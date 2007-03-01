@@ -1,1771 +1,870 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE rdf:RDF [
-	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
-	<!ENTITY wbs 'http://www.tu-harburg.de/wb/kalypso/schema/workflow#'>
-	<!ENTITY k1d2dwf 'http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#'>
-	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
-]>
-<rdf:RDF xmlns:k1d2dwf="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#">
-
-	<!--program defintion, that contains the workflow Kalypso-1D2D-->
-	<wbs:Workflow rdf:about="&k1d2dwf;WF_Kalypso1D2D">
-		<wbs:hasName>Kalypso 1D-2D Workflow</wbs:hasName>
-		<wbs:hasHelp><!-- none --></wbs:hasHelp>
-		<wbs:hasPhases rdf:resource="&k1d2dwf;PhaseOrder" />
-	</wbs:Workflow>
-
-	<!--definition of order of the phases for building up a 1D-2D-model-->
-	<wbs:PhaseSeq rdf:about="&k1d2dwf;PhaseOrder">
-		<rdf:_1 rdf:resource="&k1d2dwf;Preprocessing" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Processing" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Postprocessing" />
-	</wbs:PhaseSeq>
-
-	<!--first hierarchical level are the Phases (Processings)-->
-	<wbs:Phase rdf:about="&k1d2dwf;Preprocessing">
-		<wbs:hasName>Preprocessing: Modellaufbau</wbs:hasName>
-		<wbs:hasHelp>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</wbs:hasHelp>
-		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ModBuild" />
+<wbs:Workflow schemaLocation="../../KalypsoAFGUIFramework/etc/binding/workflow/workflow.xsd" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#WF_Kalypso1D2D" wbs:name="Kalypso 1D-2D Workflow" xmlns:wbs="http://www.kalypso.org/workflow">
+	<wbs:Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing">
+		<wbs:Name>Preprocessing: Modellaufbau</wbs:Name>
+		<wbs:Help>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</wbs:Help>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad">
+			<wbs:Name>Daten laden</wbs:Name>
+			<wbs:Help>Daten aus dem Dateisystem laden</wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad">
+				<wbs:Name>Import einer Karte</wbs:Name>
+				<wbs:Help>Einladen einer Hintergrundkarte (TIFF/JPEG)</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad">
+				<wbs:Name>Import von Höhendaten</wbs:Name>
+				<wbs:Help>Einladen von Höhendaten (TIN/GRID)</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RivNetLoad">
+				<wbs:Name>Import eines Gewässernetzes</wbs:Name>
+				<wbs:Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad">
+				<wbs:Name>Import von 1D-Profilen</wbs:Name>
+				<wbs:Help>Einladen von 1D-Profildaten (WSPWIN/DA66)</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad">
+				<wbs:Name>Rauheitsshapes laden</wbs:Name>
+				<wbs:Help>Einladen von Polygonen zur Rauheitszonenabgrenzung (SHP)</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSerLoad">
+				<wbs:Name>Import von Zeitreihen</wbs:Name>
+				<wbs:Help>Einladen von Zeitreihendaten (WISKI)</wbs:Help>
+			</wbs:Task>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
+			<wbs:Name>Netzaufbau</wbs:Name>
+			<wbs:Help>Hier sind alle Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes enthalten</wbs:Help>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
+				<wbs:Name>1D-Gewässernetz</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport">
+					<wbs:Name>1D-Netz laden</wbs:Name>
+					<wbs:Help>Laden eines Finite-Elemente-1D-Netzes (KALYPSO2D)</wbs:Help>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DRivElts">
+					<wbs:Name>1D-Netz bearbeiten</wbs:Name>
+					<wbs:Help>Zeichnen, löschen und weitere Bearbeitung von 1D-Elementen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelElts">
+						<wbs:Name>Elemente wählen</wbs:Name>
+						<wbs:Help>Selektiert Elemente innerhalb des gezeichneten Polygons</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DrawElts">
+						<wbs:Name>Element zeichnen</wbs:Name>
+						<wbs:Help>Erstellt ein 1D-Element</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GetLength">
+						<wbs:Name>Länge ermitteln</wbs:Name>
+						<wbs:Help><!--  TODO: HELP  --></wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetLength">
+						<wbs:Name>Länge zuweisen</wbs:Name>
+						<wbs:Help><!--  TODO: HELP  --></wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DelElts">
+						<wbs:Name>Elemente löschen</wbs:Name>
+						<wbs:Help>Löscht die selektierten Elemente</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DragNode">
+						<wbs:Name>Knoten verschieben</wbs:Name>
+						<wbs:Help>Verschiebt einen Knoten und passt die verbundenen Elemente an</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GroupElts">
+						<wbs:Name>Elemente gruppieren</wbs:Name>
+						<wbs:Help>Gruppiert die selektierten Elemente zu einer komplexen Gruppe von Elementen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ChangeGroupName">
+						<wbs:Name>Elementgruppe umbennenen</wbs:Name>
+						<wbs:Help>Vergibt einen individuellen Namen für eine Elementgruppe</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EditDataTable">
+					<wbs:Name>Polynomdaten bearbeiten</wbs:Name>
+					<wbs:Help>Editierfunktionen zur Bearbeitung der Datentabelle von Profilen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelProf">
+						<wbs:Name>Profil wählen</wbs:Name>
+						<wbs:Help>Selektiert ein Profil</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowDataTable">
+						<wbs:Name>Datentabelle anzeigen</wbs:Name>
+						<wbs:Help>Zeigt die Datentabelle für das selektierte Profil</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowHQDiag">
+						<wbs:Name>H-Q-Diagramm</wbs:Name>
+						<wbs:Help>Zeigt die H-Q-Wertetabelle im Diagramm an</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowHADiag">
+						<wbs:Name>H-A-Diagramm</wbs:Name>
+						<wbs:Help>Zeigt die H-A-Wertetabelle im Diagramm an</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowHCoefDiag">
+						<wbs:Name>H-Coef-Diagramm</wbs:Name>
+						<wbs:Help>Zeigt die Beiwerttabelle im Diagramm an</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowSFValue">
+						<wbs:Name>Referenzgefälle</wbs:Name>
+						<wbs:Help>Zeigt das Referenzgefälle im Diagramm an (aus stationärer Berechnung)</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GeneratePolynoms">
+					<wbs:Name>Polynome erstellen</wbs:Name>
+					<wbs:Help>Erstellen der Polynomeingabedaten für die FE-Berechnung</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelProfs">
+						<wbs:Name>Profile wählen</wbs:Name>
+						<wbs:Help>Selektiert mehrere Profil, für die Polynome erstellt werden sollen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelOrder">
+						<wbs:Name>Polynomgrad festlegen</wbs:Name>
+						<wbs:Help>Legt den Polynomgrad fest (max 14)</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelKind">
+						<wbs:Name>Polynomart wählen</wbs:Name>
+						<wbs:Help>Wählt die Art des zu erstellenden Polynoms aus (HQ/HA/Coef/alle)</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelMinBorder">
+						<wbs:Name>Min. Gültigkeitsgrenze festlegen</wbs:Name>
+						<wbs:Help>Spezifiziert die minimale Wassertiefe, für die das Polynom gültig ist</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelMaxBorder">
+						<wbs:Name>Max. Gültigkeitsgrenze festlegen</wbs:Name>
+						<wbs:Help>Spezifiziert die maximale Wassertiefe, für die das Polynom gültig ist</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GenPolynom">
+						<wbs:Name>Polynome generieren</wbs:Name>
+						<wbs:Help>Generiert die spezifizierten Polynome</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SelPolynom">
+						<wbs:Name>Polynom wählen</wbs:Name>
+						<wbs:Help>Selektiert ein Polynom des selektierten Profils</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowPolynom">
+						<wbs:Name>Polynom zeigen</wbs:Name>
+						<wbs:Help>Zeigt das aktuelle Polynom im Diagramm an</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShowCoefs">
+						<wbs:Name>Koeffizienten zeigen</wbs:Name>
+						<wbs:Help>Zeigt die Koeffizienten in tabellarischer Form an</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivVis">
+					<wbs:Name>Netzvisualisierung</wbs:Name>
+					<wbs:Help><!--  TODO: HELP  --></wbs:Help>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivVal">
+					<wbs:Name>Netzvalidierung</wbs:Name>
+					<wbs:Help>Validiert das 1D-Flussprofilnetz</wbs:Help>
+				</wbs:Task>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DChanGroup">
+				<wbs:Name>1D-Kanalnetz</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup">
+				<wbs:Name>2D-Netz</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport">
+					<wbs:Name>2D-Netz laden</wbs:Name>
+					<wbs:Help>Importiert ein 2D-Netz (KALYPSO2D)</wbs:Help>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit2DElts">
+					<wbs:Name>2D-Netz bearbeiten</wbs:Name>
+					<wbs:Help>Zeichnen, löschen und andere manuelle Bearbeitungen des 2D-Netzes</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Sel2DElts">
+						<wbs:Name>Elemente wählen</wbs:Name>
+						<wbs:Help>Selektiert Elemente innerhalb des spezifizierten Bereiches</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Draw2DElts">
+						<wbs:Name>Element zeichnen</wbs:Name>
+						<wbs:Help>Zeichnet ein Dreieck oder Viereck</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SplitQuadri">
+						<wbs:Name>Viereck teilen</wbs:Name>
+						<wbs:Help>Teilt ein selektiertes Viereck an einem Knoten in zwei Dreiecke</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CombineTriangles">
+						<wbs:Name>Dreiecke zusammenfügen</wbs:Name>
+						<wbs:Help>Fügt zwei Dreiecke mit einer gemeinsamen Kante zu einem Viereck zusammen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Del2DElts">
+						<wbs:Name>2D-Elemente löschen</wbs:Name>
+						<wbs:Help>Löscht die selektierten Elemente</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Group2DElts">
+						<wbs:Name>2D-Elemente gruppieren</wbs:Name>
+						<wbs:Help>Gruppiert selektierte Elemente zu einer komplexen Elementgruppe</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Sel2DGroup">
+						<wbs:Name>Elementgruppe wählen</wbs:Name>
+						<wbs:Help>Selektiert eine Gruppe durch Namensauswahl</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Change2DGroupName">
+						<wbs:Name>Gruppe umbenennen</wbs:Name>
+						<wbs:Help>Ändert den Namen der selektierten Gruppe</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
+					<wbs:Name>Flussschlauchgenerator</wbs:Name>
+					<wbs:Help>Generiert Flussschlauchelemente aus Profilen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DProfSel">
+						<wbs:Name>Profil wählen</wbs:Name>
+						<wbs:Help>Wählt ein Profil zur Knotendefinition aus</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGenGroup">
+						<wbs:Name>Profile fixieren</wbs:Name>
+						<wbs:Help><!--   TODO: HELP  --></wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DAddNode">
+						<wbs:Name>Stützstelle hinzufügen</wbs:Name>
+						<wbs:Help>Fügt Stützstelle in ein Profil in der Schnittansicht ein</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DDelNode">
+						<wbs:Name>Stützstelle löschen</wbs:Name>
+						<wbs:Help>Löscht Stützstelle aus Profilansicht</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DDragNode">
+						<wbs:Name>Stützstelle verschieben</wbs:Name>
+						<wbs:Help>Zum Verschieben einer Stützstelle im Profil</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DDefMinMax">
+						<wbs:Name>Stützstellenkontrolle</wbs:Name>
+						<wbs:Help>Ermöglicht die Eingabe der maximalen Stützstellen in jedem Profil und gibt die aktuelle Maximalzahl aus</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DCheckNodes">
+						<wbs:Name>Stützstellenzahl prüfen</wbs:Name>
+						<wbs:Help>Prüft, ob die Stützstellenzahl der ausgewählten Knoten bei allen Profilen konsistent ist</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DRownumber">
+						<wbs:Name>Elementzahl angeben</wbs:Name>
+						<wbs:Help>Gibt an, wieviele Elementreihen zwischen zwei Profilen erstellt werden sollen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
+						<wbs:Name>Elemente generieren</wbs:Name>
+						<wbs:Help>Erstellt die Elemente im bearbeiteten Flussschlauchbereich</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
+					<wbs:Name>Bandgenerator</wbs:Name>
+					<wbs:Help>Generiert ein regelmäßiges Elementnetz im spezifizierten Bereich</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGenDrawPolyline">
+						<wbs:Name>Begrenzung zeichnen</wbs:Name>
+						<wbs:Help>Zeichnen von Begrenzungslinien für den Bandgenerator</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGenSelectPolylines">
+						<wbs:Name>Begrenzungen selektieren</wbs:Name>
+						<wbs:Help>Selektion von Begrenzungslinien für den Bandgenerator</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGenChoseNumbers">
+						<wbs:Name>Elementzahl angeben</wbs:Name>
+						<wbs:Help>Angabe der Elementzahlen in Längs- und Querrichtung des zu erstellenden Bandes</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGenStart">
+						<wbs:Name>Band generieren</wbs:Name>
+						<wbs:Help>Generiert die Elemente im Bereich des dargestellten Bandes</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
+					<wbs:Name>Höhen zuweisen</wbs:Name>
+					<wbs:Help>Knoten werden mit Höhendaten versehen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AsElevsSelDTM">
+						<wbs:Name>Höhenmodell auswählen</wbs:Name>
+						<wbs:Help>Auswahl eines digitalen Geländemodells zur Zuweisung der Höhendaten</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AsElevsDrawPolygon">
+						<wbs:Name>Polygon zeichnen</wbs:Name>
+						<wbs:Help>Zeichnet ein Polygon zur Eingrenzung der Höhenzuweisung</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AsElevsAssign">
+						<wbs:Name>Höhen zuweisen</wbs:Name>
+						<wbs:Help>Weist die Höhen im ausgewählten Bereich zu und stellt die Höhen in der Kartenansicht dar</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AsElevsCorrLevels">
+						<wbs:Name>Höhen verändern</wbs:Name>
+						<wbs:Help>Überschreibt eine Höhe</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AsElevsGetMinMax">
+						<wbs:Name>Grenzwerte zeigen</wbs:Name>
+						<wbs:Help>Zeigt die minimale und maximale Geländehöhe im selektierten Bereich an</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroup">
+					<wbs:Name>Elemente gruppieren</wbs:Name>
+					<wbs:Help>Gruppiert Elemente zu komplexen Elementgruppen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroupEltsSel">
+						<wbs:Name>Elemente wählen</wbs:Name>
+						<wbs:Help>Elemente selektieren, die gruppiert werden sollen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroupDef">
+						<wbs:Name>Gruppe definieren</wbs:Name>
+						<wbs:Help>Definiert eine neue Gruppe aus den selektierten Elementen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroupSel">
+						<wbs:Name>Gruppe wählen</wbs:Name>
+						<wbs:Help>Selektiert eine Gruppe von Elementen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroupProps">
+						<wbs:Name>Gruppeneigenschaften</wbs:Name>
+						<wbs:Help>Bearbeitet die Eigenschaften einer Elementgruppierung, z.B. Abschnittsbezeichnung oder Kommentar</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroupDelGroupElt">
+						<wbs:Name>Element aus Gruppe löschen</wbs:Name>
+						<wbs:Help>Entfernt selektierte Elemente aus einer Gruppe</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EltsGroupAddGroupElt">
+						<wbs:Name>Element zur Gruppe hinzufügen</wbs:Name>
+						<wbs:Help>Fügt selektierte Elemente in eine vorhandene Elementgruppierung hinzu</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DVis">
+					<wbs:Name>Netzvisualisierung</wbs:Name>
+					<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				</wbs:Task>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CntrStrcGroup">
+				<wbs:Name>Bauwerkselemente</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransGroup">
+				<wbs:Name>1D-2D-Kopplungen</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
+					<wbs:Name>1D-2D-Linienkopplung</wbs:Name>
+					<wbs:Help>Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransLineDrawLine">
+						<wbs:Name>Übergangslinie zeichnen</wbs:Name>
+						<wbs:Help>Zeichnet eine 1D-2D-Übergangslinie, um 1D Modellbereiche mit 2D-Bereichen zu koppeln</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransLineChosePointLine">
+						<wbs:Name>Übergangsgeometrien wählen</wbs:Name>
+						<wbs:Help>Wählen einer Kopplungslinie und des anzuschließenden Knotens des 1D-Netzes</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransLineTransDef">
+						<wbs:Name>Kopplung definieren</wbs:Name>
+						<wbs:Help>Generiert eine Kopplung basierend auf den selektierten Geometrien</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
+					<wbs:Name>1D-2D-Elementkopplung</wbs:Name>
+					<wbs:Help>Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen</wbs:Help>
+				</wbs:Task>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ValGroup">
+				<wbs:Name>Netzvalidierung</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetValidation">
+					<wbs:Name>Modell validieren</wbs:Name>
+					<wbs:Help>Validiert alle Netzteile</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Val2DNet">
+						<wbs:Name>2D-Netzvalidierung</wbs:Name>
+						<wbs:Help>Validiert aufgebautes 2D-Netz</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Val1DRivNet">
+						<wbs:Name>1D-Flussnetzvalidierung</wbs:Name>
+						<wbs:Help>Validiert aufgebautes 1D-Flussnetz</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Val1DChanNet">
+						<wbs:Name>1D-Kanalnetzvalidierung</wbs:Name>
+						<wbs:Help>Validiert aufgebautes 1D-Kanalnetz</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ValTrans">
+						<wbs:Name>Kopplungsvalidierung</wbs:Name>
+						<wbs:Help>Validiert Netzkopplungen</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+			</wbs:TaskGroup>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod">
+			<wbs:Name>Rauheitsmodellierung</wbs:Name>
+			<wbs:Help>Rauheitszonen definieren sowie Bearbeitung der Rauheitsklassen</wbs:Help>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
+				<wbs:Name>Rauheitsdatenbank</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ModifyDB">
+					<wbs:Name>Rauheitsdatenbank bearbeiten</wbs:Name>
+					<wbs:Help>Ermöglicht die Bearbeitung der Einträge in der globalen Rauheitsdatenbank</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DBRoughNewLine">
+						<wbs:Name>neuen Datensatz anlegen</wbs:Name>
+						<wbs:Help>Legt neuen Datensatz in der Rauhigkeitsdatenbank an. Erfordert Befugnis, Daten ändern zu dürfen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DBRoughDelLine">
+						<wbs:Name>Datensatz löschen</wbs:Name>
+						<wbs:Help>Löscht einen Datensatz aus der Rauhigkeitsdatenbank. Erfordert Befugnis, Daten ändern zu dürfen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DBRoughCopyLine">
+						<wbs:Name>Datensatz kopieren</wbs:Name>
+						<wbs:Help>Kopiert einen Datensatz in der Rauheitsdatenbank. Erfordert Befugnis, Daten ändern zu dürfen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DBRoughEdit">
+						<wbs:Name>Daten editieren</wbs:Name>
+						<wbs:Help>Editieren von Daten in der tabellarischen Ansicht der Datenbank</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DBRoughSaveEdits">
+						<wbs:Name>Daten speichern</wbs:Name>
+						<wbs:Help>Speichert die Änderungen an der Datenbank (Ablage im CVS???)</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ViewDB">
+					<wbs:Name>Rauheitsdatenbank anzeigen</wbs:Name>
+					<wbs:Help>Zeigt die globale Rauheitsdatenbank ohne die Möglichkeit, Veränderungen vorzunehmen</wbs:Help>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ExportDB">
+					<wbs:Name>Datenbank exportieren</wbs:Name>
+					<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				</wbs:Task>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
+				<wbs:Name>Rauheitszonen</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneAreaDef">
+					<wbs:Name>Rauheitszonen definieren</wbs:Name>
+					<wbs:Help>Ermöglicht die polygonale Definition von Rauheitszonen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughDrawPolygon">
+						<wbs:Name>Polygon zeichnen</wbs:Name>
+						<wbs:Help>Ein Polygon zur räumlichen Abgrenzung einer Rauheitsklasse zeichnen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughDelPolygon">
+						<wbs:Name>Polygon zeichnen</wbs:Name>
+						<wbs:Help>Ein Polygon zur räumlichen Abgrenzung einer Rauheitsklasse zeichnen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughMoveNode">
+						<wbs:Name>Polygon verändern</wbs:Name>
+						<wbs:Help>Ändern des Rauhigkeitsklassenpolygons</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughAssignClass">
+						<wbs:Name>Rauheitsklasse zuweisen</wbs:Name>
+						<wbs:Help>Ordnet einem Polynom eine Rauheitsklasse aus der zur Verfügung stehenden Liste zu</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneParaDef">
+					<wbs:Name>Rauheitsparameter bearbeiten</wbs:Name>
+					<wbs:Help>Tabellarische Bearbeitung der Rauheitszonen, Zuweisung von Rauheitsklassen und Korrekturen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughSelPolygons">
+						<wbs:Name>Polygone auswählen</wbs:Name>
+						<wbs:Help>Highlighting ausgewählter Polygone in der Datentabelle</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughShowProps">
+						<wbs:Name>Daten einsehen</wbs:Name>
+						<wbs:Help>Öffnet eine Datentabelle zu den Eigenschaften der Polygone</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughEditCorrPara">
+						<wbs:Name>Korrekturfaktoren bearbeiten</wbs:Name>
+						<wbs:Help>Editierung der Korrekturfaktoren der Rauheitszonenparameter</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefRoughSortData">
+						<wbs:Name>Daten sortieren</wbs:Name>
+						<wbs:Help>Sortiert die Datensätze nach gegebenem Kriterium</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBLineDef">
+					<wbs:Name>Randbedingungslinien definieren</wbs:Name>
+					<wbs:Help>Definiert Linien auf dem Gebietsrand zur Angabe von Randbedingungen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefDrawLine">
+						<wbs:Name>Polylinie zeichnen</wbs:Name>
+						<wbs:Help>Zeichnen einer Polylinie als Randbedingunslinie</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefAssignProps">
+						<wbs:Name>Informationen zuweisen</wbs:Name>
+						<wbs:Help>Zusätzliche Informationen an eine Randbedingungslinie zuweisen (Stationierung, Kommentar)</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+			</wbs:TaskGroup>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond">
+			<wbs:Name>Anfangswerte/Randbedingungen</wbs:Name>
+			<wbs:Help>Anfangswerte und Randbedingungen festlegen</wbs:Help>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup">
+				<wbs:Name>Randbedingungen</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodalBCDef">
+					<wbs:Name>Knotenrandbedingungen spezifizieren</wbs:Name>
+					<wbs:Help>Definition von Randbedingungen, die nur auf einen Knoten angewendet werden sollen</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodalDefChosePoint">
+						<wbs:Name>Randbedingungsknoten wählen</wbs:Name>
+						<wbs:Help>Knoten auswählen, an dem eine Randbedingungen angelegt werden soll</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodalDefAssignValues">
+						<wbs:Name>Randbedingungen zuweisen</wbs:Name>
+						<wbs:Help>Weist Randbedingungsinformationen an einen Knoten zu</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LineBCDef">
+					<wbs:Name>Linienrandbedingungen definieren</wbs:Name>
+					<wbs:Help>Definition von Randbedingungen, die auf eine Linie angewendet werden</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefSelLine">
+						<wbs:Name>Randbedingungslinie wählen</wbs:Name>
+						<wbs:Help>Auswahl der Randbedingungslinie, an der Randbedingung angewendet werden soll</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefSetType">
+						<wbs:Name>Art wählen</wbs:Name>
+						<wbs:Help>Art der Randbedingung auswählen</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefSelTimeSeries">
+						<wbs:Name>Ganglinie zuweisen</wbs:Name>
+						<wbs:Help>Ganglinie auswählen, die angewendet werden soll</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefSelRelationship">
+						<wbs:Name>Wasserstands-Abfluss-Beziehung zuweisen</wbs:Name>
+						<wbs:Help>Zuweisen einer Wasserstands-Abfluss-Beziehung zur Randbedingungsgeometrie</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefSetValue">
+						<wbs:Name>Wert definieren</wbs:Name>
+						<wbs:Help>Einzelwert als Randbedingung definieren</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBDefValueGen">
+						<wbs:Name>RB-Reihe definieren</wbs:Name>
+						<wbs:Help>Ganglinie von Randbedingungen anhand manueller Eingaben definieren</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+			</wbs:TaskGroup>
+			<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StSolGroup">
+				<wbs:Name>Anfangslösung</wbs:Name>
+				<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefManStSol">
+					<wbs:Name>Anfangswerte schätzen</wbs:Name>
+					<wbs:Help>Definition von Anfangswerten (z.B. Lake-Solution)</wbs:Help>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ManStSolDefH">
+						<wbs:Name>Anfangswasserstand wählen</wbs:Name>
+						<wbs:Help>Definition eines Anfangswasserstandes (normalerweise über höchster Geländehöhe</wbs:Help>
+					</wbs:Activity>
+					<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ManStSolDefV">
+						<wbs:Name>Anfangsfließgeschwindigkeit wählen</wbs:Name>
+						<wbs:Help>Definition der initialen Werte der Fließgeschwindigkeit und der Richtung für 1D-Elemente</wbs:Help>
+					</wbs:Activity>
+				</wbs:Task>
+				<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ChoseRestSol">
+					<wbs:Name>Restartlösung spezifizieren</wbs:Name>
+					<wbs:Help>Spezifikation eines Berechnungsergebnisses als Anfangswerte für eine neue Berechnung</wbs:Help>
+				</wbs:Task>
+			</wbs:TaskGroup>
+		</wbs:TaskGroup>
 	</wbs:Phase>
 
-	<wbs:Phase rdf:about="&k1d2dwf;Processing">
-		<wbs:hasName>Processing: Kalibrieren und Rechnen</wbs:hasName>
-		<wbs:hasHelp>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</wbs:hasHelp>
-		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;CalSim" />
+	<wbs:Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
+		<wbs:Name>Processing: Kalibrieren und Rechnen</wbs:Name>
+		<wbs:Help>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</wbs:Help>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
+			<wbs:Name>Berechnungseinstellungen</wbs:Name>
+			<wbs:Help>Einstellung der generellen Berechnungsparameter</wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DryAlgorithmDef">
+				<wbs:Name>Drying/Wetting Algorithmus</wbs:Name>
+				<wbs:Help>Einstellen des Trockenfallalgorithmus</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DryWetChoseAlgorithm">
+					<wbs:Name>Drying/Wetting Algorithmus wählen</wbs:Name>
+					<wbs:Help>Auswahl des anzuwendenden Algorithmus</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DryWetParameters">
+					<wbs:Name>Grenztiefen festlegen</wbs:Name>
+					<wbs:Help>Legt Trockenfalltiefe und Benetzungstiefe fest (nicht Marsh-Parameter)</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DryWetMarshParameters">
+					<wbs:Name>Marsh-Parameter festlegen</wbs:Name>
+					<wbs:Help>Festlegen der (3 oder 4) Marsh-Parameter im Gebiet</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ConvParDef">
+				<wbs:Name>Konvergenz Parameter</wbs:Name>
+				<wbs:Help>Festlegen der Konvergenz Parameter für den Berechnungsalgorithmus</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GenCalcSet">
+				<wbs:Name>Berechnungseinstellungen</wbs:Name>
+				<wbs:Help>Legt alle generellen Berechnungseinstellungen fest</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RelaxSet">
+				<wbs:Name>Relaxationsparameter</wbs:Name>
+				<wbs:Help>Einstellung der Relaxationsparameter für den iterativen Gleichungslöser</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RelaxChoseTimeStep">
+					<wbs:Name>Zeitschritt auswählen</wbs:Name>
+					<wbs:Help>Wählt einen Zeitschritt aus, für welchen die Relaxationparameter eingestellt werden sollen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RelaxGenSet">
+					<wbs:Name>Einheitsparameter vergeben</wbs:Name>
+					<wbs:Help>generellen Relaxationsparameter für den gewählten Zeitschritt einstellen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RelaxViewParameters">
+					<wbs:Name>Detaileinstellungen</wbs:Name>
+					<wbs:Help>Tabellarische Ansicht der Relaxationsparameter für einen Zeitschritt</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TurbRoughDef">
+				<wbs:Name>Widerstands- und Turbulenzansatz</wbs:Name>
+				<wbs:Help></wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TurbRoughChoseRoughAppr">
+					<wbs:Name>Rauheitsansatz wählen</wbs:Name>
+					<wbs:Help>Auswahl des Rauheitsansatzes</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TurbRoughChoseTurbAppr">
+					<wbs:Name>Turbulenzmodell wählen</wbs:Name>
+					<wbs:Help>Auswahl des angewandten Turbulenzmodells</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef">
+			<wbs:Name>spezielle Ausgaben definieren</wbs:Name>
+			<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcLinesSet">
+				<wbs:Name>Kontinuitätslinien bestimmen</wbs:Name>
+				<wbs:Help>Kontinuitätslinien festlegen, die besonders behandelt werden sollen.</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CCLDef">
+					<wbs:Name>Kontinuitätslinie definieren</wbs:Name>
+					<wbs:Help>Legt Kontinuitätslinie an, für die während der Berechnung Ergebnisse ermittelt werden</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CCLSel">
+					<wbs:Name>Kontinuitätslinie auswählen</wbs:Name>
+					<wbs:Help>Aktivieren der bei der Berechnung zu verwendenden Kontinuitätslinien</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodeObserveSet">
+				<wbs:Name>Ausgabeknoten bestimmen</wbs:Name>
+				<wbs:Help>Knoten festlegen, für die während der Berechnung weitere Daten herausgeschrieben werden sollen</wbs:Help>
+			</wbs:Task>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ModCheck">
+			<wbs:Name>Modell prüfen</wbs:Name>
+			<wbs:Help>Das Modell auf Konsistenz prüfen</wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CheckBC">
+				<wbs:Name>Randbedingungen prüfen</wbs:Name>
+				<wbs:Help>Prüfen der Randbedingungen auf Konsistenz mit dem Netz</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CheckBCShowBCs">
+					<wbs:Name>Randbedingungen zeigen</wbs:Name>
+					<wbs:Help>Zeigt die Lage der Randbedingungen in Karte an und prüft, dass sich nicht im Leeren liegen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CheckBCCheckValues">
+					<wbs:Name>Werte prüfen</wbs:Name>
+					<wbs:Help>Prüft, ob keine Nullwerte vorhanden sind</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CheckBC">
+					<wbs:Name>Konsistenz prüfen</wbs:Name>
+					<wbs:Help>Prüft, ob die Daten zusammen ein konsistentes RB-System ergeben</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CheckStSol">
+				<wbs:Name>Anfangswerte prüfen</wbs:Name>
+				<wbs:Help>Prüfung der Anfangswerte auf Konsistenz mit dem FE-Netz</wbs:Help>
+			</wbs:Task>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc">
+			<wbs:Name>Berechnung starten</wbs:Name>
+			<wbs:Help>Starten einer Berechnung zur Kalibrierung oder Szenariensimulation</wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation">
+				<wbs:Name>Berechnung durchführen</wbs:Name>
+				<wbs:Help>Startet die Berechnung unter Verwendung eines Kontrolldisplays</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcScenarioBuilding">
+					<wbs:Name>Szenario zusammenstellen</wbs:Name>
+					<wbs:Help>Zusammenstellung von Szenarien auf der Basis der Submodelle</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcChoseSimModel">
+					<wbs:Name>Szenario/Rechenfall auswählen</wbs:Name>
+					<wbs:Help>Zur Auswahl zu berechnender Szenarien</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcContext">
+					<wbs:Name>Konsole ein/aus</wbs:Name>
+					<wbs:Help>Ein-/Ausschalten der Berechnungskonsole</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcStart">
+					<wbs:Name>Berechnung starten</wbs:Name>
+					<wbs:Help>Startet die Berechnung für die ausgewählten Szenarien</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+		</wbs:TaskGroup>
 	</wbs:Phase>
 
-	<wbs:Phase rdf:about="&k1d2dwf;Postprocessing">
-		<wbs:hasName>Postprocessing: Ergebnisauswertungen</wbs:hasName>
-		<wbs:hasHelp>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</wbs:hasHelp>
-		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ResVis" />
+	<wbs:Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
+		<wbs:Name>Postprocessing: Ergebnisauswertungen</wbs:Name>
+		<wbs:Help>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</wbs:Help>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView">
+			<wbs:Name>Einstellungen Draufsicht</wbs:Name>
+			<wbs:Help><!--  TODO:HELP  --></wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VectorDispl">
+				<wbs:Name>Vektorendarstellung</wbs:Name>
+				<wbs:Help>Erstellt spezifizierte Ergebnisse in Vektorform</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VDis_ResultSelection">
+					<wbs:Name>Ergebnisse wählen</wbs:Name>
+					<wbs:Help>Darzustellende Ergebnisse auswählen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VDis_VectorSettings">
+					<wbs:Name>Vektoreinstellungen</wbs:Name>
+					<wbs:Help>Einstellung der Vektorskalierung sowie der farblichen Darstellung</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VDis_Generation">
+					<wbs:Name>Vektoren erstellen</wbs:Name>
+					<wbs:Help>Darstellung der gewählten Ergebnisse als Vektoren</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ColoredDispl">
+				<wbs:Name>Farbflächendarstellung</wbs:Name>
+				<wbs:Help>Erstellt spezifizierte Ergebnisse in Farbflächendarstellung</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CDis_ResultSelection">
+					<wbs:Name>Ergebnisse wählen</wbs:Name>
+					<wbs:Help>Darzustellende Ergebnisse auswählen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CDis_IntervallSettings">
+					<wbs:Name>Intervalleinstellungen</wbs:Name>
+					<wbs:Help>Zur Einstellung der mit den Farbflächen darzustellenden Intervalle</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CDis_ColorSettings">
+					<wbs:Name>Farbeinstellungen</wbs:Name>
+					<wbs:Help>Farbskala</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CDis_Generation">
+					<wbs:Name>Farbflächen erstellen</wbs:Name>
+					<wbs:Help>Erstellung der Farbflächen mit den gewählten Einstellungen für ein ausgewähltes Ergebnis</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#IsolineDispl">
+				<wbs:Name>Isoliniendarstellung</wbs:Name>
+				<wbs:Help>Erstellt spezifizierte Ergebnisse in Isoliniendarstellung</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Isol_ResultSelection">
+					<wbs:Name>Ergebnisse wählen</wbs:Name>
+					<wbs:Help>Darzustellende Ergebnisse auswählen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Isol_IntervallSettings">
+					<wbs:Name>Intervalleinstellungen</wbs:Name>
+					<wbs:Help>Zur Einstellung der mit den Isolinien darzustellenden Intervalle</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Isol_ColorSettings">
+					<wbs:Name>Farbeinstellungen</wbs:Name>
+					<wbs:Help>Zur Einstellung der Farben der Isolinien</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Isol_Generation">
+					<wbs:Name>Isolinien erstellen</wbs:Name>
+					<wbs:Help>Erstellung von Isolinien mit den gewählten Einstellungen für ein ausgewähltes Ergebnis</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Section">
+			<wbs:Name>Schnittdarstellungen</wbs:Name>
+			<wbs:Help>Darstellung von Längs- oder Querschnitten</wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CrossSecDef">
+				<wbs:Name>einzelne Schnitte</wbs:Name>
+				<wbs:Help>Ermöglicht die Erstellung oder Bearbeitung von beliebigen Schnitten durch das Gebiet</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CSecDrawPolyline">
+					<wbs:Name>Schnitt zeichnen</wbs:Name>
+					<wbs:Help>Erstellung eines Polylinienschnittes</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CSecSettings">
+					<wbs:Name>Schnitteinstellungen</wbs:Name>
+					<wbs:Help>Daten zum Schnitt eingeben, z.B. Stationierung und Kommentar</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CSecChoseResults">
+					<wbs:Name>Ergebnisse auswählen</wbs:Name>
+					<wbs:Help>darzustellende Ergebnisse an dem Schnitt auswählen</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CSecDisplay">
+					<wbs:Name>Ergebnisse darstellen</wbs:Name>
+					<wbs:Help>Stellt Ergebnisse in einer Schnittanzeige dar</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CSecShowTimeSeriesQ">
+					<wbs:Name>Q-Zeitreihe</wbs:Name>
+					<wbs:Help>Darstellung des Abflusses durch das gewählte Profil in Zeitreihe</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LongSecDef">
+				<wbs:Name>Längsschnitt</wbs:Name>
+				<wbs:Help>Ermöglicht die Definition von Gewässerlängsschnitten auf der Basis definierter Querschnitte</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LSecGroupCSecs">
+					<wbs:Name>Längsschnitt definieren</wbs:Name>
+					<wbs:Help>Definition eines Längsschnittes durch Auswahl der zugehörigen Querschnitte</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LSecSettings">
+					<wbs:Name>Längsschnitteinstellungen</wbs:Name>
+					<wbs:Help>Daten zum Längsschnitt eingeben, z.B. Gewässername und Kommentar</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LSecChoseResult">
+					<wbs:Name>Ergebnisse wählen</wbs:Name>
+					<wbs:Help>Auswahl der darzustellenden Ergebnisse</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LSecDisplay">
+					<wbs:Name>Längsschnitt darstellen</wbs:Name>
+					<wbs:Help>Zeigt den ausgewählten Längsschnitt grafisch mit den ausgewählten Ergebnissen an</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSeriesDispl">
+				<wbs:Name>Gangliniendarstellung</wbs:Name>
+				<wbs:Help>Ermöglicht die Gangliniendarstellung selektierter Ergebnisgeometrien</wbs:Help>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeNode">
+					<wbs:Name>Ergebniszeitreihe Knoten</wbs:Name>
+					<wbs:Help>Darstellen der Ergebnisse eines speziellen Knotens als Zeitreihe</wbs:Help>
+				</wbs:Activity>
+				<wbs:Activity URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeCCL">
+					<wbs:Name>Ergebniszeitreihe Kontinuitätslinie</wbs:Name>
+					<wbs:Help>Darstellung der Abflussganglinie an einer vor der Berechnung definierten Kontinuitätslinien</wbs:Help>
+				</wbs:Activity>
+			</wbs:Task>
+		</wbs:TaskGroup>
+		<wbs:TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Export">
+			<wbs:Name>Daten exportieren</wbs:Name>
+			<wbs:Help>Exportieren der Daten für die Weiterbearbeitung: FloodModeller/RiskModeller</wbs:Help>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ExportFile">
+				<wbs:Name>Ergebnisdatei exportieren</wbs:Name>
+				<wbs:Help>Ermöglicht den Export von Daten in Kalypso2D-Format</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ExportPict">
+				<wbs:Name>Bild exportieren</wbs:Name>
+				<wbs:Help>aktuelle Darstellung als Bild exportieren</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ExportFloodModeller">
+				<wbs:Name>Export für Floodmodeller</wbs:Name>
+				<wbs:Help>Ermöglicht den Datentransfer zum Floodmodeller</wbs:Help>
+			</wbs:Task>
+			<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ExportRiskModeller">
+				<wbs:Name>Export für Riskmodeller</wbs:Name>
+				<wbs:Help>Ermöglicht den Datentransfer zum Riskmodeller</wbs:Help>
+			</wbs:Task>
+		</wbs:TaskGroup>
 	</wbs:Phase>
-
-	<!--Within the phases there are ordered TaskGroups-->
-	<wbs:TaskGroupSeq rdf:about="&k1d2dwf;ModBuild">
-		<rdf:_1 rdf:resource="&k1d2dwf;DataLoad" />
-		<rdf:_2 rdf:resource="&k1d2dwf;NetCstr" />
-		<rdf:_3 rdf:resource="&k1d2dwf;RoughMod" />
-		<rdf:_4 rdf:resource="&k1d2dwf;Cond" />
-	</wbs:TaskGroupSeq>
-
-	<wbs:TaskGroupSeq rdf:about="&k1d2dwf;CalSim">
-		<rdf:_1 rdf:resource="&k1d2dwf;CalcSet" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ResDef" />
-		<rdf:_3 rdf:resource="&k1d2dwf;ModCheck" />
-		<rdf:_4 rdf:resource="&k1d2dwf;Calc" />
-	</wbs:TaskGroupSeq>
-
-	<wbs:TaskGroupSeq rdf:about="&k1d2dwf;ResVis">
-		<rdf:_1 rdf:resource="&k1d2dwf;PlanView" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Section" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Export" />
-	</wbs:TaskGroupSeq>
-
-	<!--Defining the TaskGroups - Preprocessing-->
-	<wbs:TaskGroup rdf:about="&k1d2dwf;DataLoad">
-		<wbs:hasName>Daten laden</wbs:hasName>
-		<wbs:hasHelp>Daten aus dem Dateisystem laden</wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;DataLoadTasks" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;NetCstr">
-		<wbs:hasName>Netzaufbau</wbs:hasName>
-		<wbs:hasHelp>Hier sind alle Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes enthalten</wbs:hasHelp>
-		<wbs:hasSubTaskGroups rdf:resource="&k1d2dwf;NetBuildGroup" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;RoughMod">
-		<wbs:hasName>Rauheitsmodellierung</wbs:hasName>
-		<wbs:hasHelp>Rauheitszonen definieren sowie Bearbeitung der Rauheitsklassen</wbs:hasHelp>
-		<wbs:hasSubTaskGroups rdf:resource="&k1d2dwf;RoughModGroup" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;Cond">
-		<wbs:hasName>Anfangswerte/Randbedingungen</wbs:hasName>
-		<wbs:hasHelp>Anfangswerte und Randbedingungen festlegen</wbs:hasHelp>
-		<wbs:hasSubTaskGroups rdf:resource="&k1d2dwf;CondGroup" />
-	</wbs:TaskGroup>
-
-	<!--Defining the TaskGroups - Processing-->
-	<wbs:TaskGroup rdf:about="&k1d2dwf;CalcSet">
-		<wbs:hasName>Berechnungseinstellungen</wbs:hasName>
-		<wbs:hasHelp>Einstellung der generellen Berechnungsparameter</wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;CalcSetTasks" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;ResDef">
-		<wbs:hasName>spezielle Ausgaben definieren</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;ResDefTasks" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;ModCheck">
-		<wbs:hasName>Modell prüfen</wbs:hasName>
-		<wbs:hasHelp>Das Modell auf Konsistenz prüfen</wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;ModCheckTasks" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;Calc">
-		<wbs:hasName>Berechnung starten</wbs:hasName>
-		<wbs:hasHelp>Starten einer Berechnung zur Kalibrierung oder Szenariensimulation</wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;CalcTasks" />
-	</wbs:TaskGroup>
-
-	<!--Defining the TaskGroups - Postprocessing-->
-	<wbs:TaskGroup rdf:about="&k1d2dwf;PlanView">
-		<wbs:hasName>Einstellungen Draufsicht</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;PlanViewTasks" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;Section">
-		<wbs:hasName>Schnittdarstellungen</wbs:hasName>
-		<wbs:hasHelp>Darstellung von Längs- oder Querschnitten</wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;SectionTasks" />
-	</wbs:TaskGroup>
-
-	<wbs:TaskGroup rdf:about="&k1d2dwf;Export">
-		<wbs:hasName>Daten exportieren</wbs:hasName>
-		<wbs:hasHelp>Exportieren der Daten für die Weiterbearbeitung: FloodModeller/RiskModeller</wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;ExportTasks" />
-	</wbs:TaskGroup>
-
-	<!--Within the TaskGroups there are ordered SubTaskGroups - Preprocessing-->
-	<wbs:SubTaskGroupSeq rdf:about="&k1d2dwf;NetBuildGroup">
-		<rdf:_1 rdf:resource="&k1d2dwf;Net1DRivGroup" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Net1DChanGroup" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Net2DGroup" />
-		<rdf:_4 rdf:resource="&k1d2dwf;CntrStrcGroup" />
-		<rdf:_5 rdf:resource="&k1d2dwf;TransGroup" />
-		<rdf:_6 rdf:resource="&k1d2dwf;ValGroup" />
-	</wbs:SubTaskGroupSeq>
-
-	<wbs:SubTaskGroupSeq rdf:about="&k1d2dwf;RoughModGroup">
-		<rdf:_1 rdf:resource="&k1d2dwf;ClassDefGroup" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ZoneDefGroup" />
-	</wbs:SubTaskGroupSeq>
-
-	<wbs:SubTaskGroupSeq rdf:about="&k1d2dwf;CondGroup">
-		<rdf:_1 rdf:resource="&k1d2dwf;BCDefGroup" />
-		<rdf:_2 rdf:resource="&k1d2dwf;StSolGroup" />
-	</wbs:SubTaskGroupSeq>
-
-	<!--Within the TaskGroups there are ordered SubTaskGroups - Processing-->
-
-	<!--Within the TaskGroups there are ordered SubTaskGroups - Postrocessing-->
-
-	<!--Defining the SubTaskGroups - Preprocessing-->
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;Net1DRivGroup">
-		<wbs:hasName>1D-Gewässernetz</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;Net1DRivTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;Net1DChanGroup">
-		<wbs:hasName>1D-Kanalnetz</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<!-- unclear  <wbs:hasTasks rdf:resource="&k1d2dwf;Net1DChanTasks" /> -->
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;Net2DGroup">
-		<wbs:hasName>2D-Netz</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;Net2DTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;CntrStrcGroup">
-		<wbs:hasName>Bauwerkselemente</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<!--   unclear <wbs:hasTasks rdf:resource="&k1d2dwf;CntrStrcTasks" /> -->
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;TransGroup">
-		<wbs:hasName>1D-2D-Kopplungen</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;TransTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;ValGroup">
-		<wbs:hasName>Netzvalidierung</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;ValTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;ClassDefGroup">
-		<wbs:hasName>Rauheitsdatenbank</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;ClassDefTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;ZoneDefGroup">
-		<wbs:hasName>Rauheitszonen</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;ZoneDefTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;BCDefGroup">
-		<wbs:hasName>Randbedingungen</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;BCDefTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;StSolGroup">
-		<wbs:hasName>Anfangslösung</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;StSolTasks" />
-	</wbs:SubTaskGroup>
-
-	<!--Defining the SubTaskGroups - Processing-->
-
-	<!--Defining the SubTaskGroups - Postprocessing-->
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;CrossSecGroup">
-		<wbs:hasName>Querschnitte</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;CrossSecSubTasks" />
-	</wbs:SubTaskGroup>
-
-	<wbs:SubTaskGroup rdf:about="&k1d2dwf;LongSecDefGroup">
-		<wbs:hasName>Längsschnitte</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasTasks rdf:resource="&k1d2dwf;LongSecDefTasks" />
-	</wbs:SubTaskGroup>
-
-	<!--Within the TaskGroups or SubTaskGroups there are ordered Tasks - Preprocessing-->
-	<!--coming from TaskGroups-->
-	<wbs:TaskSeq rdf:about="&k1d2dwf;DataLoadTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;MapLoad" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ElevLoad" />
-		<rdf:_3 rdf:resource="&k1d2dwf;RivNetLoad" />
-		<rdf:_4 rdf:resource="&k1d2dwf;ProfImpLoad" />
-		<rdf:_5 rdf:resource="&k1d2dwf;RoughLoad" />
-		<rdf:_6 rdf:resource="&k1d2dwf;TimeSerLoad" />
-	</wbs:TaskSeq>
-
-	<!--coming from SubTaskGroups-->
-	<wbs:TaskSeq rdf:about="&k1d2dwf;Net1DRivTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;Net1DImport" />
-		<!-- 	unclear	<rdf:_2 rdf:resource="&k1d2dwf;Chan1DGen" />  -->
-		<rdf:_2 rdf:resource="&k1d2dwf;Edit1DRivElts" />
-		<rdf:_3 rdf:resource="&k1d2dwf;EditDataTable" />
-		<rdf:_4 rdf:resource="&k1d2dwf;GeneratePolynoms" />
-		<rdf:_5 rdf:resource="&k1d2dwf;Net1DRivVis" />
-		<rdf:_6 rdf:resource="&k1d2dwf;Net1DRivVal" />
-	</wbs:TaskSeq>
-
-	<!--  unclear
-		<wbs:TaskSeq rdf:about="&k1d2dwf;Net1DChanTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;???" />
-		</wbs:TaskSeq>
-	-->
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;Net2DTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;Net2DImport" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Edit2DElts" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Chan2DGen" />
-		<rdf:_4 rdf:resource="&k1d2dwf;BandGen" />
-		<rdf:_5 rdf:resource="&k1d2dwf;AssignElevs" />
-		<rdf:_6 rdf:resource="&k1d2dwf;EltsGroup" />
-		<rdf:_7 rdf:resource="&k1d2dwf;Net2DVis" />
-		<!--  unclear <rdf:_8 rdf:resource="&k1d2dwf;Net2DVal" /> -->
-	</wbs:TaskSeq>
-
-	<!-- unclear
-		<wbs:TaskSeq rdf:about="&k1d2dwf;CntrStrcTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;Gen1DCntrStrcElts" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Gen2DCntrStrcElts" />
-		</wbs:TaskSeq>
-	-->
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;TransTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;SetEltLineTrans" />
-		<rdf:_2 rdf:resource="&k1d2dwf;SetEltEltTrans" />
-		<!-- not available at present <rdf:_3 rdf:resource="&k1d2dwf;SetJunction" /> -->
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;NetzTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;NetValidation" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;ClassDefTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;ModifyDB" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ViewDB" />
-		<rdf:_3 rdf:resource="&k1d2dwf;ExportDB" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;ZoneDefTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;ZoneAreaDef" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ZoneParaDef" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;BCDefTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;RBLineDef" />
-		<rdf:_2 rdf:resource="&k1d2dwf;NodalBCDef" />
-		<rdf:_3 rdf:resource="&k1d2dwf;LineBCDef" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;StSolTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;DefManStSol" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ChoseRestSol" />
-	</wbs:TaskSeq>
-
-	<!--Within the TaskGroups or SubTaskGroups there are ordered Tasks - Processing-->
-	<wbs:TaskSeq rdf:about="&k1d2dwf;CalcSetTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;DryAlgorithmDef" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ConvParDef" />
-		<rdf:_3 rdf:resource="&k1d2dwf;GenCalcSet" />
-		<rdf:_4 rdf:resource="&k1d2dwf;RelaxSet" />
-		<rdf:_5 rdf:resource="&k1d2dwf;TurbRoughDef" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;ResDefTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;CalcLinesSet" />
-		<rdf:_2 rdf:resource="&k1d2dwf;NodeObserveSet" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;ModCheckTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;CheckBC" />
-		<rdf:_2 rdf:resource="&k1d2dwf;CheckStSol" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;CalcTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;StartCalculation" />
-	</wbs:TaskSeq>
-
-	<!--Within the TaskGroups or SubTaskGroups there are ordered Tasks - Postprocessing-->
-	<wbs:TaskSeq rdf:about="&k1d2dwf;PlanViewTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;VectorDispl" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ColoredDispl" />
-		<rdf:_3 rdf:resource="&k1d2dwf;IsolineDispl" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;SectionTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;CrossSecDef" />
-		<rdf:_2 rdf:resource="&k1d2dwf;LongSecDef" />
-		<rdf:_3 rdf:resource="&k1d2dwf;TimeSeriesDispl" />
-	</wbs:TaskSeq>
-
-	<wbs:TaskSeq rdf:about="&k1d2dwf;ExportTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;ExportFile" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ExportPict" />
-		<rdf:_3 rdf:resource="&k1d2dwf;ExportFloodModeller" />
-		<rdf:_4 rdf:resource="&k1d2dwf;ExportRiskModeller" />
-	</wbs:TaskSeq>
-
-	<!--Specifying Tasks!!!-->
-	<!--Specifying DataLoadTasks!!!-->
-	<wbs:Task rdf:about="&k1d2dwf;MapLoad">
-		<wbs:hasName>Import einer Karte</wbs:hasName>
-		<wbs:hasHelp>Einladen einer Hintergrundkarte (TIFF/JPEG)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;MapLoadActs"/>  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq 
-		rdf:about="&k1d2dwf;MapLoadActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadTiff"/>
-		<rdf:_2 rdf:resource="&k1d2dwf;LoadJPEG"/>
-		</wbs:ActivitySeq>
-		<wbs:Activity 
-		rdf:about="&k1d2dwf;LoadTiff">
-		<wbs:hasName>Tiff-Karte laden</wbs:hasName>
-		<wbs:hasHelp>Eine Karte im Tiff-Format als Hintergrundinformation laden</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity 
-		rdf:about="&k1d2dwf;LoadJPEG">
-		<wbs:hasName>JPEG-Karte laden</wbs:hasName>
-		<wbs:hasHelp>Eine Karte im JPEG-Format als Hintergrundinformation laden</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;ElevLoad">
-		<wbs:hasName>Import von Höhendaten</wbs:hasName>
-		<wbs:hasHelp>Einladen von Höhendaten (TIN/GRID)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;ElevLoadActs" />  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ElevLoadActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadGRID" />
-		<rdf:_2 rdf:resource="&k1d2dwf;LoadTIN" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadGRID">
-		<wbs:hasName>GRID-Höhendaten laden</wbs:hasName>
-		<wbs:hasHelp>Höhendaten im GRID-Rasterformat laden</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadTIN">
-		<wbs:hasName>TIN-Höhendaten laden</wbs:hasName>
-		<wbs:hasHelp>
-		Höhendaten als trianguliertes TIN laden
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;RivNetLoad">
-		<wbs:hasName>Import eines Gewässernetzes</wbs:hasName>
-		<wbs:hasHelp>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;RivNetLoadActs" />  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;RivNetLoadActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadNetshape" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadNetshape">
-		<wbs:hasName>Gewässernetzshape laden</wbs:hasName>
-		<wbs:hasHelp>
-		Laden einer shape Datei mit den Daten zum Gewässernetz(werk)
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;ProfImpLoad">
-		<wbs:hasName>Import von 1D-Profilen</wbs:hasName>
-		<wbs:hasHelp>Einladen von 1D-Profildaten (WSPWIN/DA66)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;ProfImpLoadActs" />  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ProfImpLoadActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadWSPWINProf" />
-		<rdf:_2 rdf:resource="&k1d2dwf;LoadDA66Prof" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadWSPWINProf">
-		<wbs:hasName>Profildaten (WSPWIN) importieren</wbs:hasName>
-		<wbs:hasHelp>
-		Importieren von Profildaten im WSPWIN-Format
-		</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadDA66Prof">
-		<wbs:hasName>Profildaten (DA66) importieren</wbs:hasName>
-		<wbs:hasHelp>
-		Importieren von Profildaten im Format da66
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;RoughLoad">
-		<wbs:hasName>Rauheitsshapes laden</wbs:hasName>
-		<wbs:hasHelp>Einladen von Polygonen zur Rauheitszonenabgrenzung (SHP)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;RoughLoadActs" />  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;RoughLoadActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadRoughshp" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadRoughshp">
-		<wbs:hasName>Rauheitsshapes laden</wbs:hasName>
-		<wbs:hasHelp>
-		Enladen einer Polygon *.shp-Datei mit
-		Rauheitszonenabgrenzung
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;TimeSerLoad">
-		<wbs:hasName>Import von Zeitreihen</wbs:hasName>
-		<wbs:hasHelp>Einladen von Zeitreihendaten (WISKI)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;TimeSerLoadActs" />  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;TimeSerLoadActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadWISKI" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadWISKI">
-		<wbs:hasName>Zeitreihe laden</wbs:hasName>
-		<wbs:hasHelp>
-		Enladen einer Zeitreihendatei im WISKI-Format
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<!--Specifying Net1DRivTasks!!!-->
-	<wbs:Task rdf:about="&k1d2dwf;Net1DImport">
-		<wbs:hasName>1D-Netz laden</wbs:hasName>
-		<wbs:hasHelp>Laden eines Finite-Elemente-1D-Netzes (KALYPSO2D)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;Net1DImportActs" />  -->
-	</wbs:Task>
-
-	<!--not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;Net1DImportActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadK2D1DRiv" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadK2D1DRiv">
-		<wbs:hasName>Kalypso2D 1D-Netz laden</wbs:hasName>
-		<wbs:hasHelp>
-		Laden eines 1D-Finite Elemente Netzes im Kalypso2D-Format
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<!--not necessary here because unclear
-		<wbs:Task rdf:about="&k1d2dwf;Chan1DGen">
-		<wbs:hasName>Profilnetz verknüpfen</wbs:hasName>
-		<wbs:hasHelp>
-		</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Chan1DGenActs" />
-		</wbs:Task>
-		
-		
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;Chan1DActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;" />
-		</wbs:ActivitySeq>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;Edit1DRivElts">
-		<wbs:hasName>1D-Netz bearbeiten</wbs:hasName>
-		<wbs:hasHelp>Zeichnen, löschen und weitere Bearbeitung von 1D-Elementen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Edit1DRivEltsActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;Edit1DRivEltsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;SelElts" />
-		<rdf:_2 rdf:resource="&k1d2dwf;DragNode" />
-		<rdf:_3 rdf:resource="&k1d2dwf;DrawElts" />
-		<rdf:_4 rdf:resource="&k1d2dwf;DelElts" />
-		<rdf:_5 rdf:resource="&k1d2dwf;GroupElts" />
-		<rdf:_6 rdf:resource="&k1d2dwf;ChangeGroupName" />
-		<rdf:_7 rdf:resource="&k1d2dwf;GetLength" />
-		<rdf:_8 rdf:resource="&k1d2dwf;SetLength" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;SelElts">
-		<wbs:hasName>Elemente wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert Elemente innerhalb des gezeichneten Polygons</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DrawElts">
-		<wbs:hasName>Element zeichnen</wbs:hasName>
-		<wbs:hasHelp>Erstellt ein 1D-Element</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;GetLength">
-		<wbs:hasName>Länge ermitteln</wbs:hasName>
-		<wbs:hasHelp><!--  TODO: HELP  --></wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SetLength">
-		<wbs:hasName>Länge zuweisen</wbs:hasName>
-		<wbs:hasHelp><!--  TODO: HELP  --></wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DelElts">
-		<wbs:hasName>Elemente löschen</wbs:hasName>
-		<wbs:hasHelp>Löscht die selektierten Elemente</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DragNode">
-		<wbs:hasName>Knoten verschieben</wbs:hasName>
-		<wbs:hasHelp>Verschiebt einen Knoten und passt die verbundenen Elemente an</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;GroupElts">
-		<wbs:hasName>Elemente gruppieren</wbs:hasName>
-		<wbs:hasHelp>Gruppiert die selektierten Elemente zu einer komplexen Gruppe von Elementen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ChangeGroupName">
-		<wbs:hasName>Elementgruppe umbennenen</wbs:hasName>
-		<wbs:hasHelp>Vergibt einen individuellen Namen für eine Elementgruppe</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;EditDataTable">
-		<wbs:hasName>Polynomdaten bearbeiten</wbs:hasName>
-		<wbs:hasHelp>Editierfunktionen zur Bearbeitung der Datentabelle von Profilen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;EditDataTableActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;EditDataTableActs">
-		<!--These are the Activities for the View1-->
-		<rdf:_1 rdf:resource="&k1d2dwf;SelProf" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ShowDataTable" />
-		<rdf:_3 rdf:resource="&k1d2dwf;ShowHQDiag" />
-		<rdf:_4 rdf:resource="&k1d2dwf;ShowHADiag" />
-		<rdf:_5 rdf:resource="&k1d2dwf;ShowHCoefDiag" />
-		<rdf:_6 rdf:resource="&k1d2dwf;ShowSFValue" />
-		<!--These are the Activities for the View2-->
-		<!--not necessary here because clear in table
-			<rdf:_7 rdf:resource="&k1d2dwf;SelCell" />
-			<rdf:_8 rdf:resource="&k1d2dwf;SelLines" />
-			<rdf:_9 rdf:resource="&k1d2dwf;SelColumn" />
-			<rdf:_10 rdf:resource="&k1d2dwf;SetValue" />
-			<rdf:_11 rdf:resource="&k1d2dwf;SaveChanges" />
-			<rdf:_12 rdf:resource="&k1d2dwf;FillValues" />
-		-->
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;SelProf">
-		<wbs:hasName>Profil wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert ein Profil</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowDataTable">
-		<wbs:hasName>Datentabelle anzeigen</wbs:hasName>
-		<wbs:hasHelp>Zeigt die Datentabelle für das selektierte Profil</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowHQDiag">
-		<wbs:hasName>H-Q-Diagramm</wbs:hasName>
-		<wbs:hasHelp>Zeigt die H-Q-Wertetabelle im Diagramm an</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowHADiag">
-		<wbs:hasName>H-A-Diagramm</wbs:hasName>
-		<wbs:hasHelp>Zeigt die H-A-Wertetabelle im Diagramm an</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowHCoefDiag">
-		<wbs:hasName>H-Coef-Diagramm</wbs:hasName>
-		<wbs:hasHelp>Zeigt die Beiwerttabelle im Diagramm an</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowSFValue">
-		<wbs:hasName>Referenzgefälle</wbs:hasName>
-		<wbs:hasHelp>Zeigt das Referenzgefälle im Diagramm an (aus stationärer Berechnung)</wbs:hasHelp>
-	</wbs:Activity>
-	<!--not necessary here because clear in table
-		<wbs:Activity rdf:about="&k1d2dwf;SelCell">
-		<wbs:hasName>Datenzelle selektieren</wbs:hasName>
-		<wbs:hasHelp>Selektiert eine Datenzelle</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;SelLines">
-		<wbs:hasName>Datenzeile selektieren</wbs:hasName>
-		<wbs:hasHelp>Selektiert eine Datenzeile</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;SetValue">
-		<wbs:hasName>Wert festschreiben</wbs:hasName>
-		<wbs:hasHelp>Schreibt einen eingegebenen Wert fest</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;SaveChanges">
-		<wbs:hasName>Änderungen speichern</wbs:hasName>
-		<wbs:hasHelp>Speichert Änderungen an der Tabelle</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;FillValues">
-		<wbs:hasName>Werte übertragen</wbs:hasName>
-		<wbs:hasHelp>
-		Überträgt zellen-, zeilen- oder spaltenweise die Daten des
-		selektierten Bereiches
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;GeneratePolynoms">
-		<wbs:hasName>Polynome erstellen</wbs:hasName>
-		<wbs:hasHelp>Erstellen der Polynomeingabedaten für die FE-Berechnung</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;GeneratePolynomsActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;GeneratePolynomsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;SelProfs" />
-		<rdf:_2 rdf:resource="&k1d2dwf;SelOrder" />
-		<rdf:_3 rdf:resource="&k1d2dwf;SelKind" />
-		<rdf:_4 rdf:resource="&k1d2dwf;SelMinBorder" />
-		<rdf:_5 rdf:resource="&k1d2dwf;SelMaxBorder" />
-		<rdf:_6 rdf:resource="&k1d2dwf;GenPolynom" />
-		<rdf:_7 rdf:resource="&k1d2dwf;SelPolynom" />
-		<rdf:_8 rdf:resource="&k1d2dwf;ShowPolynom" />
-		<rdf:_9 rdf:resource="&k1d2dwf;ShowCoefs" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;SelProfs">
-		<wbs:hasName>Profile wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert mehrere Profil, für die Polynome erstellt werden sollen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SelOrder">
-		<wbs:hasName>Polynomgrad festlegen</wbs:hasName>
-		<wbs:hasHelp>Legt den Polynomgrad fest (max 14)</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SelKind">
-		<wbs:hasName>Polynomart wählen</wbs:hasName>
-		<wbs:hasHelp>Wählt die Art des zu erstellenden Polynoms aus (HQ/HA/Coef/alle)</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SelMinBorder">
-		<wbs:hasName>Min. Gültigkeitsgrenze festlegen</wbs:hasName>
-		<wbs:hasHelp>Spezifiziert die minimale Wassertiefe, für die das Polynom gültig ist</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SelMaxBorder">
-		<wbs:hasName>Max. Gültigkeitsgrenze festlegen</wbs:hasName>
-		<wbs:hasHelp>Spezifiziert die maximale Wassertiefe, für die das Polynom gültig ist</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;GenPolynom">
-		<wbs:hasName>Polynome generieren</wbs:hasName>
-		<wbs:hasHelp>Generiert die spezifizierten Polynome</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SelPolynom">
-		<wbs:hasName>Polynom wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert ein Polynom des selektierten Profils</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowPolynom">
-		<wbs:hasName>Polynom zeigen</wbs:hasName>
-		<wbs:hasHelp>Zeigt das aktuelle Polynom im Diagramm an</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ShowCoefs">
-		<wbs:hasName>Koeffizienten zeigen</wbs:hasName>
-		<wbs:hasHelp>Zeigt die Koeffizienten in tabellarischer Form an</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;Net1DRivVis">
-		<wbs:hasName>Netzvisualisierung</wbs:hasName>
-		<wbs:hasHelp><!--  TODO: HELP  --></wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;Net1DRivVisActs" />  -->
-	</wbs:Task>
-	<!--not necessary here because only one activity
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;Net1DRivVisActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Vis1DRiv" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;Vis1DRiv">
-		<wbs:hasName>1D-Netz visualisieren</wbs:hasName>
-		<wbs:hasHelp>Visualisiert das 1D-Netz</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;Net1DRivVal">
-		<wbs:hasName>Netzvalidierung</wbs:hasName>
-		<wbs:hasHelp>Validiert das 1D-Flussprofilnetz</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;Net1DRivValActs" />  -->
-	</wbs:Task>
-	<!--not necessary here because only one activity
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;Net1DRivValActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Val1DRiv" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;Val1DRiv">
-		<wbs:hasName>1D Flusselemente validieren</wbs:hasName>
-		<wbs:hasHelp>
-		Validiert die 1D-Flussschlauchelemente
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-
-	<!--Specifying Net2DTasks!!!-->
-	<wbs:Task rdf:about="&k1d2dwf;Net2DImport">
-		<wbs:hasName>2D-Netz laden</wbs:hasName>
-		<wbs:hasHelp>Importiert ein 2D-Netz (KALYPSO2D)</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;Net2DImportActs" />  -->
-	</wbs:Task>
-	<!--  not necessary here because only one activity
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;Net2DImportActs">		
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadK2D2D" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;LoadK2D2D">
-		<wbs:hasName>Kalypso2D-Netz importieren</wbs:hasName>
-		<wbs:hasHelp>
-		Import ein 2D-Netz aus einer Kalypso-2D Datei
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;Edit2DElts">
-		<wbs:hasName>2D-Netz bearbeiten</wbs:hasName>
-		<wbs:hasHelp>Zeichnen, löschen und andere manuelle Bearbeitungen des 2D-Netzes</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Edit2DEltsActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;Edit2DEltsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Sel2DElts" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Draw2DElts" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Del2DElts" />
-		<rdf:_4 rdf:resource="&k1d2dwf;SplitQuadri" />
-		<rdf:_5 rdf:resource="&k1d2dwf;CombineTriangles" />
-		<rdf:_6 rdf:resource="&k1d2dwf;Group2DElts" />
-		<rdf:_7 rdf:resource="&k1d2dwf;Sel2DGroup" />
-		<rdf:_8 rdf:resource="&k1d2dwf;Change2DGroupName" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;Sel2DElts">
-		<wbs:hasName>Elemente wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert Elemente innerhalb des spezifizierten Bereiches</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Draw2DElts">
-		<wbs:hasName>Element zeichnen</wbs:hasName>
-		<wbs:hasHelp>Zeichnet ein Dreieck oder Viereck</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;SplitQuadri">
-		<wbs:hasName>Viereck teilen</wbs:hasName>
-		<wbs:hasHelp>Teilt ein selektiertes Viereck an einem Knoten in zwei Dreiecke</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CombineTriangles">
-		<wbs:hasName>Dreiecke zusammenfügen</wbs:hasName>
-		<wbs:hasHelp>Fügt zwei Dreiecke mit einer gemeinsamen Kante zu einem Viereck zusammen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Del2DElts">
-		<wbs:hasName>2D-Elemente löschen</wbs:hasName>
-		<wbs:hasHelp>Löscht die selektierten Elemente</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Group2DElts">
-		<wbs:hasName>2D-Elemente gruppieren</wbs:hasName>
-		<wbs:hasHelp>Gruppiert selektierte Elemente zu einer komplexen Elementgruppe</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Sel2DGroup">
-		<wbs:hasName>Elementgruppe wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert eine Gruppe durch Namensauswahl</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Change2DGroupName">
-		<wbs:hasName>Gruppe umbenennen</wbs:hasName>
-		<wbs:hasHelp>Ändert den Namen der selektierten Gruppe</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;Chan2DGen">
-		<wbs:hasName>Flussschlauchgenerator</wbs:hasName>
-		<wbs:hasHelp>Generiert Flussschlauchelemente aus Profilen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Chan2DGenActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;Chan2DGenActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Chan2DProfSel" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Chan2DGenGroup" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Chan2DAddNode" />
-		<rdf:_4 rdf:resource="&k1d2dwf;Chan2DDelNode" />
-		<rdf:_5 rdf:resource="&k1d2dwf;Chan2DDragNode" />
-		<rdf:_6 rdf:resource="&k1d2dwf;Chan2DDefMinMax" />
-		<rdf:_7 rdf:resource="&k1d2dwf;Chan2DCheckNodes" />
-		<rdf:_8 rdf:resource="&k1d2dwf;Chan2DRownumber" />
-		<rdf:_9 rdf:resource="&k1d2dwf;Chan2DGen" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DProfSel">
-		<wbs:hasName>Profil wählen</wbs:hasName>
-		<wbs:hasHelp>Wählt ein Profil zur Knotendefinition aus</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DGenGroup">
-		<wbs:hasName>Profile fixieren</wbs:hasName>
-		<wbs:hasHelp>
-			<!--   TODO: HELP  -->
-		</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DAddNode">
-		<wbs:hasName>Stützstelle hinzufügen</wbs:hasName>
-		<wbs:hasHelp>Fügt Stützstelle in ein Profil in der Schnittansicht ein</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DDelNode">
-		<wbs:hasName>Stützstelle löschen</wbs:hasName>
-		<wbs:hasHelp>Löscht Stützstelle aus Profilansicht</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DDragNode">
-		<wbs:hasName>Stützstelle verschieben</wbs:hasName>
-		<wbs:hasHelp>Zum Verschieben einer Stützstelle im Profil</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DDefMinMax">
-		<wbs:hasName>Stützstellenkontrolle</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht die Eingabe der maximalen Stützstellen in jedem Profil und gibt die aktuelle Maximalzahl aus</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DCheckNodes">
-		<wbs:hasName>Stützstellenzahl prüfen</wbs:hasName>
-		<wbs:hasHelp>Prüft, ob die Stützstellenzahl der ausgewählten Knoten bei allen Profilen konsistent ist</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DRownumber">
-		<wbs:hasName>Elementzahl angeben</wbs:hasName>
-		<wbs:hasHelp>Gibt an, wieviele Elementreihen zwischen zwei Profilen erstellt werden sollen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Chan2DGen">
-		<wbs:hasName>Elemente generieren</wbs:hasName>
-		<wbs:hasHelp>Erstellt die Elemente im bearbeiteten Flussschlauchbereich</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;BandGen">
-		<wbs:hasName>Bandgenerator</wbs:hasName>
-		<wbs:hasHelp>Generiert ein regelmäßiges Elementnetz im spezifizierten Bereich</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;BandGenActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;BandGenActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;BandGenDrawPolyline" />
-		<rdf:_2 rdf:resource="&k1d2dwf;BandGenSelectPolylines" />
-		<rdf:_3 rdf:resource="&k1d2dwf;BandGenChoseNumbers" />
-		<rdf:_4 rdf:resource="&k1d2dwf;BandGenStart" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;BandGenDrawPolyline">
-		<wbs:hasName>Begrenzung zeichnen</wbs:hasName>
-		<wbs:hasHelp>Zeichnen von Begrenzungslinien für den Bandgenerator</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;BandGenSelectPolylines">
-		<wbs:hasName>Begrenzungen selektieren</wbs:hasName>
-		<wbs:hasHelp>Selektion von Begrenzungslinien für den Bandgenerator</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;BandGenChoseNumbers">
-		<wbs:hasName>Elementzahl angeben</wbs:hasName>
-		<wbs:hasHelp>Angabe der Elementzahlen in Längs- und Querrichtung des zu erstellenden Bandes</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;BandGenStart">
-		<wbs:hasName>Band generieren</wbs:hasName>
-		<wbs:hasHelp>Generiert die Elemente im Bereich des dargestellten Bandes</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;AssignElevs">
-		<wbs:hasName>Höhen zuweisen</wbs:hasName>
-		<wbs:hasHelp>Knoten werden mit Höhendaten versehen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;AssignElevsActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;AssignElevsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;AsElevsSelDTM" />
-		<rdf:_2 rdf:resource="&k1d2dwf;AsElevsDrawPolygon" />
-		<rdf:_3 rdf:resource="&k1d2dwf;AsElevsAssign" />
-		<rdf:_4 rdf:resource="&k1d2dwf;AsElevsCorrLevels" />
-		<rdf:_5 rdf:resource="&k1d2dwf;AsElevsGetMinMax" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;AsElevsSelDTM">
-		<wbs:hasName>Höhenmodell auswählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl eines digitalen Geländemodells zur Zuweisung der Höhendaten</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;AsElevsDrawPolygon">
-		<wbs:hasName>Polygon zeichnen</wbs:hasName>
-		<wbs:hasHelp>Zeichnet ein Polygon zur Eingrenzung der Höhenzuweisung</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;AsElevsAssign">
-		<wbs:hasName>Höhen zuweisen</wbs:hasName>
-		<wbs:hasHelp>Weist die Höhen im ausgewählten Bereich zu und stellt die Höhen in der Kartenansicht dar</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;AsElevsCorrLevels">
-		<wbs:hasName>Höhen verändern</wbs:hasName>
-		<wbs:hasHelp>Überschreibt eine Höhe</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;AsElevsGetMinMax">
-		<wbs:hasName>Grenzwerte zeigen</wbs:hasName>
-		<wbs:hasHelp>Zeigt die minimale und maximale Geländehöhe im selektierten Bereich an</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;EltsGroup">
-		<wbs:hasName>Elemente gruppieren</wbs:hasName>
-		<wbs:hasHelp>Gruppiert Elemente zu komplexen Elementgruppen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;EltsGroupActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;EltsGroupActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;EltsGroupEltsSel" />
-		<rdf:_2 rdf:resource="&k1d2dwf;EltsGroupDef" />
-		<rdf:_3 rdf:resource="&k1d2dwf;EltsGroupSel" />
-		<rdf:_4 rdf:resource="&k1d2dwf;EltsGroupProps" />
-		<rdf:_5 rdf:resource="&k1d2dwf;EltsGroupAddGroupElt" />
-		<rdf:_6 rdf:resource="&k1d2dwf;EltsGroupDelGroupElt" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupEltsSel">
-		<wbs:hasName>Elemente wählen</wbs:hasName>
-		<wbs:hasHelp>Elemente selektieren, die gruppiert werden sollen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupDef">
-		<wbs:hasName>Gruppe definieren</wbs:hasName>
-		<wbs:hasHelp>Definiert eine neue Gruppe aus den selektierten Elementen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupSel">
-		<wbs:hasName>Gruppe wählen</wbs:hasName>
-		<wbs:hasHelp>Selektiert eine Gruppe von Elementen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupProps">
-		<wbs:hasName>Gruppeneigenschaften</wbs:hasName>
-		<wbs:hasHelp>Bearbeitet die Eigenschaften einer Elementgruppierung, z.B. Abschnittsbezeichnung oder Kommentar</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupDelGroupElt">
-		<wbs:hasName>Element aus Gruppe löschen</wbs:hasName>
-		<wbs:hasHelp>Entfernt selektierte Elemente aus einer Gruppe</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupAddGroupElt">
-		<wbs:hasName>Element zur Gruppe hinzufügen</wbs:hasName>
-		<wbs:hasHelp>Fügt selektierte Elemente in eine vorhandene Elementgruppierung hinzu</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;Net2DVis">
-		<wbs:hasName>Netzvisualisierung</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Net2DVisActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;Net2DVisActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LoadK2D2D" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;LoadK2D2D">
-		<wbs:hasName>2D-Netz visualisieren</wbs:hasName>
-		<wbs:hasHelp>Visualisiert das 2D-Netz</wbs:hasHelp>
-	</wbs:Activity>
 
 	<!-- Validation of net takes place later in general mesh checking
 		=======================================================================================
 		<wbs:Task
-		rdf:about="&k1d2dwf;Net2DVal">
-		<wbs:hasName> Netzvalidierung </wbs:hasName>
-		<wbs:hasHelp> ??? </wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Net2DValActs"/>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DVal">
+		<wbs:Name> Netzvalidierung </wbs:Name>
+		<wbs:Help> ??? </wbs:Help>
+		<wbs:hasActivities rdf:resource="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DValActs"/>
 		</wbs:Task>	
 		<wbs:ActivitySeq 
-		rdf:about="&k1d2dwf;Net2DValActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Val2D"/>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DValActs">
+		<rdf:_1 rdf:resource="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Val2D"/>
 		</wbs:ActivitySeq>
 		<wbs:Activity 
-		rdf:about="&k1d2dwf;Val2D">
-		<wbs:hasName> 2D-Netz validieren </wbs:hasName>
-		<wbs:hasHelp> Validiert das 1D-Netz </wbs:hasHelp>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Val2D">
+		<wbs:Name> 2D-Netz validieren </wbs:Name>
+		<wbs:Help> Validiert das 1D-Netz </wbs:Help>
 		</wbs:Activity>
 		=======================================================================================
 	-->
 
-	<wbs:Task rdf:about="&k1d2dwf;Gen1DCntrStrcElts">
-		<wbs:hasName>1D-Bauwerkselemente</wbs:hasName>
-		<wbs:hasHelp>Bearbeitung und Generierung von Bauwerkselementen</wbs:hasHelp>
-		<!--  unclear		<wbs:hasActivities
-			rdf:resource="&k1d2dwf;Gen1DCntrStrcEltsActs" /> -->
-	</wbs:Task>
 	<!--  unclear
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;Gen1DCntrStrcEltsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???" />
-		</wbs:ActivitySeq>
+		<wbs:Task URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Gen1DCntrStrcElts">
+		<wbs:Name>1D-Bauwerkselemente</wbs:Name>
+		<wbs:Help>Bearbeitung und Generierung von Bauwerkselementen</wbs:Help>
+		</wbs:Task>
 	-->
 
 	<!-- 2D-control structures 2D are not available at present
 		=======================================================================================
 		<wbs:Task
-		rdf:about="&k1d2dwf;Gen2DCntrStrcElts">
-		<wbs:hasName> 2D-Bauwerkselemente </wbs:hasName>
-		<wbs:hasHelp> Bearbeitung und Generierung von Bauwerkselementen </wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;Gen2DCntrStrcEltsActs"/>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Gen2DCntrStrcElts">
+		<wbs:Name> 2D-Bauwerkselemente </wbs:Name>
+		<wbs:Help> Bearbeitung und Generierung von Bauwerkselementen </wbs:Help>
+		<wbs:hasActivities rdf:resource="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Gen2DCntrStrcEltsActs"/>
 		</wbs:Task>	
 		<wbs:ActivitySeq 
-		rdf:about="&k1d2dwf;Gen2DCntrStrcEltsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Gen2DCntrStrcEltsActs">
+		<rdf:_1 rdf:resource="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#???"/>
 		</wbs:ActivitySeq>
 		=======================================================================================
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;SetEltLineTrans">
-		<wbs:hasName>1D-2D-Linienkopplung</wbs:hasName>
-		<wbs:hasHelp>Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;SetEltLineTransActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;SetEltLineTransActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;TransLineDrawLine" />
-		<rdf:_2 rdf:resource="&k1d2dwf;TransLineChosePointLine" />
-		<rdf:_3 rdf:resource="&k1d2dwf;TransLineTransDef" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;TransLineDrawLine">
-		<wbs:hasName>Übergangslinie zeichnen</wbs:hasName>
-		<wbs:hasHelp>Zeichnet eine 1D-2D-Übergangslinie, um 1D Modellbereiche mit 2D-Bereichen zu koppeln</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;TransLineChosePointLine">
-		<wbs:hasName>Übergangsgeometrien wählen</wbs:hasName>
-		<wbs:hasHelp>Wählen einer Kopplungslinie und des anzuschließenden Knotens des 1D-Netzes</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;TransLineTransDef">
-		<wbs:hasName>Kopplung definieren</wbs:hasName>
-		<wbs:hasHelp>Generiert eine Kopplung basierend auf den selektierten Geometrien</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;SetEltEltTrans">
-		<wbs:hasName>1D-2D-Elementkopplung</wbs:hasName>
-		<wbs:hasHelp>Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen</wbs:hasHelp>
-		<!--	only one	<wbs:hasActivities rdf:resource="&k1d2dwf;SetEltEltTransActs" /> -->
-	</wbs:Task>
-	<!--	only one
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;SetEltEltTransActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;EltTransDef" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;EltTransDef">
-		<wbs:hasName>Kopplung definieren</wbs:hasName>
-		<wbs:hasHelp>
-		Elementkopplung definieren durch Auswahl eines 2D-Elements
-		und eines 1D-Elements. 1D-Elementende wird entsprechend
-		verschoben
-		</wbs:hasHelp>
-		</wbs:Activity>
 	-->
 
 	<!-- 1D-Junctions not available at present
 		=======================================================================================
 		<wbs:Task
-		rdf:about="&k1d2dwf;SetJunction">
-		<wbs:hasName> 1D-1D-Verbindungen </wbs:hasName>
-		<wbs:hasHelp> Verbindet und verzweigt 1D-Netze </wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;SetJunctionActs"/>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetJunction">
+		<wbs:Name> 1D-1D-Verbindungen </wbs:Name>
+		<wbs:Help> Verbindet und verzweigt 1D-Netze </wbs:Help>
+		<wbs:hasActivities rdf:resource="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetJunctionActs"/>
 		</wbs:Task>	
 		<wbs:ActivitySeq 
-		rdf:about="&k1d2dwf;SetJunctionActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetJunctionActs">
+		<rdf:_1 rdf:resource="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#???"/>
 		</wbs:ActivitySeq>
 		=======================================================================================
 	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;NetValidation">
-		<wbs:hasName>Modell validieren</wbs:hasName>
-		<wbs:hasHelp>Validiert alle Netzteile</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;NetValidationActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;NetValidationActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Val2DNet" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Val1DRivNet" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Val1DChanNet" />
-		<rdf:_4 rdf:resource="&k1d2dwf;ValTrans" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;Val2DNet">
-		<wbs:hasName>2D-Netzvalidierung</wbs:hasName>
-		<wbs:hasHelp>Validiert aufgebautes 2D-Netz</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Val1DRivNet">
-		<wbs:hasName>1D-Flussnetzvalidierung</wbs:hasName>
-		<wbs:hasHelp>Validiert aufgebautes 1D-Flussnetz</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Val1DChanNet">
-		<wbs:hasName>1D-Kanalnetzvalidierung</wbs:hasName>
-		<wbs:hasHelp>Validiert aufgebautes 1D-Kanalnetz</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ValTrans">
-		<wbs:hasName>Kopplungsvalidierung</wbs:hasName>
-		<wbs:hasHelp>Validiert Netzkopplungen</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ModifyDB">
-		<wbs:hasName>Rauheitsdatenbank bearbeiten</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht die Bearbeitung der Einträge in der globalen Rauheitsdatenbank</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;ModifyDBActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;ModifyDBActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;DBRoughNewLine" />
-		<rdf:_2 rdf:resource="&k1d2dwf;DBRoughDelLine" />
-		<rdf:_3 rdf:resource="&k1d2dwf;DBRoughCopyLine" />
-		<rdf:_4 rdf:resource="&k1d2dwf;DBRoughEdit" />
-		<rdf:_5 rdf:resource="&k1d2dwf;DBRoughSaveEdits" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;DBRoughNewLine">
-		<wbs:hasName>neuen Datensatz anlegen</wbs:hasName>
-		<wbs:hasHelp>Legt neuen Datensatz in der Rauhigkeitsdatenbank an. Erfordert Befugnis, Daten ändern zu dürfen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DBRoughDelLine">
-		<wbs:hasName>Datensatz löschen</wbs:hasName>
-		<wbs:hasHelp>Löscht einen Datensatz aus der Rauhigkeitsdatenbank. Erfordert Befugnis, Daten ändern zu dürfen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DBRoughCopyLine">
-		<wbs:hasName>Datensatz kopieren</wbs:hasName>
-		<wbs:hasHelp>Kopiert einen Datensatz in der Rauheitsdatenbank. Erfordert Befugnis, Daten ändern zu dürfen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DBRoughEdit">
-		<wbs:hasName>Daten editieren</wbs:hasName>
-		<wbs:hasHelp>Editieren von Daten in der tabellarischen Ansicht der Datenbank</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DBRoughSaveEdits">
-		<wbs:hasName>Daten speichern</wbs:hasName>
-		<wbs:hasHelp>Speichert die Änderungen an der Datenbank (Ablage im CVS???)</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ViewDB">
-		<wbs:hasName>Rauheitsdatenbank anzeigen</wbs:hasName>
-		<wbs:hasHelp>Zeigt die globale Rauheitsdatenbank ohne die Möglichkeit, Veränderungen vorzunehmen</wbs:hasHelp>
-		<!--   <wbs:hasActivities rdf:resource="&k1d2dwf;ViewDBActs" />  -->
-	</wbs:Task>
-	<!--  not necessary here
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ViewDBActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;DBView" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;DBRoughView">
-		<wbs:hasName>Datenbank ansehen</wbs:hasName>
-		<wbs:hasHelp>
-		Anzeige der Datenbank, ohne Daten ändern zu können
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;ExportDB">
-		<wbs:hasName>Datenbank exportieren</wbs:hasName>
-		<wbs:hasHelp><!--  TODO:HELP  --></wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;ExportDBActs" />  -->
-	</wbs:Task>
-	<!--  not necessary here
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ExportDBActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;DBRoughExport2xls" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;DBRoughExport2xls">
-		<wbs:hasName>als Tabelle exportieren</wbs:hasName>
-		<wbs:hasHelp>Export der Tabelle als MS Excel Tabelle</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-
-	<wbs:Task rdf:about="&k1d2dwf;ZoneAreaDef">
-		<wbs:hasName>Rauheitszonen definieren</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht die polygonale Definition von Rauheitszonen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;ZoneAreaDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;ZoneAreaDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;DefRoughDrawPolygon" />
-		<rdf:_2 rdf:resource="&k1d2dwf;DefRoughDelPolygon" />
-		<rdf:_3 rdf:resource="&k1d2dwf;DefRoughMoveNode" />
-		<rdf:_4 rdf:resource="&k1d2dwf;DefRoughAssignClass" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughDrawPolygon">
-		<wbs:hasName>Polygon zeichnen</wbs:hasName>
-		<wbs:hasHelp>Ein Polygon zur räumlichen Abgrenzung einer Rauheitsklasse zeichnen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughDelPolygon">
-		<wbs:hasName>Polygon zeichnen</wbs:hasName>
-		<wbs:hasHelp>Ein Polygon zur räumlichen Abgrenzung einer Rauheitsklasse zeichnen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughMoveNode">
-		<wbs:hasName>Polygon verändern</wbs:hasName>
-		<wbs:hasHelp>Ändern des Rauhigkeitsklassenpolygons</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughAssignClass">
-		<wbs:hasName>Rauheitsklasse zuweisen</wbs:hasName>
-		<wbs:hasHelp>Ordnet einem Polynom eine Rauheitsklasse aus der zur Verfügung stehenden Liste zu</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ZoneParaDef">
-		<wbs:hasName>Rauheitsparameter bearbeiten</wbs:hasName>
-		<wbs:hasHelp>Tabellarische Bearbeitung der Rauheitszonen, Zuweisung von Rauheitsklassen und Korrekturen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;ZoneParaDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;ZoneParaDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;DefRoughSelPolygons" />
-		<rdf:_2 rdf:resource="&k1d2dwf;DefRoughShowProps" />
-		<rdf:_3 rdf:resource="&k1d2dwf;DefRoughEditCorrPara" />
-		<rdf:_4 rdf:resource="&k1d2dwf;DefRoughSortData" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughSelPolygons">
-		<wbs:hasName>Polygone auswählen</wbs:hasName>
-		<wbs:hasHelp>Highlighting ausgewählter Polygone in der Datentabelle</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughShowProps">
-		<wbs:hasName>Daten einsehen</wbs:hasName>
-		<wbs:hasHelp>Öffnet eine Datentabelle zu den Eigenschaften der Polygone</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughEditCorrPara">
-		<wbs:hasName>Korrekturfaktoren bearbeiten</wbs:hasName>
-		<wbs:hasHelp>Editierung der Korrekturfaktoren der Rauheitszonenparameter</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DefRoughSortData">
-		<wbs:hasName>Daten sortieren</wbs:hasName>
-		<wbs:hasHelp>Sortiert die Datensätze nach gegebenem Kriterium</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;RBLineDef">
-		<wbs:hasName>Randbedingungslinien definieren</wbs:hasName>
-		<wbs:hasHelp>Definiert Linien auf dem Gebietsrand zur Angabe von Randbedingungen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;RBLineDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;RBLineDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;RBDefDrawLine" />
-		<rdf:_2 rdf:resource="&k1d2dwf;RBDefAssignProps" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefDrawLine">
-		<wbs:hasName>Polylinie zeichnen</wbs:hasName>
-		<wbs:hasHelp>Zeichnen einer Polylinie als Randbedingunslinie</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefAssignProps">
-		<wbs:hasName>Informationen zuweisen</wbs:hasName>
-		<wbs:hasHelp>Zusätzliche Informationen an eine Randbedingungslinie zuweisen (Stationierung, Kommentar)</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;NodalBCDef">
-		<wbs:hasName>Knotenrandbedingungen spezifizieren</wbs:hasName>
-		<wbs:hasHelp>Definition von Randbedingungen, die nur auf einen Knoten angewendet werden sollen</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;NodalBCDefActs" />
-	</wbs:Task>
-
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;NodalBCDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;NodalDefChosePoint" />
-		<rdf:_2 rdf:resource="&k1d2dwf;NodalDefAssignValues" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;NodalDefChosePoint">
-		<wbs:hasName>Randbedingungsknoten wählen</wbs:hasName>
-		<wbs:hasHelp>Knoten auswählen, an dem eine Randbedingungen angelegt werden soll</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;NodalDefAssignValues">
-		<wbs:hasName>Randbedingungen zuweisen</wbs:hasName>
-		<wbs:hasHelp>Weist Randbedingungsinformationen an einen Knoten zu</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;LineBCDef">
-		<wbs:hasName>Linienrandbedingungen definieren</wbs:hasName>
-		<wbs:hasHelp>Definition von Randbedingungen, die auf eine Linie angewendet werden</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;LineBCDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;LineBCDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;RBDefSelLine" />
-		<rdf:_2 rdf:resource="&k1d2dwf;RBDefSetType" />
-		<rdf:_3 rdf:resource="&k1d2dwf;RBDefSelTimeSeries" />
-		<rdf:_4 rdf:resource="&k1d2dwf;RBDefSelRelationship" />
-		<rdf:_5 rdf:resource="&k1d2dwf;RBDefSetValue" />
-		<rdf:_6 rdf:resource="&k1d2dwf;RBDefValueGen" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefSelLine">
-		<wbs:hasName>Randbedingungslinie wählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl der Randbedingungslinie, an der Randbedingung angewendet werden soll</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefSetType">
-		<wbs:hasName>Art wählen</wbs:hasName>
-		<wbs:hasHelp>Art der Randbedingung auswählen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefSelTimeSeries">
-		<wbs:hasName>Ganglinie zuweisen</wbs:hasName>
-		<wbs:hasHelp>Ganglinie auswählen, die angewendet werden soll</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefSelRelationship">
-		<wbs:hasName>Wasserstands-Abfluss-Beziehung zuweisen</wbs:hasName>
-		<wbs:hasHelp>Zuweisen einer Wasserstands-Abfluss-Beziehung zur Randbedingungsgeometrie</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefSetValue">
-		<wbs:hasName>Wert definieren</wbs:hasName>
-		<wbs:hasHelp>Einzelwert als Randbedingung definieren</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RBDefValueGen">
-		<wbs:hasName>RB-Reihe definieren</wbs:hasName>
-		<wbs:hasHelp>Ganglinie von Randbedingungen anhand manueller Eingaben definieren</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;DefManStSol">
-		<wbs:hasName>Anfangswerte schätzen</wbs:hasName>
-		<wbs:hasHelp>Definition von Anfangswerten (z.B. Lake-Solution)</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;DefManStSolActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;DefManStSolActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;ManStSolDefH" />
-		<rdf:_2 rdf:resource="&k1d2dwf;ManStSolDefV" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;ManStSolDefH">
-		<wbs:hasName>Anfangswasserstand wählen</wbs:hasName>
-		<wbs:hasHelp>Definition eines Anfangswasserstandes (normalerweise über höchster Geländehöhe</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;ManStSolDefV">
-		<wbs:hasName>Anfangsfließgeschwindigkeit wählen</wbs:hasName>
-		<wbs:hasHelp>Definition der initialen Werte der Fließgeschwindigkeit und der Richtung für 1D-Elemente</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ChoseRestSol">
-		<wbs:hasName>Restartlösung spezifizieren</wbs:hasName>
-		<wbs:hasHelp>Spezifikation eines Berechnungsergebnisses als Anfangswerte für eine neue Berechnung</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;ChoseRestSolActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;ChoseRestSolActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;RestSolChoseSol" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;RestSolChoseSol">
-		<wbs:hasName>Restartergebnisse wählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl eines Ergebnisses als Anfangswerte für nächste Berechnung</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;DryAlgorithmDef">
-		<wbs:hasName>Drying/Wetting Algorithmus</wbs:hasName>
-		<wbs:hasHelp>Einstellen des Trockenfallalgorithmus</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;DryAlgorithmDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;DryAlgorithmDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;DryWetChoseAlgorithm" />
-		<rdf:_2 rdf:resource="&k1d2dwf;DryWetParameters" />
-		<rdf:_3 rdf:resource="&k1d2dwf;DryWetMarshParameters" />
-	</wbs:ActivitySeq>
-
-	<wbs:Activity rdf:about="&k1d2dwf;DryWetChoseAlgorithm">
-		<wbs:hasName>Drying/Wetting Algorithmus wählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl des anzuwendenden Algorithmus</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DryWetParameters">
-		<wbs:hasName>Grenztiefen festlegen</wbs:hasName>
-		<wbs:hasHelp>Legt Trockenfalltiefe und Benetzungstiefe fest (nicht Marsh-Parameter)</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;DryWetMarshParameters">
-		<wbs:hasName>Marsh-Parameter festlegen</wbs:hasName>
-		<wbs:hasHelp>Festlegen der (3 oder 4) Marsh-Parameter im Gebiet</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ConvParDef">
-		<wbs:hasName>Konvergenz Parameter</wbs:hasName>
-		<wbs:hasHelp>Festlegen der Konvergenz Parameter für den Berechnungsalgorithmus</wbs:hasHelp>
-		<!--   <wbs:hasActivites rdf:resource="&k1d2dwf;ConvParDefActs" />-->
-	</wbs:Task>
-	<!-- only one activity
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ConvParDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;ConvParDef" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;ConvParDef">
-		<wbs:hasName>Konvergenzparameter festlegen</wbs:hasName>
-		<wbs:hasHelp>
-		Steuerung der Konvergenzparameter des iterativen
-		Gleichungslösers
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;GenCalcSet">
-		<wbs:hasName>Berechnungseinstellungen</wbs:hasName>
-		<wbs:hasHelp>Legt alle generellen Berechnungseinstellungen fest</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;GenCalcSetActs" /> -->
-	</wbs:Task>
-	<!-- only one activity
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;DenCalcSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;GenCalcSetDef" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;GenCalcSetDef">
-		<wbs:hasName>Berechnungseinstellung</wbs:hasName>
-		<wbs:hasHelp>
-		Legt alle generellen Berechnungseinstellungen fest
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;RelaxSet">
-		<wbs:hasName>Relaxationsparameter</wbs:hasName>
-		<wbs:hasHelp>Einstellung der Relaxationsparameter für den iterativen Gleichungslöser</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;RelaxSetActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;RelaxSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;RelaxChoseTimeStep" />
-		<rdf:_2 rdf:resource="&k1d2dwf;RelaxGenSet" />
-		<rdf:_3 rdf:resource="&k1d2dwf;RelaxViewParameters" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;RelaxChoseTimeStep">
-		<wbs:hasName>Zeitschritt auswählen</wbs:hasName>
-		<wbs:hasHelp>Wählt einen Zeitschritt aus, für welchen die Relaxationparameter eingestellt werden sollen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RelaxGenSet">
-		<wbs:hasName>Einheitsparameter vergeben</wbs:hasName>
-		<wbs:hasHelp>generellen Relaxationsparameter für den gewählten Zeitschritt einstellen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;RelaxViewParameters">
-		<wbs:hasName>Detaileinstellungen</wbs:hasName>
-		<wbs:hasHelp>Tabellarische Ansicht der Relaxationsparameter für einen Zeitschritt</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;TurbRoughDef">
-		<wbs:hasName>Widerstands- und Turbulenzansatz</wbs:hasName>
-		<wbs:hasHelp></wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;TurbRoughDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;TurbRoughDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;TurbRoughChoseRoughAppr" />
-		<rdf:_2 rdf:resource="&k1d2dwf;TurbRoughChoseTurbAppr" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;TurbRoughChoseRoughAppr">
-		<wbs:hasName>Rauheitsansatz wählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl des Rauheitsansatzes</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;TurbRoughChoseTurbAppr">
-		<wbs:hasName>Turbulenzmodell wählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl des angewandten Turbulenzmodells</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;CalcLinesSet">
-		<wbs:hasName>Kontinuitätslinien bestimmen</wbs:hasName>
-		<wbs:hasHelp>Kontinuitätslinien festlegen, die besonders behandelt werden sollen.</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;CalcLinesSetActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;CalcLinesSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;CCLDef" />
-		<rdf:_2 rdf:resource="&k1d2dwf;CCLSel" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;CCLDef">
-		<wbs:hasName>Kontinuitätslinie definieren</wbs:hasName>
-		<wbs:hasHelp>Legt Kontinuitätslinie an, für die während der Berechnung Ergebnisse ermittelt werden</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CCLSel">
-		<wbs:hasName>Kontinuitätslinie auswählen</wbs:hasName>
-		<wbs:hasHelp>Aktivieren der bei der Berechnung zu verwendenden Kontinuitätslinien</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;NodeObserveSet">
-		<wbs:hasName>Ausgabeknoten bestimmen</wbs:hasName>
-		<wbs:hasHelp>Knoten festlegen, für die während der Berechnung weitere Daten herausgeschrieben werden sollen</wbs:hasHelp>
-		<!--   <wbs:hasActivities rdf:resource="&k1d2dwf;NodeObserveSetActs" /> -->
-	</wbs:Task>
-	<!--  not necessary yet 
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;NodeObserveSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;ObsNodeDef" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;ObsNodeDef">
-		<wbs:hasName>noch nicht definiert</wbs:hasName>
-		<wbs:hasHelp>Definition folgt!!</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;CheckBC">
-		<wbs:hasName>Randbedingungen prüfen</wbs:hasName>
-		<wbs:hasHelp>Prüfen der Randbedingungen auf Konsistenz mit dem Netz</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;CheckBCActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;CheckBCActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;CheckBCShowBCs" />
-		<rdf:_2 rdf:resource="&k1d2dwf;CheckBCCheckValues" />
-		<rdf:_3 rdf:resource="&k1d2dwf;CheckBC" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;CheckBCShowBCs">
-		<wbs:hasName>Randbedingungen zeigen</wbs:hasName>
-		<wbs:hasHelp>Zeigt die Lage der Randbedingungen in Karte an und prüft, dass sich nicht im Leeren liegen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CheckBCCheckValues">
-		<wbs:hasName>Werte prüfen</wbs:hasName>
-		<wbs:hasHelp>Prüft, ob keine Nullwerte vorhanden sind</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CheckBC">
-		<wbs:hasName>Konsistenz prüfen</wbs:hasName>
-		<wbs:hasHelp>Prüft, ob die Daten zusammen ein konsistentes RB-System ergeben</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;CheckStSol">
-		<wbs:hasName>Anfangswerte prüfen</wbs:hasName>
-		<wbs:hasHelp>Prüfung der Anfangswerte auf Konsistenz mit dem FE-Netz</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;CheckStSolActs" />  -->
-	</wbs:Task>
-
-	<!--  not necessary here because only one activity
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;CheckStSolActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;CheckStartEst" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;CheckStartEst">
-		<wbs:hasName>Anfangswerte prüfen</wbs:hasName>
-		<wbs:hasHelp>
-		Prüft die gewählten Anfangswerte auf Konsistenz mit der
-		Geometrie des Modells
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;StartCalculation">
-		<wbs:hasName>Berechnung durchführen</wbs:hasName>
-		<wbs:hasHelp>Startet die Berechnung unter Verwendung eines Kontrolldisplays</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;StartCalculationActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;StartCalculationActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;CalcScenarioBuilding" />
-		<rdf:_2 rdf:resource="&k1d2dwf;CalcChoseSimModel" />
-		<rdf:_3 rdf:resource="&k1d2dwf;CalcContext" />
-		<rdf:_4 rdf:resource="&k1d2dwf;CalcStart" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;CalcScenarioBuilding">
-		<wbs:hasName>Szenario zusammenstellen</wbs:hasName>
-		<wbs:hasHelp>Zusammenstellung von Szenarien auf der Basis der Submodelle</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CalcChoseSimModel">
-		<wbs:hasName>Szenario/Rechenfall auswählen</wbs:hasName>
-		<wbs:hasHelp>Zur Auswahl zu berechnender Szenarien</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CalcContext">
-		<wbs:hasName>Konsole ein/aus</wbs:hasName>
-		<wbs:hasHelp>Ein-/Ausschalten der Berechnungskonsole</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CalcStart">
-		<wbs:hasName>Berechnung starten</wbs:hasName>
-		<wbs:hasHelp>Startet die Berechnung für die ausgewählten Szenarien</wbs:hasHelp>
-	</wbs:Activity>
-
-
-	<wbs:Task rdf:about="&k1d2dwf;VectorDispl">
-		<wbs:hasName>Vektorendarstellung</wbs:hasName>
-		<wbs:hasHelp>Erstellt spezifizierte Ergebnisse in Vektorform</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;VectorDisplActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;VectorDisplActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;VDis_ResultSelection" />
-		<rdf:_2 rdf:resource="&k1d2dwf;VDis_VectorSettings" />
-		<rdf:_3 rdf:resource="&k1d2dwf;VDis_Generation" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;VDis_ResultSelection">
-		<wbs:hasName>Ergebnisse wählen</wbs:hasName>
-		<wbs:hasHelp>Darzustellende Ergebnisse auswählen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;VDis_VectorSettings">
-		<wbs:hasName>Vektoreinstellungen</wbs:hasName>
-		<wbs:hasHelp>Einstellung der Vektorskalierung sowie der farblichen Darstellung</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;VDis_Generation">
-		<wbs:hasName>Vektoren erstellen</wbs:hasName>
-		<wbs:hasHelp>Darstellung der gewählten Ergebnisse als Vektoren</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ColoredDispl">
-		<wbs:hasName>Farbflächendarstellung</wbs:hasName>
-		<wbs:hasHelp>Erstellt spezifizierte Ergebnisse in Farbflächendarstellung</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;ColoredDisplActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;ColoredDisplActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;CDis_ResultSelection" />
-		<rdf:_2 rdf:resource="&k1d2dwf;CDis_IntervallSettings" />
-		<rdf:_3 rdf:resource="&k1d2dwf;CDis_ColorSettings" />
-		<rdf:_4 rdf:resource="&k1d2dwf;CDis_Generation" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;CDis_ResultSelection">
-		<wbs:hasName>Ergebnisse wählen</wbs:hasName>
-		<wbs:hasHelp>Darzustellende Ergebnisse auswählen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CDis_IntervallSettings">
-		<wbs:hasName>Intervalleinstellungen</wbs:hasName>
-		<wbs:hasHelp>Zur Einstellung der mit den Farbflächen darzustellenden Intervalle</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CDis_ColorSettings">
-		<wbs:hasName>Farbeinstellungen</wbs:hasName>
-		<wbs:hasHelp>Farbskala</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CDis_Generation">
-		<wbs:hasName>Farbflächen erstellen</wbs:hasName>
-		<wbs:hasHelp>Erstellung der Farbflächen mit den gewählten Einstellungen für ein ausgewähltes Ergebnis</wbs:hasHelp>
-	</wbs:Activity>
-
-
-	<wbs:Task rdf:about="&k1d2dwf;IsolineDispl">
-		<wbs:hasName>Isoliniendarstellung</wbs:hasName>
-		<wbs:hasHelp>Erstellt spezifizierte Ergebnisse in Isoliniendarstellung</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;IsolineDisplActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;IsolineDisplActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;Isol_ResultSelection" />
-		<rdf:_2 rdf:resource="&k1d2dwf;Isol_IntervallSettings" />
-		<rdf:_3 rdf:resource="&k1d2dwf;Isol_ColorSettings" />
-		<rdf:_4 rdf:resource="&k1d2dwf;Isol_Generation" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;Isol_ResultSelection">
-		<wbs:hasName>Ergebnisse wählen</wbs:hasName>
-		<wbs:hasHelp>Darzustellende Ergebnisse auswählen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Isol_IntervallSettings">
-		<wbs:hasName>Intervalleinstellungen</wbs:hasName>
-		<wbs:hasHelp>Zur Einstellung der mit den Isolinien darzustellenden Intervalle</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Isol_ColorSettings">
-		<wbs:hasName>Farbeinstellungen</wbs:hasName>
-		<wbs:hasHelp>Zur Einstellung der Farben der Isolinien</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;Isol_Generation">
-		<wbs:hasName>Isolinien erstellen</wbs:hasName>
-		<wbs:hasHelp>Erstellung von Isolinien mit den gewählten Einstellungen für ein ausgewähltes Ergebnis</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;CrossSecDef">
-		<wbs:hasName>einzelne Schnitte</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht die Erstellung oder Bearbeitung von beliebigen Schnitten durch das Gebiet</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;CrossSecDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;CrossSecDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;CSecDrawPolyline" />
-		<rdf:_2 rdf:resource="&k1d2dwf;CSecSettings" />
-		<rdf:_3 rdf:resource="&k1d2dwf;CSecChoseResults" />
-		<rdf:_4 rdf:resource="&k1d2dwf;CSecDisplay" />
-		<rdf:_5 rdf:resource="&k1d2dwf;CSecShowTimeSeriesQ" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;CSecDrawPolyline">
-		<wbs:hasName>Schnitt zeichnen</wbs:hasName>
-		<wbs:hasHelp>Erstellung eines Polylinienschnittes</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CSecSettings">
-		<wbs:hasName>Schnitteinstellungen</wbs:hasName>
-		<wbs:hasHelp>Daten zum Schnitt eingeben, z.B. Stationierung und Kommentar</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CSecChoseResults">
-		<wbs:hasName>Ergebnisse auswählen</wbs:hasName>
-		<wbs:hasHelp>darzustellende Ergebnisse an dem Schnitt auswählen</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CSecDisplay">
-		<wbs:hasName>Ergebnisse darstellen</wbs:hasName>
-		<wbs:hasHelp>Stellt Ergebnisse in einer Schnittanzeige dar</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;CSecShowTimeSeriesQ">
-		<wbs:hasName>Q-Zeitreihe</wbs:hasName>
-		<wbs:hasHelp>Darstellung des Abflusses durch das gewählte Profil in Zeitreihe</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;LongSecDef">
-		<wbs:hasName>Längsschnitt</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht die Definition von Gewässerlängsschnitten auf der Basis definierter Querschnitte</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;LongSecDefActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;LongSecDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;LSecGroupCSecs" />
-		<rdf:_2 rdf:resource="&k1d2dwf;LSecSettings" />
-		<rdf:_3 rdf:resource="&k1d2dwf;LSecChoseResult" />
-		<rdf:_4 rdf:resource="&k1d2dwf;LSecDisplay" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;LSecGroupCSecs">
-		<wbs:hasName>Längsschnitt definieren</wbs:hasName>
-		<wbs:hasHelp>Definition eines Längsschnittes durch Auswahl der zugehörigen Querschnitte</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;LSecSettings">
-		<wbs:hasName>Längsschnitteinstellungen</wbs:hasName>
-		<wbs:hasHelp>Daten zum Längsschnitt eingeben, z.B. Gewässername und Kommentar</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;LSecChoseResult">
-		<wbs:hasName>Ergebnisse wählen</wbs:hasName>
-		<wbs:hasHelp>Auswahl der darzustellenden Ergebnisse</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;LSecDisplay">
-		<wbs:hasName>Längsschnitt darstellen</wbs:hasName>
-		<wbs:hasHelp>Zeigt den ausgewählten Längsschnitt grafisch mit den ausgewählten Ergebnissen an</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;TimeSeriesDispl">
-		<wbs:hasName>Gangliniendarstellung</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht die Gangliniendarstellung selektierter Ergebnisgeometrien</wbs:hasHelp>
-		<wbs:hasActivities rdf:resource="&k1d2dwf;TimeSeriesDisplActs" />
-	</wbs:Task>
-	<wbs:ActivitySeq rdf:about="&k1d2dwf;TimeSeriesDisplActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;TimeNode" />
-		<rdf:_2 rdf:resource="&k1d2dwf;TimeCCL" />
-	</wbs:ActivitySeq>
-	<wbs:Activity rdf:about="&k1d2dwf;TimeNode">
-		<wbs:hasName>Ergebniszeitreihe Knoten</wbs:hasName>
-		<wbs:hasHelp>Darstellen der Ergebnisse eines speziellen Knotens als Zeitreihe</wbs:hasHelp>
-	</wbs:Activity>
-	<wbs:Activity rdf:about="&k1d2dwf;TimeCCL">
-		<wbs:hasName>Ergebniszeitreihe Kontinuitätslinie</wbs:hasName>
-		<wbs:hasHelp>Darstellung der Abflussganglinie an einer vor der Berechnung definierten Kontinuitätslinien</wbs:hasHelp>
-	</wbs:Activity>
-
-	<wbs:Task rdf:about="&k1d2dwf;ExportFile">
-		<wbs:hasName>Ergebnisdatei exportieren</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht den Export von Daten in Kalypso2D-Format</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;ExportFileActs" />  -->
-	</wbs:Task>
-	<!-- not defined yet
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ExportFileActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???" />
-		</wbs:ActivitySeq>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;ExportPict">
-		<wbs:hasName>Bild exportieren</wbs:hasName>
-		<wbs:hasHelp>aktuelle Darstellung als Bild exportieren</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;ExportPictActs" />  -->
-	</wbs:Task>
-	<!--  not necessary here because wizard can make the difference
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ExportPictActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;MapExport_jpeg" />
-		<rdf:_2 rdf:resource="&k1d2dwf;MapExport_Tiff" />
-		</wbs:ActivitySeq>
-		<wbs:Activity rdf:about="&k1d2dwf;MapExport_jpeg">
-		<wbs:hasName>jpeg exportieren</wbs:hasName>
-		<wbs:hasHelp>
-		Exportiert die Kartenansicht als Jpeg-Bild
-		</wbs:hasHelp>
-		</wbs:Activity>
-		<wbs:Activity rdf:about="&k1d2dwf;MapExport_Tiff">
-		<wbs:hasName>Gruppenname ändern</wbs:hasName>
-		<wbs:hasHelp>
-		Ändert den Namen der ausgewählten Gruppe
-		</wbs:hasHelp>
-		</wbs:Activity>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;ExportFloodModeller">
-		<wbs:hasName>Export für Floodmodeller</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht den Datentransfer zum Floodmodeller</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;;ExportFloodModellerActs" />  -->
-	</wbs:Task>
-	<!--  not defined yet
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;;ExportFloodModellerActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???" />
-		</wbs:ActivitySeq>
-	-->
-
-	<wbs:Task rdf:about="&k1d2dwf;ExportRiskModeller">
-		<wbs:hasName>Export für Riskmodeller</wbs:hasName>
-		<wbs:hasHelp>Ermöglicht den Datentransfer zum Riskmodeller</wbs:hasHelp>
-		<!--  <wbs:hasActivities rdf:resource="&k1d2dwf;???" />  -->
-	</wbs:Task>
-	<!--  not defined yet
-		<wbs:ActivitySeq rdf:about="&k1d2dwf;ExportRiskModellerActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???" />
-		</wbs:ActivitySeq>
-	-->
-
-
-	<wbs:WorkflowData rdf:about="&k1d2dwf;SimMo1">
-		<wbs:hasName>SimulationModel1</wbs:hasName>
-		<wbs:hasLocation>file.xml#SimMo1</wbs:hasLocation>
-		<wbs:contains rdf:resource="&k1d2dwf;SubMo1_1" />
-		<wbs:contains rdf:resource="&k1d2dwf;SubMo1_2" />
-		<wbs:hasType>type_simulationmodel</wbs:hasType>
-	</wbs:WorkflowData>
-
-	<wbs:WorkflowData rdf:about="&k1d2dwf;SimMo1Dev">
-		<wbs:hasName>SimulationModel1Dev</wbs:hasName>
-		<wbs:hasLocation>file.xml#SimMo1Dev</wbs:hasLocation>
-		<wbs:isDerivedFrom rdf:resource="&k1d2dwf;SimMo1" />
-		<wbs:hasType>type_simulationmodel</wbs:hasType>
-	</wbs:WorkflowData>
-
-	<wbs:WorkflowData rdf:about="&k1d2dwf;SubMo1_1">
-		<wbs:hasName>Sub Model 1_1</wbs:hasName>
-		<wbs:hasLocation>file.xml#submodel1</wbs:hasLocation>
-		<wbs:hasType>sim_sub_model</wbs:hasType>
-	</wbs:WorkflowData>
-
-	<wbs:WorkflowData rdf:about="&k1d2dwf;SubMo1_2">
-		<wbs:hasName>Sub Model 1_2</wbs:hasName>
-		<wbs:hasLocation>file.xml#submodel2</wbs:hasLocation>
-		<wbs:hasType>sim_sub_model</wbs:hasType>
-	</wbs:WorkflowData>
-
-	<wbs:WorkpartRTContext rdf:about="&k1d2dwf;RTSimMo1">
-		<wbs:executingWorkflowPart rdf:resource="&k1d2dwf;Workflow1" />
-		<wbs:processedResource rdf:resource="&k1d2dwf;SimMo1" />
-		<wbs:exeState>NotStarted</wbs:exeState>
-	</wbs:WorkpartRTContext>
-
-
-</rdf:RDF>
+</wbs:Workflow>

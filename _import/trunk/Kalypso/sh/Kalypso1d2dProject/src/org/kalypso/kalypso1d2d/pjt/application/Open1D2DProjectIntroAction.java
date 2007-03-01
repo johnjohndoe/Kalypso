@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroSite;
@@ -72,32 +73,19 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
     if( !project.exists() )
       return;
-    
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    
-    try
-    {
-      // hide intro
-      final IIntroManager introManager = workbench.getIntroManager();
-      introManager.closeIntro( introManager.getIntro() );
 
-      /* Open 1D2D Perspective */
-      workbench.showPerspective( Perspective.ID, site.getWorkbenchWindow() );
-      
-      ActiveWorkContext.getInstance().setActiveProject( project );
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( site.getShell(), "", "", status );
-    }
-    
-    
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+    // hide intro
+    final IIntroManager introManager = workbench.getIntroManager();
+    introManager.closeIntro( introManager.getIntro() );
+
+    ActiveWorkContext.getInstance().setActiveProject( project );
+
     // Make sure that sim-view and workflow-view are visible?
-    
+
     // Set active project into ActiveWorkContext
-    
+
     // ...?
 
   }

@@ -21,6 +21,7 @@ import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.views.WorkflowControl2;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
+import org.kalypso.workflow.Workflow;
 
 /**
  * @author Patrice Congo
@@ -47,7 +48,7 @@ public class WorkflowView extends ViewPart
 
     public void activeProjectChanged( IProject newProject, IProject oldProject, IWorkflowDB oldDB, IWorkflowSystem oldWorkflowSystem )
     {
-      final IWorkflow workflow = m_activeWorkContext.getCurrentWorkflow();
+      final Workflow workflow = m_activeWorkContext.getCurrentWorkflow();
       LOGGER.info( "New Workflow:" + workflow );
       m_workflowControl.setWorkflow( workflow );
     }

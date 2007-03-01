@@ -9,8 +9,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.IPhase;
-import org.kalypso.afgui.model.ITask;
+import org.kalypso.workflow.Activity;
+import org.kalypso.workflow.Phase;
+import org.kalypso.workflow.Task;
 
 public class WorkflowLabelProvider extends LabelProvider implements IFontProvider // , IColorProvider
 {
@@ -26,12 +27,12 @@ public class WorkflowLabelProvider extends LabelProvider implements IFontProvide
 
   public WorkflowLabelProvider( final TreeViewer viewer )
   {
-    final Display display = viewer.getControl().getDisplay();    
+    final Display display = viewer.getControl().getDisplay();
     final ImageDescriptor taskImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/kig.png" );
-    final ImageDescriptor groupImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/forward.png" );    
+    final ImageDescriptor groupImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/forward.png" );
     IMAGE_TASK = ImageDescriptor.createFromImageData( taskImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     IMAGE_GROUP = ImageDescriptor.createFromImageData( groupImage.getImageData().scaledTo( 16, 16 ) ).createImage();
-    FONT_PHASE = new Font( display, "Tahoma", 10, SWT.BOLD);
+    FONT_PHASE = new Font( display, "Tahoma", 10, SWT.BOLD );
     FONT_TASKGROUP = new Font( display, "Tahoma", 10, SWT.NORMAL );
     FONT_TASK = new Font( display, "Tahoma", 9, SWT.NORMAL );
   }
@@ -42,8 +43,9 @@ public class WorkflowLabelProvider extends LabelProvider implements IFontProvide
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof ITask )
+    if( element instanceof Task )
     {
+      // TODO: get image from task
       return IMAGE_TASK;
     }
     else
@@ -58,7 +60,12 @@ public class WorkflowLabelProvider extends LabelProvider implements IFontProvide
   @Override
   public String getText( final Object element )
   {
-    return super.getText( element );
+    if( element instanceof Activity )
+    {
+      return ((Activity) element).getName();
+    }
+    else
+      return null;
   }
 
   /**
@@ -75,11 +82,11 @@ public class WorkflowLabelProvider extends LabelProvider implements IFontProvide
    */
   public Font getFont( final Object element )
   {
-    if( element instanceof IPhase )
+    if( element instanceof Phase )
     {
       return FONT_PHASE;
     }
-    else if( element instanceof ITask )
+    else if( element instanceof Task )
     {
       return FONT_TASK;
     }

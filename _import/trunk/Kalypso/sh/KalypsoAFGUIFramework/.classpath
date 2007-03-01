@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="srcbind"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/antlr-2.7.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/arq.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/commons-logging.jar"/>

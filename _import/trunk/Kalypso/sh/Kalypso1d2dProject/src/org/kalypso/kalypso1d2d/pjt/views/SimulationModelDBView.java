@@ -52,6 +52,8 @@ public class SimulationModelDBView extends ViewPart
 
   private static final String MEMENTO_PROJECT = "project";
 
+  protected static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Basis";
+
   TreeViewer tv;
 
   private SimModelBasedContentProvider simModelBasedCP;
@@ -83,12 +85,14 @@ public class SimulationModelDBView extends ViewPart
         // top.setVisible(false);
       }
       tv.setInput( activeWorkContext );
-      if( m_scenarioFromMemento != null )
+      
+      final String scenarioId = m_scenarioFromMemento != null ? m_scenarioFromMemento : BASIS_SCENARIO;
+      if( scenarioId != null && newDB != null )
       {
-        final IWorkflowData scenario = activeWorkContext.getWorkflowDB().getWorkflowDataById( m_scenarioFromMemento );
+        final IWorkflowData scenario = newDB.getWorkflowDataById( scenarioId );
         final IStructuredSelection selection = new StructuredSelection( scenario );
         tv.setSelection( selection, true );
-        activeWorkContext.selectScenario( m_scenarioFromMemento );
+        activeWorkContext.selectScenario( scenarioId );
         m_scenarioFromMemento = null;
       }
       // TODO: this is for debugging purposes, remove later? Looks good to me (stefan)

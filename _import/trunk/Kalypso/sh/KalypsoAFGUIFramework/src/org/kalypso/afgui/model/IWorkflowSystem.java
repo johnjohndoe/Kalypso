@@ -1,6 +1,8 @@
 
 package org.kalypso.afgui.model;
 
+import org.kalypso.workflow.Workflow;
+
 
 /**
  * Classes implements this interface to provide mechanism wot resolve
@@ -12,7 +14,7 @@ public interface IWorkflowSystem
 {
 	public IWorkflow getWorflow(IWorkflowData dataModel);
 	
-	public IWorkflow getCurrentWorkFlow();
+	public Workflow getCurrentWorkFlow();
 	
 	public IWorkflow setCurrent(IWorkflowData dataModel);
 	

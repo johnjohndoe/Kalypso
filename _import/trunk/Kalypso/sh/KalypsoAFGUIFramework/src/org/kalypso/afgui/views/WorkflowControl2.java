@@ -3,6 +3,7 @@
  */
 package org.kalypso.afgui.views;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,13 +40,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.IPhase;
-import org.kalypso.afgui.model.ISubTaskGroup;
-import org.kalypso.afgui.model.ITask;
-import org.kalypso.afgui.model.ITaskGroup;
-import org.kalypso.afgui.model.IWorkflow;
-import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.workflow.Activity;
+import org.kalypso.workflow.Phase;
+import org.kalypso.workflow.Task;
+import org.kalypso.workflow.TaskGroup;
+import org.kalypso.workflow.Workflow;
 
 /**
  * @author Stefan Kurzbach
@@ -86,13 +86,13 @@ public class WorkflowControl2
       protected void doUpdateItem( final Item item, final Object element )
       {
         super.doUpdateItem( item, element );
-        if( item != null && element instanceof IWorkflowPart )
+        if( item != null && element instanceof Activity )
         {
-          item.setData( "_HELP", ((IWorkflowPart) element).getHelp().getHelp() );
+          item.setData( "_HELP", ((Activity) element).getHelp() );
         }
       }
     };
-    m_treeViewer.setContentProvider( new WorkflowContentProvider() );
+    m_treeViewer.setContentProvider( new WorkflowContentProvider2() );
 
     final Tree tree = m_treeViewer.getTree();
     final Display display = tree.getDisplay();
@@ -179,14 +179,14 @@ public class WorkflowControl2
         final Object first = selection.getFirstElement();
         if( first != null )
         {
-          if( first instanceof ITask )
+          if( first instanceof Task )
           {
-            doTask( (ITask) first );
+            doTask( (Task) first );
           }
         }
       }
 
-      private final void doTask( final ITask task )
+      private final void doTask( final Task task )
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
@@ -200,10 +200,7 @@ public class WorkflowControl2
         catch( final Throwable e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          if( !(task instanceof IPhase || task instanceof ISubTaskGroup) )
-          {
-            ErrorDialog.openError( m_treeViewer.getControl().getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
-          }
+          ErrorDialog.openError( m_treeViewer.getControl().getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
           KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
           logger.log( Level.SEVERE, "Failed to execute command: " + name, e );
         }
@@ -226,17 +223,21 @@ public class WorkflowControl2
     } );
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      private Object m_lastSelectedElement;
+
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
         final Object first = selection.getFirstElement();
-        if( first != null && m_lastTreePath != null ? m_lastTreePath.getLastSegment() != first : true )
+        if( first != null && m_lastSelectedElement != first  )
         {
           final TreePath newTreePath = selection.getPathsFor( first )[0];
+          m_lastSelectedElement = null;
           if( m_lastTreePath != null )
           {
             final Object segment = m_lastTreePath.getSegment( Math.min( m_lastTreePath.getSegmentCount(), newTreePath.getSegmentCount() ) - 1 );
             m_treeViewer.collapseToLevel( segment, TreeViewer.ALL_LEVELS );
+            m_lastSelectedElement = newTreePath.getLastSegment();
           }
           m_treeViewer.expandToLevel( first, 1 );
           m_lastTreePath = newTreePath;
@@ -246,51 +247,48 @@ public class WorkflowControl2
     } );
   }
 
-  private TreePath findPart( final String uri, final IWorkflow workflow )
+  private TreePath findPart( final String uri, final Workflow workflow )
+  {
+    return findPartInPhases( uri, workflow.getPhases() );
+  }
+
+  private TreePath findPartInPhases( final String uri, final List<Phase> phases )
   {
     TreePath result = null;
-    for( final IPhase phase : workflow.getPhases() )
+    for( final Phase phase : phases )
     {
       if( phase.getURI().equals( uri ) )
       {
-        result = new TreePath( new Object[] { phase } );
+        return new TreePath( new Object[] { phase } );
       }
       else
       {
-        for( final ITaskGroup taskGroup : phase.getTaskGroups() )
-        {
-          if( taskGroup.getURI().equals( uri ) )
-          {
-            result = new TreePath( new Object[] { phase, taskGroup } );
-          }
-          else
-          {
-            for( final ISubTaskGroup subTaskGroup : taskGroup.getSubTaskGroups() )
-            {
-              if( subTaskGroup.getURI().equals( uri ) )
-              {
-                result = new TreePath( new Object[] { phase, taskGroup, subTaskGroup } );
-              }
-              else
-              {
-                for( final ITask task : subTaskGroup.getTasks() )
-                {
-                  if( task.getURI().equals( uri ) )
-                  {
-                    result = new TreePath( new Object[] { phase, taskGroup, subTaskGroup, task } );
-                  }
-                }
-              }
-            }
-            for( final ITask task : taskGroup.getTasks() )
-            {
-              if( task.getURI().equals( uri ) )
-              {
-                result = new TreePath( new Object[] { phase, taskGroup, task } );
-              }
-            }
-          }
-        }
+        result = findPartInTaskGroups( uri, phase.getTaskGroups(), new TreePath( new Object[] { phase } ) );
+      }
+      if( result != null )
+      {
+        return result;
+      }
+    }
+    return result;
+  }
+
+  private TreePath findPartInTaskGroups( final String uri, final List< ? extends Task> taskOrTaskGroups, final TreePath prefix )
+  {
+    TreePath result = null;
+    for( final Task taskOrTaskGroup : taskOrTaskGroups )
+    {
+      if( taskOrTaskGroup.getURI().equals( uri ) )
+      {
+        return prefix.createChildPath( taskOrTaskGroup );
+      }
+      else if( taskOrTaskGroup instanceof TaskGroup )
+      {
+        result = findPartInTaskGroups( uri, ((TaskGroup) taskOrTaskGroup).getTasks(), prefix.createChildPath( taskOrTaskGroup ) );
+      }
+      if( result != null )
+      {
+        return result;
       }
     }
     return result;
@@ -314,11 +312,11 @@ public class WorkflowControl2
     if( m_lastTreePath != null )
     {
       final Object lastSegment = m_lastTreePath.getLastSegment();
-      memento.putString( MEMENTO_LAST_SELECTION, ((IWorkflowPart) lastSegment).getURI() );
+      memento.putString( MEMENTO_LAST_SELECTION, ((Activity) lastSegment).getURI() );
     }
   }
 
-  public void setWorkflow( final IWorkflow workflow )
+  public void setWorkflow( final Workflow workflow )
   {
     m_treeViewer.setInput( workflow );
     m_treeViewer.refresh();

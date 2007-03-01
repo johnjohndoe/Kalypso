@@ -7,15 +7,19 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.workflow.Workflow;
 
 //TODO move to workflow system problem with project??
 
@@ -59,8 +63,22 @@ public class ActiveWorkContext
     // TODO remove source provider and projectChangeListener somewhere
   }
 
-  synchronized public void setActiveProject( IProject activeProject )
+  synchronized public void setActiveProject( final IProject activeProject )
   {
+
+    /* Open 1D2D Perspective */
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    try
+    {
+      workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( workbench.getActiveWorkbenchWindow().getShell(), "", "", status );
+    }
+
     if( this.m_activeProject == activeProject )
     {
       return;
@@ -124,7 +142,7 @@ public class ActiveWorkContext
     return workflowSystem;
   }
 
-  public IWorkflow getCurrentWorkflow( )
+  public Workflow getCurrentWorkflow( )
   {
     if( m_activeProject == null )
     {

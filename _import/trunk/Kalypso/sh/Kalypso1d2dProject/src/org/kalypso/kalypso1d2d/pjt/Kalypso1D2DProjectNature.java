@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -36,6 +38,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 public class Kalypso1D2DProjectNature implements IProjectNature
 {
   private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class.getName() );
+
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
 
   static
@@ -43,7 +46,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     if( !log )
       logger.setUseParentHandlers( false );
   }
-  
+
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
 
   public static final String METADATA_FOLDER = ".metadata";
@@ -142,16 +145,18 @@ public class Kalypso1D2DProjectNature implements IProjectNature
       workflowDB = new WorkflowDB( metaDataFolder.getFile( WORKFLOW_DATA_DESC ) );
       workflowSystem = new WorkflowSystem( metaDataFolder.getFile( WORKFLOW_DESC ).getRawLocationURI().toURL() );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
-      logger.log(Level.SEVERE, "Bad url to work flow desc data", e );
+      logger.log( Level.SEVERE, "Bad url to work flow desc data", e );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
-      logger.log(Level.SEVERE, "Work flow data could not be found", e );
+      logger.log( Level.SEVERE, "Work flow data could not be found", e );
     }
-    logger.info( "Config End:" + workflowDB );
-    // return workflowDB;
+    catch( final JAXBException e )
+    {
+      logger.log( Level.SEVERE, "Workflow could not be loaded.", e );
+    }
   }
 
   synchronized public IWorkflowSystem getWorkflowSystem( )

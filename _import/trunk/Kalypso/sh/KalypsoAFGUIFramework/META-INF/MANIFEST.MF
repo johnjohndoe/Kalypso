@@ -38,4 +38,5 @@ Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.schema,
  org.kalypso.afgui.views,
  org.kalypso.afgui.viz,
+ org.kalypso.workflow,
  test.org.kalypso.afgui

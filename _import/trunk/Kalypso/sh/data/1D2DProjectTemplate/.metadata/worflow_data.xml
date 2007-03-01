@@ -2,9 +2,8 @@
     xmlns:kb="http://www.tu-harburg.de/wb/kalypso/kb/workflow#"
     xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:pjtNS="file:/C:/Kalypso/runtime-kalypsomodel.product/1D2DTemplate/.metadata/worflow_data.xml#" >
-  <rdf:Description rdf:about="file:/C:/Kalypso/runtime-kalypsomodel.product/New1D2D/.metadata/worflow_data.xml#Basis">
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <rdf:Description rdf:about="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Basis">
     <rdf:type rdf:resource="http://www.tu-harburg.de/wb/kalypso/schema/workflow#WorkflowData"/>
     <wbs:hasName>Basis</wbs:hasName>
   </rdf:Description>
