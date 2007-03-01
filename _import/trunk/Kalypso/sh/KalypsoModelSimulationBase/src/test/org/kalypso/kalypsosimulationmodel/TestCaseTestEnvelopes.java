@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.mpcoverage.GMRectanglesClip;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.GMRectanglesClip;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import junit.framework.TestCase;
@@ -83,12 +84,34 @@ public class TestCaseTestEnvelopes extends TestCase
   {
     GM_Envelope env1 = GeometryFactory.createGM_Envelope( 0, 0, 4, 4 );
     GM_Envelope env2 = GeometryFactory.createGM_Envelope( 1, 1, 3, 3 );
-        
+    GM_Envelope interEnv12 = GeometryFactory.createGM_Envelope( 1, 1, 3, 3 );
+    
     GMRectanglesClip test = new GMRectanglesClip(env1,env2);
     assertEquals( true, env1.intersects(env2));
-    test.getIntersectionPoints();
-    test.displayIntersectionPoints();    
-   // asse
+    GM_Envelope intersetionEnv = 
+        GMRectanglesClip.getIntersectionEnv( env1, env2 );
+    assertEquals( interEnv12, intersetionEnv );
+    
+    //envelop which do not intersects
+    GM_Envelope noInterEnv1 = GeometryFactory.createGM_Envelope( 0, 0, 4, 4 );
+    GM_Envelope noInterEnv2 = GeometryFactory.createGM_Envelope( 5, 5, 6, 6 );
+    assertNull( GMRectanglesClip.getIntersectionEnv( noInterEnv1, noInterEnv2 ) );
+    
+    //1 point of intersection
+    GM_Envelope onePointInterEnv1 = GeometryFactory.createGM_Envelope( 0, 0, 4, 4 );
+    GM_Envelope onePointInterEnv2 = GeometryFactory.createGM_Envelope( 4, 4, 6, 6 );
+    GM_Envelope onePointInterEnv = GeometryFactory.createGM_Envelope( 4, 4, 4, 4 );
+    
+    assertEquals(
+            onePointInterEnv, 
+            GMRectanglesClip.getIntersectionEnv( 
+                      onePointInterEnv1, onePointInterEnv2 ) );
+    
+    //selfs intersection
+    assertEquals(
+        onePointInterEnv1, 
+        GMRectanglesClip.getIntersectionEnv( 
+                  onePointInterEnv1, onePointInterEnv1 ) );
   }
 
 }

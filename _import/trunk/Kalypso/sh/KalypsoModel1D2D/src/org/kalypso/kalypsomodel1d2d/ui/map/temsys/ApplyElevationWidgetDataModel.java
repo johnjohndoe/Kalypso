@@ -45,9 +45,13 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
@@ -63,12 +67,25 @@ public class ApplyElevationWidgetDataModel
   private IFEDiscretisationModel1d2d discretisationModel;
   private List<IFE1D2DNode> selectedNode;
   private GM_Polygon selectionArea;
+  private IMapModell mapModell;
+  private ElevationTheme elevationTheme;
+  private MapPanel mapPanel;
   
   public ApplyElevationWidgetDataModel( )
   {
     //empty
   }
 
+  public void setMapModell( IMapModell mapModell )
+  {
+    this.mapModell = mapModell;
+  }
+  
+  public IMapModell getMapModell( )
+  {
+    return mapModell;
+  }
+  
   public IFEDiscretisationModel1d2d getDiscretisationModel( )
   {
     return discretisationModel;
@@ -135,7 +152,24 @@ public class ApplyElevationWidgetDataModel
     this.elevationModelSystem=terrainModel.getTerrainElevationModelSystem();
   }
   
+  public ElevationTheme getElevationTheme( )
+  {
+    return elevationTheme;
+  }
   
+  public void setElevationTheme( ElevationTheme elevationTheme )
+  {
+    this.elevationTheme = elevationTheme;
+  }
   
+  public MapPanel getMapPanel( )
+  {
+    return mapPanel;
+  }
+  
+  public void setMapPanel( MapPanel mapPanel )
+  {
+    this.mapPanel = mapPanel;
+  }
   
 }

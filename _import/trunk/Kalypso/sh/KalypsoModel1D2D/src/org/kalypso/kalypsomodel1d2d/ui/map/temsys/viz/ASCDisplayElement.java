@@ -41,15 +41,20 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Graphics;
+import java.awt.Point;
+import java.util.Iterator;
+import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Provide display mechanism for asc terrain elevation model
@@ -76,10 +81,14 @@ public class ASCDisplayElement implements DisplayElement
     IElevationProvider elevationProvider = 
               elevationModel.getElevationProvider();
     //TODO continue
-//    if(elevationProvider instanceof ASCTerrainElevationModel)
-//    {
-//      ascElevationModel=(ASCTerrainElevationModel)elevationProvider;
-//    }
+    if(elevationProvider instanceof ASCTerrainElevationModel)
+    {
+      ascElevationModel=(ASCTerrainElevationModel)elevationProvider;
+    }
+    else
+    {
+      throw new RuntimeException("Can only handle asc ele model:"+elevationProvider);
+    }
   }
   
   /**
@@ -137,7 +146,24 @@ public class ASCDisplayElement implements DisplayElement
                   GM_Envelope bbox, 
                   boolean selected )
   {
-   
+   System.out.println("Do Draw dddddd ");
+   List<GM_Position> cellLL = ascElevationModel.getCellLLCornerIterator( bbox );
+   double cellSize=2;
+  if(!cellLL.isEmpty())
+  {
+    GM_Position position0 = cellLL.get( 0 );
+    
+    double x = position0.getX();
+    cellSize = 
+      p.getDestX( x+ascElevationModel.getCellSize() )-p.getDestX( x );
+    System.out.print( "CellSize:"+cellSize );
+  }
+  for( GM_Position position:cellLL)
+   {
+     double destX = p.getDestX( position.getX() );
+     double destY = p.getDestY( position.getY() );    
+     g.draw3DRect( (int)destX, (int)destY, (int)cellSize, (int)cellSize, true );
+   }
   }
   
   /**

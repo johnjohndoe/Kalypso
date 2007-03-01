@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -51,70 +51,103 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class GMRectanglesClip
 {
-  GM_Position RectAmin;
-  GM_Position RectAmax;
-  GM_Position RectBmin;
-  GM_Position RectBmax;
-  private GM_Envelope envOne;
-  private GM_Envelope envTwo;
-  static GM_Envelope env1;
-  static GM_Envelope env2;
-  private GM_Position[] gmA;
+ 
+//  private GM_Envelope envOne;
+//  private GM_Envelope envTwo;
+  
+//  private GM_Position[] gmA;
   
   public GMRectanglesClip(GM_Envelope envOne, GM_Envelope envTwo){
-    this.envOne = envOne;
-    this.envTwo = envTwo;    
+//    this.envOne = envOne;
+//    this.envTwo = envTwo;    
   }
   
 
-   
-   public GM_Position[] getIntersectionPoints(){
-     gmA = new GM_Position[2];
+   /**
+    * returns upper left corner and lower right corner of the
+    * intersection envelop or null if the 2 envelop do not 
+    * intersect
+    * 
+    */
+   public static final GM_Position[] getIntersectionPoints(
+                             GM_Envelope envOne,
+                             GM_Envelope envTwo){
+     if(!envOne.intersects( envTwo ))
+     {
+       return null;
+     }
+     GM_Position[] gmA = new GM_Position[2];
      
        gmA[0] = GeometryFactory.createGM_Position(
-           max(
+           Math.max(
                envOne.getMin().getX(),
                envTwo.getMin().getX()
                ),
-           min(envOne.getMin().getY()+envOne.getHeight(),
+           Math.min(envOne.getMin().getY()+envOne.getHeight(),
                envTwo.getMin().getY()+envTwo.getHeight() )
                );
        gmA[1] = GeometryFactory.createGM_Position(
-           min(
+           Math.min(
                envOne.getMax().getX(),
                envTwo.getMax().getX()
                ),
-           max(envOne.getMax().getY()-envOne.getHeight(),
+           Math.max(envOne.getMax().getY()-envOne.getHeight(),
                envTwo.getMax().getY()-envTwo.getHeight() )
                );   
         return gmA;    
    }
 
-  private double max(double d,double e )
+   /**
+    * To get the intersection of the 2 envelop.
+    * If the 2 envelops intesects the resulting
+    * envelope is return otherwise null is return
+    * 
+    */
+  public static final GM_Envelope getIntersectionEnv(
+                                  GM_Envelope envOne,
+                                  GM_Envelope envTwo)
   {
-    if((d>e))
-      return d;
-      else
-      return e;    
+    GM_Position[] poses = 
+            getIntersectionPoints(envOne,envTwo);
+    if(poses==null)
+    {
+      return null;
+    }
+    
+    GM_Envelope envelope = GeometryFactory.createGM_Envelope( 
+        poses[0].getX(),//minx, 
+        poses[1].getY(),//miny, 
+        poses[1].getX(),//maxx, 
+        poses[0].getY()//maxy 
+        );
+    return envelope;
   }
   
-  private double min(double d,double e )
-  {
-    if((d<e))
-      return d;
-      else
-      return e;    
-  }
+//  private double max(double d,double e )
+//  {
+//    if((d>e))
+//      return d;
+//      else
+//      return e;    
+//  }
+//  
+//  private double min(double d,double e )
+//  {
+//    if((d<e))
+//      return d;
+//      else
+//      return e;    
+//  }
 
 
 
-  public void displayIntersectionPoints( )
-  {
-    for (int i= 0; i <gmA.length;i++){
-    System.out.println(gmA[i].toString());
-  }
+//  public void displayIntersectionPoints( )
+//  {
+//    for (int i= 0; i <gmA.length;i++){
+//    System.out.println(gmA[i].toString());
+//  }
     
-  }
+//  }
   
    
   

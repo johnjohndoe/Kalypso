@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +55,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;
 
 /**
  * An elevation provider base on ASC file
@@ -63,7 +67,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ASCTerrainElevationModel implements IElevationProvider
 {
-  private static final Iterator<GM_Position> NULL_ITERATOR = null;
+  private static final List<GM_Position> NULL_LIST = Collections.<GM_Position>emptyList();
 
   /**
    * the asc data source File or URL containing the elevation info 
@@ -236,13 +240,16 @@ public class ASCTerrainElevationModel implements IElevationProvider
     }
   }
   
-  public Iterator<GM_Position> getCellLLCornerIterator(GM_Envelope env)
+  public List<GM_Position> getCellLLCornerIterator(GM_Envelope env)
   {
     
-    GM_Envelope envToShow = intersect( maxElevation, env );
+    GM_Envelope envToShow = 
+        GMRectanglesClip.getIntersectionEnv(  
+                        maxEnvelope, env );
+    
     if(envToShow==null)
     {
-      return NULL_ITERATOR; 
+      return NULL_LIST; 
     }
     else
     {
@@ -252,17 +259,60 @@ public class ASCTerrainElevationModel implements IElevationProvider
 
 
 
-  private Iterator<GM_Position> makeCellsLLCornerIterator( GM_Envelope env )
+  private List<GM_Position> makeCellsLLCornerIterator( 
+                                              GM_Envelope env )
   {
-    // TODO Auto-generated method stub
-    return null;
+    double xmin = env.getMin().getX();
+    int col = (int)Math.floor( (xmin-xllcorner)/cellSize );
+    double ymin = env.getMin().getY();
+    int row = (int)Math.floor( (ymin-yllcorner)/cellSize );
+    if(row<0)
+    {
+      row=0;
+    }
+    ArrayList<GM_Position> poses = new ArrayList<GM_Position>();
+    
+    if(col<N_COLS && row<N_ROWS && col>=0 && row>=0)
+    {
+      int N_COL_ENV = (int)Math.floor( env.getWidth()/cellSize );
+      int N_ROW_ENV = (int)Math.floor( env.getHeight()/cellSize );
+      for(int i=0;i<N_ROW_ENV;i++)
+      {
+        for(int j=0;j<N_COL_ENV;j++)
+        {
+          double x=xmin+j*cellSize;
+          double y=ymin+i*cellSize;
+          double z=0;//elevations[i][j];
+          
+          GM_Position position=
+              GeometryFactory.createGM_Position(x,y,z );
+          poses.add( position );
+        }
+      }
+//    
+      return poses;
+    }
+    else
+    {
+      return NULL_LIST;
+    }
+    
+    
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
+   */
+  public GM_Envelope getBoundingBox( )
+  {
+    return maxEnvelope;
   }
 
 
-
-  private GM_Envelope intersect( double maxElevation2, GM_Envelope env )
+  public double getCellSize( )
   {
-    return null;
+    return cellSize;
   }
+ 
 
 }

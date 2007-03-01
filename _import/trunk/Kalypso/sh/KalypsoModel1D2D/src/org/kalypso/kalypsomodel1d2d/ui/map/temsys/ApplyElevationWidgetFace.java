@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.preference.ColorSelector;
@@ -50,15 +51,12 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -80,7 +78,11 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 /**
  * @author Patrice Congo
  * @author Madanagopal
@@ -107,6 +109,8 @@ class ApplyElevationWidgetFace
   private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
   private ApplyElevationWidgetDataModel dataModel;
 
+//  private ElevationTheme elevationTheme;//= new ElevationTheme();
+  
   public ApplyElevationWidgetFace( )
   {
   }
@@ -184,7 +188,9 @@ class ApplyElevationWidgetFace
         {
           if (selection.getFirstElement() instanceof ITerrainElevationModel)
           {            
-            inputText.setText(((ITerrainElevationModel)selection.getFirstElement()).getName());            
+            ITerrainElevationModel firstElement = (ITerrainElevationModel)selection.getFirstElement();
+            dataModel.setElevationModel( firstElement );
+            inputText.setText(firstElement.getName());            
           }
         }
         areaSelectSection.setEnabled( true );
@@ -214,7 +220,17 @@ class ApplyElevationWidgetFace
       {
         areaSelectSection.setEnabled( true );
         areaSelectSection.setExpanded( true );
-
+        IMapModell mapModell = dataModel.getMapModell();
+        System.out.println(
+            "themes="+Arrays.asList( mapModell.getAllThemes()));
+        ElevationTheme elevationTheme = dataModel.getElevationTheme();
+        elevationTheme.setTerrainElevationModel( 
+                          dataModel.getElevationModel()  );
+        dataModel.getMapPanel().setBoundingBox( elevationTheme.getBoundingBox() );
+        
+        elevationTheme.fireModellEvent( null );
+//        mapModell.fireModellEvent( null );
+        
       }
 
     } );

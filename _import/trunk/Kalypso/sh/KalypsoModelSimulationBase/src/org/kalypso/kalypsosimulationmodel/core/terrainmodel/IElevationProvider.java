@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -58,5 +59,7 @@ public interface IElevationProvider
    *    NaN if not
    */
   public double getElevation( GM_Point location );
+
+  public GM_Envelope getBoundingBox( );
 
 }

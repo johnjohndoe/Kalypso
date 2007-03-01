@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.swt.widgets.Composite;
@@ -50,13 +51,16 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
 /**
@@ -96,10 +100,29 @@ public class ApplyElevationWidget
   {
     super.activate(commandPoster, mapPanel);
     
+    IMapModell mapModell = mapPanel.getMapModell();
     IFEDiscretisationModel1d2d model1d2d = 
       UtilMap.findFEModelTheme( 
-          mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
+          mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
     dataModel.setDiscretisationModel( model1d2d );
+    dataModel.setMapModell( mapModell );
+    ElevationTheme theme= null;//new ElevationTheme("ASC Theme",mapModell);
+    for(IKalypsoTheme curTheme:mapModell.getAllThemes())
+    {
+      if(curTheme instanceof ElevationTheme)
+      {
+        theme=(ElevationTheme)curTheme;
+      }
+    }
+    if(theme==null)
+    {
+      theme = 
+        new ElevationTheme("ASC Theme",mapModell);
+      mapModell.addTheme( theme );
+    }
+    
+    dataModel.setElevationTheme( theme );
+    dataModel.setMapPanel( mapPanel );
   }
   
   

@@ -42,6 +42,11 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Graphics;
 
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -53,28 +58,68 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class ElevationTheme extends AbstractKalypsoTheme
 {
-
+  private ITerrainElevationModel terrainElevationModel;
+  
   public ElevationTheme( String name, IMapModell mapModel )
   {
     super(name, mapModel);
   }
   
-  
+  public void setTerrainElevationModel( ITerrainElevationModel terrainElevationModel )
+  {
+    this.terrainElevationModel = terrainElevationModel;    
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
   public GM_Envelope getBoundingBox( )
   {
-    return null;
+    if(terrainElevationModel==null)
+    {
+      return null;      
+    }
+    
+    IElevationProvider elevationProvider = 
+      ((NativeTerrainElevationModelWrapper)
+                  terrainElevationModel).getElevationProvider();
+    if(elevationProvider instanceof ASCTerrainElevationModel)
+    {
+      GM_Envelope boundingBox = elevationProvider.getBoundingBox();
+      return boundingBox;
+    }
+    else
+    {
+      return null;
+    }
+    
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, double, org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
+  public void paint(  Graphics g, 
+                      GeoTransform p, 
+                      double scale, 
+                      GM_Envelope bbox, 
+                      boolean selected )
   {
-    
+    System.out.println("drawing elevation");
+   if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
+   {
+     IElevationProvider elevationProvider = 
+       ((NativeTerrainElevationModelWrapper)
+                   terrainElevationModel).getElevationProvider();
+     if(elevationProvider instanceof ASCTerrainElevationModel)
+     {
+       ASCDisplayElement displayElement = new ASCDisplayElement(
+           (NativeTerrainElevationModelWrapper)terrainElevationModel);
+       displayElement.paint( g, p, scale, bbox, selected );
+     }
+   }
+   
   }
+  
+  
 
 }

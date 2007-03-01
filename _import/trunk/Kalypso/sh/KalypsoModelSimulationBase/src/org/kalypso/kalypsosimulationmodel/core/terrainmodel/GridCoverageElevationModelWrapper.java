@@ -48,6 +48,7 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
@@ -151,6 +152,14 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
     }
     
     return  doubleRaster.getValue( x, y );    
+  }
+
+   /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
+   */
+  public GM_Envelope getBoundingBox( )
+  {
+    return null;
   }
 
 }

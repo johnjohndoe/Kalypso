@@ -55,6 +55,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -201,4 +202,11 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
     return elevationProvider;
   }
   
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
+   */
+  public GM_Envelope getBoundingBox( )
+  {
+    return elevationProvider.getBoundingBox();
+  }
 }
