@@ -1,5 +1,6 @@
 package org.kalypso.ui.wizards.imports.baseMap;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,11 +20,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.ui.wizards.imports.roughness.DataContainer;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Madanagopal
@@ -32,6 +36,8 @@ import org.kalypso.ui.wizards.imports.Messages;
 public class BaseMapMainPage extends WizardPage
 {
   private Text sourceFileField;
+
+  Combo cmb_CoordinateSystem;
 
   private IPath initialSourcePath;
 
@@ -90,6 +96,19 @@ public class BaseMapMainPage extends WizardPage
     } );
     button.setText( "Browse.." );
 
+    // Coordinate system combo box
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
+    cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
+    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
+    cmb_CoordinateSystem.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
+    GridData gd = new GridData();
+    gd.horizontalAlignment = GridData.FILL;
+    gd.widthHint = 75;
+    cmb_CoordinateSystem.setEnabled( true );
+    cmb_CoordinateSystem.setLayoutData( gd );
+
+    button.setFocus();
     initContents();
   }
 
@@ -105,8 +124,8 @@ public class BaseMapMainPage extends WizardPage
       return;
 
     fileExtensions.add( new String( "tif" ) );
-//    fileExtensions.add( new String( "jpg" ) );
-//    fileExtensions.add( new String( "gml" ) );
+    fileExtensions.add( new String( "jpg" ) );
+    // fileExtensions.add( new String( "gml" ) );
 
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
@@ -152,10 +171,23 @@ public class BaseMapMainPage extends WizardPage
     setPageComplete( false );
 
     IPath sourceLoc = getSourceLocation();
-    if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
+    // if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
+    if( sourceLoc == null || !sourceLoc.toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.6" ) );
+      return;
+    }
+    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile())
+    {
+      setMessage( null );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
+      return;
+    }
+    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile())
+    {
+      setMessage( null );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment()} ) );
       return;
     }
     setPageComplete( true );
@@ -168,7 +200,7 @@ public class BaseMapMainPage extends WizardPage
    */
   protected void browseForSourceFile( )
   {
-    IPath path = browse( getSourceLocation(), false );
+    IPath path = browse( getSourceLocation() );
     if( path == null )
       return;
     IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
@@ -186,10 +218,11 @@ public class BaseMapMainPage extends WizardPage
    *          <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
-  private IPath browse( IPath path, boolean mustExist )
+  private IPath browse( IPath path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.tif" } );
+    dialog.setFilterExtensions( new String[] { "*.tif; *.jpg" } );
+    // dialog.setFilterExtensions( (String[]) fileExtensions.toArray() );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
@@ -216,4 +249,10 @@ public class BaseMapMainPage extends WizardPage
       path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( path );
     return path;
   }
+
+  public String getCoordinateSystem( )
+  {
+    return cmb_CoordinateSystem.getText();
+  }
+
 }

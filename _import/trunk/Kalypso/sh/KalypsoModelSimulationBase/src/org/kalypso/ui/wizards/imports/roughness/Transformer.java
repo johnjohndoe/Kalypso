@@ -126,9 +126,12 @@ public class Transformer implements ICoreRunnableWithProgress
     {
       Feature f = myWorkspace.getFeature( key );
       Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
-      XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:" + m_data.getRoughnessDatabaseLocation() + "#"
-          + linkedFeature.getId(), "", "", "", "", "" );
-      f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
+      if( linkedFeature != null )
+      {
+        XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:" + m_data.getRoughnessDatabaseLocation()
+            + "#" + linkedFeature.getId(), "", "", "", "", "" );
+        f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
+      }
     }
   }
 
@@ -142,9 +145,9 @@ public class Transformer implements ICoreRunnableWithProgress
     writer.close();
     relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "szenario" + File.separator + "maps" + File.separator + "base.gmt";
     absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
-//    
-//    GisTemplateMapModell model = GisTemplateHelper.loadGisMapView( new File(absPath) ); 
-//    new AddThemeCommand();
-//    m_data.getProjectBaseFolder();
+    //    
+    // GisTemplateMapModell model = GisTemplateHelper.loadGisMapView( new File(absPath) );
+    // new AddThemeCommand();
+    // m_data.getProjectBaseFolder();
   }
 }

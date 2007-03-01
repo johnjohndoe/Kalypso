@@ -6,7 +6,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -21,9 +20,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -35,6 +37,14 @@ import de.renew.workflow.WorkflowCommandHandler;
 public class ImportBaseMapHandler extends WorkflowCommandHandler
 {
   private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard";
+
+  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), new Runnable()
+  {
+
+    public void run( )
+    {
+    }
+  } );
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
@@ -59,14 +69,14 @@ public class ImportBaseMapHandler extends WorkflowCommandHandler
 
     final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
     final HashMap<String, Object> data = new HashMap<String, Object>();
+    data.put( "Project", currentFolder.getProject() );
     data.put( "ProjectFolder", currentFolder.getFullPath().segment( 0 ) );
-    // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
 
     wizard.init( workbench, selection );
     wizard.initModelProperties( data );
     if( wizardDialog.open() == Window.OK )
     {
-      currentFolder.getProject().refreshLocal( IProject.DEPTH_INFINITE, null );
+//      currentFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
       final IFile file = szenarioPath.getFile( "maps/base.gmt" );
       if( file.exists() )
       {

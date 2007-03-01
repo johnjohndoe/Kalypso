@@ -6,11 +6,16 @@ import java.util.LinkedHashMap;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -41,21 +46,16 @@ public class PageSecond extends WizardPage
    */
   public void createControl( Composite parent )
   {
-    ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.BORDER );
-    Composite composite = new Composite( sc, SWT.NULL );
+    ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.BORDER | SWT.V_SCROLL );
+    Composite composite = new Composite(scrolledComposite, SWT.NONE);
+    scrolledComposite.setContent( composite );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
-    gridLayout.marginWidth = 30;
+    gridLayout.marginWidth = 20;
     gridLayout.marginHeight = 10;
     gridLayout.verticalSpacing = 10;
     gridLayout.horizontalSpacing = 40;
     composite.setLayout( gridLayout );
-    composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | SWT.VERTICAL ) );
-    composite.setSize( 400, 5000 );
-    sc.setExpandHorizontal( false );
-    sc.setExpandVertical( true );
-    sc.setMinSize( composite.computeSize( 400, 300 ) );
-    sc.setContent( composite );
     setControl( composite );
     setPageComplete( false );
   }
@@ -70,24 +70,39 @@ public class PageSecond extends WizardPage
     LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
     m_shpNamesList = new ArrayList<String>();
     m_comboRoughnessIDs = new Combo[map.size()];
-    GridData gridDataID = new GridData();
     for( String key : map.keySet() )
     {
       if( !m_shpNamesList.contains( map.get( key ) ) )
       {
+        GridData gridDataID = new GridData();
+        int nextEntryNr = m_shpNamesList.size(); 
         m_shpNamesList.add( map.get( key ) );
         new Label( composite, SWT.NONE ).setText( map.get( key ) ); //$NON-NLS-1$
-        m_comboRoughnessIDs[m_shpNamesList.size() - 1] = new Combo( composite, SWT.READ_ONLY );
-        m_comboRoughnessIDs[m_shpNamesList.size() - 1].setLayoutData( gridDataID );
-        m_comboRoughnessIDs[m_shpNamesList.size() - 1].setItems( names );
-        // comboRoughnessIDs[m_shpNamesList.size() - 1].setText( "Selection" );
+        m_comboRoughnessIDs[nextEntryNr] = new Combo( composite, SWT.READ_ONLY );
+        m_comboRoughnessIDs[nextEntryNr].setLayoutData( gridDataID );
+        m_comboRoughnessIDs[nextEntryNr].setItems( names );
       }
     }
+    Point pt = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+    composite.setSize(pt);
     composite.layout();
-    composite.getParent().layout();
+//    composite.getParent().layout();
     setPageComplete( true );
   }
-
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+   */
+  @Override
+  public boolean isPageComplete( )
+  {
+//    boolean complete = true;
+//    for(int i=0; i<m_comboRoughnessIDs.length; i++)
+//      complete &= m_comboRoughnessIDs[i].getText().length() > 0;
+//    return complete;
+    return super.isPageComplete();
+  }
+  
   protected void saveDataToModel( )
   {
     if( isCurrentPage() )
