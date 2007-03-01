@@ -451,7 +451,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
         {
           return featureList.remove( o );
         }else {
-			return false;
+			return featureList.remove( o );
 		}
 	}
 
