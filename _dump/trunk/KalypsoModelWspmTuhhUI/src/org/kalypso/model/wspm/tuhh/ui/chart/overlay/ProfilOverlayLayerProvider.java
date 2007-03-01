@@ -54,7 +54,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView,
    *      java.lang.String)
    */
-  public IProfilChartLayer[] createLayer( ProfilChartView view, String layerId )
+  public IProfilChartLayer[] addLayerToChart( ProfilChartView view, String layerId )
   {
     return new IProfilChartLayer[0];
   }
@@ -64,26 +64,26 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public String[] getAddableLayers( ProfilChartView view )
   {
-    return null;
+    return new String[0];
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getLayer(java.lang.String,
    *      org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public IProfilChartLayer getLayer( String layerId, ProfilChartView view )
+  public IProfilChartLayer[] getLayer( String layerId, ProfilChartView view )
   {
     if(IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ))
-      return new ProfilOverlayLayer(view);
+      return new IProfilChartLayer[]{new ProfilOverlayLayer(view)};
     return null;
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getRequieredLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public IProfilChartLayer[] getRequieredLayer( ProfilChartView view )
+  public String[] getRequiredLayer(final ProfilChartView view )
   {
-    return new IProfilChartLayer[]{new ProfilOverlayLayer(view)};
+    return new String[]{IWspmOverlayConstants.LAYER_OVERLAY};
   }
 
   /**

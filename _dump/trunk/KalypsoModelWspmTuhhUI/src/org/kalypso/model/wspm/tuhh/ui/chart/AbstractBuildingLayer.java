@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import java.awt.geom.Rectangle2D;
+
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
@@ -64,6 +66,43 @@ import de.belger.swtchart.EditInfo;
  */
 public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   */
+  @Override
+  protected void editProfil( Point point, Object data )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return getLabel();
+  }
+
+  /**
+   * @see de.belger.swtchart.layer.IChartLayer#getBounds()
+   */
+  public Rectangle2D getBounds( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+   */
+  public void paint( GCWrapper gc )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
   private final Color m_color;
 
   public AbstractBuildingLayer( final String layerId, final String label, final ProfilChartView pcv )

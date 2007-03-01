@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.Insets;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -112,11 +113,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     super( pem, viewdata, results );
     m_colorRegistry = colorRegistry;
   }
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata,  final ColorRegistry colorRegistry )
+
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
   {
-    super( pem, viewdata, new IStationResult[0]  );
+    super( pem, viewdata, new IStationResult[0] );
     m_colorRegistry = colorRegistry;
   }
+
   public void addChartPosListener( final IChartPosListener l )
   {
     m_poslisteners.add( l );
@@ -155,8 +158,16 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           return;
 
         // call provider
-
-        addLayer( provider.getRequieredLayer( this ), visibility );
+        final String[] requieredLayer = provider.getRequiredLayer( this );
+        final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
+        for( final String layerId : requieredLayer )
+        {
+          for( final IProfilChartLayer layer : provider.getLayer( layerId,this ) )
+          {
+            layers.add( layer );
+          }
+        }
+        addLayer( layers.toArray(new IProfilChartLayer[0]), visibility );
       }
     }
   }

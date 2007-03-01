@@ -47,13 +47,34 @@ package org.kalypso.model.wspm.ui.view.chart;
  */
 public interface IProfilLayerProvider
 {
-  public IProfilChartLayer[] createLayer( final ProfilChartView view, final String layerId );
+  /**
+   * if the layer depends on other layers or properties, create all required things here.
+   * </p>
+   * if there is nothing to do see getLayer( final String layerId, final ProfilChartView view )
+   * </p>
+   * return all affected layer
+   */
+  public IProfilChartLayer[] addLayerToChart( final ProfilChartView view, final String layerId );
 
-  public IProfilChartLayer[] getRequieredLayer( final ProfilChartView view );
+  /**
+   * return the layers, the view needs to show all of the required themes
+   */
+  public String[] getRequiredLayer( final ProfilChartView view );
 
+  /**
+   * return the layers not shown yet, but addable
+   */
   public String[] getAddableLayers( final ProfilChartView view );
 
-  public IProfilChartLayer getLayer( final String layerId, final ProfilChartView view );
+  /**
+   * the layer factory, no additional operations needed
+   * </p>
+   * otherwise see: addLayerToChart
+   */
+  public IProfilChartLayer[] getLayer( final String layerId, final ProfilChartView view );
 
+  /**
+   * return true if The provider can create the layer
+   */
   public boolean providesLayer( final String layerId );
 }
