@@ -3388,11 +3388,18 @@
 				<arg name="href6" value="Steuerung_gerechnet"/>
 				<arg name="href7" value="Überleitung_gerechnet"/>
 			</arg>
-			<arg name="templateDiagQ">
+			<arg name="templateDiagV">
 				<arg name="label" value="Volumengrafik"/>
 				<arg name="category" value="Speicher;Volumengrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherV.odt"/>
 			</arg>
+			<!-- Wasserstandsgrafik ist für Speicher nicht wirklich sinnvoll
+			<arg name="templateDiagW">
+				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="category" value="Speicher;Wasserstandsgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherW.odt"/>
+			</arg>
+			-->
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (V / W / Z / A / Steu / Überl)"/>
 				<arg name="category" value="Speicher;Übersichtstabelle (V / W / Z / A / Steu / Überl)"/>
