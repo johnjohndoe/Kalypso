@@ -44,6 +44,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
@@ -131,9 +132,9 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper getChangedFeature( )
+  public IFeatureWrapper[] getChangedFeature( )
   {
-    return addedEdge;
+    return new IFeatureWrapper[]{addedEdge};
   }
   
   /**

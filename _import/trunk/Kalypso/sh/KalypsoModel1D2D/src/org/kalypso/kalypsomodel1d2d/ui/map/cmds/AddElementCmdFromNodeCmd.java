@@ -167,9 +167,9 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper getChangedFeature( )
+  public IFeatureWrapper[] getChangedFeature( )
   {
-    return addedElement;
+    return new IFeatureWrapper[]{addedElement};
   }
   
   /**

@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -90,31 +91,73 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
    */
   public void process( ) throws Exception
   {
-    if(!edgeToDel.getContainers().isEmpty())
+    IFE1D2DEdge edge = edgeToDel;
+    if(!edge.getContainers().isEmpty())
     {
+      System.out.println("Edge has containers");
       return;
     }
     
-    if(edgeToDel.getEdgeInv()!=null)
+    if(edge instanceof IEdgeInv)
     {
-//    TODO care with edge with invedge and no element
-//    may be readjust the network
-      return;
-    }
-    
-    String edgeID=edgeToDel.getGmlID();
-    IFE1D2DNode[] nodeArray = 
-      (IFE1D2DNode[])edgeToDel.getNodes().toArray( new IFE1D2DNode[]{} );
-    for(IFE1D2DNode node: nodeArray)
-    {
-      node.getContainers().getWrappedList().remove( edgeID );
+      IFE1D2DEdge inverted = ((IEdgeInv)edge).getInverted();
+      inverted.resetInvEdge();
       
+      //remove link to nodes
+      String edgeID = edge.getGmlID();
+      IFE1D2DNode[] nodeArray = 
+        (IFE1D2DNode[])inverted.getNodes().toArray( new IFE1D2DNode[]{} );
+      RemoveNodeWithoutContainer remNode = 
+              new RemoveNodeWithoutContainer(null,model1d2d);
+      for(IFE1D2DNode node: nodeArray)
+      {
+        node.getContainers().getWrappedList().remove( edgeID );
+        
+      }
+      
+      model1d2d.getEdges().remove( edge );
+      RemoveEdgeWithoutContainerOrInvCmd remInverted= 
+        new RemoveEdgeWithoutContainerOrInvCmd(model1d2d,inverted);
+      remInverted.process();
     }
-    
-    //remov edge
-    model1d2d.getEdges().remove( edgeToDel.getWrappedFeature() );
+    else
+    {
+      if(edge.getEdgeInv()!=null)
+      {
+  //    TODO care with edge with invedge and no element
+  //    may be readjust the network
+        System.out.println("Edge has inverted");
+        return;
+      }
+      else
+      {
+        String edgeID=edge.getGmlID();
+        IFE1D2DNode[] nodeArray = 
+          (IFE1D2DNode[])edge.getNodes().toArray( new IFE1D2DNode[]{} );
+        RemoveNodeWithoutContainer remNode = 
+                new RemoveNodeWithoutContainer(null,model1d2d);
+        for(IFE1D2DNode node: nodeArray)
+        {
+          boolean isRemoved = node.getContainers().getWrappedList().remove( edgeID );
+          remNode.setNodeToDel( node );
+          remNode.process();
+        }        
+        //remov edge
+        model1d2d.getEdges().remove( edge );
+      }
+    }
   }
 
+  public void setEdgeToDel( IFE1D2DEdge edgeToDel )
+  {
+    this.edgeToDel = edgeToDel;
+  }
+  
+  public IFE1D2DEdge getEdgeToDel( )
+  {
+    return edgeToDel;
+  }
+  
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */

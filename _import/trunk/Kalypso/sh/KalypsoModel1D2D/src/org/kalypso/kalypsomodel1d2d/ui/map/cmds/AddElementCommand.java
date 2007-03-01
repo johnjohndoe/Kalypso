@@ -121,7 +121,7 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
       IFE1D2DEdge curEdge;
       for(IDiscrModel1d2dChangeCommand edgeCmd:elementEdgeCmds)
       {
-          curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature();
+          curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature()[0];
           if(curEdge!=null)
           {
             edges.add( curEdge );
@@ -158,9 +158,9 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper getChangedFeature( )
+  public IFeatureWrapper[] getChangedFeature( )
   {
-    return addedElement;
+    return new IFeatureWrapper[]{addedElement};
   }
   
   /**

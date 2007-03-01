@@ -127,14 +127,16 @@ public class ChangeDiscretiationModelCommand implements ICommand
       try
       {
         command.process();
-        IFeatureWrapper changedFeature = command.getChangedFeature();
-        if(changedFeature!=null)
+        for(IFeatureWrapper changedFeature :command.getChangedFeature())
         {
-          Feature wrappedFeature=changedFeature.getWrappedFeature();
-          if(wrappedFeature!=null)
+          if(changedFeature!=null)
           {
-            changedFeatures.add( wrappedFeature );
-            wrappedFeature.invalidEnvelope();
+            Feature wrappedFeature=changedFeature.getWrappedFeature();
+            if(wrappedFeature!=null)
+            {
+              changedFeatures.add( wrappedFeature );
+              wrappedFeature.invalidEnvelope();
+            }
           }
         }
       }
@@ -146,6 +148,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
     
     model1d2d.getEdges().getWrappedList().invalidate();
     model1d2d.getElements().getWrappedList().invalidate();
+    model1d2d.getNodes().getWrappedList().invalidate();
     fireStructureChange( changedFeatures );    
   }
 

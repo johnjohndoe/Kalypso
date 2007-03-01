@@ -107,6 +107,10 @@ public class UtilMap
       {
         final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = ftheme.getFeatureType();
+        if(featureType==null)
+        {
+          continue;
+        }
         if( GMLSchemaUtilities.substitutes( 
         featureType, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) )

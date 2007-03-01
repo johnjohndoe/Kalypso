@@ -86,7 +86,7 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
   public void process( ) throws Exception
   {
     //TODO move code into discretisation model
-    IFE1D2DEdge edgeToInv = (IFE1D2DEdge)edgeCommand.getChangedFeature();
+    IFE1D2DEdge edgeToInv = (IFE1D2DEdge)edgeCommand.getChangedFeature()[0];
     if(edgeToInv==null)
     {
       return;
@@ -134,9 +134,9 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper getChangedFeature( )
+  public IFeatureWrapper[] getChangedFeature( )
   {
-    return addedEdgeInv;
+    return new IFeatureWrapper[]{addedEdgeInv};
   }
   
   /**

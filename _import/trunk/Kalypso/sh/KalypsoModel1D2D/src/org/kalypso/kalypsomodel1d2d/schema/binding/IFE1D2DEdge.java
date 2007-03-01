@@ -63,5 +63,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   
   public void setInvEdge(String invEdgeID);
   
+  public void resetInvEdge();
+  
   public IEdgeInv getEdgeInv();
 }

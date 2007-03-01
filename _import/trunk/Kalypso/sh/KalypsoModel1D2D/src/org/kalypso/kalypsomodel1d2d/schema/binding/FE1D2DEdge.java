@@ -333,6 +333,15 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   }
   
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#resetInvEdge()
+   */
+  public void resetInvEdge( )
+  {
+    m_featureToBind.setProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, null );
+  }
+  
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getEdgeInv()
    */
   public IEdgeInv getEdgeInv( )

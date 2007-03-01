@@ -52,7 +52,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -60,7 +62,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Patrice Congo
  */
-public class DeleteFE1D2DElement2DCmd implements ICommand
+public class DeleteFE1D2DElement2DCmd implements IDiscrModel1d2dChangeCommand
 {
   
   private IFEDiscretisationModel1d2d model1d2d;
@@ -68,7 +70,7 @@ public class DeleteFE1D2DElement2DCmd implements ICommand
   private GM_Point[] elementPoints;
   
   private IFE1D2DComplexElement[] complexElements;
-  
+//  private IFE1D2DEdge edges[]
   
   public DeleteFE1D2DElement2DCmd(
                       IFEDiscretisationModel1d2d model1d2d,
@@ -109,42 +111,54 @@ public class DeleteFE1D2DElement2DCmd implements ICommand
     
     IFE1D2DEdge edges[]= makeElementEdges();
     
-    deleteElement(elementID);
+    deleteElement(elementID,edges,complexElements);
     
     deleteEdges(edges,elementID);
     
-    deleteNodes(nodes,elementID);
-    
   }
 
-  private void deleteNodes( List<IFE1D2DNode> nodes, String elementID )
-  {
-    // TODO Auto-generated method stub
-    //will not be implemented since this wil be done by edge remover
-  }
   
   private void deleteEdges( IFE1D2DEdge[] edges, String elementID )
   {
+    RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd=
+          new RemoveEdgeWithoutContainerOrInvCmd(model1d2d,null);
     for(IFE1D2DEdge edge:edges)
     {
-      FeatureList wrappedList = edge.getContainers().getWrappedList();
-      wrappedList.remove( elementID );
-      if(wrappedList.isEmpty())
+      try
       {
-        //remove edge
-        //TODO make a remove edge command
-        //TODO care about inv edge
+        
+        remEdgeCmd.setEdgeToDel( edge );
+        remEdgeCmd.process();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
       }
     }
   }
   
-  private void deleteElement( String elementID )
+  private void deleteElement( String elementID, IFE1D2DEdge[] edges, IFE1D2DComplexElement[] complexElements )
   {
     //delete link to complex elements
+    for(IFE1D2DComplexElement complexElement:complexElements)
+    {
+     complexElement.getElements().remove( elementID ); 
+    }
     
     //delete link to edges
+    for(IFE1D2DEdge edge : edges)
+    {
+      IFeatureWrapperCollection containers = edge.getContainers();
+      boolean isRemoved = containers.remove( elementID );
+      if(!isRemoved)
+      {
+        throw new RuntimeException("Could not remove element as edge container");
+      }
+    }
     
     //delete element from model
+    model1d2d.getElements().remove( element2D );
+    
   }
   
   private IFE1D2DEdge[] makeElementEdges( )
@@ -166,26 +180,30 @@ public class DeleteFE1D2DElement2DCmd implements ICommand
   {
     int SIZE = nodes.size();
     GM_Point[] points=new GM_Point[SIZE];
-    GM_Point nodePoint;
-    for(int i=SIZE-1;i>0;i++)
+    GM_Position nodePos;
+    for(int i=SIZE-1;i>0;i--)
     {
-      nodePoint=nodes.get( i ).getPoint();
-      int dimension = nodePoint.getDimension();
+      GM_Point point = nodes.get( i ).getPoint();
+      nodePos=point.getPosition();
+      double[] xyz = nodePos.getAsArray();
+      int dimension = xyz.length;//getDimension();
       if(dimension==2)
       {
         points[i]= GeometryFactory.createGM_Point( 
-            nodePoint.getX(), nodePoint.getY(), 
-            nodePoint.getCoordinateSystem() );
+            xyz[0], xyz[1], 
+            point.getCoordinateSystem() );
       }
       else if(dimension==3)
       {
         points[i]= GeometryFactory.createGM_Point( 
-                          nodePoint.getX(), nodePoint.getY(), 
-                          nodePoint.getZ(), nodePoint.getCoordinateSystem() ); 
+                          xyz[0], xyz[1],xyz[2], 
+                          point.getCoordinateSystem() ); 
       }
       else
       {
-        throw new RuntimeException("Unsupported gm point dimension:"+dimension);
+        throw new RuntimeException(
+                      "Unsupported gm point dimension:"+dimension+
+                      " "+nodePos);
       }
     }
     return points;
@@ -206,5 +224,19 @@ public class DeleteFE1D2DElement2DCmd implements ICommand
   {
       
   }
-
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
+   */
+  public IFeatureWrapper[] getChangedFeature( )
+  {
+    return new IFeatureWrapper[]{element2D};
+  }
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
+   */
+  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
+  {
+    return model1d2d;
+  }
+  
 }

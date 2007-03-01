@@ -7,10 +7,21 @@ import java.awt.event.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteFE1D2DElement2DCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provide widget for deleting finit elements 
@@ -208,12 +219,77 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
 //    }
   }
 
+  private  final void deleteCurrentSelection()
+  {
+    MapPanel mapPanel = getMapPanel();
+    IFeatureSelectionManager selectionManager = 
+                        mapPanel.getSelectionManager();
+    EasyFeatureWrapper[] selected = 
+        selectionManager.getAllFeatures();
+    selectionManager.clear();
+    if(selected.length==0)
+    {
+      return;
+    }
+    
+    //feature are supposed to be in the same model
+    Feature sampleFeature = selected[0].getFeature();
+    Feature parentFeature = sampleFeature.getParent();
+    IFEDiscretisationModel1d2d model1d2d=
+        (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+    if(model1d2d==null)
+    {
+      throw new RuntimeException("Could not found model1d2d");
+    }    
+    
+    try
+    {
+      IKalypsoFeatureTheme featureTheme = UtilMap.findEditableThem( 
+          mapPanel.getMapModell(), 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
+      CommandableWorkspace workspace = featureTheme.getWorkspace();
+      
+      //TODO check for feature type
+      ChangeDiscretiationModelCommand modelChangeCmd=
+                      new ChangeDiscretiationModelCommand(
+                          workspace,
+                          model1d2d);
+      for(EasyFeatureWrapper easyFeatureWrapper:selected)
+      {
+        try
+        {
+          Feature feature = easyFeatureWrapper.getFeature();
+          DeleteFE1D2DElement2DCmd cmd = 
+            new DeleteFE1D2DElement2DCmd(model1d2d,feature);
+          modelChangeCmd.addCommand( cmd );
+        }
+        catch(Throwable th)
+        {
+         th.printStackTrace(); 
+        }
+      }
+      workspace.postCommand( modelChangeCmd );
+      
+      
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
   public void keyPressed( KeyEvent e )
   {
+    if(e.getKeyChar()==KeyEvent.VK_DELETE)
+    {
+      deleteCurrentSelection();
+    }
+    
     try
     {
       if(widgetStrategy!=null)
