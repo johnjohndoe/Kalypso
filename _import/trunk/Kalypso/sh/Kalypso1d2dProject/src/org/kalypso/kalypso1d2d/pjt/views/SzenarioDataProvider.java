@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -69,7 +70,16 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
   final IWorkflowData data )
   {
     final IFolder szenarioFolder = project == null ? null : project.getFolder( "szenario" );
-
+    
+    try
+    {
+      project.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+    }
+    
     for( final Map.Entry<Class, String> entry : LOCATION_MAP.entrySet() )
     {
       final Class wrapperClass = entry.getKey();
