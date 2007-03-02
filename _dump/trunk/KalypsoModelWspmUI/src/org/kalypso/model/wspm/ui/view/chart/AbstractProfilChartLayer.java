@@ -56,6 +56,23 @@ import de.belger.swtchart.layer.AbstractChartLayer;
 public abstract class AbstractProfilChartLayer extends AbstractChartLayer implements IProfilChartLayer
 {
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#alwaysAllowsEditing()
+   */
+  public boolean alwaysAllowsEditing( )
+  {
+    return false;
+  }
+
+  /**
+   * @see de.belger.swtchart.layer.IChartLayer#getZOrder()
+   */
+  public int getZOrder( )
+  {
+    // the layerprovider order the layers
+    return 0;
+  }
+
   private final ProfilChartView m_chartView;
 
   private boolean m_initialVisibility = true;

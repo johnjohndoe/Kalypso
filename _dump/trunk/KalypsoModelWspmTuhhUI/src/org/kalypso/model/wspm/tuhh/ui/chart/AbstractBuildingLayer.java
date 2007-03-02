@@ -67,6 +67,11 @@ import de.belger.swtchart.EditInfo;
 public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 {
   /**
+   * @see de.belger.swtchart.layer.IChartLayer#getZOrder()
+   */
+  
+
+  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override

@@ -56,6 +56,8 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public IProfilChartLayer[] addLayerToChart( ProfilChartView view, String layerId )
   {
+    view.getChart().addLayer( new ProfilOverlayLayer(view), true );
+    view.getChart().repaint();
     return new IProfilChartLayer[0];
   }
 
@@ -64,7 +66,8 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public String[] getAddableLayers( ProfilChartView view )
   {
-    return new String[0];
+    return new String[]{IWspmOverlayConstants.LAYER_OVERLAY};
+ 
   }
 
   /**
@@ -83,7 +86,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public String[] getRequiredLayer(final ProfilChartView view )
   {
-    return new String[]{IWspmOverlayConstants.LAYER_OVERLAY};
+    return new String[0];
   }
 
   /**

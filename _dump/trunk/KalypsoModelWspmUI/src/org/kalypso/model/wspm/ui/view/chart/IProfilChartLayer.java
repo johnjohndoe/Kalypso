@@ -56,7 +56,7 @@ public interface IProfilChartLayer extends IChartLayer
 {
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
   public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData );
- 
+
   /**
    * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer
    * repräsentiert werden.
@@ -70,9 +70,9 @@ public interface IProfilChartLayer extends IChartLayer
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
   public ProfilChartView getProfilChartView( );
-  
-  public String getLabel();
-  
-  public String getId();
+
+  public String getLabel( );
+
+  public String getId( );
 
 }

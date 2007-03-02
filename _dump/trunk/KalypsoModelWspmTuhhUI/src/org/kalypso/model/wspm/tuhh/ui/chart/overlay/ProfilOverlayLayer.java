@@ -67,6 +67,15 @@ import de.belger.swtchart.EditInfo;
 public class ProfilOverlayLayer extends AbstractProfilChartLayer
 {
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#alwaysAllowsEditing()
+   */
+  @Override
+  public boolean alwaysAllowsEditing( )
+  {
+    return true;
+  }
+
   private final List<Point2D> m_points;
 
   private final Color m_color;
@@ -151,7 +160,6 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     return null;
   }
 
-
   public List getPoints( )
   {
     return m_points;
@@ -223,5 +231,14 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   public String toString( )
   {
     return getLabel();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#getZOrder()
+   */
+  @Override
+  public int getZOrder( )
+  {
+    return 10;
   }
 }
