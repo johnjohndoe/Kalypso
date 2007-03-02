@@ -91,7 +91,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
    */
   public void createControl( Composite parent )
   {
-
     initializeDialogUnits( parent );
     m_topLevel = new Composite( parent, SWT.NONE );
 
@@ -119,16 +118,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   public void validate()
   {
     // page is always complete
+    getWizard().getContainer().updateButtons();
     setPageComplete( true );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-   */
-  @Override
-  public boolean canFlipToNextPage()
-  {
-    return isPageComplete();
   }
 
   /**
