@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -72,7 +74,9 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
     {
       final URL url = new URL( context, m_mapViewRefUrl );
       m_innerMapModel = new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager );
-      final InputSource inputSource = new InputSource( ResourceUtilities.findFileFromURL( url ).getContents() );
+      final IFile file = ResourceUtilities.findFileFromURL( url );
+      file.refreshLocal( IResource.DEPTH_ZERO, null );
+      final InputSource inputSource = new InputSource( file.getContents() );
       final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
       m_innerMapModel.createFromTemplate( innerGisView );
     }
