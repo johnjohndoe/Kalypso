@@ -196,10 +196,6 @@
             id="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
             provider="org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh"/>
-      <profilLayerProvider
-            id="org.kalypso.model.wspm.tuhh.ui.chart.overlay.ProfilOverlayLayerProvider"
-            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.tuhh.ui.chart.overlay.ProfilOverlayLayerProvider"/>
    </extension>
    <extension
          point="org.kalypso.ui.featureViewExtensionControl">
