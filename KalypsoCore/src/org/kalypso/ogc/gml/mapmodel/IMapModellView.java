@@ -40,14 +40,19 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * @author doemming
+ * Provides a view on a {@link IMapModell} and can handle selections on that model.
+ * 
+ * @author doemming, Stefan Kurzbach
  */
-public interface IMapModellView extends ModellEventListener
+public interface IMapModellView extends ModellEventListener, ISelectionProvider
 {
-  public IMapModell getMapModell();
+  public IMapModell getMapModell( );
 
   public void setMapModell( final IMapModell modell );
+
+  public void dispose( );
 }

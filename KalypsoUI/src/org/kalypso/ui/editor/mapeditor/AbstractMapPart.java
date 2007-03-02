@@ -66,9 +66,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
@@ -76,10 +79,10 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -87,12 +90,13 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.ITemplateTheme;
 import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
+import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
@@ -107,14 +111,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
- * dirty, command target).
- * <p>
- * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen können potentiell editiert werden
- * </p>
- * <p>
- * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
- * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgeführt
- * </p>
+ * dirty, command target). Based on the old {@link GisMapEditor} implementation.
  * 
  * @author Stefan Kurzbach
  */
@@ -131,7 +128,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private GisTemplateMapModell m_mapModell;
 
-  private GisMapOutlinePage m_outlinePage;
+  private IMapModellView m_mapModellView;
 
   private MapModellContextSwitcher m_contextSwitcher;
 
@@ -144,7 +141,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private String m_partName;
 
-  protected IFile m_file;
+  private IFile m_file;
+
+  private IPartListener m_partListener;
 
   private final IWidgetChangeListener m_wcl = new IWidgetChangeListener()
   {
@@ -155,10 +154,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       try
       {
         final IWorkbenchPartSite site = getSite();
-        if( site != null && newWidget instanceof IWidgetWithOptions )
+        if( site != null )
         {
           final IWorkbenchPage page = site.getPage();
-          page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
+          final IViewPart view = page.findView( ActionOptionsView.class.getName() );
+          if( newWidget instanceof IWidgetWithOptions )
+          {
+            page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
+          }
+          else if( view != null )
+          {
+            page.hideView( view );
+          }
         }
       }
       catch( final PartInitException e )
@@ -242,6 +249,40 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       m_contextService = (IContextService) site.getWorkbenchWindow().getWorkbench().getService( IContextService.class );
     }
     m_contextSwitcher = new MapModellContextSwitcher( m_contextService );
+
+    m_partListener = new PartAdapter()
+    {
+
+      /**
+       * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
+       */
+      @Override
+      public void partActivated( final IWorkbenchPart part )
+      {
+        if( part instanceof GisMapOutlineView )
+        {
+          initMapModellView( (IMapModellView) part );
+        }
+      }
+
+      /**
+       * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partClosed(org.eclipse.ui.IWorkbenchPart)
+       */
+      @Override
+      public void partClosed( final IWorkbenchPart part )
+      {
+        if( part instanceof GisMapOutlineView )
+        {
+          setMapModellView( null );
+        }
+      }
+
+      private void initMapModellView( final IMapModellView mapModellView )
+      {
+        setMapModellView( mapModellView );
+      }
+    };
+    site.getPage().addPartListener( m_partListener );
   }
 
   /**
@@ -251,7 +292,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void createPartControl( final Composite parent )
   {
     m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
-
     getSite().setSelectionProvider( m_mapPanel );
   }
 
@@ -364,8 +404,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final IProject project;
       if( storage instanceof IFile )
       {
-        m_file = (IFile) storage;
-        context = ResourceUtilities.createURL( m_file );
+        setFile( (IFile) storage );
+        context = ResourceUtilities.createURL( getFile() );
         project = ((IFile) storage).getProject();
       }
       else
@@ -423,7 +463,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       setMapModell( null );
 
-      m_file = null;
+      setFile( null );
 
       throw new CoreException( status );
     }
@@ -431,7 +471,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
-      final String fileName = m_file != null ? FileUtilities.nameWithoutExtension( m_file.getName() ) : "<input not a file>";
+      final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : "<input not a file>";
       final String partName = m_partName == null ? fileName : m_partName;
       // must set part name in ui thread
       if( site != null )
@@ -508,7 +548,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
   }
 
-  protected void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
+  public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( m_mapModell == null )
       return;
@@ -584,9 +624,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     }
 
-    if( m_outlinePage != null )
+    if( m_mapModellView != null )
     {
-      m_outlinePage.setMapModell( m_mapModell );
+      m_mapModellView.setMapModell( m_mapModell );
     }
   }
 
@@ -616,21 +656,24 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     } );
   }
 
+  public void setMapModellView( final IMapModellView mapModellView )
+  {
+    m_mapModellView = mapModellView;
+    if( m_mapModellView != null )
+    {
+      m_mapModellView.setMapModell( m_mapModell );
+    }
+  }
+
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
   public Object getAdapter( final Class adapter )
   {
-    if( IContentOutlinePage.class.equals( adapter ) )
+    if( IMapModellView.class.equals( adapter ) )
     {
-      if( m_outlinePage == null )
-      {
-        m_outlinePage = new GisMapOutlinePage( getCommandTarget() );
-        m_outlinePage.setMapModell( m_mapModell );
-      }
-
-      return m_outlinePage;
+      return m_mapModellView;
     }
 
     if( IExportableObjectFactory.class.equals( adapter ) )
@@ -697,7 +740,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     } );
   }
-  
+
+  public void setFile( final IFile file )
+  {
+    m_file = file;
+  }
+
   public IFile getFile( )
   {
     return m_file;
@@ -716,9 +764,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.getWidgetManager().removeWidgetChangeListener( m_wcl );
     m_mapPanel.dispose();
 
-    if( m_outlinePage != null )
-      m_outlinePage.dispose();
-
+    getSite().getPage().removePartListener( m_partListener );
     super.dispose();
   }
 }

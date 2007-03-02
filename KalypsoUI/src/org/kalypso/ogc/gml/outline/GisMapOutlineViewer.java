@@ -60,6 +60,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
@@ -75,7 +76,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
 
   private IMapModell m_mapModel;
 
-  private final ICommandTarget m_commandTarget;
+  private ICommandTarget m_commandTarget;
 
   public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
   {
@@ -221,7 +222,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
       if( data instanceof IKalypsoTheme )
       {
         final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme) data, ti.getChecked() );
-        m_commandTarget.postCommand( command, null );
+        postCommand( command, null );
       }
     }
   }
@@ -229,7 +230,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetDefaultSelected( SelectionEvent e )
+  public void widgetDefaultSelected( final SelectionEvent e )
   {
     //
   }
@@ -246,7 +247,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_viewer.addSelectionChangedListener( listener );
   }
@@ -265,7 +266,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_viewer.removeSelectionChangedListener( listener );
   }
@@ -273,7 +274,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     m_viewer.setSelection( selection );
   }
@@ -289,7 +290,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    * @param listener
    *          a double-click listener
    */
-  public void addDoubleClickListener( IDoubleClickListener listener )
+  public void addDoubleClickListener( final IDoubleClickListener listener )
   {
     m_viewer.addDoubleClickListener( listener );
   }
@@ -300,7 +301,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    * @param listener
    *          a double-click listener
    */
-  public void removeDoubleClickListener( IDoubleClickListener listener )
+  public void removeDoubleClickListener( final IDoubleClickListener listener )
   {
     if( m_viewer != null )
       m_viewer.removeDoubleClickListener( listener );
@@ -310,9 +311,17 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
-  public void postCommand( ICommand command, Runnable runnable )
+  public void postCommand( final ICommand command, final Runnable runnable )
   {
-    m_commandTarget.postCommand( command, runnable );
+    if( m_commandTarget != null )
+    {
+      m_commandTarget.postCommand( command, runnable );
+    }
+  }
+
+  public void setCommandTarget( JobExclusiveCommandTarget commandTarget )
+  {
+    m_commandTarget = commandTarget;
   }
 
 }

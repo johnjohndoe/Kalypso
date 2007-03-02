@@ -19,6 +19,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -112,7 +113,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( part != null )
     {
       final IWorkbenchPart workbenchPart = part.getPart();
-      final IContentOutlinePage page = workbenchPart == null ? null : (IContentOutlinePage) workbenchPart.getAdapter( IContentOutlinePage.class );
+      final IMapModellView page = workbenchPart == null ? null : (IMapModellView) workbenchPart.getAdapter( IMapModellView.class );
       if( page != null )
       {
         m_ftSelection = null;
