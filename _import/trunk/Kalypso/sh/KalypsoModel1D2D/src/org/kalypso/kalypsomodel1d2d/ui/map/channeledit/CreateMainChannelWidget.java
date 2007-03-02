@@ -151,22 +151,21 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     final MapPanel mapPanel = getMapPanel();
 
     /* draw mesh */
-    if( m_data.getMeshStatus() == true ) 
+    if( m_data.getMeshStatus() == true )
       m_data.paintAllSegments( g, mapPanel );
 
     /* draw editable bankline */
-//    if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
-//    {
-//      m_data.drawBankLine( m_composite.m_currentSegment, 1, g );
-//    }
-//    if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
-//    {
-//      m_data.drawBankLine( m_composite.m_currentSegment, 2, g );
-//    }
-    
+    // if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
+    // {
+    // m_data.drawBankLine( m_composite.m_currentSegment, 1, g );
+    // }
+    // if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
+    // {
+    // m_data.drawBankLine( m_composite.m_currentSegment, 2, g );
+    // }
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
-    
+
   }
 
   private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color )
@@ -449,9 +448,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       public void run( )
       {
         // check if all needed data is specified
-        //m_data.completationCheck();
+        // m_data.completationCheck();
 
-        m_composite.updateControl();
+        m_composite.updateControl( false );
       }
     } );
 

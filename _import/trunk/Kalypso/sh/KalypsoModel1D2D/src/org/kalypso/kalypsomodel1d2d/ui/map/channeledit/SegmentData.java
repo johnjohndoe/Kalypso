@@ -767,7 +767,7 @@ public class SegmentData
     m_numBankIntersections = numIntersections;
   }
 
-  public void updateBankIntersection( )
+  public void updateBankIntersection()
   {
     if( m_bankLeftInters != null )
       m_bankLeftInters = intersectLineString( m_bankLeftOrg, m_numBankIntersections );
@@ -1043,5 +1043,15 @@ public class SegmentData
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );
 
+  }
+
+  public void setBankLeftInters( LineString bankLeftInters )
+  {
+    m_bankLeftInters = bankLeftInters;
+  }
+
+  public void setBankRightInters( LineString bankRightInters )
+  {
+    m_bankRightInters = bankRightInters;
   }
 }

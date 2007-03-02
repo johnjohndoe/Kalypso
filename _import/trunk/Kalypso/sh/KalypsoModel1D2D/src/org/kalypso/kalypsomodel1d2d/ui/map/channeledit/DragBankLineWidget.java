@@ -40,22 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author jung
@@ -87,11 +97,36 @@ public class DragBankLineWidget extends AbstractWidget
    */
   private GM_Curve m_bankline;
 
-  public DragBankLineWidget( GM_Curve bankline )
+  /**
+   * The new curve.
+   */
+  private GM_Curve m_newCurve;
+
+  /**
+   * The side which is changed.
+   */
+  private final int m_side;
+
+  /**
+   * The current segment.
+   */
+  private final SegmentData m_currentSegment;
+
+  private CreateChannelData m_data;
+
+  public DragBankLineWidget( CreateChannelData channeldata, SegmentData currentSegment, int side ) throws GM_Exception
   {
     super( "Uferline", "Dieses Widget ermöglicht das Verändern der Uferlinie." );
-    m_bankline = bankline;
 
+    if( side == 1 )
+      m_bankline = (GM_Curve) JTSAdapter.wrap( currentSegment.getBankLeftInters() );
+    else
+      m_bankline = (GM_Curve) JTSAdapter.wrap( currentSegment.getBankRightInters() );
+
+    m_data = channeldata;
+    m_currentSegment = currentSegment;
+    m_side = side;
+    m_newCurve = null;
     m_handles = null;
     m_radius = 4;
 
@@ -190,26 +225,42 @@ public class DragBankLineWidget extends AbstractWidget
     if( (m_handles == null) || (m_startPoint == null) || (m_currentPoint == null) )
       return;
 
-    /* Memory to collect all active handles. */
-    ArrayList<Handle> list = new ArrayList<Handle>();
-
     /* Set all handles inactive. */
     for( IHandle handle : m_handles )
       handle.setActive( false );
 
-    // TODO collect all handles to change
-
-    if( list.size() == 0 )
-    {
+    if( m_newCurve == null ) {
       /* Reset. */
       m_currentPoint = null;
       m_startPoint = null;
-
       return;
     }
 
-    /* Create new geometry. */
-    // TODO
+    try
+    {
+      /* Create new geometry. */
+      if( m_side == 1 )
+      {
+        m_currentSegment.setBankLeftInters( (LineString) JTSAdapter.export( m_newCurve ) );
+        m_data.updateSegments( true );
+      }
+      else
+      {
+        m_currentSegment.setBankRightInters( (LineString) JTSAdapter.export( m_newCurve ) );
+        m_data.updateSegments( true );
+      }
+
+      m_bankline = m_newCurve;
+      m_newCurve = null;
+      m_handles = collectHandles();
+      m_handles.remove( 0 );
+      m_handles.remove( m_handles.size() - 1 );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
     /* Reset. */
     m_currentPoint = null;
     m_startPoint = null;
@@ -221,33 +272,80 @@ public class DragBankLineWidget extends AbstractWidget
   @Override
   public void paint( Graphics g )
   {
-    if( m_handles == null )
+    if( m_handles == null || m_bankline == null )
       return;
-    
-    //GM_LineString linestrin = m_bankline.getAsLineString();
-    GM_Point[] linepoints = new GM_Point[m_handles.size() + 2];  //number of handles plus start and end point
-    
+
+    // final GM_Point[] linepoints = new GM_Point[m_handles.size() + 2]; //number of handles plus start and end point
+    final GM_Position[] positions = new GM_Position[m_handles.size() + 2]; // number of handles plus start and end
+    // point
     int i = 0;
-    
+    positions[i] = m_bankline.getStartPoint().getPosition();
+
     /* Paint all handles. */
     for( IHandle handle : m_handles )
     {
-      i = i+1;
+      i = i + 1;
       if( handle.isActive() )
       {
         handle.paint( getMapPanel().getGraphics(), getMapPanel().getProjection(), m_startPoint, m_currentPoint );
-        linepoints[i] = MapUtilities.transform( getMapPanel(), m_currentPoint );
+
+        if( m_currentPoint != null )
+          positions[i] = MapUtilities.transform( getMapPanel(), m_currentPoint ).getPosition();
+        else
+        {
+          GM_Position position = handle.getPosition();
+          positions[i] = GeometryFactory.createGM_Point( position, m_bankline.getCoordinateSystem() ).getPosition();
+        }
       }
       else
       {
         handle.paint( getMapPanel().getGraphics(), getMapPanel().getProjection(), null, null );
-        
+
+        GM_Position position = handle.getPosition();
+        positions[i] = GeometryFactory.createGM_Point( position, m_bankline.getCoordinateSystem() ).getPosition();
       }
     }
+    i = i + 1;
+    positions[i] = m_bankline.getEndPoint().getPosition();
 
     // paint the current dragged line
-    // take all handles, check for the acitve handle, add it to the start ad endpoint of the orig curve and built a line
-    
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+
+    final GM_Curve curve;
+    try
+    {
+      curve = GeometryFactory.createGM_Curve( positions, m_bankline.getCoordinateSystem() );
+      Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+      defaultstroke = symb.getStroke();
+
+      stroke.setWidth( 2 );
+      final Color color = new Color( 30, 255, 255 );
+      stroke.setStroke( color );
+      symb.setStroke( stroke );
+
+      DisplayElement de;
+      try
+      {
+        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        de.paint( g, getMapPanel().getProjection() );
+      }
+      catch( IncompatibleGeometryTypeException e )
+      {
+        e.printStackTrace();
+      }
+
+      // Set the Stroke back to default
+      symb.setStroke( defaultstroke );
+
+      m_newCurve = curve;
+    }
+    catch( GM_Exception e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+
   }
 
   /**
@@ -255,6 +353,9 @@ public class DragBankLineWidget extends AbstractWidget
    */
   public void reset( )
   {
+    //m_bankline = null;
+    m_newCurve = null;
+
     /* Reset the start & current points. */
     m_startPoint = null;
     m_currentPoint = null;

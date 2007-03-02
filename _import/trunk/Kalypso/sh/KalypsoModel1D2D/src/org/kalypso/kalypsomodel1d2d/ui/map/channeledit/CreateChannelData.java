@@ -787,7 +787,7 @@ public class CreateChannelData
     if( m_numbProfileIntersections != numProfileIntersections )
     {
       m_numbProfileIntersections = numProfileIntersections;
-      updateSegments();
+      updateSegments( false);
       // initSegments();
     }
   }
@@ -915,17 +915,24 @@ public class CreateChannelData
   /**
    * this method updates the segment data
    */
-  public void updateSegments( )
+  public void updateSegments(boolean edit )
   {
     // loop over all segments
     final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
     for( final SegmentData segment : datas )
     {
-      if( segment != null )
+      if( segment != null & edit == false)
       {
         // intersect the bankline by the defined number of intersections
         segment.updateBankIntersection();
         segment.updateProfileIntersection();
+      }
+      else if ( segment != null & edit == true)
+      {
+        // commits the done edits
+        
+       // segment.updateBank();
+       // segment.updateProfile();
       }
     }
     completationCheck();
@@ -945,5 +952,24 @@ public class CreateChannelData
   public SegmentData getCurrentSegment( int segment )
   {
     return m_segmentList.get( segment - 1 );
+  }
+
+  public void updateSegment( boolean edit, int segmentNumber )
+  {
+    final SegmentData segment = m_segmentList.get( segmentNumber-1 );
+    if( segment != null & edit == false)
+    {
+      // intersect the bankline by the defined number of intersections
+      segment.updateBankIntersection();
+      segment.updateProfileIntersection();
+    }
+    else if ( segment != null & edit == true)
+    {
+      // commits the done edits
+      
+     // segment.updateBank();
+     // segment.updateProfile();
+    }
+  completationCheck();
   }
 }
