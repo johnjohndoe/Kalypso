@@ -243,4 +243,11 @@
               name="Import 1D2D"
               project="false"/>
      </extension>
+     <extension
+           point="org.kalypso.model.wspm.ui.profilChartLayerProvider">
+        <profilLayerProvider
+              id="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ovelay.ProfilOverlayLayerProvider"
+              profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+              provider="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider"/>
+     </extension>
 </plugin>

@@ -65,8 +65,11 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
@@ -78,7 +81,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Thomas Jung
@@ -108,10 +113,6 @@ public class SegmentData
   private final List<IntersPointData> m_intersPoints = new ArrayList<IntersPointData>();
 
   private int m_numBankIntersections;
-
-  // private IProfil m_intersUpIProfil;
-
-  // private IProfil m_intersDownIProfil;
 
   // original data
   private Map<Feature, CreateChannelData.SIDE> m_bankLines;
@@ -285,7 +286,7 @@ public class SegmentData
    * the profile. next step is to intersect the profile (a) by Douglas-Peucker (b) equidistant the geographical data is
    * interpolated from the original profile data. Input: original profile (WSPMProfile) to be intersected, corresponding
    * intersection points (CreateChannelData.PROF). Output: LineString of the intersected / interpolated profile points.
-   * OBSOLETE!
+   * OBSOLETE!!! -> then delete it!!
    */
   private LineString intersectProfile( WspmProfile wspmprofile, CreateChannelData.PROF prof ) throws Exception
   {
@@ -548,20 +549,20 @@ public class SegmentData
 
   public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws GM_Exception
   {
-    //g.dispose();
-    
-//    if( m_bankRightOrg != null )
-//      paintBankLine( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
-//    if( m_bankLeftOrg != null )
-//      paintBankLine( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
+    // g.dispose();
+
+    // if( m_bankRightOrg != null )
+    // paintBankLine( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
+    // if( m_bankLeftOrg != null )
+    // paintBankLine( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
     // if( m_profDownInters != null )
     // paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
     // if( m_profUpInters != null )
     // paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
-//    if( m_bankLeftInters != null )
-//      paintLinePoints( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
-//    if( m_bankRightInters != null )
-//      paintLinePoints( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
+    // if( m_bankLeftInters != null )
+    // paintLinePoints( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
+    // if( m_bankRightInters != null )
+    // paintLinePoints( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
     // if( m_intersPoints != null )
     // {
     // final Point[] points = new Point[m_intersPoints.size()];
@@ -594,43 +595,6 @@ public class SegmentData
     }
   }
 
-  private void paintBankLine( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception
-  {
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
-
-    final GM_Curve Curve = (GM_Curve) JTSAdapter.wrap( line );
-
-    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
-
-    defaultstroke = symb.getStroke();
-
-    float[] dArray = new float[3];
-
-    dArray[0] = 6;
-    dArray[1] = 3;
-
-    stroke.setWidth( 2 );
-    stroke.setDashArray( dArray );
-    stroke.setStroke( color );
-    symb.setStroke( stroke );
-
-    DisplayElement de;
-    try
-    {
-      de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
-      de.paint( g, mapPanel.getProjection() );
-    }
-    catch( IncompatibleGeometryTypeException e )
-    {
-      e.printStackTrace();
-    }
-
-    // Set the Stroke back to default
-    symb.setStroke( defaultstroke );
-
-  }
-
   public boolean complete( )
   {
     boolean check;
@@ -643,6 +607,10 @@ public class SegmentData
     return check;
   }
 
+  /**
+   * gives the intersection point (Point) of the profile (prof) for the specified bank side (side). TODO: there has to
+   * be a set-method, too!!
+   */
   private Point getIntersPoint( CreateChannelData.PROF prof, CreateChannelData.SIDE side )
   {
     Point intersPoint = null;
@@ -674,7 +642,33 @@ public class SegmentData
     return Math.abs( distance );
   }
 
-  /** @return the points with are redundant */
+  /*
+   * // /** @return the points witch are redundant
+   */
+  // private Point[] reduceIt( final Point[] points, final int begin, final int end, final double allowedDistance )
+  // throws ProfilDataException
+  // {
+  // if( end - begin < 2 )
+  // return new Point[0];
+  //
+  // // für alle punkte abstand zu segment[begin-end] ausrechnen
+  // final double[] distances = new double[end - (begin + 1)];
+  // double maxdistance = 0.0;
+  // int maxdistIndex = -1;
+  //
+  // for( int i = 0; i < distances.length; i++ )
+  // {
+  // final double distance = calcDistance( points[begin], points[end], points[i + begin + 1] );
+  // distances[i] = distance;
+  //
+  // if( distance > maxdistance )
+  // {
+  // maxdistance = distance;
+  // maxdistIndex = i + begin + 1;
+  // }
+  // }
+  // }
+  /** @return the points witch are redundant */
   private IProfilPoint[] reduceIt( final IProfilPoint[] points, final int begin, final int end, final double allowedDistance ) throws ProfilDataException
   {
     if( end - begin < 2 )
@@ -713,6 +707,30 @@ public class SegmentData
       reduced[i] = points[i + begin + 1];
 
     return reduced;
+  }
+
+  protected Point[] reducePoints( final Point[] points, final Point[] pointsToKeep, final double allowedDistance ) throws ProfilDataException
+  {
+    // reduce segment wise
+    final Set<Point> pointsToKeepList = new HashSet<Point>( Arrays.asList( pointsToKeep ) );
+    final List<Point> pointsToRemove = new ArrayList<Point>( points.length - 2 );
+
+    int segmentBegin = 0;
+    for( int i = 0; i < points.length; i++ )
+    {
+      if( i == segmentBegin )
+        continue;
+
+      final Point point = points[i];
+      if( pointsToKeepList.contains( point ) || i == points.length - 1 )
+      {
+        // final Point[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
+        // pointsToRemove.addAll( Arrays.asList( toRemove ) );
+        segmentBegin = i;
+      }
+    }
+
+    return pointsToRemove.toArray( new Point[pointsToRemove.size()] );
   }
 
   protected IProfilPoint[] reducePoints( final IProfilPoint[] points, final IProfilPoint[] pointsToKeep, final double allowedDistance ) throws ProfilDataException
@@ -756,16 +774,17 @@ public class SegmentData
     if( m_bankRightInters != null )
       m_bankRightInters = intersectLineString( m_bankRightOrg, m_numBankIntersections );
   }
-  
+
   public void updateProfileIntersection( )
   {
     /* get the profile linestrings */
 
-    // TODO: Flächenausgleich!!
+    // TODO: Flächenausgleich!! -> that will be done later, after the init / update intersection, and again after every
+    // edit step via the profile chart.
     // DOWNSTREAM
     try
     {
-      m_profDownInters = intersectLineString( m_previousProfLineString, m_channelData.getNumProfileIntersections() );
+      m_profDownInters = intersectProfileLineString( m_previousProfLineString, m_channelData.getNumProfileIntersections() );
     }
     catch( Exception e )
     {
@@ -775,12 +794,254 @@ public class SegmentData
     // UPSTREAM
     try
     {
-      m_profUpInters = intersectLineString( m_nextProfLineString, m_channelData.getNumProfileIntersections() );
+      m_profUpInters = intersectProfileLineString( m_nextProfLineString, m_channelData.getNumProfileIntersections() );
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
   }
-  
+
+  /**
+   * intersects a profile linestring <br>
+   * (a) after initialisation of the widget <br>
+   * (b) after changing the number of profile intersection points, the intersection will be done by the
+   * Douglas-Peucker-Algorithm <br>
+   * if there are less profile points than the specified number of intersections, an equidistant approach will be done.<br>
+   * if the linestring has allready the right number of points, nothing will be done.
+   */
+  private LineString intersectProfileLineString( LineString profLinestring, int numProfIntersects )
+  {
+    if( profLinestring == null )
+      return null;
+
+    // calculate the distance between the intersection points by the distance along the profile linestring.
+    final double totaldistance = profLinestring.getLength();
+
+    // then compute the additional coodinates of the intersected profile linestring
+    // by the given spinner data of the composite
+
+    if( numProfIntersects > profLinestring.getNumPoints() )
+    {
+      /*
+       * equidistant widths, this attempt will be used, if there are not enough profile points to reach the number of
+       * intersection points
+       */
+      final double dDist = totaldistance / (numProfIntersects - 1); // equidistant widths
+      final double[] dist = new double[numProfIntersects];
+      final Point[] points = new Point[numProfIntersects];
+
+      dist[0] = 0;
+      points[0] = profLinestring.getStartPoint();
+
+      for( int i = 1; i < dist.length - 1; i++ )
+      {
+        dist[i] = dist[0] + dDist * i;
+        points[i] = JTSUtilities.pointOnLine( profLinestring, dist[i] );
+      }
+      dist[numProfIntersects - 1] = totaldistance;
+      points[numProfIntersects - 1] = profLinestring.getEndPoint();
+
+      final GM_Point[] gmpoints = new GM_Point[numProfIntersects]; // points for the LineString
+      GeometryFactory factory = new GeometryFactory();
+      Coordinate[] coordinates = new Coordinate[points.length];
+      for( int i = 0; i < gmpoints.length; i++ )
+      {
+        try
+        {
+          gmpoints[i] = (GM_Point) JTSAdapter.wrap( points[i] );
+
+          final double z = points[i].getCoordinate().z;
+
+          if( !Double.isNaN( z ) )
+          {
+            coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY(), gmpoints[i].getZ() );
+          }
+          else
+          {
+            coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY() );
+          }
+        }
+        catch( GM_Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+      return factory.createLineString( coordinates );
+    }
+    else if( numProfIntersects < profLinestring.getNumPoints() )
+    {
+      /* TODO: implement Douglas-Peucker for width calculation */
+      final double dDist = totaldistance / (numProfIntersects - 1); // equidistant widths
+      final double[] dist = new double[numProfIntersects];
+      final Point[] points = new Point[numProfIntersects];
+
+      dist[0] = 0;
+      points[0] = profLinestring.getStartPoint();
+
+      for( int i = 1; i < dist.length - 1; i++ )
+      {
+        dist[i] = dist[0] + dDist * i;
+        points[i] = JTSUtilities.pointOnLine( profLinestring, dist[i] );
+      }
+      dist[numProfIntersects - 1] = totaldistance;
+      points[numProfIntersects - 1] = profLinestring.getEndPoint();
+      final GM_Point[] gmpoints = new GM_Point[numProfIntersects]; // points for the LineString
+      GeometryFactory factory = new GeometryFactory();
+      Coordinate[] coordinates = new Coordinate[points.length];
+
+      return factory.createLineString( coordinates );
+    }
+    /* the input profile linestring is allready correct intersected */
+    return profLinestring;
+  }
+
+  /**
+   * gets the map extend (GM_Envelope) of the current segment
+   */
+  public GM_Envelope getSegmentMapExtend( )
+  {
+    GM_Envelope segmentMapExtend = null;
+    Geometry[] boundary = new Geometry[4];
+    int i;
+
+    i = 0;
+    if( m_profUpInters != null )
+    {
+      boundary[0] = m_profUpInters.getBoundary();
+      i = i + 1;
+    }
+    if( m_profDownInters != null )
+    {
+      boundary[1] = m_profDownInters.getBoundary();
+      i = i + 1;
+    }
+    if( m_bankLeftInters != null )
+    {
+      boundary[2] = m_bankLeftInters.getBoundary();
+      i = i + 1;
+    }
+    if( m_bankRightInters != null )
+    {
+      boundary[3] = m_bankRightInters.getBoundary();
+      i = i + 1;
+    }
+
+    double maxX = 0;
+    double maxY = 0;
+    double minX = 0;
+    double minY = 0;
+
+    for( int j = 0; j < i; j++ )
+    {
+      Coordinate[] coords = new Coordinate[2];
+      coords = boundary[j].getCoordinates();
+
+      for( int k = 0; k < 2; k++ )
+      {
+
+        if( j == 0 & k == 0 )
+        {
+          maxX = coords[k].x;
+          maxY = coords[k].y;
+          minX = coords[k].x;
+          minY = coords[k].y;
+        }
+
+        if( coords[k].x > maxX )
+          maxX = coords[k].x;
+        if( coords[k].y > maxY )
+          maxY = coords[k].y;
+        if( coords[k].x < minX )
+          minX = coords[k].x;
+        if( coords[k].x < minY )
+          minY = coords[k].y;
+      }
+    }
+
+    minX = minX - (maxX - minX) / 10;
+    minY = minY - (maxY - minY) / 10;
+    maxX = maxX + (maxX - minX) / 10;
+    maxY = maxY + (maxY - minY) / 10;
+
+    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+
+  }
+
+  /**
+   * the editable bank linestring is painted
+   */
+  public void paintLineString( MapPanel panel, Graphics g, int side )
+  {
+    Color color = new Color( 20, 20, 255 );
+
+    // paint the line
+    if( side == 1 )
+    {
+      try
+      {
+        paintBankLine( getBankLeftInters(), g, panel, color );
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    else if( side == 2 )
+    {
+      try
+      {
+        paintBankLine( getBankRightInters(), g, panel, color );
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
+    // paint the nodes
+    if( side == 1 )
+    {
+      paintLinePoints( getBankLeftInters(), g, panel, color );
+    }
+    else if( side == 2 )
+    {
+      paintLinePoints( getBankRightInters(), g, panel, color );
+    }
+
+  }
+
+  private void paintBankLine( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception
+  {
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+
+    final GM_Curve Curve = (GM_Curve) JTSAdapter.wrap( line );
+    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+    defaultstroke = symb.getStroke();
+    // float[] dArray = new float[3];
+    // dArray[0] = 6;
+    // dArray[1] = 3;
+    stroke.setWidth( 3 );
+    // stroke.setDashArray( dArray );
+    stroke.setStroke( color );
+    symb.setStroke( stroke );
+
+    DisplayElement de;
+    try
+    {
+      de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
+      de.paint( g, mapPanel.getProjection() );
+    }
+    catch( IncompatibleGeometryTypeException e )
+    {
+      e.printStackTrace();
+    }
+
+    // Set the Stroke back to default
+    symb.setStroke( defaultstroke );
+
+  }
 }

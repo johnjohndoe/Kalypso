@@ -83,9 +83,11 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.Graphic_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -762,7 +764,7 @@ public class CreateChannelData
 
   public void paintAllSegments( final Graphics g, final MapPanel mapPanel )
   {
-    if( m_meshCoords != null ) 
+    if( m_meshCoords != null )
     {
       try
       {
@@ -776,7 +778,7 @@ public class CreateChannelData
       {
         e.printStackTrace();
       }
-      paintCoords( m_meshCoords, g, mapPanel );
+      // paintCoords( m_meshCoords, g, mapPanel );
     }
   }
 
@@ -842,7 +844,7 @@ public class CreateChannelData
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
     Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
     defaultstroke = symb.getStroke();
-    Color grey = new Color( 200, 200, 200 );
+    Color grey = new Color( 100, 100, 100 );
 
     stroke.setWidth( 1 );
     stroke.setStroke( grey );
@@ -927,5 +929,21 @@ public class CreateChannelData
       }
     }
     completationCheck();
+  }
+
+  public GM_Envelope getCurrentSegmentExtend( int segment )
+  {
+    return m_segmentList.get( segment - 1 ).getSegmentMapExtend();
+  }
+
+  public void drawBankLine( int segment, int side, final Graphics g )
+  {
+    MapPanel panel = m_widget.getPanel();
+    m_segmentList.get( segment - 1 ).paintLineString( panel, g, side );
+  }
+
+  public SegmentData getCurrentSegment( int segment )
+  {
+    return m_segmentList.get( segment - 1 );
   }
 }

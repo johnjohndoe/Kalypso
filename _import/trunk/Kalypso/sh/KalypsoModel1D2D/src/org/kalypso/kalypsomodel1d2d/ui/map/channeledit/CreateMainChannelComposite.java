@@ -41,8 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -71,9 +73,17 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Thomas Jung
@@ -92,6 +102,8 @@ public class CreateMainChannelComposite extends Composite
 
   private Section m_segmentSection;
 
+  private boolean m_ButtonStateZoom;
+
   /*********************************************************************************************************************
    * m_buttonList Following buttons are present in the Schlauchgenerator: Profile wählen Uferlinie 1 wählen Uferlinie 1
    * zeichnen Uferlinie 2 wählen Uferlinie 2 zeichnen
@@ -99,6 +111,16 @@ public class CreateMainChannelComposite extends Composite
   private final List<Button> m_buttonList = new ArrayList<Button>();
 
   private Button m_buttonConvertToModel;
+
+  protected boolean m_bankEdit1;
+
+  protected boolean m_bankEdit2;
+
+  protected int m_currentSegment;
+
+  private Button m_buttonEditBank2;
+
+  private Button m_buttonEditBank1;
 
   public CreateMainChannelComposite( final Composite parent, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -202,8 +224,32 @@ public class CreateMainChannelComposite extends Composite
 
     final Spinner spinnerSegment = new Spinner( sectionClient, 0 );
     GridData gridDataSegmentSpinner = new GridData( SWT.LEFT, SWT.CENTER, true, false );
-    gridDataSegmentSpinner.horizontalSpan = 3;
+    gridDataSegmentSpinner.horizontalSpan = 2;
     spinnerSegment.setLayoutData( gridDataSegmentSpinner );
+
+    final Button buttonZoomToExtend = new Button( sectionClient, SWT.CHECK );
+    buttonZoomToExtend.setText( "autom. Zoom" );
+    buttonZoomToExtend.setSelection( m_ButtonStateZoom );
+
+    buttonZoomToExtend.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( m_ButtonStateZoom == false )
+        {
+          m_ButtonStateZoom = true;
+          final GM_Envelope mapExtend = m_data.getCurrentSegmentExtend( spinnerSegment.getSelection() );
+          if( mapExtend != null )
+          {
+            MapPanel panel = m_widget.getPanel();
+            panel.setBoundingBox( mapExtend );
+          }
+        }
+        else
+          m_ButtonStateZoom = false;
+      }
+    } );
 
     if( m_data.getNumOfSegments() > 1 )
     {
@@ -222,6 +268,7 @@ public class CreateMainChannelComposite extends Composite
       spinnerSegment.setMinimum( 0 );
       spinnerSegment.setMaximum( m_data.getNumOfSegments() );
       spinnerSegment.setSelection( 1 );
+      m_currentSegment = 1;
     }
     else
       spinnerSegment.setEnabled( false );
@@ -231,6 +278,16 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( SelectionEvent e )
       {
         m_data.setSelectedSegment( spinnerSegment.getSelection() );
+        m_currentSegment = spinnerSegment.getSelection();
+        if( buttonZoomToExtend.getSelection() == true )
+        {
+          final GM_Envelope mapExtend = m_data.getCurrentSegmentExtend( spinnerSegment.getSelection() );
+          if( mapExtend != null )
+          {
+            MapPanel panel = m_widget.getPanel();
+            panel.setBoundingBox( mapExtend );
+          }
+        }
         updateControl();
       }
     } );
@@ -297,49 +354,85 @@ public class CreateMainChannelComposite extends Composite
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // bring profile 1 on the ChartView
+        // TODO: bring profile 1 on the ChartView
       }
     } );
 
-    Label labelBankline1 = new Label( groupSegment, SWT.NULL );
+    final Label labelBankline1 = new Label( groupSegment, SWT.NULL );
     labelBankline1.setText( "Uferlinie 1" );
 
-    Button buttonEditBank1 = new Button( groupSegment, SWT.PUSH );
-    buttonEditBank1.setText( "edit" );
-    buttonEditBank1.addSelectionListener( new SelectionAdapter()
+    m_buttonEditBank1 = new Button( groupSegment, SWT.TOGGLE );
+    m_buttonEditBank1.setText( "edit" );
+    //m_bankEdit1 = false;
+    m_buttonEditBank1.setSelection( m_bankEdit1 );
+    m_buttonEditBank1.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // set LineString for Bank 1 editable
+        // TODO: set LineString for Bank 1 editable
+        if( m_buttonEditBank1.getSelection() == true )
+        {
+          m_bankEdit1 = true;
+          m_buttonEditBank2.setSelection( false );
+          m_bankEdit2 = false;
+          //get the line
+          SegmentData currentSegment = m_data.getCurrentSegment( m_currentSegment );
+          LineString bankLeftInters = currentSegment.getBankLeftInters();
+          try
+          {
+            GM_Curve curve = (GM_Curve)JTSAdapter.wrap( bankLeftInters );
+            DragBankLineWidget widget = new DragBankLineWidget(curve);
+            m_widget.setDelegate( widget );
+          }
+          catch( GM_Exception e1 )
+          {
+            e1.printStackTrace();
+          }
+        }
+        else {
+          m_bankEdit1 = false;
+          m_widget.setDelegate( null );
+        }
+        
       }
     } );
 
-    Label labelProfile2 = new Label( groupSegment, SWT.NULL );
+    final Label labelProfile2 = new Label( groupSegment, SWT.NULL );
     labelProfile2.setText( "Profil 2" );
 
-    Button buttonEditProf2 = new Button( groupSegment, SWT.PUSH );
+    final Button buttonEditProf2 = new Button( groupSegment, SWT.PUSH );
     buttonEditProf2.setText( "edit" );
     buttonEditProf2.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // bring profile 2 on the ChartView
+        // TODO: bring profile 2 on the ChartView
       }
     } );
 
-    Label labelBankline2 = new Label( groupSegment, SWT.NULL );
+    final Label labelBankline2 = new Label( groupSegment, SWT.NULL );
     labelBankline2.setText( "Uferlinie 2" );
 
-    Button buttonEditBank2 = new Button( groupSegment, SWT.PUSH );
-    buttonEditBank2.setText( "edit" );
-    buttonEditBank2.addSelectionListener( new SelectionAdapter()
+    m_buttonEditBank2 = new Button( groupSegment, SWT.TOGGLE );
+    m_buttonEditBank2.setText( "edit" );
+    //m_bankEdit2 = false;
+    m_buttonEditBank2.setSelection( m_bankEdit2 );
+    m_buttonEditBank2.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // set LineString for Bank 2 editable
+        // TODO: set LineString for Bank 2 editable
+        if( m_buttonEditBank2.getSelection() == true )
+        {
+          m_bankEdit2 = true;
+          m_buttonEditBank1.setSelection( false );
+          m_bankEdit1 = false;
+        }
+        else
+          m_bankEdit2 = false;
       }
     } );
 
@@ -643,7 +736,7 @@ public class CreateMainChannelComposite extends Composite
     final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.NONE );
 
     spinNumProfIntersections.setDigits( 0 );
-    spinNumProfIntersections.setMinimum( 2 );
+    spinNumProfIntersections.setMinimum( 4 );
     spinNumProfIntersections.setMaximum( 100 );
     if( m_data.getNumProfileIntersections() == 0 )
       spinNumProfIntersections.setSelection( 6 );
@@ -676,7 +769,6 @@ public class CreateMainChannelComposite extends Composite
 
   public void updateControl( )
   {
-
     updateSegmentSwitchSection();
     m_data.updateSegments();
     updateProfilSection();
@@ -716,8 +808,15 @@ public class CreateMainChannelComposite extends Composite
       final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      for( final ProfilChartActionsEnum action : ProfilChartActionsEnum.values() )
-        manager.add( ProfilChartActionsEnum.createAction( profilChartView, action ) );
+      List<IAction> chartActions = new LinkedList<IAction>();
+      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ) );
+      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN ) );
+      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN ) );
+      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ) );
+      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE ) );
+
+      for( final IAction chartAction : chartActions )
+        manager.add( chartAction );
 
       manager.update( true );
     }
