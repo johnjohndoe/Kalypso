@@ -58,17 +58,13 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
  * <p>
- * Eclipse-Editor zum editieren der GML-Gis-Templates.
+ * View on a {@link org.kalypso.ogc.gml.mapmodel.IMapModell}.
  * </p>
  * <p>
- * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen potentiell editiert werden
- * </p>
- * <p>
- * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
- * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
+ * Shows a map of all themes. The sources of the themes can be edited.
  * </p>
  * 
- * @author belger
+ * @author Stefan Kurzbach, belger
  */
 public class MapView extends AbstractMapPart implements IViewPart
 {
@@ -90,10 +86,10 @@ public class MapView extends AbstractMapPart implements IViewPart
   {
     super.createPartControl( parent );
 
-    if( m_file != null )
+    final IFile file = getFile();
+    if( file != null )
     {
-      final IFile storage = m_file;
-      startLoadJob( storage );
+      startLoadJob( file );
     }
   }
 
@@ -112,7 +108,7 @@ public class MapView extends AbstractMapPart implements IViewPart
       if( fullPath != null )
       {
         final IPath path = Path.fromPortableString( fullPath );
-        m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+        setFile( ResourcesPlugin.getWorkspace().getRoot().getFile( path ) );
       }
       final String partName = memento.getString( MEMENTO_PARTNAME );
       setCustomName( partName );
@@ -124,9 +120,10 @@ public class MapView extends AbstractMapPart implements IViewPart
    */
   public void saveState( final IMemento memento )
   {
-    if( m_file != null )
+    final IFile file = getFile();
+    if( file != null )
     {
-      final IPath fullPath = m_file.getFullPath();
+      final IPath fullPath = file.getFullPath();
       if( fullPath != null )
         memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
     }
@@ -147,7 +144,7 @@ public class MapView extends AbstractMapPart implements IViewPart
         {
           try
           {
-            saveMap( monitor, m_file );
+            saveMap( monitor, getFile() );
           }
           catch( final CoreException e )
           {

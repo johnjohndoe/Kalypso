@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * <p>
@@ -52,4 +53,37 @@ import org.eclipse.ui.IEditorPart;
 public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
   public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor";
+
+  private GisMapOutlinePage m_gisMapOutlinePage;
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_gisMapOutlinePage == null )
+      {
+        m_gisMapOutlinePage = new GisMapOutlinePage( getCommandTarget() );
+        m_gisMapOutlinePage.setMapModell( getMapPanel().getMapModell() );
+      }
+      return m_gisMapOutlinePage;
+    }
+    return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_gisMapOutlinePage != null )
+    {
+      m_gisMapOutlinePage.dispose();
+    }
+    super.dispose();
+  }
 }
