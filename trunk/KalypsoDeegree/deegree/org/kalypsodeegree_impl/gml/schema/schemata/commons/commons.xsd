@@ -80,6 +80,13 @@
 	<simpleType name="directory">
 		<restriction base="string"> </restriction>
 	</simpleType>
+	
+	<!-- Defines a valid email adress based on a string. -->
+	<simpleType name="email">
+		<restriction base="string"> 
+			<pattern value=".+@.+[.].+"/>
+		</restriction>
+	</simpleType>
 
 	<!-- Image -->
 	<element name="Image" type="common:ImageType" substitutionGroup="gml:_Feature">
@@ -87,7 +94,7 @@
 			<documentation xml:lang="de">
 				<name>Bild</name>
 				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
-				<tooltip>Referenz auf eine bilddatei</tooltip>
+				<tooltip>Referenz auf eine Bilddatei</tooltip>
 				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
