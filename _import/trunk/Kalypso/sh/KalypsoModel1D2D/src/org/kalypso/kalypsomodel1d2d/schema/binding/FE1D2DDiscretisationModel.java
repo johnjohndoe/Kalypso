@@ -113,54 +113,76 @@ public class FE1D2DDiscretisationModel
    */
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-      List<IFE1D2DEdge> edges= new ArrayList<IFE1D2DEdge>();
-      edges.addAll(node0.getContainers() );
-      if(edges.size()==0)
+      IFE1D2DEdge toInv=null;
+      for(IFE1D2DEdge edge:node0.getEdges())
       {
-        return null;
-      }
-      edges.retainAll( node1.getContainers() );
-      int size=edges.size();
-      if(size==1)
-      {
-        IFE1D2DEdge edge=edges.get( 0 );
-        if(NodeOps.startOf( node0, edge ))
+        if(NodeOps.endOf( node1, edge ))
         {
           return edge;
         }
-        else
+        else if(NodeOps.startOf( node1, edge ))
         {
-          IEdgeInv edgeInv=edge.getEdgeInv();
-          if(edgeInv==null)
-          {
-            edgeInv=new EdgeInv(edge,this);
-          }
-          return edgeInv;
-          
+          toInv=edge;
         }
       }
-      else if(size==2)
+      if(toInv!=null)
       {
-        IFE1D2DEdge edge=edges.get( 0 );
-        if(NodeOps.startOf( node0, edge ))
-        {
-          return edge;
-        }
-        else
-        {
-          return edges.get( 1 );
-        }
-      }
-      else if(size==0)
-      {
-        return null;
+        return new EdgeInv(toInv,this);
       }
       else
       {
-         System.out.println(
-             "Found an several edges with those two nodes:"+edges);
-         return null;
+        return null;
       }
+//      List<IFE1D2DEdge> edges= new ArrayList<IFE1D2DEdge>();
+//      edges.addAll(node0.getContainers() );
+//      if(edges.size()==0)
+//      {
+//        return null;
+//      }
+//      edges.retainAll( node1.getContainers() );
+//      int size=edges.size();
+//      if(size==1)
+//      {
+//        IFE1D2DEdge edge=edges.get( 0 );
+//        if(NodeOps.startOf( node0, edge ))
+//        {
+//          return edge;
+//        }
+//        else
+//        {
+//          IEdgeInv edgeInv=edge.getEdgeInv();
+//          if(edgeInv==null)
+//          {
+//            edgeInv=new EdgeInv(edge,this);
+//          }
+//          return edgeInv;
+//          
+//        }
+//      }
+//      else if(size==2)
+//      {
+//        IFE1D2DEdge edge=edges.get( 0 );
+//        if(NodeOps.startOf( node0, edge ))
+//        {
+//          return edge;
+//        }
+//        else
+//        {
+//          return edges.get( 1 );
+//        }
+//      }
+//      else if(size==0)
+//      {
+//        return null;
+//      }
+//      else
+//      {
+//        throw new RuntimeException(
+//            "Found an several edges with those two nodes:"+edges);
+////         System.out.println(
+////             "Found an several edges with those two nodes:"+edges);
+////         return null;
+//      }
       
   }
 

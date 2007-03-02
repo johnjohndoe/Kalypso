@@ -85,7 +85,7 @@ public class EdgeInv implements IEdgeInv
       toInv=workspace.getFeature( (String )toInv);
     }
     this.edge = (IFE1D2DEdge)((Feature)toInv).getAdapter( IFE1D2DEdge.class );//new FE1D2DEdge((Feature)toInv);
-    this.wrappedFeature=invEdgeFeature;
+    this.wrappedFeature = invEdgeFeature;
     containers = 
       new FeatureWrapperCollection<IFE1D2DElement>(
           wrappedFeature,

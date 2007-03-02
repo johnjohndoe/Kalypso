@@ -311,7 +311,7 @@ public class ModelOps
     
 //    sortElementEdgesOld( element );
 //    sortEdgesAddToElement( element, edges );
-    sortElementEdges( element );
+    sortElementEdges( element, edges );
     String elementID = element.getGmlID();
     for(IFE1D2DEdge edge:edges)
     {
@@ -322,74 +322,85 @@ public class ModelOps
     
   }
   
-  public static final void sortEdgesAddToElement(
-                                  IFE1D2DElement element,
-                                  List<IFE1D2DEdge> toSortAndAddEdges)
-  {
-    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges=element.getEdges();
-    final int INITIAL_SIZE=toSortAndAddEdges.size();
-    if(INITIAL_SIZE<3)
-    {
-      String str=
-        "Illegal2D element:"+element.getGmlID()+
-        " edgeCount="+INITIAL_SIZE;
-//      throw new IllegalStateException(str);
-      System.out.println(str);
-      return;
-    }
-    List<IFE1D2DEdge> edges=
-          new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);
-    
-    //clear old edge for reordering
-    elementEdges.clear();
-    
-    FeatureList edgeFeatureList=elementEdges.getWrappedList();
-    
-//  just select the first node
-    IFE1D2DEdge edge=edges.remove(0);    
-    edgeFeatureList.add( edge.getGmlID() );
-    for(int i=0; edges.size()>0;)
-    {
-      
-      IFE1D2DNode nodeEnd=edge.getNode( 1 );
-      i=edges.size()-1;
-      for(;i>=0;i--)
-      {
-        if( nodeEnd.getGmlID().equals( edges.get( i ).getNode( 0 ).getGmlID()) )
-        {
-          break;
-        }
-      }
-      if(i==-1)
-      {
-        ///no following not found ordering ends
-        return;
-      }
-      else
-      {
-        edge=edges.remove( i );
-        edgeFeatureList.add( edge.getGmlID() );
-      }
-    }
-    
-    
-  }
+ 
+  
+//  public static final void sortEdgesAddToElement(
+//                                  IFE1D2DElement element,
+//                                  List<IFE1D2DEdge> toSortAndAddEdges)
+//  {
+//    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges=element.getEdges();
+//    final int INITIAL_SIZE=toSortAndAddEdges.size();
+//    if(INITIAL_SIZE<3)
+//    {
+//      String str=
+//        "Illegal2D element:"+element.getGmlID()+
+//        " edgeCount="+INITIAL_SIZE;
+////      throw new IllegalStateException(str);
+//      System.out.println(str);
+//      return;
+//    }
+//    List<IFE1D2DEdge> edges=
+//          new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);
+//    
+//    //clear old edge for reordering
+//    elementEdges.clear();
+//    
+//    FeatureList edgeFeatureList=elementEdges.getWrappedList();
+//    
+////  just select the first node
+//    IFE1D2DEdge edge=edges.remove(0);    
+//    edgeFeatureList.add( edge.getGmlID() );
+//    for(int i=0; edges.size()>0;)
+//    {
+//      
+//      IFE1D2DNode nodeEnd=edge.getNode( 1 );
+//      i=edges.size()-1;
+//      for(;i>=0;i--)
+//      {
+//        if( nodeEnd.getGmlID().equals( edges.get( i ).getNode( 0 ).getGmlID()) )
+//        {
+//          break;
+//        }
+//      }
+//      if(i==-1)
+//      {
+//        ///no following not found ordering ends
+//        return;
+//      }
+//      else
+//      {
+//        edge=edges.remove( i );
+//        edgeFeatureList.add( edge.getGmlID() );
+//      }
+//    }
+//    
+//    
+//  }
 
   public static final void sortElementEdges(IFE1D2DElement element)
   {
+    IFeatureWrapperCollection edges = element.getEdges();
+    List<IFE1D2DEdge> toSort= new ArrayList<IFE1D2DEdge>(edges);
+    edges.clear();
+    sortElementEdges( element, toSort);
+  }
+  
+  public static final void sortElementEdges(
+                          IFE1D2DElement element,
+                          List<IFE1D2DEdge> toSortAndAddEdges)
+  {
 //    sortElementEdgesOld( element );
     IFeatureWrapperCollection<IFE1D2DEdge> elementEdges=element.getEdges();
-    final int INITIAL_SIZE=elementEdges.size();
+    final int INITIAL_SIZE=toSortAndAddEdges.size();//elementEdges.size();
     if(INITIAL_SIZE<3)
     {
       String str=
         "Illegal2D element:"+element.getGmlID()+" edgeCount="+INITIAL_SIZE;
-//      throw new IllegalStateException(str);
-      System.out.println(str);
-      return;
+      throw new IllegalStateException(str);
+//      return;
     }
     List<IFE1D2DEdge> edges=
-          new ArrayList<IFE1D2DEdge>(element.getEdges());
+          new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);//element.getEdges());
     
     
     //clear old edge for reordering
@@ -401,7 +412,7 @@ public class ModelOps
     IFE1D2DEdge edge=edges.remove(0);
     edgeFeatureList.add( edge.getGmlID() );
     int SIZE=edges.size();
-    for(int i=0; SIZE>0;SIZE=edges.size())
+    for( ; SIZE>0;SIZE=edges.size())
     {
       
       IFE1D2DNode nodeEnd=edge.getNode( 1 );
@@ -437,31 +448,6 @@ public class ModelOps
               "\n\tlist:"+edges);
         }
       }
-      
-//      i=edges.size()-1;
-//      for(;i>=0;i--)
-//      {
-//        IFE1D2DEdge edge2 = edges.get( i );
-//        if( nodeEnd.getGmlID().equals( edge2.getNode( 0 ).getGmlID()) )
-//        {
-//          break;
-//        }
-//        else
-//        {
-//          continue;
-//        }
-//      }
-//      
-//      if(i==-1)
-//      {
-//        ///no following not found ordering ends
-//        return;
-//      }
-//      else
-//      {
-//        edge=edges.remove( i );
-//        edgeFeatureList.add( edge.getGmlID() );
-//      }
     }
     
     

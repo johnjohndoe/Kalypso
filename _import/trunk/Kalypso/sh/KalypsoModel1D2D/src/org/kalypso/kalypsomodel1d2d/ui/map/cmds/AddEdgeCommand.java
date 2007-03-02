@@ -94,13 +94,13 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
     addedEdge=model.findEdge( addedNode1, addedNode2 );
     if(addedEdge==null)
     {
-    addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-    String edgeGmlID = addedEdge.getGmlID();
-    addedEdge.addNode( addedNode1.getGmlID() );
-    addedNode1.addContainer( edgeGmlID );
-    //
-    addedEdge.addNode( addedNode2.getGmlID() );
-    addedNode2.addContainer( edgeGmlID );
+      addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      String edgeGmlID = addedEdge.getGmlID();
+      addedEdge.addNode( addedNode1.getGmlID() );
+      addedNode1.addContainer( edgeGmlID );
+      //
+      addedEdge.addNode( addedNode2.getGmlID() );
+      addedNode2.addContainer( edgeGmlID );
     }
     
     

@@ -157,5 +157,16 @@ public class NodeOps
     return equals;    
   }
   
+  public static boolean endOf( IFE1D2DNode<IFE1D2DEdge> endNode, IFE1D2DEdge edgeToTest)
+  {
+    if(endNode==null || edgeToTest==null)
+    {
+      return false;
+    }
+    
+    IFE1D2DNode edgeEnd = edgeToTest.getNode( 1 );
+    boolean equals = endNode.equals( edgeEnd );
+    return equals;    
+  }
   
 }
