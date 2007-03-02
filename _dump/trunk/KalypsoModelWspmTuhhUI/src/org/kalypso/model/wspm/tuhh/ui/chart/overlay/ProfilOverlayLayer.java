@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
 
 import de.belger.swtchart.EditInfo;
+import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author kimwerner
@@ -76,7 +77,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     return true;
   }
 
-  private final List<Point2D> m_points;
+  private List<Point2D> m_points;
 
   private final Color m_color;
 
@@ -106,9 +107,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       gc.setLineWidth( 1 );
       gc.setForeground( m_color );
 
-      final Point p = logical2screen( m_points.get( index ) );
-
-      gc.drawLine( p.x, p.y, editing.x, editing.y );
+      // final Point p = logical2screen( m_points.get( index ) );
+      final AxisRange valueRange = getValueRange();
+      final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
+      int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+      gc.drawLine( editing.x, bottom, editing.x, top );
       gc.setLineWidth( lineWidthBuffer );
       gc.setLineStyle( lineStyleBuffer );
       gc.setForeground( foregroundBuffer );
@@ -125,7 +128,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final EditData editData = (EditData) data;
     final Point2D point2D = m_points.get( editData.getIndex() );
     final Point2D logPoint = screen2logical( point );
-    point2D.setLocation( logPoint );
+    final double hoehe = logPoint.getY();
+    point2D.setLocation( logPoint.getX(),hoehe );
     getProfilChartView().getChart().repaint();
   }
 
@@ -163,6 +167,13 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   public List getPoints( )
   {
     return m_points;
+  }
+
+  public Point2D[] setPoints( final Point2D[] points )
+  {
+    final Point2D[] oldPoints = m_points.toArray( new Point2D[0] );
+    m_points = Arrays.asList( points );
+    return oldPoints;
   }
 
   /**

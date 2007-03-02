@@ -56,7 +56,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public IProfilChartLayer[] addLayerToChart( ProfilChartView view, String layerId )
   {
-    view.getChart().addLayer( new ProfilOverlayLayer(view), true );
+    view.getChart().addLayer( new ProfilOverlayLayer( view ), true );
     view.getChart().repaint();
     return new IProfilChartLayer[0];
   }
@@ -66,8 +66,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public String[] getAddableLayers( ProfilChartView view )
   {
-    return new String[]{IWspmOverlayConstants.LAYER_OVERLAY};
- 
+    return new String[0];
   }
 
   /**
@@ -76,17 +75,17 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public IProfilChartLayer[] getLayer( String layerId, ProfilChartView view )
   {
-    if(IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ))
-      return new IProfilChartLayer[]{new ProfilOverlayLayer(view)};
+    if( IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ) )
+      return new IProfilChartLayer[] { new ProfilOverlayLayer( view ) };
     return null;
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getRequieredLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public String[] getRequiredLayer(final ProfilChartView view )
+  public String[] getRequiredLayer( final ProfilChartView view )
   {
-    return new String[0];
+    return new String[] { IWspmOverlayConstants.LAYER_OVERLAY };
   }
 
   /**
