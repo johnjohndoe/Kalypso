@@ -641,7 +641,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapModell.saveTheme( theme, monitor );
   }
 
-  private void setMapModell( final GisTemplateMapModell mapModell )
+  protected void setMapModell( final GisTemplateMapModell mapModell )
   {
     // dispose old one
     if( m_mapModell != null )
@@ -664,7 +664,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_mapModellView != null )
     {
       m_mapModellView.setMapModell( m_mapModell );
-    }
+    }      
   }
 
   /**

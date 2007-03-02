@@ -42,6 +42,7 @@ package org.kalypso.ui.editor.mapeditor;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
 
 /**
  * <p>
@@ -72,6 +73,19 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
       return m_gisMapOutlinePage;
     }
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#setMapModell(org.kalypso.ogc.gml.GisTemplateMapModell)
+   */
+  @Override
+  protected void setMapModell( final GisTemplateMapModell mapModell )
+  {
+    super.setMapModell( mapModell );
+    if( m_gisMapOutlinePage != null )
+    {
+      m_gisMapOutlinePage.setMapModell( mapModell );
+    }
   }
 
   /**
