@@ -49,6 +49,10 @@ import java.net.URL;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -177,6 +181,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private static IContextService m_contextService;
 
+  private IResourceChangeListener m_resourceChangeListener;
+
+  private boolean m_saving;
+
   /**
    *
    */
@@ -283,6 +291,36 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     };
     site.getPage().addPartListener( m_partListener );
+
+    m_resourceChangeListener = new IResourceChangeListener()
+    {
+      public void resourceChanged( final IResourceChangeEvent event )
+      {
+        if( m_saving )
+        {
+          return;
+        }
+        final IFile file = getFile();
+        if( file == null )
+        {
+          return;
+        }
+        if( event.getType() != IResourceChangeEvent.POST_CHANGE )
+        {
+          return;
+        }
+        final IResourceDelta rootDelta = event.getDelta();
+        final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );
+        if( fileDelta == null )
+        {
+          return;
+        }
+        if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+        {
+          startLoadJob( file );
+        }
+      }
+    };
   }
 
   /**
@@ -380,6 +418,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         return MapView.JOB_FAMILY.equals( family );
       }
     };
+    if( storage instanceof IResource )
+      job.setRule( (IResource) storage );
     job.setUser( true );
     job.schedule();
   }
@@ -473,18 +513,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : "<input not a file>";
       final String partName = m_partName == null ? fileName : m_partName;
-      // must set part name in ui thread
-      if( site != null )
-      {
-        site.getShell().getDisplay().asyncExec( new Runnable()
-        {
-          @SuppressWarnings("synthetic-access")
-          public void run( )
-          {
-            setPartName( partName );
-          }
-        } );
-      }
+      setCustomName( partName );
     }
   }
 
@@ -496,56 +525,60 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     final IFile file = input.getFile();
-    if( m_mapModell == null )
-      return;
-
-    ByteArrayInputStream bis = null;
-    try
-    {
-      monitor.beginTask( "Kartenvorlage speichern", 2000 );
-      final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
-      final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
-
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-      GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
-
-      bis = new ByteArrayInputStream( bos.toByteArray() );
-      bos.close();
-      monitor.worked( 1000 );
-
-      if( file.exists() )
-        file.setContents( bis, false, true, monitor );
-      else
-        file.create( bis, false, monitor );
-    }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
-    catch( final Throwable e )
-    {
-      System.out.println( e.getLocalizedMessage() );
-      e.printStackTrace();
-
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
-    }
-    finally
-    {
-      monitor.done();
-
-      if( bis != null )
-        try
-        {
-          bis.close();
-        }
-        catch( IOException e1 )
-        {
-          // never occurs with a byteinputstream
-          e1.printStackTrace();
-        }
-    }
+    saveMap( monitor, file );
+//    if( m_mapModell == null )
+//      return;
+//
+//    m_saving = true;
+//    ByteArrayInputStream bis = null;
+//    try
+//    {
+//      monitor.beginTask( "Kartenvorlage speichern", 2000 );
+//      final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
+//      final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+//      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
+//
+//      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//
+//      GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
+//
+//      bis = new ByteArrayInputStream( bos.toByteArray() );
+//      bos.close();
+//      monitor.worked( 1000 );
+//
+//      if( file.exists() )
+//        file.setContents( bis, false, true, monitor );
+//      else
+//        file.create( bis, false, monitor );
+//    }
+//    catch( final CoreException e )
+//    {
+//      m_saving = false;
+//      throw e;
+//    }
+//    catch( final Throwable e )
+//    {
+//      System.out.println( e.getLocalizedMessage() );
+//      e.printStackTrace();
+//      m_saving = false;
+//      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+//    }
+//    finally
+//    {
+//      monitor.done();
+//
+//      if( bis != null )
+//        try
+//        {
+//          bis.close();
+//        }
+//        catch( IOException e1 )
+//        {
+//          // never occurs with a byteinputstream
+//          e1.printStackTrace();
+//        }
+//    }
+//    m_saving = false;
   }
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
@@ -553,6 +586,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_mapModell == null )
       return;
 
+    m_saving = true;
     ByteArrayInputStream bis = null;
     try
     {
@@ -576,10 +610,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
     catch( final CoreException e )
     {
+      m_saving = false;
       throw e;
     }
     catch( final Throwable e )
     {
+      m_saving = false;
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
     }
     finally
@@ -597,6 +633,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
           e1.printStackTrace();
         }
     }
+    m_saving = false;
   }
 
   public void saveTheme( final ITemplateTheme theme, final IProgressMonitor monitor ) throws CoreException
@@ -744,6 +781,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setFile( final IFile file )
   {
     m_file = file;
+    m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener );
   }
 
   public IFile getFile( )
@@ -765,6 +803,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.dispose();
 
     getSite().getPage().removePartListener( m_partListener );
+
+    if( m_file != null )
+    {
+      m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
+    }
     super.dispose();
   }
 }

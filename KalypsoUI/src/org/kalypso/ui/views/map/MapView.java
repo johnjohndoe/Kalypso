@@ -41,6 +41,7 @@
 package org.kalypso.ui.views.map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -133,28 +134,66 @@ public class MapView extends AbstractMapPart implements IViewPart
     {
       memento.putString( MEMENTO_PARTNAME, customName );
     }
+  }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
     final String saveOnCloseString = getConfigurationElement().getAttribute( SAVE_MAP_ON_CLOSE );
     if( "true".equals( saveOnCloseString ) )
     {
-      final Job disposeJob = new Job( "Saving map state..." )
-      {
-        @Override
-        protected IStatus run( final IProgressMonitor monitor )
-        {
-          try
-          {
-            saveMap( monitor, getFile() );
-          }
-          catch( final CoreException e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
-          return Status.OK_STATUS;
-        }
-      };
-      disposeJob.setUser( true );
-      disposeJob.schedule();
+      startSaveJob();
     }
+    super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#startLoadJob(org.eclipse.core.resources.IStorage)
+   */
+  @Override
+  public void startLoadJob( final IStorage storage )
+  {
+    final IFile file = getFile();
+    if( file != null && !file.equals( storage))
+    {
+      startSaveJob();
+    }
+    super.startLoadJob( storage );
+  }
+
+  public void startSaveJob( )
+  {
+    final IFile file = getFile();
+    final Job disposeJob = new Job( "Saving map state..." )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          saveMap( monitor, file );
+        }
+        catch( final CoreException e )
+        {
+          return StatusUtilities.statusFromThrowable( e );
+        }
+        return Status.OK_STATUS;
+      }
+
+      /**
+       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+       */
+      @Override
+      public boolean belongsTo( final Object family )
+      {
+        return MapView.JOB_FAMILY.equals( family );
+      }
+    };
+    disposeJob.setRule( file );
+    disposeJob.setUser( true );
+    disposeJob.schedule();
   }
 }
