@@ -300,7 +300,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:OperationalModel"/>
+			<xs:element ref="simBase:_OperationalModel"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
@@ -309,7 +309,7 @@
 	OperationalModel
 	================================================================== -->	
 	<xs:element 
-		name="OperationalModel"
+		name="_OperationalModel"
 		type="simBase:AbstractOperationalModelType"
 		substitutionGroup="simBase:_Model"
 		abstract="true"

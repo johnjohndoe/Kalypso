@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.timeseries;
+package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
 import java.net.URL;
@@ -173,6 +173,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       }
       catch( Exception e )
       {
+        e.printStackTrace();
         MessageDialog.openInformation( getShell(), "Fehler beim laden der Zieldatei-Datei",
             "Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich" );
       }

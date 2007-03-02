@@ -56,9 +56,9 @@
             name="ElevationWizard"
             project="false"/>
       <wizard
-            class="org.kalypso.ui.wizards.imports.timeseries.ImportObservationWizard"
-            id="org.kalypso.ui.wizard.sensor.ImportObservationWizard"
-            name="Timeseries load"/>
+            class="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
+            id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
+            name="Observation load"/>
             
    </extension>
    <extension

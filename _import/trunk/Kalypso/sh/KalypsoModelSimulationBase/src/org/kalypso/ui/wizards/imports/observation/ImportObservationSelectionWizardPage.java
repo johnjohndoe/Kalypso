@@ -38,12 +38,14 @@
 *  v.doemming@tuhh.de
 *   
 *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.timeseries;
+package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.compare.internal.ListContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -83,6 +85,7 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 
 /**
  * @author doemming
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider,
     ISelectionChangedListener
@@ -97,7 +100,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private Text m_textFileSource;
 
-  private Text m_textFileTarget;
+//  private Text m_textFileTarget;
 
   private Button m_buttonRetainMeta;
 
@@ -223,9 +226,21 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         m_sourceFile = chooseFile( m_sourceFile );
+        m_targetFile = new File(m_sourceFile.getParentFile().getPath() + "/izlaz.zml");
+//        if(m_targetFile.exists())
+//          m_targetFile.delete();
+//        try
+//        {
+//          m_targetFile.createNewFile();
+//        }
+//        catch( IOException e1 )
+//        {
+//          e1.printStackTrace();
+//        }
         validate();
       }
     } );
@@ -299,31 +314,32 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     gridLayout.numColumns = 3;
     top.setLayout( gridLayout );
 
-    Label label = new Label( top, SWT.NONE );
-    label.setText( "nach" );
-
-    m_textFileTarget = new Text( top, SWT.BORDER );
-    m_textFileTarget.setText( DEFAUL_FILE_LABEL );
-    m_textFileTarget.addFocusListener( this );
-    GridData data1 = new GridData();
-    data1.horizontalAlignment = GridData.FILL;
-    data1.grabExcessHorizontalSpace = true;
-    m_textFileTarget.setLayoutData( data1 );
-    Button button = new Button( top, SWT.PUSH );
-    button.setText( "Auswahl ..." );
-    GridData data2 = new GridData();
-    data2.horizontalAlignment = GridData.END;
-    button.setLayoutData( data2 );
-
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        m_targetFile = chooseFile( m_targetFile );
-        validate();
-
-      }
-    } );
+//    Label label = new Label( top, SWT.NONE );
+//    label.setText( "nach" );
+//
+//    m_textFileTarget = new Text( top, SWT.BORDER );
+//    m_textFileTarget.setText( DEFAUL_FILE_LABEL );
+//    m_textFileTarget.addFocusListener( this );
+//    GridData data1 = new GridData();
+//    data1.horizontalAlignment = GridData.FILL;
+//    data1.grabExcessHorizontalSpace = true;
+//    m_textFileTarget.setLayoutData( data1 );
+//    Button button = new Button( top, SWT.PUSH );
+//    button.setText( "Auswahl ..." );
+//    GridData data2 = new GridData();
+//    data2.horizontalAlignment = GridData.END;
+//    button.setLayoutData( data2 );
+//
+//    button.addSelectionListener( new SelectionAdapter()
+//    {
+//      @Override
+//      public void widgetSelected( SelectionEvent e )
+//      {
+//        m_targetFile = chooseFile( m_targetFile );
+//        validate();
+//
+//      }
+//    } );
 
     Composite bottom = new Composite( group, SWT.NONE );
     GridData data3 = new GridData();
@@ -376,21 +392,21 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     }
     m_buttonAppend.setEnabled( false );
     m_buttonRetainMeta.setEnabled( false );
-    if( m_targetFile != null )
-    {
-      m_textFileTarget.setText( m_targetFile.getName() );
-      if( m_targetFile.exists() )
-      {
-        m_buttonAppend.setEnabled( true );
-        m_buttonRetainMeta.setEnabled( true );
-      }
-    }
-    else
-    {
-      m_textFileTarget.setText( DEFAUL_FILE_LABEL );
-      error.append( "Ziel nicht ausgewählt\n" );
-      setPageComplete( false );
-    }
+//    if( m_targetFile != null )
+//    {
+//      m_textFileTarget.setText( m_targetFile.getName() );
+//      if( m_targetFile.exists() )
+//      {
+//        m_buttonAppend.setEnabled( true );
+//        m_buttonRetainMeta.setEnabled( true );
+//      }
+//    }
+//    else
+//    {
+//      m_textFileTarget.setText( DEFAUL_FILE_LABEL );
+//      error.append( "Ziel nicht ausgewählt\n" );
+//      setPageComplete( false );
+//    }
     if( error.length() > 0 )
       setErrorMessage( error.toString() );
     else
@@ -402,6 +418,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
+  @Override
   public boolean canFlipToNextPage()
   {
     return isPageComplete();
@@ -411,6 +428,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose()
   {
     super.dispose();
@@ -438,10 +456,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     {
       m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource.getText() );
     }
-    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
-    {
-      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
-    }
+//    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
+//    {
+//      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
+//    }
     validate();
   }
 

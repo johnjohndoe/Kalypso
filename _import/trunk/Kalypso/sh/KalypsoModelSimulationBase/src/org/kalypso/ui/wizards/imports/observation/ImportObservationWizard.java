@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.timeseries;
+package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
 import java.io.FileOutputStream;

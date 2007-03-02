@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.timeseries;
+package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
 

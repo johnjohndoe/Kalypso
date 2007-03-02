@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema for the operational model
+	@author Patrice Congo
+	@author Antanaskovic Dejan
+-->
+
+
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:simBase = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified"
+	xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" 
+	>
+	
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+
+	
+
+	<xs:import 
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"
+		schemaLocation = "gml_imitations.xsd" />
+	
+	<xs:import 
+		namespace="http://www.opengis.net/gml"
+		schemaLocation = "platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+			
+	<xs:include 
+		schemaLocation="simulation_model.xsd"/>
+	<xs:include 
+		schemaLocation="gml_imitations.xsd"/>
+	
+	
+	<xs:element 
+		name="operationalConcept"
+		type="simBase:OperationalConceptPropertyType"/> 
+	
+	<xs:complexType name="OperationalConceptPropertyType">
+		<xs:sequence>
+			<xs:element 
+					ref="simBase:OperationalModelConcept"
+					minOccurs="0" maxOccurs="1"/>
+		</xs:sequence> 
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<xs:element 
+		name="OperationalModelConcept"
+		type="simBase:OperationalConceptType"
+		/>
+	
+	<!-- ================================================
+	
+	================================================== -->
+	<xs:element 
+		name="SimpleOperationalModel"
+		type="simBase:SimpleOperationalModelType"
+		substitutionGroup="simBase:_OperationalModel"/>
+	<xs:complexType 
+		name="SimpleOperationalModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Base type for an elment in finite element  network  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractOperationalModelType">
+				<xs:sequence>
+					<xs:element
+						ref="simBase:operationalConcept"
+						minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element
+						ref="wbGml:pointCoverage"
+						minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- ================================================
+	
+	================================================== -->
+	<xs:complexType 
+		name="OperationalConceptType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Base type for an elment in finite element  network  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<xs:element 
+			name="BoundaryCondition"
+			type="simBase:BoundaryConditionType"
+			substitutionGroup="simBase:OperationalModelConcept"
+			abstract="true"/>
+			
+	<xs:complexType 
+		name="BoundaryConditionType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Base type for an elment in finite element  network  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:OperationalConceptType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- TIME SERIES -->
+	<xs:element 
+			name="TimeSeriesBoundaryCondition"
+			type="simBase:BoundaryConditionType"
+			substitutionGroup="simBase:BoundaryCondition"
+			abstract="true"/>
+			
+	<xs:complexType 
+		name="TimeSeriesBoundaryConditionType">
+		<xs:annotation>
+			<xs:documentation>
+				Base type for an elment in finite element  network  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:BoundaryConditionType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+</xs:schema>
+
+
+
+
+
+
+
+
+

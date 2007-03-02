@@ -24,7 +24,7 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.ui.wizards.imports,
  org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,
+ org.kalypso.ui.wizards.imports.observation,
  org.kalypso.ui.wizards.imports.roughness,
- org.kalypso.ui.wizards.imports.timeseries,
  test.org.kalypso.kalypsosimulationmodel
 Eclipse-LazyStart: true 

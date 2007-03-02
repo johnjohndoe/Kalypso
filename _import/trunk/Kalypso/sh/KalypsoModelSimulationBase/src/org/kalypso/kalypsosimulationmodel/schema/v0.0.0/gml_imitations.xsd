@@ -29,6 +29,23 @@
 		/>
 	
 	<xs:element 
+		name="pointCoverage"
+		type="wbGml:PointCoveragePropertyType"/>
+		
+	<xs:complexType name="PointCoveragePropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="wbGml:PointCoverage"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<xs:element 
 		name="PointCoverage"
 		type="wbGml:PointCoverageType"/>
 	<xs:complexType 

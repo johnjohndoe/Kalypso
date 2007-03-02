@@ -138,7 +138,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
       m_data.getRoughnessShapeStaticRelationMap().clear();
       m_data.getRoughnessStaticCollectionMap().clear();
       // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
-      IFile ifile = m_szenarioFolder.getFile( "maps/base.gmt" );
+      IFile ifile = m_szenarioFolder.getFile( "maps/roughness.gmt" );
       Gismapview gismapview = GisTemplateHelper.loadGisMapView( ifile );
       Layers layers = gismapview.getLayers();
       StyledLayerType layer = new StyledLayerType();
