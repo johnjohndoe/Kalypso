@@ -6,6 +6,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.views.map.MapView;
 
@@ -59,6 +60,7 @@ public class Perspective implements IPerspectiveFactory
     // rightTop.addView(IPageLayout.ID_RES_NAV);
     // rightMiddle.addView(ActivitiesView.ID);
     leftBottom.addView( SimulationModelDBView.ID );
+    leftBottom.addView( GisMapOutlineView.ID );
     rightTop.addPlaceholder( MapView.ID );
     veryRight.addPlaceholder( ActionOptionsView.ID );
     layout.getViewLayout( ActionOptionsView.ID ).setMoveable( false );
