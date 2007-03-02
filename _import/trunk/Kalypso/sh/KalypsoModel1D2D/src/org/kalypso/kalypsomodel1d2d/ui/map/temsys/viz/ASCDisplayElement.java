@@ -40,8 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.List;
 
@@ -144,26 +148,51 @@ public class ASCDisplayElement implements DisplayElement
                   GeoTransform p, 
                   double scale, 
                   GM_Envelope bbox, 
-                  boolean selected )
+                  boolean selected,
+                  ElevationColorModel colorModel)
   {
-   System.out.println("Do Draw dddddd ");
+   System.out.println("Do Draw dddddd "+System.currentTimeMillis());
    List<GM_Position> cellLL = ascElevationModel.getCellLLCornerIterator( bbox );
-   double cellSize=2;
+   int cellSize=1;
   if(!cellLL.isEmpty())
   {
     GM_Position position0 = cellLL.get( 0 );
     
     double x = position0.getX();
     cellSize = 
-      p.getDestX( x+ascElevationModel.getCellSize() )-p.getDestX( x );
-    System.out.print( "CellSize:"+cellSize );
+      (int)(p.getDestX( x+ascElevationModel.getCellSize() )-p.getDestX( x ));
+    System.out.println( "CellSize:"+cellSize );
   }
+//  final Color cacheColor=g.getColor();
+  
+  
+  g.setPaintMode();
+  
   for( GM_Position position:cellLL)
    {
-     double destX = p.getDestX( position.getX() );
-     double destY = p.getDestY( position.getY() );    
-     g.draw3DRect( (int)destX, (int)destY, (int)cellSize, (int)cellSize, true );
+     int destX = (int)p.getDestX( position.getX() );
+     int destY = (int)p.getDestY( position.getY() );    
+     Color col = colorModel.getColor( position.getZ() );
+     g.setXORMode( col );
+//     g.draw3DRect( 
+//         (int)destX, (int)destY, 
+//         2/*(int)cellSize*/, 1/*(int)cellSize*/, 
+//         true );
+     int xcoords[]={destX, destX+cellSize, destX+cellSize, destX};
+     int yCoords[]={destY, destY,          destY+cellSize, destY+cellSize};
+     g.fillPolygon( xcoords, yCoords, 4 );
+     g.drawPolygon( xcoords, yCoords, 4 );
+     
+//     g.fill3DRect( 
+//           (int)destX, 
+//           (int)destY, 
+//           (int)cellSize, 
+//           (int)cellSize, true );
+    
    }
+  
+//  g.setColor( cacheColor );
+//  g.s
   }
   
   /**

@@ -45,7 +45,6 @@ import java.awt.Graphics;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -59,6 +58,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class ElevationTheme extends AbstractKalypsoTheme
 {
   private ITerrainElevationModel terrainElevationModel;
+  private ElevationColorModel colorModel=
+        new SimpleElevationColorModel();
   
   public ElevationTheme( String name, IMapModell mapModel )
   {
@@ -104,6 +105,10 @@ public class ElevationTheme extends AbstractKalypsoTheme
                       GM_Envelope bbox, 
                       boolean selected )
   {
+    
+    Graphics g1=g.create();
+    g1.setPaintMode();
+    
     System.out.println(
         "drawing elevation:"+
         "\n\tscale="+scale+
@@ -117,11 +122,21 @@ public class ElevationTheme extends AbstractKalypsoTheme
      {
        ASCDisplayElement displayElement = new ASCDisplayElement(
            (NativeTerrainElevationModelWrapper)terrainElevationModel);
-       displayElement.paint( g, p, scale, bbox, selected );
+       displayElement.paint( g1, p, scale, bbox, selected,colorModel );
      }
    }
    
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
+   */
+  @Override
+  public boolean isLoaded( )
+  {
+    return super.isLoaded();
+  }
+  
   
   
 
