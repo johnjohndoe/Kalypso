@@ -40,32 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.baseMap;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import org.eclipse.core.resources.IProject;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.xml.sax.InputSource;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -75,13 +79,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
 {
   private IStructuredSelection initialSelection;
 
-  private BaseMapMainPage mPage;
+  BaseMapMainPage mPage;
 
-  private String m_projectFolder;
+  // private String m_projectFolder;
+  //
+  // private IProject m_project;
 
-  private IProject m_project;
-
-  ProgressMonitorDialog monitor;
+  IFolder m_scenarioFolder;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
@@ -109,8 +113,9 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
    */
   public void initModelProperties( HashMap<String, Object> map )
   {
-    m_project = (IProject) map.get( "Project" );
-    m_projectFolder = (String) map.get( "ProjectFolder" );
+    m_scenarioFolder = (IFolder) map.get( "ScenarioFolder" );
+    // m_project = (IProject) map.get( "Project" );
+    // m_projectFolder = (String) map.get( "ProjectFolder" );
   }
 
   @Override
@@ -127,71 +132,88 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   @Override
   public boolean performFinish( )
   {
-    String basePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + m_projectFolder + File.separator;
-    String dstFilePath = basePath + "imports" + File.separator;
+    final IFolder dstFilePath = m_scenarioFolder.getFolder( "imports" );
     final File srcFileImage = new File( mPage.getSourceLocation().toOSString() );
-    final File dstFileImage = new File( dstFilePath + mPage.getSourceLocation().lastSegment() );
+    final IFile dstFileImage = dstFilePath.getFile( mPage.getSourceLocation().lastSegment() );
     File srcFileGeoreference = null;
-    File dstFileGeoreference = null;
-    // final File dstFileTif = new File( dstFilePath + "basemap.tif" );
-    // final File dstFileTfw = new File( dstFilePath + "basemap.tfw" );
-
+    IFile dstFileGeoreference = null;
     final String extension = mPage.getSourceLocation().getFileExtension();
-
     if( extension.equalsIgnoreCase( "tif" ) )
     {
       srcFileGeoreference = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
-      dstFileGeoreference = new File( dstFilePath + mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
+      dstFileGeoreference = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
     }
     else if( extension.equalsIgnoreCase( "jpg" ) )
     {
       srcFileGeoreference = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() );
-      dstFileGeoreference = new File( dstFilePath + mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() );
+      dstFileGeoreference = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() );
     }
     else
     {
       throw new UnsupportedOperationException( "Unsuported base map type: " + extension );
     }
-
     try
     {
       final File finalSrcGeoreference = srcFileGeoreference;
-      final File finalDstGeoreference = dstFileGeoreference;
+      final IFile finalDstGeoreference = dstFileGeoreference;
+      final String coordinateSystem = mPage.getCoordinateSystem();
       getContainer().run( true, true, new IRunnableWithProgress()
       {
-        public void run( IProgressMonitor monitor )
+        public void run( final IProgressMonitor monitor )
         {
-          copy( srcFileImage, dstFileImage, monitor );
-          copy( finalSrcGeoreference, finalDstGeoreference, monitor );
+          try
+          {
+            if( !dstFilePath.exists() )
+            {
+              dstFilePath.create( true, true, monitor );
+            }
+            copy( srcFileImage, dstFileImage, monitor );
+            copy( finalSrcGeoreference, finalDstGeoreference, monitor );
+            final IFile file = m_scenarioFolder.getFile( "maps/base.gmt" );
+            m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+            final Gismapview gismapview = GisTemplateHelper.loadGisMapView( file );
+            final Layers layers = gismapview.getLayers();
+            final StyledLayerType layer = new StyledLayerType();
+            layer.setName( "BaseMap" ); //$NON-NLS-1$
+            layer.setVisible( true );
+            layer.setFeaturePath( "" ); //$NON-NLS-1$
+            layer.setHref( "file:/" + dstFileImage.getLocation().toOSString() + "#" + coordinateSystem ); //$NON-NLS-1$ //$NON-NLS-2$
+            layer.setType( "simple" ); //$NON-NLS-1$
+            layer.setLinktype( extension.toLowerCase() ); //$NON-NLS-1$
+            layer.setActuate( "onRequest" ); //$NON-NLS-1$
+            layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
+            layers.getLayer().add( layer );
+            gismapview.setLayers( layers );
+            // GM_Position max = GisTemplateHelper.getBoundingBox( gismapview ).getMax();
+            // GM_Position min = GisTemplateHelper.getBoundingBox( gismapview ).getMin();
+            // ExtentType extent = new ExtentType();
+            // extent.setLeft( min.getX() );
+            // extent.setBottom( min.getY() );
+            // extent.setRight( max.getX() );
+            // extent.setTop( max.getY() );
+            // extent.setSrs( mPage.getCoordinateSystem() );
+            // gismapview.setExtent( extent );
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            GisTemplateHelper.saveGisMapView( gismapview, bos, file.getCharset() );
+            final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+            bos.close();
+            file.setContents( bis, false, true, monitor );
+            m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+          }
+          catch( final CoreException e )
+          {
+            e.printStackTrace();
+          }
+          catch( final IOException e )
+          {
+            e.printStackTrace();
+          }
+          catch( final JAXBException e )
+          {
+            e.printStackTrace();
+          }
         }
       } );
-      String mapPath = basePath + "szenario" + File.separator + "maps" + File.separator + "base.gmt";
-      m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
-      InputSource source = new InputSource( new FileInputStream( new File( mapPath ) ) );
-      Gismapview gismapview = GisTemplateHelper.loadGisMapView( source );
-      Layers layers = gismapview.getLayers();
-      StyledLayerType layer = new StyledLayerType();
-      layer.setName( "BaseMap" ); //$NON-NLS-1$
-      layer.setVisible( true );
-      layer.setFeaturePath( "" ); //$NON-NLS-1$
-      layer.setHref( "file:/" + dstFileImage + "#" + mPage.getCoordinateSystem() ); //$NON-NLS-1$ //$NON-NLS-2$
-      layer.setType( "simple" ); //$NON-NLS-1$
-      layer.setLinktype( extension.toLowerCase() ); //$NON-NLS-1$
-      layer.setActuate( "onRequest" ); //$NON-NLS-1$
-      layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
-      layers.getLayer().add( layer );
-      gismapview.setLayers( layers );
-      // GM_Position max = GisTemplateHelper.getBoundingBox( gismapview ).getMax();
-      // GM_Position min = GisTemplateHelper.getBoundingBox( gismapview ).getMin();
-      // ExtentType extent = new ExtentType();
-      // extent.setLeft( min.getX() );
-      // extent.setBottom( min.getY() );
-      // extent.setRight( max.getX() );
-      // extent.setTop( max.getY() );
-      // extent.setSrs( mPage.getCoordinateSystem() );
-      // gismapview.setExtent( extent );
-      GisTemplateHelper.saveGisMapView( gismapview, new FileWriter( new File( mapPath ) ), "UTF-8" );
-      m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( InvocationTargetException e )
     {
@@ -211,33 +233,24 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     return true;
   }
 
-  boolean copy( File src, File dst, IProgressMonitor monitor2 )
+  void copy( final File src, final IFile dstFileImage, final IProgressMonitor monitor2 ) throws CoreException, IOException
   {
-    InputStream in;
-    OutputStream out;
+    InputStream in = null;
     try
     {
-      in = new FileInputStream( src );
-      out = new FileOutputStream( dst );
-
-      byte[] buf = new byte[1024];
-      int len;
-      int lens = ((int) src.length() / 1024 + 1);
-      monitor2.beginTask( "Copying..", lens );
-      while( (len = in.read( buf )) > 0 )
+      in = new BufferedInputStream( new FileInputStream( src ) );
+      if( dstFileImage.exists() )
       {
-        monitor2.worked( 1 );
-        out.write( buf, 0, len );
+        dstFileImage.setContents( in, false, true, monitor2 );
       }
-      monitor2.done();
-      in.close();
-      out.close();
-      return true;
+      else
+      {
+        dstFileImage.create( in, false, monitor2 );
+      }
     }
-    catch( Exception e )
+    finally
     {
-      e.printStackTrace();
-      return false;
+      IOUtils.closeQuietly( in );
     }
   }
 

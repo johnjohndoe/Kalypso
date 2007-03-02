@@ -18,14 +18,10 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
-import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -38,14 +34,6 @@ public class ImportBaseMapHandler extends WorkflowCommandHandler
 {
   private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard";
 
-  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), new Runnable()
-  {
-
-    public void run( )
-    {
-    }
-  } );
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
@@ -56,33 +44,35 @@ public class ImportBaseMapHandler extends WorkflowCommandHandler
     IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     if( selection == null )
     {
-      final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+      final IResource currentFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
       selection = new StructuredSelection( currentFolder );
     }
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbench workbench = (workbenchWindow).getWorkbench();
-    final IFolder szenarioPath = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
     final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
     final INewWizardKalypsoImport wizard = (INewWizardKalypsoImport) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
 
-    final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+    final IFolder currentFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
     final HashMap<String, Object> data = new HashMap<String, Object>();
-    data.put( "Project", currentFolder.getProject() );
-    data.put( "ProjectFolder", currentFolder.getFullPath().segment( 0 ) );
+    data.put( "ScenarioFolder", currentFolder );
 
     wizard.init( workbench, selection );
     wizard.initModelProperties( data );
+    final IFile file = currentFolder.getFile( "maps/base.gmt" );
+    final IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+    final MapView mapView = (MapView) workbenchPage.showView( MapView.ID );
+    if( mapView != null )
+    {
+      final IFile currentFile = mapView.getFile();
+      if( !file.equals( currentFile ) )
+      {
+        mapView.startLoadJob( file );        
+      }
+    }
     if( wizardDialog.open() == Window.OK )
     {
-//      currentFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
-      final IFile file = szenarioPath.getFile( "maps/base.gmt" );
-      if( file.exists() )
-      {
-        final IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-        IDE.openEditor( workbenchPage, file, GisMapEditor.ID );
-      }
       return Status.OK_STATUS;
     }
     return Status.CANCEL_STATUS;

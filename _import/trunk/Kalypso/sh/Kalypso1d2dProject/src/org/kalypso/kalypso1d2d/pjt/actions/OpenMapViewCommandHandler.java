@@ -81,8 +81,9 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
       final MapPanel mapPanel = (MapPanel) m_mapView.getAdapter( MapPanel.class );
 
-      if( !file.equals( m_mapView.getFile() ) )
-      {
+      final IFile currentFile = m_mapView.getFile();
+      if( !file.equals( currentFile ) )
+      {        
         m_mapView.startLoadJob( file );
       }
 
@@ -128,8 +129,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
         };
         job.setUser( true );
         job.schedule();
-      }
-
+      }      
     }
     return Status.OK_STATUS;
   }
@@ -171,8 +171,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
     if( m_featureType.equals( themeContext ) )
     {
       logger.info( themeToActivate + " theme activated with feature type " + m_featureType );
-      m_mapModell.activateTheme( themeToActivate );
-      m_mapView.setCustomName( themeToActivate.getName() );
+      m_mapModell.activateTheme( themeToActivate );      
     }
   }
 }
