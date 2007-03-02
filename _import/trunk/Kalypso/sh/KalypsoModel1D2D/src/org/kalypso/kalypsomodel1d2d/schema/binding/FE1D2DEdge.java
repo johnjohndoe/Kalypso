@@ -107,7 +107,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     curEdge.addNode( node1.getGmlID() );
     node1.addContainer( edgeGmlID );
     
-    edges.add( curEdge );
+//    edges.add( curEdge );
     curEdge.getWrappedFeature().invalidEnvelope();
     
     return curEdge;
@@ -348,6 +348,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   {
     Object prop= m_featureToBind.getProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV );
+    
     Feature edgeInvFeature=FeatureHelper.getFeature(
         m_featureToBind.getWorkspace(),
         prop);         

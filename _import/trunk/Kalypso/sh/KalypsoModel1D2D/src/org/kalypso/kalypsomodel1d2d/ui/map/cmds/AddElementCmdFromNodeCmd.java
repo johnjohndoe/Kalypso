@@ -130,8 +130,14 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
           curEdge=model.findEdge( node0, node1  );
           if(curEdge==null)
           {
+              final int size1 = model.getEdges().size();
               curEdge=FE1D2DEdge.createFromModel( model, node0, node1 );
               edges.add( curEdge );
+              final int size2 = model.getEdges().size();
+              if(size2-size1!=1)
+              {
+                throw new IllegalStateException("Multi edge created");
+              }
           }
           else
           {

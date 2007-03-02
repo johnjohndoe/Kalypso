@@ -152,6 +152,7 @@
             class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory">
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine"/>

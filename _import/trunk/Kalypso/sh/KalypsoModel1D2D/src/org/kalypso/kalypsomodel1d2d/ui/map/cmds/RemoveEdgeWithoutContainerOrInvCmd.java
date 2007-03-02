@@ -115,18 +115,22 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
         
       }
       
-      model1d2d.getEdges().remove( edge );
+      for(;model1d2d.getEdges().remove( edge );)
+      {
+        //does remove all ocurence;
+      }
       RemoveEdgeWithoutContainerOrInvCmd remInverted= 
         new RemoveEdgeWithoutContainerOrInvCmd(model1d2d,inverted);
       remInverted.process();
     }
     else
-    {
+    {//for normal edges
+      
       if(edge.getEdgeInv()!=null)
       {
   //    TODO care with edge with invedge and no element
   //    may be readjust the network
-        System.out.println("Edge has inverted");
+        System.out.println("Edge has inverteddd");
         return;
       }
       else

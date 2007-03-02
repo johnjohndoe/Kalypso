@@ -304,10 +304,11 @@ public class ModelOps
                                         model1d2d.getElements();
     IFE1D2DElement element = elements.addNew( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
-    for(IFE1D2DEdge edge:edges)
-    {
-      element.addEdge( edge.getGmlID() );
-    }
+    
+//    for(IFE1D2DEdge edge:edges)
+//    {
+//      element.addEdge( edge.getGmlID() );
+//    }
     
 //    sortElementEdgesOld( element );
 //    sortEdgesAddToElement( element, edges );
@@ -390,7 +391,7 @@ public class ModelOps
                           List<IFE1D2DEdge> toSortAndAddEdges)
   {
 //    sortElementEdgesOld( element );
-    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges=element.getEdges();
+    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges = element.getEdges();
     final int INITIAL_SIZE=toSortAndAddEdges.size();//elementEdges.size();
     if(INITIAL_SIZE<3)
     {

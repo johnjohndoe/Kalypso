@@ -121,17 +121,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
               if(featureQName.equals( 
                   Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV) )
               {
-//                Object toInv=
-//                  feature.getProperty( 
-//                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
-//                if(toInv instanceof String)
-//                {
-//                  GMLWorkspace workspace=feature.getWorkspace();
-//                  toInv=workspace.getFeature( (String )toInv);
-//                }
-//                FE1D2DEdge edge = new FE1D2DEdge((Feature)toInv);
-//                
-//                return new EdgeInv(edge);
                 return new EdgeInv(feature);
               }
               else
@@ -141,6 +130,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFE1D2DEdge.class, cTor);
+        cMap.put(IEdgeInv.class, cTor);
         
         // Element1D  
         cTor = new AdapterConstructor()
