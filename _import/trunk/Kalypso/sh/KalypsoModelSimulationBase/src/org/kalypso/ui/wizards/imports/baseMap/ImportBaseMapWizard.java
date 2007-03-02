@@ -63,7 +63,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -132,7 +131,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   @Override
   public boolean performFinish( )
   {
-    final IFolder dstFilePath = m_scenarioFolder.getFolder( "imports" );
+    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" );
     final File srcFileImage = new File( mPage.getSourceLocation().toOSString() );
     final IFile dstFileImage = dstFilePath.getFile( mPage.getSourceLocation().lastSegment() );
     File srcFileGeoreference = null;
