@@ -104,7 +104,10 @@ public class ElevationTheme extends AbstractKalypsoTheme
                       GM_Envelope bbox, 
                       boolean selected )
   {
-    System.out.println("drawing elevation");
+    System.out.println(
+        "drawing elevation:"+
+        "\n\tscale="+scale+
+        "\n\tbb="+bbox);
    if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
    {
      IElevationProvider elevationProvider = 

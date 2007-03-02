@@ -79,7 +79,9 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -173,7 +175,24 @@ class ApplyElevationWidgetFace
     elevationList = new ListViewer( clientComposite, SWT.FILL | SWT.BORDER );
     elevationList.setContentProvider( new ArrayContentProvider() );
     elevationList.setLabelProvider( new ElevationListLabelProvider() );
-    elevationList.setInput(dataModel.getElevationModelSystem().getTerrainElevationModels().toArray());   
+    ITerrainElevationModelSystem elevationModelSystem = dataModel.getElevationModelSystem();
+    if(elevationModelSystem==null)
+    {
+      elevationList.setInput(new Object[]{});
+    }
+    else
+    {
+      IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = 
+                                  elevationModelSystem.getTerrainElevationModels();
+      if(terrainElevationModels==null)
+      {
+        elevationList.setInput(new Object[]{});
+      }
+      else
+      {
+        elevationList.setInput(terrainElevationModels.toArray());
+      }
+    }
     elevationList.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( SelectionChangedEvent event )
