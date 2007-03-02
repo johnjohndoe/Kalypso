@@ -67,8 +67,8 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
       if( m_gisMapOutlinePage == null )
       {
         m_gisMapOutlinePage = new GisMapOutlinePage( getCommandTarget() );
-        m_gisMapOutlinePage.setMapModell( getMapPanel().getMapModell() );
       }
+      m_gisMapOutlinePage.setMapModell( getMapPanel().getMapModell() );
       return m_gisMapOutlinePage;
     }
     return super.getAdapter( adapter );
