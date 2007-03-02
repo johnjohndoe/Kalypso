@@ -138,7 +138,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
   void setMapPart( final AbstractMapPart mapPart )
   {
     m_mapPart = mapPart;
-    String newName = "Legende";
+    String newName = "Outline";
     if( m_mapPart != null )
     {
       newName += "(" + mapPart.getPartName() + ")";
