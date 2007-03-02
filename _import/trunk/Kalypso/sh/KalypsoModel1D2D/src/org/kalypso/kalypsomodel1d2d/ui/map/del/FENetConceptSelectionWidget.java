@@ -299,6 +299,7 @@ public class FENetConceptSelectionWidget implements IWidget
    */
   public void leftClicked( Point p )
   {
+    
     GM_Point point = MapUtilities.transform( mapPanel, p );
     if(polygonSelectModus)
     {
