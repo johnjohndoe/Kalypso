@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,13 +61,19 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -110,6 +117,7 @@ class ApplyElevationWidgetFace
 
   private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
   private ApplyElevationWidgetDataModel dataModel;
+  private Section elevationColorSection;
 
 //  private ElevationTheme elevationTheme;//= new ElevationTheme();
   
@@ -135,6 +143,7 @@ class ApplyElevationWidgetFace
 
     scrolledForm.getBody().setLayout( new TableWrapLayout() );
 
+     // Creates Section for "Select Elevation Model"
     elevationSelectStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     elevationSelectStatus.setText( "Select Elevation Model" );
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
@@ -142,6 +151,7 @@ class ApplyElevationWidgetFace
     elevationSelectStatus.setLayoutData( tableWrapData );
     elevationSelectStatus.setExpanded( true );
 
+    // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
     areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     areaSelectSection.setText( "Select A Region" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
@@ -151,10 +161,153 @@ class ApplyElevationWidgetFace
     areaSelectSection.setExpanded( false );
     areaSelectSection.setEnabled( false );
 
+    // Creates Section to Configure the Color for Different Elevations
+    elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    elevationColorSection.setText( "Select Colors for MAX Elevation and MIN Elevation " );
+    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.align = TableWrapData.FILL_GRAB;
+    elevationColorSection.setLayoutData( tableWrapData );
+    elevationColorSection.setExpanded( false );
+    elevationColorSection.setEnabled( true );
+    
     createAreaSelectSection( areaSelectSection );
     createElevationModelSelectStatus( elevationSelectStatus );
+    createElevationColorSetup(elevationColorSection);
 
     return rootPanel;
+  }
+
+  private void createElevationColorSetup(Section elevationColorConfig )
+  {
+    elevationColorConfig.setLayout( new GridLayout() );
+
+    Composite clientComposite = toolkit.createComposite( elevationColorConfig, SWT.FLAT );
+    elevationColorConfig.setClient( clientComposite );
+    //clientComposite.setSize( 400, 300 );
+    GridLayout elevationColorGrid = new GridLayout( 2, false );
+    clientComposite.setLayout( elevationColorGrid );
+    
+    Canvas windowCanvas = new Canvas(clientComposite,SWT.None);
+    toolkit.adapt( clientComposite );
+    windowCanvas.setSize( 40, 100 );
+    windowCanvas.setLocation( 20,20 );
+    
+    GC gc = new GC(windowCanvas);
+    gc.drawRectangle( 0, 0, 20, 20 );
+    
+    gc.setForeground(clientComposite.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
+    
+    
+    Group minMaxGroup = new Group(clientComposite,SWT.NULL);
+    GridLayout minMaxLayout = new GridLayout(4,false);
+    minMaxGroup.setText( "First Group" );
+    minMaxGroup.setLayout( minMaxLayout );
+    
+    Group optionsColorGroup = new Group(clientComposite,SWT.NULL);
+    GridLayout optionsColorLayout = new GridLayout(3,false);
+    optionsColorGroup.setText( "Further Options" );
+    optionsColorGroup.setLayout( optionsColorLayout );   
+    
+    Label maxLabel = new Label( minMaxGroup, SWT.NONE );
+    maxLabel.setText( "Max" );
+    
+//    Canvas windowCanvas = new Canvas(minMaxGroup,SWT.None);
+//    windowCanvas.setSize( 40, 600 );
+//    windowCanvas.setLocation( 20,20 );
+//    
+//    GC gc = new GC(windowCanvas);
+//    gc.drawRectangle( 21, 21, 80, 80 );
+    //gc.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
+    
+//    GridData windowCanvasGridData = new GridData(GridData.FILL_BOTH);
+//    windowCanvasGridData.horizontalSpan = 1;
+//    windowCanvasGridData.verticalSpan = 4;    
+//    windowCanvas.setLayoutData( windowCanvasGridData );
+//    
+//    Label maximumColor = new Label(minMaxGroup,SWT.FLAT);
+//    maximumColor.setText( "Maximum Color" );
+//    GridData maxColorGridData = new GridData(GridData.FILL_HORIZONTAL);
+//    maxColorGridData.horizontalSpan = 2;
+//    maxColorGridData.verticalSpan = 1;
+//    maximumColor.setLayoutData( maxColorGridData );
+//    
+//    Button maxColor = new Button(minMaxGroup,SWT.FLAT);
+//    maxColor.setText( "SELECT" );
+//    GridData maxColorBtnGridData = new GridData(GridData.END);
+//    maxColorBtnGridData.horizontalSpan = 3;
+//    maxColorBtnGridData.verticalSpan = 1;
+//    maxColor.setLayoutData( maxColorBtnGridData );
+//    
+//    Button upDown = new Button(minMaxGroup,SWT.FLAT);
+//    upDown.setText( "UP/DOWN" );
+    
+        
+    Label minimumColor = new Label(minMaxGroup,SWT.FLAT);
+    minimumColor.setText( "Minimum Color" );
+    GridData minColorGridData = new GridData(GridData.END);
+    minColorGridData.horizontalSpan = 4;
+    minColorGridData.verticalSpan = 1;
+    minimumColor.setLayoutData( minColorGridData );
+    
+    Label minLabel = new Label( minMaxGroup, SWT.NONE );
+    maxLabel.setText( "Min" );
+    
+    Button minColor = new Button(minMaxGroup,SWT.FLAT);
+    minColor.setText( "Select" );
+//    GridData minColorBtnGridData = new GridData(GridData.END);
+//    minColorBtnGridData.horizontalSpan = 3;
+//    minColorBtnGridData.verticalSpan = 1;
+//    minColor.setLayoutData( minColorBtnGridData );
+    
+    Button upDown1 = new Button(minMaxGroup,SWT.FLAT);
+    upDown1.setText( "UP/DOWN" );
+    
+    Label noElevationColorLabel = new Label(optionsColorGroup,SWT.NONE);
+    noElevationColorLabel.setText( "No Elevation Color" );
+    GridData noElevationGridData = new GridData(GridData.FILL_VERTICAL);
+    noElevationGridData.horizontalSpan = 2;
+    noElevationGridData.verticalSpan = 1;
+    noElevationColorLabel.setLayoutData( noElevationGridData );
+    
+    Button noElevationColorBtn = new Button(optionsColorGroup,SWT.None);
+    noElevationColorBtn.setText( "SELECT" );
+//    GridData noElevationBtnGridData = new GridData(GridData.END);
+//    noElevationBtnGridData.horizontalSpan = 2;
+//    noElevationBtnGridData.verticalSpan = 1;   
+//    noElevationColorBtn.setLayoutData( noElevationBtnGridData );
+    
+    Label colorNumberCells = new Label(optionsColorGroup,SWT.NONE);
+    colorNumberCells.setText( "Discrete Color Number" );
+    GridData colorNumberGridData = new GridData(GridData.FILL_VERTICAL);
+    colorNumberGridData.horizontalSpan = 2;
+    colorNumberGridData.verticalSpan = 1;
+    colorNumberCells.setLayoutData( colorNumberGridData );
+    
+    Combo stepperCombo = new Combo(optionsColorGroup,SWT.DROP_DOWN);
+    String[] listOfValues = new String[]{"5","10","15","20","25","30","35"};
+    for (int i = 0; i<listOfValues.length;i++)
+    stepperCombo.add( listOfValues[i]);
+//    GridData stepperGridData = new GridData(GridData.CENTER);
+//    stepperGridData.horizontalSpan = 3;
+//    stepperGridData.verticalSpan = 1;
+//    stepperCombo.setLayoutData( stepperGridData );
+    
+    Label optionMinMax = new Label(optionsColorGroup,SWT.NONE);
+    optionMinMax.setText( "Go Darker from Max to Min Elevation" );
+    GridData optionMinMaxGridData = new GridData(GridData.FILL_VERTICAL);
+    optionMinMaxGridData.horizontalSpan = 3;
+    optionMinMaxGridData.verticalSpan = 1;
+    optionMinMax.setLayoutData( optionMinMaxGridData );
+    
+    Button checkBtnOptionMinMax = new Button(optionsColorGroup,SWT.CHECK);
+    
+    //checkBtnOptionMinMax.setText( "SELECT" );
+//    GridData checkBtnOptionGridData = new GridData(GridData.END);
+//    checkBtnOptionGridData.horizontalSpan = ;
+//    checkBtnOptionGridData.verticalSpan = 1;   
+//    checkBtnOptionMinMax.setLayoutData( checkBtnOptionGridData );  
+
   }
 
   private final void createElevationModelSelectStatus( Section workStatusSection )
