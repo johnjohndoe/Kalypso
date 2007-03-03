@@ -41,13 +41,20 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -62,27 +69,97 @@ import org.xml.sax.InputSource;
  */
 public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKalypsoTheme, ITemplateTheme
 {
+  /**
+   * @author Stefan Kurzbach
+   */
+  private final class GmtFileChangeListener implements IResourceChangeListener
+  {
+    GmtFileChangeListener( )
+    {
+    }
+
+    /**
+     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+     */
+    public void resourceChanged( final IResourceChangeEvent event )
+    {
+      if( m_file == null )
+      {
+        return;
+      }
+      final IResourceDelta rootDelta = event.getDelta();
+      final IResourceDelta fileDelta = rootDelta.findMember( m_file.getFullPath() );
+      if( fileDelta == null )
+      {
+        return;
+      }
+      if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+      {
+        try
+        {
+          startLoadJob();
+        }
+        catch( final CoreException e )
+        {
+          // TODO something useful
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
   private GisTemplateMapModell m_innerMapModel;
 
   private String m_mapViewRefUrl;
 
-  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
+  private IResourceChangeListener m_resourceChangeListener;
+
+  IFile m_file;
+
+  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException
   {
     super( "Cascading theme", mapModel );
     m_mapViewRefUrl = layerType.getHref();
+    URL url = null;
     try
     {
-      final URL url = new URL( context, m_mapViewRefUrl );
-      m_innerMapModel = new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager );
-      final IFile file = ResourceUtilities.findFileFromURL( url );
-      file.refreshLocal( IResource.DEPTH_ZERO, null );
-      final InputSource inputSource = new InputSource( file.getContents() );
-      final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-      m_innerMapModel.createFromTemplate( innerGisView );
+      url = new URL( context, m_mapViewRefUrl );
     }
-    catch( final Throwable e )
+    catch( final MalformedURLException e )
     {
-      e.printStackTrace();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Kein gültiger Kontext " + context + " oder Kartenreferenz " + m_mapViewRefUrl ) );
+    }
+    if( url != null )
+    {
+      m_innerMapModel = new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager );
+      m_file = ResourceUtilities.findFileFromURL( url );
+      if( m_file != null )
+      {
+        m_resourceChangeListener = new GmtFileChangeListener();
+        m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
+        startLoadJob();
+      }
+      else
+      {
+        throw new CoreException( StatusUtilities.createErrorStatus( "Kann " + url.toExternalForm() + " nicht finden." ) );
+      }
+    }
+  }
+
+  void startLoadJob( ) throws CoreException
+  {
+    m_file.refreshLocal( IResource.DEPTH_ZERO, null );
+    final InputSource inputSource = new InputSource( m_file.getContents() );
+    Gismapview innerGisView;
+    try
+    {
+      innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
+      m_innerMapModel.createFromTemplate( innerGisView );
+      fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTENT_CHANGED ) );
+    }
+    catch( final JAXBException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Konnte " + m_file.getName() + " nicht laden." ) );
     }
   }
 
@@ -94,6 +171,10 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
   {
     if( m_innerMapModel != null )
       m_innerMapModel.dispose();
+    if( m_resourceChangeListener != null )
+    {
+      m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
+    }
     super.dispose();
   }
 

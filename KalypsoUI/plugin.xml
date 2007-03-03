@@ -144,7 +144,7 @@
         class="org.kalypso.ogc.gml.outline.GisMapOutlineView"
         icon="icons/kalypso_gmt.gif"
         id="org.kalypso.ui.views.outline"
-        name="Legende"/>
+        name="Outline"/>
 	</extension>
 	<extension id="editorActions" name="editorActions"
 		point="org.eclipse.ui.editorActions">
