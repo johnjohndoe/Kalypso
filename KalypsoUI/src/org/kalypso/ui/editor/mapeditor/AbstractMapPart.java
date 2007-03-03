@@ -510,7 +510,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       monitor.done();
 
       final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : "<input not a file>";
-      final String partName = m_partName == null ? fileName : m_partName;
+      final String partName = fileName;
       setCustomName( partName );
     }
   }
