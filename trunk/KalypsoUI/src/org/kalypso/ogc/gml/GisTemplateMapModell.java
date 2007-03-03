@@ -66,7 +66,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-public class GisTemplateMapModell implements IMapModell
+public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
 {
   private final IMapModell m_modell;
 
@@ -90,10 +90,20 @@ public class GisTemplateMapModell implements IMapModell
   }
 
   /**
-   * Adds layers based on Gismapview template. Resolves MapviewRefs if necessary.
+   * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
+   * 
+   * @throws CoreException
+   *           if a theme in the {@link Gismapview} cannot be loaded.
    */
-  public void createFromTemplate( final Gismapview gisview )
+  public void createFromTemplate( final Gismapview gisview ) throws CoreException
   {
+    for( IKalypsoTheme theme : getAllThemes() )
+    {
+      if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
+      {
+        removeTheme( theme );
+      }
+    }
     final Layers layerListType = gisview.getLayers();
     final Object activeLayer = layerListType.getActive();
 
@@ -106,7 +116,7 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  public IKalypsoTheme addTheme( final StyledLayerType layer )
+  public IKalypsoTheme addTheme( final StyledLayerType layer ) throws CoreException
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -123,7 +133,7 @@ public class GisTemplateMapModell implements IMapModell
       m_modell.dispose();
   }
 
-  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context )
+  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws CoreException
   {
     if( "wms".equals( layerType.getLinktype() ) ) //$NON-NLS-1$
     {
@@ -239,6 +249,7 @@ public class GisTemplateMapModell implements IMapModell
 
   public void addTheme( final IKalypsoTheme theme )
   {
+    theme.addModellListener( this );
     m_modell.addTheme( theme );
   }
 
@@ -382,4 +393,13 @@ public class GisTemplateMapModell implements IMapModell
     return m_modell.getScrabLayer();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
+   */
+  public void kalypsoThemeChanged( final KalypsoThemeEvent event )
+  {
+    // TODO this hack is for getting a repaint when a theme changes
+    if( event.isType( KalypsoThemeEvent.CONTENT_CHANGED ) )
+      fireModellEvent( null );
+  }
 }

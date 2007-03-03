@@ -418,8 +418,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         return MapView.JOB_FAMILY.equals( family );
       }
     };
-    if( storage instanceof IResource )
-      job.setRule( (IResource) storage );
     job.setUser( true );
     job.schedule();
   }
@@ -526,59 +524,60 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final IFile file = input.getFile();
     saveMap( monitor, file );
-//    if( m_mapModell == null )
-//      return;
-//
-//    m_saving = true;
-//    ByteArrayInputStream bis = null;
-//    try
-//    {
-//      monitor.beginTask( "Kartenvorlage speichern", 2000 );
-//      final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
-//      final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-//      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
-//
-//      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//
-//      GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
-//
-//      bis = new ByteArrayInputStream( bos.toByteArray() );
-//      bos.close();
-//      monitor.worked( 1000 );
-//
-//      if( file.exists() )
-//        file.setContents( bis, false, true, monitor );
-//      else
-//        file.create( bis, false, monitor );
-//    }
-//    catch( final CoreException e )
-//    {
-//      m_saving = false;
-//      throw e;
-//    }
-//    catch( final Throwable e )
-//    {
-//      System.out.println( e.getLocalizedMessage() );
-//      e.printStackTrace();
-//      m_saving = false;
-//      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
-//    }
-//    finally
-//    {
-//      monitor.done();
-//
-//      if( bis != null )
-//        try
-//        {
-//          bis.close();
-//        }
-//        catch( IOException e1 )
-//        {
-//          // never occurs with a byteinputstream
-//          e1.printStackTrace();
-//        }
-//    }
-//    m_saving = false;
+    // if( m_mapModell == null )
+    // return;
+    //
+    // m_saving = true;
+    // ByteArrayInputStream bis = null;
+    // try
+    // {
+    // monitor.beginTask( "Kartenvorlage speichern", 2000 );
+    // final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
+    // final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+    // final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
+    //
+    // final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    //
+    // GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
+    //
+    // bis = new ByteArrayInputStream( bos.toByteArray() );
+    // bos.close();
+    // monitor.worked( 1000 );
+    //
+    // if( file.exists() )
+    // file.setContents( bis, false, true, monitor );
+    // else
+    // file.create( bis, false, monitor );
+    // }
+    // catch( final CoreException e )
+    // {
+    // m_saving = false;
+    // throw e;
+    // }
+    // catch( final Throwable e )
+    // {
+    // System.out.println( e.getLocalizedMessage() );
+    // e.printStackTrace();
+    // m_saving = false;
+    // throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt
+    // werden." ) );
+    // }
+    // finally
+    // {
+    // monitor.done();
+    //
+    // if( bis != null )
+    // try
+    // {
+    // bis.close();
+    // }
+    // catch( IOException e1 )
+    // {
+    // // never occurs with a byteinputstream
+    // e1.printStackTrace();
+    // }
+    // }
+    // m_saving = false;
   }
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
@@ -664,7 +663,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_mapModellView != null )
     {
       m_mapModellView.setMapModell( m_mapModell );
-    }      
+    }
   }
 
   /**
@@ -781,7 +780,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setFile( final IFile file )
   {
     m_file = file;
-    m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener );
+    if( m_file != null )
+    {
+      m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener );
+    }
   }
 
   public IFile getFile( )

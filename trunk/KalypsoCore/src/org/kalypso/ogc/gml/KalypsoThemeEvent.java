@@ -47,7 +47,9 @@ package org.kalypso.ogc.gml;
  */
 public class KalypsoThemeEvent
 {
-  public static final int CONTEXT_CHANGED = 0x0001;
+  public static final int CONTEXT_CHANGED = 1 << 1;
+
+  public static final int CONTENT_CHANGED = 1 << 2;
 
   private final IKalypsoTheme m_source;
 

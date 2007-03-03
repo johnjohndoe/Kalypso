@@ -30,7 +30,6 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,6 +40,8 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -86,7 +87,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel )
+  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel ) throws CoreException
   {
     super( themeName, linktype.toUpperCase(), mapModel );
     m_themeName = themeName;
@@ -123,15 +124,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
       ulcx = worldFile.getUlcx();
       ulcy = worldFile.getUlcy();
     }
-    catch( MalformedURLException e )
+    catch( final Throwable e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Kein gültiges Worldfile " + wf ) );
     }
     finally
     {
@@ -143,10 +138,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     {
       imageFileURL = new URL( source );
     }
-    catch( MalformedURLException e1 )
+    catch( final MalformedURLException e1 )
     {
-      e1.printStackTrace();
-      System.out.println( "Ungültige URL der Datei: " + source );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Ungültige URL der Datei: " + source ) );
     }
     String imagePath = imageFileURL.getPath().substring( 1, imageFileURL.getPath().length() );
     RenderedOp image = JAI.create( "fileload", imagePath );
@@ -194,7 +188,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   {
     if( m_image != null )
       m_image.dispose();
-    
+
     super.dispose();
   }
 
