@@ -201,6 +201,24 @@
 	                     	value="Element2D"/>
 	       			</class>
 			</action>
+			
+			<action
+	           icon="icons/elcl16/cut.png"
+	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE2DElement"               
+	           label="Del FE 2D"
+	           style="radio"
+	           toolbarPath="karte/edit"
+	           tooltip="FE-Element markieren und entfernen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElementsWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Element2D"/>
+	       			</class>
+			</action>
+			
          	<action               
                id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineDelegate"
                label="Kontinuitätslinie definieren"

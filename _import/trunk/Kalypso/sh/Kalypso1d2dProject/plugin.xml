@@ -182,6 +182,7 @@
      <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>
+           
      <handler
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit2DElts">
         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
@@ -193,6 +194,7 @@
                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
         </class>
      </handler>
+     
      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DRivElts">
         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
            <parameter

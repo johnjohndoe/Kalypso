@@ -2,6 +2,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.command.ICommand;
@@ -176,6 +177,19 @@ public class CreateFE2DElementWidget extends AbstractWidget
         m_builder.paint( g, getMapPanel().getProjection(), currentPoint );
       g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
     }
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyTyped( KeyEvent e )
+  {
+    if(KeyEvent.VK_ESCAPE==e.getKeyCode())
+    {
+      this.reinit();
+    }
+//    super.keyTyped(e);
   }
 
 }
