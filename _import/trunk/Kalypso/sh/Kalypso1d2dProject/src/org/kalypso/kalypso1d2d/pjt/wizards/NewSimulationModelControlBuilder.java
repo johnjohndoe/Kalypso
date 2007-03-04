@@ -22,6 +22,7 @@ import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 
 
@@ -33,11 +34,11 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 public class NewSimulationModelControlBuilder
 {
 	
-	final static String NEW_NAME_MUST_NOT_BE_EMPTY="Namem feld kann nicht leer sein";
-	final static String ALLREADY_EXISTS="Simulation mit diesem namen existiert schon";
+	final static String NEW_NAME_MUST_NOT_BE_EMPTY=Messages.getString("NewSimulationModelControlBuilder.0"); //$NON-NLS-1$
+	final static String ALLREADY_EXISTS=Messages.getString("NewSimulationModelControlBuilder.1"); //$NON-NLS-1$
 	final static Logger logger=
 			Logger.getLogger(NewSimulationModelControlBuilder.class.getName());
-    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
 
     static
     {
@@ -81,7 +82,7 @@ public class NewSimulationModelControlBuilder
 	};
 	
 	public NewSimulationModelControlBuilder(
-							@SuppressWarnings("hiding")
+							@SuppressWarnings("hiding") //$NON-NLS-1$
               IWorkflowData parentWorkflowData,
 							Composite parentComposite)
 	{
@@ -100,21 +101,21 @@ public class NewSimulationModelControlBuilder
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		Label newModelNameLabel= new Label(panel,SWT.NONE);
-		newModelNameLabel.setText("Name:");
+		newModelNameLabel.setText(Messages.getString("NewSimulationModelControlBuilder.4")); //$NON-NLS-1$
 		newModelTFE= 
 			new Text(panel,SWT.BORDER);
 		newModelTFE.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		newModelTFE.addKeyListener(keyListener);
 		
 		Label parentLabel= new Label(panel,SWT.NONE);
-		parentLabel.setText("Parent:");
+		parentLabel.setText(Messages.getString("NewSimulationModelControlBuilder.5")); //$NON-NLS-1$
 		parentTFE= new Text(panel,SWT.BORDER);
 		parentTFE.setEditable(false);
 		parentTFE.setText(getParentDataName());
 		parentTFE.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label commentLabel=new Label(panel, SWT.NONE);
-		commentLabel.setText("Comment:");
+		commentLabel.setText(Messages.getString("NewSimulationModelControlBuilder.6")); //$NON-NLS-1$
 		commentText= new Text(panel, SWT.BORDER|SWT.WRAP|SWT.MULTI);
 		GridData gd= new GridData(GridData.FILL_BOTH);
 		gd.verticalSpan=10;
@@ -128,12 +129,12 @@ public class NewSimulationModelControlBuilder
 		if(parentWorkflowData==null)
 			
 		{
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		String pname=parentWorkflowData.getName();
 		if(pname==null)
 		{
-			pname="";
+			pname=""; //$NON-NLS-1$
 		}
 		return pname;
 	}
@@ -142,7 +143,7 @@ public class NewSimulationModelControlBuilder
 	{
 		if(parentWorkflowData==null)
 		{
-			parentTFE.setText("");
+			parentTFE.setText(""); //$NON-NLS-1$
 		}
 		else
 		{
@@ -159,7 +160,7 @@ public class NewSimulationModelControlBuilder
 	{
 		newName= newModelTFE.getText();
 		
-		newName=(newName==null)?"":newName.trim();
+		newName=(newName==null)?"":newName.trim(); //$NON-NLS-1$
 		return newName;
 	}
 	
@@ -181,7 +182,7 @@ public class NewSimulationModelControlBuilder
 	{
 		Boolean answer=true;
 		StringBuffer errors= new StringBuffer(128);
-		if(newName.equals(""))
+		if(newName.equals("")) //$NON-NLS-1$
 		{
 			answer=answer&&false;		
 			errors.append(NEW_NAME_MUST_NOT_BE_EMPTY);
@@ -202,7 +203,7 @@ public class NewSimulationModelControlBuilder
 		return errorMessage;
 	}
 	
-	public void setUpdateListerner(@SuppressWarnings("hiding")
+	public void setUpdateListerner(@SuppressWarnings("hiding") //$NON-NLS-1$
   IUpdateListener updateListener)
 	{
 		this.updateListener=updateListener;
@@ -237,7 +238,7 @@ public class NewSimulationModelControlBuilder
 
 			public String getURI()
 			{
-				return "www.dada.de/dde";
+				return "www.dada.de/dde"; //$NON-NLS-1$
 			}
 
 			public boolean hasLinkedWorkflowData(EWorkflowProperty prop)
@@ -247,7 +248,7 @@ public class NewSimulationModelControlBuilder
 			
 			public String getName()
 			{
-				return "Sim1";
+				return "Sim1"; //$NON-NLS-1$
 			}
 			
 			public void remove()
@@ -259,7 +260,7 @@ public class NewSimulationModelControlBuilder
 		Display d = new Display();
 		final Shell shell = new Shell(d);
 		shell.setSize(400, 400);
-		shell.setText("Wizard Test");
+		shell.setText("Wizard Test"); //$NON-NLS-1$
 		shell.setLayout(new FillLayout());
 		Composite c= new Composite(shell,SWT.FILL);
 		c.setLayout(new GridLayout());
@@ -287,10 +288,10 @@ public class NewSimulationModelControlBuilder
 	///////////
 	final static public void startWizard(Shell shell, IWorkflowData workflowData )
 	{
-		logger.info("starting wizard");
+		logger.info("starting wizard"); //$NON-NLS-1$
 		NewSimulationModelWizardPage wpage=
 			new NewSimulationModelWizardPage(
-							"Neues Simulation Model",
+							"Neues Simulation Model", //$NON-NLS-1$
 							workflowData);
 		
 		Wizard iWizard=new Wizard()
@@ -301,12 +302,12 @@ public class NewSimulationModelControlBuilder
 			{
 				NewSimulationModelWizardPage page=
 					(NewSimulationModelWizardPage)getStartingPage();
-				logger.info("page:"+page.getClass());
+				logger.info("page:"+page.getClass()); //$NON-NLS-1$
 				boolean answer=
 					page.getNewSimulaionControlBuilder().isValid();
 				if(!answer)
 				{
-					page.setErrorMessage("");
+					page.setErrorMessage(""); //$NON-NLS-1$
 				}
 				return answer;
 			}
@@ -316,20 +317,20 @@ public class NewSimulationModelControlBuilder
 		iWizard.addPage(wpage);
 		//wpage.setTitle("spage");
 		WizardDialog wd= new WizardDialog(shell,iWizard);
-		wd.setTitle("Neue Simulationsmodel");
+		wd.setTitle(Messages.getString("NewSimulationModelControlBuilder.20")); //$NON-NLS-1$
 		//wd.setMessage("Neue Simulationsmodell");
 		//wd.setBlockOnOpen(true);
 		int decision=wd.open();
-		logger.info("Opendecision:"+decision);
+		logger.info("Opendecision:"+decision); //$NON-NLS-1$
 		if(decision==WizardDialog.OK)
 		{
 			String name=wpage.getNewSimulaionControlBuilder().getNewName();
-			logger.info("newName="+name);
+			logger.info("newName="+name); //$NON-NLS-1$
 			IWorkflowDB workflowDB=
 				ActiveWorkContext.getInstance().getWorkflowDB();
 			if(workflowDB==null)
 			{
-				logger.warning("no workflow db available");
+				logger.warning("no workflow db available"); //$NON-NLS-1$
 				return;
 			}
 			else
@@ -342,7 +343,7 @@ public class NewSimulationModelControlBuilder
 		}
 		else
 		{
-			logger.info("Wizard canceled:"+decision);
+			logger.info("Wizard canceled:"+decision); //$NON-NLS-1$
 		}
 	}
 }

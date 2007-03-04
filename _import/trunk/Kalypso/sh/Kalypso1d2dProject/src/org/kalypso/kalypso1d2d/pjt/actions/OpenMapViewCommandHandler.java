@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeEvent;
@@ -41,9 +42,9 @@ import de.renew.workflow.WorkflowCommandHandler;
 public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension, IKalypsoThemeListener
 {
 
-  private static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource";
+  private static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"; //$NON-NLS-1$
 
-  private static final String PARAM_LAYER_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer";
+  private static final String PARAM_LAYER_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"; //$NON-NLS-1$
 
   private String m_resource;
 
@@ -56,7 +57,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
@@ -64,7 +65,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
     if( m_resource == null )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( "Resource parameter was null." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.1") ) ); //$NON-NLS-1$
     }
 
     final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -72,7 +73,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
     final IFile file = szenarioPath.getFile( new Path( m_resource ) );
 
-    logger.info( "Opening " + file );
+    logger.info( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.2") + file ); //$NON-NLS-1$
 
     if( file.exists() && activeWorkbenchWindow != null )
     {
@@ -89,7 +90,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
       if( m_featureType != null )
       {
-        final Job job = new Job( "Activate layer..." )
+        final Job job = new Job( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.3") ) //$NON-NLS-1$
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
@@ -148,7 +149,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
     }
     else
     {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() );
+      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
     }
   }
 
@@ -170,7 +171,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
     final String themeContext = themeToActivate.getContext();
     if( m_featureType.equals( themeContext ) )
     {
-      logger.info( themeToActivate + " theme activated with feature type " + m_featureType );
+      logger.info( themeToActivate + " theme activated with feature type " + m_featureType ); //$NON-NLS-1$
       m_mapModell.activateTheme( themeToActivate );      
     }
   }

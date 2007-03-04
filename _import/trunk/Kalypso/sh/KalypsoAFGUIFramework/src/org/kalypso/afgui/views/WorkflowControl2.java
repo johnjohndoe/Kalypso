@@ -40,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.workflow.Activity;
 import org.kalypso.workflow.Phase;
@@ -54,9 +55,9 @@ public class WorkflowControl2
 {
   final static Logger logger = Logger.getLogger( WorkflowControl2.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
 
-  private static final String MEMENTO_LAST_SELECTION = "lastSelection";
+  private static final String MEMENTO_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
   static
   {
@@ -88,7 +89,7 @@ public class WorkflowControl2
         super.doUpdateItem( item, element );
         if( item != null && element instanceof Activity )
         {
-          item.setData( "_HELP", ((Activity) element).getHelp() );
+          item.setData( "_HELP", ((Activity) element).getHelp() ); //$NON-NLS-1$
         }
       }
     };
@@ -97,7 +98,7 @@ public class WorkflowControl2
     final Tree tree = m_treeViewer.getTree();
     final Display display = tree.getDisplay();
     // Disable native tooltip
-    tree.setToolTipText( "" );
+    tree.setToolTipText( "" ); //$NON-NLS-1$
 
     // Implement a "fake" tooltip
     final Listener labelListener = new Listener()
@@ -110,7 +111,7 @@ public class WorkflowControl2
         {
           case SWT.MouseDown:
             final Event e = new Event();
-            e.item = ((TreeItem) control.getData( "_TREEITEM" ));
+            e.item = ((TreeItem) control.getData( "_TREEITEM" )); //$NON-NLS-1$
             // set the selection as if
             // the mouse down event went through to the tree
             tree.setSelection( new TreeItem[] { (TreeItem) e.item } );
@@ -146,8 +147,8 @@ public class WorkflowControl2
             label = new Label( tip, SWT.NONE );
             label.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
             label.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-            label.setData( "_TREEITEM", item );
-            final Object help = item.getData( "_HELP" );
+            label.setData( "_TREEITEM", item ); //$NON-NLS-1$
+            final Object help = item.getData( "_HELP" ); //$NON-NLS-1$
             if( help != null )
             {
               label.setText( (String) help );
@@ -171,7 +172,7 @@ public class WorkflowControl2
     m_treeViewer.setLabelProvider( new WorkflowLabelProvider( m_treeViewer ) );
     m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
-      private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands";
+      private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands"; //$NON-NLS-1$
 
       public void doubleClick( final DoubleClickEvent event )
       {
@@ -200,9 +201,9 @@ public class WorkflowControl2
         catch( final Throwable e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( m_treeViewer.getControl().getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
+          ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString("org.kalypso.afgui.views.WorkflowControl2.8"), Messages.getString("org.kalypso.afgui.views.WorkflowControl2.9") + name, status ); //$NON-NLS-1$ //$NON-NLS-2$
           KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-          logger.log( Level.SEVERE, "Failed to execute command: " + name, e );
+          logger.log( Level.SEVERE, "Failed to execute command: " + name, e ); //$NON-NLS-1$
         }
       }
 
@@ -211,7 +212,7 @@ public class WorkflowControl2
         final Command command = commandService.getCommand( commandId );
         if( !command.isDefined() )
         {
-          final Category category = commandService.getCategory( "org.kalypso.afgui.tasks" );
+          final Category category = commandService.getCategory( "org.kalypso.afgui.tasks" ); //$NON-NLS-1$
           if( !category.isDefined() )
           {
             category.define( TASKS_COMMANDS_CATEGORY, null );

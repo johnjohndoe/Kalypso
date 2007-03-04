@@ -1,5 +1,6 @@
-#Thu Mar 09 15:49:37 CET 2006
+#Sun Mar 04 14:10:26 CET 2007
 eclipse.preferences.version=1
 encoding//etc/schemas=UTF-8
 encoding//etc/schemas/debugdiff.xsd=UTF-8
 encoding//etc/schemas/debugdiff_example.xml=UTF-8
+encoding//src/org/kalypso/kalypso1d2d/pjt/i18n/messages_de.properties=8859_1

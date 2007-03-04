@@ -13,6 +13,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
@@ -43,7 +44,7 @@ public class CreateFEContlineWidget extends AbstractWidget
 
   public CreateFEContlineWidget( )
   {
-    super( "New Continuity Line", "Creates a new Continuity Line" );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -155,7 +156,7 @@ public class CreateFEContlineWidget extends AbstractWidget
       {
         public void run( )
         {
-          ErrorDialog.openError( shell, getName(), "Failure while creation of continuity line:", status );
+          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.2"), status ); //$NON-NLS-1$
         }
       } );
     }

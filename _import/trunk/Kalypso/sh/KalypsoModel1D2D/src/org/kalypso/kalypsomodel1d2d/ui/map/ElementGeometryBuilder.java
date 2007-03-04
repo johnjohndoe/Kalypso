@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
@@ -116,7 +117,7 @@ public class ElementGeometryBuilder
       return null;
     }
     else
-      throw new IllegalArgumentException( "node must be either a FE1D2DNode or a GM_Point" );
+      throw new IllegalArgumentException( "node must be either a FE1D2DNode or a GM_Point" ); //$NON-NLS-1$
   }
 
   /**
@@ -124,7 +125,7 @@ public class ElementGeometryBuilder
    */
   public ICommand finish( ) throws Exception
   {
-    final CompositeCommand command = new CompositeCommand( "FE1D2D Element hinzufügen" );
+    final CompositeCommand command = new CompositeCommand( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1") ); //$NON-NLS-1$
 
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
@@ -173,8 +174,8 @@ public class ElementGeometryBuilder
         // create new node
         final FE1D2DNode newNode = FE1D2DNode.createNode( discModel );
         newNode.setPoint( (GM_Point) node );
-        newNode.setName( "" );
-        newNode.setDescription( "manuell digitalisiert" );
+        newNode.setName( "" ); //$NON-NLS-1$
+        newNode.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3") ); //$NON-NLS-1$
         final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
         command.addCommand( addNodeCommand );
         nodes[i] = newNode;
