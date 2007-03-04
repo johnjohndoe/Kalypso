@@ -42,6 +42,14 @@ package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.convert.namodel.NAConfiguration;
@@ -142,7 +150,7 @@ public class ParseManager
       FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, features[i] );
 
     // complete Features of StorageChannel
-//    features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
+    // features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
 
     System.out.println( "\n\n-----------------" );
     return naModellFe;
@@ -153,20 +161,30 @@ public class ParseManager
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
     IFeatureType naParaFT = m_paraSchema.getFeatureType( "Parameter" );
+    
 
     // create all Features (and FeatureCollections)
     Feature naParaFe = modelManager.createFeature( naParaFT );
+    Feature[] features;
+    IPropertyType soilLayerMemberPT = naParaFT.getProperty( "soilLayerMember" );
+    IPropertyType soiltypeMemberPT = naParaFT.getProperty( "soiltypeMember" );
 
     // complete Feature soilLayerMember
-    Feature[] features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
-    IPropertyType soilLayerMemberPT = naParaFT.getProperty( "soilLayerMember" );
-    for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
+    try
+    {
+      features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
+      for( int i = 0; i < features.length; i++ )
+        FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
+    }
+    catch( Exception e )
+    {
+      System.out.println( "keine Datei boden_art.dat vorhanden" );
+    }
 
     // complete Feature soiltypeMember
     features = m_bodtypManager.parseFile( m_conf.getBodentypFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
+      FeatureHelper.addProperty( naParaFe, soiltypeMemberPT, features[i] );
 
     // complete Feature idealLandUseMember
     File nutzungDir = m_conf.getNutzungDir();
@@ -192,12 +210,32 @@ public class ParseManager
         FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     }
     System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
+    
+    
+    final IPropertyType sealingMemberRT = naParaFT.getProperty( "sealingMember" );
+    URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL();
+    features=m_idleLanduseManager.parseSealingFilecsv(csvsealingURL);
+    for( int f = 0; f < features.length; f++ )
+      FeatureHelper.addProperty( naParaFe, sealingMemberRT, features[f] );
 
+    
+    URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL();
+    features=m_idleLanduseManager.parseFilecsv(csvURL);
+    for( int f = 0; f < features.length; f++ )
+      FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
+    
     final IPropertyType snowMemberRT = naParaFT.getProperty( "snowMember" );
     // complete Feature snowMember
-    features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
-    for( int i = 0; i < features.length; i++ )
-      FeatureHelper.addProperty( naParaFe, snowMemberRT, features[i] );
+    try
+    {
+      features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
+      for( int i = 0; i < features.length; i++ )
+        FeatureHelper.addProperty( naParaFe, snowMemberRT, features[i] );
+    }
+    catch( Exception e )
+    {
+      System.out.println( "keine Datei snowtyp.dat vorhanden" );
+    }
 
     System.out.println( "\n\n-----------------" );
     return naParaFe;

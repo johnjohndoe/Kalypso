@@ -119,13 +119,11 @@ public class BodenartManager extends AbstractManager
     createProperties( propCollector, line, 6 );
 
     // generate id:
-    // FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
     String asciiStringId = propCollector.get( "name" );
     final Feature feature = getFeature( asciiStringId, m_bodenartFT );
 
     // continue reading
 
-    // Collection collection = propCollector.values();
     setParsedProperties( feature, propCollector, null );
     return feature;
   }

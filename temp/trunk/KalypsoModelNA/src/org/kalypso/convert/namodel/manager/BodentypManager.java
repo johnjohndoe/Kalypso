@@ -96,9 +96,6 @@ public class BodentypManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    // FileReader(
-    // file
-    // ) );
     Feature fe = null;
     // Kommentarzeilen
     for( int i = 0; i <= 2; i++ )
@@ -128,11 +125,9 @@ public class BodentypManager extends AbstractManager
     createProperties( propCollector, line, 1 );
 
     // generate id:
-    // FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
     String asciiStringId = propCollector.get( "name" );
     final Feature feature = getFeature( asciiStringId, m_bodentypFT );
 
-    // FeatureProperty ianzProp = (FeatureProperty)propCollector.get( "ianz" );
     int ianz = Integer.parseInt( propCollector.get( "ianz" ) );
     HashMap<String, String> bodArtPropCollector = new HashMap<String, String>();
     // BodArtParameterMember
@@ -146,8 +141,6 @@ public class BodentypManager extends AbstractManager
       // final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "name" );
       String asciiBodArtId = bodArtPropCollector.get( "name" );
       final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
-
-      // final FeatureProperty BodArtLink = FeatureFactory.createFeatureProperty( "soilLayerLink", BodArtFE.getId() );
 
       bodArtPropCollector.put( "soilLayerLink", BodArtFE.getId() );
       bodArtParameterFeature.setProperty( "soilLayerLink", BodArtFE.getId() );

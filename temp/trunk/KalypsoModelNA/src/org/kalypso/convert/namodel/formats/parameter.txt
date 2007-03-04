@@ -4,7 +4,7 @@
 #
 #Bodenart:
 (text,*)
-(name,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
+(name,*)_(IGNORE,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
 #
 #Nutzung:
 (name,a80)
