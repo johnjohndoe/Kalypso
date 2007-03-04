@@ -1574,7 +1574,7 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         e.printStackTrace();
 
-        System.out.println( "ERR: " + exeResource + " max not exist" );
+        System.out.println( "ERR: " + exeResource + " may not exist" );
       }
     }
   }
