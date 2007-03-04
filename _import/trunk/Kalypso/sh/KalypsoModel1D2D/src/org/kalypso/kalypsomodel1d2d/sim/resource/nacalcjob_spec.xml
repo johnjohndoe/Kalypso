@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<modelspec 
-	xmlns="simspec.core.simulation.kalypso.org" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	typeID="Calc1D2D">
-	
-</modelspec>

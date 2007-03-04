@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="Calc1D2D">
+    <input id="DiscretisationModel" path="discretisation.gml" />
+    <input id="OperationalModel" path="operational.gml" />
+    <input id="FlowResistanceModel" path="flowResistance.gml" />
+	<input id="FlowRelationshipModel" path="flowRelationship.gml" />
+	<input id="SimulationControlModel" path="models/control.gml" relativeToCalcCase="true"/>
+		<input id="Roughness" path=".metadata/roughness.gml" relativeToCalcCase="false"/>
+	
+	<output id="SimulationResultModel" path="/Ergebnisse/simulationResult.gml" />
+	<output id="RESULT_DIR_NAME" path="/Ergebnisse" />
+</modeldata>
+
