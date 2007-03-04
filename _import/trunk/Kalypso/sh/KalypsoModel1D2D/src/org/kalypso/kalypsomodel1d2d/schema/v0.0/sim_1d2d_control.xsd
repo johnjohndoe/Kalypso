@@ -22,294 +22,397 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="Version" type="c1d2d:VersionType">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Version</label>
-							<tooltip>Version des Rechenkerns RMA 10S</tooltip>
-						</documentation>
-					</annotation>
+					<element name="Version" default="NEW">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Version</label>
+								<tooltip>Version des Rechenkerns RMA 10S</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="NEW">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Neueste</label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>latest</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="Version3.5"/>
+								<enumeration value="test"/>
+							</restriction>
+						</simpleType>
 					</element>
 					<!-- ControlDataBlock-->
 					<!--C0-->
-					<element name="IOPTZD" type="c1d2d:IOPTZDType">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Turbulenz Methode</label>
-							<tooltip>Option für Turbulenz Methode</tooltip>
-						</documentation>
-					</annotation>					
+					<element name="IOPTZD" default="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Turbulenz Methode</label>
+								<tooltip>Option für Turbulenz Methode</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="0">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>original RMA-10 Methode</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="1">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Quadratische Verteilung</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="2">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Lineare Verteilung</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="3">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Gaussian Mellor-Yamada</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
 					</element>
-					<element name="IDNOPT" type="c1d2d:IDNOPTType">
-					<annotation>
-						<documentation xml:lang="de">
-						<label>Marsh Elemente</label>
-							<tooltip>Option für Marsh Elemente</tooltip>
-						</documentation>
-					</annotation>					
+					<element name="IDNOPT">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Marsh Elemente</label>
+								<tooltip>Option für Marsh Elemente</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="0">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Keine Verwendung</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="-1">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Default Werte</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="-2">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Eingegebene Werte</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
 					</element>
 					<element name="startsim" type="dateTime">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Start Simulation</label>
-							<tooltip>Startdatum und Zeit der Simulation</tooltip>
-						</documentation>
-					</annotation>					
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start Simulation</label>
+								<tooltip>Startdatum und Zeit der Simulation</tooltip>
+							</documentation>
+						</annotation>
 					</element>
-					<element name="IEDSW" type="c1d2d:IEDSWType">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Eddy/ Turbulenz</label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>					
+					<element name="IEDSW">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Eddy/ Turbulenz</label>
+								<tooltip/>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="-1">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Eingabedaten verwenden Elementtypenabhängig?</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="0">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Eingabedaten direkt verwenden?</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="1">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Eingabedaten magnitude verwenden?</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="2">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Smagorinsky</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="3">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>mit Fliessrichtung?</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="4">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>wie 3 mit 2tem?</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+							</restriction>
+						</simpleType>
 					</element>
-					<element name="TBFACT" type="c1d2d:TBFACTType" default="0.2">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Alfa</label>
-							<tooltip>Alfa Wert des Smagorinsky Ansatzes</tooltip>
-						</documentation>
-					</annotation>					
+					<element name="TBFACT" default="0.2">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Alfa</label>
+								<tooltip>Alfa Wert des Smagorinsky Ansatzes</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.02"/>
+								<maxExclusive value="0.5"/>
+							</restriction>
+						</simpleType>
 					</element>
 					<element name="TBMIN" type="float">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Min. Eddy Viskosität</label>
-							<tooltip>Minimale kinematische Eddy Viskosität des Smagorinsky Ansatzes</tooltip>
-						</documentation>
-					</annotation>					
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Min. Eddy Viskosität</label>
+								<tooltip>Minimale kinematische Eddy Viskosität des Smagorinsky Ansatzes</tooltip>
+							</documentation>
+						</annotation>
 					</element>
-					<element name="IPROJ" type="c1d2d:IPROJType">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Projektion</label>
-							<tooltip>Pojektionsoptionen</tooltip>
-						</documentation>
-					</annotation>					
+					<element name="IPROJ">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Projektion</label>
+								<tooltip>Pojektionsoptionen</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="0">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Zeitabweichung</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="1">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>keine Projektion</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+								<enumeration value="2">
+								<annotation>
+										<documentation xml:lang="de">
+											<label>Projektion auf aktuellem und vorherigem Wert</label>
+										</documentation>
+									</annotation>
+									</enumeration>
+							</restriction>
+						</simpleType>
 					</element>
 					<!--C2-->
 					<element name="OMEGA" type="double">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Breitengrad</label>
-							<tooltip>Breitengrad zur Ermittlung der Corioliskraft [°]</tooltip>
-						</documentation>
-					</annotation>					
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Breitengrad</label>
+								<tooltip>Breitengrad zur Ermittlung der Corioliskraft [°]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="ELEV" type="double">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Anfangswert Wasserspiegel</label>
-							<tooltip>Mittlerer Anfangswert für die Wasserspiegelhöhe [m]</tooltip>
-						</documentation>
-					</annotation>					
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangswert Wasserspiegel</label>
+								<tooltip>Mittlerer Anfangswert für die Wasserspiegelhöhe [m]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<!--C3-->
-					<element name="UDIR" type="c1d2d:UDIRType">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Geschwindigkeitsrichtung</label>
-							<tooltip>Richtung der nominalen Geschwindigkeit im Gegenuhrzeigersinn auf die x-Achse bezogen [°]</tooltip>
-						</documentation>
-					</annotation>
+					<element name="UDIR">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Geschwindigkeitsrichtung</label>
+								<tooltip>Richtung der nominalen Geschwindigkeit im Gegenuhrzeigersinn auf die x-Achse bezogen [°]</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0"/>
+								<maxInclusive value="360.0"/>
+							</restriction>
+						</simpleType>
 					</element>
 					<element name="HMIN" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Min. Tiefe</label>
-							<tooltip> Minimale Tiefe bei Simulationsstart [m]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Min. Tiefe</label>
+								<tooltip> Minimale Tiefe bei Simulationsstart [m]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="DSET" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Trockenknotenhöhe</label>
-							<tooltip>Höhe bei welcher Knoten als trocken angesetzt werden [m]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Trockenknotenhöhe</label>
+								<tooltip>Höhe bei welcher Knoten als trocken angesetzt werden [m]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="DSETD" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Nassknotenhöhe?</label>
-							<tooltip>Höhe bei welcher Knoten als submerged? während des Benetzungsprozesses angesetzt werden [m]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Nassknotenhöhe?</label>
+								<tooltip>Höhe bei welcher Knoten als submerged? während des Benetzungsprozesses angesetzt werden [m]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<!--C4-->
 					<element name="SALI" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Salzkonzentration</label>
-							<tooltip>Anfangswert der Salzkonzentration [????]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Salzkonzentration</label>
+								<tooltip>Anfangswert der Salzkonzentration [????]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="TEMPI" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Temperatur</label>
-							<tooltip>Anfangswert der Temperatur [°C]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Temperatur</label>
+								<tooltip>Anfangswert der Temperatur [°C]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="SEDI" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Sandkonzentraion</label>
-							<tooltip>Anfangswert der Sandkonzentration [???]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Sandkonzentraion</label>
+								<tooltip>Anfangswert der Sandkonzentration [???]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="UINP" type="double" minOccurs="0">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>u Geschwindigeit????</label>
-							<tooltip>[m/s]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>u Geschwindigeit????</label>
+								<tooltip>[m/s]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="VINP" type="double" minOccurs="0">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>v Geschwindigeit????</label>
-							<tooltip>[m/s]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>v Geschwindigeit????</label>
+								<tooltip>[m/s]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="PRCNT" type="double" default="0.0" minOccurs="0">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Salzkonzentrationsaustausch???</label>
-							<tooltip>[%]</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Salzkonzentrationsaustausch???</label>
+								<tooltip>[%]</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="DMIX" type="double" fixed="0.0" minOccurs="0">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>fixed value???</label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>fixed value???</label>
+								<tooltip/>
+							</documentation>
+						</annotation>
 					</element>
 					<!--C5-->
 					<element name="NITI" type="int">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Max. Iterationsanzahl</label>
-							<tooltip>Maximale Anzahl der Interationen für stedy state Ergebnis (0 - ohne Berechnung stedy state)</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Max. Iterationsanzahl</label>
+								<tooltip>Maximale Anzahl der Interationen für stedy state Ergebnis (0 - ohne Berechnung stedy state)</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="NITN" type="int">
-										<annotation>
-						<documentation xml:lang="de">
-							<label>Max. Iterationsanzahl dynamisch???</label>
-							<tooltip>Maximale Anzahl der Iterationen für jeden Zeitschritt einer dynamischen Berechnung</tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Max. Iterationsanzahl dynamisch???</label>
+								<tooltip>Maximale Anzahl der Iterationen für jeden Zeitschritt einer dynamischen Berechnung</tooltip>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="NCYC" type="int">
-										<annotation>
-						<documentation xml:lang="de">
-							<label></label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label/>
+								<tooltip/>
+							</documentation>
+						</annotation>
 					</element>
 					<!--CV-->
 					<element name="CONV_1" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label></label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label/>
+								<tooltip/>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="CONV_2" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label></label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label/>
+								<tooltip/>
+							</documentation>
+						</annotation>
 					</element>
 					<element name="CONV_3" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label></label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label/>
+								<tooltip/>
+							</documentation>
+						</annotation>
 					</element>
 					<!-- Time step DataBlock-->
 					<element name="DELTA" type="double">
-										<annotation>
-						<documentation xml:lang="de">
-							<label></label>
-							<tooltip></tooltip>
-						</documentation>
-					</annotation>
+						<annotation>
+							<documentation xml:lang="de">
+								<label/>
+								<tooltip/>
+							</documentation>
+						</annotation>
 					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!--C0-->
-	<simpleType name="IOPTZDType">
-		<restriction base="string">
-			<enumeration value="0 - original RMA-10 Methode"/>
-			<enumeration value="1 - Quadratische Verteilung"/>
-			<enumeration value="2 - Lineare Verteilung"/>
-			<enumeration value="3 - Gaussian Mellor-Yamada"/>
-		</restriction>
-	</simpleType>
-	<simpleType name="IDNOPTType">
-		<restriction base="string">
-			<enumeration value=" 0 - Keine Verwendung"/>
-			<enumeration value="-1 - Default Werte"/>
-			<enumeration value="-2 - Eingegebene Werte"/>
-		</restriction>
-	</simpleType>
-	<simpleType name="IEDSWType">
-		<restriction base="string">
-			<enumeration value="-1 - Eingabedaten verwenden Elementtypenabhängig?"/>
-			<enumeration value=" 0 - Eingabedaten direkt verwenden?"/>
-			<enumeration value=" 1 - Eingabedaten magnitude verwenden?"/>
-			<enumeration value=" 2 - Smagorinsky"/>
-			<enumeration value=" 3 - 1 mit Fliessrichtung?"/>
-			<enumeration value=" 4 - 3 mit 2tem?"/>
-		</restriction>
-	</simpleType>
-	<simpleType name="TBFACTType">
-		<restriction base="double">
-			<minInclusive value="0.02"/>
-			<maxExclusive value="0.5"/>
-		</restriction>
-	</simpleType>
-	<simpleType name="IPROJType">
-		<restriction base="string">
-			<enumeration value="0 - Zeitabweichung"/>
-			<enumeration value="1 - keine Projektion"/>
-			<enumeration value="2 - Projektion auf aktuellem und vorherigem Wert"/>
-		</restriction>
-	</simpleType>
-	<!--C3-->
-	<simpleType name="UDIRType">
-		<restriction base="double">
-			<minInclusive value="0.0"/>
-			<maxInclusive value="360.0"/>
-		</restriction>
-	</simpleType>
-	<simpleType name="VersionType">
-		<restriction base="string">
-			<enumeration value="neueste"/>
-			<enumeration value="latest"/>
-			<enumeration value="Version3.5"/>
-			<enumeration value="test"/>
-		</restriction>
-	</simpleType>
 </schema>
