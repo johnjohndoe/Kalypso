@@ -84,7 +84,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     m_profile = profile;
     final ColorRegistry cr = chartView.getColorRegistry();
     if( !cr.getKeySet().contains( IWspmOverlayConstants.LAYER_OVERLAY ) )
-      cr.put( IWspmOverlayConstants.LAYER_OVERLAY, new RGB( 255, 255, 0 ) );
+      cr.put( IWspmOverlayConstants.LAYER_OVERLAY, new RGB( 0, 153, 255 ) );
     m_color = cr.get( IWspmOverlayConstants.LAYER_OVERLAY );
   }
 
@@ -131,7 +131,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final Point2D logPoint = screen2logical( point );
     final double hoehe = logPoint.getY(); // set by schlauchgenerator
     profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, logPoint.getX() );
-    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, hoehe );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, hoehe );
     getProfilChartView().getChart().repaint();
   }
 
