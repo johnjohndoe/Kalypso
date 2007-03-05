@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -286,6 +287,18 @@ public class ModelOps
     
   }
   
+  public static final IElement1D createElement1d(
+                                IFEDiscretisationModel1d2d model1d2d,
+                                IFE1D2DEdge edge)
+  {
+      IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
+      IElement1D element = 
+          (IElement1D) elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+      element.setEdge( edge );
+      
+      return element;
+  }
+  
   public static final IFE1D2DElement createElement2d(
                               IFEDiscretisationModel1d2d model1d2d,
                               List<IFE1D2DEdge> edges)
@@ -452,6 +465,38 @@ public class ModelOps
     }
     
     
+  }
+  /**
+   * Answert whether the edge is contained by a fe element.
+   * This is the when if its is directely contains in an element
+   * or in the case of a normal edge through its edge inv
+   * 
+   * @param egde the edge to test 
+   * @return true if the given edge is in an element
+   */
+  public static final boolean isContainedInAnElement(IFE1D2DEdge edge)
+  {
+    if(!edge.getContainers().isEmpty())
+    {
+      return true;
+    }
+    if(edge instanceof IEdgeInv)
+    {
+      return false;
+    }
+    else
+    {
+        IEdgeInv edgeInv = edge.getEdgeInv();
+        if(edgeInv==null)
+        {
+          return false;
+        }
+        if(edgeInv.getContainers().isEmpty())
+        {
+          return false;
+        }    
+        return true;
+    }
   }
   
   

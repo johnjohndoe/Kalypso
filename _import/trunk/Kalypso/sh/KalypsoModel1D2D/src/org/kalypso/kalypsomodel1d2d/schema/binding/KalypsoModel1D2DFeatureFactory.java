@@ -160,6 +160,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 {
                   return new FE1D2DContinuityLine(feature);     
                 }
+                else if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D) )
+                {
+                  return new Element1D(feature);     
+                }
                 // TODO: what is the purpose of these (similar below) strange else's
                 // Why not register FE1D2D_2DElement? Please comment!
                 
@@ -173,6 +178,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFE1D2DElement.class, cTor);
+        cMap.put(IElement1D.class, cTor);
+        cMap.put(IFE1D2DContinuityLine.class, cTor);
 
         //element1d
         cTor = new AdapterConstructor()

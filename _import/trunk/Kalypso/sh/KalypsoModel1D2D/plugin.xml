@@ -56,6 +56,8 @@
 	                     	value="Element2D"/>
 	       			</class>
 			</action>
+			
+			
          <action               
                id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineDelegate"
                label="Kontinuitätslinie definieren"
@@ -106,6 +108,15 @@
               style="radio"
               toolbarPath="karte/tools"
               tooltip="Grid draw tool"/>
+        <action
+              class="org.kalypso.kalypsomodel1d2d.ui.map.create1dele.CreateFE1DElementActionDelegate"
+              id="org.kalypso.kalypsomodel1d2d.ui.map.create1dele.CreateFEElement1DWidget"
+              label="1DCreate"
+              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+              style="radio"
+              toolbarPath="karte/tools"
+              tooltip="Create 1D Element"/>
+              
         <action
               class="org.kalypso.kalypsomodel1d2d.ui.map.del.TestDeleteFEElementActionDelegate"
               id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"

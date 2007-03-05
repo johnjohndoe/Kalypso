@@ -42,11 +42,13 @@ package org.kalypso.kalypsomodel1d2d.geom;
 
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -191,5 +193,12 @@ public class ModelGeometryBuilder
         return null;
       }
       
+  }
+  
+  public static final GM_Curve computeElement1DGeometry( 
+              IElement1D element1D) throws GM_Exception
+  {
+    Assert.throwIAEOnNullParam( element1D, "element1D" );
+    return computeEgdeGeometry( element1D.getEdge() );
   }
 }

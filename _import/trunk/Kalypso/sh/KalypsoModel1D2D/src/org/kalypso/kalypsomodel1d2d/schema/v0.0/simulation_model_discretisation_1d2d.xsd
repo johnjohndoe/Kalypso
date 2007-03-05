@@ -208,7 +208,7 @@
 					<xs:element
 						ref="wb1d2d:edgeContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
-					<group ref="gml:StandardObjectProperties"/>
+					<xs:group ref="gml:StandardObjectProperties"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -538,6 +538,11 @@
 				Basic 1D elements in a finite element network.
 				It just wraps an edge.
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
@@ -546,6 +551,9 @@
 						<xs:element 
 							ref="wb1d2d:directedEdge"
 							minOccurs="1" maxOccurs="1"/>
+						<xs:element 
+						name="geometry" 
+						type="gml:LineStringPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	
@@ -783,7 +791,7 @@
 					<xs:sequence>
 						<xs:element 
 							ref="wb1d2d:directedEdge"
-							minOccurs="1" maxOccurs="unbounded"/>
+							minOccurs="1" maxOccurs="1"/>
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

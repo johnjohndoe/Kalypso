@@ -8,9 +8,12 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
@@ -35,15 +38,25 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    final IFeatureType featureType = feature.getFeatureType();
-    final FE1D2D_2DElement element;
-    if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
-      element = new FE1D2DContinuityLine( feature );
-    else
-      element = new FE1D2D_2DElement( feature );
 
     try
     {
+      final IFeatureType featureType = feature.getFeatureType();
+      final FE1D2D_2DElement element;
+      if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
+      {
+        element = new FE1D2DContinuityLine( feature );
+      }
+      else if( featureType.getQName().equals( 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) )
+      {
+        IElement1D element1D  = new Element1D(feature);
+        return ModelGeometryBuilder.computeElement1DGeometry( element1D );
+      }
+      else
+      {
+        element = new FE1D2D_2DElement( feature );
+      }
       return element.recalculateElementGeometry();
     }
     catch( final GM_Exception e )
