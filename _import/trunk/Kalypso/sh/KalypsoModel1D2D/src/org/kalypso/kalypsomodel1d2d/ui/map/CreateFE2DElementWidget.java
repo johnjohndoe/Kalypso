@@ -11,6 +11,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -43,7 +44,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
   public CreateFE2DElementWidget( )
   {
-    super( "New FE-Element", "Creates a new FE-Element" );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

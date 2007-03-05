@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -216,7 +217,7 @@ public class CreateMainChannelComposite extends Composite
     sectionClient.setLayout( new GridLayout( 4, false ) );
 
     m_segmentSection.setClient( sectionClient );
-    m_segmentSection.setText( "Segmentansicht" );
+    m_segmentSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.0") ); //$NON-NLS-1$
     if( m_data.getNumOfSegments() > 0 )
       m_segmentSection.setExpanded( true );
     else
@@ -224,7 +225,7 @@ public class CreateMainChannelComposite extends Composite
 
     /* Header */
     final Label labelSpinnnerSegment = new Label( sectionClient, 0 );
-    labelSpinnnerSegment.setText( "Wählen Sie das gewünschte Segment  ->" );
+    labelSpinnnerSegment.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.1") ); //$NON-NLS-1$
     GridData gridDataLabelSpinner = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDataLabelSpinner.horizontalSpan = 1;
     labelSpinnnerSegment.setLayoutData( gridDataLabelSpinner );
@@ -235,7 +236,7 @@ public class CreateMainChannelComposite extends Composite
     spinnerSegment.setLayoutData( gridDataSegmentSpinner );
 
     final Button buttonZoomToExtend = new Button( sectionClient, SWT.CHECK );
-    buttonZoomToExtend.setText( "autom. Zoom" );
+    buttonZoomToExtend.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2") ); //$NON-NLS-1$
     buttonZoomToExtend.setSelection( m_ButtonStateZoom );
 
     buttonZoomToExtend.addSelectionListener( new SelectionAdapter()
@@ -307,7 +308,7 @@ public class CreateMainChannelComposite extends Composite
 
     /* Group Segmentdaten */
     Group groupSegment = new Group( sectionClient, SWT.NULL );
-    groupSegment.setText( "Segmentdaten" );
+    groupSegment.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.3") ); //$NON-NLS-1$
 
     GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 4;
@@ -325,7 +326,7 @@ public class CreateMainChannelComposite extends Composite
     compSegmentDataHeader.setLayoutData( gridDataHeader );
 
     Label labelNumIntersSegment = new Label( compSegmentDataHeader, SWT.NULL );
-    labelNumIntersSegment.setText( "Anzahl der Uferlinienunterteilungen ->" );
+    labelNumIntersSegment.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.4") ); //$NON-NLS-1$
     GridData gridDatalabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDatalabel.horizontalSpan = 1;
     labelNumIntersSegment.setLayoutData( gridDatalabel );
@@ -347,7 +348,7 @@ public class CreateMainChannelComposite extends Composite
       spinnerNumIntersSegment.setEnabled( false );
       spinnerNumIntersSegment.setSelection( 0 );
     }
-    spinnerNumIntersSegment.setToolTipText( "Wählen Sie die Anzahl der Uferlinienunterteilungen für das aktuelle Segment." );
+    spinnerNumIntersSegment.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.5") ); //$NON-NLS-1$
     spinnerNumIntersSegment.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -361,10 +362,10 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     Label labelProfile1 = new Label( groupSegment, SWT.NULL );
-    labelProfile1.setText( "Profil 1" );
+    labelProfile1.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.6") ); //$NON-NLS-1$
 
     Button buttonEditProf1 = new Button( groupSegment, SWT.PUSH );
-    buttonEditProf1.setText( "edit" );
+    buttonEditProf1.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.7") ); //$NON-NLS-1$
     buttonEditProf1.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -375,10 +376,10 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     final Label labelBankline1 = new Label( groupSegment, SWT.NULL );
-    labelBankline1.setText( "Uferlinie 1" );
+    labelBankline1.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8") ); //$NON-NLS-1$
 
     m_buttonEditBank1 = new Button( groupSegment, SWT.TOGGLE );
-    m_buttonEditBank1.setText( "edit" );
+    m_buttonEditBank1.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9") ); //$NON-NLS-1$
     m_buttonEditBank1.setSelection( m_bankEdit1 );
     // editButtonUpdateBank1();
     m_buttonEditBank1.addSelectionListener( new SelectionAdapter()
@@ -391,10 +392,10 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     final Label labelProfile2 = new Label( groupSegment, SWT.NULL );
-    labelProfile2.setText( "Profil 2" );
+    labelProfile2.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.10") ); //$NON-NLS-1$
 
     final Button buttonEditProf2 = new Button( groupSegment, SWT.PUSH );
-    buttonEditProf2.setText( "edit" );
+    buttonEditProf2.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11") ); //$NON-NLS-1$
     buttonEditProf2.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -405,10 +406,10 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     final Label labelBankline2 = new Label( groupSegment, SWT.NULL );
-    labelBankline2.setText( "Uferlinie 2" );
+    labelBankline2.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.12") ); //$NON-NLS-1$
 
     m_buttonEditBank2 = new Button( groupSegment, SWT.TOGGLE );
-    m_buttonEditBank2.setText( "edit" );
+    m_buttonEditBank2.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.13") ); //$NON-NLS-1$
     m_buttonEditBank2.setSelection( m_bankEdit2 );
     // editButtonUpdateBank2();
     m_buttonEditBank2.addSelectionListener( new SelectionAdapter()
@@ -422,8 +423,8 @@ public class CreateMainChannelComposite extends Composite
 
     /* conversion button */
     m_buttonConvertToModel = new Button( sectionClient, SWT.PUSH );
-    m_buttonConvertToModel.setText( "alle Segmente ins Modell übernehmen..." );
-    m_buttonConvertToModel.setToolTipText( "alle Segmente ins Modell übernehmen..." );
+    m_buttonConvertToModel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14") ); //$NON-NLS-1$
+    m_buttonConvertToModel.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15") ); //$NON-NLS-1$
     m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -446,9 +447,9 @@ public class CreateMainChannelComposite extends Composite
     Composite sectionClient = new Composite( bankSection, SWT.NONE );
     sectionClient.setLayout( new GridLayout( 3, false ) );
     bankSection.setClient( sectionClient );
-    bankSection.setText( "Uferlinien" );
+    bankSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.16") ); //$NON-NLS-1$
     bankSection.setExpanded( true );
-    bankSection.setDescription( "Wählen Sie Ihre Uferlinienthemen und ggf. hieraus einzelne Linien" );
+    bankSection.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.17") ); //$NON-NLS-1$
 
     final ComboViewer combviewerBank1 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     combviewerBank1.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -460,7 +461,7 @@ public class CreateMainChannelComposite extends Composite
     if( bankThemes.length == 0 )
     {
       combviewerBank1.getControl().setEnabled( false );
-      String msg = "<kein Uferlinienthema in Karte vorhanden>";
+      String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.18"); //$NON-NLS-1$
       combviewerBank1.setInput( new String[] { msg } );
       combviewerBank1.setSelection( new StructuredSelection( msg ) );
       themeToBankSelect = null;
@@ -492,7 +493,7 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank selection */
     final Button chooseFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( chooseFirstBankButton );
-    chooseFirstBankButton.setText( "Uferlinie 1 wählen..." );
+    chooseFirstBankButton.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19") ); //$NON-NLS-1$
     chooseFirstBankButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -503,7 +504,7 @@ public class CreateMainChannelComposite extends Composite
           buttonGuard( chooseFirstBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.LEFT;
           final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
-          final IWidget selectBankWidget = new SelectionWidget( "", "", function );
+          final IWidget selectBankWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( selectBankWidget );
         }
         else
@@ -516,7 +517,7 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank drawing */
     final Button drawFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( drawFirstBankButton );
-    drawFirstBankButton.setText( "zeichnen" );
+    drawFirstBankButton.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.22") ); //$NON-NLS-1$
 
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
@@ -528,7 +529,7 @@ public class CreateMainChannelComposite extends Composite
     if( bankThemes.length == 0 )
     {
       combviewerBank2.getControl().setEnabled( false );
-      String msg = "<kein Uferlinienthema in Karte vorhanden>";
+      String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.23"); //$NON-NLS-1$
       combviewerBank2.setInput( new String[] { msg } );
       combviewerBank2.setSelection( new StructuredSelection( msg ) );
       themeToBank2Select = null;
@@ -560,7 +561,7 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the second bank selection */
     final Button chooseSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( chooseSecondBankButton );
-    chooseSecondBankButton.setText( "Uferlinie 2 wählen..." );
+    chooseSecondBankButton.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.24") ); //$NON-NLS-1$
     chooseSecondBankButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -571,7 +572,7 @@ public class CreateMainChannelComposite extends Composite
           buttonGuard( chooseSecondBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT;
           final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
-          final IWidget selectBankWidget = new SelectionWidget( "", "", function );
+          final IWidget selectBankWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( selectBankWidget );
         }
         else
@@ -584,7 +585,7 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the second bank drawing */
     final Button drawSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( drawSecondBankButton );
-    drawSecondBankButton.setText( "zeichnen" );
+    drawSecondBankButton.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.27") ); //$NON-NLS-1$
 
     Composite compNumBankIntersections = new Composite( sectionClient, SWT.NONE );
     // Layout
@@ -596,7 +597,7 @@ public class CreateMainChannelComposite extends Composite
     compNumBankIntersections.setLayoutData( gridDataNumProfInters );
 
     Label bankLabel = new Label( compNumBankIntersections, SWT.NULL );
-    bankLabel.setText( "Anzahl der Stützstellen pro Uferlinie (global):" );
+    bankLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.28") ); //$NON-NLS-1$
     final GridData gridData = new GridData();
     gridData.horizontalSpan = 1;
     bankLabel.setLayoutData( gridData );
@@ -611,7 +612,7 @@ public class CreateMainChannelComposite extends Composite
     else
       spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
     m_data.setGlobNumBankIntersections( 6 );
-    spinNumBankIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Uferlinie ein. Diese Angabe gilt zunächst global für alle Segmente. Eine genaue Definition für jedes einzelne Segment kann in der Segmentansicht vorgenommen werden." );
+    spinNumBankIntersections.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.29") ); //$NON-NLS-1$
     spinNumBankIntersections.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -644,9 +645,9 @@ public class CreateMainChannelComposite extends Composite
     Composite sectionClient = new Composite( mysection, SWT.NONE );
     sectionClient.setLayout( new GridLayout( 2, false ) );
     mysection.setClient( sectionClient );
-    mysection.setText( "Profile" );
+    mysection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.30") ); //$NON-NLS-1$
     mysection.setExpanded( true );
-    mysection.setDescription( "Wählen Sie Ihr Profilthema und ggf. hieraus einzelne Profile" );
+    mysection.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.31") ); //$NON-NLS-1$
 
     /* add combo-box for the wspm-profile theme selection */
     final ComboViewer combviewerProfiles = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
@@ -660,7 +661,7 @@ public class CreateMainChannelComposite extends Composite
     if( profileThemes.length == 0 )
     {
       combviewerProfiles.getControl().setEnabled( false );
-      String msg = "<kein Profilthema in Karte vorhanden>";
+      String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.32"); //$NON-NLS-1$
       combviewerProfiles.setInput( new String[] { msg } );
       combviewerProfiles.setSelection( new StructuredSelection( msg ) );
       themeToProfileSelect = null;
@@ -696,7 +697,7 @@ public class CreateMainChannelComposite extends Composite
     final Button chooseProfilesButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( chooseProfilesButton );
     chooseProfilesButton.setLayoutData( gridData );
-    chooseProfilesButton.setText( "Profile wählen..." );
+    chooseProfilesButton.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33") ); //$NON-NLS-1$
     chooseProfilesButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -706,7 +707,7 @@ public class CreateMainChannelComposite extends Composite
         {
           buttonGuard( chooseProfilesButton );
           final IRectangleMapFunction function = new ProfileSelectorFunction( m_data );
-          final IWidget selectProfileWidget = new SelectionWidget( "", "", function );
+          final IWidget selectProfileWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( selectProfileWidget );
         }
         else
@@ -716,7 +717,7 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
-    new Label( sectionClient, SWT.NULL ).setText( "Anzahl der Stützstellen pro Profil (global):" );
+    new Label( sectionClient, SWT.NULL ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.36") ); //$NON-NLS-1$
     final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.NONE );
 
     spinNumProfIntersections.setDigits( 0 );
@@ -726,14 +727,14 @@ public class CreateMainChannelComposite extends Composite
       spinNumProfIntersections.setSelection( 6 );
     else
       spinNumProfIntersections.setSelection( m_data.getNumProfileIntersections() );
-    spinNumProfIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Profil ein." );
+    spinNumProfIntersections.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.37") ); //$NON-NLS-1$
 
     spinNumProfIntersections.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -782,15 +783,15 @@ public class CreateMainChannelComposite extends Composite
     sectionClient.setLayout( new GridLayout( 1, false ) );
 
     m_profilSection.setClient( sectionClient );
-    m_profilSection.setText( "Profilansicht" );
-    m_profilSection.setDescription( "Bearbeiten Sie die Profilunterteilungen" );
+    m_profilSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39") ); //$NON-NLS-1$
+    m_profilSection.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.40") ); //$NON-NLS-1$
 
     final IProfilEventManager pem = m_data.getProfilEventManager();
     final IProfil profil = pem.getProfil();
     if( profil == null )
     {
       final Label label = new Label( sectionClient, SWT.NONE );
-      label.setText( "Kein Profil selektiert" );
+      label.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.41") ); //$NON-NLS-1$
     }
     else
     {
