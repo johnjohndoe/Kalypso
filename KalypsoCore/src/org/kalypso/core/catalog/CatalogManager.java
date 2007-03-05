@@ -42,10 +42,12 @@ package org.kalypso.core.catalog;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -116,7 +118,7 @@ public class CatalogManager
     try
     {
       ensureExisting( baseURN );
-      return getCatalog( catalogFile.toURI() );
+      return getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
     }
     catch( Exception e )
     {
@@ -177,7 +179,7 @@ public class CatalogManager
           final DynamicCatalog dynCatalog = (DynamicCatalog) catalog;
           dynCatalog.save( m_baseDir );
           final URL location = dynCatalog.getLocation();
-          catalogsToClose.add( location.toURI() );
+          catalogsToClose.add( new URI( URLEncoder.encode( location.toString(), "UTF-8" ) ) );
         }
       }
       catch( Exception e )
@@ -197,8 +199,20 @@ public class CatalogManager
 
     final String href = CatalogUtilities.getPathForCatalog( baseURN );
     final URL catalogURL = new URL( m_baseDir.toURL(), href );
+
+    URI catalogURI = null;
+    try
+    {
+      catalogURI = new URI( URLEncoder.encode( catalogURL.toString(), "UTF-8" ) );
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      return;
+    }
+
     // TODO: problem: not all urls are uris (example: file with spaces), so we might get an URISyntaxException here
-    final URI catalogURI = catalogURL.toURI();
+    // final URI catalogURI = catalogURL.toURI();
     if( m_openCatalogs.containsKey( catalogURI ) )
       return;
     boolean exists = true;
