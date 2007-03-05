@@ -44,11 +44,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -56,6 +59,7 @@ import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -63,6 +67,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
+
+import com.sun.msv.datatype.ErrorDatatypeLibrary;
 
 /**
  * @author Kuepferle
@@ -100,10 +106,14 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
         m_outlineviewer.postCommand( command, null );
       }
     }
-    catch( Exception e )
+    catch( final Throwable e )
     {
-      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoAddLayerPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), "Thema konnte nicht hinzugefügt werden: ", status );
+      return false;
     }
+    
     return true;
   }
 
