@@ -1,8 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/scenarios" xmlns:ksc="http://www.kalypso.org/scenarios" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/scenarios" xmlns:scm="http://www.kalypso.org/scenarios" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
+
 	<!-- ==============================================================
 		elements and types
 		============================================================== -->
-		
-	
+
+	<complexType name="Scenario">
+		<complexContent>
+			<extension base="scm:Model">
+				<sequence>
+					<element name="DerivedScenarios" type="scm:ScenarioList" maxOccurs="1" />
+					<element name="StaticModel" type="scm:Model" maxOccurs="1" />
+					<element name="OperationalModel" type="scm:Model" maxOccurs="1" />
+					<element name="ControlModel" type="scm:Model" maxOccurs="1" />
+				</sequence>
+				<attribute name="ParentScenario" type="IDREF">
+					<annotation>
+						<appinfo>
+							<jaxb:property>
+								<jaxb:baseType name="Scenario" />
+							</jaxb:property>
+						</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Model">
+		<sequence>
+			<element name="Name" type="string" maxOccurs="1" minOccurs="1" />
+		</sequence>
+		<attribute name="URI" type="ID" use="required" />
+	</complexType>
+
+	<complexType name="ScenarioList">
+		<sequence>
+			<annotation>
+				<appinfo>
+					<jaxb:property name="Scenarios" />
+				</appinfo>
+			</annotation>
+			<element name="Scenario" type="scm:Scenario" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<element name="ProjectScenarios">
+		<complexType>
+			<complexContent>
+				<extension base="scm:ScenarioList" />
+			</complexContent>
+		</complexType>
+	</element>
+
 </schema>

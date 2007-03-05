@@ -1,26 +1,33 @@
 package org.kalypso.afgui.db;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.afgui.model.IWorkflowData;
-import org.kalypso.afgui.schema.Schema;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.scenarios.ProjectScenarios;
+import org.kalypso.scenarios.Scenario;
+import org.kalypso.scenarios.ScenarioList;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-
+/**
+ * @author Patrice Congo, Stefan Kurzbach
+ */
 public class WorkflowDB implements IWorkflowDB
 {
-
-  final static private Logger logger = Logger.getLogger( WorkflowDB.class.getName() );
+  private static final Logger logger = Logger.getLogger( WorkflowDB.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
 
@@ -30,121 +37,129 @@ public class WorkflowDB implements IWorkflowDB
       logger.setUseParentHandlers( false );
   }
 
-  // final private Map< String, IWorkflowDataCreationMechanism>
-  // creationMechanism= new Hashtable<String, IWorkflowDataCreationMechanism>();
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.scenarios.ObjectFactory.class );
 
-  private List<IWorkflowDBChangeListerner> dbListener = new ArrayList<IWorkflowDBChangeListerner>();
+  private final List<IWorkflowDBChangeListerner> m_listeners = new ArrayList<IWorkflowDBChangeListerner>();
 
-  final private Model dbModel;
+  private ProjectScenarios m_projectScenarios;
 
-  final private IResource dbDescResource;
+  private IFile m_file;
 
-  final private URL dbDescURL;
-
-  public WorkflowDB( IResource dbDescRes ) throws IOException
+  /**
+   *
+   */
+  public WorkflowDB( final IFile file ) throws JAXBException
   {
-    dbDescURL = dbDescRes.getRawLocationURI().toURL();
-    dbModel = loadModel( dbDescURL );
-    this.dbDescResource = dbDescRes;
-  }
-
-  final static private Model loadModel( URL url ) throws IOException
-  {
-    // TODO: close input stream!! (finally!)
-    logger.info( "specURL=" + url );
-    InputStream iStream = url.openStream();
-    Model rdfModel = ModelFactory.createDefaultModel();
-    rdfModel.read( iStream, "" );
-    rdfModel.setNsPrefix( Schema.PJT_NS, url.toString() + "#" );
-    // rdfModel.write(System.out);
-    return rdfModel;
-  }
-
-  public IWorkflowData createWorkflowData( String id, String type, IWorkflowData parent )
-  {
-
-    logger.info( "creating data for :" + id );
-    if( type == null )
-    {
-      throw new IllegalArgumentException( "Arguments type must not be null: id=" + id + " type=" + type + " parent=" + parent );
-    }
-    // IWorkflowDataCreationMechanism creator=
-    // creationMechanism.get(type);
-    // logger.info("creator="+creator);
-    // return creator.create(dbModel, id, type, parent);
     try
     {
-      IWorkflowData data = Schema.createWorkflowData( dbModel, parent, id );
-      // logger.info("\n======================rdfModel\n"+dbModel);
-      fireWorkflowDBChange();
-      return data;
+      loadModel( file.getRawLocationURI().toURL() );
+      this.m_file = file;
     }
-    catch( Throwable th )
+    catch( final MalformedURLException e )
     {
-      logger.log( Level.SEVERE, "error createing:" + id + " dbModel=" + dbModel, th );
-      return null;
+      e.printStackTrace();
     }
-
   }
 
-  public IWorkflowData derivedWorkflowData( IWorkflowData parent, String childId )
+  private void loadModel( final URL url ) throws JAXBException
   {
-
-    return Schema.derivedWorkflowData( dbModel, parent, childId );
+    m_projectScenarios = (ProjectScenarios) JC.createUnmarshaller().unmarshal( url );
+    fireWorkflowDBChange();
   }
 
-  public IWorkflowData getWorkflowDataById( String id )
+  /**
+   * @see org.kalypso.afgui.db.IWorkflowDB#createWorkflowData(java.lang.String, org.kalypso.scenarios.Scenario)
+   */
+  public Scenario deriveScenario( final String id, final Scenario parentScenario ) throws CoreException
   {
-    return Schema.getWorkflowDataById( dbModel, id );
+    final Scenario newScenario = new Scenario();
+    newScenario.setURI( parentScenario.getURI() + "/" + id );
+    newScenario.setName( id );
+    newScenario.setParentScenario( parentScenario );
+    ScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
+    if( derivedScenarios == null )
+    {
+      derivedScenarios = new ScenarioList();
+      parentScenario.setDerivedScenarios( derivedScenarios );
+    }
+    derivedScenarios.getScenarios().add( newScenario );
+    persist();
+    fireWorkflowDBChange();
+    return newScenario;
   }
 
-  public List<IWorkflowData> getWorkflowDataByType( String type )
+  /**
+   * @see org.kalypso.afgui.db.IWorkflowDB#getWorkflowDataById(java.lang.String)
+   */
+  public Scenario getScenario( final String id )
   {
-    return Schema.getWorkflowDataByType( dbModel, type );
+    Scenario result = null;
+    for( final Scenario scenario : getRootScenarios() )
+    {
+      result = findScenario( scenario, id );
+      if( result != null )
+      {
+        return result;
+      }
+    }
+    return result;
   }
 
-  public void link( IWorkflowData subject, IWorkflowData object, EWorkflowProperty prop )
+  public Scenario findScenario( final Scenario parentScenario, final String id )
   {
-    Schema.createStatement( dbModel, subject, object, prop );
+    Scenario result = null;
+    final ScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
+    if( parentScenario.getURI().equals( id ) )
+    {
+      result = parentScenario;
+    }
+    else if( derivedScenarios != null )
+    {
+      for( final Scenario derivedScenario : derivedScenarios.getScenarios() )
+      {
+        if( derivedScenario.getURI().equals( id ) )
+        {
+          result = derivedScenario;
+        }
+        else
+        {
+          result = findScenario( derivedScenario, id );
+        }
+        if( result != null )
+        {
+          return result;
+        }
+      }
+    }
+    return result;
   }
 
-  public void unlink( IWorkflowData subject, IWorkflowData object, EWorkflowProperty prop )
-  {
-    Schema.removeStatement( dbModel, subject, object, prop );
-  }
-
-  public List<IWorkflowData> getUnresolvable( )
-  {
-    return null;
-  }
-
-  public List<IWorkflowData> getRootWorkflowDataByType( String type )
-  {
-    return Schema.getRootWorkflowDataByType( dbModel, type );
-  }
-
+  /**
+   * @see org.kalypso.afgui.db.IWorkflowDB#addWorkflowDBChangeListener(org.kalypso.afgui.db.IWorkflowDBChangeListerner)
+   */
   public void addWorkflowDBChangeListener( IWorkflowDBChangeListerner l )
   {
-    logger.info( "Registering:" + l );
-
     if( l == null )
     {
       return;
     }
     else
     {
-      if( dbListener.contains( l ) )
+      if( m_listeners.contains( l ) )
       {
         return;
       }
       else
       {
-        dbListener.add( l );
+        m_listeners.add( l );
       }
     }
 
   }
 
+  /**
+   * @see org.kalypso.afgui.db.IWorkflowDB#removeWorkflowDBChangeListener(org.kalypso.afgui.db.IWorkflowDBChangeListerner)
+   */
   public void removeWorkflowDBChangeListener( IWorkflowDBChangeListerner l )
   {
     if( l == null )
@@ -153,45 +168,69 @@ public class WorkflowDB implements IWorkflowDB
     }
     else
     {
-      if( dbListener.contains( l ) )
+      if( m_listeners.contains( l ) )
       {
-        dbListener.remove( l );
+        m_listeners.remove( l );
       }
     }
   }
 
-  public void removeAllWorkflowDBChangeListener( )
+  /**
+   * @see org.kalypso.afgui.db.IWorkflowDB#dispose()
+   */
+  public void dispose( )
   {
-    dbListener.clear();
-
+    m_listeners.clear();
   }
 
   private void fireWorkflowDBChange( )
   {
-    for( IWorkflowDBChangeListerner l : dbListener )
+    for( IWorkflowDBChangeListerner l : m_listeners )
     {
       l.workflowDBChanged();
     }
   }
 
-  public boolean persist( )
+  public void persist( ) throws CoreException
   {
+    ByteArrayInputStream bis = null;
     try
     {
-
-      logger.info( "Persisting in :" + dbDescResource );
-      FileOutputStream outStream = new FileOutputStream( dbDescResource.getLocationURI().toURL().getFile() );
-      dbModel.shortForm( "RDF/XML-ABBREV" );
-      dbModel.write( outStream );
-      // RDFWriter rdfWriter=dbModel.getWriter("RDF/XML-ABBREV");
-      // rdfWriter.setProperty("relativeURIs", "same-document");
-      // rdfWriter.write(dbModel, outStream, null);
-      return true;
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      JC.createMarshaller().marshal( m_projectScenarios, bos );
+      bis = new ByteArrayInputStream( bos.toByteArray() );
+      bos.close();
+      if( m_file.exists() )
+      {
+        try
+        {
+          m_file.refreshLocal( IResource.DEPTH_ONE, null );
+        }
+        catch( final Exception e )
+        {
+        }
+        m_file.setContents( bis, false, true, null );
+      }
+      else
+      {
+        m_file.create( bis, false, null );
+      }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      logger.log( Level.SEVERE, "Could not save model", e );
-      return false;
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
+    finally
+    {
+      IOUtils.closeQuietly( bis );
+    }
+  }
+
+  /**
+   * @see org.kalypso.afgui.db.IWorkflowDB#getRootScenario()
+   */
+  public List<Scenario> getRootScenarios( )
+  {
+    return m_projectScenarios.getScenarios();
   }
 }

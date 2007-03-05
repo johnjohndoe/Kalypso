@@ -7,18 +7,15 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
+import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.scenarios.Scenario;
 import org.kalypso.workflow.Workflow;
 
 //TODO move to workflow system problem with project??
@@ -45,6 +42,10 @@ public class ActiveWorkContext
 
   private final static ActiveWorkContext activeWorkContext = new ActiveWorkContext();
 
+  private static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis";
+
+  private Scenario m_activeScenario;
+
   private IWorkflowDB workflowDB;
 
   private IWorkflowSystem workflowSystem;
@@ -60,43 +61,28 @@ public class ActiveWorkContext
     final SzenarioSourceProvider simModelProvider = new SzenarioSourceProvider( this );
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     service.addSourceProvider( simModelProvider );
+    final ProjectChangeListener projectChangeListener = new ProjectChangeListener();
+    addActiveContextChangeListener( projectChangeListener );
     // TODO remove source provider and projectChangeListener somewhere
   }
 
   synchronized public void setActiveProject( final IProject activeProject )
   {
-
-    /* Open 1D2D Perspective */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    try
-    {
-      workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( workbench.getActiveWorkbenchWindow().getShell(), "", "", status );
-    }
-
     if( this.m_activeProject == activeProject )
     {
       return;
     }
     logger.info( "New Project to Set:" + activeProject );
-    IProject oldProject = this.m_activeProject;
-    IWorkflowDB oldWorkflowDB = getWorkflowDB();
-    IWorkflowSystem oldWorkflowSystem = getWorkflowSystem();
-    if( oldWorkflowDB != null )
-    {
-      oldWorkflowDB.persist();
-    }
-
+    final IWorkflowDB oldWorkflowDB = getWorkflowDB();
     try
     {
+      if( oldWorkflowDB != null )
+      {
+        oldWorkflowDB.persist();
+      }
       if( Kalypso1D2DProjectNature.isOfThisNature( activeProject ) )
       {
-        Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
+        final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
         this.m_activeProject = activeProject;
         this.workflowDB = nature.getWorkflowDB();
         this.workflowSystem = nature.getWorkflowSystem();
@@ -105,7 +91,6 @@ public class ActiveWorkContext
       }
       else
       {
-
         this.m_activeProject = null;
         this.workflowDB = null;
         logger.warning( "Project to set is not of 1d2d nature" );
@@ -118,7 +103,7 @@ public class ActiveWorkContext
     }
     finally
     {
-      fireActiveProjectChanged( activeProject, oldProject, oldWorkflowDB, oldWorkflowSystem );
+      fireActiveProjectChanged( activeProject, workflowDB.getScenario( BASIS_SCENARIO ) );
     }
   }
 
@@ -130,6 +115,11 @@ public class ActiveWorkContext
   synchronized public IProject getActiveProject( )
   {
     return m_activeProject;
+  }
+
+  synchronized public Scenario getActiveScenario( )
+  {
+    return m_activeScenario;
   }
 
   synchronized public IWorkflowDB getWorkflowDB( )
@@ -202,11 +192,11 @@ public class ActiveWorkContext
     activeProjectChangeListener.clear();
   }
 
-  final private void fireActiveProjectChanged( IProject newProject, IProject oldProject, IWorkflowDB oldWorkflowDB, IWorkflowSystem oldWorkflowSystem )
+  final private void fireActiveProjectChanged( final IProject newProject, final Scenario scenario )
   {
-    for( IActiveContextChangeListener l : activeProjectChangeListener )
+    for( final IActiveContextChangeListener l : activeProjectChangeListener )
     {
-      l.activeProjectChanged( newProject, oldProject, oldWorkflowDB, oldWorkflowSystem );
+      l.activeContextChanged( newProject, scenario );
     }
   }
 
@@ -215,19 +205,11 @@ public class ActiveWorkContext
     return m_dataProvider;
   }
 
-  public void setCurrentSzenario( final IProject project, final IWorkflowData data )
+  public void setCurrentSzenario( final Scenario scenario )
   {
-    m_dataProvider.setCurrent( project, data );
-  }
-
-  public void selectScenario( final IProject project, final String scenarioURI )
-  {
-    setActiveProject( project );
-    setCurrentSzenario( project, workflowDB.getWorkflowDataById( scenarioURI ) );
-  }
-
-  public void selectScenario( final String scenarioURI )
-  {
-    setCurrentSzenario( m_activeProject, workflowDB.getWorkflowDataById( scenarioURI ) );
+    final IProject activeProject = getActiveProject();
+    m_activeScenario = scenario;
+    m_dataProvider.setCurrent( activeProject, scenario );
+    fireActiveProjectChanged( activeProject, scenario );
   }
 }

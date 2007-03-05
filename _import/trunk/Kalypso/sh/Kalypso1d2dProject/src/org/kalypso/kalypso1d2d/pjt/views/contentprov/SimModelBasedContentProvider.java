@@ -9,108 +9,135 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflowData;
-import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
+import org.kalypso.scenarios.Scenario;
+import org.kalypso.scenarios.ScenarioList;
 
 /**
  * Content provider for the simulation model based data view
  * 
- * @author Patrice Congo
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public class SimModelBasedContentProvider implements ITreeContentProvider
 {
-	final static private Logger logger=
-				Logger.getLogger(SimModelBasedContentProvider.class.getName());
-    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+  /**
+   * @author Stefan Kurzbach
+   */
+  private final class ScenarioChangeListener implements IWorkflowDBChangeListerner
+  {
+    private final Viewer m_viewer;
 
-    static
+    ScenarioChangeListener( final Viewer viewer )
     {
-      if( !log )
-        logger.setUseParentHandlers( false );
+      m_viewer = viewer;
     }
-    
-	final static public Object[] EMPTY_ARRAY={};
-	
-	
-	
-	//private IWorkflowDB workflowDB;
-	
-	
-	public Object[] getChildren(Object parentElement)
-	{
-		if(parentElement instanceof IWorkflowData)
-		{
-			IWorkflowData workflowData= (IWorkflowData)parentElement;
-			List<IWorkflowData> list=
-					workflowData.getLinkedWorkflowData(
-									EWorkflowProperty.IS_DERIVED_FROM);
-			return list.toArray();
-		}
-		else
-		{
-			return EMPTY_ARRAY;
-		}
-	}
 
-	public Object getParent(Object element)
-	{
-		return null;
-	}
+    public void workflowDBChanged( )
+    {
+      if( m_viewer != null )
+      {
+        m_viewer.refresh();
+      }
+    }
+  }
 
-	public boolean hasChildren(Object element)
-	{
-		if(element instanceof IWorkflowData)
-		{
-			IWorkflowData workflowData= (IWorkflowData)element;
-			return workflowData.hasLinkedWorkflowData(
-									EWorkflowProperty.IS_DERIVED_FROM);
-			
-		}
-		else
-		{
-			return false;
-		}
-	}
+  private static final Logger logger = Logger.getLogger( SimModelBasedContentProvider.class.getName() );
 
-	public Object[] getElements(Object inputElement)
-	{
-		logger.info("getting root elements:"+inputElement);
-		if(inputElement instanceof ActiveWorkContext)
-		{
-			ActiveWorkContext workContext= (ActiveWorkContext)inputElement;
-			IWorkflowDB workflowDB=workContext.getWorkflowDB();
-			if(workflowDB==null)
-			{
-				logger.warning("Workflow DB is null");
-				return EMPTY_ARRAY;
-			}
-			else
-			{
-				List<IWorkflowData> data=
-					workflowDB.getRootWorkflowDataByType(
-								Kalypso1D2DSchemaConstants.SIMULATION_MODEL1D2D.toString());
-				return data.toArray();
-			}
-		}
-		else
-		{
-			logger.warning("Not supportetd root:"+inputElement);
-			return EMPTY_ARRAY;
-		}
-	}
-	
-	
-	public void dispose()
-	{
-					
-	}
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-	{
-		
-	}
-	
+  private IWorkflowDBChangeListerner m_dbChangeListerner;
+
+  static
+  {
+    if( !log )
+      logger.setUseParentHandlers( false );
+  }
+
+  public Object[] getChildren( final Object parentElement )
+  {
+    if( parentElement instanceof IWorkflowDB )
+    {
+      final IWorkflowDB workflowDB = (IWorkflowDB) parentElement;
+      if( workflowDB != null )
+      {
+        final List<Scenario> data = workflowDB.getRootScenarios();
+        return data.toArray();
+      }
+    }
+    else if( parentElement instanceof Scenario )
+    {
+      Scenario workflowData = (Scenario) parentElement;
+      final List<Scenario> list = workflowData.getDerivedScenarios().getScenarios();
+      return list.toArray();
+    }
+    return new Object[0];
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+   */
+  public Object getParent( final Object element )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+   */
+  public boolean hasChildren( final Object element )
+  {
+    if( element instanceof IWorkflowDB )
+    {
+      final IWorkflowDB workflowData = (IWorkflowDB) element;
+      return !workflowData.getRootScenarios().isEmpty();
+    }
+    else if( element instanceof Scenario )
+    {
+      Scenario workflowData = (Scenario) element;
+      final ScenarioList derivedScenarios = workflowData.getDerivedScenarios();
+      if( derivedScenarios != null )
+        return !derivedScenarios.getScenarios().isEmpty();
+    }
+    return false;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+   */
+  public Object[] getElements( final Object parentElement )
+  {
+    return getChildren( parentElement );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+   */
+  public void dispose( )
+  {
+
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
+   */
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  {
+    final IWorkflowDB oldWorkflowDB = (IWorkflowDB) oldInput;
+    final IWorkflowDB newDB = (IWorkflowDB) newInput;
+    if( m_dbChangeListerner == null )
+    {
+      m_dbChangeListerner = new ScenarioChangeListener( viewer );
+    }
+    if( oldWorkflowDB != null )
+    {
+      oldWorkflowDB.removeWorkflowDBChangeListener( m_dbChangeListerner );
+    }
+    if( newDB != null )
+    {
+      newDB.addWorkflowDBChangeListener( m_dbChangeListerner );
+    }
+    logger.info( "DB changed" );
+  }
 }

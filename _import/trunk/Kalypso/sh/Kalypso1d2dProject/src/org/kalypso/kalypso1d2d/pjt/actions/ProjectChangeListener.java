@@ -45,14 +45,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.scenarios.Scenario;
 
 /**
  * @author Stefan Kurzbach
@@ -61,18 +62,18 @@ public class ProjectChangeListener implements IActiveContextChangeListener
 {
 
   /**
-   * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.resources.IProject, org.kalypso.afgui.db.IWorkflowDB,
-   *      org.kalypso.afgui.model.IWorkflowSystem)
+   * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
    */
-  public void activeProjectChanged( final IProject newProject, final IProject oldProject, final IWorkflowDB oldDB, final IWorkflowSystem oldWorkflowSystem )
+  public void activeContextChanged( final IProject newProject, Scenario scenario )
   {
     final UIJob job = new UIJob( "Changing work context..." )
     {
       @Override
       public IStatus runInUIThread( IProgressMonitor monitor )
       {
-        final IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+        final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
         final IViewReference[] viewReferences = workbenchPage.getViewReferences();
         for( final IViewReference reference : viewReferences )
         {
@@ -100,7 +101,7 @@ public class ProjectChangeListener implements IActiveContextChangeListener
           return false;
         }
       }
-    };    
+    };
     job.schedule();
   }
 

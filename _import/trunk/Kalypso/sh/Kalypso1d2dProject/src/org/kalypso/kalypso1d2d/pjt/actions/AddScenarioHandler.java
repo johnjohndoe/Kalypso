@@ -13,9 +13,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.wizards.NewSimulationModelControlBuilder;
+import org.kalypso.scenarios.Scenario;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -36,7 +36,7 @@ public class AddScenarioHandler extends WorkflowCommandHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-    final Object canHandle = canHandle( selection );
+    final Scenario canHandle = canHandle( selection );
     if( canHandle != null )
     {
       createWorkflowData( shell, canHandle );
@@ -46,47 +46,31 @@ public class AddScenarioHandler extends WorkflowCommandHandler
       return Status.CANCEL_STATUS;
   }
 
-  private Object canHandle( ISelection selection )
+  private Scenario canHandle( final ISelection selection )
   {
-    logger.info( "canHandleSlection:" + selection );
     if( selection instanceof IStructuredSelection )
     {
       IStructuredSelection structSel = ((IStructuredSelection) selection);
 
-      if( structSel.size() > 1 )
+      if( !structSel.isEmpty() )
       {
-        return activeWorkContext;
+        final Object object = structSel.getFirstElement();
+        return (Scenario) object;
       }
-
-      Object object = structSel.getFirstElement();
-      // IWorkflowData parent=null;
-      if( object instanceof IWorkflowData )
-      {
-        // parent=(IWorkflowData)object;
-
-      }
-      else
-      {
-        logger.warning( "No Workflow data selcted:" + object );
-        object = activeWorkContext;
-      }
-      return object;
-
     }
     else
     {
       logger.warning( "Cannot handle selection:" + selection );
-      return activeWorkContext;
     }
+    return null;
   }
 
-  private void createWorkflowData( final Shell shell, final Object dataContext )
+  private void createWorkflowData( final Shell shell, final Scenario scenario )
   {
-    logger.info( "Creating Data:" + dataContext );
-    IWorkflowData workflowData = (dataContext instanceof IWorkflowData) ? (IWorkflowData) dataContext : null;
+    logger.info( "Creating Data: " + scenario.getURI() );
     try
     {
-      NewSimulationModelControlBuilder.startWizard( shell, workflowData );
+      NewSimulationModelControlBuilder.startWizard( shell, scenario );
     }
     catch( Throwable th )
     {

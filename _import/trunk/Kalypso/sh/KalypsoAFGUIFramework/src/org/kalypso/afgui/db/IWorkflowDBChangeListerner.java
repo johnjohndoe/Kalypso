@@ -4,12 +4,9 @@
 package org.kalypso.afgui.db;
 
 /**
- * @author Patrice
- *
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public interface IWorkflowDBChangeListerner
 {
-	
-	void workflowDBChanged();
-	
+  public void workflowDBChanged( );
 }

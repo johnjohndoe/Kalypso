@@ -312,11 +312,6 @@ public class WorkflowControl2
     return result;
   }
 
-  public void setVisible( final boolean visible )
-  {
-    m_treeViewer.getControl().setVisible( visible );
-  }
-
   public void restoreState( final IMemento memento )
   {
     if( memento != null )
@@ -337,7 +332,7 @@ public class WorkflowControl2
   public void setWorkflow( final Workflow workflow )
   {
     m_treeViewer.setInput( workflow );
-    m_treeViewer.refresh();
+    m_treeViewer.collapseAll();
     if( m_selectionFromMemento != null && workflow != null )
     {
       final TreePath findPart = findPart( m_selectionFromMemento, workflow );

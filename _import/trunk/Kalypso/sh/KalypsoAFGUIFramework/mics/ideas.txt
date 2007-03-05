@@ -1,4 +1,0 @@
-class to check possible transition not 
-started->ongoing
-ongoing->done
-done->ongoing

@@ -60,13 +60,11 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
 /**
  * @author madanago
- *
  */
 public class ImportElevationHandler extends WorkflowCommandHandler
 {
@@ -79,42 +77,32 @@ public class ImportElevationHandler extends WorkflowCommandHandler
   protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final ISzenarioDataProvider szenarioDataProvider = 
-      (ISzenarioDataProvider) context.getVariable( 
-            SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
-    final IFolder modelFolder= 
-      (IFolder) context.getVariable( 
-                      SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME);//"activeSimulationModelBaseFolder" );
-    
-    final IFolder temFolder = 
-      (IFolder) context.getVariable( 
-                      SzenarioSourceProvider.ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME);//"activeSimulationModelBaseFolder" );
-    
-    IStructuredSelection selection = 
-      new StructuredSelection(new Object[]{terrainModel, modelFolder, temFolder });
-    
-//    if(selection == null)
-//    {
-//      final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
-//      selection = new StructuredSelection(currentFolder);
-//    }
-    final IWorkbenchWindow workbenchWindow = 
-            (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IFolder modelFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+
+    final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
+
+    IStructuredSelection selection = new StructuredSelection( new Object[] { terrainModel, modelFolder, temFolder } );
+
+    // if(selection == null)
+    // {
+    // final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+    // selection = new StructuredSelection(currentFolder);
+    // }
+    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbench workbench = (workbenchWindow).getWorkbench();
 
-    final IWizardDescriptor wizardDescriptor = 
-            workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
-    final INewWizard wizard = 
-           (INewWizard) wizardDescriptor.createWizard();
+    final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
+    final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
-    
+
     final HashMap<String, Object> data = new HashMap<String, Object>();
-//    data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
+    // data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
     // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
 
     wizard.init( workbench, selection );
-//    wizard.initModelProperties( data );
+    // wizard.initModelProperties( data );
     if( wizardDialog.open() == Window.OK )
       return Status.OK_STATUS;
     return Status.CANCEL_STATUS;

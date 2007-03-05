@@ -14,12 +14,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.scenarios.Scenario;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -51,7 +51,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
     // simulation model gets its own wrapper.
     LOCATION_MAP.put( IFeatureWrapper2.class, "simulation.gml" );
-//    LOCATION_MAP.put( IDiscretisationModel.class, "discretisation.gml" );
+    // LOCATION_MAP.put( IDiscretisationModel.class, "discretisation.gml" );
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, "discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, "terrain.gml" );
     // TODO: add other model types here
@@ -67,19 +67,20 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
   private static final String MODELS_FOLDER = "models";
 
   public synchronized void setCurrent( final IProject project, @SuppressWarnings("unused")
-  final IWorkflowData data )
+  final Scenario scenario )
   {
     final IFolder szenarioFolder = project == null ? null : project.getFolder( "szenario" );
-    
+
     try
     {
-      project.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+      if( project != null )
+        project.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
     }
     catch( Throwable th )
     {
       th.printStackTrace();
     }
-    
+
     for( final Map.Entry<Class, String> entry : LOCATION_MAP.entrySet() )
     {
       final Class wrapperClass = entry.getKey();
@@ -150,7 +151,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
     modelWorkspace.postCommand( command );
   }
-  
+
   private CommandableWorkspace getModelWorkspace( final Class wrapperClass ) throws IllegalArgumentException, CoreException
   {
     if( !LOCATION_MAP.containsKey( wrapperClass ) )
@@ -165,7 +166,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
     return workspace;
   }
-  
+
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */

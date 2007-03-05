@@ -93,7 +93,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 
   public static final String WORKFLOW_DESC = "workflow.xml";
 
-  public static final String WORKFLOW_DATA_DESC = "worflow_data.xml";
+  public static final String WORKFLOW_DATA_DESC = "scenarios.xml";
 
   private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip";
 
@@ -188,10 +188,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     catch( final MalformedURLException e )
     {
       logger.log( Level.SEVERE, "Bad url to work flow desc data", e );
-    }
-    catch( final IOException e )
-    {
-      logger.log( Level.SEVERE, "Work flow data could not be found", e );
     }
     catch( final JAXBException e )
     {

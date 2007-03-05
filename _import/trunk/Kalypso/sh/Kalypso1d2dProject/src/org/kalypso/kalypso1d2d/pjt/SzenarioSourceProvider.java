@@ -8,18 +8,16 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
-import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
+import org.kalypso.scenarios.Scenario;
 
 public class SzenarioSourceProvider extends AbstractSourceProvider
 {
   public static final String ACTIVE_SZENARIO_DATA_PROVIDER_NAME = "activeSzenarioDataProvider";
 
   public static final String ACTIVE_SZENARIO_FOLDER_NAME = "activeSimulationModelBaseFolder";
-  
-  public static final String ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME = 
-                                              "activeNativeTerrainElevationModelFolder";
+
+  public static final String ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME = "activeNativeTerrainElevationModelFolder";
 
   private static final Logger LOGGER = Logger.getLogger( SzenarioSourceProvider.class.getName() );
 
@@ -30,11 +28,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
       LOGGER.setUseParentHandlers( false );
   }
 
-  private static final String[] PROVIDED_SOURCE_NAMES = 
-                                new String[] { 
-                                              ACTIVE_SZENARIO_FOLDER_NAME, 
-                                              ACTIVE_SZENARIO_DATA_PROVIDER_NAME,
-                                              ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME};
+  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_SZENARIO_FOLDER_NAME, ACTIVE_SZENARIO_DATA_PROVIDER_NAME, ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME };
 
   protected ActiveWorkContext activeWorkContext;
 
@@ -42,7 +36,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   {
 
     @SuppressWarnings("synthetic-access")
-    public void activeProjectChanged( IProject newProject, IProject oldProject, IWorkflowDB oldDB, IWorkflowSystem oldWorkflowSystem )
+    public void activeContextChanged( final IProject newProject, Scenario scenario )
     {
       fireSourceChanged( 0, getCurrentState() );
     }
@@ -71,9 +65,6 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   {
     final Map currentState = new TreeMap();
     currentState.put( ACTIVE_SZENARIO_FOLDER_NAME, getSzenarioFolder() );
-    currentState.put(
-        ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME, 
-        getNativeTerrainElevationModelFolder());
     currentState.put( ACTIVE_SZENARIO_DATA_PROVIDER_NAME, getDataProvider() );
     return currentState;
   }
@@ -92,12 +83,6 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
     return project == null ? null : project.getFolder( "szenario" );
   }
 
-  private IFolder getNativeTerrainElevationModelFolder( )
-  {
-    final IProject project = activeWorkContext.getActiveProject();
-    return project == null ? null : project.getFolder( "szenario/models/native_tem" );
-  }
-  
   private ISzenarioDataProvider getDataProvider( )
   {
     return activeWorkContext.getSzenarioDataProvider();

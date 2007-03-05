@@ -11,8 +11,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -22,17 +26,14 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
-import org.kalypso.afgui.model.IWorkflowData;
-import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
-import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvider;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.WorkflowDataLabelProvider;
+import org.kalypso.scenarios.Scenario;
 
 /**
- * @author Patrice Congo
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public class SimulationModelDBView extends ViewPart
 {
@@ -52,8 +53,6 @@ public class SimulationModelDBView extends ViewPart
 
   private static final String MEMENTO_PROJECT = "project";
 
-  protected static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Basis";
-
   TreeViewer tv;
 
   private SimModelBasedContentProvider simModelBasedCP;
@@ -64,53 +63,47 @@ public class SimulationModelDBView extends ViewPart
 
   private IActiveContextChangeListener activeProjectChangeListener = new IActiveContextChangeListener()
   {
-
     @SuppressWarnings("synthetic-access")
-    public void activeProjectChanged( IProject newProject, IProject olProject, IWorkflowDB oldWorkflowDB, IWorkflowSystem oldWorkflowSystem )
+    public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
-      // oldWorkflowDB.removeWorkflowDBChangeListener(dbChangeListerner);
-      if( oldWorkflowDB != null )
+      final IWorkflowDB newDB = activeWorkContext.getWorkflowDB();
+      if( tv.getInput() != newDB )
       {
-        oldWorkflowDB.removeWorkflowDBChangeListener( dbChangeListerner );
+        tv.setInput( newDB );
       }
-      IWorkflowDB newDB = activeWorkContext.getWorkflowDB();
-      if( newDB != null )
+      final Scenario scenarioToSet;
+      if( m_scenarioFromMemento != null )
       {
-        newDB.addWorkflowDBChangeListener( dbChangeListerner );
-        // top.setVisible(true);
+        scenarioToSet = newDB.getScenario( m_scenarioFromMemento );
+        m_scenarioFromMemento = null;
+        activeWorkContext.setCurrentSzenario( scenarioToSet );
       }
       else
       {
-        logger.warning( "New Project DB is nul" );
-        // top.setVisible(false);
+        scenarioToSet = scenario;
       }
-      tv.setInput( activeWorkContext );
-      
-      final String scenarioId = m_scenarioFromMemento != null ? m_scenarioFromMemento : BASIS_SCENARIO;
-      if( scenarioId != null && newDB != null )
+      if( scenarioToSet != null )
       {
-        final IWorkflowData scenario = newDB.getWorkflowDataById( scenarioId );
-        final IStructuredSelection selection = new StructuredSelection( scenario );
-        tv.setSelection( selection, true );
-        activeWorkContext.selectScenario( scenarioId );
-        m_scenarioFromMemento = null;
+        final ITreeSelection selection = new TreeSelection( constructTreePath( scenarioToSet ) );
+        if( !tv.getSelection().equals( selection ) )
+        {
+          tv.setSelection( selection, true );
+        }
       }
       // TODO: this is for debugging purposes, remove later? Looks good to me (stefan)
-      setContentDescription( newProject == null ? "" : newProject.getName() );
+      setContentDescription( "Projekt: " + (newProject == null ? "" : newProject.getName()) );
     }
 
-  };
-
-  private Composite top;
-
-  IWorkflowDBChangeListerner dbChangeListerner = new IWorkflowDBChangeListerner()
-  {
-    public void workflowDBChanged( )
+    private TreePath constructTreePath( final Scenario scenario )
     {
-      tv.setInput( activeWorkContext );
-      logger.info( "DB changed " );
+      if( scenario.getParentScenario() != null )
+        return constructTreePath( scenario.getParentScenario() ).createChildPath( scenario );
+      else
+        return new TreePath( new Object[] { scenario } );
     }
   };
+
+  private Composite m_top;
 
   private String m_scenarioFromMemento;
 
@@ -123,7 +116,7 @@ public class SimulationModelDBView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-
+    activeWorkContext.addActiveContextChangeListener( activeProjectChangeListener );
     if( memento != null )
     {
       m_scenarioFromMemento = memento.getString( MEMENTO_SCENARIO );
@@ -137,26 +130,39 @@ public class SimulationModelDBView extends ViewPart
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
-    top = new Composite( parent, SWT.FILL );
-    top.setLayout( new FillLayout() );
+    m_top = new Composite( parent, SWT.FILL );
+    m_top.setLayout( new FillLayout() );
 
-    tv = new TreeViewer( top, SWT.FILL );
+    tv = new TreeViewer( m_top, SWT.FILL );
     simModelBasedCP = new SimModelBasedContentProvider();
     tv.setContentProvider( simModelBasedCP );
-    tv.setInput( activeWorkContext );
-    activeWorkContext.addActiveContextChangeListener( activeProjectChangeListener );
     getSite().setSelectionProvider( tv );
     tv.setLabelProvider( labelProvider );
+    tv.setInput( activeWorkContext.getWorkflowDB() );
     if( m_projectFromMemento != null )
     {
       final IPath projectPath = Path.fromPortableString( m_projectFromMemento );
       final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
-      activeWorkContext.setActiveProject( (IProject) resource );
+      if( resource.getType() == IResource.PROJECT )
+      {
+        activeWorkContext.setActiveProject( (IProject) resource );
+      }
+      m_projectFromMemento = null;
     }
-    final ProjectChangeListener projectChangeListener = new ProjectChangeListener();
-    activeWorkContext.addActiveContextChangeListener( projectChangeListener );
+    tv.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final ITreeSelection selection = (ITreeSelection) event.getSelection();
+        if( !selection.isEmpty() )
+        {
+          final Scenario scenario = (Scenario) selection.getFirstElement();
+          activeWorkContext.setCurrentSzenario( scenario );
+        }
+      }
+    } );
   }
 
   /*
@@ -178,9 +184,9 @@ public class SimulationModelDBView extends ViewPart
   {
     final IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
     final Object firstElement = selection.isEmpty() ? null : selection.getFirstElement();
-    if( firstElement != null && firstElement instanceof IWorkflowData )
+    if( firstElement != null && firstElement instanceof Scenario )
     {
-      final IWorkflowData data = (IWorkflowData) firstElement;
+      final Scenario data = (Scenario) firstElement;
       memento.putString( MEMENTO_SCENARIO, data.getURI() );
     }
     final IProject activeProject = activeWorkContext.getActiveProject();
@@ -189,12 +195,5 @@ public class SimulationModelDBView extends ViewPart
       final String projectPath = activeProject.getName();
       memento.putString( MEMENTO_PROJECT, projectPath );
     }
-  }
-
-  public void updateTreeView( @SuppressWarnings("unused")
-  IWorkflowData selected )
-  {
-    tv.refresh();
-    // IStructuredSelection selection= new StructuredSelection(selected);
   }
 }
