@@ -42,8 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -54,6 +53,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -68,6 +69,25 @@ import de.belger.swtchart.axis.AxisRange;
 public class ProfilOverlayLayer extends AbstractProfilChartLayer
 {
 
+  private IProfil m_profile;
+
+  private final Color m_color;
+
+  public ProfilOverlayLayer( ProfilChartView chartView )
+  {
+    this( chartView, chartView.getProfil() );
+  }
+
+  public ProfilOverlayLayer( ProfilChartView chartView, final IProfil profile )
+  {
+    super( IWspmOverlayConstants.LAYER_OVERLAY, chartView, chartView.getDomainRange(), chartView.getValueRangeLeft(), "Zeichenfläche" );
+    m_profile = profile;
+    final ColorRegistry cr = chartView.getColorRegistry();
+    if( !cr.getKeySet().contains( IWspmOverlayConstants.LAYER_OVERLAY ) )
+      cr.put( IWspmOverlayConstants.LAYER_OVERLAY, new RGB( 255, 255, 0 ) );
+    m_color = cr.get( IWspmOverlayConstants.LAYER_OVERLAY );
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#alwaysAllowsEditing()
    */
@@ -77,28 +97,9 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     return true;
   }
 
-  private List<Point2D> m_points;
-
-  private final Color m_color;
-
-  public ProfilOverlayLayer( ProfilChartView chartView )
-  {
-    this( chartView, ProfilUtil.getPoints2D( chartView.getProfil(), IWspmConstants.POINT_PROPERTY_HOEHE ) );
-  }
-
-  public ProfilOverlayLayer( ProfilChartView chartView, Point2D[] points )
-  {
-    super( IWspmOverlayConstants.LAYER_OVERLAY, chartView, chartView.getDomainRange(), chartView.getValueRangeLeft(), "Zeichenfläche" );
-    m_points = Arrays.asList( points );
-    final ColorRegistry cr = chartView.getColorRegistry();
-    if( !cr.getKeySet().contains( IWspmOverlayConstants.LAYER_OVERLAY ) )
-      cr.put( IWspmOverlayConstants.LAYER_OVERLAY, new RGB( 255, 255, 0 ) );
-    m_color = cr.get( IWspmOverlayConstants.LAYER_OVERLAY );
-  }
-
   protected void drawEditLine( final GCWrapper gc, final Point editing, final int index )
   {
-    if( 0 <= index && index < m_points.size() )
+    if( 0 <= index && index < m_profile.getPoints().size() )
     {
       final int lineWidthBuffer = gc.getLineWidth();
       final int lineStyleBuffer = gc.getLineStyle();
@@ -123,13 +124,14 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )  //release
+  protected void editProfil( Point point, Object data ) // release
   {
     final EditData editData = (EditData) data;
-    final Point2D point2D = m_points.get( editData.getIndex() );
+    final IProfilPoint profilePoint = m_profile.getPoints().get( editData.getIndex() );
     final Point2D logPoint = screen2logical( point );
-    final double hoehe = logPoint.getY(); //set by schlauchgenerator
-    point2D.setLocation( logPoint.getX(),hoehe );
+    final double hoehe = logPoint.getY(); // set by schlauchgenerator
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, logPoint.getX() );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, hoehe );
     getProfilChartView().getChart().repaint();
   }
 
@@ -138,9 +140,20 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    */
   public Rectangle2D getBounds( )
   {
-    Rectangle2D bounds = new Rectangle2D.Double( m_points.get( 0 ).getX(), m_points.get( 0 ).getY(), 0, 0 );
-    for( final Point2D point : m_points )
-      bounds.add( point );
+    final LinkedList<IProfilPoint> points = m_profile.getPoints();
+    Rectangle2D bounds = null;
+    for( final IProfilPoint point : points )
+    {
+      final Point2D p = ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE );
+      if( bounds == null )
+      {
+        bounds = new Rectangle2D.Double( p.getX(), p.getY(), 0, 0 );
+      }
+      else
+      {
+        bounds.add( p );
+      }
+    }
     return bounds;
   }
 
@@ -151,9 +164,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   public EditInfo getHoverInfo( Point point )
   {
     int index = 0;
-    for( final Point2D point2D : m_points )
+    final LinkedList<IProfilPoint> points = m_profile.getPoints();
+    for( final IProfilPoint pp : points )
     {
-      final Point p = logical2screen( point2D );
+      final Point p = logical2screen( ProfilUtil.getPoint2D( pp,IWspmConstants.POINT_PROPERTY_HOEHE  ));
       final Rectangle hover = RectangleUtils.buffer( p );
       if( hover.contains( point ) )
       {
@@ -164,16 +178,18 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     return null;
   }
 
-  public List getPoints( )
+  public IProfil getProfile( )
   {
-    return m_points;
+    return m_profile;
   }
 
-  public Point2D[] setPoints( final Point2D[] points )
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#getZOrder()
+   */
+  @Override
+  public int getZOrder( )
   {
-    final Point2D[] oldPoints = m_points.toArray( new Point2D[0] );
-    m_points = Arrays.asList( points );
-    return oldPoints;
+    return 10;
   }
 
   /**
@@ -181,7 +197,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    */
   public void paint( GCWrapper gc )
   {
-    if( m_points.size() < 2 )
+    final LinkedList<IProfilPoint> points = m_profile.getPoints();
+    if( points.size() < 2 )
       return;
     Point leftP = null;
     final int lineWidthBuffer = gc.getLineWidth();
@@ -190,15 +207,15 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     gc.setLineWidth( 3 );
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setForeground( m_color );
-    for( final Point2D point : m_points )
+    for( final IProfilPoint point : points )
     {
       if( leftP == null )
       {
-        leftP = logical2screen( point );
+        leftP = logical2screen(ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE  ));
       }
       else
       {
-        final Point rightP = logical2screen( point );
+        final Point rightP = logical2screen(ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE  ));
         gc.drawOval( leftP.x - 2, leftP.y - 2, 4, 4 );
         gc.drawLine( leftP.x, leftP.y, rightP.x, rightP.y );
         leftP = rightP;
@@ -235,6 +252,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     // do nothing
   }
 
+  public void setProfile( final IProfil profile )
+  {
+    m_profile = profile;
+  }
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -242,14 +264,5 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   public String toString( )
   {
     return getLabel();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#getZOrder()
-   */
-  @Override
-  public int getZOrder( )
-  {
-    return 10;
   }
 }
