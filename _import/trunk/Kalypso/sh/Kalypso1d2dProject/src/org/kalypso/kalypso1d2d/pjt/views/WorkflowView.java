@@ -15,7 +15,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.views.WorkflowControl2;
@@ -119,7 +118,6 @@ public class WorkflowView extends ViewPart
     super.init( site, memento );
     m_activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
     m_workflowControl = new WorkflowControl2();
-    // m_workflowControl = new WorkflowControl( m_activeWorkContext.getCurrentWorkflow() );
     m_workflowControl.restoreState( memento );
   }
 

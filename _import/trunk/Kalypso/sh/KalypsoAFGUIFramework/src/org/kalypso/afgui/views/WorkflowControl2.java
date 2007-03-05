@@ -201,7 +201,7 @@ public class WorkflowControl2
         catch( final Throwable e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString("org.kalypso.afgui.views.WorkflowControl2.8"), Messages.getString("org.kalypso.afgui.views.WorkflowControl2.9") + name, status ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) + name, status ); //$NON-NLS-1$ //$NON-NLS-2$
           KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
           logger.log( Level.SEVERE, "Failed to execute command: " + name, e ); //$NON-NLS-1$
         }
@@ -230,15 +230,32 @@ public class WorkflowControl2
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
         final Object first = selection.getFirstElement();
-        if( first != null && m_lastSelectedElement != first  )
+        if( first != null && m_lastSelectedElement != first )
         {
           final TreePath newTreePath = selection.getPathsFor( first )[0];
           m_lastSelectedElement = null;
           if( m_lastTreePath != null )
           {
-            final Object segment = m_lastTreePath.getSegment( Math.min( m_lastTreePath.getSegmentCount(), newTreePath.getSegmentCount() ) - 1 );
-            m_treeViewer.collapseToLevel( segment, TreeViewer.ALL_LEVELS );
-            m_lastSelectedElement = newTreePath.getLastSegment();
+            final int segmentCount = m_lastTreePath.getSegmentCount();
+            final int newSegmentCount = newTreePath.getSegmentCount();
+            final Object segment = m_lastTreePath.getSegment( Math.min( segmentCount, newSegmentCount ) - 1 );
+            final TreePath longerPath;
+            final TreePath shorterPath;
+            if( segmentCount > newSegmentCount )
+            {
+              longerPath = m_lastTreePath;
+              shorterPath = newTreePath;
+            }
+            else
+            {
+              longerPath = newTreePath;
+              shorterPath = m_lastTreePath;
+            }
+            if( !longerPath.startsWith( shorterPath, null ) )
+            {
+              m_treeViewer.collapseToLevel( segment, TreeViewer.ALL_LEVELS );
+            }
+            m_lastSelectedElement = first;
           }
           m_treeViewer.expandToLevel( first, 1 );
           m_lastTreePath = newTreePath;

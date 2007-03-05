@@ -10,9 +10,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.afgui.model.IWorkflow;
-import org.kalypso.afgui.model.IWorkflowData;
-import org.kalypso.afgui.model.IWorkflowPartRTContext;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.workflow.Workflow;
@@ -99,18 +96,6 @@ public class WorkflowSystem implements IWorkflowSystem
   // loadRuntimeStatus(statusURL));
   // }
 
-  /**
-   * To get the workflow for the given resource. If their is a worflow in the system for this resource then it is
-   * returned otherwise a new one is created
-   * 
-   * @param resouceType
-   * @return
-   */
-  public IWorkflow getWorflow( IWorkflowData dataModel )
-  {
-    return null;
-  }
-
   // public IWorkflow getCurrentWorkFlow( )
   // {
   // if( m_currentWorkflow == null )
@@ -128,11 +113,6 @@ public class WorkflowSystem implements IWorkflowSystem
     return m_currentWorkflow;
   }
 
-  public IWorkflow setCurrent( IWorkflowData dataModel )
-  {
-    return null;
-  }
-
   // public IActivity getActivity( String uri )
   // {
   // if( uri == null )
@@ -144,29 +124,4 @@ public class WorkflowSystem implements IWorkflowSystem
   // return activities.get( uri );
   // }
   // }
-
-  public void updateRTContext( IWorkflowPartRTContext currentWorkflowRTContext, IWorkflowPartRTContext currentTaskGroupRTContext, IWorkflowPartRTContext currentSubTaskGroupRTContext, IWorkflowPartRTContext currentTaskRTContext )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void updateRTContext( IWorkflowPartRTContext currentTaskGroupRTContext, IWorkflowPartRTContext currentSubTaskGroupRTContext, IWorkflowPartRTContext currentTaskRTContext )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void updateRTContext( IWorkflowPartRTContext currentSubTaskGroupRTContext, IWorkflowPartRTContext currentTaskRTContext )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void updateRTContext( IWorkflowPartRTContext currentTaskRTContext )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
 }
