@@ -51,6 +51,9 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_F_FE1D2DContinuityLine = 
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine" );
       
+      public final static QName WB1D2D_F_JUNCTION1D2D = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Junction1D2D" );
+      
       public static final QName WB1D2D_F_POLY_ELEMENT = 
             new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" );
 

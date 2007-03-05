@@ -51,19 +51,15 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 @SuppressWarnings("unchecked")
 /**
- * Default implementation for {@link IFE1D2DContinuityLine} for
- * binding a feature of the type wb1d2d:ContinuityLine
+ * Default implementation for {@link IFEJunction1D2D} for
+ * binding a feature of the type wb1d2d:Junction1D2D
  * 
  * @author Patrice Congo
  */
-public class FE1D2DContinuityLine 
+public class FEJunction1D2D 
                   extends FE1D2D_2DElement 
                   implements IFE1D2DContinuityLine<
                                     IFE1D2DComplexElement, IFE1D2DEdge>
@@ -74,7 +70,7 @@ public class FE1D2DContinuityLine
    * @throws IllegalArgumentException if the passed featureToBind 
    *    parameter is null
    */
-  public FE1D2DContinuityLine( 
+  public FEJunction1D2D( 
                 final Feature featureToBind )
                 throws IllegalArgumentException
   {
@@ -91,7 +87,7 @@ public class FE1D2DContinuityLine
    * @throws IllegalArgumentException if the passed parentfeature or the
    * the property QName is null
    */
-  public FE1D2DContinuityLine( 
+  public FEJunction1D2D( 
                 Feature parentFeature, 
                 QName propQName )
                 throws IllegalArgumentException
@@ -99,11 +95,11 @@ public class FE1D2DContinuityLine
     super( 
         parentFeature, 
         propQName, 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
   }
 
   /**
-   * Creates a new continuity line that bind a feature created and linked 
+   * Creates a new continuity line that bind a feature linked 
    * as property of the provided parent feature.
    * The type of the feature to create is specified by the 
    * newFeatureQName Q-name
@@ -114,7 +110,7 @@ public class FE1D2DContinuityLine
    * @throws IllegalArgumentException if the passed parentfeature or the
    * the property QName is null
    */
-  public FE1D2DContinuityLine( 
+  public FEJunction1D2D( 
                 Feature parentFeature, 
                 QName propQName, 
                 QName newFeatureQName ) 
@@ -124,21 +120,21 @@ public class FE1D2DContinuityLine
   }
   
   /**
-   * Creates a continuity line with a specified GML ID.
+   * Creates a Junction with a specified GML ID.
    * The parent feature respectively its link to the newly 
    * created continuity line are specified as parameters.
    * @param parentFeature the parent feature
    * @param propQName the qname of the property linking the
    *    parent feature to the continuity line 
    */
-  public FE1D2DContinuityLine( 
+  public FEJunction1D2D( 
                         Feature parentFeature,
                         QName propQName,
                         String gmlID)
   {
     this(
       org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
+          Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D,
           parentFeature, 
           propQName, 
           gmlID ));
@@ -184,7 +180,7 @@ public class FE1D2DContinuityLine
         else
         {
           //bad list not following each other
-          throw new RuntimeException("Continuity line node is bad:"+edges);
+          throw new RuntimeException("Junction line node is bad:"+edges);
         }
       }
       nodes.add( node1 );

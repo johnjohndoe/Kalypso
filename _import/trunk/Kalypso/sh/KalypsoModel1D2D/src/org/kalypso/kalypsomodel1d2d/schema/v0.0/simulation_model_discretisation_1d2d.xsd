@@ -146,6 +146,30 @@
 		</xs:complexContent-->
 	</xs:complexType>
 	
+	<xs:element 
+		name="MiddleNode"
+		type="wb1d2d:MiddleNodeType"
+		substitutionGroup="wb1d2d:Node"
+		>
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents a middle node in a 1d 2d finite element network.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="MiddleNodeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:NodeType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
 	<!-- =================================================================
 		Directed node property
 	================================================================== -->
@@ -775,7 +799,8 @@
 	<xs:element 
 		name="Junction1D2D"
 		type="wb1d2d:JunctionType"
-		substitutionGroup="simBase:_FEElement"/>
+		substitutionGroup="wb1d2d:Element"/>
+		
 	<xs:complexType name="JunctionType">
 		<xs:annotation>
 			<xs:documentation>
@@ -787,11 +812,11 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="simBase:FEAbstractElementType">
+				base="wb1d2d:ElementType">
 					<xs:sequence>
 						<xs:element 
 							ref="wb1d2d:directedEdge"
-							minOccurs="1" maxOccurs="1"/>
+							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

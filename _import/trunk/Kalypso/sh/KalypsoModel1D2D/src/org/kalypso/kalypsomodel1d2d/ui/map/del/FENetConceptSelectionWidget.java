@@ -103,6 +103,8 @@ public class FENetConceptSelectionWidget implements IWidget
 
   private QName themeElementsQName;
   
+  private ISelectionFilter selectionFilter;
+  
   public FENetConceptSelectionWidget(QName themeElementsQName )
   {
     this.themeElementsQName=themeElementsQName;
@@ -359,16 +361,34 @@ public class FENetConceptSelectionWidget implements IWidget
                                 themeElementsQName
                                 /*Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS*/ );
     
-    
-    for(int i=0;i<SIZE;i++)
+    if(selectionFilter==null)
     {
-      Feature curFeature=(Feature)selected.get( i );
-      featuresToAdd[i]=
-        new EasyFeatureWrapper(
-          cmdWorkspace,
-          curFeature,
-          parentFeature,
-          parentFeatureProperty);
+      for(int i=0;i<SIZE;i++)
+      {
+        Feature curFeature=(Feature)selected.get( i );
+        featuresToAdd[i]=
+          new EasyFeatureWrapper(
+            cmdWorkspace,
+            curFeature,
+            parentFeature,
+            parentFeatureProperty);
+      }
+    }
+    else
+    {
+      for(int i=0;i<SIZE;i++)
+      {
+        Feature curFeature=(Feature)selected.get( i );
+        if(selectionFilter.accept( curFeature ))
+        {
+          featuresToAdd[i]=
+            new EasyFeatureWrapper(
+              cmdWorkspace,
+              curFeature,
+              parentFeature,
+              parentFeatureProperty);
+        }
+      }
     }
     
     Feature[] featuresToRemove= new Feature[]{};
