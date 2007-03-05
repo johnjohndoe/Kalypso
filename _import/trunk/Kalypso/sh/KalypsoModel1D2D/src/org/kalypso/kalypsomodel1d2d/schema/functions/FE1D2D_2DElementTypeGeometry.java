@@ -2,6 +2,8 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -13,7 +15,9 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
@@ -43,12 +47,17 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
     {
       final IFeatureType featureType = feature.getFeatureType();
       final FE1D2D_2DElement element;
+      QName featureQName = featureType.getQName();
       if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
       {
         element = new FE1D2DContinuityLine( feature );
       }
-      else if( featureType.getQName().equals( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) )
+      else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D ) )
+      {
+        IFEJunction1D2D junction1D2D=new FEJunction1D2D(feature);
+        return ModelGeometryBuilder.computeJunction1D2DGeometry( junction1D2D );
+      }
+      else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) )
       {
         IElement1D element1D  = new Element1D(feature);
         return ModelGeometryBuilder.computeElement1DGeometry( element1D );
@@ -68,6 +77,8 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
     
 //    return currentValue;
   }
+
+ 
 
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,

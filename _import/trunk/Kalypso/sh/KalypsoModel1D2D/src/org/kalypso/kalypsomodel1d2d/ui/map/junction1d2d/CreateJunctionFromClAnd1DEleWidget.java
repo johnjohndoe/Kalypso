@@ -47,10 +47,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionElementFromClAndElement1DCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.QNameBasedSelectionFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -123,14 +126,20 @@ public class CreateJunctionFromClAnd1DEleWidget
        System.out.println(
            "Please select an 1d element and a cl:"+Arrays.asList( selectedFeatures ));
      }
-     AddJunctionElementFromClAndElement1DCmd junctionCmd=
+     IFEDiscretisationModel1d2d model1d2d = super.getModel1d2d();
+    AddJunctionElementFromClAndElement1DCmd junctionCmd=
        new AddJunctionElementFromClAndElement1DCmd(
-           super.getModel1d2d(),
+           model1d2d,
            selected1DEle,
            selectedCLine);
+     CommandableWorkspace workspace = super.getTheme().getWorkspace();
+     ChangeDiscretiationModelCommand changeModelCmd=
+           new ChangeDiscretiationModelCommand(
+               workspace,model1d2d);
+     changeModelCmd.addCommand( junctionCmd );
      try
     {
-      super.getTheme().getWorkspace().postCommand( junctionCmd);
+      workspace.postCommand( changeModelCmd);
     }
     catch( Exception e1 )
     {

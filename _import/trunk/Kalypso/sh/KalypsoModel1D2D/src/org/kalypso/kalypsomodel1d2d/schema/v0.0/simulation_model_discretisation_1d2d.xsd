@@ -802,6 +802,11 @@
 				from different nature. the starting point is from a one d structure
 				and the ending node is a 2D network or a continuity line.
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
@@ -810,6 +815,9 @@
 						<xs:element 
 							ref="wb1d2d:directedEdge"
 							minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element 
+							name="geometry" 
+							type="gml:LineStringPropertyType"/>
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

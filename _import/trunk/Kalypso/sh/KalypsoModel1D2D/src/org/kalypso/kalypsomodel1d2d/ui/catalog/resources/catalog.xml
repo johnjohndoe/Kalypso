@@ -7,5 +7,6 @@
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:ContinuityLine:sld:default" uri="FE1D2DContinuityLine.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:PolyElement:sld:default" uri="FE1D2DPolyElement.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Element1D:sld:default" uri="Element1D.sld" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Junction1D2D:sld:default" uri="Junction1D2D.sld" />
 </catalog:catalog>
 
