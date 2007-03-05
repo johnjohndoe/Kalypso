@@ -46,6 +46,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -63,16 +64,25 @@ public class NamedFeatureHelper
   {
   }
 
-  /** Gets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case. */
+  /**
+   * Gets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case.
+   * 
+   * @return null, if the given feature has no 'gml:name' property. The empty string if the property is not set.
+   */
   public static String getName( final Feature namedFeature )
   {
-    final Object value = namedFeature.getProperty( GML_NAME );
+    final IFeatureType featureType = namedFeature.getFeatureType();
+    final IPropertyType nameProperty = featureType.getProperty( GML_NAME );
+    if( nameProperty == null )
+      return null;
+
+    final Object value = namedFeature.getProperty( nameProperty );
 
     if( value instanceof String )
       return (String) value;
     else if( value instanceof List )
     {
-      final List nameList =  (List) value;
+      final List nameList = (List) value;
       if( nameList == null || nameList.isEmpty() )
         return "";
 
@@ -97,9 +107,17 @@ public class NamedFeatureHelper
       namedFeature.setProperty( GML_NAME, name );
   }
 
+  /**
+   * @return null, if the given feature has no 'gml:description' property. The empty string if the property is not set.
+   */
   public static String getDescription( final Feature namedFeature )
   {
-    final Object desc = namedFeature.getProperty( GML_DESCRIPTION );
+    final IFeatureType featureType = namedFeature.getFeatureType();
+    final IPropertyType descProperty = featureType.getProperty( GML_DESCRIPTION );
+    if( descProperty == null )
+      return null;
+
+    final Object desc = namedFeature.getProperty( descProperty );
     return desc == null ? "" : (String) desc;
   }
 
