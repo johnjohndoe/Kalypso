@@ -258,7 +258,7 @@ public class CreateChannelData
     datacomplete = false;
 
     // there must be at least two selected profiles and one selected bank.
-    if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
+    if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
     {
       datacomplete = true;
     }
@@ -358,7 +358,7 @@ public class CreateChannelData
     datacomplete = false;
 
     // there must be at least two selected profiles and one selected bank.
-    if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
+    if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
     {
       datacomplete = true;
     }
@@ -472,9 +472,9 @@ public class CreateChannelData
         // at the end point of the profile line there should follow the start point of the next line
         LineString[] lines = new LineString[4];
 
-        lines[0] = segment.getProfUpInters();
+        lines[0] = segment.getProfUpIntersLineString();
         lines[1] = segment.getBankRightInters();
-        lines[2] = segment.getProfDownInters();
+        lines[2] = segment.getProfDownIntersLineString();
         lines[3] = segment.getBankLeftInters();
         lines = checkLineOrientation( lines );
 
@@ -972,4 +972,6 @@ public class CreateChannelData
     }
   completationCheck();
   }
+
+
 }

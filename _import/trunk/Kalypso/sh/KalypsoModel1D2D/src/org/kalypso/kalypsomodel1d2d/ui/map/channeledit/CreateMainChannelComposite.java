@@ -66,9 +66,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -82,6 +83,10 @@ import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 import de.belger.swtchart.layer.IChartLayer;
 
@@ -266,7 +271,13 @@ public class CreateMainChannelComposite extends Composite
       spinnerSegment.setEnabled( true );
       spinnerSegment.setMinimum( 1 );
       spinnerSegment.setMaximum( m_data.getNumOfSegments() );
-      m_currentSegment = m_data.getSelectedSegment();
+      if( m_data.getSelectedSegment() == 0 )
+      {
+        m_currentSegment = 1;
+        m_data.setSelectedSegment( 1 );
+      }
+      else
+        m_currentSegment = m_data.getSelectedSegment();
 
       if( m_data.getNumOfSegments() > 0 )
         spinnerSegment.setSelection( m_data.getSelectedSegment() );
@@ -280,6 +291,7 @@ public class CreateMainChannelComposite extends Composite
       spinnerSegment.setMaximum( m_data.getNumOfSegments() );
       spinnerSegment.setSelection( 1 );
       m_currentSegment = 1;
+      m_data.setSelectedSegment( 1 );
     }
     else
       spinnerSegment.setEnabled( false );
@@ -799,6 +811,13 @@ public class CreateMainChannelComposite extends Composite
     {
       final ProfilChartView profilChartView = new ProfilChartView( pem, m_viewData, m_colorRegistry );
 
+      // KIM
+      // final ProfilOverlayLayer overlayLayer = null;
+      // overlayLayer.setPoints( points );
+      // über getLAyer -> Ovelraylayer -> dann construcotr....
+
+      // KIM
+
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
       manager.createControl( sectionClient );
 
@@ -808,7 +827,12 @@ public class CreateMainChannelComposite extends Composite
       final IChartLayer overlayLayer = profilChartView.getChart().getLayer( IWspmOverlayConstants.LAYER_OVERLAY );
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
-        ((ProfilOverlayLayer) overlayLayer).setPoints( null );// TODO: hier die Punkte einfügen
+        SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+        if( currentSegment != null )
+        {
+          final IProfil layerData = currentSegment.getProfUpIntersProfile();
+          ((ProfilOverlayLayer) overlayLayer).setProfile( layerData );// TODO: hier die Punkte einfügen
+        }
       }
 
       List<IAction> chartActions = new LinkedList<IAction>();
