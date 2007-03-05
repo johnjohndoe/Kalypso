@@ -48,7 +48,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -146,6 +148,27 @@ public class ModelGeometryBuilder
       }
       
   }
+  
+  
+    static public GM_Object computeJunction1D2DGeometry(
+                                  IFEJunction1D2D<IFE1D2DComplexElement, IFE1D2DEdge> junction1D2D) throws GM_Exception 
+    {
+      IFeatureWrapperCollection<IFE1D2DEdge> edges = junction1D2D.getEdges();
+      int size = edges.size();
+      if(size==0)
+      {
+        return null;
+      }
+      else if(size==1)
+      {
+        return computeEgdeGeometry( edges.get( 0 ));
+      }
+      else
+      {
+        throw new RuntimeException("Support geo compute for one edge:"+edges);
+        
+      }
+    }
   
   /**
    * Recalculates the geometry of this element. Used by the corresponding property function.

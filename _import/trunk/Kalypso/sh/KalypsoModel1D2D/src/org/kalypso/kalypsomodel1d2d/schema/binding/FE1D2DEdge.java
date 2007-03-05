@@ -23,6 +23,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
+import com.vividsolutions.jts.geomgraph.Edge;
+
 /**
  * @author Gernot Belger
  */
@@ -178,29 +180,44 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   {
     return m_nodes;
   }
-
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getMiddleNode()
+   */
+  public IFEMiddleNode getMiddleNode( )
+  {
+    Feature middleNodeFeature = 
+          (Feature)getFeature().getProperty(
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE);
+    if(middleNodeFeature==null)
+    {
+      return null;
+    }
+    else
+    {
+      return (IFEMiddleNode) middleNodeFeature.getAdapter( IFEMiddleNode.class );
+    }
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
+   */
+  public void setMiddleNode( IFEMiddleNode middleNode )
+  {
+    String newMiddleNodeID=null;
+    if(middleNode!=null)
+    {
+      newMiddleNodeID=middleNode.getGmlID();
+    }
+    getFeature().setProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE, 
+        newMiddleNodeID);
+  }
+  
   /* static helper functions */
   public GM_Curve recalculateEgdeGeometry( ) throws GM_Exception
   {
-//    final FE1D2DNode[] nodes = getNodesAsArray();
-//    final GM_Position[] poses = new GM_Position[nodes.length];
-//
-//    if( nodes.length < 2 )
-//      return null;
-//
-//    // REMARK: we assume here, that all nodes live in the same coordinate
-//    // system.
-//    final CS_CoordinateSystem crs = nodes[0].getPoint().getCoordinateSystem();
-//
-//    for( int i = 0; i < poses.length; i++ )
-//    {
-//      final GM_Point point = nodes[i].getPoint();
-//      final GM_Position position = point.getPosition();
-//      poses[i] = GeometryFactory.createGM_Position( position.getX(), position.getY() );
-//    }
-//
-//    return GeometryFactory.createGM_Curve( poses, crs );
-    return ModelGeometryBuilder.computeEgdeGeometry( this );
+   return ModelGeometryBuilder.computeEgdeGeometry( this );
   }
 
   public static FE1D2DEdge createEdge( final FE1D2DDiscretisationModel discModel )

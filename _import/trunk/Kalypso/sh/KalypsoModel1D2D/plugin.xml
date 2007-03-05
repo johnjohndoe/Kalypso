@@ -125,6 +125,14 @@
               style="radio"
               toolbarPath="karte/tools"
               tooltip="Delete  FE Element"/>
+        <action
+              class="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromClAndElement1DActionDelegate"
+              id="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromClAndElement1DActionDelegate"
+              label="Junc1d2d"
+              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+              style="radio"
+              toolbarPath="karte/tools"
+              tooltip="Create a junction element"/>
   
           <action
                	id="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"

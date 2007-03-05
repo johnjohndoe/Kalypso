@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -102,11 +103,19 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 										Class cls) 
 										throws IllegalArgumentException
 			{
-				
-				return new FE1D2DNode(feature);
+                IFeatureType featureType = feature.getFeatureType();
+				if(Kalypso1D2DSchemaConstants.WB1D2D_F_MIDDLE_NODE.equals( featureType.getQName() ))
+                {
+                  return new FEMiddleNode(feature);
+                }
+                else
+                {
+                  return new FE1D2DNode(feature);
+                }
 			}
 		};
 		cMap.put(IFE1D2DNode.class, cTor);
+        cMap.put(IFEMiddleNode.class, cTor);
 		
 		//IFE1D2DEdge
         cTor = new AdapterConstructor()
@@ -165,6 +174,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 {
                   return new Element1D(feature);     
                 }
+                else if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D) )
+                {
+                  return new FEJunction1D2D(feature);     
+                }
                 // TODO: what is the purpose of these (similar below) strange else's
                 // Why not register FE1D2D_2DElement? Please comment!
                 
@@ -180,6 +194,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         cMap.put(IFE1D2DElement.class, cTor);
         cMap.put(IElement1D.class, cTor);
         cMap.put(IFE1D2DContinuityLine.class, cTor);
+        cMap.put(IFEJunction1D2D.class, cTor);
 
         //element1d
         cTor = new AdapterConstructor()

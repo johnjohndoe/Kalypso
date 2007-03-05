@@ -130,6 +130,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }

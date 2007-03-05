@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**

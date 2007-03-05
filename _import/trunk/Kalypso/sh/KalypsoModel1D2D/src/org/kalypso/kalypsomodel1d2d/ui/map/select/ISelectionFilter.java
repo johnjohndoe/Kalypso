@@ -38,36 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package org.kalypso.kalypsomodel1d2d.ui.map.select;
 
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge;
-import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * Interface to be implemented by classes used to
+ * filter the user selection
+ * 
  * @author Patrice Congo
  */
-public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge<CT, ET>
+public interface ISelectionFilter
 {
-  public GM_Curve getCurve( );
-
-  public void addContainer( String containerID );
-
-  // TODO: BAD STYLE: why access node via index??
-  // TODO where to get the number of nodes from?
-  public ET getNode( int index ) throws IndexOutOfBoundsException;
-
-  // TODO: why not addNode( FE1D2DNode ) and get the id in the implementation?
-  // TODO: comment: is the back reference handled here or must it be handled from outside?
-  // TODO: also invalidate the edge-feature-envelope here
-  public void addNode( String nodeID );
+  /**
+   * Answer whether to feature which is being selected 
+   * is accepted, which means will be added to the selected
+   * items
+   * 
+   * @param feature the feature to test for acceptance
+   * 
+   * @return true if the feature should be added to the selected 
+   *  feature list
+   *  
+   */
+  public boolean accept(Feature feature);
   
-  public void setInvEdge(String invEdgeID);
-  
-  public void resetInvEdge();
-  
-  public IEdgeInv getEdgeInv();
-  
-  public IFEMiddleNode getMiddleNode();
-  
-  public void setMiddleNode(IFEMiddleNode  middleNode);
 }

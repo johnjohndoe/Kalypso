@@ -67,6 +67,7 @@ import org.eclipse.ui.forms.widgets.ScrolledPageBook;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 
 class DeleteFEElementsWidgetFace
   {

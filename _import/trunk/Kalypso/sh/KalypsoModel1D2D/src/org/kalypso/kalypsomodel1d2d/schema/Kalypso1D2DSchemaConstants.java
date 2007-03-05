@@ -15,6 +15,9 @@ public class Kalypso1D2DSchemaConstants
 ////fem
 	  public final static QName WB1D2D_F_NODE = 
             new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" );
+      
+      public final static QName WB1D2D_F_MIDDLE_NODE = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "MiddleNode" );
 
       public final static QName WB1D2D_PROP_POINT = 
              new QName( NS.GML3, "pointProperty" );
@@ -29,8 +32,16 @@ public class Kalypso1D2DSchemaConstants
                             new QName( 
                                     UrlCatalog1D2D.MODEL_1D2D_NS, 
                                     "directedNode" );
+      
+      public final static QName WB1D2D_PROP_MIDDLE_NODE = 
+        new QName( 
+                UrlCatalog1D2D.MODEL_1D2D_NS, 
+                "middleNode" );
+      
       public final static QName WB1D2D_PROP_EDGE_CONTAINERS=
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer");
+                    new QName(  
+                            UrlCatalog1D2D.MODEL_1D2D_NS, 
+                            "edgeContainer");
     
       public final static QName WB1D2D_PROP_ELEMENT_CONTAINERS=
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "elementContainer");

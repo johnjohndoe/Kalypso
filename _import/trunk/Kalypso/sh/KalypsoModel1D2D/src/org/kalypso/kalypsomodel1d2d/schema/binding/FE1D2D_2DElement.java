@@ -44,7 +44,12 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
 
   public FE1D2D_2DElement( final Feature featureToBind )
   {
-    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
+    this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
+  }
+  
+  public FE1D2D_2DElement( final Feature featureToBind, QName featureQName )
+  {
+    super( featureToBind, featureQName );
     //
     Object prop =null;
     try

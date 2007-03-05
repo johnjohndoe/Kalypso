@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteFE1D2DElement2DCmd;
@@ -55,29 +54,7 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
 
   private final void reinit( )
   {
-//    m_builder = null;
-//    m_nodeTheme = null;
-//
-//    // we must have the node and the element theme, one of them must be active
-//    // First node theme gets it
-//    // TODO: change that
-//    final IKalypsoTheme[] allThemes = getMapPanel().getMapModell().getAllThemes();
-//    for( final IKalypsoTheme theme : allThemes )
-//    {
-//      if( theme instanceof IKalypsoFeatureTheme )
-//      {
-//        final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
-//        final IFeatureType featureType = ftheme.getFeatureType();
-//        if( GMLSchemaUtilities.substitutes( 
-//                    featureType, 
-//                    Kalypso1D2DSchemaConstants.WB1D2D_F_NODE
-//                    /*FE1D2DNode.QNAME_FE1D2DNode*/ ) )
-//        {
-//          m_nodeTheme = ftheme;
-//          m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
-//        }
-//      }
-//    }
+
   }
 
   @Override

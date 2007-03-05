@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public class FEJunction1D2D 
                   extends FE1D2D_2DElement 
-                  implements IFE1D2DContinuityLine<
+                  implements IFEJunction1D2D<
                                     IFE1D2DComplexElement, IFE1D2DEdge>
 {
   /**
@@ -74,7 +74,7 @@ public class FEJunction1D2D
                 final Feature featureToBind )
                 throws IllegalArgumentException
   {
-    super( featureToBind );
+    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
   }
 
   /**
@@ -146,7 +146,7 @@ public class FEJunction1D2D
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    return ModelGeometryBuilder.computeContiniutyLineGeometry( this );
+    return ModelGeometryBuilder.computeJunction1D2DGeometry( this );
   }
   
   /**

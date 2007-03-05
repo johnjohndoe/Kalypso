@@ -40,34 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
+ * Interface to be implemented by classes which represents a
+ * middle node. this interface if mainly use as tagging interface
+ *  
  * @author Patrice Congo
+ *
  */
-public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge<CT, ET>
+public interface IFEMiddleNode<CT extends IFE1D2DEdge> extends IFE1D2DNode<CT>
 {
-  public GM_Curve getCurve( );
-
-  public void addContainer( String containerID );
-
-  // TODO: BAD STYLE: why access node via index??
-  // TODO where to get the number of nodes from?
-  public ET getNode( int index ) throws IndexOutOfBoundsException;
-
-  // TODO: why not addNode( FE1D2DNode ) and get the id in the implementation?
-  // TODO: comment: is the back reference handled here or must it be handled from outside?
-  // TODO: also invalidate the edge-feature-envelope here
-  public void addNode( String nodeID );
   
-  public void setInvEdge(String invEdgeID);
-  
-  public void resetInvEdge();
-  
-  public IEdgeInv getEdgeInv();
-  
-  public IFEMiddleNode getMiddleNode();
-  
-  public void setMiddleNode(IFEMiddleNode  middleNode);
 }

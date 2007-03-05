@@ -131,19 +131,12 @@
 		
 	<xs:complexType 
 		name="MiddleNodePropertyType">
-		<!--xs:complexContent>
-			<xs:restriction 
-					base="simBase:FEDirectedNodePropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:Node"
-						minOccurs="1"	maxOccurs="1"/>
+						ref="wb1d2d:MiddleNode"
+						minOccurs="0"	maxOccurs="1"/>
 				</xs:sequence>
-				<xs:attribute 
-					name="orientation" type="gml:SignType" default="+"/>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-			<!--/xs:restriction>
-		</xs:complexContent-->
 	</xs:complexType>
 	
 	<xs:element 

@@ -38,29 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.del;
+package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
 
 /**
- * Interface to be implemented by classes used to
- * filter the user selection
+ * Test action delagate for junction widget
  * 
  * @author Patrice Congo
+ *
  */
-public interface ISelectionFilter
+public class CreateJunctionFromClAndElement1DActionDelegate extends AbstractGisMapEditorActionDelegate implements IEditorActionDelegate
 {
-  /**
-   * Answer whether to feature which is being selected 
-   * is accepted, which means will be added to the selected
-   * items
-   * 
-   * @param feature the feature to test for acceptance
-   * 
-   * @return true if the feature should be added to the selected 
-   *  feature list
-   *  
-   */
-  public boolean accept(Feature feature);
-  
+  public CreateJunctionFromClAndElement1DActionDelegate( )
+  {
+    super( new CreateJunctionFromClAnd1DEleWidget() );
+  }
+
 }

@@ -324,6 +324,7 @@ class GridWidgetFace
       helpSection.setText( "Hilfe" );
       tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
+      tableWrapData.heightHint=300;
       helpSection.setLayoutData(tableWrapData );
       helpSection.setExpanded( true );
       

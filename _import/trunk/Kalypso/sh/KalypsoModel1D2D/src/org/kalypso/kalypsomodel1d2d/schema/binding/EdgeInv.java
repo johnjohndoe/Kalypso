@@ -327,4 +327,20 @@ public class EdgeInv implements IEdgeInv
     
     return buf.toString();
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getMiddleNode()
+   */
+  public IFEMiddleNode getMiddleNode( )
+  {
+    return edge.getMiddleNode();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
+   */
+  public void setMiddleNode( IFEMiddleNode middleNode )
+  {
+    edge.setMiddleNode( middleNode );
+  }
 }

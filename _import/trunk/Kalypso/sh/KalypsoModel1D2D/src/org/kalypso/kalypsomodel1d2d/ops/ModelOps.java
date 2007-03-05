@@ -61,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -285,6 +286,22 @@ public class ModelOps
       element.addEdge( edge.getWrappedFeature().getId() );
     }
     
+  }
+  
+  public static final IFEJunction1D2D createJunction(
+                            IFEDiscretisationModel1d2d model1d2d,
+                            IFE1D2DEdge edge)
+  {
+    IFeatureWrapperCollection<IFE1D2DElement> elements = 
+                                        model1d2d.getElements();
+    IFEJunction1D2D junction1D2D = 
+      (IFEJunction1D2D) elements.addNew( 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
+    
+    junction1D2D.addEdge( edge.getGmlID() );
+    edge.addContainer( junction1D2D.getGmlID() );
+    
+    return junction1D2D;
   }
   
   public static final IElement1D createElement1d(

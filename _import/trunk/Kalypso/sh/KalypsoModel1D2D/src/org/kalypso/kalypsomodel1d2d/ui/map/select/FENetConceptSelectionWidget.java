@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.del;
+package org.kalypso.kalypsomodel1d2d.ui.map.select;
 
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -284,6 +285,7 @@ public class FENetConceptSelectionWidget implements IWidget
     else if(e.VK_SHIFT == keyCode )
     {
       this.polygonSelectModus=false;
+      polygonGeometryBuilder=null;
     }
     
   }
@@ -324,9 +326,13 @@ public class FENetConceptSelectionWidget implements IWidget
        
       //TODO get the delta from preferences
       double delta=MapUtilities.calculateWorldDistance( mapPanel, point, 6 );
-      GM_Position min = GeometryFactory.createGM_Position( point.getX()-delta, point.getY()-delta );
+      GM_Position min = 
+          GeometryFactory.createGM_Position( 
+                point.getX()-delta, point.getY()-delta );
       
-      GM_Position max = GeometryFactory.createGM_Position( point.getX()+delta, point.getY()+delta );;
+      GM_Position max = 
+        GeometryFactory.createGM_Position( 
+              point.getX()+delta, point.getY()+delta );
       GM_Envelope env= GeometryFactory.createGM_Envelope( min, max );
       
       List selected = 
@@ -353,7 +359,7 @@ public class FENetConceptSelectionWidget implements IWidget
     }
     
     final int SIZE = selected.size();
-    EasyFeatureWrapper[] featuresToAdd = new EasyFeatureWrapper[SIZE];
+    EasyFeatureWrapper[] featuresToAdd;// = new EasyFeatureWrapper[SIZE];
     Feature parentFeature=model1d2d.getWrappedFeature();
     IFeatureType featureType = parentFeature.getFeatureType();
     IRelationType parentFeatureProperty=
@@ -363,6 +369,7 @@ public class FENetConceptSelectionWidget implements IWidget
     
     if(selectionFilter==null)
     {
+      featuresToAdd = new EasyFeatureWrapper[SIZE];
       for(int i=0;i<SIZE;i++)
       {
         Feature curFeature=(Feature)selected.get( i );
@@ -376,19 +383,24 @@ public class FENetConceptSelectionWidget implements IWidget
     }
     else
     {
+      List<EasyFeatureWrapper> addedAsList=
+          new ArrayList<EasyFeatureWrapper>(SIZE);
       for(int i=0;i<SIZE;i++)
       {
         Feature curFeature=(Feature)selected.get( i );
         if(selectionFilter.accept( curFeature ))
         {
-          featuresToAdd[i]=
-            new EasyFeatureWrapper(
+          
+            EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
               cmdWorkspace,
               curFeature,
               parentFeature,
               parentFeatureProperty);
+          addedAsList.add( easyFeatureWrapper );
+          
         }
       }
+      featuresToAdd = addedAsList.toArray(new EasyFeatureWrapper[]{});
     }
     
     Feature[] featuresToRemove= new Feature[]{};
@@ -516,6 +528,35 @@ public class FENetConceptSelectionWidget implements IWidget
     
   }
 
+  public void setSelectionFilter( ISelectionFilter selectionFilter )
+  {
+    this.selectionFilter = selectionFilter;
+  }
   
-
+  public ISelectionFilter getSelectionFilter( )
+  {
+    return selectionFilter;
+  }
+  
+  public Feature[] getSelectedFeature()
+  {
+    EasyFeatureWrapper[] easyFeatureWrappers = 
+            mapPanel.getSelectionManager().getAllFeatures();
+    Feature features[]=new Feature[easyFeatureWrappers.length];
+    for(int i=features.length-1;i>=0;i--)
+    {
+      features[i]=easyFeatureWrappers[i].getFeature();
+    }
+    return features;
+  }
+  
+  public IFEDiscretisationModel1d2d getModel1d2d( )
+  {
+    return model1d2d;
+  }
+  
+  public IKalypsoFeatureTheme getTheme()
+  {
+    return this.featureTheme;
+  }
 }
