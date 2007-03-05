@@ -118,11 +118,17 @@ public class ApplyElevationWidgetDataModel
 
   public List<IFE1D2DNode> getSelectedNode( )
   {
-    ArrayList<IFE1D2DNode> fakeSelection = 
-      new ArrayList<IFE1D2DNode>(this.discretisationModel.getNodes());
-    selectedNode=fakeSelection;
+    if (this.discretisationModel == null)
+      return new ArrayList<IFE1D2DNode>();
+    else
+    {
+      ArrayList<IFE1D2DNode> fakeSelection = 
+      new ArrayList<IFE1D2DNode>( this.discretisationModel.getNodes());
+      selectedNode=fakeSelection;      
+      return selectedNode;
+    }
     
-    return selectedNode;
+    
   }
 
   public void setSelectedNode( List<IFE1D2DNode> selectedNode )

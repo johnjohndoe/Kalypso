@@ -184,42 +184,63 @@ class ApplyElevationWidgetFace
 
     Composite clientComposite = toolkit.createComposite( elevationColorConfig, SWT.FLAT );
     elevationColorConfig.setClient( clientComposite );
+    
     //clientComposite.setSize( 400, 300 );
     GridLayout elevationColorGrid = new GridLayout( 2, false );
     clientComposite.setLayout( elevationColorGrid );
     
-    Canvas windowCanvas = new Canvas(clientComposite,SWT.None);
-    toolkit.adapt( clientComposite );
-    windowCanvas.setSize( 40, 100 );
-    windowCanvas.setLocation( 20,20 );
+    Canvas windowCanvas = new Canvas(clientComposite.getShell(),SWT.None);
+       
+    windowCanvas.setSize( 40,40 );
+    windowCanvas.setLocation( clientComposite.getLocation() );
+    windowCanvas.setBackground( clientComposite.getDisplay().getSystemColor( SWT.COLOR_RED) );
     
     GC gc = new GC(windowCanvas);
-    gc.drawRectangle( 0, 0, 20, 20 );
+    gc.setBackground( windowCanvas.getDisplay().getSystemColor( SWT.COLOR_GREEN) );
+    gc.setForeground( windowCanvas.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
     
-    gc.setForeground(clientComposite.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
+    gc.drawRectangle( 0, 0, 10, 10 );
     
+    
+//    Canvas windowCanvas = new Canvas(clientComposite,SWT.None);
+//    toolkit.adapt( clientComposite );
+//    windowCanvas.setSize( 40, 100 );
+//    windowCanvas.setLocation( 20,20 );
+//    
+//    GC gc = new GC(windowCanvas);
+//    gc.drawRectangle( 0, 0, 20, 20 );
+//    
+//    gc.setForeground(clientComposite.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
+//    
     
     Group minMaxGroup = new Group(clientComposite,SWT.NULL);
     GridLayout minMaxLayout = new GridLayout(4,false);
     minMaxGroup.setText( "First Group" );
     minMaxGroup.setLayout( minMaxLayout );
+    //minMaxGroup.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
     
     Group optionsColorGroup = new Group(clientComposite,SWT.NULL);
     GridLayout optionsColorLayout = new GridLayout(3,false);
     optionsColorGroup.setText( "Further Options" );
     optionsColorGroup.setLayout( optionsColorLayout );   
     
-    Label maxLabel = new Label( minMaxGroup, SWT.NONE );
-    maxLabel.setText( "Max" );
-    
-//    Canvas windowCanvas = new Canvas(minMaxGroup,SWT.None);
-//    windowCanvas.setSize( 40, 600 );
-//    windowCanvas.setLocation( 20,20 );
+//    Label maxLabel = new Label( minMaxGroup, SWT.NONE );
+//    maxLabel.setText( "Max" );
 //    
+//    Canvas windowCanvas = new Canvas(minMaxGroup,SWT.None);
+////    windowCanvas.setForeground(minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+////    windowCanvas.setBackground(minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
+//    
+//    windowCanvas.setSize( 40,40 );
+//    //windowCanvas.setLocation( 20,20 );
+////    
 //    GC gc = new GC(windowCanvas);
-//    gc.drawRectangle( 21, 21, 80, 80 );
-    //gc.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
-    
+//    gc.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GREEN) );
+//    gc.setForeground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_BLUE ) );
+//    gc.drawRectangle( 0, 0, 10, 10 );
+//    
+
+//    
 //    GridData windowCanvasGridData = new GridData(GridData.FILL_BOTH);
 //    windowCanvasGridData.horizontalSpan = 1;
 //    windowCanvasGridData.verticalSpan = 4;    
@@ -243,25 +264,25 @@ class ApplyElevationWidgetFace
 //    upDown.setText( "UP/DOWN" );
     
         
-    Label minimumColor = new Label(minMaxGroup,SWT.FLAT);
-    minimumColor.setText( "Minimum Color" );
-    GridData minColorGridData = new GridData(GridData.END);
-    minColorGridData.horizontalSpan = 4;
-    minColorGridData.verticalSpan = 1;
-    minimumColor.setLayoutData( minColorGridData );
-    
-    Label minLabel = new Label( minMaxGroup, SWT.NONE );
-    maxLabel.setText( "Min" );
-    
-    Button minColor = new Button(minMaxGroup,SWT.FLAT);
-    minColor.setText( "Select" );
-//    GridData minColorBtnGridData = new GridData(GridData.END);
-//    minColorBtnGridData.horizontalSpan = 3;
-//    minColorBtnGridData.verticalSpan = 1;
-//    minColor.setLayoutData( minColorBtnGridData );
-    
-    Button upDown1 = new Button(minMaxGroup,SWT.FLAT);
-    upDown1.setText( "UP/DOWN" );
+//    Label minimumColor = new Label(minMaxGroup,SWT.FLAT);
+//    minimumColor.setText( "Minimum Color" );
+//    GridData minColorGridData = new GridData(GridData.END);
+//    minColorGridData.horizontalSpan = 4;
+//    minColorGridData.verticalSpan = 1;
+//    minimumColor.setLayoutData( minColorGridData );
+//    
+//    Label minLabel = new Label( minMaxGroup, SWT.NONE );
+//    maxLabel.setText( "Min" );
+//    
+//    Button minColor = new Button(minMaxGroup,SWT.FLAT);
+//    minColor.setText( "Select" );
+////    GridData minColorBtnGridData = new GridData(GridData.END);
+////    minColorBtnGridData.horizontalSpan = 3;
+////    minColorBtnGridData.verticalSpan = 1;
+////    minColor.setLayoutData( minColorBtnGridData );
+//    
+//    Button upDown1 = new Button(minMaxGroup,SWT.FLAT);
+//    upDown1.setText( "UP/DOWN" );
     
     Label noElevationColorLabel = new Label(optionsColorGroup,SWT.NONE);
     noElevationColorLabel.setText( "No Elevation Color" );
