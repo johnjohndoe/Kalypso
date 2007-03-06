@@ -486,10 +486,13 @@ public class ProfilUtil
     final IProfilPoint[] segment2 = getSegment( profile, end );
     final IProfilPoint startPoint = splitSegment( profile, segment1[0], segment1[1] );
     final IProfilPoint endPoint = splitSegment( profile, segment2[0], segment2[1] );
+    
     final int index1 = points.indexOf( segment1[1] );
-    final int index2 = points.indexOf( segment2[1] );
     points.add( index1, startPoint );
+
+    final int index2 = points.indexOf( segment2[1] );
     points.add( index2, endPoint );
+    
     final IProfilPoint[] toDelete_1 = points.subList( 0, index1 ).toArray( new IProfilPoint[0] );
     final IProfilPoint[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IProfilPoint[0] );
     for( int i = 0; i < toDelete_1.length; i++ )
