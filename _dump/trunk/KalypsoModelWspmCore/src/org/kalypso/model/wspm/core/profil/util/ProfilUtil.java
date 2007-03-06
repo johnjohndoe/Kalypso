@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 
 /**
  * @author kimwerner
@@ -101,8 +100,6 @@ public class ProfilUtil
     }
     return values;
   }
-
-  
 
   public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final IProfilPointMarker leftDevider, final IProfilPointMarker rightDevider )
   {
@@ -170,6 +167,25 @@ public class ProfilUtil
 
   }
 
+  public static IProfilPoint[] getSegment( final IProfil profile, final double breite )
+  {
+    final LinkedList<IProfilPoint> points = profile.getPoints();
+    final IProfilPoint[] segment = new IProfilPoint[] { null, null };
+    for( final IProfilPoint point : points )
+    {
+
+      if( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) > breite )
+      {
+        segment[1] = point;
+        return segment;
+      }
+      else
+        segment[0] = point;
+
+    }
+    return segment;
+  }
+
   public static IProfilPoint findNearestPoint( final IProfil profil, final double breite )
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
@@ -203,6 +219,34 @@ public class ProfilUtil
       throw new IllegalArgumentException( "Punkt nicht im Profil: " + point );
 
     return points.get( i - 1 );
+  }
+
+  public static IProfilPoint getPointBefore( final IProfil profil, final double breite )
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( points.isEmpty() )
+      return null;
+    IProfilPoint thePointBefore = null;
+    for( final IProfilPoint point : points )
+    {
+      if( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) > breite )
+        return thePointBefore;
+      thePointBefore = point;
+    }
+    return thePointBefore;
+  }
+
+  public static IProfilPoint getPointAfter( final IProfil profil, final double breite )
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( points.isEmpty() )
+      return null;
+    for( final IProfilPoint point : points )
+    {
+      if( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) > breite )
+        return point;
+    }
+    return null;
   }
 
   public static IProfilPoint getPointAfter( final IProfil profil, final IProfilPoint point )
@@ -353,16 +397,17 @@ public class ProfilUtil
     profil.addPoint( point );
     return point;
   }
-  public static final void insertPoint( final IProfil profil, final IProfilPoint point,final IProfilPoint thePointBefore )
+
+  public static final void insertPoint( final IProfil profil, final IProfilPoint point, final IProfilPoint thePointBefore )
   {
-   final LinkedList<IProfilPoint> points = profil.getPoints();
-   final int index = thePointBefore == null ? 0:points.indexOf( thePointBefore )+1;
-   points.add( index, point );
- }
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final int index = thePointBefore == null ? 0 : points.indexOf( thePointBefore ) + 1;
+    points.add( index, point );
+  }
+
   /**
    * calculates the area of a given profile for the region between two given profile widths.<br>
-   * the area is calculatated in dependence of the max heigth value. 
-   * input: IProfil, start width, end width<br>
+   * the area is calculatated in dependence of the max heigth value. input: IProfil, start width, end width<br>
    * output: area between the two widths<br>
    */
   public static final double calcArea( final IProfil profil, final double startWidth, final double endWidth )
@@ -392,8 +437,7 @@ public class ProfilUtil
 
   /**
    * calculates the area of a given profile.<br>
-   * the area is calculatated in dependence of the max heigth value. 
-   * input: IProfil<br>
+   * the area is calculatated in dependence of the max heigth value. input: IProfil<br>
    * output: area <br>
    */
   public static final double calcArea( final IProfil profil )
@@ -435,15 +479,21 @@ public class ProfilUtil
    * @see org.kalypso.model.wspm.core.profil.IProfil#croppProfile(org.kalypso.model.wspm.core.profil.IProfilPoint,
    *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
-  public void croppProfile( final IProfil profile, final IProfilPoint startPoint, final IProfilPoint endPoint )
+  public void croppProfile( final IProfil profile, final double start, final double end )
   {
     final LinkedList<IProfilPoint> points = profile.getPoints();
-    final int start = points.indexOf( startPoint );
-    final int end = points.indexOf( endPoint );
-    if( (start < 0) || (end < 0) || (start > end) )
-      return;
-    final List<IProfilPoint> toDelete_1 = points.subList( 0, start );
-    final List<IProfilPoint> toDelete_2 = points.subList( end + 1, points.size() );
+    final IProfilPoint[] segment1 = getSegment( profile, start );
+    final IProfilPoint[] segment2 = getSegment( profile, end );
+    final IProfilPoint startPoint = splitSegment( profile, segment1[0], segment1[1] );
+    final IProfilPoint endPoint = splitSegment( profile, segment2[0], segment2[1] );
+    final int index1 = points.indexOf( segment1[1] );
+    final int index2 = points.indexOf( segment2[1] );
+    points.add(index1, startPoint );
+    points.add( index2, endPoint );
+
+   
+    final List<IProfilPoint> toDelete_1 = points.subList( 0, index1 );
+    final List<IProfilPoint> toDelete_2 = points.subList( index2 + 1, points.size() );
     for( final IProfilPoint point : toDelete_1 )
     {
       for( IProfilPointMarker marker : profile.getPointMarkerFor( point ) )
