@@ -4,9 +4,9 @@
 	xmlns:ogc="http://www.opengis.net/ogc"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>FE1D2DEdge</Name>
-	<Title>FE1D2DEdge</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Edge</FeatureTypeName>
+	<Name>Junction1D2D</Name>
+	<Title>Junction1D2D</Title>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Junction1D2D</FeatureTypeName>
 	<Rule>
 		<Name>Junction1D2D</Name>
 		<Title>Junction1D2D</Title>
