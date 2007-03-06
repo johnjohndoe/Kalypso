@@ -488,27 +488,25 @@ public class ProfilUtil
     final IProfilPoint endPoint = splitSegment( profile, segment2[0], segment2[1] );
     final int index1 = points.indexOf( segment1[1] );
     final int index2 = points.indexOf( segment2[1] );
-    points.add(index1, startPoint );
+    points.add( index1, startPoint );
     points.add( index2, endPoint );
-
-   
-    final List<IProfilPoint> toDelete_1 = points.subList( 0, index1 );
-    final List<IProfilPoint> toDelete_2 = points.subList( index2 + 1, points.size() );
-    for( final IProfilPoint point : toDelete_1 )
+    final IProfilPoint[] toDelete_1 = points.subList( 0, index1 ).toArray( new IProfilPoint[0] );
+    final IProfilPoint[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IProfilPoint[0] );
+    for( int i = 0; i < toDelete_1.length; i++ )
     {
-      for( IProfilPointMarker marker : profile.getPointMarkerFor( point ) )
+      for( IProfilPointMarker marker : profile.getPointMarkerFor( toDelete_1[i] ) )
       {
         profile.removePointMarker( marker );
       }
-      points.remove( point );
+      profile.removePoint( toDelete_1[i] );
     }
-    for( final IProfilPoint point : toDelete_2 )
+    for( int i = 0; i < toDelete_2.length; i++ )
     {
-      for( IProfilPointMarker marker : profile.getPointMarkerFor( point ) )
+      for( IProfilPointMarker marker : profile.getPointMarkerFor( toDelete_2[i] ) )
       {
         profile.removePointMarker( marker );
       }
-      points.remove( point );
+      profile.removePoint( toDelete_2[i] );
     }
   }
 }
