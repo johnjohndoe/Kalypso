@@ -3,10 +3,12 @@ package org.kalypso.kalypso1d2d.pjt.perspective;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.IPlaceholderFolderLayout;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
+import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.views.map.MapView;
 
@@ -45,7 +47,7 @@ public class Perspective implements IPerspectiveFactory
     // editorArea);
     final IFolderLayout rightTop = layout.createFolder( "rightTop", IPageLayout.RIGHT, 1.0f, editorArea );
     
-    final IFolderLayout veryRight = layout.createFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
+    final IPlaceholderFolderLayout veryRight = layout.createPlaceholderFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
 
     // IFolderLayout rightMiddle = layout.createFolder( "rightMiddle", IPageLayout.BOTTOM, 0.5f, "rightTop" );
 
@@ -60,10 +62,12 @@ public class Perspective implements IPerspectiveFactory
     // rightTop.addView(IPageLayout.ID_RES_NAV);
     // rightMiddle.addView(ActivitiesView.ID);
     leftBottom.addView( SimulationModelDBView.ID );
-    leftBottom.addView( GisMapOutlineView.ID );
+    leftBottom.addView( GisMapOutlineView.ID );    
     rightTop.addPlaceholder( MapView.ID );
-    veryRight.addPlaceholder( ActionOptionsView.ID );
-    layout.getViewLayout( ActionOptionsView.ID ).setMoveable( false );
+    rightTop.addPlaceholder( FeatureTemplateView.ID );
+    veryRight.addPlaceholder( ActionOptionsView.ID );    
+    layout.getViewLayout( FeatureTemplateView.ID ).setCloseable( false );
+    layout.getViewLayout( ActionOptionsView.ID ).setCloseable( false );
     layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
     layout.getViewLayout( SimulationModelDBView.ID ).setCloseable( false );
     // TODO: secondary id does not work here: gives assertion failed

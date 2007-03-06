@@ -28,6 +28,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvider;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.WorkflowDataLabelProvider;
 import org.kalypso.scenarios.Scenario;
@@ -57,7 +58,7 @@ public class SimulationModelDBView extends ViewPart
 
   private SimModelBasedContentProvider simModelBasedCP;
 
-  ActiveWorkContext activeWorkContext = ActiveWorkContext.getInstance();
+  ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
 
   private WorkflowDataLabelProvider labelProvider = new WorkflowDataLabelProvider();
 
@@ -88,6 +89,7 @@ public class SimulationModelDBView extends ViewPart
         if( !tv.getSelection().equals( selection ) )
         {
           tv.setSelection( selection, true );
+          getSite().getPage().activate( SimulationModelDBView.this );
         }
       }
       // TODO: this is for debugging purposes, remove later? Looks good to me (stefan)

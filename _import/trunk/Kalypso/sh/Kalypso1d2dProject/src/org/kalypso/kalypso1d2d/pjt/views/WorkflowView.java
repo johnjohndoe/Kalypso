@@ -12,6 +12,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.views.WorkflowControl2;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.scenarios.Scenario;
 
 /**
@@ -32,7 +33,7 @@ public class WorkflowView extends ViewPart
 
   WorkflowControl2 m_workflowControl;
 
-  final ActiveWorkContext m_activeWorkContext = ActiveWorkContext.getInstance();
+  final ActiveWorkContext m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
 
   private final IActiveContextChangeListener m_contextListener = new IActiveContextChangeListener()
   {
