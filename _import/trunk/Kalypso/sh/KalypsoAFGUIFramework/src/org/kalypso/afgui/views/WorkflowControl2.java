@@ -47,6 +47,7 @@ import org.kalypso.workflow.Phase;
 import org.kalypso.workflow.Task;
 import org.kalypso.workflow.TaskGroup;
 import org.kalypso.workflow.Workflow;
+import org.kalypso.workflow.Activity.Help;
 
 /**
  * @author Stefan Kurzbach
@@ -151,7 +152,7 @@ public class WorkflowControl2
             final Object help = item.getData( "_HELP" ); //$NON-NLS-1$
             if( help != null )
             {
-              label.setText( (String) help );
+              label.setText( ((Help) help).getValue() );
             }
             label.addListener( SWT.MouseExit, labelListener );
             label.addListener( SWT.MouseDown, labelListener );
