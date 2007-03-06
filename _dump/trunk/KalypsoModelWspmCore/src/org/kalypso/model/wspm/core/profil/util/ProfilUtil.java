@@ -500,7 +500,7 @@ public class ProfilUtil
       {
         profile.removePointMarker( marker );
       }
-      profile.removePoint( point );
+      points.remove( point );
     }
     for( final IProfilPoint point : toDelete_2 )
     {
@@ -508,7 +508,7 @@ public class ProfilUtil
       {
         profile.removePointMarker( marker );
       }
-      profile.removePoint( point );
+      points.remove( point );
     }
   }
 }
