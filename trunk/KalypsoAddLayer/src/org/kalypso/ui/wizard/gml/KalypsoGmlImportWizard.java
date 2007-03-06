@@ -68,8 +68,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
-import com.sun.msv.datatype.ErrorDatatypeLibrary;
-
 /**
  * @author Kuepferle
  */
