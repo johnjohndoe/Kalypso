@@ -355,6 +355,78 @@ public class ProfilUtil
   }
 
   /**
+   * calculates the area of a given profile for the region between two given profile widths.<br>
+   * the area is calculatated in dependence of the max heigth value. 
+   * input: IProfil, start width, end width<br>
+   * output: area between the two widths<br>
+   */
+  public static final double calcArea( final IProfil profil, final double startWidth, final double endWidth )
+  {
+    double area = 0;
+    double width = 0;
+    final double maxZ = calcMaxZ( profil );
+
+    for( int i = 0; i < profil.getPoints().size() - 1; i++ )
+    {
+      double currentWidth = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+
+      // just take the profile points between (inclusive) the two given widths.
+      if( currentWidth >= startWidth & currentWidth <= endWidth )
+      {
+        final double z1 = (maxZ - profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ));
+        final double z2 = (maxZ - profil.getPoints().get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ));
+        final double width1 = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+        final double width2 = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+        width = width2 - width1;
+        area = area + (z1 + z2) / 2 * width;
+      }
+    }
+
+    return area;
+  }
+
+  /**
+   * calculates the area of a given profile.<br>
+   * the area is calculatated in dependence of the max heigth value. 
+   * input: IProfil<br>
+   * output: area <br>
+   */
+  public static final double calcArea( final IProfil profil )
+  {
+    double area = 0;
+    double width = 0;
+    final double maxZ = calcMaxZ( profil );
+
+    for( int i = 0; i < profil.getPoints().size() - 1; i++ )
+    {
+      final double z1 = (maxZ - profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ));
+      final double z2 = (maxZ - profil.getPoints().get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ));
+      final double width1 = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double width2 = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      width = width2 - width1;
+      area = area + (z1 + z2) / 2 * width;
+    }
+
+    return area;
+  }
+
+  /**
+   * gives the maximal z value of a coordinate array
+   */
+  private static double calcMaxZ( IProfil profile )
+  {
+    double maxZ = -9999;
+
+    for( int i = 0; i < profile.getPoints().size(); i++ )
+    {
+      double currentZ = profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      if( maxZ < currentZ )
+        maxZ = currentZ;
+    }
+    return maxZ;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#croppProfile(org.kalypso.model.wspm.core.profil.IProfilPoint,
    *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
