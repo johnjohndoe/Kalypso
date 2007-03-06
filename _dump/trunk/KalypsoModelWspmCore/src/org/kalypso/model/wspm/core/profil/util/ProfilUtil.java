@@ -353,7 +353,12 @@ public class ProfilUtil
     profil.addPoint( point );
     return point;
   }
-
+  public static final void insertPoint( final IProfil profil, final IProfilPoint point,final IProfilPoint thePointBefore )
+  {
+   final LinkedList<IProfilPoint> points = profil.getPoints();
+   final int index = thePointBefore == null ? 0:points.indexOf( thePointBefore )+1;
+   points.add( index, point );
+ }
   /**
    * calculates the area of a given profile for the region between two given profile widths.<br>
    * the area is calculatated in dependence of the max heigth value. 
