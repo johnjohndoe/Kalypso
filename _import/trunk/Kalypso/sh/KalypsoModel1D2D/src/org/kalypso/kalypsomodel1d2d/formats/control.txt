@@ -12,7 +12,7 @@ IN3WAVE or INBNWAVE			//wave data file for computation
 INSTRESS					//Ascii file name containing time series for surface tractions from an external grid
 INCSTR						//file control structure data
 INTIMS						//time series governing on/off of control structures operation
-RESTART						//Restartdatei
+RESTART						//Angabe Restart soll durchgeführt werden (Datei in INKALYPS ist restart Datei)
 ENDFIL  
 **********************************Allocation Limits DataBlock************************************
 nothing to apply at the moment!
@@ -26,6 +26,7 @@ C4          00.0    20.0     0.0
 C5            54      25              00       0       1       1       0       1       1
 CV          0.01    0.01    0.01   0.050   0.050               1    0.05
 VEGETA???
+KAL_BC // Koordinaten der Randbedingung auf orthogonal zur Linie
 ****Rauheiten
 **********************************Properties DataBlock************************************
 ED1            1     25.     25.     25.     25.    -1.0  1.000   1.000
