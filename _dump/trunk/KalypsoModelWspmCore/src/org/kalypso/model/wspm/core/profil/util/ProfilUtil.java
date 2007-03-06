@@ -479,7 +479,7 @@ public class ProfilUtil
    * @see org.kalypso.model.wspm.core.profil.IProfil#croppProfile(org.kalypso.model.wspm.core.profil.IProfilPoint,
    *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
-  public void croppProfile( final IProfil profile, final double start, final double end )
+  public static void croppProfile( final IProfil profile, final double start, final double end )
   {
     final LinkedList<IProfilPoint> points = profile.getPoints();
     final IProfilPoint[] segment1 = getSegment( profile, start );
