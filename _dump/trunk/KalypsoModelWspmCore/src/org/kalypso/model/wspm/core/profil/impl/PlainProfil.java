@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,14 +64,19 @@ import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarkerComparator;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
 public class PlainProfil implements IProfil
 {
+
+  
+
   private IProfileObject m_building;
 
   private final Map<String, List<IProfilPointMarker>> m_pointMarker = new HashMap<String, List<IProfilPointMarker>>();
@@ -98,9 +109,28 @@ public class PlainProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.ProfilPoints#addPoint(double,double)
    */
-  public void addPoint( final IProfilPoint point )
+  public boolean addPoint( final IProfilPoint point )
   {
+    if( !pointIsValid( point ) )
+      return false;
     m_points.add( point );
+    return true;
+  }
+
+  private boolean pointIsValid( final IProfilPoint point )
+  {
+    final String[] propertyIds = point.getProperties();
+    for( final String propertyId : propertyIds )
+    {
+      if( !hasPointProperty( propertyId ) )
+        return false;
+    }
+    for( final String property : m_pointProperties.keySet() )
+    {
+      if( !point.hasProperty( property ) )
+        return false;
+    }
+    return true;
   }
 
   /**

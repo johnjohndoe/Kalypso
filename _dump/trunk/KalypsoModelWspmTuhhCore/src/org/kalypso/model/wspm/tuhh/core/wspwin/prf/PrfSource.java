@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfileUtilities;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -641,6 +642,7 @@ public class PrfSource implements IProfilSource
     {
       prfReader.readFromReader( new BufferedReader( reader ) );
       readSource( prfReader, profil );
+     
       return true;
     }
     catch( IOException e )

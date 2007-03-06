@@ -51,17 +51,17 @@ public class ProfilPoint implements IProfilPoint
 {
   private final HashMap<String, Double> m_pointProperties = new HashMap<String, Double>();
 
+  public ProfilPoint( )
+  {
+
+  }
+
   public ProfilPoint( final String[] pointProperties )
   {
     for( final String property : pointProperties )
     {
       m_pointProperties.put( property, 0.0 );
     }
-
-  }
-
-  public ProfilPoint( )
-  {
 
   }
 

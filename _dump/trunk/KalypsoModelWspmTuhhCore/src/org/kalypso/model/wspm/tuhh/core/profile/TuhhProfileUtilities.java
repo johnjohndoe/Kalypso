@@ -38,35 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil;
+package org.kalypso.model.wspm.tuhh.core.profile;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InvalidObjectException;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 
-public interface IProfilPoints_
+/**
+ * @author kimwerner
+ */
+public class TuhhProfileUtilities
 {
-  /**
-   * @return a valid ProfilPoint if operation succeeds, othwerwise null
-   */
-//  abstract IProfilPoint addPoint( final double breite, final double hoehe );
-//
-//  abstract IProfilPoint addPoint( final IProfilPoint thePointBefore );
-//
-//  abstract void addProperty( final POINT_PROPERTY pointProperty );
-//
-//  abstract POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY pointProperty );
-//
-//  abstract LinkedList<POINT_PROPERTY> getExistingProperties( );
-//
-//  abstract LinkedList<POINT_PROPERTY> getVisibleProperties( );
-//
-//  abstract IProfilPoint insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
-//      throws ProfilDataException;
-//
-//  abstract boolean propertyExists( final POINT_PROPERTY pointProperty );
-//
-//  abstract boolean removePoint( final IProfilPoint point );
-//
-//  abstract boolean removeProperty( final POINT_PROPERTY pointProperty );
-//
-//  abstract LinkedList<IProfilPoint> getPoints( );
+  private TuhhProfileUtilities( )
+  {
+    // Helperclass, do not instantiate
+  }
+
+  public static final IProfil copyProfile( final IProfil profile ) throws InvalidObjectException
+  {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try
+    {
+      ProfilSerializerUtilitites.writeProfile( new PrfSink(), profile, new BufferedOutputStream( out ) );
+      final ByteArrayInputStream in = new ByteArrayInputStream( out.toByteArray() );
+      final IProfil profil = ProfilSerializerUtilitites.readProfile( profile.getType(), new PrfSource(), new BufferedInputStream( in ) );
+     
+      return profil;
+    }
+    catch( IOException e )
+    {
+      throw new InvalidObjectException( e.getLocalizedMessage() );
+    }
+  }
 }

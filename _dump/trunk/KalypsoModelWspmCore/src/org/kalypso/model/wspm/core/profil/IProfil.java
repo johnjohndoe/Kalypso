@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import java.io.InvalidObjectException;
 import java.util.LinkedList;
 
 /**
@@ -47,10 +48,19 @@ import java.util.LinkedList;
  */
 public interface IProfil
 {
-  public void addPoint( final IProfilPoint point );
+  /**
+   * @return false if the point does not match all the properties in this profile
+   */
+  public boolean addPoint( final IProfilPoint point );
 
+  /**
+   * @return the new pointmarker represented by markerId created on the given point
+   */
   public IProfilPointMarker addPointMarker( final IProfilPoint point, final String markerId );
 
+  /**
+   * @return all pointmarker in this profile with the same markerId given by marker
+   */
   public IProfilPointMarker[] addPointMarker( final IProfilPointMarker marker );
 
   /**
@@ -59,6 +69,10 @@ public interface IProfil
    */
   public String[] addPointProperty( final String pointProperty );
 
+  /**
+   * @return a valid profilPoint, addable to this profile
+   * @see addPoint(IProfilpoint point)
+   */
   public IProfilPoint createProfilPoint( );
 
   /**
@@ -72,31 +86,48 @@ public interface IProfil
   public IProfilPointProperty getActiveProperty( );
 
   /**
-   * @return the current building, maybe null
+   * @return array of PointPropertyIds wich depends somehow on the given propertyId
    */
-  public IProfileObject getProfileObject( );
-
   public String[] getDependenciesFor( final String property );
 
+  /**
+   * @return all profilePoints captured by a PointMarker
+   */
   public IProfilPoint[] getMarkedPoints( );
 
+  /**
+   * @return the first markerProvider wich provides the given MarkerId
+   */
   public IProfilPointMarkerProvider getMarkerProviderFor( final String markerId );
 
-  public IProfilPointMarker[] getPointMarkerFor( final IProfilPoint point );
-
-  public IProfilPointMarker[] getPointMarkerFor( final String markerType );
-
-  public String[] getPointMarkerTypes( );
+  public IProfileObjectProvider getObjectProviderFor( final String profileObject );
 
   /**
-   * @param filterNonVisible
-   * @return LinkedList<POINT_PROPERTY>
+   * @return all PointMarker with a reference on the given point
    */
+  public IProfilPointMarker[] getPointMarkerFor( final IProfilPoint point );
+
+  /**
+   * @return all PointMarker equals the given PointMarkerId
+   */
+  public IProfilPointMarker[] getPointMarkerFor( final String markerType );
+
+  /**
+   * @return all PointMarkerIds addable to this profile
+   */
+  public String[] getPointMarkerTypes( );
+
+  
   public IProfilPointProperty[] getPointProperties( );
 
   public IProfilPointProperty getPointProperty( final String pointPrioperty );
 
   public LinkedList<IProfilPoint> getPoints( );
+
+  /**
+   * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
+   */
+  public IProfileObject getProfileObject( );
 
   /**
    * @param key
@@ -106,12 +137,7 @@ public interface IProfil
 
   public IProfilPointPropertyProvider getPropertyProviderFor( final String property );
 
-  public IProfileObjectProvider getObjectProviderFor( final String profileObject );
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.impl.points
-   */
-  // public IProfilPoints getProfilPoints( );
+  
   public double getStation( );
 
   /**
@@ -127,31 +153,8 @@ public interface IProfil
   public String getType( );
 
   public boolean hasPointProperty( final String propertyId );
-
-  // public static enum PROFIL_PROPERTY
-  // {
-  // /** ObjectTyp=List<String> */
-  // KOMMENTAR,
-  // /** ObjectTyp=String */
-  // MEHRFELDBRUECKE,
-  // /** ObjectTyp=List<String> */
-  // METASTRINGS,
-  // /** ObjectTyp=RAUHEIT_TYP */
-  // RAUHEIT_TYP,
-  // /** ObjectTyp=String */
-  // STATUS,
-  // /** ObjectTyp=String */
-  // VERZWEIGUNGSKENNUNG,
-  // /** ObjectTyp=String */
-  // WASSERSPIEGEL
-  // }
-
-  /**
-   * @return the extracted building, IProfil.getBuilding() will return null
-   * @throws ProfilDataException
-   */
-  public IProfileObject removeProfileObject( ) throws ProfilDataException;
-
+  
+  
   /**
    * @param point
    *          to remove
@@ -165,6 +168,12 @@ public interface IProfil
    *          to remove
    */
   public boolean removePointProperty( final String pointProperty );
+
+  /**
+   * @return the extracted building, IProfil.getBuilding() will return null
+   * @throws ProfilDataException
+   */
+  public IProfileObject removeProfileObject( ) throws ProfilDataException;
 
   /**
    * @param key

@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 
 /**
  * @author kimwerner
@@ -100,6 +101,8 @@ public class ProfilUtil
     }
     return values;
   }
+
+  
 
   public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final IProfilPointMarker leftDevider, final IProfilPointMarker rightDevider )
   {
@@ -351,4 +354,34 @@ public class ProfilUtil
     return point;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#croppProfile(org.kalypso.model.wspm.core.profil.IProfilPoint,
+   *      org.kalypso.model.wspm.core.profil.IProfilPoint)
+   */
+  public void croppProfile( final IProfil profile, final IProfilPoint startPoint, final IProfilPoint endPoint )
+  {
+    final LinkedList<IProfilPoint> points = profile.getPoints();
+    final int start = points.indexOf( startPoint );
+    final int end = points.indexOf( endPoint );
+    if( (start < 0) || (end < 0) || (start > end) )
+      return;
+    final List<IProfilPoint> toDelete_1 = points.subList( 0, start );
+    final List<IProfilPoint> toDelete_2 = points.subList( end + 1, points.size() );
+    for( final IProfilPoint point : toDelete_1 )
+    {
+      for( IProfilPointMarker marker : profile.getPointMarkerFor( point ) )
+      {
+        profile.removePointMarker( marker );
+      }
+      profile.removePoint( point );
+    }
+    for( final IProfilPoint point : toDelete_2 )
+    {
+      for( IProfilPointMarker marker : profile.getPointMarkerFor( point ) )
+      {
+        profile.removePointMarker( marker );
+      }
+      profile.removePoint( point );
+    }
+  }
 }
