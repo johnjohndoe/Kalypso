@@ -518,8 +518,7 @@
 						ref="wb1d2d:elementContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-			</xs:extension>
-			
+			</xs:extension>			
 		</xs:complexContent>	
 	</xs:complexType>
 	
@@ -782,7 +781,7 @@
 						minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 				
-			</xs:extension>
+			</xs:extension>			
 		</xs:complexContent>	
 	</xs:complexType>
 	
@@ -809,12 +808,124 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
+			<!--xs:extension 
 				base="wb1d2d:ElementType">
 					<xs:sequence>
+						<xs:element
+							name="edge1D"
+							type="wb1d2d:DirectedEdgePropertyType"/>
+						<xs:element
+							name="edge"/>
 						<xs:element 
 							ref="wb1d2d:directedEdge"
 							minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element 
+							name="geometry" 
+							type="gml:LineStringPropertyType"/>
+					</xs:sequence>
+			</xs:extension-->
+			<xs:extension 
+				base="wb1d2d:AbstractJunctionType">
+					<xs:sequence>
+						<xs:element
+							name="edge1D"
+							type="wb1d2d:DirectedEdgePropertyType"/>
+						<xs:element
+							name="edge"/>
+						<xs:element 
+							ref="wb1d2d:directedEdge"
+							minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element 
+							name="geometry" 
+							type="gml:LineStringPropertyType"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- edge to edge junction element -->
+	<xs:element 
+		name="EdgeToEdgeJunction1D2D"
+		type="wb1d2d:EdgeToEdgeJunctionType"
+		substitutionGroup="wb1d2d:_Junction1D2D"/>
+		
+	<xs:complexType name="EdgeToEdgeJunctionType">
+		<xs:annotation>
+			<xs:documentation>
+				A 1D 2D junction based on an edge and a continuity line 
+				and a target node.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:AbstractJunctionType">
+					<xs:sequence>
+						<xs:element
+							name="edge1D"
+							type="wb1d2d:DirectedEdgePropertyType"/>
+						<xs:element
+							name="edge2D"
+							type="wb1d2d:DirectedEdgePropertyType"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- EdgeToCline Junction 1d2d  -->
+	<xs:element 
+		name="EdgeToClineJunction1D2D"
+		type="wb1d2d:EdgeToClineJunctionType"
+		substitutionGroup="wb1d2d:_Junction1D2D"/>
+		
+	<xs:complexType name="EdgeToClineJunctionType">
+		<xs:annotation>
+			<xs:documentation>
+				A 1D 2D junction based on an edge and a continuity line 
+				and a target node.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:AbstractJunctionType">
+					<xs:sequence>
+						<xs:element
+							name="edge1D"
+							type="wb1d2d:DirectedEdgePropertyType"/>
+						<xs:element
+							name="continuityLine"
+							type="wb1d2d:ElementPropertyType"/>
+						<xs:element 
+							name="geometry" 
+							type="gml:LineStringPropertyType"/>
+						<xs:element
+							name="targetNode"
+							type="wb1d2d:NodePropertyType"/>					
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- Abstract junction element -->
+	<xs:element 
+		name="_Junction1D2D"
+		type="wb1d2d:AbstractJunctionType"
+		substitutionGroup="wb1d2d:Element"/>
+		
+	<xs:complexType name="AbstractJunctionType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"/>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:ElementType">
+					<xs:sequence>
+						<!--xs:element
+							name="edge1D"
+							type="wb1d2d:DirectedEdgePropertyType"/ -->
 						<xs:element 
 							name="geometry" 
 							type="gml:LineStringPropertyType"/>
