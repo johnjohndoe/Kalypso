@@ -133,7 +133,16 @@
               style="radio"
               toolbarPath="karte/tools"
               tooltip="Create a junction element"/>
-  
+  		
+  		<action
+              class="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromSelectedEdgesActionDelegate"
+              id="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromSelectedEdgesActionDelegate"
+              label="JuncEdge2"
+              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+              style="radio"
+              toolbarPath="karte/tools"
+              tooltip="Create a junction element from selected edge"/>
+  		
           <action
                	id="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"
                	label="Flussschlauch"

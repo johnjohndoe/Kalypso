@@ -44,11 +44,14 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionElementFromClAndElement1DCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionElementFromEdgesCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.QNameBasedSelectionFilter;
@@ -62,21 +65,20 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Patrice Congo
  */
-public class CreateJunctionFromClAnd1DEleWidget 
+public class CreateJunctionFromSelectedEdges 
                     extends FENetConceptSelectionWidget 
                     implements IWidget
 {
   
   private QNameBasedSelectionFilter selectionFilter;
 
-  public CreateJunctionFromClAnd1DEleWidget()
+  public CreateJunctionFromSelectedEdges()
   {
-    super(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT);
+    super(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
     selectionFilter= new QNameBasedSelectionFilter();
     selectionFilter.add( 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
-    selectionFilter.add( 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    
     setSelectionFilter( selectionFilter );
   }  
   
@@ -117,24 +119,21 @@ public class CreateJunctionFromClAnd1DEleWidget
            selectedFeatures.length);
        return;
      }
-     IElement1D selected1DEle = 
-           findSelectedelement1D(selectedFeatures);
-     IFE1D2DContinuityLine selectedCLine=
-           findSelectedCLine( selectedFeatures );
-     if(selected1DEle==null || selectedCLine==null)
-     {
-       System.out.println(
-           "Please select an 1d element and a cl:"+Arrays.asList( selectedFeatures ));
-     }
+     IFE1D2DEdge selected1DEdge = 
+           findSelectedElement1DEdge(selectedFeatures);
+     IFE1D2DEdge selected2DEdge = 
+       findSelectedElement2DEdge(selectedFeatures);
+     
      IFEDiscretisationModel1d2d model1d2d = 
-         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT);
-    AddJunctionElementFromClAndElement1DCmd junctionCmd=
-       new AddJunctionElementFromClAndElement1DCmd(
+         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
+    AddJunctionElementFromEdgesCmd junctionCmd=
+       new AddJunctionElementFromEdgesCmd(
            model1d2d,
-           selected1DEle,
-           selectedCLine);
-     CommandableWorkspace workspace = 
-       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT).getWorkspace();
+           selected1DEdge,
+           selected2DEdge);
+     
+    CommandableWorkspace workspace = 
+       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE).getWorkspace();
      ChangeDiscretiationModelCommand changeModelCmd=
            new ChangeDiscretiationModelCommand(
                workspace,model1d2d);
@@ -154,28 +153,38 @@ public class CreateJunctionFromClAnd1DEleWidget
     }
   }
 
-  private IFE1D2DContinuityLine findSelectedCLine( Feature[] selectedFeatures )
+  private IFE1D2DEdge findSelectedElement2DEdge( Feature[] selectedFeatures )
   {
     for(Feature feature:selectedFeatures)
     {
-     if(Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine.equals( 
-                                          feature.getFeatureType().getQName()))
+     if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
+                                  feature.getFeatureType().getQName()))
      {
-       return (IFE1D2DContinuityLine) feature.getAdapter( IFE1D2DContinuityLine.class );
+       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+      if(TypeInfo.is2DEdge( edge ))
+       {
+         return edge;
+       }
      }
     }
     return null;
   }
 
-  private IElement1D findSelectedelement1D( Feature[] selectedFeatures )
+  private IFE1D2DEdge findSelectedElement1DEdge( Feature[] selectedFeatures )
   {
     for(Feature feature:selectedFeatures)
     {
-     if(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D.equals(feature.getFeatureType().getQName()))
+     if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
+                                  feature.getFeatureType().getQName()))
      {
-       return (IElement1D) feature.getAdapter( IElement1D.class );
+       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+      if(TypeInfo.is1DEdge( edge ))
+       {
+         return edge;
+       }
      }
     }
     return null;
+    
   }
 }

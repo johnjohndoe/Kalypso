@@ -48,12 +48,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-
 import org.eclipse.jface.viewers.ISelection;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -84,33 +83,149 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class FENetConceptSelectionWidget implements IWidget
 {
 
+  class QNameBasedSelectionContext
+  {
+    final private QName themeElementsQName;
+    private IKalypsoFeatureTheme featureTheme;
+    private IFEDiscretisationModel1d2d model1d2d;
+    private CommandableWorkspace cmdWorkspace;
+    
+    
+    public QNameBasedSelectionContext( 
+                            QName themeElementsQName)
+    {
+      super();
+      this.themeElementsQName = themeElementsQName;
+    }
+    
+    public void init(IMapModell mapModell) throws IllegalArgumentException
+    {
+      model1d2d = 
+        UtilMap.findFEModelTheme( 
+          mapModell, 
+          themeElementsQName );
+      Assert.throwIAEOnNull( this.model1d2d, "Could not found model" );
+      featureTheme = 
+        UtilMap.findEditableThem( 
+            mapModell, 
+            themeElementsQName );
+      cmdWorkspace = this.featureTheme.getWorkspace();
+    }
+    
+    public List getSelectedByPolygon(GM_Object polygon,ISelectionFilter selectionFilter)
+    {
+//      GM_Object object = 
+//        polygonGeometryBuilder.finish();
+      GM_Envelope env = polygon.getEnvelope();
+      List selected = 
+              selector.select( 
+                      env, 
+                      featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
+                      false );
+      for(int i=selected.size()-1;i>=0;i--)
+      {
+        //TODO WHAT is this doing???
+        ((Feature)selected.get( i )).getDefaultGeometryProperty();
+      }
+      return filterSelected( selected,selectionFilter);
+    }
+    
+    public List<EasyFeatureWrapper> getSelectedByEnvelope(GM_Envelope env, ISelectionFilter selectionFilter)
+    {
+      List selected = 
+        selector.select( 
+            env,
+            featureTheme.getFeatureList(),
+            false);
+      return filterSelected( selected, selectionFilter );
+      
+    }
+    
+    private List<EasyFeatureWrapper> filterSelected(List selected, ISelectionFilter selectionFilter)
+    {
+        
+        final int SIZE = selected.size();
+        List<EasyFeatureWrapper> featuresToAdd = new ArrayList<EasyFeatureWrapper>(SIZE);
+        Feature parentFeature=model1d2d.getWrappedFeature();
+        IFeatureType featureType = parentFeature.getFeatureType();
+        IRelationType parentFeatureProperty=
+          (IRelationType)featureType.getProperty( 
+                                    themeElementsQName);
+        
+        if(selectionFilter==null)
+        {
+          for(int i=0;i<SIZE;i++)
+          {
+            Feature curFeature=(Feature)selected.get( i );
+            featuresToAdd.add( 
+              new EasyFeatureWrapper(
+                cmdWorkspace,
+                curFeature,
+                parentFeature,
+                parentFeatureProperty));
+          }
+        }
+        else
+        {
+          for(int i=0;i<SIZE;i++)
+          {
+            Feature curFeature=(Feature)selected.get( i );
+            if(selectionFilter.accept( curFeature ))
+            {
+              
+                EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
+                  cmdWorkspace,
+                  curFeature,
+                  parentFeature,
+                  parentFeatureProperty);
+              featuresToAdd.add( easyFeatureWrapper );
+              
+            }
+          }
+        }
+        return featuresToAdd;
+        
+    }
+    
+  }
+  
   private ICommandTarget commandPoster;
   
   private MapPanel mapPanel;
  
-  private IFEDiscretisationModel1d2d model1d2d;
+//  private IFEDiscretisationModel1d2d model1d2d;
 
   private boolean addToSelection;
 
-  private IKalypsoFeatureTheme featureTheme;
+  
+//  private IKalypsoFeatureTheme featureTheme;
 
-  private CommandableWorkspace cmdWorkspace;
   
   private PolygonGeometryBuilder polygonGeometryBuilder; 
   
   private JMSelector selector= new JMSelector();
 
   private IMapModell mapModell;
-
-  private QName themeElementsQName;
+  
+  private QNameBasedSelectionContext selectionContexts[];
+//  private QName themeElementsQName;
   
   private ISelectionFilter selectionFilter;
   
   public FENetConceptSelectionWidget(QName themeElementsQName )
   {
-    this.themeElementsQName=themeElementsQName;
+    this(new QName[]{themeElementsQName});
   }
   
+  public FENetConceptSelectionWidget(QName themeElementsQNames[] )
+  {
+    this.selectionContexts= new QNameBasedSelectionContext[themeElementsQNames.length];
+    for(int i=0;i<themeElementsQNames.length;i++)
+    {
+      selectionContexts[i] = 
+        new QNameBasedSelectionContext(themeElementsQNames[i]);
+    }
+  }
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
@@ -122,16 +237,10 @@ public class FENetConceptSelectionWidget implements IWidget
    this.mapPanel=mapPanel;
    mapModell = mapPanel.getMapModell();
    //QName name = Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT;
-  this.model1d2d = 
-     UtilMap.findFEModelTheme( 
-       mapModell, 
-       themeElementsQName );
-   Assert.throwIAEOnNull( this.model1d2d, "Could not found model" );
-   this.featureTheme = 
-     UtilMap.findEditableThem( 
-         mapModell, 
-         themeElementsQName );
-   cmdWorkspace = this.featureTheme.getWorkspace();
+   for(QNameBasedSelectionContext selectionContext:selectionContexts)
+   {
+    selectionContext.init( mapModell );
+   }
    crs = mapModell.getCoordinatesSystem();
    
   }
@@ -165,17 +274,22 @@ public class FENetConceptSelectionWidget implements IWidget
         {
           GM_Object object = 
               polygonGeometryBuilder.finish();
-          GM_Envelope env = object.getEnvelope();
-          List selected = 
-                  selector.select( 
-                          env, 
-                          featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
-                          false );
-          for(int i=selected.size()-1;i>=0;i--)
+//          GM_Envelope env = object.getEnvelope();
+//          List selected = 
+//                  selector.select( 
+//                          env, 
+//                          featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
+//                          false );
+//          for(int i=selected.size()-1;i>=0;i--)
+//          {
+//            ((Feature)selected.get( i )).getDefaultGeometryProperty();
+//          }
+//          addSelection( selected );
+          for(QNameBasedSelectionContext selectionContext:selectionContexts)
           {
-            ((Feature)selected.get( i )).getDefaultGeometryProperty();
+            List selectedByPolygon = selectionContext.getSelectedByPolygon( object,selectionFilter );
+            addSelection(selectedByPolygon); 
           }
-          addSelection( selected );
           
 //          selector.selectNearestHandel( geom, pos, snapRadius )
           
@@ -335,17 +449,23 @@ public class FENetConceptSelectionWidget implements IWidget
               point.getX()+delta, point.getY()+delta );
       GM_Envelope env= GeometryFactory.createGM_Envelope( min, max );
       
-      List selected = 
-        selector.select( 
-            env,
-            featureTheme.getFeatureList(),
-            false);
-     addSelection( selected );
+//      List selected = 
+//        selector.select( 
+//            env,
+//            featureTheme.getFeatureList(),
+//            false);
+//     addSelection( selected );
+     
+     for(QNameBasedSelectionContext selectionContext:selectionContexts)
+     {
+       List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,selectionFilter );
+       addSelection( selectedByEnvelope );
+     }
     }
   }
 
   
-  private final void addSelection(List selected)
+  private final void addSelection(List<EasyFeatureWrapper> selected)
   {
     IFeatureSelectionManager selectionManager = 
                       mapPanel.getSelectionManager();
@@ -359,49 +479,48 @@ public class FENetConceptSelectionWidget implements IWidget
     }
     
     final int SIZE = selected.size();
-    EasyFeatureWrapper[] featuresToAdd;// = new EasyFeatureWrapper[SIZE];
-    Feature parentFeature=model1d2d.getWrappedFeature();
-    IFeatureType featureType = parentFeature.getFeatureType();
-    IRelationType parentFeatureProperty=
-      (IRelationType)featureType.getProperty( 
-                                themeElementsQName
-                                /*Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS*/ );
+    EasyFeatureWrapper[] featuresToAdd = selected.toArray( new EasyFeatureWrapper[SIZE]);
+//    Feature parentFeature=model1d2d.getWrappedFeature();
+//    IFeatureType featureType = parentFeature.getFeatureType();
+//    IRelationType parentFeatureProperty=
+//      (IRelationType)featureType.getProperty( 
+//                                themeElementsQName);
     
-    if(selectionFilter==null)
-    {
-      featuresToAdd = new EasyFeatureWrapper[SIZE];
-      for(int i=0;i<SIZE;i++)
-      {
-        Feature curFeature=(Feature)selected.get( i );
-        featuresToAdd[i]=
-          new EasyFeatureWrapper(
-            cmdWorkspace,
-            curFeature,
-            parentFeature,
-            parentFeatureProperty);
-      }
-    }
-    else
-    {
-      List<EasyFeatureWrapper> addedAsList=
-          new ArrayList<EasyFeatureWrapper>(SIZE);
-      for(int i=0;i<SIZE;i++)
-      {
-        Feature curFeature=(Feature)selected.get( i );
-        if(selectionFilter.accept( curFeature ))
-        {
-          
-            EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
-              cmdWorkspace,
-              curFeature,
-              parentFeature,
-              parentFeatureProperty);
-          addedAsList.add( easyFeatureWrapper );
-          
-        }
-      }
-      featuresToAdd = addedAsList.toArray(new EasyFeatureWrapper[]{});
-    }
+//    if(selectionFilter==null)
+//    {
+//      featuresToAdd = new EasyFeatureWrapper[SIZE];
+//      for(int i=0;i<SIZE;i++)
+//      {
+//        Feature curFeature=(Feature)selected.get( i );
+//        featuresToAdd[i]=
+//          new EasyFeatureWrapper(
+//            cmdWorkspace,
+//            curFeature,
+//            parentFeature,
+//            parentFeatureProperty);
+//      }
+//    }
+//    else
+//    {
+//      List<EasyFeatureWrapper> addedAsList=
+//          new ArrayList<EasyFeatureWrapper>(SIZE);
+//      for(int i=0;i<SIZE;i++)
+//      {
+//        Feature curFeature=(Feature)selected.get( i );
+//        if(selectionFilter.accept( curFeature ))
+//        {
+//          
+//            EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
+//              cmdWorkspace,
+//              curFeature,
+//              parentFeature,
+//              parentFeatureProperty);
+//          addedAsList.add( easyFeatureWrapper );
+//          
+//        }
+//      }
+//      featuresToAdd = addedAsList.toArray(new EasyFeatureWrapper[]{});
+//    }
     
     Feature[] featuresToRemove= new Feature[]{};
     selectionManager.changeSelection( featuresToRemove, featuresToAdd ); 
@@ -421,19 +540,24 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     if(draggedPoint0!=null && draggedPoint1!=null)
     {
-      System.out.println("DO Select");
+      
       GM_Point point0=MapUtilities.transform( mapPanel, draggedPoint0 );
       GM_Point point1=MapUtilities.transform( mapPanel, draggedPoint1 );
       GM_Envelope env= 
         GeometryFactory.createGM_Envelope( 
                                     point0.getPosition(), 
                                     point1.getPosition() );
-      List selected = 
-        selector.select( 
-            env, 
-            featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
-            false );
-      addSelection( selected );
+//      List selected = 
+//        selector.select( 
+//            env, 
+//            featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
+//            false );
+//      addSelection( selected );
+      for(QNameBasedSelectionContext selectionContext:selectionContexts)
+      {
+        List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,selectionFilter );
+        addSelection( selectedByEnvelope );
+      }
     }
     draggedPoint0=null;
     draggedPoint1=null;
@@ -550,13 +674,42 @@ public class FENetConceptSelectionWidget implements IWidget
     return features;
   }
   
-  public IFEDiscretisationModel1d2d getModel1d2d( )
+  public IFEDiscretisationModel1d2d getModel1d2d(QName themeQName )
   {
-    return model1d2d;
+    if(themeQName==null)
+    {
+      return null;
+    }
+    
+    for(QNameBasedSelectionContext selectionContext:selectionContexts)
+    {
+      if(themeQName.equals( selectionContext.themeElementsQName))
+      {
+        return selectionContext.model1d2d;
+      }
+    }
+    return null;
   }
   
-  public IKalypsoFeatureTheme getTheme()
+  public void postCommand(ICommand command)
   {
-    return this.featureTheme;
+    commandPoster.postCommand( command, null );
+  }
+  
+  public IKalypsoFeatureTheme getTheme(QName themeQName)
+  {
+    if(themeQName==null)
+    {
+      return null;
+    }
+    for(QNameBasedSelectionContext selectionContext:selectionContexts)
+    {
+      if(themeQName.equals( selectionContext.themeElementsQName))
+      {
+        return selectionContext.featureTheme;
+      }
+    }
+    
+    return null;
   }
 }
