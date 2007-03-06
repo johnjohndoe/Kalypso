@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import java.awt.Color;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -66,9 +67,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -83,6 +86,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -141,8 +145,13 @@ class ApplyElevationWidgetFace
   private int selectedRects = 0;
 
   private GC gc;
-private Label minLabel;
+
+  private Label minLabel;
+  private RGB RGBChoice;
+  private Color colorChoice;
+
   private Widget leftComposite;
+  private Display disp;// = optionsColorGroup.getDisplay();
 
   // private ElevationTheme elevationTheme;//= new ElevationTheme();
 
@@ -167,7 +176,7 @@ private Label minLabel;
     ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
 
     TableWrapData tableWrapData;
-    
+
     scrolledForm.getBody().setLayout( new TableWrapLayout() );
 
     // Creates Section for "Select Elevation Model"
@@ -194,22 +203,20 @@ private Label minLabel;
     elevationColorSection.setText( "Select Colors for MAX Elevation and MIN Elevation " );
     // elevationColorSection.addPaintListener( drawListener );
 
-    tableWrapData = new TableWrapData( );//TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.heightHint=155;
+    tableWrapData.heightHint = 170;
     tableWrapData.align = TableWrapData.FILL_GRAB;
     elevationColorSection.setLayoutData( tableWrapData );
-    
+
     elevationColorSection.setExpanded( false );
     elevationColorSection.setEnabled( true );
 
-    
     createElevationColorSetup( elevationColorSection );
     createAreaSelectSection( areaSelectSection );
     createElevationModelSelectStatus( elevationSelectStatus );
     // createElevationColorSetup(elevationColorSection, drawListener);
-    
 
     return rootPanel;
   }
@@ -229,192 +236,247 @@ private Label minLabel;
     return createCanvas( parent, SWT.NONE, pl );
   }
 
- 
   private void createElevationColorSetup( Section elevationColorConfig )
   {
     elevationColorConfig.setLayout( new GridLayout() );
 
     final Composite clientComposite = toolkit.createComposite( elevationColorConfig, SWT.FLAT );
     elevationColorConfig.setClient( clientComposite );
-    
-    FillLayout elevationColorGrid = new FillLayout();
+
+    FormLayout elevationColorGrid = new FormLayout();
     clientComposite.setLayout( elevationColorGrid );
 
-    
-    //   Min Max Grouping
-    final Group minMaxGroup = new Group( clientComposite, SWT.NULL );
-    FormLayout minMaxLayout = new FormLayout();
-    minMaxGroup.setText( "First Group" );
-    minMaxGroup.setLayout( minMaxLayout );
-   // minMaxGroup.setSize( 100,140);
-    
-    
-
-    
-
-////     First Left Composite of MinMax Grouping
-//    Composite leftComposite = new Composite( minMaxGroup, SWT.FLAT );
-//    GridLayout leftMinMaxLayout = new GridLayout(2,false);
-//    leftComposite.setLayout( leftMinMaxLayout );
-//    
-    
-    //GridLayout leftMinMaxLayout = new GridLayout( 1, false );
-    
-
-    Label maxLabel = new Label( minMaxGroup, SWT.NONE );
-    maxLabel.setText( "Max" );  
     FormData formData = new FormData();
-    formData.left = new FormAttachment(0,5);
-    formData.top = new FormAttachment(0,5);
-    formData.right = new FormAttachment(10,0);
-    maxLabel.setLayoutData( formData );
-  
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( 0, 5 );
+    formData.bottom = new FormAttachment( 100, 0 );
+//    formData.width=160;
     
+    // formData.right = new FormAttachment(5,0);
+    clientComposite.setLayoutData( formData );
+
+    // Min Max Grouping
+    final Group minMaxGroup = new Group( clientComposite, SWT.NULL );
+    minMaxGroup.setLayoutData( formData );
+
+    final Group optionsColorGroup = new Group( clientComposite, SWT.NULL );
+    formData = new FormData();
+    formData.left = new FormAttachment( minMaxGroup, 5 );
+    formData.top = new FormAttachment( 0, 5 );
+    formData.bottom = new FormAttachment( 100, 0 );
+    formData.right = new FormAttachment( 100, 0 );
+    optionsColorGroup.setLayoutData( formData );
+
+
+    // minMaxGroup.setSize( 150, 150 );
+
+    firstGroup( minMaxGroup );
+    secondGroup( optionsColorGroup );
+
+    //
+    // FormData formData = new FormData();
+    // formData.width = 150;
+    // formData.height = 140;
+    // minMaxGroup.setLayoutData( formData );
+
+    // Second Grouping for "Further Options"
+
+  }
+
+  private void firstGroup( Group minMaxGroup )
+  {
+    
+    int MIN_MAX_WIDTH=20;
+    FormLayout minMaxLayout = new FormLayout();
+    minMaxGroup.setText( "Color Space" );
+    minMaxGroup.setLayout( minMaxLayout );
+
+    FormData formData;
+    Label maxLabel = new Label( minMaxGroup, SWT.NONE );
+    maxLabel.setText( "Max" );
+    formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( 0, 5 );
+    formData.right = new FormAttachment( MIN_MAX_WIDTH, 0 );
+    maxLabel.setLayoutData( formData );
+    disp = minMaxGroup.getDisplay();
     windowCanvas = createCanvas( minMaxGroup, new PaintListener()
     {
       public void paintControl( PaintEvent e )
       {
         gc = new GC( windowCanvas );
-        gc.setBackground( windowCanvas.getDisplay().getSystemColor( SWT.COLOR_GREEN ) );
-        gc.setForeground( windowCanvas.getDisplay().getSystemColor( SWT.COLOR_BLACK ) );
-        gc.drawRectangle( 0, 0, 20, 100 );
+       // gc.drawRectangle( 0, 0, 20, 100 );
 
         // gc.
-        for( int i = 0; i < 10; i++ )
-          gc.drawRectangle( 0, (100 / 10) * i, 20, 100 / 10 );
+        int coord = (((int)(Math.ceil( 100D / selectedRects))));
+        
+//        for( int i = 0; i < selectedRects; i++ ){
+//          
+//          gc.drawRectangle( 0, coord*i, 20, 100 / selectedRects );
+//        System.out.println(i+" , "+coord*i+" , "+ 100/selectedRects);
+//        }
+        System.out.println("i ,(100/coord)*i , coord");
+        for( int i = 0; i < selectedRects; i++ ){
+          if (colorChoice != null){
+          gc.setBackground( new Color(disp,(new RGB((colorChoice.getRGB().getHSB()[0]+(10*i)),
+                            colorChoice.getRGB().getHSB()[1],
+                            colorChoice.getRGB().getHSB()[2]))));
+          
+          gc.setForeground( new Color(disp,(new RGB((colorChoice.getRGB().getHSB()[0]+(10*i)),
+              colorChoice.getRGB().getHSB()[1],
+              colorChoice.getRGB().getHSB()[2]))));
+          }          
+          gc.fillRectangle( 0, (coord)*i, 20, coord );
+        System.out.println(i+" , "+(coord)*i+" , "+ coord + " ,"+(colorChoice.getRGB().getHSB()[0]+(10*i)));
+      }
 
       }
     } );
-    
-    windowCanvas.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GREEN )  );
 
+    windowCanvas.setForeground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GRAY ) );
 
-//    formData = new FormData();
-////    windowCanvasFormData.width = 30;
-////    windowCanvasFormData.height = 120;
-//    formData.top = new FormAttachment(0,1,0);
-//    formData.bottom = new FormAttachment(100,1,0);
-//    formData.left = new FormAttachment(0,1,0);
-//    windowCanvas.setLayoutData( formData );
-    
-    
-   
     formData = new FormData();
-    formData.width = 30;
-    formData.height = 120;
-  //  windowCanvasFormData.top = new FormAttachment(0,1,0);
-    formData.top = new FormAttachment(0,0);
-    formData.bottom = new FormAttachment(100,-5);
-    formData.left = new FormAttachment(maxLabel,5);
+    formData.width = 22;// 22;
+    formData.height = 100;// 106;
+    // windowCanvasFormData.top = new FormAttachment(0,1,0);
+    formData.top = new FormAttachment( 0, 5 );
+    formData.bottom = new FormAttachment( 100, -5 );
+    formData.left = new FormAttachment( maxLabel, 5 );
     windowCanvas.setLayoutData( formData );
-    
-   // formData.left = new FormAttachment(minLabel,5);
-    //formData.right = new FormAttachment
-   // windowCanvas.setLayoutData( formData );
-    //windowCanvasFormData.
-//    GridData windowCanvasGridData = new GridData( GridData.FILL_VERTICAL );
-//    windowCanvasGridData.horizontalSpan = 1;
-//    windowCanvasGridData.verticalSpan = 4;
-//    windowCanvasGridData.grabExcessVerticalSpace = true;
-//    windowCanvas.setLayoutData( windowCanvasGridData );
 
     minLabel = new Label( minMaxGroup, SWT.BOTTOM );
     minLabel.setText( "Min" );
     formData = new FormData();
-    
-    formData.left = new FormAttachment(0,5);
-    //formData.top = new FormAttachment(maxLabel,100);
-    formData.bottom = new FormAttachment(100,-5);
-    formData.right = new FormAttachment(10,0);
-    minLabel.setLayoutData( formData);
-    
-    
-//
+    formData.left = new FormAttachment( 0, 5 );
+    // formData.top = new FormAttachment(maxLabel,100);
+    formData.bottom = new FormAttachment( 100, -5 );
+    formData.right = new FormAttachment( MIN_MAX_WIDTH, 0 );
+    minLabel.setLayoutData( formData );
 
-    
-//     //right Composite
-//    
-//    Composite rightComposite = new Composite( minMaxGroup, SWT.FLAT );
-//    GridLayout rightMinMaxLayout = new GridLayout( 2, false );
-//    rightComposite.setLayout( rightMinMaxLayout );
-//    
 //    Label maximumColor = new Label( minMaxGroup, SWT.FLAT );
 //    maximumColor.setText( "Maximum Color" );
 //    formData = new FormData();
-//    GridData maxColorGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    maxColorGridData.horizontalSpan = 2;
-//    maxColorGridData.verticalSpan = 1;
-//    maximumColor.setLayoutData( maxColorGridData );
+//    formData.left = new FormAttachment( windowCanvas, 15 );
+//    formData.top = new FormAttachment( 0, 5 );
+//    // formData.right = new FormAttachment()
+//    maximumColor.setLayoutData( formData );
 //
 //    Button maxColor = new Button( minMaxGroup, SWT.FLAT );
 //    maxColor.setText( "SELECT" );
-//    GridData maxColorBtnGridData = new GridData( GridData.BEGINNING );
-//    maxColorBtnGridData.horizontalSpan = 1;
-//    maxColorBtnGridData.verticalSpan = 1;
-//    maxColor.setLayoutData( maxColorBtnGridData );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( windowCanvas, 25 );
+//    formData.top = new FormAttachment( maximumColor, 5 );
+//    maxColor.setLayoutData( formData );
 //
 //    Button upDown = new Button( minMaxGroup, SWT.FLAT );
-//    upDown.setText( "UP/DOWN" );
-//    GridData upDownGridData = new GridData( GridData.BEGINNING );
-//    upDownGridData.horizontalSpan = 1;
-//    upDownGridData.verticalSpan = 1;
-//    upDown.setLayoutData( upDownGridData );
-// 
-//    Label minimumColor_ = new Label( rightComposite, SWT.FLAT );
-//    //minimumColor.setText( "Minimum Color" );
-//    GridData minColorGridData_ = new GridData( GridData.FILL_HORIZONTAL );
-//    minColorGridData_.horizontalSpan = 2;
-//    minColorGridData_.verticalSpan = 3;
-//    minimumColor_.setLayoutData( minColorGridData_ );
-//    
+//    upDown.setText( "U/D" );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( maxColor, 5 );
+//    formData.top = new FormAttachment( maximumColor, 5 );
+//    upDown.setLayoutData( formData );
 //
-//    Label minimumColor = new Label( rightComposite, SWT.FLAT );
+//    Button minColor = new Button( minMaxGroup, SWT.FLAT );
+//    minColor.setText( "SELECT" );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( windowCanvas, 25 );
+//    formData.bottom = new FormAttachment( 100, -5 );
+//    minColor.setLayoutData( formData );
+//
+//    Label minimumColor = new Label( minMaxGroup, SWT.FLAT );
 //    minimumColor.setText( "Minimum Color" );
-//    GridData minColorGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    minColorGridData.horizontalSpan = 2;
-//    minColorGridData.verticalSpan = 1;
-//    minimumColor.setLayoutData( minColorGridData );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( windowCanvas, 15 );
+//    formData.bottom = new FormAttachment( minColor, -5 );
+//    // formData.right = new FormAttachment(100,-5);
+//    minimumColor.setLayoutData( formData );
 //
-//    Button minColor = new Button( rightComposite, SWT.FLAT );
-//    minColor.setText( "Select" );
-//    // GridData minColorBtnGridData = new GridData(GridData.END);
-//    // minColorBtnGridData.horizontalSpan = 3;
-//    // minColorBtnGridData.verticalSpan = 1;
-//    // minColor.setLayoutData( minColorBtnGridData );
-//
-//    Button upDown1 = new Button( rightComposite, SWT.FLAT );
-//    upDown1.setText( "UP/DOWN" );
-//    
+//    Button upDown_ = new Button( minMaxGroup, SWT.FLAT );
+//    upDown_.setText( "U/D" );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( minColor, 5 );
+//    formData.bottom = new FormAttachment( 100, -5 );
+//    // formData.right = new FormAttachment(100,-5);
+//    upDown_.setLayoutData( formData );
+
+  }
+
+  private void secondGroup( Group optionsColorGroup )
+  {
+
+    FormData optionsColorFormData;
+    FormLayout optionsColorGrpLayout = new FormLayout();
+    optionsColorGroup.setText( "Further Options" );
+    optionsColorGroup.setLayout( optionsColorGrpLayout );
     
-  //  minMaxGroup.pack();
-//
-//    
-//    // Second Grouping for "Further Options"
-//    Group optionsColorGroup = new Group( clientComposite, SWT.NULL );
-//    GridLayout optionsColorLayout = new GridLayout( 3, false );
-//    optionsColorGroup.setText( "Further Options" );
-//    optionsColorGroup.setLayout( optionsColorLayout );
-//
-//    Label noElevationColorLabel = new Label( optionsColorGroup, SWT.NONE );
-//    noElevationColorLabel.setText( "No Elevation Color" );
-//    GridData noElevationGridData = new GridData( GridData.FILL_VERTICAL );
-//    noElevationGridData.horizontalSpan = 2;
-//    noElevationGridData.verticalSpan = 1;
-//    noElevationColorLabel.setLayoutData( noElevationGridData );
-//    
-//    Button noElevationColorBtn = new Button( optionsColorGroup, SWT.None );
-//    noElevationColorBtn.setText( "SELECT" );
-//
-//
-//    Label colorNumberCells = new Label( optionsColorGroup, SWT.NONE );
-//    colorNumberCells.setText( "Discrete Color Number" );
-//    GridData colorNumberGridData = new GridData( GridData.FILL_VERTICAL );
-//    colorNumberGridData.horizontalSpan = 2;
-//    colorNumberGridData.verticalSpan = 1;
-//    colorNumberCells.setLayoutData( colorNumberGridData );
-//
+    Label maximumColor = new Label( optionsColorGroup, SWT.FLAT );
+    maximumColor.setText( "Choose Color" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( 0, 5 );
+    optionsColorFormData.top = new FormAttachment( 0, 5 );
+    // formData.right = new FormAttachment()
+    maximumColor.setLayoutData( optionsColorFormData );
+    
+   
+    //private ColorFieldEditor lineColorFieldEditor[] = new ColorFieldEditor[4];
+    final ColorSelector cs = new ColorSelector(optionsColorGroup);
+    Button maxColorBtn = cs.getButton();//new Button(optionsColorGroup,SWT.None);
+//    System.out.println(colorChoice.getBlue());
+    
+    maxColorBtn.addSelectionListener( new SelectionAdapter(){
+      public void widgetSelected( SelectionEvent e )
+      {
+        RGBChoice = cs.getColorValue();
+        //RGBChoice.g
+        colorChoice = new Color(disp,RGBChoice);
+        
+       // colorChoice.get
+      }
+      
+    });
+    maxColorBtn.setText( "SELECT" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( maximumColor, 5 );
+    optionsColorFormData.top = new FormAttachment( 0, 5 );
+    
+    maxColorBtn.setLayoutData( optionsColorFormData );
+
+    Label noElevationColorLabel = new Label( optionsColorGroup, SWT.NONE );
+    noElevationColorLabel.setText( "No Elevation Color" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( 0, 5 );
+    optionsColorFormData.top = new FormAttachment( maxColorBtn, 10 );
+//    optionsColorFormData.right = new FormAttachment( 100, 0 );
+    noElevationColorLabel.setLayoutData( optionsColorFormData );
+
+    Button noElevationColorBtn = new Button( optionsColorGroup, SWT.None );
+    optionsColorFormData = new FormData();
+    noElevationColorBtn.setText( "SELECT" );
+    optionsColorFormData.left = new FormAttachment( noElevationColorLabel, 5 );
+    optionsColorFormData.top = new FormAttachment( maxColorBtn, 10 );
+    noElevationColorBtn.setLayoutData( optionsColorFormData );
+
+    Label colorNumberCells = new Label( optionsColorGroup, SWT.NONE );
+    colorNumberCells.setText( "Discrete Color Number" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( 0, 5 );
+    optionsColorFormData.top = new FormAttachment( noElevationColorBtn, 10 );
+    colorNumberCells.setLayoutData( optionsColorFormData );
+    
+    final Spinner stepper = new Spinner(optionsColorGroup,SWT.None);
+    stepper.setMinimum( 0 );
+    stepper.setIncrement( 10 );
+    stepper.setMaximum( 50 );
+    
+    stepper.addSelectionListener( new SelectionAdapter(){
+      public void widgetSelected(SelectionEvent e){
+    System.out.println( "Selected" + stepper.getSelection() );
+    selectedRects = stepper.getSelection();
+    windowCanvas.redraw();
+      }
+    });
+
 //    final Combo stepperCombo = new Combo( optionsColorGroup, SWT.DROP_DOWN );
-//    String[] listOfValues = new String[] { "5", "10", "15", "20", "25", "30", "35" };
+//    String[] listOfValues = new String[] { "5", "10", "15", "20", "25", "30", "35","50","100" };
 //    for( int i = 0; i < listOfValues.length; i++ )
 //      stepperCombo.add( listOfValues[i] );
 //    stepperCombo.addSelectionListener( new SelectionAdapter()
@@ -425,21 +487,30 @@ private Label minLabel;
 //        System.out.println( "Selected" + stepperCombo.getText() );
 //        selectedRects = Integer.parseInt( stepperCombo.getText() );
 //        windowCanvas.redraw();
-//        clientComposite.layout();
-//        //minMaxGroup.redraw();
-//       // clientComposite.layout();
-//        
+//        // clientComposite.layout();
+//        // minMaxGroup.redraw();
+//        // clientComposite.layout();
+//
 //      }
 //    } );
-//
-//    Label optionMinMax = new Label( optionsColorGroup, SWT.NONE );
-//    optionMinMax.setText( "Go Darker from Max to Min Elevation" );
-//    GridData optionMinMaxGridData = new GridData( GridData.FILL_VERTICAL );
-//    optionMinMaxGridData.horizontalSpan = 3;
-//    optionMinMaxGridData.verticalSpan = 1;
-//    optionMinMax.setLayoutData( optionMinMaxGridData );
-//
-//    Button checkBtnOptionMinMax = new Button( optionsColorGroup, SWT.CHECK );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( colorNumberCells, 5 );
+    optionsColorFormData.top = new FormAttachment( noElevationColorBtn, 10 );
+    stepper.setLayoutData( optionsColorFormData );
+
+    Label optionMinMax = new Label( optionsColorGroup, SWT.NONE );
+    optionMinMax.setText( "Go Darker from Max to Min Elevation" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( 0, 5 );
+    optionsColorFormData.top = new FormAttachment( stepper, 10 );
+//    optionsColorFormData.bottom = new FormAttachment( 100, -5 );
+    optionMinMax.setLayoutData( optionsColorFormData );
+
+    Button checkBtnOptionMinMax = new Button( optionsColorGroup, SWT.CHECK );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( optionMinMax, 5 );
+    optionsColorFormData.top = new FormAttachment( stepper, 10 );
+    checkBtnOptionMinMax.setLayoutData( optionsColorFormData );
   }
 
   private final void createElevationModelSelectStatus( Section workStatusSection )
