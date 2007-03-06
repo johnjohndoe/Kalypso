@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.contexts.Context;
@@ -122,11 +124,27 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
   private final Collection<IKalypsoTheme> m_themes = new ArrayList<IKalypsoTheme>();
 
-  private ContextSwitcherThread m_contextSwitcherThread;
+  private Map<IContextService, ContextSwitcherThread> m_contextSwitcherThreads = new HashMap<IContextService, ContextSwitcherThread>();
 
-  public MapModellContextSwitcher( final IContextService contextService )
+  public MapModellContextSwitcher( )
   {
-    m_contextSwitcherThread = new ContextSwitcherThread( contextService );
+  }
+
+  public void addContextService( final IContextService contextService )
+  {
+    if( contextService != null )
+    {
+      m_contextSwitcherThreads.put( contextService, new ContextSwitcherThread( contextService ) );
+    }
+  }
+
+  public void removeContextService( final IContextService contextService )
+  {
+    final ContextSwitcherThread thread = m_contextSwitcherThreads.remove( contextService );
+    if( thread != null )
+    {
+      thread.dispose();
+    }
   }
 
   /**
@@ -184,14 +202,20 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
   private synchronized void activateContextFor( final IKalypsoTheme theme )
   {
-    m_contextSwitcherThread.setTheme( theme );
-    PlatformUI.getWorkbench().getDisplay().asyncExec( m_contextSwitcherThread );
+    for( final ContextSwitcherThread thread : m_contextSwitcherThreads.values() )
+    {
+      thread.setTheme( theme );
+      PlatformUI.getWorkbench().getDisplay().asyncExec( thread );
+    }
   }
 
   public void dispose( )
   {
     activateContextFor( null );
-    m_contextSwitcherThread.dispose();
+    for( ContextSwitcherThread thread : m_contextSwitcherThreads.values() )
+    {
+      thread.dispose();
+    }
     for( IKalypsoTheme theme : m_themes )
     {
       theme.removeKalypsoThemeListener( this );

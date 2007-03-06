@@ -79,7 +79,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -99,7 +98,6 @@ import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
-import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -133,8 +131,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private GisTemplateMapModell m_mapModell;
 
   private IMapModellView m_mapModellView;
-
-  private MapModellContextSwitcher m_contextSwitcher;
 
   private Control m_control;
 
@@ -178,8 +174,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     }
   };
-
-  private static IContextService m_contextService;
 
   private IResourceChangeListener m_resourceChangeListener;
 
@@ -251,13 +245,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( this );
-
-    if( m_contextService == null )
-    {
-      m_contextService = (IContextService) site.getWorkbenchWindow().getWorkbench().getService( IContextService.class );
-    }
-    m_contextSwitcher = new MapModellContextSwitcher( m_contextService );
-
     m_partListener = new PartAdapter()
     {
 
@@ -645,7 +632,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     // dispose old one
     if( m_mapModell != null )
     {
-      m_mapModell.removeModellListener( m_contextSwitcher );
       m_mapModell.dispose();
     }
 
@@ -654,10 +640,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_mapPanel != null )
     {
       m_mapPanel.setMapModell( m_mapModell );
-      if( m_mapModell != null )
-      {
-        m_mapModell.addModellListener( m_contextSwitcher );
-      }
     }
 
     if( m_mapModellView != null )
@@ -782,6 +764,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_file = file;
     if( m_file != null )
     {
+      try
+      {
+        m_file.refreshLocal( IResource.DEPTH_ONE, null );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
       m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener );
     }
   }
@@ -797,9 +787,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_disposed = true;
 
     setMapModell( null );
-
-    m_contextSwitcher.dispose();
-    m_contextService = null;
 
     m_mapPanel.getWidgetManager().removeWidgetChangeListener( m_wcl );
     m_mapPanel.dispose();
