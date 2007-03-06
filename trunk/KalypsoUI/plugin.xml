@@ -145,6 +145,13 @@
         icon="icons/kalypso_gmt.gif"
         id="org.kalypso.ui.views.outline"
         name="Outline"/>
+  <view
+        allowMultiple="true"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView"
+        icon="icons/kalypso_gtt.gif"
+        id="org.kalypso.ui.views.featuretemplateview"
+        name="Feature View"/>
 	</extension>
 	<extension id="editorActions" name="editorActions"
 		point="org.eclipse.ui.editorActions">
