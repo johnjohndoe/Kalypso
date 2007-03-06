@@ -49,8 +49,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.scenarios.Scenario;
@@ -60,49 +63,69 @@ import org.kalypso.scenarios.Scenario;
  */
 public class ProjectChangeListener implements IActiveContextChangeListener
 {
+  private IProject m_newProject;
+
+  private Scenario m_scenario;
 
   /**
    * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
    */
-  public void activeContextChanged( final IProject newProject, Scenario scenario )
+  public void activeContextChanged( final IProject newProject, final Scenario scenario )
   {
-    final UIJob job = new UIJob( "Changing work context..." )
+    if( newProject != m_newProject || scenario != m_scenario )
     {
-      @Override
-      public IStatus runInUIThread( IProgressMonitor monitor )
+      final UIJob job = new UIJob( "Changing work context..." )
       {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-        final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-        final IViewReference[] viewReferences = workbenchPage.getViewReferences();
-        for( final IViewReference reference : viewReferences )
+        @Override
+        public IStatus runInUIThread( IProgressMonitor monitor )
         {
-          if( !shouldKeepView( reference ) )
+          final IWorkbench workbench = PlatformUI.getWorkbench();
+          final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+          final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
+          try
           {
-            workbenchPage.hideView( reference );
+            workbench.showPerspective( Perspective.ID, activeWorkbenchWindow );
+          }
+          catch( final WorkbenchException e )
+          {
+            return StatusUtilities.statusFromThrowable( e );
+          }
+          final IViewReference[] viewReferences = workbenchPage.getViewReferences();
+          for( final IViewReference reference : viewReferences )
+          {
+            if( !shouldKeepView( reference ) )
+            {
+              workbenchPage.hideView( reference );
+            }
+          }
+          return Status.OK_STATUS;
+        }
+
+        private boolean shouldKeepView( final IViewReference reference )
+        {
+          final String viewId = reference.getId();
+          if( WorkflowView.ID.equals( viewId ) )
+          {
+            return true;
+          }
+          else if( SimulationModelDBView.ID.equals( viewId ) )
+          {
+            return true;
+          }
+          else if( reference.getPartName().equals( "Welcome" ) )
+          {
+            return true;
+          }
+          else
+          {
+            return false;
           }
         }
-        return Status.OK_STATUS;
-      }
-
-      private boolean shouldKeepView( final IViewReference reference )
-      {
-        final String viewId = reference.getId();
-        if( WorkflowView.ID.equals( viewId ) )
-        {
-          return true;
-        }
-        else if( SimulationModelDBView.ID.equals( viewId ) )
-        {
-          return true;
-        }
-        else
-        {
-          return false;
-        }
-      }
-    };
-    job.schedule();
+      };
+      job.schedule();
+      m_newProject = newProject;
+      m_scenario = scenario;
+    }
   }
 
 }

@@ -1,6 +1,7 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,14 +9,29 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.scenarios.Scenario;
+import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypso.workflow.Workflow;
 
 //TODO move to workflow system problem with project??
@@ -28,7 +44,7 @@ import org.kalypso.workflow.Workflow;
  * 
  * @author Patrice Congo
  */
-public class ActiveWorkContext
+public class ActiveWorkContext implements IWindowListener, IPartListener, IPerspectiveListener
 {
   final static Logger logger = Logger.getLogger( ActiveWorkContext.class.getName() );
 
@@ -39,8 +55,6 @@ public class ActiveWorkContext
     if( !log )
       logger.setUseParentHandlers( false );
   }
-
-  private final static ActiveWorkContext activeWorkContext = new ActiveWorkContext();
 
   private static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis";
 
@@ -56,14 +70,41 @@ public class ActiveWorkContext
 
   private List<IActiveContextChangeListener> activeProjectChangeListener = new ArrayList<IActiveContextChangeListener>();
 
-  private ActiveWorkContext( )
+  /**
+   * list of registries where we are registered as listeners <br>
+   * used for clean dispose
+   */
+  private final List<Object> m_registries = new ArrayList<Object>();
+
+  private final SzenarioSourceProvider m_simModelProvider = new SzenarioSourceProvider( this );
+
+  private final ProjectChangeListener m_projectChangeListener = new ProjectChangeListener();
+
+  private MapModellContextSwitcher m_contextSwitcher = new MapModellContextSwitcher();
+
+  public ActiveWorkContext( )
   {
-    final SzenarioSourceProvider simModelProvider = new SzenarioSourceProvider( this );
-    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    service.addSourceProvider( simModelProvider );
-    final ProjectChangeListener projectChangeListener = new ProjectChangeListener();
-    addActiveContextChangeListener( projectChangeListener );
-    // TODO remove source provider and projectChangeListener somewhere
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    windowOpened( workbench.getActiveWorkbenchWindow() );
+  }
+
+  public void dispose( )
+  {
+    // remove all listeners
+    for( Iterator iter = m_registries.iterator(); iter.hasNext(); )
+    {
+      final Object registry = iter.next();
+      if( registry instanceof IWorkbench )
+        ((IWorkbench) registry).removeWindowListener( this );
+      if( registry instanceof IWorkbenchWindow )
+        ((IWorkbenchWindow) registry).removePerspectiveListener( this );
+      if( registry instanceof IWorkbenchPage )
+        ((IWorkbenchPage) registry).removePartListener( this );
+      if( registry instanceof IHandlerService )
+        ((IHandlerService) registry).removeSourceProvider( m_simModelProvider );
+      if( registry instanceof ActiveWorkContext )
+        ((ActiveWorkContext) registry).removeActiveContextChangeListener( m_projectChangeListener );
+    }
   }
 
   synchronized public void setActiveProject( final IProject activeProject )
@@ -105,11 +146,6 @@ public class ActiveWorkContext
     {
       fireActiveProjectChanged( activeProject, workflowDB.getScenario( BASIS_SCENARIO ) );
     }
-  }
-
-  final static public ActiveWorkContext getInstance( )
-  {
-    return activeWorkContext;
   }
 
   synchronized public IProject getActiveProject( )
@@ -207,9 +243,165 @@ public class ActiveWorkContext
 
   public void setCurrentSzenario( final Scenario scenario )
   {
-    final IProject activeProject = getActiveProject();
-    m_activeScenario = scenario;
-    m_dataProvider.setCurrent( activeProject, scenario );
-    fireActiveProjectChanged( activeProject, scenario );
+    if( m_activeScenario == null ? scenario != null : m_activeScenario.getURI().equals( scenario == null ? null : scenario.getURI() ) )
+    {
+      final IProject activeProject = getActiveProject();
+      m_activeScenario = scenario;
+      m_dataProvider.setCurrent( activeProject, scenario );
+      fireActiveProjectChanged( activeProject, scenario );
+    }
   }
+
+  // **** LISTENERS ****
+
+  /**
+   * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void windowActivated( final IWorkbenchWindow window )
+  {
+    // nothing
+  }
+
+  /**
+   * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void windowDeactivated( final IWorkbenchWindow window )
+  {
+    // nothing
+  }
+
+  /**
+   * @see org.eclipse.ui.IPageListener#pageActivated(org.eclipse.ui.IWorkbenchPage)
+   */
+  public void pageActivated( @SuppressWarnings("unused")
+  final IWorkbenchPage page )
+  {
+    // nothing
+  }
+
+  /**
+   * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void windowOpened( final IWorkbenchWindow window )
+  {
+    window.addPerspectiveListener( this );
+    m_registries.add( window );
+    final IWorkbenchPage activePage = window.getActivePage();
+    if( activePage != null )
+    {
+      perspectiveActivated( activePage, activePage.getPerspective() );
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void windowClosed( final IWorkbenchWindow window )
+  {
+    window.removePerspectiveListener( this );
+    m_registries.remove( window );
+  }
+
+  /**
+   * @see org.eclipse.ui.IPerspectiveListener#perspectiveActivated(org.eclipse.ui.IWorkbenchPage,
+   *      org.eclipse.ui.IPerspectiveDescriptor)
+   */
+  public void perspectiveActivated( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )
+  {
+    final IHandlerService handlerService = (IHandlerService) page.getWorkbenchWindow().getService( IHandlerService.class );
+    if( perspective.getId().equals( Perspective.ID ) )
+    {
+      handlerService.addSourceProvider( m_simModelProvider );
+      addActiveContextChangeListener( m_projectChangeListener );
+      page.addPartListener( this );
+      m_registries.add( page );
+      m_registries.add( handlerService );
+      m_registries.add( this );
+    }
+    else
+    {
+      handlerService.removeSourceProvider( m_simModelProvider );
+      removeActiveContextChangeListener( m_projectChangeListener );
+      page.removePartListener( this );
+      m_registries.remove( page );
+      m_registries.remove( handlerService );
+      m_registries.remove( this );
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.IPerspectiveListener#perspectiveChanged(org.eclipse.ui.IWorkbenchPage,
+   *      org.eclipse.ui.IPerspectiveDescriptor, java.lang.String)
+   */
+  public void perspectiveChanged( final IWorkbenchPage page, final IPerspectiveDescriptor perspective, final String changeId )
+  {
+  }
+
+  /**
+   * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
+   */
+  public void partActivated( final IWorkbenchPart part )
+  {
+    if( part instanceof MapView || part instanceof FeatureTemplateView )
+    {
+      final IWorkbenchPage page = part.getSite().getPage();
+      final IViewPart[] viewStack = page.getViewStack( (IViewPart) part );
+      for( final IViewPart otherPart : viewStack )
+      {
+        if( otherPart == part )
+        {
+          continue;
+        }
+        else
+        {
+          page.hideView( otherPart );
+        }
+      }
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
+   */
+  public void partDeactivated( final IWorkbenchPart part )
+  {
+    // nothing
+  }
+
+  /**
+   * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
+   */
+  public void partBroughtToTop( final IWorkbenchPart part )
+  {
+    // nothing
+  }
+
+  /**
+   * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
+   */
+  public void partClosed( final IWorkbenchPart part )
+  {
+    if( part instanceof MapView )
+    {
+      final IContextService contextService = (IContextService) part.getSite().getService( IContextService.class );
+      final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+      mapPanel.removeModellListener( m_contextSwitcher );
+      m_contextSwitcher.removeContextService( contextService );
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
+   */
+  public void partOpened( final IWorkbenchPart part )
+  {
+    if( part instanceof MapView )
+    {
+      final IContextService contextService = (IContextService) part.getSite().getService( IContextService.class );
+      final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+      mapPanel.addModellListener( m_contextSwitcher );
+      m_contextSwitcher.addContextService( contextService );
+    }
+  }
+
 }
