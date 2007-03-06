@@ -115,7 +115,10 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     m_selection = selection;
-    refreshAction( action, selection );
+    if( action != null )
+    {
+      refreshAction( action, selection );
+    }
   }
 
   protected WidgetActionPart getPart( )
