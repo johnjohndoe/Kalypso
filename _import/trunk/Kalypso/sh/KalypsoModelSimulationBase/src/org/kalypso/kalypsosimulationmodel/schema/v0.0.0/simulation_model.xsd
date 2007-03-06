@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--  
 	Provide the abstrat model (framework) for creating simulation models.
 	A simulation model is an abtraction of all aspects about
@@ -32,42 +31,21 @@
 		
 	@author Patrice Congo
 -->
-
-
-<xs:schema 
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
-	xmlns:gml="http://www.opengis.net/gml" 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
-	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	elementFormDefault="qualified" 
-	attributeFormDefault="unqualified">
+<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:kapp="org.kalypso.appinfo" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
-		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+		<xs:appinfo>
 			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
-	<xs:import
-		namespace="http://www.opengis.net/gml"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
-		/>
-	
-	
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="D:\Eclipse\Workspace\KalypsoContributionsOGC31\src\org\kalypso\contribs\ogc31\schemata\gml\3.1.1\base/gml.xsd"/>
 	<!-- ==============================================================
 						global element declarations
 		============================================================== -->
 	<!-- Root element.
-		RiverNetworkSimulationModel --> 
+		RiverNetworkSimulationModel -->
 	<!-- wieso substitute to _gml -->
-	
-	<xs:element 
-			name="SimulationModel"
-			type="simBase:SimulationModelType"
-			substitutionGroup="simBase:_Model">
-	</xs:element>
-	
-	<xs:complexType  
-			name="SimulationModelType">
+	<xs:element name="SimulationModel" type="simBase:SimulationModelType" substitutionGroup="simBase:_Model"/>
+	<xs:complexType name="SimulationModelType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Represents a simulation model.
@@ -81,43 +59,19 @@
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractModelType">
 				<xs:sequence>
-					<xs:element  
-						ref="simBase:staticModel"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
-						ref="simBase:operationalModel"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
-						ref="simBase:controlModel"
-						minOccurs="1"
-						maxOccurs="1"/>
-					<xs:element 
-						ref="simBase:resultModel"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
-						ref="simBase:evaluationModel"
-						minOccurs="1" maxOccurs="1"/>						
-					<xs:element 
-						ref="simBase:additionalModelProperty"
-						minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element
-						ref="simBase:overridingModel"
-						minOccurs="0"
-						maxOccurs="unbounded"/>					
+					<xs:element ref="simBase:staticModel"/>
+					<xs:element ref="simBase:operationalModel"/>
+					<xs:element ref="simBase:controlModel"/>
+					<xs:element ref="simBase:resultModel"/>
+					<xs:element ref="simBase:evaluationModel"/>
+					<xs:element ref="simBase:additionalModelProperty" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="simBase:overridingModel" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	<xs:element 
-		name="_Model"
-		type="simBase:AbstractModelType"
-		substitutionGroup="gml:_Feature">
-	</xs:element>
-	
-	<xs:complexType 
-		name="AbstractModelType"
-		abstract="true">
+	<xs:element name="_Model" type="simBase:AbstractModelType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AbstractModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base type for all sub models. 
@@ -126,19 +80,13 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="gml:AbstractFeatureType">
-			</xs:extension>
+			<xs:extension base="gml:AbstractFeatureType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
 	<!--==================================================================
 		additionalModelProperty 
 	===================================================================-->
-	<xs:element 
-			name="additionalModelProperty"
-			type="simBase:AdditionalModelPropertyAssociationType"
-			block="substitution">
+	<xs:element name="additionalModelProperty" type="simBase:AdditionalModelPropertyAssociationType" block="substitution">
 		<xs:annotation>
 			<xs:documentation>s 
 				To associate an additional model property to a simualtion model.
@@ -150,10 +98,7 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="AdditionalModelPropertyAssociationType"
-		abstract="true">
+	<xs:complexType name="AdditionalModelPropertyAssociationType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for extension
@@ -162,26 +107,18 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:restriction
-				base="gml:AssociationType">
+			<xs:restriction base="gml:AssociationType">
 				<xs:sequence>
 					<xs:element ref="simBase:AdditionalModelProperty"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
-	</xs:complexType>	
-	
+	</xs:complexType>
 	<!-- =================================================================
 		AdditionalModelProperty
 	================================================================== -->
-	<xs:element 
-		name="AdditionalModelProperty"
-		type="simBase:AdditionalModelPropertyType"
-		substitutionGroup="gml:_GML">	
-	</xs:element>
-	<xs:complexType 
-		name="AdditionalModelPropertyType"
-		abstract="true">
+	<xs:element name="AdditionalModelProperty" type="simBase:AdditionalModelPropertyType" substitutionGroup="gml:_GML"/>
+	<xs:complexType name="AdditionalModelPropertyType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for extension
@@ -190,62 +127,43 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="gml:AbstractGMLType">
-			</xs:extension>
+			<xs:extension base="gml:AbstractGMLType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
 	<!-- =====================================================================
 				staticModel property element 
 		===================================================================-->
-	<xs:element 
-		name="staticModel"
-		type="simBase:StaticModelPropertyType">
+	<xs:element name="staticModel" type="simBase:StaticModelPropertyType">
 		<xs:annotation>
-			<xs:documentation 
-				xml:lang="en">
+			<xs:documentation xml:lang="en">
 				Use to associate a static model to a simmulation model.
 				Concrete models should provide a substitute for this property
 				element. E.g. the 1d2d model should provide a staticModel1D2D
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="StaticModelPropertyType">
+	<xs:complexType name="StaticModelPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete staticModel property type.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="simBase:StaticModel" 
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="simBase:StaticModel" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>	
-	
+	</xs:complexType>
 	<!-- =====================================================================
 			StaticModel element
 	================================================================== -->
-	<xs:element 
-		name="StaticModel"
-		type="simBase:AbstractStaticModelType"
-		abstract="true"
-		substitutionGroup="gml:_Feature"
-		>
+	<xs:element name="StaticModel" type="simBase:AbstractStaticModelType" abstract="true" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
 				Substititution group head for static model 
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="AbstractStaticModelType"
-		abstract="true">
+	<xs:complexType name="AbstractStaticModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for static models.
@@ -256,14 +174,9 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractModelType">
-			</xs:extension>
+			<xs:extension base="simBase:AbstractModelType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	
-	
 	<!--*********************************************************************** 
 		Operational Model modelling 
 		To create a concrete operational model
@@ -274,26 +187,19 @@
 			==Provide an element of that type, with ist substitution group 
 				set tp operationalModel
 		********************************************************************-->
-	
 	<!-- =====================================================================
 		operationalModel Property Type
-		================================================================== -->	
-	<xs:element 
-		name="operationalModel"
-		type="simBase:OperationalModelPropertyType">
+		================================================================== -->
+	<xs:element name="operationalModel" type="simBase:OperationalModelPropertyType">
 		<xs:annotation>
-			<xs:documentation 
-				xml:lang="en">
+			<xs:documentation xml:lang="en">
 				Use to associate an operational model to a simmulation model.
 				Concrete models should provide a substitute for this property
 				element. E.g. the 1d2d model should provide an operationalModel1D2D
 			</xs:documentation>
-		</xs:annotation>		
+		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="OperationalModelPropertyType"
-		>
+	<xs:complexType name="OperationalModelPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete operational model property type.
@@ -304,26 +210,17 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-	
 	<!-- =================================================================
 	OperationalModel
-	================================================================== -->	
-	<xs:element 
-		name="_OperationalModel"
-		type="simBase:AbstractOperationalModelType"
-		substitutionGroup="simBase:_Model"
-		abstract="true"
-		>
+	================================================================== -->
+	<xs:element name="_OperationalModel" type="simBase:AbstractOperationalModelType" abstract="true" substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for all concrete OperationalModel element
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="AbstractOperationalModelType"
-		abstract="true">
+	<xs:complexType name="AbstractOperationalModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for operational models.
@@ -332,63 +229,43 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractModelType">
-			</xs:extension>
+			<xs:extension base="simBase:AbstractModelType"/>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!--=====================================================================
 		Control Model property type  
 	=======================================================================-->
-	<xs:element 
-		name="controlModel"
-		type="simBase:ControlModelPropertyType"
-		abstract="true">
+	<xs:element name="controlModel" type="simBase:ControlModelPropertyType" abstract="true">
 		<xs:annotation>
-			<xs:documentation 
-				xml:lang="en">
+			<xs:documentation xml:lang="en">
 				Use to associate a conrol model to a simulation model.
 				Concrete models should provide a substitute for this property
 				element. E.g. the 1d2d model should provide a controlModel1D2D
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="ControlModelPropertyType"
-		abstract="true">
+	<xs:complexType name="ControlModelPropertyType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete control model property type.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="simBase:ControlModel"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="simBase:ControlModel" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>	
-	
+	</xs:complexType>
 	<!-- ======================================================================
 		Control Model 
 	========================================================================-->
-	<xs:element 
-		name="ControlModel"
-		type="simBase:AbstractControlModelType"
-		substitutionGroup="simBase:_Model"
-		abstract="true">
+	<xs:element name="ControlModel" type="simBase:AbstractControlModelType" abstract="true" substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head  for all concrete model types
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="AbstractControlModelType"
-		abstract="true">
+	<xs:complexType name="AbstractControlModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for control models.
@@ -398,65 +275,43 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractModelType">
-			</xs:extension>
+			<xs:extension base="simBase:AbstractModelType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	
 	<!-- =====================================================================
 		resultModel property element 
 		===================================================================-->
-	<xs:element 
-		name="resultModel"
-		type="simBase:ResultModelPropertyType"
-		abstract="true">
+	<xs:element name="resultModel" type="simBase:ResultModelPropertyType" abstract="true">
 		<xs:annotation>
-			<xs:documentation 
-				xml:lang="en">
+			<xs:documentation xml:lang="en">
 				Use to associate a result model to a simmulation model.
 				Concrete models should provide a substitute for this property
 				element. E.g. the 1d2d model should provide a resultModel1D2D
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="ResultModelPropertyType"
-		abstract="true">
+	<xs:complexType name="ResultModelPropertyType" abstract="true">
 		<xs:annotation>
-			<xs:documentation 
-				xml:lang="en">
+			<xs:documentation xml:lang="en">
 				The root type of all concrete result model property type.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="simBase:ResultModel"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="simBase:ResultModel" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>	
-	
+	</xs:complexType>
 	<!-- =================================================================
 		ResultModel
 	================================================================== -->
-	<xs:element 
-		name="ResultModel"
-		type="simBase:AbstractResultModelType"
-		substitutionGroup="simBase:_Model"
-		>
+	<xs:element name="ResultModel" type="simBase:AbstractResultModelType" substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for relt model
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	<xs:complexType 
-		name="AbstractResultModelType"
-		abstract="true">
+	<xs:complexType name="AbstractResultModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for result models.
@@ -467,28 +322,22 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractModelType"><!-- "gml:AbstractFeatureType" -->
-			</xs:extension>
+			<xs:extension base="simBase:AbstractModelType"/>
+			<!-- "gml:AbstractFeatureType" -->
 		</xs:complexContent>
 	</xs:complexType>
-	
 	<!-- **********************************************************************
 		Evaluation Model property 
 		********************************************************************-->
-	<xs:element 
-		name="evaluationModel"
-		type="simBase:EvaluationModelPropertyType">
+	<xs:element name="evaluationModel" type="simBase:EvaluationModelPropertyType">
 		<xs:annotation>
-			<xs:documentation 
-				xml:lang="en">
+			<xs:documentation xml:lang="en">
 				Use to associate an evaluation modell to a simulation model.
 				Concrete models should provide a substitute for this property
 				element. E.g. the 1d2d model should provide an evaluationModel1D2D
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
 	<xs:complexType name="EvaluationModelPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
@@ -499,20 +348,12 @@
 			<xs:element ref="simBase:evaluationModel"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>	
-	
+	</xs:complexType>
 	<!-- =================================================================
 		Evaluation Model
 	================================================================== -->
-	<xs:element 
-		name="EvaluationModel"
-		type="simBase:AbstractEvaluationModelType"
-		substitutionGroup="simBase:_Model"
-		/>
-	
-	<xs:complexType 
-		name="AbstractEvaluationModelType"
-		abstract="true">
+	<xs:element name="EvaluationModel" type="simBase:AbstractEvaluationModelType" substitutionGroup="simBase:_Model"/>
+	<xs:complexType name="AbstractEvaluationModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for result models.
@@ -523,18 +364,13 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractModelType">
-			</xs:extension>
+			<xs:extension base="simBase:AbstractModelType"/>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!-- ====================================================================
 		overridingModel property element
 	====================================================================== -->
-	<xs:element 
-		name="overridingModel"
-		type="simBase:OverridingModelPropertyType">
+	<xs:element name="overridingModel" type="simBase:OverridingModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
 				Use to override the behavior of a model
@@ -552,24 +388,17 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-	
 	<!-- =================================================================
 		OverridingModel 
 	================================================================== -->
-	<xs:element 
-		name="OverridingModel"
-		abstract="true"
-		type="simBase:AbstractOverridingModelType"
-		substitutionGroup="simBase:_Model">
+	<xs:element name="OverridingModel" type="simBase:AbstractOverridingModelType" abstract="true" substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for overriding models
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType 
-		name="AbstractOverridingModelType"
-		abstract="true">
+	<xs:complexType name="AbstractOverridingModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
 				The base type for all overriding model element.
@@ -579,15 +408,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractModelType"/>
+			<xs:extension base="simBase:AbstractModelType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	
 </xs:schema>
-
-
-
-
-

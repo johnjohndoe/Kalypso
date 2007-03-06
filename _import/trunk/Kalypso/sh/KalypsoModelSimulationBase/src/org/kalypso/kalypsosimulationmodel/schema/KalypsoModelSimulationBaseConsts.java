@@ -87,4 +87,21 @@ public class KalypsoModelSimulationBaseConsts
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
               "GridCoverageElevationModelWrapper");
+
+    public static final QName SIM_BASE_F_SIMPLE_OPERATIONAL_MODEL =
+        new QName(
+                UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+                "SimpleOperationalModel");
+    
+    public static final QName SIM_BASE_P_OPERATIONAL_CONCEPT =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "operationalConcept");
+  
+    public static final QName SIM_BASE_P_POINT_COVERAGE =
+      new QName(
+              UrlCatalogModelSimulationBase.GML_IMITATIONS_NS_PREFIX,
+              "pointCoverage");
+  
+
 }

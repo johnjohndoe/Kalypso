@@ -116,6 +116,9 @@ public class TestWorkspaces
 	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
 							"data/collection_of_roughness_cls_correction.xml";
 	
+    public static final URL URL_SIMPLE_OPERATIONAL_MODEL;
+    public static final String REL_RES_SIMPLE_OPERATIONAL_MODEL="data/simulation_model_operational.xml";
+    
 	public static final QName GML_PROP_FEATURE_MEMBER= 
 						new QName(NS.GML3,"featureMember");
 	
@@ -221,6 +224,10 @@ public class TestWorkspaces
                 REL_RES_TEM_EMPTY_TER_MODEL,
                 TestWorkspaces.class.getResource(
                         REL_RES_TEM_EMPTY_TER_MODEL));
+            urlMap.put(
+                REL_RES_SIMPLE_OPERATIONAL_MODEL,
+                TestWorkspaces.class.getResource(
+                    REL_RES_SIMPLE_OPERATIONAL_MODEL));
 		}
 		catch(Throwable th)
 		{
@@ -268,7 +275,8 @@ public class TestWorkspaces
               urlMap.get(REL_RES_TEM_SYSTEM);
             URL_TEM_EMPTY_TER_MODEL=
               urlMap.get(REL_RES_TEM_EMPTY_TER_MODEL);
-
+            URL_SIMPLE_OPERATIONAL_MODEL=
+              urlMap.get(REL_RES_SIMPLE_OPERATIONAL_MODEL);
         }
 	}
 	

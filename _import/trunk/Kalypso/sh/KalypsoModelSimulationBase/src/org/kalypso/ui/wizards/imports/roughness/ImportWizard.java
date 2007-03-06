@@ -127,11 +127,12 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   @Override
   public boolean performFinish( )
   {
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
+    IStatus status = null;
     try
     {
       m_pageMain.saveDataToModel();
       m_pageSecond.saveDataToModel();
+      status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
       m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
       ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
       m_data.getRoughnessPolygonCollection().clear();

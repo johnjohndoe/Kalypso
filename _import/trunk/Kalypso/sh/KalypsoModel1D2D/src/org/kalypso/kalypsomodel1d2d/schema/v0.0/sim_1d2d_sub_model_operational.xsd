@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema for the operational model
+	@author Patrice Congo
+	@author Antanaskovic Dejan
+-->
+
+
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:simBase = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import 
+		namespace="http://www.opengis.net/gml"
+		schemaLocation = "platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+     <xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_operational.xsd"
+		/>	
+		
+	
+	<!-- ================================================
+	
+	================================================== -->
+	<xs:element 
+			name="ZMLBoundaryWrapper"
+			type="wb1d2d:ZMLBoundaryWrapperType"
+			substitutionGroup="simBase:TimeSeriesBoundaryCondition"/>
+	<xs:complexType 
+		name="ZMLBoundaryWrapperType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>  
+			<xs:extension 
+				base="simBase:TimeSeriesBoundaryConditionType">
+				<xs:sequence>
+					<xs:element 
+						name="zmlSource"
+						type="xs:anyURI"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+		
+	
+</xs:schema>
+
+
+
+
+
+
+
+
+

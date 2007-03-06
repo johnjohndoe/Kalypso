@@ -78,6 +78,7 @@ public class Transformer implements ICoreRunnableWithProgress
     String relPath = workspace.getContext().getPath().toString();
     relPath = relPath.substring( 9 ); // trimming "/resource"
     String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
+    System.out.println(absPath);
     FileWriter writer = new FileWriter( absPath );
     GmlSerializer.serializeWorkspace( writer, workspace );
     writer.close();
