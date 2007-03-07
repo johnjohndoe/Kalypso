@@ -147,7 +147,7 @@ public class SimulationModelDBView extends ViewPart
     {
       final IPath projectPath = Path.fromPortableString( m_projectFromMemento );
       final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
-      if( resource.getType() == IResource.PROJECT )
+      if( resource != null && resource.getType() == IResource.PROJECT )
       {
         activeWorkContext.setActiveProject( (IProject) resource );
       }
