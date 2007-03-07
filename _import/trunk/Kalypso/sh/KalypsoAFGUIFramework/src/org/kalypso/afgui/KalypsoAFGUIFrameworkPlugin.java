@@ -1,9 +1,12 @@
 package org.kalypso.afgui;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.scenarios.Scenario;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -45,6 +48,14 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       e.printStackTrace();
     }
+  }
+  
+  public static IPath constructPath( final Scenario scenario )
+  {
+    if( scenario.getParentScenario() != null )
+      return constructPath( scenario.getParentScenario() ).append( scenario.getName() );
+    else
+      return new Path( scenario.getName() );
   }
 
   // /**

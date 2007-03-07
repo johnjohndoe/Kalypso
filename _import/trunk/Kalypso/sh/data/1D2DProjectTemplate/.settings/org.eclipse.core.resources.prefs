@@ -1,5 +1,5 @@
-#Fri Mar 02 12:14:06 CET 2007
+#Wed Mar 07 15:24:29 CET 2007
 eclipse.preferences.version=1
-encoding//szenario/models/discretisation.gml=Cp1252
-encoding//szenario/models/simulation.gml=Cp1252
-encoding//szenario/models/terrain.gml=Cp1252
+encoding//Basis/models/discretisation.gml=Cp1252
+encoding//Basis/models/simulation.gml=Cp1252
+encoding//Basis/models/terrain.gml=Cp1252

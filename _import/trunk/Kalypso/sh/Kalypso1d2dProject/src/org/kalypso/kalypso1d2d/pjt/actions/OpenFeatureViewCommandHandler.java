@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
@@ -52,17 +51,19 @@ public class OpenFeatureViewCommandHandler extends WorkflowCommandHandler implem
     }
 
     final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IFolder szenarioPath = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    final IFolder szenarioFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
-    final IFile file = szenarioPath.getFile( new Path( m_resource ) );
+    final IFolder folder = SzenarioSourceProvider.findModelContext( szenarioFolder, m_resource );
+    IFile file = null;
+    if( folder != null )
+      file = folder.getFile( m_resource );
 
-
-    if( file.exists() && activeWorkbenchWindow != null )
+    if( file != null && file.exists() && activeWorkbenchWindow != null )
     {
       logger.info( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.2" ) + file ); //$NON-NLS-1$
       final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
       final FeatureTemplateView featureView = (FeatureTemplateView) workbenchPage.showView( FeatureTemplateView.ID );
-      featureView.loadFromTemplate( file );      
+      featureView.loadFromTemplate( file );
     }
     return Status.OK_STATUS;
   }

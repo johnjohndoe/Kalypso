@@ -13,9 +13,12 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.scenarios.ProjectScenarios;
@@ -83,6 +86,8 @@ public class WorkflowDB implements IWorkflowDB
       parentScenario.setDerivedScenarios( derivedScenarios );
     }
     derivedScenarios.getScenarios().add( newScenario );
+    final IFolder newFolder = m_file.getProject().getFolder( KalypsoAFGUIFrameworkPlugin.constructPath( newScenario ) );
+    newFolder.create( false, true, null );
     persist();
     fireWorkflowDBChange();
     return newScenario;

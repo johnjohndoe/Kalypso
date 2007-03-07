@@ -113,9 +113,9 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     {
       return;
     }
-    logger.info( "New Project to Set:" + activeProject );    
+    logger.info( "New Project to Set:" + activeProject );
     try
-    {      
+    {
       if( Kalypso1D2DProjectNature.isOfThisNature( activeProject ) )
       {
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
@@ -238,7 +238,15 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
 
   public void setCurrentSzenario( final Scenario scenario )
   {
-    if( m_activeScenario == null ? scenario != null : m_activeScenario.getURI().equals( scenario == null ? null : scenario.getURI() ) )
+    if( m_activeScenario == null && scenario == null )
+    {
+      return;
+    }
+    else if( scenario != null && m_activeScenario != null && m_activeScenario.getURI().equals( scenario.getURI() ) )
+    {
+      return;
+    }
+    else
     {
       final IProject activeProject = getActiveProject();
       m_activeScenario = scenario;
@@ -398,5 +406,4 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
       m_contextSwitcher.addContextService( contextService );
     }
   }
-
 }

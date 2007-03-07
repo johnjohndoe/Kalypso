@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -16,11 +15,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
-import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 import de.renew.workflow.WorkflowCommandHandler;
@@ -60,17 +57,15 @@ public class ImportBaseMapHandler extends WorkflowCommandHandler
 
     wizard.init( workbench, selection );
     wizard.initModelProperties( data );
-    final IFile file = currentFolder.getFile( "maps/base.gmt" );
-    final IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    final MapView mapView = (MapView) workbenchPage.showView( MapView.ID );
-    if( mapView != null )
-    {
-      final IFile currentFile = mapView.getFile();
-      if( !file.equals( currentFile ) )
-      {
-        mapView.startLoadJob( file );        
-      }
-    }
+
+    final String mapFileName = "maps/base.gmt";
+    final OpenMapViewCommandHandler openMapViewCommandHandler = new OpenMapViewCommandHandler();
+    final HashMap<String, String> paramMap = new HashMap<String, String>();
+    paramMap.put( OpenMapViewCommandHandler.PARAM_RESOURCE, mapFileName );
+    openMapViewCommandHandler.setInitializationData( null, null, paramMap );
+    openMapViewCommandHandler.executeInternal( event );
+    openMapViewCommandHandler.dispose();
+    
     if( wizardDialog.open() == Window.OK )
     {
       return Status.OK_STATUS;

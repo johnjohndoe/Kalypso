@@ -69,20 +69,19 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     data.put( "RoughnessDatabaseLocation", "/.metadata/roughness.gml" );
     data.put( "ProjectBaseFolder", currentFolder.getFullPath().segment( 0 ) );
     // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
-
     wizard.init( workbench, selection );
     wizard.initModelProperties( data );
+    
+    final String mapFileName = "maps/roughness.gmt";
+    final OpenMapViewCommandHandler openMapViewCommandHandler = new OpenMapViewCommandHandler();
+    final HashMap<String, String> paramMap = new HashMap<String, String>();
+    paramMap.put( OpenMapViewCommandHandler.PARAM_RESOURCE, mapFileName );
+    openMapViewCommandHandler.setInitializationData( null, null, paramMap );
+    openMapViewCommandHandler.executeInternal( event );
+    openMapViewCommandHandler.dispose();
+    
     if( wizardDialog.open() == Window.OK )
     {
-      // currentFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
-      
-//      final IFile file = szenarioPath.getFile( "maps/roughness.gmt" );
-//      if( file.exists() )
-//      {
-//        final IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-//        MapView view = (MapView) workbenchPage.showView( MapView.ID );
-//        view.startLoadJob( file );
-//      }
       return Status.OK_STATUS;
     }
     return Status.CANCEL_STATUS;

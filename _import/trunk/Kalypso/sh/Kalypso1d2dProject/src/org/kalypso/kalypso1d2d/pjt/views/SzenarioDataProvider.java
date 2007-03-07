@@ -14,8 +14,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -45,15 +47,17 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
   private static Map<Class, String> LOCATION_MAP = new HashMap<Class, String>();
+  
+  private static final String MODELS_FOLDER = "models";
 
   static
   {
     // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
     // simulation model gets its own wrapper.
-    LOCATION_MAP.put( IFeatureWrapper2.class, "simulation.gml" );
+    LOCATION_MAP.put( IFeatureWrapper2.class, MODELS_FOLDER + "/simulation.gml" );
     // LOCATION_MAP.put( IDiscretisationModel.class, "discretisation.gml" );
-    LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, "discretisation.gml" );
-    LOCATION_MAP.put( ITerrainModel.class, "terrain.gml" );
+    LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
+    LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
     // TODO: add other model types here
   }
 
@@ -64,12 +68,10 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
    */
   private Map<Class, IPoolableObjectType> m_keyMap = new HashMap<Class, IPoolableObjectType>();
 
-  private static final String MODELS_FOLDER = "models";
-
   public synchronized void setCurrent( final IProject project, @SuppressWarnings("unused")
   final Scenario scenario )
   {
-    final IFolder szenarioFolder = project == null ? null : project.getFolder( "szenario" );
+    final IFolder szenarioFolder = project == null ? null : project.getFolder( KalypsoAFGUIFrameworkPlugin.constructPath( scenario ) );
 
     try
     {
@@ -102,13 +104,15 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
 
     if( szenarioFolder != null )
     {
+      URL context;
       try
       {
-        // TODO: change context later to folder of selected szenario/simulation
-        final IFolder folder = szenarioFolder.getFolder( MODELS_FOLDER );
-        final URL context = ResourceUtilities.createURL( folder );
-
-        newKey = new PoolableObjectType( "gml", gmlLocation, context );
+        final IFolder folder = SzenarioSourceProvider.findModelContext( szenarioFolder, gmlLocation );
+        if( folder != null )
+        {
+          context = ResourceUtilities.createURL( folder );
+          newKey = new PoolableObjectType( "gml", gmlLocation, context );
+        }
       }
       catch( final MalformedURLException e )
       {

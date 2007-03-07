@@ -2,7 +2,7 @@
 <mapv:gismapview xmlns:ns9="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <mapv:extent top="6023743.650540146" srs="EPSG:31467" right="3581731.2800000003" left="3516810.62" bottom="5947070.929459854"/>
     <mapv:layers>
-        <mapv:layer visible="true" name="Roughness" id="ID_2" featurePath="#fid#RoughnessLayerPolygonCollection11709431308431/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="project:/szenario/models/terrain.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Roughness" id="ID_2" featurePath="#fid#RoughnessLayerPolygonCollection11709431308431/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
             <ns9:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
         </mapv:layer>
     </mapv:layers>

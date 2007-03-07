@@ -160,7 +160,7 @@ public class SimulationModelDBView extends ViewPart
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
         if( !selection.isEmpty() )
         {
-          final Scenario scenario = (Scenario) selection.getFirstElement();
+          final Scenario scenario = (Scenario) selection.getPaths()[0].getLastSegment();
           activeWorkContext.setCurrentSzenario( scenario );
         }
       }
