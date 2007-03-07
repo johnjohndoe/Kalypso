@@ -38,63 +38,73 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
+package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import java.awt.Color;
+import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
 
 /**
- * @author congo
+ * @author madanago
  *
  */
-public class SimpleElevationColorModel implements IElevationColorModel
+public class PainterElevationColorModel implements IElevationColorModel2
 {
+
   public static final double DEEPEST_POINT_ON_EARTH=-10924;
   public static final double HIGHEST_POINT_ON_EARTH=8850;
   
   private double minElevation;
   private double maxElevation;
-  private int minHue;
-  private int maxHue;
+  private float lighterColorParameter;
   private Color noElevationColor;
   private Color baseColor;
   private float[] hsb;
+  private int minHue;
+  private int maxHue;
+  private Color firstColor;
+  private Color secondColor;
   
-  public SimpleElevationColorModel(
-            double minElevation,
-            double maxElevation,
-            Color baseColor,
-            int minHue,
-            int maxHue,
-            Color noElevationColor)
-  {
-    this.minElevation=minElevation;
-    this.maxElevation = maxElevation;
-    this.minHue=minHue;
-    this.maxHue=maxHue;
-    this.noElevationColor=noElevationColor;
-    this.baseColor=baseColor;
-    RGB rgb= new RGB(
-        baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue());
-    this.hsb = rgb.getHSB();
-  }
   
-  public SimpleElevationColorModel( )
+//  public PainterElevationColorModel(
+//            double minElevation,
+//            double maxElevation,
+//            Color baseColor,
+//            float lighterColorParameter,
+//            Color noElevationColor,
+//            int minHue,
+//            int maxHue)
+//  {
+//    this.minElevation=minElevation;
+//    this.maxElevation = maxElevation;
+//    this.lighterColorParameter = lighterColorParameter;
+//    this.noElevationColor=noElevationColor;
+//    this.baseColor=baseColor;
+//    RGB rgb= new RGB(
+//        baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue());
+//    this.hsb = rgb.getHSB();
+//    this.minHue = minHue;
+//    this.maxHue = maxHue;
+//  }
+  
+  public PainterElevationColorModel( )
   {
-    this(
-        DEEPEST_POINT_ON_EARTH,
-        HIGHEST_POINT_ON_EARTH,
-        Color.BLUE,
-        40,
-        100,
-        Color.RED);
+//    this(
+//        DEEPEST_POINT_ON_EARTH,
+//        HIGHEST_POINT_ON_EARTH,
+//        Color.BLUE,
+//        40,
+//        100,
+//        Color.RED);
   }
   
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorModel#getColor(double)
    */
+  
+  
   public Color getColor( double elevation )
   {
     return interpolateColor( elevation );
@@ -110,8 +120,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     {
       double cHue = minHue+elevation*(maxHue-minHue)/(maxElevation-minElevation);
       
-      return Color.getHSBColor( 
-                  (float)cHue, hsb[1], hsb[2] );
+      return new Color(new Display(),new RGB((float) cHue, hsb[1], hsb[2] ));
     }
     else
     {
@@ -131,7 +140,48 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.minElevation=minElevation;
     this.maxElevation=maxElevation;
   }
+
+  public Color getFirstColor( )
+  {
+    return firstColor;
+  }
+
+  public void setFirstColor( Color firstColor )
+  {
+    this.firstColor = firstColor;
+  }
+
+  public Color getSecondColor( )
+  {
+    return secondColor;
+  }
+
+  public void setSecondColor( Color secondColor )
+  {
+    this.secondColor = secondColor;
+  }
+
+  public Color getBaseColor( )
+  {
+    return baseColor;
+  }
+
+  public void setBaseColor( org.eclipse.swt.graphics.Color colorChoice )
+  {
+    this.baseColor = colorChoice;
+  }
+
+  public Color getNoElevationColor( )
+  {
+    return noElevationColor;
+  }
+
+  public void setNoElevationColor( Color noElevationColor )
+  {
+    this.noElevationColor = noElevationColor;
+  }
   
   
   
+
 }

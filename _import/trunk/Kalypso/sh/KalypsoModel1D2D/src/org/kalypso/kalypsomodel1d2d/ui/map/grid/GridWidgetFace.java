@@ -544,6 +544,7 @@ class GridWidgetFace
      lineColorFieldEditor[3]=
        new ColorFieldEditor(LINE_COLOR_3,"Farbe Linie3",clientComposite);
      
+     
      for(ColorFieldEditor colorFieldEditor:lineColorFieldEditor)
      {
        colorFieldEditor.setPreferenceStore( preferenceStore );

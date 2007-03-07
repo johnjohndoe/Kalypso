@@ -38,23 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
+package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import java.awt.Color;
+import org.eclipse.swt.graphics.Color;
+
+
 
 /**
- * Interface for color model used in the elevation visualization
- * 
- * @author Madanagopal
- * @author Patrice Congo
+ * @author madanago
+ *
  */
-public interface ElevationColorModel
+public interface IElevationColorModel2
 {
-
-  /**
-   * To get the color for the given elevation
-   * @return an {@link Color} for the given elevation
-   */
   public Color getColor(double elevation);
-  
 }
