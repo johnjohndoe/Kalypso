@@ -193,7 +193,7 @@ public class JTSCoordsAreaElevAdjust
     double maxZ = 0;
     
     maxZ = calcMaxZ (line_coords);
-    //lower coordinates by minZ to avoid negativ elevations during the area calculation
+   
     for( int i = 0; i < line_coords.length - 1; i++ )
     {   
       final double z1 = (maxZ - line_coords[i].z);
