@@ -41,8 +41,6 @@
 	<output id="bfLengthSection" optional="true" description="*.qb1" />
 	<!-- 
 		results for BANKFUL NONUNIFORM mode -->
-	<output id="wqKalMil" optional="true" description="W/Q-Tabelle für Kalinin-Miljukow Berechnung (*.km)" />
-	<output id="wqProProfil" optional="true" description="W/Q-Tabelle pro Profil (*.pro)" />
 	<output id="resultListsNonUni" optional="true" description="Ergebnislisten für jeden Abfluss (*.tab)" />
 	<output id="qIntervallResultGml" optional="true" description="Detailergebnisse der Bordvollberechnung; Ergebnisse über W"/>
 	<output id="qIntervallResultGmv" optional="true" description="Detailergebnisse der Bordvollberechnung; Ergebnisse über W"/>

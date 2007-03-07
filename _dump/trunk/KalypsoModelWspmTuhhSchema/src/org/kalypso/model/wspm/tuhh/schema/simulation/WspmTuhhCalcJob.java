@@ -61,7 +61,6 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
@@ -472,11 +471,6 @@ public class WspmTuhhCalcJob implements ISimulation
         {
           // bankfull nonuniform
 
-          final File polynomeTmpDir = new File( tmpDir, "polynome" );
-
-          final TuhhReach reach = calculation.getReach();
-          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, reach, log, lTimeout, resultEater );
-
           // TODO :check everything below if it still makes sense?
 
           // *.qb2 = Q als Treppenfunktion, we don't fetch it
@@ -488,35 +482,6 @@ public class WspmTuhhCalcJob implements ISimulation
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
             log.log( false, " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
-          }
-
-          // *.km (W/Q-Tabelle für Kalinin-Miljukow)
-          final FileFilter kmFilter = FileFilterUtils.suffixFileFilter( ".km" );
-          final File[] kmFiles = dathDir.listFiles( kmFilter );
-          if( kmFiles.length > 0 )
-          {
-            // assumption: max. one KM
-            resultEater.addResult( "wqKalMil", kmFiles[0] );
-            log.log( false, " - W/Q-Tabelle zur Bestimmung der Kalinin-Miljukow-Parameter erzeugt." );
-          }
-
-          // *.pro (W/Q-Tabellen für jedes Profil -> Verzeichnis)
-          final FileFilter wqProProfilFilter = FileFilterUtils.suffixFileFilter( ".pro" );
-          final File[] proFiles = dathDir.listFiles( wqProProfilFilter );
-          final File wqProProfilDir = new File( dathDir, "WQTabs" );
-          wqProProfilDir.mkdirs();
-          for( final File file : proFiles )
-          {
-            FileUtils.copyFileToDirectory( file, wqProProfilDir );
-
-            if( log.checkCanceled() )
-              return;
-          }
-
-          if( wqProProfilDir.exists() )
-          {
-            resultEater.addResult( "wqProProfil", wqProProfilDir );
-            log.log( false, " - W/Q-Tabelle pro Profil erzeugt." );
           }
 
           // *.tb (Ergebnislisten für jeden Abfluss -> Verzeichnis)
@@ -531,6 +496,13 @@ public class WspmTuhhCalcJob implements ISimulation
             resultEater.addResult( "resultListsNonUni", resNonUniDir );
             log.log( false, " - Ergebnislisten pro Abfluss erzeugt." );
           }
+          
+
+          /* Calculate and fetch Polynomes */
+          final File polynomeTmpDir = new File( tmpDir, "polynome" );
+          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, log, lTimeout, resultEater, calculation );
+
+          
           break;
         }
       }

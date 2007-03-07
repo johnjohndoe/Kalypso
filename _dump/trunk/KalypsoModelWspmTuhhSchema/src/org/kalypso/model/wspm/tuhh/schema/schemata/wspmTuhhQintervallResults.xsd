@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:math="org.kalypso.gml.common.math" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
-	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:math="org.kalypso.gml.common.math"
+	xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -10,7 +10,7 @@
 			This is the gml-application schema wich describes the types for results of a Q-Intervall calculation ('ungleichförmige Bordvollberechnung') of the TUHH-WSPM modell (Kalypso1D-Rechenkern)
 		</documentation>
 	</annotation>
-	<import namespace="org.kalypso.gml.common.math"/>
+	<import namespace="org.kalypso.gml.common.math" />
 	<import namespace="org.kalypso.model.wspm" />
 	<import namespace="org.kalypso.model.wspmcommon" />
 	<import namespace="org.kalypso.model.wspmprofile" />
@@ -57,18 +57,26 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Ergebnis</name>
-				<label>${property:org.kalypso.model.wspm.tuhh#station;-}</label>
-				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-}</tooltip>
+				<label>
+					<![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+				</label>
+				<tooltip>
+					<![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+				</tooltip>
 				<description>
-					<![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+					<![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]>
 				</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Result</name>
-				<label>${property:org.kalypso.model.wspm.tuhh#station;-}</label>
-				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-}</tooltip>
+				<label>
+					<![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+				</label>
+				<tooltip>
+					<![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+				</tooltip>
 				<description>
-					<![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+					<![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]>
 				</description>
 			</documentation>
 		</annotation>
@@ -145,7 +153,7 @@
 			<element ref="tuhh:WPointsObservation" />
 		</sequence>
 	</complexType>
-	
-	<element name="WPointsObservation" type="om:ObservationType" substitutionGroup="om:Observation"/>
+
+	<element name="WPointsObservation" type="om:ObservationType" substitutionGroup="om:Observation" />
 
 </schema>

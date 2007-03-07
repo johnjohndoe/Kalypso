@@ -42,7 +42,9 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -50,11 +52,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -71,6 +76,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -162,12 +168,22 @@ public class PolynomeHelper
     return true;
   }
 
-  public static void processPolynomes( final File tmpDir, final File dathDir, final TuhhReach reach, final LogHelper log, final long timeout, final ISimulationResultEater resultEater ) throws SimulationException
+  public static void processPolynomes( final File tmpDir, final File dathDir, final LogHelper log, final long timeout, final ISimulationResultEater resultEater, final TuhhCalculation calculation ) throws SimulationException
   {
+    final ISimulationMonitor monitor = log.getMonitor();
+
+    log.log( true, "Polynomfuktionen werden ermittelt");
+
+    log.log( true, "- Übertrage Ergebnisse der Q-Intervallberechnung");
     if( !preparePolynomes( tmpDir, dathDir, log ) )
       return;
 
-    final ISimulationMonitor monitor = log.getMonitor();
+    if( monitor.isCanceled() )
+      return;
+
+    log.log( true, "- Starte Polynome1d.exe");
+    prepareSteuerpoly( tmpDir, calculation );
+
     if( monitor.isCanceled() )
       return;
 
@@ -214,11 +230,12 @@ public class PolynomeHelper
       return;
 
     /* Read results */
+    log.log( true, "- Lese Punktwolken und Polynome");
     final File resultDir = new File( tmpDir, "02Ausgang" );
     final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" );
     try
     {
-      readResults( resultDir, targetGmlFile, reach, log, resultEater );
+      readResults( resultDir, targetGmlFile, calculation, log, resultEater );
       final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" );
       resultEater.addResult( "qIntervallResultGmv", gmvResultFile );
     }
@@ -230,12 +247,52 @@ public class PolynomeHelper
     }
   }
 
-  private static void readResults( final File resultDir, final File targetGmlFile, final TuhhReach reach, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
+  private static void prepareSteuerpoly( final File tmpDir, final TuhhCalculation calculation ) throws SimulationException
+  {
+    final File steuerFile = new File( tmpDir, "steuerpoly.ini" );
+
+    PrintWriter pw = null;
+
+    try
+    {
+      final double startStation = calculation.getStartStation().doubleValue();
+      final double endStation = calculation.getStartStation().doubleValue();
+
+      // TODO: fetch other parameters from calculation
+      pw = new PrintWriter( new BufferedWriter( new OutputStreamWriter( new FileOutputStream( steuerFile ) ) ) );
+      pw.println( "Steuerdatei fuer die Polynomfunktionen je Profil" );
+      pw.println( "-------------------------------------------------" );
+      pw.println( "01 Beiwerte(Pfad) 01Eingang\\Beiwerte.AUS " );
+      pw.println( "02 Längsschnitt(Pfad) 01Eingang\\laengsschnitt.txt" );
+      pw.println( "03 PolyGrad(2,3,4) 4" );
+      pw.println( "04 DreiTeil(J/N) J" );
+      pw.println( "05 PolyReduce(J/N) J" );
+      pw.println( "06 ProfIntervall(J/N) N" );
+      pw.printf( Locale.PRC, "07 StartProf(0000.0000) %.4f", startStation );
+      pw.println();
+      pw.printf( Locale.PRC, "08 EndProf(0000.0000) %.4f", endStation );
+      pw.println();
+      pw.println( "09 AusgabeJeFunktion(J/N) J" );
+      pw.println( "10 AusgabeWspWerte(J/N) J" );
+      pw.println( "11 AusgabeKontrolle(J/N) J" );
+      pw.println( "12 AusgabeFile(Pfad) 02Ausgang\\" );
+    }
+    catch( final FileNotFoundException e )
+    {
+      throw new SimulationException( "Could not write 'steuerpoly.ini'", e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( pw );
+    }
+  }
+
+  private static void readResults( final File resultDir, final File targetGmlFile, final TuhhCalculation calculation, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
   {
     /* Read results */
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature resultCollectionFeature = workspace.getRootFeature();
-    final Map<BigDecimal, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, reach, log );
+    final Map<BigDecimal, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, calculation, log );
 
     if( log.checkCanceled() )
       return;
@@ -250,10 +307,8 @@ public class PolynomeHelper
     resultEater.addResult( "qIntervallResultGml", targetGmlFile );
   }
 
-  private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final TuhhReach reach, final LogHelper log )
+  private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final TuhhCalculation calculation, final LogHelper log )
   {
-    log.log( true, "Lese Punktwolken" );
-
     final GMLWorkspace workspace = resultCollectionFeature.getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResult );
@@ -276,7 +331,7 @@ public class PolynomeHelper
       return results;
     }
 
-    final SortedMap<BigDecimal, WspmProfile> profileIndex = indexProfiles( reach );
+    final SortedMap<BigDecimal, WspmProfile> profileIndex = indexProfiles( calculation );
 
     for( final File profFile : profFiles )
     {
@@ -301,7 +356,7 @@ public class PolynomeHelper
         resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember, obsFeature );
 
         final WspmProfile profile = profileForStation( profileIndex, station );
-        
+
         if( profile != null )
         {
           final String href = "project:/modell.gml#" + profile.getGmlID();
@@ -336,14 +391,15 @@ public class PolynomeHelper
     final SortedMap<BigDecimal, WspmProfile> subMap = profileIndex.subMap( pred, succ );
     if( !subMap.isEmpty() )
       return subMap.values().iterator().next();
-    
+
     return profileIndex.get( station );
   }
 
-  private static SortedMap<BigDecimal, WspmProfile> indexProfiles( final TuhhReach reach )
+  private static SortedMap<BigDecimal, WspmProfile> indexProfiles( final TuhhCalculation calculation )
   {
+    final TuhhReach reach = calculation.getReach();
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    final SortedMap<BigDecimal, WspmProfile> index = new TreeMap<BigDecimal, WspmProfile>(  );
+    final SortedMap<BigDecimal, WspmProfile> index = new TreeMap<BigDecimal, WspmProfile>();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
@@ -354,7 +410,7 @@ public class PolynomeHelper
   }
 
   private static TupleResult readProfFile( final File profFile, final IComponent[] pointsComponents, final LogHelper log ) throws IOException
-  { 
+  {
     final TupleResult tupleResult = new TupleResult( pointsComponents );
 
     LineNumberReader reader = null;
@@ -433,8 +489,6 @@ public class PolynomeHelper
 
   private static void readPolynomeFile( final File resultDir, final Map<BigDecimal, Feature> pointResults, final LogHelper log ) throws IOException
   {
-    log.log( true, "Lese Polynome" );
-
     final File polyFile = new File( resultDir, "Polynome.TXT" );
 
     LineNumberReader reader = null;
