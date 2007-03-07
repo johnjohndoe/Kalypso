@@ -42,12 +42,15 @@ package org.kalypso.kalypsomodel1d2d.geom;
 
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
+import org.kalypso.kalypsomodel1d2d.schema.binding.FEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -223,5 +226,36 @@ public class ModelGeometryBuilder
   {
     Assert.throwIAEOnNullParam( element1D, "element1D" );
     return computeEgdeGeometry( element1D.getEdge() );
+  }
+
+  public static GM_Object computeEdgeToEdgeJunction1D2DGeometry( IFEEdgeToEdgeJunction1D2D junction1D2D ) throws GM_Exception
+  {
+    IFE1D2DEdge edge1D = junction1D2D.get1DEdge();
+    IFE1D2DEdge edge2D = junction1D2D.get2DEdge();
+    if(edge1D==null || edge2D==null)
+    {
+      return null;
+    }
+    IFE1D2DNode<IFE1D2DEdge>  borderNode = 
+                  EdgeOps.find1DEdgeEndNode( edge1D );
+    if(borderNode==null)
+    {
+      throw new IllegalStateException(
+          "The edge 1d does not have a border node");
+    }
+    
+    IFE1D2DNode<IFE1D2DEdge> startNode = 
+                  EdgeOps.find1DEdgeEndNode( edge1D );
+    GM_Point startPoint = startNode.getPoint();
+    GM_Point targetPoint = EdgeOps.computeEdgeMiddle( edge2D);
+    
+    GM_Position positions[]= new GM_Position[2];
+    
+    
+    positions[0] = startPoint.getPosition();
+    positions[1] = targetPoint.getPosition();
+    
+    return GeometryFactory.createGM_Curve( positions, targetPoint.getCoordinateSystem() );
+    
   }
 }

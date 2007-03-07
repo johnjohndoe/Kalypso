@@ -187,6 +187,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IRiverChannel1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D"/>
       </factory>
    </extension>
      <!--extension

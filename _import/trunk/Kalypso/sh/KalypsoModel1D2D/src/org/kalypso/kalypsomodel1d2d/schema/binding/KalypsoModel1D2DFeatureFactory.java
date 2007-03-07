@@ -179,6 +179,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 {
                   return new FEJunction1D2D(feature);     
                 }
+                else if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE) )
+                {
+                  return new FEEdgeToEdgeJunction1D2D(feature);     
+                }
                 // TODO: what is the purpose of these (similar below) strange else's
                 // Why not register FE1D2D_2DElement? Please comment!
                 
@@ -195,7 +200,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         cMap.put(IElement1D.class, cTor);
         cMap.put(IFE1D2DContinuityLine.class, cTor);
         cMap.put(IFEJunction1D2D.class, cTor);
-
+        cMap.put(IFEEdgeToEdgeJunction1D2D.class,cTor);
+        
         //element1d
         cTor = new AdapterConstructor()
         {

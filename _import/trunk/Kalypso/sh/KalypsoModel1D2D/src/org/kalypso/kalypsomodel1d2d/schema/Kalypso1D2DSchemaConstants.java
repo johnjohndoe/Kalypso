@@ -65,12 +65,22 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_F_JUNCTION1D2D = 
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Junction1D2D" );
       
+      public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = 
+        new QName(  UrlCatalog1D2D.MODEL_1D2D_NS, 
+                    "EdgeToEdgeJunction1D2D" );
+      
       public static final QName WB1D2D_F_POLY_ELEMENT = 
             new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" );
 
       public final static QName WB1D2D_PROP_DIRECTEDEDGE = 
           new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedEdge" );
       
+      public final static QName WB1D2D_PROP_JUNCTION_1DEDGE = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge1D" );
+     
+      public final static QName WB1D2D_PROP_JUNCTION_2DEDGE = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge2D" );
+
       public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = 
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS,"wb1d2d:middleNode");
         

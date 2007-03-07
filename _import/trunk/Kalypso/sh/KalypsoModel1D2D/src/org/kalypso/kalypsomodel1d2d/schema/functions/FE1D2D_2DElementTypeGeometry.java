@@ -17,6 +17,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -61,6 +62,13 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
       {
         IElement1D element1D  = new Element1D(feature);
         return ModelGeometryBuilder.computeElement1DGeometry( element1D );
+      }
+      else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE ) )
+      {
+        IFEEdgeToEdgeJunction1D2D junction1D2D=
+          (IFEEdgeToEdgeJunction1D2D) feature.getAdapter( IFEEdgeToEdgeJunction1D2D.class );
+       
+        return ModelGeometryBuilder.computeEdgeToEdgeJunction1D2DGeometry( junction1D2D );
       }
       else
       {

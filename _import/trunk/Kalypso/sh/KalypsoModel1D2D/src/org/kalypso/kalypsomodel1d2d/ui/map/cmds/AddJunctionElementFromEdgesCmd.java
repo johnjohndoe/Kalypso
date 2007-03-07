@@ -43,12 +43,11 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -71,7 +70,7 @@ public class AddJunctionElementFromEdgesCmd implements IDiscrModel1d2dChangeComm
   private IFEDiscretisationModel1d2d model;
   
   
-  private IFEJunction1D2D addedJunction;
+  private IFEEdgeToEdgeJunction1D2D addedJunction;
   
   /**
    * @param model
@@ -121,34 +120,35 @@ public class AddJunctionElementFromEdgesCmd implements IDiscrModel1d2dChangeComm
     {
       try
       {
-        IFEMiddleNode targetClNodel = addTargetCLNode(edge2D);
-        
-        IFE1D2DNode<IFE1D2DEdge> node0 = 
-                          findJunctionStartNode(edge1D);
-        
-        IFE1D2DEdge curEdge = model.findEdge( node0, targetClNodel );
-        if(curEdge==null)
-        {
-            final int size1 = model.getEdges().size();
-            curEdge=FE1D2DEdge.createFromModel( model, node0, targetClNodel );
-            final int size2 = model.getEdges().size();
-            if(size2-size1!=1)
-            {
-              throw new IllegalStateException("Multi edge created");
-            }
-        }
-        else
-        {
-          //test whether the edge is in an element
-          if(ModelOps.isContainedInAnElement( curEdge ))
-          {
-            System.out.println("Edge must not be already in an element:"+curEdge);
-            return;
-          }
-        }
+//        IFEMiddleNode targetClNodel = addTargetCLNode(edge2D);
+//        
+//        IFE1D2DNode<IFE1D2DEdge> node0 = 
+//                          findJunctionStartNode(edge1D);
+//        
+//        IFE1D2DEdge curEdge = model.findEdge( node0, targetClNodel );
+//        if(curEdge==null)
+//        {
+//            final int size1 = model.getEdges().size();
+//            curEdge=FE1D2DEdge.createFromModel( 
+//                            model, node0, targetClNodel );
+//            final int size2 = model.getEdges().size();
+//            if(size2-size1!=1)
+//            {
+//              throw new IllegalStateException("Multi edge created");
+//            }
+//        }
+//        else
+//        {
+//          //test whether the edge is in an element
+//          if(ModelOps.isContainedInAnElement( curEdge ))
+//          {
+//            System.out.println("Edge must not be already in an element:"+curEdge);
+//            return;
+//          }
+//        }
         
         addedJunction = 
-          ModelOps.createJunction( model, curEdge );
+          ModelOps.createEdgeToEdgeJunction( model, edge1D, edge2D );
       }
       catch( Exception e )
       {

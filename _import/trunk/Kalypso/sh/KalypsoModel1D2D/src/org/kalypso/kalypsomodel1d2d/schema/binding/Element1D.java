@@ -101,10 +101,11 @@ public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D
       containers.remove( this );
     else
     {
+      String gmlID = getGmlID();
       // TODO: only add if not already present. 
       // May the containers contain me twice?
-      if( !containers.contains( this ) )
-        containers.add( this );
+      if( !containers.contains( gmlID ) )
+        containers.add( gmlID );
     }
   }
 

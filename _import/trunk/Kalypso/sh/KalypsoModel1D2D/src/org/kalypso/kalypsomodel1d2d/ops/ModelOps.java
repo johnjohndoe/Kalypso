@@ -57,13 +57,17 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -286,6 +290,23 @@ public class ModelOps
       element.addEdge( edge.getWrappedFeature().getId() );
     }
     
+  }
+  
+  public static final IFEEdgeToEdgeJunction1D2D createEdgeToEdgeJunction(
+                                IFEDiscretisationModel1d2d model1d2d,
+                                IFE1D2DEdge edge1D,
+                                IFE1D2DEdge edge2D)
+  {
+    IFeatureWrapperCollection<IFE1D2DElement> elements = 
+                      model1d2d.getElements();
+    IFEEdgeToEdgeJunction1D2D junction1D2D = 
+    (IFEEdgeToEdgeJunction1D2D) elements.addNew( 
+    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE );
+    
+    junction1D2D.set1DEdge( edge1D );
+    junction1D2D.set2DEdge( edge2D );
+    
+    return junction1D2D;
   }
   
   public static final IFEJunction1D2D createJunction(
@@ -516,5 +537,40 @@ public class ModelOps
     }
   }
   
+  public static final IFeatureWrapperCollection<IFE1D2DComplexElement> getElementContainer(Feature featureToBind)
+  {
+    Object prop =null;
+    try
+    {
+        prop=featureToBind.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    }
+    catch(Throwable th)
+    {
+      th.printStackTrace();
+    }
+
+    FeatureWrapperCollection<IFE1D2DComplexElement> containers;
+    if( prop == null )
+    {
+      // create the property tha is still missing
+      containers = 
+          new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+                featureToBind, 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, 
+                IFE1D2DComplexElement.class );
+    }
+    else
+    {
+      // just wrapped the existing one
+      containers = 
+        new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+                featureToBind, 
+                IFE1D2DComplexElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    }
+    return containers;
+  }
   
 }
