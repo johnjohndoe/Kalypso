@@ -48,20 +48,25 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -71,7 +76,45 @@ public class FeatureTemplateView extends ViewPart
 {
   public static final String ID = "org.kalypso.ui.views.featuretemplateview";
 
+  private static final String MEMENTO_FILE = "file";
+
   FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget( null, null ), 0, 0 );
+
+  protected IFile m_file;
+
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  public void init( final IViewSite site, final IMemento memento ) throws PartInitException
+  {
+    super.init( site, memento );
+
+    if( memento != null )
+    {
+      final String fullPath = memento.getString( MEMENTO_FILE );
+      if( fullPath != null )
+      {
+        final IPath path = Path.fromPortableString( fullPath );
+        m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );        
+      }
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+   */
+  @Override
+  public void saveState( final IMemento memento )
+  {
+    if( m_file != null )
+    {
+      final IPath fullPath = m_file.getFullPath();
+      if( fullPath != null )
+        memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
+    }
+  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -80,6 +123,10 @@ public class FeatureTemplateView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_templateviewer.createControls( parent, SWT.BORDER );
+    if( m_file != null )
+    {
+      loadFromTemplate( m_file );
+    }
   }
 
   public void loadFromTemplate( final IFile file )
@@ -95,12 +142,12 @@ public class FeatureTemplateView extends ViewPart
       {
         try
         {
-          final IFile templateFile = file;
-          if( templateFile != null && templateFile.exists() )
+          if( file != null && file.exists() )
           {
-            final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
+            final Reader reader = new InputStreamReader( file.getContents(), file.getCharset() );
             final URL context = ResourceUtilities.createURL( file );
             m_templateviewer.loadInput( reader, context, monitor, new Properties() );
+            m_file = file;
           }
           return Status.OK_STATUS;
         }
@@ -135,8 +182,42 @@ public class FeatureTemplateView extends ViewPart
   public void dispose( )
   {
     if( m_templateviewer != null )
+    {
+      saveFeature();
       m_templateviewer.dispose();
+    }
     super.dispose();
+  }
+
+  /**
+   * Saves the feature being edited
+   */
+  private void saveFeature( )
+  {
+    final Display display = m_templateviewer.getControl().getDisplay();
+    final UIJob job = new UIJob( display, "Feature speichern" )
+    {
+      /**
+       * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        IStatus status;
+        try
+        {
+          status = m_templateviewer.saveGML( monitor );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+          status = StatusUtilities.statusFromThrowable( e );
+          ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten", status );
+        }
+        return status;
+      }
+    };
+    job.schedule();
   }
 
   /**
