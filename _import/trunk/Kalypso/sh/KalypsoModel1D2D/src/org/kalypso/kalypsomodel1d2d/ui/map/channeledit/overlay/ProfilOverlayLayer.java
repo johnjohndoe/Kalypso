@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import org.eclipse.jface.resource.ColorRegistry;
@@ -52,13 +53,23 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
+import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.IntersPointData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.SegmentData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilComparator;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.cs.CS_CoordinateSystem;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -73,15 +84,18 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
 
   private final Color m_color;
 
+  private static CreateChannelData m_data;
+
   public ProfilOverlayLayer( ProfilChartView chartView )
   {
-    this( chartView, chartView.getProfil() );
+    this( chartView, chartView.getProfil(), m_data );
   }
 
-  public ProfilOverlayLayer( ProfilChartView chartView, final IProfil profile )
+  public ProfilOverlayLayer( ProfilChartView chartView, final IProfil profile, final CreateChannelData data )
   {
     super( IWspmOverlayConstants.LAYER_OVERLAY, chartView, chartView.getDomainRange(), chartView.getValueRangeLeft(), "Zeichenfläche" );
     m_profile = profile;
+    m_data = data;
     final ColorRegistry cr = chartView.getColorRegistry();
     if( !cr.getKeySet().contains( IWspmOverlayConstants.LAYER_OVERLAY ) )
       cr.put( IWspmOverlayConstants.LAYER_OVERLAY, new RGB( 0, 153, 255 ) );
@@ -129,9 +143,96 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final EditData editData = (EditData) data;
     final IProfilPoint profilePoint = m_profile.getPoints().get( editData.getIndex() );
     final Point2D logPoint = screen2logical( point );
-    final double hoehe = logPoint.getY(); // set by schlauchgenerator
-    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, logPoint.getX() );
-    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, hoehe );
+
+    double width = logPoint.getX();
+
+    /* check that the point is lying inside the orig. profile */
+    final double firstProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double lastProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+
+    if( width < firstProfileWidth )
+      width = firstProfileWidth;
+    else if( width > lastProfileWidth )
+      width = lastProfileWidth;
+
+    /* set the initial heigth to the profile height */
+    double heigth = 0;
+    try
+    {
+      heigth = WspmProfileHelper.getHeigthPositionByWidth( width, m_data.getProfilEventManager().getProfil() );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    /* save the first and last widths of the intersected profile for comparing width the new widths */
+    final double oldStartWdith = m_profile.getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double oldEndWdith = m_profile.getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    
+    /* set the new values to the moved point */
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+
+    /* sort profile points by width */
+    final LinkedList<IProfilPoint> points = m_profile.getPoints();
+    final ProfilComparator comparator = new ProfilComparator( IWspmConstants.POINT_PROPERTY_BREITE );
+    Collections.sort( points, comparator );
+
+    // get the current segment
+    final SegmentData segment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+
+    /* check if the first or last intersection point was moved -> update bank linestrings */
+    final double newStartWidth = m_profile.getPoints().getFirst().getValueFor(  IWspmConstants.POINT_PROPERTY_BREITE );
+    if( oldStartWdith != newStartWidth ) // right intersection point has been moved
+    {
+      // update the intersection points (necessary? -> yes)
+      /* geo.coordinates */
+      GM_Point gmPoint = null;
+      
+      try
+      {
+        gmPoint = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+//      final double x = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+//      final double y = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+//      final double z = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+//
+//      final CS_CoordinateSystem crs = m_data.getBankTheme1().getMapModell().getCoordinatesSystem();
+//      final GM_Point gmpoint = GeometryFactory.createGM_Point( x, y, z, crs );
+      
+      /* intersection point data */
+      final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT; //LEFT == Bankline 1
+      final CreateChannelData.WIDTHORDER widthorder = CreateChannelData.WIDTHORDER.FIRST; //first point sorted by width
+      
+      CreateChannelData.PROF prof = null;
+      if( m_data.getCurrentProfile() == 1 )
+      {
+        prof = CreateChannelData.PROF.UP;
+      }
+      else if ( m_data.getCurrentProfile() == 2 )
+      {
+        prof = CreateChannelData.PROF.DOWN;
+      }
+      segment.setIntersPoint( gmPoint, prof, side , widthorder);
+      m_data.setIntersectedProfile(m_profile, prof);
+      
+      // calc the new RW/HW for the points depended on the new width (X)
+
+      // update the banklines (move the first/last point to the new intersection point
+      // update the profile data for the neighboring segment
+
+    }
+    else if( oldEndWdith != m_profile.getPoints().getLast().getValueFor(  IWspmConstants.POINT_PROPERTY_BREITE ) ) // left intersection point has been moved
+    {
+
+    }
     getProfilChartView().getChart().repaint();
   }
 
@@ -167,7 +268,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final LinkedList<IProfilPoint> points = m_profile.getPoints();
     for( final IProfilPoint pp : points )
     {
-      final Point p = logical2screen( ProfilUtil.getPoint2D( pp,IWspmConstants.POINT_PROPERTY_HOEHE  ));
+      final Point p = logical2screen( ProfilUtil.getPoint2D( pp, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       final Rectangle hover = RectangleUtils.buffer( p );
       if( hover.contains( point ) )
       {
@@ -211,11 +312,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     {
       if( leftP == null )
       {
-        leftP = logical2screen(ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE  ));
+        leftP = logical2screen( ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       }
       else
       {
-        final Point rightP = logical2screen(ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE  ));
+        final Point rightP = logical2screen( ProfilUtil.getPoint2D( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
         gc.drawOval( leftP.x - 2, leftP.y - 2, 4, 4 );
         gc.drawLine( leftP.x, leftP.y, rightP.x, rightP.y );
         leftP = rightP;
@@ -252,9 +353,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     // do nothing
   }
 
-  public void setProfile( final IProfil profile )
+  public void setProfile( final IProfil profile, CreateChannelData data )
   {
     m_profile = profile;
+    m_data = data;
   }
 
   /**

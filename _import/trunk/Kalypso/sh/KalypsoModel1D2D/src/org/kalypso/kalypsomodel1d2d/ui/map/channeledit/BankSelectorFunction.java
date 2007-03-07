@@ -87,8 +87,15 @@ public class BankSelectorFunction implements IRectangleMapFunction
   public void execute( MapPanel mapPanel, Rectangle rectangle )
   {
     final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
-   
-    final IKalypsoFeatureTheme bankTheme = m_data.getBankTheme();
+    IKalypsoFeatureTheme bankTheme = null;
+    if ( m_side == CreateChannelData.SIDE.LEFT )
+    {
+      bankTheme = m_data.getBankTheme1();
+    }
+    else if ( m_side == CreateChannelData.SIDE.RIGHT )
+    {
+      bankTheme = m_data.getBankTheme2();      
+    }
     if( bankTheme == null )
       return;
 

@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Insets;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -57,6 +58,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -66,12 +70,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.jts.JTSUtilities;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
@@ -83,10 +88,6 @@ import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 import de.belger.swtchart.layer.IChartLayer;
 
@@ -244,6 +245,7 @@ public class CreateMainChannelComposite extends Composite
 
     final Button buttonZoomToExtend = new Button( sectionClient, SWT.CHECK );
     buttonZoomToExtend.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ) ); //$NON-NLS-1$
+    buttonZoomToExtend.setToolTipText( "ermöglicht das automatische Springen zum aktuellen Segment" );
     buttonZoomToExtend.setSelection( m_ButtonStateZoom );
 
     buttonZoomToExtend.addSelectionListener( new SelectionAdapter()
@@ -314,14 +316,16 @@ public class CreateMainChannelComposite extends Composite
               editButtonUpdateBank1();
             else if( m_buttonEditBank2.getSelection() == true )
               editButtonUpdateBank2();
+            panel.repaint();
           }
         }
         updateControl( true );
       }
     } );
+    
 
     /* Group Segmentdaten */
-    Group groupSegment = new Group( sectionClient, SWT.NULL );
+    final Group groupSegment = new Group( sectionClient, SWT.NULL );
     groupSegment.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.3" ) ); //$NON-NLS-1$
 
     GridLayout gridLayout = new GridLayout();
@@ -331,7 +335,7 @@ public class CreateMainChannelComposite extends Composite
     gridData.horizontalSpan = 4;
     groupSegment.setLayoutData( gridData );
 
-    Composite compSegmentDataHeader = new Composite( groupSegment, SWT.NULL );
+    final Composite compSegmentDataHeader = new Composite( groupSegment, SWT.NULL );
     GridLayout gridLayoutDataHeader = new GridLayout();
     gridLayoutDataHeader.numColumns = 2;
     compSegmentDataHeader.setLayout( gridLayoutDataHeader );
@@ -339,15 +343,15 @@ public class CreateMainChannelComposite extends Composite
     gridDataHeader.horizontalSpan = 4;
     compSegmentDataHeader.setLayoutData( gridDataHeader );
 
-    Label labelNumIntersSegment = new Label( compSegmentDataHeader, SWT.NULL );
+    final Label labelNumIntersSegment = new Label( compSegmentDataHeader, SWT.NULL );
     labelNumIntersSegment.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.4" ) ); //$NON-NLS-1$
-    GridData gridDatalabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData gridDatalabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDatalabel.horizontalSpan = 1;
     labelNumIntersSegment.setLayoutData( gridDatalabel );
 
     final Spinner spinnerNumIntersSegment = new Spinner( compSegmentDataHeader, 0 );
-
-    GridData gridDataNumIntersSpinner = new GridData( SWT.LEFT, SWT.CENTER, true, false );
+    
+    final GridData gridDataNumIntersSpinner = new GridData( SWT.LEFT, SWT.CENTER, true, false );
     gridDataNumIntersSpinner.horizontalSpan = 1;
     spinnerNumIntersSegment.setLayoutData( gridDataNumIntersSpinner );
     spinnerNumIntersSegment.setEnabled( true );
@@ -369,31 +373,28 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( SelectionEvent e )
       {
         m_data.setNumBankIntersections( spinnerSegment.getSelection(), spinnerNumIntersSegment.getSelection() );
-        // updateControl( true );
-        // TODO: just update the selected segment
+        //just update the selected segment
         updateSegmentData( false, m_currentSegment );
+        m_widget.getPanel().repaint();
       }
     } );
 
-    Label labelProfile1 = new Label( groupSegment, SWT.NULL );
-    labelProfile1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.6" ) ); //$NON-NLS-1$
-
-    Button buttonEditProf1 = new Button( groupSegment, SWT.PUSH );
-    buttonEditProf1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.7" ) ); //$NON-NLS-1$
-    buttonEditProf1.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        // TODO: bring profile 1 on the ChartView
-      }
-    } );
-
-    final Label labelBankline1 = new Label( groupSegment, SWT.NULL );
+    final Composite compSegmBanks1 = new Composite( groupSegment, SWT.NULL );
+    final GridLayout gridLayoutSegmBanks = new GridLayout();
+    gridLayoutSegmBanks.numColumns = 2;
+    compSegmBanks1.setLayout( gridLayoutSegmBanks );
+    final GridData gridDataSegmBanks = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    gridDataSegmBanks.horizontalSpan = 1;
+    compSegmBanks1.setLayoutData( gridDataSegmBanks );
+    
+    final Label labelBankline1 = new Label( compSegmBanks1, SWT.NULL );
     labelBankline1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
 
-    m_buttonEditBank1 = new Button( groupSegment, SWT.TOGGLE );
-    m_buttonEditBank1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
+    m_buttonEditBank1 = new Button( compSegmBanks1, SWT.TOGGLE  );
+    m_buttonEditBank1.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
+    final Image editImage = KalypsoModel1D2DUIImages.ID_EDIT.createImage();
+    m_buttonEditBank1.setImage( editImage );
+    
     m_buttonEditBank1.setSelection( m_bankEdit1 );
     // editButtonUpdateBank1();
     m_buttonEditBank1.addSelectionListener( new SelectionAdapter()
@@ -402,28 +403,20 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         editButtonUpdateBank1();
+        m_widget.getPanel().repaint();
       }
     } );
 
-    final Label labelProfile2 = new Label( groupSegment, SWT.NULL );
-    labelProfile2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.10" ) ); //$NON-NLS-1$
-
-    final Button buttonEditProf2 = new Button( groupSegment, SWT.PUSH );
-    buttonEditProf2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11" ) ); //$NON-NLS-1$
-    buttonEditProf2.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        // TODO: bring profile 2 on the ChartView
-      }
-    } );
-
-    final Label labelBankline2 = new Label( groupSegment, SWT.NULL );
+    final Composite compSegmBanks2 = new Composite( groupSegment, SWT.NULL );
+    compSegmBanks2.setLayout( gridLayoutSegmBanks );
+    compSegmBanks2.setLayoutData( gridDataSegmBanks );
+    
+    final Label labelBankline2 = new Label( compSegmBanks2, SWT.NULL );
     labelBankline2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.12" ) ); //$NON-NLS-1$
 
-    m_buttonEditBank2 = new Button( groupSegment, SWT.TOGGLE );
-    m_buttonEditBank2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.13" ) ); //$NON-NLS-1$
+    m_buttonEditBank2 = new Button( compSegmBanks2, SWT.TOGGLE );
+    m_buttonEditBank2.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.13" ) ); //$NON-NLS-1$
+    m_buttonEditBank2.setImage( editImage );
     m_buttonEditBank2.setSelection( m_bankEdit2 );
     // editButtonUpdateBank2();
     m_buttonEditBank2.addSelectionListener( new SelectionAdapter()
@@ -432,13 +425,16 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         editButtonUpdateBank2();
+        m_widget.getPanel().repaint();
       }
     } );
 
     /* conversion button */
     m_buttonConvertToModel = new Button( sectionClient, SWT.PUSH );
-    m_buttonConvertToModel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14" ) ); //$NON-NLS-1$
     m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
+    final Image convImage = KalypsoModel1D2DUIImages.ID_OK.createImage();
+    m_buttonConvertToModel.setImage( convImage );
+    
     m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -469,7 +465,7 @@ public class CreateMainChannelComposite extends Composite
     combviewerBank1.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     combviewerBank1.setContentProvider( new ArrayContentProvider() );
     combviewerBank1.setLabelProvider( new LabelProvider() );
-    final IKalypsoFeatureTheme bankTheme = m_data.getBankTheme();
+    final IKalypsoFeatureTheme bankTheme = m_data.getBankTheme1();
 
     final IKalypsoFeatureTheme themeToBankSelect;
     if( bankThemes.length == 0 )
@@ -493,21 +489,23 @@ public class CreateMainChannelComposite extends Composite
     }
 
     if( bankTheme != themeToBankSelect )
-      m_data.setBankTheme( themeToBankSelect );
+      m_data.setBankTheme1( themeToBankSelect );
 
     combviewerBank1.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        m_data.setBankTheme( (IKalypsoFeatureTheme) selection.getFirstElement() );
+        m_data.setBankTheme1( (IKalypsoFeatureTheme) selection.getFirstElement() );
       }
     } );
 
     /* Button for the first bank selection */
     final Button chooseFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( chooseFirstBankButton );
-    chooseFirstBankButton.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
+    chooseFirstBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
+    final Image selImage = KalypsoModel1D2DUIImages.ID_SELECT.createImage();
+    chooseFirstBankButton.setImage( selImage );
     chooseFirstBankButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -538,7 +536,7 @@ public class CreateMainChannelComposite extends Composite
     combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     combviewerBank2.setContentProvider( new ArrayContentProvider() );
     combviewerBank2.setLabelProvider( new LabelProvider() );
-    final IKalypsoFeatureTheme bankTheme2 = m_data.getBankTheme();
+    final IKalypsoFeatureTheme bankTheme2 = m_data.getBankTheme2();
     final IKalypsoFeatureTheme themeToBank2Select;
     if( bankThemes.length == 0 )
     {
@@ -561,21 +559,22 @@ public class CreateMainChannelComposite extends Composite
     }
 
     if( bankTheme2 != themeToBank2Select )
-      m_data.setBankTheme( themeToBank2Select );
+      m_data.setBankTheme2( themeToBank2Select );
 
     combviewerBank2.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        m_data.setBankTheme( (IKalypsoFeatureTheme) selection.getFirstElement() );
+        m_data.setBankTheme2( (IKalypsoFeatureTheme) selection.getFirstElement() );
       }
     } );
 
     /* Button for the second bank selection */
     final Button chooseSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( chooseSecondBankButton );
-    chooseSecondBankButton.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.24" ) ); //$NON-NLS-1$
+    chooseSecondBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.24" ) ); //$NON-NLS-1$
+    chooseSecondBankButton.setImage( selImage );
     chooseSecondBankButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -711,7 +710,9 @@ public class CreateMainChannelComposite extends Composite
     final Button chooseProfilesButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( chooseProfilesButton );
     chooseProfilesButton.setLayoutData( gridData );
-    chooseProfilesButton.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
+    chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
+    final Image selImage = KalypsoModel1D2DUIImages.ID_SELECT.createImage();
+    chooseProfilesButton.setImage( selImage );
     chooseProfilesButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -794,13 +795,25 @@ public class CreateMainChannelComposite extends Composite
       client.dispose();
 
     final Composite sectionClient = new Composite( m_profilSection, SWT.NONE );
-    sectionClient.setLayout( new GridLayout( 1, false ) );
+    final GridLayout clientLayout = new GridLayout( 1, false );
+    clientLayout.marginHeight = 0;
+    clientLayout.verticalSpacing = 0;
+    sectionClient.setLayout( clientLayout );
 
     m_profilSection.setClient( sectionClient );
     m_profilSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39" ) ); //$NON-NLS-1$
     m_profilSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.40" ) ); //$NON-NLS-1$
 
+    // init while first load
+    if( m_data.getCurrentProfile() == 0 )
+      {
+      m_data.setCurrentProfile( 1 );
+      //here repaint!!
+      }
+    m_widget.getPanel().repaint();
+
     final IProfilEventManager pem = m_data.getProfilEventManager();
+    
     final IProfil profil = pem.getProfil();
     if( profil == null )
     {
@@ -809,17 +822,16 @@ public class CreateMainChannelComposite extends Composite
     }
     else
     {
-      final ProfilChartView profilChartView = new ProfilChartView( pem, m_viewData, m_colorRegistry );
-
-      // KIM
-      // final ProfilOverlayLayer overlayLayer = null;
-      // overlayLayer.setPoints( points );
-      // über getLAyer -> Ovelraylayer -> dann construcotr....
-
-      // KIM
+      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      final ProfilChartView profilChartView = new ProfilChartView( pem, m_viewData, new IStationResult[0], m_colorRegistry, new Insets( 0, 0, 0, 0 ) );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
       manager.createControl( sectionClient );
+
+      final Label label = new Label( sectionClient, SWT.BORDER | SWT.CENTER );
+      label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      label.setText( "Station km " + pem.getProfil().getStation() );
+      label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
       final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -827,23 +839,42 @@ public class CreateMainChannelComposite extends Composite
       final IChartLayer overlayLayer = profilChartView.getChart().getLayer( IWspmOverlayConstants.LAYER_OVERLAY );
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
-        SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+        //currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
         if( currentSegment != null )
         {
-          final IProfil layerData = currentSegment.getProfUpIntersProfile();
-          ((ProfilOverlayLayer) overlayLayer).setProfile( layerData );// TODO: hier die Punkte einfügen
+          final IProfil layerData;
+          if( m_data.getCurrentProfile() == 1 )
+            layerData = currentSegment.getProfUpIntersProfile();
+          else
+            layerData = currentSegment.getProfDownIntersProfile();
+
+          ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data );
+          m_widget.getPanel().repaint();
         }
       }
 
-      List<IAction> chartActions = new LinkedList<IAction>();
-      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ) );
-      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN ) );
-      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN ) );
-      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ) );
-      chartActions.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE ) );
 
-      for( final IAction chartAction : chartActions )
-        manager.add( chartAction );
+      final IAction action = new Action( "Profil Wechsler", IAction.AS_PUSH_BUTTON )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#run()
+         */
+        @Override
+        public void run( )
+        {
+          // Execute code
+          m_data.switchProfile();
+          updateProfilSection();
+        }
+      };
+      action.setToolTipText( "Wechselt zwischen Profilen des Segments." );
+      action.setImageDescriptor( KalypsoModel1D2DUIImages.ID_CHANGE );
+      manager.add( action );
 
       manager.update( true );
     }
@@ -865,7 +896,6 @@ public class CreateMainChannelComposite extends Composite
 
   public void setConversionButton( )
   {
-
     Button button = m_buttonList.get( getStyle() );
     for( int i = 0; i < m_buttonList.size(); i++ )
     {

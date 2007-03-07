@@ -150,6 +150,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     final MapPanel mapPanel = getMapPanel();
 
+    /* draw intersected profile */
+    drawIntersProfiles( g, new Color( 0, 153, 255 ) );
+
     /* draw mesh */
     if( m_data.getMeshStatus() == true )
       m_data.paintAllSegments( g, mapPanel );
@@ -166,6 +169,17 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
 
+  }
+
+  private void drawIntersProfiles( Graphics g, Color color )
+  {
+    if( m_data.getSelectedSegment() != 0 )
+    {
+      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      if( currentSegment != null )
+        if( currentSegment.complete() == true )
+          currentSegment.paintProfile( m_data.getCurrentProfile(), getPanel(), g, color );
+    }
   }
 
   private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color )

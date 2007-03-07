@@ -118,9 +118,17 @@ public class CreateChannelData
     DOWN;
   }
 
+  public enum WIDTHORDER
+  {
+    FIRST,
+    LAST;
+  }
+
   private IKalypsoFeatureTheme m_profileTheme;
 
-  private IKalypsoFeatureTheme m_bankTheme;
+  private IKalypsoFeatureTheme m_bankTheme1; // LEFT = 1
+
+  private IKalypsoFeatureTheme m_bankTheme2; // RIGHT = 2
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
 
@@ -146,6 +154,8 @@ public class CreateChannelData
 
   public int m_selectedSegment;
 
+  private int m_selectedProfile; // 1 = up, 2 = down
+
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
     m_widget = widget;
@@ -158,9 +168,14 @@ public class CreateChannelData
     return m_profileTheme;
   }
 
-  public IKalypsoFeatureTheme getBankTheme( )
+  public IKalypsoFeatureTheme getBankTheme1( )
   {
-    return m_bankTheme;
+    return m_bankTheme1;
+  }
+
+  public IKalypsoFeatureTheme getBankTheme2( )
+  {
+    return m_bankTheme2;
   }
 
   public void setProfileTheme( final IKalypsoFeatureTheme profileTheme )
@@ -170,11 +185,14 @@ public class CreateChannelData
     // TODO: event handling
   }
 
-  public void setBankTheme( final IKalypsoFeatureTheme bankTheme )
+  public void setBankTheme1( final IKalypsoFeatureTheme bankTheme )
   {
-    m_bankTheme = bankTheme;
+    m_bankTheme1 = bankTheme;
+  }
 
-    // TODO: event handling
+  public void setBankTheme2( final IKalypsoFeatureTheme bankTheme )
+  {
+    m_bankTheme2 = bankTheme;
   }
 
   /**
@@ -333,18 +351,20 @@ public class CreateChannelData
     if( m_selectedProfiles.size() == 0 )
       return new ProfilEventManager( null, null );
 
-    try
+    final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
+
+    final IProfil profil;
+    if( m_selectedProfile == 1 )
     {
-      final Feature profileFeature = m_selectedProfiles.iterator().next();
-      final IProfil profil = ProfileFeatureFactory.toProfile( profileFeature );
-      final ProfilEventManager pem = new ProfilEventManager( profil, null );
-      return pem;
+      profil = segment.getProfilUpOrg();
     }
-    catch( final ProfilDataException e )
+    else
     {
-      e.printStackTrace();
+      profil = segment.getProfilDownOrg();
     }
-    return new ProfilEventManager( null, null );
+
+    final ProfilEventManager pem = new ProfilEventManager( profil, null );
+    return pem;
   }
 
   /* --------------------- workflow handling ---------------------------------- */
@@ -787,7 +807,7 @@ public class CreateChannelData
     if( m_numbProfileIntersections != numProfileIntersections )
     {
       m_numbProfileIntersections = numProfileIntersections;
-      updateSegments( false);
+      updateSegments( false );
       // initSegments();
     }
   }
@@ -915,24 +935,24 @@ public class CreateChannelData
   /**
    * this method updates the segment data
    */
-  public void updateSegments(boolean edit )
+  public void updateSegments( boolean edit )
   {
     // loop over all segments
     final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
     for( final SegmentData segment : datas )
     {
-      if( segment != null & edit == false)
+      if( segment != null & edit == false )
       {
         // intersect the bankline by the defined number of intersections
         segment.updateBankIntersection();
         segment.updateProfileIntersection();
       }
-      else if ( segment != null & edit == true)
+      else if( segment != null & edit == true )
       {
         // commits the done edits
-        
-       // segment.updateBank();
-       // segment.updateProfile();
+
+        // segment.updateBank();
+        // segment.updateProfile();
       }
     }
     completationCheck();
@@ -946,32 +966,70 @@ public class CreateChannelData
   public void drawBankLine( int segment, int side, final Graphics g )
   {
     MapPanel panel = m_widget.getPanel();
-    m_segmentList.get( segment - 1 ).paintLineString( panel, g, side );
+    m_segmentList.get( segment - 1 ).paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
   }
 
   public SegmentData getCurrentSegment( int segment )
   {
-    return m_segmentList.get( segment - 1 );
+    if( m_segmentList.size() >= segment )
+      return m_segmentList.get( segment - 1 );
+    else
+      return null;
+
   }
 
   public void updateSegment( boolean edit, int segmentNumber )
   {
-    final SegmentData segment = m_segmentList.get( segmentNumber-1 );
-    if( segment != null & edit == false)
+    final SegmentData segment = m_segmentList.get( segmentNumber - 1 );
+    if( segment != null & edit == false )
     {
       // intersect the bankline by the defined number of intersections
       segment.updateBankIntersection();
       segment.updateProfileIntersection();
     }
-    else if ( segment != null & edit == true)
+    else if( segment != null & edit == true )
     {
       // commits the done edits
-      
-     // segment.updateBank();
-     // segment.updateProfile();
+
+      // segment.updateBank();
+      // segment.updateProfile();
     }
-  completationCheck();
+    completationCheck();
   }
 
+  public final int getCurrentProfile( ) // 1 = up, 2 = down
+  {
+    return m_selectedProfile;
+  }
+
+  public void setCurrentProfile( int profile )
+  {
+    m_selectedProfile = profile;
+  }
+
+  public void switchProfile( )
+  {
+    if( m_selectedProfile == 1 )
+      m_selectedProfile = 2;
+    else
+      m_selectedProfile = 1;
+  }
+
+  public void setIntersectedProfile( IProfil profile, PROF prof )
+  {
+    final SegmentData segment = m_segmentList.get( m_selectedSegment - 1 );
+    segment.setNewIntersectedProfile( profile, prof );
+    
+    completationCheck();
+    //TODO: handle neighbouring segment!!
+    if ( prof == PROF.DOWN )
+    {
+      
+    }
+    else if ( prof == PROF.UP)
+    {
+      
+    }
+  }
 
 }

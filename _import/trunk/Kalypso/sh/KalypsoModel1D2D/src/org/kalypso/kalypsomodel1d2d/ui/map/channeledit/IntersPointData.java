@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -50,17 +51,20 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class IntersPointData
 {
-  private final Point m_point;
+  private Point m_point;
 
   private final PROF m_prof;
 
   private final SIDE m_side;
+
+  private WIDTHORDER m_widthOrder;
 
   public IntersPointData( Point point, CreateChannelData.PROF prof, CreateChannelData.SIDE side )
   {
     m_point = point;
     m_prof = prof;
     m_side = side;
+    m_widthOrder = null;
   }
 
   public Point getPoint( )
@@ -68,16 +72,21 @@ public class IntersPointData
     return m_point;
   }
 
+  public void setPoint( Point point)
+  {
+    m_point = point;
+  }
+
   public CreateChannelData.PROF getProf( )
   {
     return m_prof;
   }
-  
+
   public CreateChannelData.SIDE getSide( )
   {
     return m_side;
   }
-  
+
   public boolean isLeft( )
   {
     if( m_side == SIDE.LEFT )
@@ -90,24 +99,33 @@ public class IntersPointData
   {
     if( m_side == SIDE.RIGHT )
       return true;
-    
+
     return false;
   }
 
   public boolean isUp( )
   {
-    if( m_prof == PROF.UP )
+    if( m_prof == PROF.UP ) // next
       return true;
 
     return false;
   }
-  
+
   public boolean isDown( )
   {
-    if( m_prof == PROF.DOWN )
+    if( m_prof == PROF.DOWN ) // previous
       return true;
-    
+
     return false;
   }
 
+  public void setWidthOrder( CreateChannelData.WIDTHORDER widthOrder )
+  {
+    m_widthOrder = widthOrder;
+  }
+
+  public CreateChannelData.WIDTHORDER getWidthOrder( )
+  {
+    return m_widthOrder;
+  }
 }
