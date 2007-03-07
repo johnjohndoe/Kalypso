@@ -73,6 +73,9 @@ public class TupleResultCellModifier implements ICellModifier
     final IComponent component = m_provider.getComponent( property );
 
     final Object value = record.getValue( component );
+    if( value == null )
+      return "";
+    
     // TODO: use component definition to format string
     return "" + value;
   }
