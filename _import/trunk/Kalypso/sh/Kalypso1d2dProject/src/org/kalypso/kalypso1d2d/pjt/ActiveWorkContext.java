@@ -113,14 +113,9 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     {
       return;
     }
-    logger.info( "New Project to Set:" + activeProject );
-    final IWorkflowDB oldWorkflowDB = getWorkflowDB();
+    logger.info( "New Project to Set:" + activeProject );    
     try
-    {
-      if( oldWorkflowDB != null )
-      {
-        oldWorkflowDB.persist();
-      }
+    {      
       if( Kalypso1D2DProjectNature.isOfThisNature( activeProject ) )
       {
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
