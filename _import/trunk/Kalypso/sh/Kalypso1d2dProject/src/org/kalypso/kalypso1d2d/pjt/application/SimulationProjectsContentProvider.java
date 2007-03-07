@@ -43,10 +43,18 @@ package org.kalypso.kalypso1d2d.pjt.application;
 import java.io.PrintWriter;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
@@ -63,10 +71,37 @@ import org.w3c.dom.Element;
 public class SimulationProjectsContentProvider implements IIntroXHTMLContentProvider
 {
   /**
+   * @author Stefan Kurzbach
+   */
+  private final class WorkspaceChangeListener implements IResourceChangeListener
+  {
+    WorkspaceChangeListener( )
+    {
+    }
+
+    public void resourceChanged( final IResourceChangeEvent event )
+    {
+      PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
+      {
+
+        public void run( )
+        {
+          m_site.reflow( SimulationProjectsContentProvider.this, false );
+        }
+      } );
+    }
+  }
+
+  private IIntroContentProviderSite m_site;
+
+  private IResourceChangeListener m_resourceListener;
+
+  /**
    * @see org.eclipse.ui.intro.config.IIntroContentProvider#init(org.eclipse.ui.intro.config.IIntroContentProviderSite)
    */
   public void init( final IIntroContentProviderSite site )
   {
+    m_site = site;
   }
 
   /**
@@ -76,7 +111,13 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   {
     final Document dom = parent.getOwnerDocument();
 
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    if( m_resourceListener == null )
+    {
+      m_resourceListener = new WorkspaceChangeListener();
+      workspace.addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
+    }
+    final IWorkspaceRoot root = workspace.getRoot();
     final IProject[] projects = root.getProjects();
     for( final IProject project : projects )
     {
@@ -94,6 +135,18 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   }
 
   private void addProjectLink( final Element parent, final Document dom, final IProject project ) throws DOMException
+  {
+    final Element a = createOpenLink( dom, project );
+    parent.appendChild( a );
+
+    final Element a2 = createDeleteLink( dom, project );
+    parent.appendChild( a2 );
+
+    final Element br = dom.createElement( "br" );
+    parent.appendChild( br );
+  }
+
+  private Element createOpenLink( final Document dom, final IProject project )
   {
     final String pname = project.getName();
 
@@ -116,10 +169,32 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
 
     a.appendChild( img );
     a.appendChild( dom.createTextNode( pname ) );
-    parent.appendChild( a );
+    return a;
+  }
 
-    final Element br = dom.createElement( "br" );
-    parent.appendChild( br );
+  private Element createDeleteLink( final Document dom, final IProject project )
+  {
+    final String pname = project.getName();
+
+    final Element a = dom.createElement( "a" );
+    a.setAttribute( "id", "projectLinkId_" + pname );
+    a.setAttribute( "class", "link" );
+
+    final StringBuffer href = new StringBuffer();
+    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Delete1D2DProjectIntroAction" );
+    href.append( "&project=" );
+    href.append( pname );
+
+    a.setAttribute( "href", href.toString() );
+
+    final Element img = dom.createElement( "img" );
+    img.setAttribute( "class", "link" );
+    img.setAttribute( "border", "0" );
+    img.setAttribute( "src", "css/redx.gif" );    
+
+    a.appendChild( img );    
+    a.appendChild( dom.createTextNode( "löschen" ) );
+    return a;
   }
 
   /**
@@ -142,6 +217,8 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
    */
   public void dispose( )
   {
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    workspace.removeResourceChangeListener( m_resourceListener );
   }
 
 }
