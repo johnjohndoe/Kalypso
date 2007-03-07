@@ -296,4 +296,10 @@
               profiletype="org.kalypso.model.wspm.tuhh.profiletype"
               provider="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider"/>
      </extension>
+     <extension
+           point="org.kalypso.core.catalogContribution">
+        <catalogContribution
+              class="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"
+              name="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"/>
+     </extension>
 </plugin>
