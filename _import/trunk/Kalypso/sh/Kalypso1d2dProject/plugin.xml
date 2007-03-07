@@ -271,13 +271,13 @@
 	       </activeWhen>
         </class>
      </handler>
-      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GenCalcSet">
+     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
     	  <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler">
-           <parameter
+          <parameter
                  name="org.kalypso.kalypso1d2d.pjt.OpenFeatureViewCommand.resource"
                  value="templates/control.gft"/>           
-	        </class>
-      </handler>
+	       </class>
+     </handler>
      
 	</extension>
         <extension
