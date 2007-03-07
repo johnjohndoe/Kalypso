@@ -362,4 +362,9 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   {
     return m_title;
   }
+
+  public String getUri( )
+  {
+    return m_uri;
+  }
 }

@@ -271,7 +271,7 @@ public class FeatureHelper
 
     final Feature newFeature = newParentFeature.getWorkspace().createFeature( newParentFeature, relation, featureType );
     // TODO: this is no good to add it here....
-    // For example we cannot give a position where to add the new feature... 
+    // For example we cannot give a position where to add the new feature...
     if( relation.isList() )
       newParentFeature.getWorkspace().addFeatureAsComposition( newParentFeature, relation, -1, newFeature );
     else
@@ -751,7 +751,17 @@ public class FeatureHelper
     if( value instanceof Feature )
       return (Feature) value;
     else
+    {
+      /* Its a local link inside a xlinked-feature */
+      if( feature instanceof XLinkedFeature_Impl )
+      {
+        final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
+        final String href = xlinkedFeature.getUri() + "#" + value;
+        return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
+      }
+      /* A normal local link inside the same workspace */
       return feature.getWorkspace().getFeature( (String) value );
+    }
   }
 
   public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
@@ -978,6 +988,7 @@ public class FeatureHelper
 
     return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
   }
+
   /**
    * @author thuel2
    * @return <code>true</code> if <code>parent</code> is one of the ancestors of or equals
