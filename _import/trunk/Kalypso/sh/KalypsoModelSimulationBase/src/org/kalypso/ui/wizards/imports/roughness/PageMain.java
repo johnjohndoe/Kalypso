@@ -264,6 +264,9 @@ public class PageMain extends WizardPage implements Listener
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
+//      m_data.getRoughnessPolygonCollection().clear();
+//      m_data.getRoughnessShapeStaticRelationMap().clear();
+//      m_data.getRoughnessStaticCollectionMap().clear();
       try
       {
         ((Transformer)((ImportWizard)getWizard()).m_operation).prepare(true);

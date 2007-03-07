@@ -173,7 +173,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
             final Gismapview gismapview = GisTemplateHelper.loadGisMapView( file );
             final Layers layers = gismapview.getLayers();
             final StyledLayerType layer = new StyledLayerType();
-            layer.setName( "BaseMap" ); //$NON-NLS-1$
+
+            layer.setName( mPage.getSourceLocation().removeFileExtension().lastSegment() );
+//            layer.setName( "BaseMap" ); //$NON-NLS-1$
+            
             layer.setVisible( true );
             layer.setFeaturePath( "" ); //$NON-NLS-1$
             layer.setHref( "file:/" + dstFileImage.getLocation().toOSString() + "#" + coordinateSystem ); //$NON-NLS-1$ //$NON-NLS-2$

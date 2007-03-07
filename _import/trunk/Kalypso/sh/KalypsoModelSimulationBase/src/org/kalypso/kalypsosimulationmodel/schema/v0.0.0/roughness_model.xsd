@@ -52,23 +52,6 @@
 	</xs:complexType>
 
 	<!-- =================================================================
-		roughnessMembers
-		================================================================== -->
-	<xs:element name="roughnessClsMembers"
-		type="wbr:RoughnessClsArrayPropertyType" />
-
-	<xs:complexType name="RoughnessClsArrayPropertyType">
-		<xs:complexContent>
-			<xs:restriction base="gml:FeatureArrayPropertyType">
-				<xs:sequence>
-					<xs:element ref="wbr:RoughnessCls" minOccurs="0"
-						maxOccurs="unbounded" />
-				</xs:sequence>
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<!-- =================================================================
 		roughnessMember; RoughnessPropertyType
 		================================================================== -->
 	<xs:element name="roughnessClsMember"

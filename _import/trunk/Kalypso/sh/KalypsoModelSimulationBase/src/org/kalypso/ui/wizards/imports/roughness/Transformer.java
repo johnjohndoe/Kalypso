@@ -17,12 +17,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -91,7 +85,10 @@ public class Transformer implements ICoreRunnableWithProgress
   public void prepare( boolean resetMap ) throws Exception
   {
     if( resetMap )
+    {
       m_data.getRoughnessShapeStaticRelationMap().clear();
+      m_data.getRoughnessPolygonCollection().clear();
+    }
     QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
     QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
     QName shpCustomPropertyName = new QName( "namespace", m_data.getShapeProperty() ); //$NON-NLS-1$
@@ -105,7 +102,7 @@ public class Transformer implements ICoreRunnableWithProgress
     {
       roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
       shapeFeature = (Feature) shapeFeatureList.get( i );
-      final String propertyValue = (String) shapeFeature.getProperty( shpCustomPropertyName );
+      final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
       final Object gm_Whatever = shapeFeature.getProperty( shpGeomPropertyName );
       GM_Surface gm_Surface = null;
       if( gm_Whatever instanceof GM_Surface )
