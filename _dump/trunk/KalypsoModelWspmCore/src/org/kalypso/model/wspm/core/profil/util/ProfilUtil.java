@@ -437,7 +437,7 @@ public class ProfilUtil
 
   /**
    * calculates the area of a given profile.<br>
-   * the area is calculatated in dependence of the max heigth value. input: IProfil<br>
+   * the area is calculated in dependence of the max heigth value. input: IProfil<br>
    * output: area <br>
    */
   public static final double calcArea( final IProfil profil )
@@ -451,7 +451,7 @@ public class ProfilUtil
       final double z1 = (maxZ - profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ));
       final double z2 = (maxZ - profil.getPoints().get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ));
       final double width1 = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      final double width2 = profil.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double width2 = profil.getPoints().get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
       width = width2 - width1;
       area = area + (z1 + z2) / 2 * width;
     }

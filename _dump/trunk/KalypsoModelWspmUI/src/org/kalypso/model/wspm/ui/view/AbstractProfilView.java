@@ -71,13 +71,14 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
     if( m_viewdata != null )
       m_viewdata.addProfilViewDataListener( this );
-    
-    
+
   }
+
   public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
-    this(pem,  viewdata, new IStationResult[0] );
+    this( pem, viewdata, new IStationResult[0] );
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#dispose()
    */

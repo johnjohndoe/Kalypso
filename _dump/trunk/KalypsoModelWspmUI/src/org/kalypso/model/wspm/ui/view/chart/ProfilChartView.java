@@ -94,30 +94,37 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private final static int TICK_LENGTH = 10;
 
-  private ChartStandardActions m_actions;
+  private final Collection<IChartPosListener> m_poslisteners = new LinkedList<IChartPosListener>();
 
-  protected ChartCanvas m_chart = null;
+  private final Insets m_insets;
 
   private final ColorRegistry m_colorRegistry;
 
-  private AxisRange m_domainRange;
+  private ChartStandardActions m_actions;
 
-  private final Collection<IChartPosListener> m_poslisteners = new LinkedList<IChartPosListener>();
+  private ChartCanvas m_chart = null;
+
+  private AxisRange m_domainRange;
 
   private AxisRange m_valueRangeLeft;
 
   private AxisRange m_valueRangeRight;
 
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
+  {
+    this( pem, viewdata, new IStationResult[0], colorRegistry, null );
+  }
+
   public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry )
+  {
+    this( pem, viewdata, results, colorRegistry, new Insets( 20, 0, 0, 0 ) );
+  }
+
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets )
   {
     super( pem, viewdata, results );
     m_colorRegistry = colorRegistry;
-  }
-
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
-  {
-    super( pem, viewdata, new IStationResult[0] );
-    m_colorRegistry = colorRegistry;
+    m_insets = insets;
   }
 
   public void addChartPosListener( final IChartPosListener l )
@@ -162,12 +169,12 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
         for( final String layerId : requieredLayer )
         {
-          for( final IProfilChartLayer layer : provider.getLayer( layerId,this ) )
+          for( final IProfilChartLayer layer : provider.getLayer( layerId, this ) )
           {
             layers.add( layer );
           }
         }
-        addLayer( layers.toArray(new IProfilChartLayer[0]), visibility );
+        addLayer( layers.toArray( new IProfilChartLayer[0] ), visibility );
       }
     }
   }
@@ -196,17 +203,22 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
    * @see com.bce.profil.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
    */
   @Override
-  public Control doCreateControl( final Composite parent, final int style )
+  protected Control doCreateControl( final Composite parent, final int style )
   {
-    m_chart = new ChartCanvas( parent, style, new Insets( 20, 0, 0, 0 ) );
+    m_chart = new ChartCanvas( parent, style, m_insets );
     m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     // TODO: move this to layer provider
     // or even better: let layer provider create layers and then retrieve domain/value axes from layers
-    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
-    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
-    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+    m_domainRange = new AxisRange( null, SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
+    m_valueRangeLeft = new AxisRange( null, SwitchDelegate.VERTICAL, true, 5, 1.0 );
+    m_valueRangeRight = new AxisRange( null, SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
+//    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
+//    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
+//    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+
+    
     final IAxisRenderer domainrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );
     final IAxisRenderer leftrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, false );
     final IAxisRenderer rightrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );
@@ -287,7 +299,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    m_chart.getDisplay().syncExec( new Runnable()
+    final ChartCanvas chart = m_chart;
+    chart.getDisplay().syncExec( new Runnable()
     {
       public void run( )
       {
@@ -298,7 +311,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         }
         if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
         {
-          for( final IChartLayer layer : m_chart.getLayers() )
+          for( final IChartLayer layer : chart.getLayers() )
           {
             if( layer instanceof IProfilChartLayer )
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
