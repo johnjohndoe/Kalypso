@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema for the operational model
+	@author Patrice Congo
+	@author Antanaskovic Dejan
+-->
+
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om"
+	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+	<xs:import namespace="http://www.opengis.net/om"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
+
+	<!-- ================================================
+		
+		================================================== -->
+
+	<xs:element name="OperationalConcept"
+		type="op1d2d:OperationalConceptType" substitutionGroup="gml:_Feature" />
+
+	<xs:complexType name="OperationalConceptType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="BoundaryConditionMember"
+						type="op1d2d:BoundaryPropertyType" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="BoundaryPropertyType">
+		<xs:sequence>
+			<xs:element ref="op1d2d:BoundaryCondition" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="BoundaryCondition"
+		type="op1d2d:BoundaryConditionType" />
+
+	<xs:complexType name="BoundaryConditionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="position"
+						type="gml:PointPropertyType" />
+					<xs:element name="timeserie1D"
+						type="op1d2d:Timeserie1DPropertyType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="Timeserie1DPropertyType">
+		<xs:sequence>
+			<xs:element ref="op1d2d:Timeserie1D" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="Timeserie1D" type="om:ObservationType"
+		substitutionGroup="om:Observation" />
+
+</xs:schema>

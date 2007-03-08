@@ -2,7 +2,6 @@ package org.kalypso.ui.wizards.imports.roughness;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;

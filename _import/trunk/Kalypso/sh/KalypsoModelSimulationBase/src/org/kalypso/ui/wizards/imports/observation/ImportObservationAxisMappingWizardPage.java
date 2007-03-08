@@ -128,7 +128,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   @Override
   public boolean canFlipToNextPage()
   {
-    return isPageComplete();
+//    return isPageComplete();
+    return false;
   }
 
   /**

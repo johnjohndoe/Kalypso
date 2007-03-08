@@ -43,15 +43,17 @@ package org.kalypso.ui.wizards.imports.observation;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -66,10 +68,11 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
-public class ImportObservationWizard extends Wizard implements IImportWizard
+public class ImportObservationWizard extends Wizard implements INewWizardKalypsoImport
 {
   private final static JAXBContext zmlJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
@@ -78,6 +81,8 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   private IStructuredSelection m_selection;
 
   private ImportObservationAxisMappingWizardPage m_page2;
+
+  private IProject m_project;
 
   public ImportObservationWizard( )
   {
@@ -105,6 +110,14 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   }
 
   /**
+   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
+   */
+  public void initModelProperties( HashMap<String, Object> map )
+  {
+    m_project = (IProject) map.get( "Project" );
+  }
+  
+  /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   @Override
@@ -113,7 +126,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     super.addPages();
     m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" );
 
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen" );
+    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_project );
     addPage( m_page1 );
     addPage( m_page2 );
 
@@ -235,7 +248,8 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );
       writer.close();
-      // TODO refresh resources or use IResource
+
+      m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( Exception e )
     {
@@ -244,4 +258,5 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     }
     return true;
   }
+
 }

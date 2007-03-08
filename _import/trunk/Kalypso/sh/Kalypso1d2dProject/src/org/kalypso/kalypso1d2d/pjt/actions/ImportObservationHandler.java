@@ -1,5 +1,7 @@
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.util.HashMap;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -14,8 +16,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -46,13 +49,16 @@ public class ImportObservationHandler extends WorkflowCommandHandler
 //    final IFolder szenarioPath = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
     final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
-    final IWorkbenchWizard wizard = wizardDescriptor.createWizard();
+    final INewWizardKalypsoImport wizard = (INewWizardKalypsoImport) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
+    final HashMap<String, Object> data = new HashMap<String, Object>();
+    final IFolder currentFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    data.put( "Project", currentFolder.getProject() );
 
 //    final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
 
     wizard.init( workbench, selection );
-//    wizard.initModelProperties( data );
+    wizard.initModelProperties( data );
     if( wizardDialog.open() == Window.OK )
     {
 //      currentFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );

@@ -105,8 +105,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     m_data.getRoughnessStaticCollectionMap().clear();
     try
     {
-      IResource resource = (IResource) selection.getFirstElement();
-      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+      m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
       // ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( Exception e )

@@ -41,13 +41,13 @@
 package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.compare.internal.ListContentProvider;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -90,6 +90,8 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider,
     ISelectionChangedListener
 {
+  protected IProject m_project;
+
   private static final String DEFAUL_FILE_LABEL = "";
 
   private final List m_adapter;
@@ -114,9 +116,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private boolean m_controlFinished = false;
 
-  public ImportObservationSelectionWizardPage( String pageName )
+  public ImportObservationSelectionWizardPage( String pageName, IProject project )
   {
     this( pageName, null, null );
+    m_project = project;
   }
 
   public ImportObservationSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage )
@@ -187,7 +190,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     createControlSource( m_topLevel );
     createControlTarget( m_topLevel );
     setControl( m_topLevel );
-    validate();
+//    validate();
     m_controlFinished = true;
   }
 
@@ -230,7 +233,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       public void widgetSelected( SelectionEvent e )
       {
         m_sourceFile = chooseFile( m_sourceFile );
-        m_targetFile = new File(m_sourceFile.getParentFile().getPath() + "/izlaz.zml");
+        m_targetFile = m_project.getLocation().append( "/imports/" + m_sourceFile.getName() + ".zml" ).toFile();
+//        m_targetFile = new File(m_sourceFile.getParentFile().getPath() + "/TestDWD.zml");
 //        if(m_targetFile.exists())
 //          m_targetFile.delete();
 //        try
@@ -390,8 +394,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       error.append( "Quelle nicht ausgewählt\n" );
       setPageComplete( false );
     }
-    m_buttonAppend.setEnabled( false );
-    m_buttonRetainMeta.setEnabled( false );
+//    m_buttonAppend.setEnabled( false );
+//    m_buttonRetainMeta.setEnabled( false );
+    
+    
 //    if( m_targetFile != null )
 //    {
 //      m_textFileTarget.setText( m_targetFile.getName() );
