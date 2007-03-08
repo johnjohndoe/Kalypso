@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -49,6 +53,12 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
  */
 public class ProfilOverlayLayerProvider implements IProfilLayerProvider
 {
+  final IProfilLayerProvider m_TuhhLayerProvider;
+
+  public ProfilOverlayLayerProvider( )
+  {
+    m_TuhhLayerProvider = new ProfilLayerProviderTuhh();
+  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView,
@@ -57,8 +67,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
   public IProfilChartLayer[] addLayerToChart( ProfilChartView view, String layerId )
   {
     view.getChart().addLayer( new ProfilOverlayLayer( view ), true );
-    view.getChart().repaint();
-    return new IProfilChartLayer[0];
+    return m_TuhhLayerProvider.addLayerToChart( view, layerId );
   }
 
   /**
@@ -66,7 +75,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public String[] getAddableLayers( ProfilChartView view )
   {
-    return new String[0];
+    return m_TuhhLayerProvider.getAddableLayers( view );
   }
 
   /**
@@ -75,9 +84,12 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public IProfilChartLayer[] getLayer( String layerId, ProfilChartView view )
   {
+    final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
+    layers.addAll( Arrays.asList( m_TuhhLayerProvider.getLayer( layerId, view ) ) );
+
     if( IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ) )
-      return new IProfilChartLayer[] { new ProfilOverlayLayer( view ) };
-    return null;
+      layers.add( new ProfilOverlayLayer( view ) );
+    return layers.toArray( new IProfilChartLayer[0] );
   }
 
   /**
@@ -85,7 +97,10 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public String[] getRequiredLayer( final ProfilChartView view )
   {
-    return new String[] { IWspmOverlayConstants.LAYER_OVERLAY };
+    final ArrayList<String> layers = new ArrayList<String>();
+    layers.addAll( Arrays.asList( m_TuhhLayerProvider.getRequiredLayer( view ) ) );
+    layers.add( IWspmOverlayConstants.LAYER_OVERLAY );
+    return layers.toArray( new String[0] );
   }
 
   /**
@@ -93,7 +108,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    */
   public boolean providesLayer( String layerId )
   {
-    return IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId );
+    return IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ) ? true : m_TuhhLayerProvider.providesLayer( layerId );
   }
 
 }
