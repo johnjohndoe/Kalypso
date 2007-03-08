@@ -47,16 +47,16 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * An elevation provider base on ASC file
@@ -67,6 +67,7 @@ import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;
  */
 public class ASCTerrainElevationModel implements IElevationProvider
 {
+  public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
   private static final List<GM_Position> NULL_LIST = Collections.<GM_Position>emptyList();
 
   /**
@@ -282,7 +283,7 @@ public class ASCTerrainElevationModel implements IElevationProvider
         {
           double x=xmin+j*cellSize;
           double y=ymin+i*cellSize;
-          double z=0;//elevations[i][j];
+          double z=elevations[i][j];
           
           GM_Position position=
               GeometryFactory.createGM_Position(x,y,z );
@@ -314,5 +315,26 @@ public class ASCTerrainElevationModel implements IElevationProvider
     return cellSize;
   }
  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
+   */
+  public CS_CoordinateSystem getCoordinateSystem( )
+  {
+    //TODO Patrice introduce the it in the schema
+    CS_CoordinateSystem cs= 
+      ConvenienceCSFactory.getInstance().getOGCCSByName( 
+                          CS_KEY_GAUSS_KRUEGER );
+    return cs;
+  }
+  
+  public double getMaxElevation( )
+  {
+    return maxElevation;
+  }
+  
+  public double getMinElevation( )
+  {
+    return minElevation;
+  }
 
 }

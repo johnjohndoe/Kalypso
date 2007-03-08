@@ -44,7 +44,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.geom.Area;
 import java.util.List;
@@ -52,9 +51,11 @@ import java.util.List;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -77,19 +78,20 @@ import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
  * @author Madanagopal 
  * @author Patrice Congo
  */
-public class ASCDisplayElement implements DisplayElement
+public class ASCDisplayElement implements DisplayElementDecorator
 {
   private NativeTerrainElevationModelWrapper elevationModel;
   
-  private boolean isHighlighted;
+  private boolean isHighlighted=false;
  
   
-  private boolean isSelected;
+  private boolean isSelected=false;
 
   private ASCTerrainElevationModel ascElevationModel;
 
   private Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
   
+  private DisplayElement decorated;
  
   public ASCDisplayElement(
                 NativeTerrainElevationModelWrapper elevationModel )
@@ -114,7 +116,14 @@ public class ASCDisplayElement implements DisplayElement
    */
   public boolean doesScaleConstraintApply( double scale )
   {
-    return false;
+    if(decorated!=null)
+    {
+      return decorated.doesScaleConstraintApply( scale );
+    }
+    else
+    {
+      return false;
+    }
   }
 
   /**
@@ -122,7 +131,14 @@ public class ASCDisplayElement implements DisplayElement
    */
   public String getAssociateFeatureId( )
   {
-    return elevationModel.getGmlID(); 
+    if(decorated!=null)
+    {
+      return decorated.getAssociateFeatureId();
+    }
+    else
+    {
+      return elevationModel.getGmlID();
+    }
   }
 
   /**
@@ -130,7 +146,14 @@ public class ASCDisplayElement implements DisplayElement
    */
   public Feature getFeature( )
   {
-    return elevationModel.getFeature();
+    if(decorated!=null)
+    {
+      return decorated.getFeature();
+    }
+    else
+    {
+      return elevationModel.getFeature();
+    }
   }
 
   /**
@@ -138,7 +161,14 @@ public class ASCDisplayElement implements DisplayElement
    */
   public boolean isHighlighted( )
   {
-    return this.isHighlighted;
+    if(decorated!=null)
+    {
+      return decorated.isHighlighted();
+    }
+    else
+    {
+      return this.isHighlighted;
+    }
   }
 
   /**
@@ -146,7 +176,14 @@ public class ASCDisplayElement implements DisplayElement
    */
   public boolean isSelected( )
   {
-    return this.isSelected;
+    if(decorated!=null)
+    {
+      return decorated.isSelected();
+    }
+    else
+    {
+      return this.isSelected;
+    }
   }
 
 
@@ -160,35 +197,7 @@ public class ASCDisplayElement implements DisplayElement
                   boolean selected,
                   IElevationColorModel colorModel)
   {
-   
-   
-    System.out.println("Do Draw dddddd "+System.currentTimeMillis());
     paint( g, p, bbox );
-//   List<GM_Position> cellLL = ascElevationModel.getCellLLCornerIterator( bbox );
-//   int cellSize=1;
-//  if(!cellLL.isEmpty())
-//  {
-//    GM_Position position0 = cellLL.get( 0 );
-//    
-//    double x = position0.getX();
-//    cellSize = 
-//      (int)(p.getDestX( x+ascElevationModel.getCellSize() )-p.getDestX( x ));
-//    System.out.println( "CellSize:"+cellSize );
-//  }
-//  
-//  g.setPaintMode();
-//  
-//  for( GM_Position position:cellLL)
-//   {
-//     int destX = (int)p.getDestX( position.getX() );
-//     int destY = (int)p.getDestY( position.getY() );    
-//     Color col = colorModel.getColor( position.getZ() );
-//     g.setXORMode( col );
-//     int xcoords[]={destX, destX+cellSize, destX+cellSize, destX};
-//     int yCoords[]={destY, destY,          destY+cellSize, destY+cellSize};
-//     g.fillPolygon( xcoords, yCoords, 4 );
-//     g.drawPolygon( xcoords, yCoords, 4 );    
-//   }
   }
   
   /**
@@ -196,44 +205,33 @@ public class ASCDisplayElement implements DisplayElement
    */
   public void setHighlighted( boolean highlighted )
   {
+    if(decorated!=null)
+    {
+      decorated.setHighlighted( highlighted );
+    }
     this.isHighlighted=highlighted;
   }
 
+  
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
   public void setSelected( boolean selected )
   {
+    if(decorated!=null)
+    {
+      decorated.setSelected( selected );
+    }
     this.isSelected=selected;
   }
   
   public void paint( Graphics g, GeoTransform projection )
   {
-    try
+    if(decorated!=null)
     {
-      
-      Area area = null;
-      List<GM_Surface> surfaces=null;
-      List<GM_Position> cellLLCornerList = 
-          this.ascElevationModel.getCellLLCornerIterator( projection.getSourceRect() );
-      CS_CoordinateSystem crs=null;
-      GM_Envelope bbox=null;
-      double cellSize=ascElevationModel.getCellSize();
-      for(GM_Position position:cellLLCornerList)
-      {
-        double minx=position.getX();
-        double miny=position.getY();
-//        g.setColor( Color.BLUE);
-        bbox = GeometryFactory.createGM_Envelope( minx, miny, minx+cellSize, miny+cellSize ); 
-        GM_Surface surface= GeometryFactory.createGM_Surface( bbox, crs );
-        area = calcTargetCoordinates( projection, surface );
-        drawPolygon( g, area );
-      }
+      decorated.paint( g, projection );
     }
-    catch (Exception e) 
-    {
-      e.printStackTrace();
-    }
+    paint( g, projection, elevationModel.getBoundingBox() );
   }
   
   public void paint( Graphics g, GeoTransform projection,GM_Envelope env )
@@ -246,11 +244,19 @@ public class ASCDisplayElement implements DisplayElement
       List<GM_Position> cellLLCornerList = 
           this.ascElevationModel.getCellLLCornerIterator( env );
       //TODO patrice remove that from hier
-      CS_CoordinateSystem crs=TestWorkspaces.getGaussKrueger();
+      CS_CoordinateSystem crs=ascElevationModel.getCoordinateSystem();
       GM_Envelope bbox=null;
       double cellSize=ascElevationModel.getCellSize();
-      Graphics graphics = g.create();
-      g.setPaintMode();
+      Graphics graphics = g;//.create();
+      SimpleElevationColorModel colorModel = 
+            new SimpleElevationColorModel(
+                        ascElevationModel.getMinElevation(),
+                        ascElevationModel.getMaxElevation(),
+                        Color.RED,
+                        0.10,
+                        0.80,
+                        Color.WHITE);
+//      g.setPaintMode();
       for(GM_Position position:cellLLCornerList)
       {
         double minx=position.getX();
@@ -258,9 +264,10 @@ public class ASCDisplayElement implements DisplayElement
         bbox = GeometryFactory.createGM_Envelope( minx, miny, minx+cellSize, miny+cellSize ); 
         GM_Surface surface= GeometryFactory.createGM_Surface( bbox, crs );
         area = calcTargetCoordinates( projection, surface );
+        g.setColor( colorModel.getColor( position.getZ() ) );
         drawPolygon( graphics, area );
       }
-      graphics.dispose();
+//      graphics.dispose();
     }
     catch (Exception e) 
     {
@@ -348,10 +355,9 @@ public class ASCDisplayElement implements DisplayElement
   /**
    * renders one surface to the submitted graphic context considering the also submitted projection
    */
-  private void drawPolygon( Graphics g, Area area ) throws FilterEvaluationException
+  private void drawPolygon( Graphics gg, Area area ) throws FilterEvaluationException
   {
-    Graphics2D g2 = (Graphics2D) g;
-
+    Graphics2D g2d=(Graphics2D) gg;
     PolygonSymbolizer sym = getSymbolizer();
     org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
     org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
@@ -370,9 +376,9 @@ public class ASCDisplayElement implements DisplayElement
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
-        color = new Color( red, green*0, blue*0, alpha );
-        g2.setColor( color );
-
+//        color = new Color( red*0, green*0, blue*1, alpha );
+//        g2d.setColor( color );
+//        g2d.setBackground( color );
         
         
 //        
@@ -390,7 +396,8 @@ public class ASCDisplayElement implements DisplayElement
 
         try
         {
-          g2.fill( area );
+          
+          g2d.fill( area );
         }
         catch( Exception e )
         {
@@ -400,52 +407,91 @@ public class ASCDisplayElement implements DisplayElement
     }
 
     // only stroke outline, if Stroke-Element is given
-    if( stroke != null )
-    {
-      double opacity = stroke.getOpacity( feature );
-      if( opacity > 0.01 )
-      {
-        Color color = stroke.getStroke( feature );
-        int alpha = (int) Math.round( opacity * 255 );
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
-        color = new Color( red, green, blue, alpha );
-
-        g2.setColor( color );
-
-        float[] dash = stroke.getDashArray( feature );
-
-        // use a simple Stroke if dash == null or dash length < 2
-        BasicStroke bs2 = null;
-        float w = (float) stroke.getWidth( feature );
-
-        if( (dash == null) || (dash.length < 2) )
-        {
-          bs2 = new BasicStroke( w );
-        }
-        else
-        {
-          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash, stroke.getDashOffset( feature ) );
-        }
-
-        g2.setStroke( bs2 );
-        try
-        {
-          g2.draw( area );
-        }
-        catch( Exception e )
-        {
-          //  
-        }
-      }
-    }
+//    if( stroke != null )
+//    {
+//      double opacity = stroke.getOpacity( feature );
+//      if( opacity > 0.01 )
+//      {
+//        Color color = stroke.getStroke( feature );
+//        int alpha = (int) Math.round( opacity * 255 );
+//        int red = color.getRed();
+//        int green = color.getGreen();
+//        int blue = color.getBlue();
+//        color = new Color( red, green, blue, alpha );
+//
+//        g2d.setColor( color );
+//
+//        float[] dash = stroke.getDashArray( feature );
+//
+//        // use a simple Stroke if dash == null or dash length < 2
+//        BasicStroke bs2 = null;
+//        float w = (float) stroke.getWidth( feature );
+//
+//        if( (dash == null) || (dash.length < 2) )
+//        {
+//          bs2 = new BasicStroke( w );
+//        }
+//        else
+//        {
+//          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash, stroke.getDashOffset( feature ) );
+//        }
+//
+//        g2d.setStroke( bs2 );
+//        try
+//        {
+//          g2d.draw( area );
+//        }
+//        catch( Exception e )
+//        {
+//          //  
+//        }
+//      }
+//    }
   }
 
   private PolygonSymbolizer getSymbolizer( )
   {
+    decorated.doesScaleConstraintApply( 0 );
     return (PolygonSymbolizer) defaultSymbolizer;
   }
+  
+  
+  
+  
+  public static final ASCDisplayElement createDisplayElement(Feature feature)
+  {
+    if(feature == null)
+    {
+      return null;
+    }
+    ITerrainElevationModel terrainElevationModel=
+            (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
+    if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
+    {
+      return new ASCDisplayElement(
+                      (NativeTerrainElevationModelWrapper)terrainElevationModel);
+    }
+    else
+    {
+      System.out.println("Could not adapt to a native terrain ele model:"+feature);
+      return null;
+    }
+  }
 
+  /**
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
+   */
+  public DisplayElement getDecorated( )
+  {
+    return decorated;
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
+   */
+  public void setDecorated( DisplayElement decorated )
+  {
+    this.decorated=decorated;    
+  }
 
 }

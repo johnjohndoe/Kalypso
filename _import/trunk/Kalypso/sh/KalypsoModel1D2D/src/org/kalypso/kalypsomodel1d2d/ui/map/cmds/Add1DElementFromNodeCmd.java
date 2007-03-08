@@ -132,7 +132,19 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
      
       IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[0].getAddedNode();
       IFE1D2DNode<IFE1D2DEdge> node1=elementNodeCmds[1].getAddedNode();
-       
+      if(node0==null || node1==null)
+      {
+        throw new IllegalStateException(
+            "One of the base node command returns a null node:"+
+            "\n\tnode0="+node0+
+            "\n\tnode1="+node1);
+      }
+      if(node0.equals( node1 ))
+      {
+        throw new UnsupportedOperationException(
+            "Building an edge from one node not supported");
+      }
+      
       curEdge=model.findEdge( node0, node1  );
       if(curEdge==null)
       {

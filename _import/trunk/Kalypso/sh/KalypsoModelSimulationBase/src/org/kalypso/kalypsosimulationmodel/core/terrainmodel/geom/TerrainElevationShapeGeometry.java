@@ -1,0 +1,105 @@
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom;
+
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+/**
+ * Function property to provide shape for native terrain elevation
+ * 
+ * @author Manadagopal
+ * @author Patrice Congo
+ */
+public class TerrainElevationShapeGeometry extends FeaturePropertyFunction
+{
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
+   */
+  @Override
+  public void init( Map<String, String> properties )
+  {
+    // nothing to do
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object getValue( 
+                  final Feature feature, 
+                  final IPropertyType pt, 
+                  final Object currentValue )
+  {
+    System.out.println("getting shape:"+feature);
+    try
+    {
+      final IFeatureType featureType = feature.getFeatureType();
+      QName featureQName = featureType.getQName();
+      if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( featureQName) )
+      {
+        ITerrainElevationModel terrainElevationModel=
+          (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
+        GM_Envelope bBox = terrainElevationModel.getBoundingBox();
+        GM_Position[] positions = new GM_Position[4];
+        GM_Position min = bBox.getMin();
+        GM_Position max = bBox.getMax();
+        double minx=min.getX();
+        double miny=min.getY();
+        
+        double maxx=max.getX();
+        double maxy=max.getY();
+        
+        double[] coords = 
+              new double[]{minx,miny, maxx,miny , maxx,maxy, minx,maxy, minx,miny,};
+        GM_Curve curve = 
+            GeometryFactory.createGM_Curve( 
+                            coords ,
+                            2,
+                            terrainElevationModel.getCoordinateSystem() );
+        
+        return curve;
+      }
+      else
+      {
+        return null;
+      }
+    }
+    catch( final Exception e )
+    {
+      //final IStatus status = StatusUtilities.statusFromThrowable( e );
+      //KalypsoModelSimulationBaseConsts.getDefault().getLog().log( status );
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+ 
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object setValue( 
+                  final Feature feature, 
+                  final IPropertyType pt, 
+                  final Object valueToSet )
+  {
+    // TODO: change underlying node geometry?
+    return valueToSet;
+  }
+
+}

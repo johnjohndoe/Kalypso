@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
@@ -107,9 +109,7 @@ public class ElevationTheme extends AbstractKalypsoTheme
                       GM_Envelope bbox, 
                       boolean selected )
   {
-    
-    Graphics g1=g.create();
-    g1.setPaintMode();
+
     
     System.out.println(
         "drawing elevation:"+
@@ -124,7 +124,7 @@ public class ElevationTheme extends AbstractKalypsoTheme
      {
        ASCDisplayElement displayElement = new ASCDisplayElement(
            (NativeTerrainElevationModelWrapper)terrainElevationModel);
-       displayElement.paint( g1, p, scale, bbox, selected,colorModel );       
+       displayElement.paint( g, p, scale, bbox, selected,colorModel );       
      }
    }
    

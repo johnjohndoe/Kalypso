@@ -49,7 +49,10 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConst
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Default {@link AbstractFeatureBinder} based implementation
@@ -148,7 +151,43 @@ public class TerrainElevationModelSystem
    */
   public GM_Envelope getBoundingBox( )
   {
-    //TODO iterate through all ele and merge there bb
+    GM_Envelope env=null;
+    int i =  terrainElevationModels.size()-1;
+
+    //find the first non null envelop and init the merged env
+    firstNonNullEnv:for(;i>=0;i--)
+    {
+      GM_Envelope boundingBox = 
+          terrainElevationModels.get( i ).getBoundingBox();
+      if(boundingBox!=null)
+      {
+        GM_Position min = boundingBox.getMin();
+        GM_Position max = boundingBox.getMax();
+        env = GeometryFactory.createGM_Envelope(min.getX(), min.getY(), max.getX(), max.getY());
+        break firstNonNullEnv;
+      }
+    }
+    
+    //merge other env
+    for(;i>=0;i--)
+    {
+      GM_Envelope boundingBox = 
+        terrainElevationModels.get( i ).getBoundingBox();
+      if(boundingBox!=null)
+      {
+        env = env.getMerged( boundingBox );      
+      }
+    }
+    
+    return env;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
+   */
+  public CS_CoordinateSystem getCoordinateSystem( )
+  {
+    //TODO Patrice check whether the elevation do have the same system and return it
     return null;
   }
 }

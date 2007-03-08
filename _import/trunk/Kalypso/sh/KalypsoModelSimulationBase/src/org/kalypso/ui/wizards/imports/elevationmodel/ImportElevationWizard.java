@@ -169,6 +169,10 @@ public class ImportElevationWizard extends Wizard
              
              String nativeTEMRelPath = 
                    modelFolderFile.toURI().relativize( dstFileTif.toURI() ).toString();
+             if(nativeTEMRelPath==null)
+             {
+               nativeTEMRelPath = dstFileTif.toURL().toString();
+             }
               ITerrainElevationModel tem =
                      new NativeTerrainElevationModelWrapper(temSys,nativeTEMRelPath);
               

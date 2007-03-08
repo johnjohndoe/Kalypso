@@ -67,5 +67,10 @@
             class="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
             id="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
             name="Linked-Feature-Property-Fetcher"/>
+      <function
+            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
+            id="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
+            name="Native-Terrain-Elevation-Shape-Builder"/>
    </extension>
+
 </plugin>

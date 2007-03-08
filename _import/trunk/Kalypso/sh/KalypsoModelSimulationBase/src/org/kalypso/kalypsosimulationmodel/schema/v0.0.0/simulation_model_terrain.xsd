@@ -184,6 +184,11 @@
 				Native terrain elevation wrapper; the elevation type is
 				recognized by the file extension
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
+					kapp:property="simBase:geometry"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension
@@ -192,6 +197,9 @@
 					<xs:element 
 						name="fileName" type="xs:anyURI" 
 						minOccurs="0" maxOccurs="1" />
+					<xs:element 
+						name="geometry" 
+						type="gml:LineStringPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

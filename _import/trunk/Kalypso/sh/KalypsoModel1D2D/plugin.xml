@@ -197,6 +197,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D"/>
+         <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator"/>
       </factory>
    </extension>
      <!--extension

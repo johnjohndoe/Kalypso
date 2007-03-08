@@ -12,6 +12,10 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ASCDisplayElement;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -286,6 +290,28 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFEDiscretisationModel1d2d.class, cTor);
+        
+//      IDisplayElement
+        cTor= new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName name = feature.getFeatureType().getQName();
+            if(KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ))
+            {
+              return ASCDisplayElement.createDisplayElement( feature );
+            }
+            else
+            {
+              return null;
+            }
+          }
+        };
+        cMap.put(DisplayElementDecorator.class, cTor);
+        
         
 		return Collections.unmodifiableMap(cMap);
 	}

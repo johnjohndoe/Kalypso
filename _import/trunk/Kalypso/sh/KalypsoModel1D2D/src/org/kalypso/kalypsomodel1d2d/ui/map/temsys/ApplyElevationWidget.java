@@ -119,6 +119,7 @@ public class ApplyElevationWidget
       theme = 
         new ElevationTheme("ASC Theme",mapModell);
       mapModell.addTheme( theme );
+      
     }
     
     dataModel.setElevationTheme( theme );

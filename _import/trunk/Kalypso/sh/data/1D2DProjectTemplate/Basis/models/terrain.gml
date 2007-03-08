@@ -6,4 +6,9 @@
  <simBase:riverProfileNetworkCollectionMember>
   <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840"/>
  </simBase:riverProfileNetworkCollectionMember>
+ <simBase:terrainElevationModelSystem>
+	  <simBase:TerrainElevationModelSystem 
+	  				gml:id="Scenario_Terrain_Elevation_ModelSystem">
+	  </simBase:TerrainElevationModelSystem> 
+ </simBase:terrainElevationModelSystem>
 </simBase:TerrainModel>

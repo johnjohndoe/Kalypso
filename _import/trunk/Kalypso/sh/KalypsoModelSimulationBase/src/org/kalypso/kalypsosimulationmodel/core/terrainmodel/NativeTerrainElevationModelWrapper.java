@@ -57,6 +57,7 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConst
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provide the implementaion of {@link ITerrainElevationModel} for 
@@ -208,5 +209,12 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
   public GM_Envelope getBoundingBox( )
   {
     return elevationProvider.getBoundingBox();
+  }
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
+   */
+  public CS_CoordinateSystem getCoordinateSystem( )
+  {
+    return elevationProvider.getCoordinateSystem();
   }
 }

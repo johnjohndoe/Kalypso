@@ -43,10 +43,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 import java.awt.Color;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 
 /**
- * @author congo
+ * @author Patrice Congo
  *
  */
 public class SimpleElevationColorModel implements IElevationColorModel
@@ -56,8 +55,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
   
   private double minElevation;
   private double maxElevation;
-  private int minHue;
-  private int maxHue;
+  private double minBrightness;
+  private double maxBrightness;
   private Color noElevationColor;
   private Color baseColor;
   private float[] hsb;
@@ -66,14 +65,14 @@ public class SimpleElevationColorModel implements IElevationColorModel
             double minElevation,
             double maxElevation,
             Color baseColor,
-            int minHue,
-            int maxHue,
+            double minBrightness,
+            double maxBrightness,
             Color noElevationColor)
   {
     this.minElevation=minElevation;
     this.maxElevation = maxElevation;
-    this.minHue=minHue;
-    this.maxHue=maxHue;
+    this.minBrightness=minBrightness;
+    this.maxBrightness=maxBrightness;
     this.noElevationColor=noElevationColor;
     this.baseColor=baseColor;
     RGB rgb= new RGB(
@@ -108,10 +107,11 @@ public class SimpleElevationColorModel implements IElevationColorModel
     }
     else if(elevation>=minElevation && elevation<=maxElevation)
     {
-      double cHue = minHue+elevation*(maxHue-minHue)/(maxElevation-minElevation);
+      double brightness = minBrightness+elevation*(maxBrightness-minBrightness)/(maxElevation-minElevation);
+      
       
       return Color.getHSBColor( 
-                  (float)cHue, hsb[1], hsb[2] );
+          hsb[0], hsb[1], (float)brightness );
     }
     else
     {
