@@ -1,4 +1,4 @@
-package org.kalypso.kalypsomodel1d2d.ui.map;
+package org.kalypso.kalypsomodel1d2d.ui.map.cline;
 
 import java.awt.Graphics;
 import java.awt.Point;

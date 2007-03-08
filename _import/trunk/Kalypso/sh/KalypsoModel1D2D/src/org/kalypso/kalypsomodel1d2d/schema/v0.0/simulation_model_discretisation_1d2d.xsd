@@ -757,6 +757,20 @@
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType-->
+	
+	<xs:element 
+		name="continuityLine"
+		type="wb1d2d:ContinuityLinePropertyType"/>
+		
+	<xs:complexType name="ContinuityLinePropertyType">
+		<xs:sequence>
+			<xs:element 
+				ref="wb1d2d:ContinuityLine"
+				minOccurs="0" maxOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
 	<xs:element 
 		name="ContinuityLine"
 		type="wb1d2d:ContinuityLineType"
@@ -782,6 +796,35 @@
 					</xs:sequence>
 				
 			</xs:extension>			
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!--  ===============================================================
+		Element 1D Continuity line Junction element context
+	 =================================================================-->
+	 <xs:element 
+		name="JunctionContext"
+		type="wb1d2d:JunctionContextType"
+		substitutionGroup="wb1d2d:ComplexElement"/>
+	<xs:complexType name="JunctionContextType">
+		<xs:annotation>
+			<xs:documentation>
+				The context for a junction base on a
+				continuity line and a 1d element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction 
+				base="wb1d2d:ComplexElementType">
+					<xs:sequence>
+						<xs:element 
+							ref="wb1d2d:element1D"
+							minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+							ref="wb1d2d:continuityLine"
+							minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+			</xs:restriction>
 		</xs:complexContent>	
 	</xs:complexType>
 	
@@ -888,8 +931,11 @@
 			<xs:extension 
 				base="wb1d2d:AbstractJunctionType">
 					<xs:sequence>
-						<xs:element
-							name="edge1D"
+						<xs:element 
+							ref="wb1d2d:directedEdge"
+							minOccurs="1" maxOccurs="1"/>
+						<!--xs:element
+							name="edge1dD"
 							type="wb1d2d:DirectedEdgePropertyType"/>
 						<xs:element
 							name="continuityLine"
@@ -899,7 +945,7 @@
 							type="gml:LineStringPropertyType"/>
 						<xs:element
 							name="targetNode"
-							type="wb1d2d:NodePropertyType"/>					
+							type="wb1d2d:NodePropertyType"/-->					
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

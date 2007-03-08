@@ -68,6 +68,9 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = 
         new QName(  UrlCatalog1D2D.MODEL_1D2D_NS, 
                     "EdgeToEdgeJunction1D2D" );
+      public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE = 
+        new QName(  UrlCatalog1D2D.MODEL_1D2D_NS, 
+                    "EdgeToClineJunction1D2D" );
       
       public static final QName WB1D2D_F_POLY_ELEMENT = 
             new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" );

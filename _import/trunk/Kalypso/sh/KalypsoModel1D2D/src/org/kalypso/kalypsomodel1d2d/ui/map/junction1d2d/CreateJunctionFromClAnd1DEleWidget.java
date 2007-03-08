@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
@@ -71,7 +73,9 @@ public class CreateJunctionFromClAnd1DEleWidget
 
   public CreateJunctionFromClAnd1DEleWidget()
   {
-    super(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT);
+    super(new QName[]{
+          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
+          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D});
     selectionFilter= new QNameBasedSelectionFilter();
     selectionFilter.add( 
         Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
@@ -127,14 +131,14 @@ public class CreateJunctionFromClAnd1DEleWidget
            "Please select an 1d element and a cl:"+Arrays.asList( selectedFeatures ));
      }
      IFEDiscretisationModel1d2d model1d2d = 
-         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT);
+         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D);
     AddJunctionElementFromClAndElement1DCmd junctionCmd=
        new AddJunctionElementFromClAndElement1DCmd(
            model1d2d,
            selected1DEle,
            selectedCLine);
      CommandableWorkspace workspace = 
-       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT).getWorkspace();
+       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D).getWorkspace();
      ChangeDiscretiationModelCommand changeModelCmd=
            new ChangeDiscretiationModelCommand(
                workspace,model1d2d);

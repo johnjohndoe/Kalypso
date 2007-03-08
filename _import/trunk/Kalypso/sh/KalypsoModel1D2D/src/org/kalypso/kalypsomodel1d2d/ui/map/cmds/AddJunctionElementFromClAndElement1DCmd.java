@@ -93,10 +93,11 @@ public class AddJunctionElementFromClAndElement1DCmd implements IDiscrModel1d2dC
     Assert.throwIAEOnNullParam( model, "model" );
     Assert.throwIAEOnNullParam( element1D, "element1D" );
     Assert.throwIAEOnNullParam( continuityLine, "continuityLine" );
+
     this.model=model;
     this.element1D=element1D;
     this.continuityLine=continuityLine;
-    
+
   }
   
   /**
@@ -141,10 +142,12 @@ public class AddJunctionElementFromClAndElement1DCmd implements IDiscrModel1d2dC
           System.out.println("Could not find cl middle edge");
           return;
         }
-        IFEMiddleNode targetClNodel = addTargetCLNode(clMiddleEdge);
-        
+
         IFE1D2DNode<IFE1D2DEdge> node0 = 
-                          findJunctionStartNode(elementEdge);
+          findJunctionStartNode(elementEdge);
+        
+        IFE1D2DNode targetClNodel = addTargetCLNode(continuityLine,node0);
+        
         
         IFE1D2DEdge curEdge = model.findEdge( node0, targetClNodel );
         if(curEdge==null)
@@ -194,25 +197,44 @@ public class AddJunctionElementFromClAndElement1DCmd implements IDiscrModel1d2dC
     return null;
   }
 
-  private final IFEMiddleNode addTargetCLNode( 
-                        IFE1D2DEdge clMiddleEdge )
+  private final IFE1D2DNode addTargetCLNode( 
+                        IFE1D2DContinuityLine cLine, IFE1D2DNode startNode )
   {
-    IFE1D2DNode node0 = clMiddleEdge.getNode( 0 );
-    IFE1D2DNode node1 = clMiddleEdge.getNode( 1 );
-    GM_Point point0 = node0.getPoint();
-    GM_Point point1 = node1.getPoint();
-    double x=(point0.getX()+point1.getX())/2;
-    double y=(point0.getY()+point1.getY())/2;
-    CS_CoordinateSystem crs=point0.getCoordinateSystem();
-    GM_Point middleNodePoint = 
+    IFeatureWrapperCollection<IFE1D2DEdge> cLineEdges = cLine.getEdges();
+    final int SIZE = cLineEdges.size();
+    GM_Point middlePoint;
+    if((SIZE %2)==0)
+    {
+      //the target point taken from the end of middle left node
+      IFE1D2DNode middleNode=cLineEdges.get( SIZE/2-1 ).getNode( 1 );
+      middlePoint = middleNode.getPoint();
+      
+    }
+    else
+    {
+      //middle of middle edge
+      IFE1D2DEdge middleEdge = cLineEdges.get( (int)Math.floor( SIZE/2.0 ) );
+      GM_Point point0 = middleEdge.getNode( 0 ).getPoint();
+      GM_Point point1 = middleEdge.getNode( 1 ).getPoint();
+      double x=(point0.getX()+point1.getX())/2;
+      double y=(point0.getY()+point1.getY())/2;
+      CS_CoordinateSystem crs=point0.getCoordinateSystem();
+      middlePoint = GeometryFactory.createGM_Point( x, y, crs );
+    }
+    
+    GM_Point startPoint = startNode.getPoint();
+    double x=(middlePoint.getX()*9 + startPoint.getX())/10;
+    double y=(middlePoint.getY()*9 + startPoint.getY())/10;
+    CS_CoordinateSystem crs=startPoint.getCoordinateSystem();
+    GM_Point targetPoint = 
               GeometryFactory.createGM_Point( x, y, crs );
-    IFEMiddleNode middleNode = 
-      (IFEMiddleNode) model.getNodes().addNew( 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_MIDDLE_NODE );
-    middleNode.setPoint( middleNodePoint );
+    IFE1D2DNode targetNode = 
+      model.getNodes().addNew( 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    targetNode.setPoint( targetPoint );
     //TODO check if this is not breaking the find egde computation
-    middleNode.addContainer( clMiddleEdge.getGmlID() );
-    return middleNode;
+    
+    return targetNode;
   }
 
   private IFE1D2DEdge findCLMiddleEdge( 

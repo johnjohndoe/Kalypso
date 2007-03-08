@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.geom;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
+import org.kalypso.kalypsomodel1d2d.schema.binding.FEEdgeToCLineJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
@@ -257,5 +258,16 @@ public class ModelGeometryBuilder
     
     return GeometryFactory.createGM_Curve( positions, targetPoint.getCoordinateSystem() );
     
+  }
+
+  public static GM_Object computeEdgeToCLineJunction1D2DGeometry( FEEdgeToCLineJunction1D2D junction1D2D ) throws GM_Exception
+  {
+    Assert.throwIAEOnNullParam( junction1D2D, "junction1D2D" );
+    IFE1D2DEdge edge = junction1D2D.getEdge();
+    if(edge==null)
+    {
+      return null;
+    }
+    return computeEgdeGeometry( edge );
   }
 }

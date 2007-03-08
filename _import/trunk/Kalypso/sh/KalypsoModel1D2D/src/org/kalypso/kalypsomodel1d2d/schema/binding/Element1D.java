@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -87,26 +88,36 @@ public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D
    */
   public void setEdge( final IFE1D2DEdge edge )
   {
-    final String linkToEdge;
-    if( edge == null )
-      linkToEdge = null;
-    else
-      linkToEdge = edge.getGmlID();
-
+    IFE1D2DEdge oldEdge = getEdge();
+    final String gmlID = getGmlID();
+    if(oldEdge!=null)
+    {
+      for(;oldEdge.getContainers().remove( gmlID );)
+      {
+        //removing all links
+      }
+    }
+    
     final Feature feature = getFeature();
-    feature.setProperty( QNAME_PROPS_DIRECTED_EDGE, linkToEdge );
-
-    final IFeatureWrapperCollection containers = edge.getContainers();
-    if( linkToEdge == null )
-      containers.remove( this );
+    if( edge == null )
+    {
+      feature.setProperty( QNAME_PROPS_DIRECTED_EDGE, null );
+    }
     else
     {
-      String gmlID = getGmlID();
+      final String linkToEdge  = edge.getGmlID();
+      feature.setProperty( QNAME_PROPS_DIRECTED_EDGE, linkToEdge );
+      
+      final IFeatureWrapperCollection containers = edge.getContainers();
+      FeatureList wrappedList = containers.getWrappedList();
       // TODO: only add if not already present. 
       // May the containers contain me twice?
-      if( !containers.contains( gmlID ) )
-        containers.add( gmlID );
-    }
+        if( !wrappedList.contains( gmlID ) )
+        {
+          wrappedList.add( gmlID );
+        }
+     }
+    
   }
 
   /**
