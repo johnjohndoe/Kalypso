@@ -156,26 +156,20 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     if( profil != null )
     {
       final String profiletype = profil.getType();
-      final IProfilLayerProvider[] providers = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
-      if( providers == null )
+      final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
+      if( provider == null )
         return;
-      for( final IProfilLayerProvider provider : providers )
+      // call provider
+      final String[] requieredLayer = provider.getRequiredLayer( this );
+      final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
+      for( final String layerId : requieredLayer )
       {
-        if( provider == null )
-          return;
-
-        // call provider
-        final String[] requieredLayer = provider.getRequiredLayer( this );
-        final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
-        for( final String layerId : requieredLayer )
+        for( final IProfilChartLayer layer : provider.getLayer( layerId, this ) )
         {
-          for( final IProfilChartLayer layer : provider.getLayer( layerId, this ) )
-          {
-            layers.add( layer );
-          }
+          layers.add( layer );
         }
-        addLayer( layers.toArray( new IProfilChartLayer[0] ), visibility );
       }
+      addLayer( layers.toArray( new IProfilChartLayer[0] ), visibility );
     }
   }
 
@@ -214,11 +208,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_valueRangeLeft = new AxisRange( null, SwitchDelegate.VERTICAL, true, 5, 1.0 );
     m_valueRangeRight = new AxisRange( null, SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
-//    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
-//    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
-//    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+    // m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
+    // m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
+    // m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
-    
     final IAxisRenderer domainrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );
     final IAxisRenderer leftrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, false );
     final IAxisRenderer rightrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );

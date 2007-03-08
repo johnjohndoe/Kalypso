@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -97,19 +96,22 @@ public class KalypsoModelWspmUIExtensions
     return targets.toArray( a );
   }
 
-  public static IProfilLayerProvider[] createProfilLayerProvider( final String profiletype )
+  public static IProfilLayerProvider createProfilLayerProvider( final String profiletype, final String providerId )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
-    final List<IProfilLayerProvider> layerProvider = new ArrayList<IProfilLayerProvider> ();
+
     for( final IConfigurationElement element : elements )
     {
       final String type = element.getAttribute( "profiletype" );
-      if( type.equals( profiletype ) )
+      final String id = element.getAttribute( "id" );
+      if( type.equals( profiletype ) && id.equals(providerId ) )
       {
         try
         {
-          layerProvider.add((IProfilLayerProvider)  element.createExecutableExtension( "provider" ) );
+          final Object layerProvider = element.createExecutableExtension( "provider" );
+          if( layerProvider instanceof IProfilLayerProvider )
+            return (IProfilLayerProvider) layerProvider;
         }
         catch( final CoreException e )
         {
@@ -117,10 +119,14 @@ public class KalypsoModelWspmUIExtensions
         }
       }
     }
-    if( layerProvider.size() > 0 )
-      return layerProvider.toArray(new IProfilLayerProvider[0]);
     final IStatus status = StatusUtilities.createWarningStatus( "No profile layer provider for type: " + profiletype );
     KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
     return null;
+
+  }
+
+  public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
+  {
+    return createProfilLayerProvider( profiletype, "org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider" );
   }
 }

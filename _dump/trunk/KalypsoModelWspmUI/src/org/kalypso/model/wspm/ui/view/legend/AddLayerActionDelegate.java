@@ -69,19 +69,16 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     }
 
     // liste anzeigen
-    // final AddableLayer[] addables = createAddables( profil );
+
     final List<IProfilChartLayer> addables = new ArrayList<IProfilChartLayer>();
-    final IProfilLayerProvider[] layerProviders = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
-    if( layerProviders != null )
+    final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
+    if( layerProvider != null )
     {
-      for( final IProfilLayerProvider provider : layerProviders )
+      for( final String al : layerProvider.getAddableLayers( profilChartView ) )
       {
-        for( final String al : provider.getAddableLayers( profilChartView ) )
-        {
-          final IProfilChartLayer[] layers = provider.getLayer( al, profilChartView );
-          if( layers != null )
-            addables.addAll( Arrays.asList(layers) );
-        }
+        final IProfilChartLayer[] layers = layerProvider.getLayer( al, profilChartView );
+        if( layers != null )
+          addables.addAll( Arrays.asList( layers ) );
       }
     }
 
@@ -89,8 +86,14 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     dialog.setAddCancelButton( true );
     dialog.setBlockOnOpen( true );
     dialog.setContentProvider( new ArrayContentProvider() );
-    dialog.setLabelProvider( new LabelProvider(){@Override
-    public final String getText(Object element){return ((IProfilChartLayer) element).getLabel();}} );
+    dialog.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public final String getText( Object element )
+      {
+        return ((IProfilChartLayer) element).getLabel();
+      }
+    } );
     dialog.setInput( addables );
     dialog.setMessage( "Folgende Datensätze können hinzugefügt werden:" );
     dialog.setTitle( "Datensatz hinzufügen" );
@@ -101,171 +104,13 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     if( result == null || result.length != 1 )
       return;
     // TODO: reset undo + message to user
-    // try
-    // {
     final String layerToAdd = ((IProfilChartLayer) result[0]).getId();
-    if( layerProviders != null )
+    if( layerProvider != null )
     {
-      for( final IProfilLayerProvider provider : layerProviders )
+      if( layerProvider.providesLayer( layerToAdd ) )
       {
-        if( provider.providesLayer( layerToAdd ) )
-        {
-          provider.addLayerToChart( profilChartView, layerToAdd );
-        }
+        layerProvider.addLayerToChart( profilChartView, layerToAdd );
       }
     }
   }
 }
-// final IProfilChange[] changes = new IProfilChange[pointProperties.size()+1];
-// for( int i = 0; i < pointProperties.size(); i++ )
-// {
-// changes[i] = new PointPropertyAdd( profil, pointProperties.get( i ), 0 );
-// }
-// // changes[pointProperties.size()+1]= new ProfileObjectSet();
-//
-// final ProfilOperation operation = new ProfilOperation( layerToAdd + " einfügen",
-// profilChartView.getProfilEventManager(), changes, true );
-// new ProfilOperationJob( operation ).schedule();
-//
-// // ((AddableLayer) result[0]).perform( profil, profilChartView.getProfilEventManager() );
-// }
-// catch( final Exception e )
-// {
-// e.printStackTrace();
-//
-// handleError( "Datensatz konnte nicht hinzugefügt werden.\n" + e.getLocalizedMessage() );
-// }
-// }
-
-// private AddableLayer[] createAddables( final IProfil profil )
-// {
-// final Collection<AddableLayer> addables = new ArrayList<AddableLayer>();
-//
-// // Bauwerke
-//
-// if( profil.getProfileObject() == null )
-// {
-// for( AddableLayer bl : AddableBuildingLayer.getAddableBuildingLayer() )
-// {
-// addables.add( bl );
-// }
-// }
-//
-// // Bewuchs
-// if( !profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-// addables.add( AddableLayer.BEWUCHS );
-//
-// // Rechtswert Hochwert
-// if( !profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-// addables.add( AddableLayer.HOCHWERT );
-//
-// // Rauheit
-// if( !profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT ) )
-// addables.add( AddableLayer.RAUHEIT );
-//
-// return addables.toArray( new AddableLayer[addables.size()] );
-// }
-//
-// private static abstract class AddableLayer
-// {
-// public static final AddableLayer BEWUCHS = new AddableLayer( "Bewuchs" )
-// {
-// @Override
-// public void perform( final IProfil profil, final IProfilEventManager pem )
-// {
-// final IProfilChange[] changes = new IProfilChange[3];
-// changes[0] = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, 0 );
-// changes[1] = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, 0 );
-// changes[2] = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, 0 );
-//
-// final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", pem, changes, true );
-// new ProfilOperationJob( operation ).schedule();
-// }
-// };
-//
-// public static final AddableLayer HOCHWERT = new AddableLayer( "Geokoordinaten RW/HW" )
-// {
-// @Override
-// public void perform( final IProfil profil, final IProfilEventManager pem )
-// {
-// final IProfilChange[] changes = new IProfilChange[2];
-// changes[0] = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT, 0 );
-// changes[1] = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT, 0 );
-// final ProfilOperation operation = new ProfilOperation( "Geokoordinaten einfügen", pem, changes, true );
-// new ProfilOperationJob( operation ).schedule();
-// }
-// };
-//
-// public static final AddableLayer RAUHEIT = new AddableLayer( "Rauheiten" )
-// {
-// @Override
-// public void perform( final IProfil profil, final IProfilEventManager pem )
-// {
-// final IProfilChange change = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT, 0 );
-// final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", pem, change, true );
-// new ProfilOperationJob( operation ).schedule();
-// }
-// };
-//
-// private final String m_label;
-//
-// protected AddableLayer( final String label )
-// {
-// m_label = label;
-// }
-//
-// public abstract void perform( final IProfil profil, final IProfilEventManager pem ) throws ProfilDataException;
-//
-// @Override
-// public String toString( )
-// {
-// return m_label;
-// }
-// }
-//
-// private static class AddableBuildingLayer extends AddableLayer
-// {
-//
-// public final static AddableLayer BRUECKE = new AddableBuildingLayer( "Brücke", IWspmConstants.BUILDING_TYP_BRUECKE );
-//
-// public final static AddableLayer WEHR = new AddableBuildingLayer( "Wehr", IWspmConstants.BUILDING_TYP_WEHR );
-//
-// public final static AddableLayer KREIS = new AddableBuildingLayer( "Kreis - Durchlass",
-// IWspmConstants.BUILDING_TYP_KREIS );
-//
-// public final static AddableLayer TRAPEZ = new AddableBuildingLayer( "Trapez - Durchlass",
-// IWspmConstants.BUILDING_TYP_TRAPEZ );
-//
-// public final static AddableLayer MAUL = new AddableBuildingLayer( "Maul - Durchlass",
-// IWspmConstants.BUILDING_TYP_MAUL );
-//
-// public final static AddableLayer EI = new AddableBuildingLayer( "Ei - Durchlass", IWspmConstants.BUILDING_TYP_EI );
-//
-// private final String m_buildingTyp;
-//
-// private AddableBuildingLayer( final String label, final String buildingTyp )
-// {
-// super( label );
-//
-// m_buildingTyp = buildingTyp;
-// }
-//
-// final static AddableLayer[] getAddableBuildingLayer( )
-// {
-// AddableLayer[] buildingLayer = { BRUECKE, WEHR, KREIS, TRAPEZ, MAUL, EI };
-// return buildingLayer;
-// }
-//
-// @Override
-// public void perform( final IProfil profil, final IProfilEventManager pem )
-// {
-// final IProfileObject building = ProfilBuildingFactory.createProfilBuilding( m_buildingTyp );
-//
-// final ProfileObjectSet buildingChange = new ProfileObjectSet( profil, building );
-// final ProfilOperation operation = new ProfilOperation( building.toString() + " einfügen", pem, buildingChange, true
-// );
-// new ProfilOperationJob( operation ).schedule();
-//
-// }
-// }
-// }
