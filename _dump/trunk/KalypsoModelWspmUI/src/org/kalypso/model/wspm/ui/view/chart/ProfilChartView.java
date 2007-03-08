@@ -112,7 +112,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
   {
-    this( pem, viewdata, new IStationResult[0], colorRegistry, null );
+    this( pem, viewdata, new IStationResult[0], colorRegistry );
   }
 
   public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry )
