@@ -7,6 +7,7 @@ Bundle-Activator: org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.tuhh.ui,
+ org.kalypso.model.wspm.tuhh.ui.chart,
  org.kalypso.model.wspm.tuhh.ui.rules
 Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.tuhh.core,

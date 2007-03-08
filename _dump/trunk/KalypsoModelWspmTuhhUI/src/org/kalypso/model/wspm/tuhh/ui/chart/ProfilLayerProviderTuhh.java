@@ -279,74 +279,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     return layerToAdd.toArray( new String[0] );
   }
 
-  // final List<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
-  // final IProfil profil = view.getProfil();
-  // final ColorRegistry colorRegistry = view.getColorRegistry();
-  // final Color foreground = colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND );
-  // final Color stations = colorRegistry.get( IProfilColorSet.COLOUR_STATIONS );
-  // final AxisRange valueRangeLeft = view.getValueRangeLeft();
-  // final AxisRange valueRangeRight = view.getValueRangeRight();
-  // final AxisRange domainRange = view.getDomainRange();
-  // layers.add( new GelaendeLayer( view, domainRange, valueRangeLeft, colorRegistry.get(
-  // IProfilColorSet.COLOUR_GELAENDE ), colorRegistry.get( IProfilColorSet.COLOUR_GELAENDE_MARKED ), stations,
-  // foreground ) );
-  // final IProfilChartLayer buildingLayer = BuildingLayerFactory.createLayer( view, domainRange, valueRangeLeft,
-  // colorRegistry );
-  // if( buildingLayer != null )
-  // layers.add( buildingLayer );
-  // layers.add( new TrennerLayer( view, domainRange, valueRangeLeft, colorRegistry ) );
-  // final IProfilPointProperty[] props = profil.getPointProperties();
-  // for( final IProfilPointProperty prop : props )
-  // {
-  // if( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT.equals( prop.getId() ) )
-  // {
-  // layers.add( new HochRechtsLayer( view, domainRange, valueRangeLeft, colorRegistry.get(
-  // IProfilColorSet.COLOUR_AXIS_FOREGROUND ) ) );
-  // }
-  // else if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.equals( prop.getId() ) )
-  // {
-  // layers.add( new BewuchsLayer( view, domainRange, valueRangeLeft, colorRegistry.get( IProfilColorSet.COLOUR_BEWUCHS
-  // ) ) );
-  // }
-  // else if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT.equals( prop.getId() ) )
-  // {
-  // layers.add( new RauheitLayer( view, domainRange, valueRangeRight, colorRegistry.get(
-  // IProfilColorSet.COLOUR_AXIS_FOREGROUND ), colorRegistry.get( IProfilColorSet.COLOUR_RAUHEIT ) ) );
-  // }
-  // }
-  //
-  // // Wasserpiegel
-  // for( final IStationResult result : results )
-  // {
-  // // only if we have got a wsp for this profile
-  // if( result.getComponentValue( "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" ) != null )
-  // layers.add( new WspLayer( view, domainRange, valueRangeLeft, colorRegistry.get( IProfilColorSet.COLOUR_WSP ),
-  // result ) );
-  // }
-  //
-  // return layers.toArray( new IProfilChartLayer[layers.size()] );
-  // }
-  //
-  // private IProfilChartLayer createBuildingLayer( final ProfilChartView view, final String building, final AxisRange
-  // domainRange, final AxisRange valueRange, final ColorRegistry colorRegistry )
-  // {
-  // if( building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) )
-  // return new KreisBuildingLayer( view, domainRange, valueRange, colorRegistry.get( IProfilColorSet ) );
-  // else if( building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
-  // return new EiBuildingLayer( chartView, domainRange, valueRange, colorRegistry.get( IProfilColorSet ) );
-  // else if( building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) == 0 )
-  // return new MaulBuildingLayer( chartView, domainRange, valueRange, colorRegistry.get( IProfilColorSet ) );
-  // else if( building.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
-  // return new TrapezBuildingLayer( chartView, domainRange, valueRange, colorRegistry.get( IProfilColorSet ) );
-  // else if( building.equals( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
-  // return new WehrBuildingLayer( chartView, domainRange, valueRange, Arrays.asList( colorRegistry.get( IProfilColorSet
-  // ), colorWehr, colorWehr, colorForeground ) );
-  // else if( building.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) == 0 )
-  // return new BrueckeBuildingLayer( chartView, domainRange, valueRange, Arrays.asList( colorRegistry.get(
-  // IProfilColorSet, colorRegistry.get( IProfilColorSet ), colorOKBruecke, colorOKBruecke, colorForeground ) ) );
-  // else
-  // return null;
-  // }
+ 
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getLayer(java.lang.String)
