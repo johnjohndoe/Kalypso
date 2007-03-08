@@ -89,5 +89,9 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
 
     catalog.put( NS.SWE_EXTENSIONS, getClass().getResource( "commons/sweExtensions.xsd" ) );
     prefixes.put( NS.SWE_EXTENSIONS, "sweExt" );
+    
+    catalog.put( NS.COMMON_MATHRANGES, getClass().getResource( "commons/mathRanges.xsd" ) );
+    prefixes.put( NS.COMMON_MATHRANGES, "mathRanges" );
+
   }
 }
