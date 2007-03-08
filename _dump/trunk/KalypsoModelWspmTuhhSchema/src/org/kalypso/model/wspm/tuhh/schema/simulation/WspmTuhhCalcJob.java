@@ -241,7 +241,167 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      MODE calcMode = calculation.getCalcMode();
+      final MODE calcMode = calculation.getCalcMode();
+
+      //
+      // laengsschnitt.txt
+      //
+      final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
+      if( lenSecFile.exists() )
+      {
+        resultEater.addResult( "LengthSection", lenSecFile );
+        log.log( false, " - Längsschnitt erzeugt." );
+
+        // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
+        // (without header) + new footer
+        File lengthSectionGmlFile = new File( tmpDir, "lengthSectionGml.gml" );
+
+        headerInputStream = getClass().getResourceAsStream( "resources/headerLenghSection.txt" );
+        footerInputStream = getClass().getResourceAsStream( "resources/footerLenghSection.txt" );
+
+        // Info: gml header file contains same encoding
+        final String strHeader = IOUtils.toString( headerInputStream, WSPMTUHH_CODEPAGE );
+        final String strFooter = IOUtils.toString( footerInputStream, WSPMTUHH_CODEPAGE );
+        String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
+
+        // introduce space around 'NaN' and '***' values to make it parseable
+        strLengthSection = strLengthSection.replaceAll( "NaN", " -999.999 " );
+        // strLengthSection = strLengthSection.replaceAll( "\\**" , " NaN " );
+
+        // remove first two rows (old header) from laengsschnitt.txt
+        int pos = strLengthSection.indexOf( "\n" );
+        pos = strLengthSection.indexOf( "\n", pos + 1 );
+        strLengthSection = org.apache.commons.lang.StringUtils.right( strLengthSection, strLengthSection.length() - pos );
+
+        FileUtils.writeStringToFile( lengthSectionGmlFile, strHeader + strLengthSection + strFooter, WSPMTUHH_CODEPAGE );
+        if( lengthSectionGmlFile.exists() )
+        {
+          resultEater.addResult( "LengthSectionGml", lengthSectionGmlFile );
+          log.log( false, " - Längsschnitt (als GML) erzeugt." );
+
+          // Read Length-Section GML
+          final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL(), null );
+          final Feature rootFeature = obsWks.getRootFeature();
+
+          final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
+          final TupleResult result = lengthSectionObs.getResult();
+          final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
+          final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
+          final TuhhReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+
+          //
+          // Diagramm
+          //
+          try
+          {
+            final File diagFile = new File( tmpDir, "Längsschnitt.kod" );
+
+            final WspmWaterBody waterBody = calculation.getReach().getWaterBody();
+            LaengsschnittHelper.createDiagram( diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
+            if( diagFile.exists() )
+            {
+              resultEater.addResult( "LengthSectionDiag", diagFile );
+              log.log( false, " - Längsschnitt-Diagramm erzeugt." );
+            }
+          }
+          catch( final Exception e )
+          {
+            log.log( e, "Längsschnitt-Diagramm konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
+          }
+
+          if( log.checkCanceled() )
+            return;
+
+          //
+          // Table
+          //
+          try
+          {
+            final File tableFile = new File( tmpDir, "table.gft" );
+            final URL tableUrl = getClass().getResource( "resources/table.gft" );
+            FileUtilities.makeFileFromUrl( tableUrl, tableFile, false );
+
+            resultEater.addResult( "LengthSectionTab", tableFile );
+            log.log( false, " - Tabelle erzeugt." );
+          }
+          catch( final Exception e )
+          {
+            log.log( e, "Tabelle konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
+          }
+
+          if( log.checkCanceled() )
+            return;
+
+          //
+          // Breaklines
+          //
+          try
+          {
+            final File breaklineFile = new File( tmpDir, "Bruchkanten.gml" );
+            BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( epsThinning ), breaklineFile );
+            if( breaklineFile.exists() )
+            {
+              resultEater.addResult( "Bruchkanten", breaklineFile );
+              log.log( false, " - Bruchkanten erzeugt." );
+            }
+          }
+          catch( final Exception e )
+          {
+            log.log( e, "Bruchkanten konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
+          }
+
+          if( log.checkCanceled() )
+            return;
+
+          //
+          // Model-Boundaries
+          //
+          try
+          {
+            final File file = new File( tmpDir, "Modellgrenzen.gml" );
+            BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, false );
+            if( file.exists() )
+            {
+              resultEater.addResult( "Modellgrenzen", file );
+              log.log( false, " - Modellgrenzen erzeugt." );
+            }
+          }
+          catch( final Exception e )
+          {
+            log.log( e, "Modellgrenzen konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
+          }
+
+          if( log.checkCanceled() )
+            return;
+
+          //
+          // Waterlevel
+          //
+          try
+          {
+            final File file = new File( tmpDir, "Überschwemmungslinie.gml" );
+            BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, true );
+            if( file.exists() )
+            {
+              resultEater.addResult( "Ueberschwemmungslinie", file );
+              log.log( false, " - Überschwemmungslinie erzeugt." );
+            }
+          }
+          catch( final Exception e )
+          {
+            log.log( e, "Überschwemmungslinie konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
+          }
+
+          if( log.checkCanceled() )
+            return;
+        }
+      }
+      else
+      {
+        if( calcMode == MODE.WATERLEVEL || calcMode == MODE.BF_NON_UNIFORM )
+          log.log( false, "Ergebnisdatei %s fehlt, vermutlich ein Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs.", lenSecFile.getName() );
+      }
+
       switch( calcMode )
       {
         case WATERLEVEL:
@@ -268,165 +428,6 @@ public class WspmTuhhCalcJob implements ISimulation
 
           if( log.checkCanceled() )
             return;
-
-          //
-          // laengsschnitt.txt
-          //
-          final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
-          if( lenSecFile.exists() )
-          {
-            resultEater.addResult( "LengthSection", lenSecFile );
-            log.log( false, " - Längsschnitt erzeugt." );
-
-            // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
-            // (without header) + new footer
-            File lengthSectionGmlFile = new File( tmpDir, "lengthSectionGml.gml" );
-
-            headerInputStream = getClass().getResourceAsStream( "resources/headerLenghSection.txt" );
-            footerInputStream = getClass().getResourceAsStream( "resources/footerLenghSection.txt" );
-
-            // Info: gml header file contains same encoding
-            final String strHeader = IOUtils.toString( headerInputStream, WSPMTUHH_CODEPAGE );
-            final String strFooter = IOUtils.toString( footerInputStream, WSPMTUHH_CODEPAGE );
-            String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
-
-            // introduce space around 'NaN' and '***' values to make it parseable
-            strLengthSection = strLengthSection.replaceAll( "NaN", " -999.999 " );
-            // strLengthSection = strLengthSection.replaceAll( "\\**" , " NaN " );
-
-            // remove first two rows (old header) from laengsschnitt.txt
-            int pos = strLengthSection.indexOf( "\n" );
-            pos = strLengthSection.indexOf( "\n", pos + 1 );
-            strLengthSection = org.apache.commons.lang.StringUtils.right( strLengthSection, strLengthSection.length() - pos );
-
-            FileUtils.writeStringToFile( lengthSectionGmlFile, strHeader + strLengthSection + strFooter, WSPMTUHH_CODEPAGE );
-            if( lengthSectionGmlFile.exists() )
-            {
-              resultEater.addResult( "LengthSectionGml", lengthSectionGmlFile );
-              log.log( false, " - Längsschnitt (als GML) erzeugt." );
-
-              // Read Length-Section GML
-              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL(), null );
-              final Feature rootFeature = obsWks.getRootFeature();
-
-              final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
-              final TupleResult result = lengthSectionObs.getResult();
-              final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
-              final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
-              final TuhhReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
-
-              //
-              // Diagramm
-              //
-              try
-              {
-                final File diagFile = new File( tmpDir, "Längsschnitt.kod" );
-
-                final WspmWaterBody waterBody = calculation.getReach().getWaterBody();
-                LaengsschnittHelper.createDiagram( diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
-                if( diagFile.exists() )
-                {
-                  resultEater.addResult( "LengthSectionDiag", diagFile );
-                  log.log( false, " - Längsschnitt-Diagramm erzeugt." );
-                }
-              }
-              catch( final Exception e )
-              {
-                log.log( e, "Längsschnitt-Diagramm konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
-              }
-
-              if( log.checkCanceled() )
-                return;
-
-              //
-              // Table
-              //
-              try
-              {
-                final File tableFile = new File( tmpDir, "table.gft" );
-                final URL tableUrl = getClass().getResource( "resources/table.gft" );
-                FileUtilities.makeFileFromUrl( tableUrl, tableFile, false );
-
-                resultEater.addResult( "LengthSectionTab", tableFile );
-                log.log( false, " - Tabelle erzeugt." );
-              }
-              catch( final Exception e )
-              {
-                log.log( e, "Tabelle konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
-              }
-
-              if( log.checkCanceled() )
-                return;
-
-              //
-              // Breaklines
-              //
-              try
-              {
-                final File breaklineFile = new File( tmpDir, "Bruchkanten.gml" );
-                BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( epsThinning ), breaklineFile );
-                if( breaklineFile.exists() )
-                {
-                  resultEater.addResult( "Bruchkanten", breaklineFile );
-                  log.log( false, " - Bruchkanten erzeugt." );
-                }
-              }
-              catch( final Exception e )
-              {
-                log.log( e, "Bruchkanten konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
-              }
-
-              if( log.checkCanceled() )
-                return;
-
-              //
-              // Model-Boundaries
-              //
-              try
-              {
-                final File file = new File( tmpDir, "Modellgrenzen.gml" );
-                BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, false );
-                if( file.exists() )
-                {
-                  resultEater.addResult( "Modellgrenzen", file );
-                  log.log( false, " - Modellgrenzen erzeugt." );
-                }
-              }
-              catch( final Exception e )
-              {
-                log.log( e, "Modellgrenzen konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
-              }
-
-              if( log.checkCanceled() )
-                return;
-
-              //
-              // Waterlevel
-              //
-              try
-              {
-                final File file = new File( tmpDir, "Überschwemmungslinie.gml" );
-                BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, true );
-                if( file.exists() )
-                {
-                  resultEater.addResult( "Ueberschwemmungslinie", file );
-                  log.log( false, " - Überschwemmungslinie erzeugt." );
-                }
-              }
-              catch( final Exception e )
-              {
-                log.log( e, "Überschwemmungslinie konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
-              }
-
-              if( log.checkCanceled() )
-                return;
-
-            }
-          }
-          else
-          {
-            log.log( false, "Ergebnisdatei %s fehlt, vermutlich ein Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs.", lenSecFile.getName() );
-          }
 
           // *.tab (-> fixed name "Ergebnis.list")
           final FileFilter ergListFilter = FileFilterUtils.suffixFileFilter( ".tab" );
@@ -496,13 +497,11 @@ public class WspmTuhhCalcJob implements ISimulation
             resultEater.addResult( "resultListsNonUni", resNonUniDir );
             log.log( false, " - Ergebnislisten pro Abfluss erzeugt." );
           }
-          
 
           /* Calculate and fetch Polynomes */
           final File polynomeTmpDir = new File( tmpDir, "polynome" );
           PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, log, lTimeout, resultEater, calculation );
 
-          
           break;
         }
       }

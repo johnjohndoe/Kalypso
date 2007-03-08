@@ -64,6 +64,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -122,18 +123,18 @@ public class PolynomeHelper
     final File ausFile = new File( dathDir, "Beiwerte.AUS" );
 
     /* Check input data */
-    // TODO comment in
-    // if( !lsFile.exists() )
-    // {
-    // log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", lsFile );
-    // return false;
-    // }
-    //
-    // if( !ausFile.exists() )
-    // {
-    // log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", ausFile );
-    // return false;
-    // }
+    if( !lsFile.exists() )
+    {
+      log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", lsFile );
+      return false;
+    }
+
+    if( !ausFile.exists() )
+    {
+      log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", ausFile );
+      return false;
+    }
+
     /* Prepare exe dir */
     InputStream zipInputStream = null;
     try
@@ -153,18 +154,17 @@ public class PolynomeHelper
     }
 
     /* Copy input data to exe dir */
-    // TODO: comment in
-    // try
-    // {
-    // final File eingangDir = new File( tmpDir, "01Eingang" );
-    // FileUtils.copyFileToDirectory( lsFile, eingangDir );
-    // FileUtils.copyFileToDirectory( ausFile, eingangDir );
-    // }
-    // catch( final IOException e )
-    // {
-    // log.log( e, "Eingangsdaten für Polynomberechnung konnten nicht kopiert werden. Abbruch." );
-    // return false;
-    // }
+    try
+    {
+      final File eingangDir = new File( tmpDir, "01Eingang" );
+      FileUtils.copyFileToDirectory( lsFile, eingangDir );
+      FileUtils.copyFileToDirectory( ausFile, eingangDir );
+    }
+    catch( final IOException e )
+    {
+      log.log( e, "Eingangsdaten für Polynomberechnung konnten nicht kopiert werden. Abbruch." );
+      return false;
+    }
     return true;
   }
 
@@ -172,16 +172,16 @@ public class PolynomeHelper
   {
     final ISimulationMonitor monitor = log.getMonitor();
 
-    log.log( true, "Polynomfuktionen werden ermittelt");
+    log.log( true, "Polynomfuktionen werden ermittelt" );
 
-    log.log( true, "- Übertrage Ergebnisse der Q-Intervallberechnung");
+    log.log( true, "- Übertrage Ergebnisse der Q-Intervallberechnung" );
     if( !preparePolynomes( tmpDir, dathDir, log ) )
       return;
 
     if( monitor.isCanceled() )
       return;
 
-    log.log( true, "- Starte Polynome1d.exe");
+    log.log( true, "- Starte Polynome1d.exe" );
     prepareSteuerpoly( tmpDir, calculation );
 
     if( monitor.isCanceled() )
@@ -230,7 +230,7 @@ public class PolynomeHelper
       return;
 
     /* Read results */
-    log.log( true, "- Lese Punktwolken und Polynome");
+    log.log( true, "- Lese Punktwolken und Polynome" );
     final File resultDir = new File( tmpDir, "02Ausgang" );
     final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" );
     try

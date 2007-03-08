@@ -93,10 +93,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     final List<String> existingLayers = new ArrayList<String>();
 
     for( final IChartLayer layer : view.getChart().getLayers() )
-    {
-
       existingLayers.add( layer.getId() );
-    }
 
     final IProfil profile = view.getProfil();
     if( profile.getProfileObject() == null )
@@ -260,7 +257,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
         layerToAdd.add( IWspmTuhhConstants.LAYER_BRUECKE );
       else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_WEHR ) )
-        layerToAdd.add( IWspmTuhhConstants.LAYER_BRUECKE );
+        layerToAdd.add( IWspmTuhhConstants.LAYER_WEHR );
       else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) )
         layerToAdd.add( IWspmTuhhConstants.LAYER_KREIS );
       else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
