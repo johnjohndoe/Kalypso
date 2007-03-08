@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.gml.common"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.gml.common" elementFormDefault="qualified"
+	version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -10,7 +9,6 @@
 	<import namespace="http://www.opengis.net/gml"/>
 	<!-- utility schema for gml application schemas -->
 	<!-- TODO: KALYPSO-Header einfügen -->
-
 	<!-- 
 	_________________________________________________________________________________________
 	TYPES
@@ -63,31 +61,32 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-
 	<!-- Defines a color based on a string. It uses the format #RGB (Hex). -->
 	<simpleType name="color">
 		<restriction base="string">
 			<pattern value="^#[0-9a-fA-F]{6}"/>
 		</restriction>
 	</simpleType>
-
 	<!-- Defines a file based on a string. -->
 	<simpleType name="file">
 		<restriction base="string"> </restriction>
 	</simpleType>
-
 	<!-- Defines a directory based on a string. -->
 	<simpleType name="directory">
 		<restriction base="string"> </restriction>
 	</simpleType>
-	
-	<!-- Defines a valid email adress based on a string. -->
+	<!-- Defines a email adress based on a string. -->
 	<simpleType name="email">
-		<restriction base="string"> 
+		<restriction base="string">
 			<pattern value=".+@.+[.].+"/>
 		</restriction>
 	</simpleType>
-
+	<!-- Defines a shapefile attribute name based on a string. -->
+	<simpleType name="shpAttribName">
+		<restriction base="string">
+			<maxLength value="10"/>
+		</restriction>
+	</simpleType>
 	<!-- Image -->
 	<element name="Image" type="common:ImageType" substitutionGroup="gml:_Feature">
 		<annotation>
@@ -105,7 +104,6 @@
 			</documentation>
 		</annotation>
 	</element>
-
 	<complexType name="ImageType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
