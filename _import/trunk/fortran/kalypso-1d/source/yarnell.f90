@@ -81,6 +81,9 @@ SUBROUTINE yarnell (hpf, fges, q, xk)
 USE IO_UNITS
 USE KONSTANTEN
                                                                         
+REAL, INTENT(IN) :: fges, q, xk
+REAL, INTENT(OUT) :: hpf
+
 COMMON / pfeilerstau / alpha, bnetto
 
 !     xk - pfeilerformbeiwert
@@ -95,7 +98,7 @@ hz = fges / bnetto
 vm3 = q / fges
 
 !UT   TABELLE 3.44, BWK, S. 66
-IF (alpha.gt.0.23) then
+IF (alpha > 0.23) then
 
   !UT     SCHREIBEN IN KONTROLLDATEI
   WRITE (UNIT_OUT_LOG, '(''warnung !!!!'')')
@@ -109,21 +112,7 @@ ENDIF
 
 !UT   LIEGT alpha ueber 0.44 GILT TABELLE 3.44 nicht MEHR
 !UT   iykenn WIRD 1 GESETZT UND AN SUB-ENDE DANN STAUHOEWHE AUF NULL
-IF (alpha.gt.44) iykenn = 1                                                      
-                                                                        
-!JK         WAR SCHON DEAKTIVIERT, 30.04.00, JK
-!**         print *
-!**         print *
-!**         print *,'warnung !!!!'
-!**         print *
-!**         print *,'verbauverhaeltnis alpha = ',alpha
-!**         print *,'- fuer rechteckgerinne alpha < 0.23'
-!**         print *,'- fuer trapezgerinne'
-!**         print *,'  boeschungsneigung  1:2     < 0.34'
-!**         print *,'                     1:3     < 0.44'
-!**         print *,'ueberpruefen sie ggf. die verhaeltnisse !!'
-!**         print *,'(vgl beschreibung)'
-!**         endif
+IF (alpha > 0.44) iykenn = 1                                                      
 
 !UT      BERECHNUNG NACH PFEILERSTAUFORMEL 58,S.35 IN PROGRAMMANLEITUNG
 !UT      KLAMMERTERM
