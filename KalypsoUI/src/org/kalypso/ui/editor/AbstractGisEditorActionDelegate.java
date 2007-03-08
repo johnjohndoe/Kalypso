@@ -105,7 +105,10 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
     }
 
     // update action state
-    refreshAction( action, m_selection );
+    if( action != null )
+    {
+      refreshAction( action, m_selection );
+    }
   }
 
   /**
