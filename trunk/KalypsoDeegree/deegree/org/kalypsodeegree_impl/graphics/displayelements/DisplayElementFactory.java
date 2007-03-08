@@ -68,6 +68,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
@@ -218,6 +219,7 @@ public class DisplayElementFactory
   {
     DisplayElement displayElement = null;
 
+
     // determine the geometry property to be used
     GM_Object geoProperty = null;
     Geometry geometry = symbolizer.getGeometry();
@@ -243,7 +245,9 @@ public class DisplayElementFactory
 
     // if the geometry property is null, do not build a DisplayElement
     if( geoProperty == null && !(symbolizer instanceof RasterSymbolizer) )
+    {
       return null;
+    }
 
     // PointSymbolizer
     if( symbolizer instanceof PointSymbolizer )
@@ -269,6 +273,16 @@ public class DisplayElementFactory
     else
     {
       System.out.println( "symbolizer...?" );
+    }
+    
+//  //TODO Patrice Check changes
+//  //decorate the display with another get through adapation
+    DisplayElement displayElementDecorator = 
+          (DisplayElement) feature.getAdapter( DisplayElementDecorator.class );
+    if(displayElementDecorator instanceof DisplayElementDecorator)
+    {
+      ((DisplayElementDecorator)displayElementDecorator).setDecorated( displayElement );
+      return displayElementDecorator;
     }
 
     return displayElement;
