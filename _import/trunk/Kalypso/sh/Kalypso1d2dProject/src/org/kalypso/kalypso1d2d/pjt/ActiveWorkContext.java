@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -21,8 +22,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.afgui.scenarios.IScenarioManager;
+import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
@@ -34,15 +36,13 @@ import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.workflow.Workflow;
 
-//TODO move to workflow system problem with project??
-
 /**
- * Represents the work context for a user. A workkontext is made of:
+ * Represents the work context for a user. A work context is made of:
  * <ul>
- * <li/>The actuel project the user is working on <li/>The Workflow system <li/>The data basis system
+ * <li/>The current project the user is working on <li/>The workflow system <li/>A scenario manager instance
  * </ul>
  * 
- * @author Patrice Congo
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public class ActiveWorkContext implements IWindowListener, IPartListener, IPerspectiveListener
 {
@@ -58,13 +58,9 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
 
   private static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis";
 
-  private Scenario m_activeScenario;
+  private ScenarioManager m_scenarioManager;
 
-  private IWorkflowDB workflowDB;
-
-  private IWorkflowSystem workflowSystem;
-
-  private final SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
+  private IWorkflowSystem m_workflowSystem;
 
   private IProject m_activeProject;
 
@@ -81,6 +77,8 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
   private final ProjectChangeListener m_projectChangeListener = new ProjectChangeListener();
 
   private MapModellContextSwitcher m_contextSwitcher = new MapModellContextSwitcher();
+
+  private SzenarioDataProvider m_dataProvider;
 
   public ActiveWorkContext( )
   {
@@ -109,7 +107,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
 
   synchronized public void setActiveProject( final IProject activeProject )
   {
-    if( this.m_activeProject == activeProject )
+    if( m_activeProject == activeProject )
     {
       return;
     }
@@ -119,16 +117,17 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
       if( Kalypso1D2DProjectNature.isOfThisNature( activeProject ) )
       {
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
-        this.m_activeProject = activeProject;
-        this.workflowDB = nature.getWorkflowDB();
-        this.workflowSystem = nature.getWorkflowSystem();
-        logger.info( "WorkflowDB=" + workflowDB );
-        logger.info( "WorkflowSystem:" + workflowSystem );
+        m_activeProject = activeProject;
+        m_scenarioManager = nature.getScenarioManager();
+        m_dataProvider = new SzenarioDataProvider( m_scenarioManager );
+        m_workflowSystem = nature.getWorkflowSystem();
+        logger.info( "WorkflowDB=" + m_scenarioManager );
+        logger.info( "WorkflowSystem:" + m_workflowSystem );
       }
       else
       {
-        this.m_activeProject = null;
-        this.workflowDB = null;
+        m_activeProject = null;
+        m_scenarioManager = null;
         logger.warning( "Project to set is not of 1d2d nature" );
       }
     }
@@ -139,43 +138,51 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     }
     finally
     {
-      fireActiveProjectChanged( activeProject, workflowDB.getScenario( BASIS_SCENARIO ) );
+      if( m_scenarioManager != null )
+      {
+        fireActiveProjectChanged( activeProject, m_scenarioManager.getScenario( BASIS_SCENARIO ) );
+      }
+      else
+      {
+        fireActiveProjectChanged( activeProject, null );
+      }
     }
   }
 
-  synchronized public IProject getActiveProject( )
+  synchronized public IProject getCurrentProject( )
   {
     return m_activeProject;
   }
 
-  synchronized public Scenario getActiveScenario( )
+  public IScenarioManager getScenarioManager( )
   {
-    return m_activeScenario;
+    return m_scenarioManager;
   }
 
-  synchronized public IWorkflowDB getWorkflowDB( )
+  synchronized public Scenario getCurrentScenario( )
   {
-    return workflowDB;
+    return m_scenarioManager.getCurrentScenario();
   }
 
-  synchronized public IWorkflowSystem getWorkflowSystem( )
+  synchronized public IFolder getCurrentScenarioFolder( )
   {
-    return workflowSystem;
+    if( m_scenarioManager == null )
+    {
+      return null;
+    }
+    final Scenario activeScenario = m_scenarioManager.getCurrentScenario();
+    return (m_activeProject == null || activeScenario == null) ? null : m_activeProject.getFolder( m_scenarioManager.getProjectPath( activeScenario ) );
   }
 
   public Workflow getCurrentWorkflow( )
   {
-    if( m_activeProject == null )
-    {
-      return null;
-    }
-    if( workflowSystem == null )
+    if( m_workflowSystem == null )
     {
       return null;
     }
     else
     {
-      return workflowSystem.getCurrentWorkFlow();
+      return m_workflowSystem.getCurrentWorkflow();
     }
   }
 
@@ -218,11 +225,6 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     }
   }
 
-  synchronized public void removeAllActiveContextChangeListener( )
-  {
-    activeProjectChangeListener.clear();
-  }
-
   final private void fireActiveProjectChanged( final IProject newProject, final Scenario scenario )
   {
     for( final IActiveContextChangeListener l : activeProjectChangeListener )
@@ -238,20 +240,20 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
 
   public void setCurrentSzenario( final Scenario scenario )
   {
-    if( m_activeScenario == null && scenario == null )
+    final Scenario currentScenario = m_scenarioManager.getCurrentScenario();
+    if( currentScenario == null && scenario == null )
     {
       return;
     }
-    else if( scenario != null && m_activeScenario != null && m_activeScenario.getURI().equals( scenario.getURI() ) )
+    else if( scenario != null && currentScenario != null && currentScenario.getURI().equals( scenario.getURI() ) )
     {
       return;
     }
     else
     {
-      final IProject activeProject = getActiveProject();
-      m_activeScenario = scenario;
-      m_dataProvider.setCurrent( activeProject, scenario );
-      fireActiveProjectChanged( activeProject, scenario );
+      m_scenarioManager.setCurrentScenario( scenario );
+      m_dataProvider.setCurrent( m_activeProject, scenario );
+      fireActiveProjectChanged( m_activeProject, scenario );
     }
   }
 

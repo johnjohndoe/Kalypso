@@ -10,7 +10,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.scenarios.Scenario;
 
@@ -93,9 +92,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
 
   private IFolder getSzenarioFolder( )
   {
-    final IProject project = activeWorkContext.getActiveProject();
-    final Scenario activeScenario = activeWorkContext.getActiveScenario();
-    return (project == null || activeScenario == null) ? null : project.getFolder( KalypsoAFGUIFrameworkPlugin.constructPath( activeScenario ) );
+    return activeWorkContext.getCurrentScenarioFolder();
   }
 
   private ISzenarioDataProvider getDataProvider( )

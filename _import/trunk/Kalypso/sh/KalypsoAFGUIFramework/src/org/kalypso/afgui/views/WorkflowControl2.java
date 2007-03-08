@@ -332,16 +332,20 @@ public class WorkflowControl2
 
   public void setWorkflow( final Workflow workflow )
   {
-    m_treeViewer.setInput( workflow );
-    m_treeViewer.collapseAll();
-    if( m_selectionFromMemento != null && workflow != null )
+    if( m_treeViewer != null && m_treeViewer.getInput() != workflow )
     {
-      final TreePath findPart = findPart( m_selectionFromMemento, workflow );
-      if( findPart != null && findPart.getParentPath() != null )
+      m_treeViewer.setInput( workflow );
+      m_treeViewer.collapseAll();
+      if( m_selectionFromMemento != null && workflow != null )
       {
-        m_treeViewer.setSelection( new TreeSelection( findPart.getParentPath() ), true );
+        final TreePath findPart = findPart( m_selectionFromMemento, workflow );
+        if( findPart != null && findPart.getParentPath() != null )
+        {
+          final TreeSelection newSelection = new TreeSelection( findPart.getParentPath() );
+          m_treeViewer.setSelection( newSelection, true );
+        }
+        m_selectionFromMemento = null;
       }
-      m_selectionFromMemento = null;
     }
   }
 }

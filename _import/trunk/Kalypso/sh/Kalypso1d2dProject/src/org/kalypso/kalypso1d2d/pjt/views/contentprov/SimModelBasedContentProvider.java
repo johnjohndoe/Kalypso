@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
+import org.kalypso.afgui.scenarios.IScenarioManager;
+import org.kalypso.afgui.scenarios.IScenarioManagerListener;
 import org.kalypso.scenarios.Scenario;
 import org.kalypso.scenarios.ScenarioList;
 
@@ -24,7 +24,7 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
   /**
    * @author Stefan Kurzbach
    */
-  private final class ScenarioChangeListener implements IWorkflowDBChangeListerner
+  private final class ScenarioChangeListener implements IScenarioManagerListener
   {
     private final Viewer m_viewer;
 
@@ -33,7 +33,7 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
       m_viewer = viewer;
     }
 
-    public void workflowDBChanged( )
+    public void scenariosChanged( )
     {
       if( m_viewer != null )
       {
@@ -46,7 +46,7 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
 
-  private IWorkflowDBChangeListerner m_dbChangeListerner;
+  private IScenarioManagerListener m_dbChangeListerner;
 
   static
   {
@@ -56,9 +56,9 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
 
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof IWorkflowDB )
+    if( parentElement instanceof IScenarioManager )
     {
-      final IWorkflowDB workflowDB = (IWorkflowDB) parentElement;
+      final IScenarioManager workflowDB = (IScenarioManager) parentElement;
       if( workflowDB != null )
       {
         final List<Scenario> data = workflowDB.getRootScenarios();
@@ -87,9 +87,9 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof IWorkflowDB )
+    if( element instanceof IScenarioManager )
     {
-      final IWorkflowDB workflowData = (IWorkflowDB) element;
+      final IScenarioManager workflowData = (IScenarioManager) element;
       return !workflowData.getRootScenarios().isEmpty();
     }
     else if( element instanceof Scenario )
@@ -124,19 +124,19 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    final IWorkflowDB oldWorkflowDB = (IWorkflowDB) oldInput;
-    final IWorkflowDB newDB = (IWorkflowDB) newInput;
+    final IScenarioManager oldWorkflowDB = (IScenarioManager) oldInput;
+    final IScenarioManager newDB = (IScenarioManager) newInput;
     if( m_dbChangeListerner == null )
     {
       m_dbChangeListerner = new ScenarioChangeListener( viewer );
     }
     if( oldWorkflowDB != null )
     {
-      oldWorkflowDB.removeWorkflowDBChangeListener( m_dbChangeListerner );
+      oldWorkflowDB.removeScenarioManagerListener( m_dbChangeListerner );
     }
     if( newDB != null )
     {
-      newDB.addWorkflowDBChangeListener( m_dbChangeListerner );
+      newDB.addScenarioManagerListener( m_dbChangeListerner );
     }
     logger.info( "DB changed" );
   }

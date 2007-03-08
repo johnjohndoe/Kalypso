@@ -1,16 +1,16 @@
-
 package org.kalypso.afgui.model;
 
 import org.kalypso.workflow.Workflow;
 
-
 /**
- * Classes implements this interface to provide mechanism wot resolve
- * a Workflow associated to a resource of a particular kind
+ * A workflow system has one running workflow instance.
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
 public interface IWorkflowSystem
 {
-	public Workflow getCurrentWorkFlow();	
+  /**
+   * Returns the workflow instance or <code>null</code> if no workflow instance has been created
+   */
+  public Workflow getCurrentWorkflow( );
 }

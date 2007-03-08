@@ -25,7 +25,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.afgui.db.IWorkflowDB;
+import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -67,17 +67,16 @@ public class SimulationModelDBView extends ViewPart
     @SuppressWarnings("synthetic-access")
     public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
-      final IWorkflowDB newDB = activeWorkContext.getWorkflowDB();
-      if( tv.getInput() != newDB )
+      final IScenarioManager scenarioManager = activeWorkContext.getScenarioManager();
+      if( tv.getInput() != scenarioManager )
       {
-        tv.setInput( newDB );
+        tv.setInput( scenarioManager );
       }
       final Scenario scenarioToSet;
       if( m_scenarioFromMemento != null )
       {
-        scenarioToSet = newDB.getScenario( m_scenarioFromMemento );
+        scenarioToSet = scenarioManager.getScenario( m_scenarioFromMemento );
         m_scenarioFromMemento = null;
-        activeWorkContext.setCurrentSzenario( scenarioToSet );
       }
       else
       {
@@ -142,19 +141,12 @@ public class SimulationModelDBView extends ViewPart
     tv.setContentProvider( simModelBasedCP );
     getSite().setSelectionProvider( tv );
     tv.setLabelProvider( labelProvider );
-    tv.setInput( activeWorkContext.getWorkflowDB() );
-    if( m_projectFromMemento != null )
-    {
-      final IPath projectPath = Path.fromPortableString( m_projectFromMemento );
-      final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
-      if( resource != null && resource.getType() == IResource.PROJECT )
-      {
-        activeWorkContext.setActiveProject( (IProject) resource );
-      }
-      m_projectFromMemento = null;
-    }
+    tv.setInput( activeWorkContext.getScenarioManager() );
     tv.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
@@ -165,6 +157,16 @@ public class SimulationModelDBView extends ViewPart
         }
       }
     } );
+    if( m_projectFromMemento != null )
+    {
+      final IPath projectPath = Path.fromPortableString( m_projectFromMemento );
+      final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
+      if( resource != null && resource.getType() == IResource.PROJECT )
+      {
+        activeWorkContext.setActiveProject( (IProject) resource );
+      }
+      m_projectFromMemento = null;
+    }
   }
 
   /*
@@ -191,7 +193,7 @@ public class SimulationModelDBView extends ViewPart
       final Scenario data = (Scenario) firstElement;
       memento.putString( MEMENTO_SCENARIO, data.getURI() );
     }
-    final IProject activeProject = activeWorkContext.getActiveProject();
+    final IProject activeProject = activeWorkContext.getCurrentProject();
     if( activeProject != null )
     {
       final String projectPath = activeProject.getName();

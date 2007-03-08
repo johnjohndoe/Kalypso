@@ -42,7 +42,14 @@ public class WorkflowView extends ViewPart
      */
     public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
-      setContentDescription( "Aktives Scenario: " + scenario.getName() );
+      if( scenario != null )
+      {
+        setContentDescription( "Aktives Szenario: " + scenario.getName() );
+      }
+      else
+      {
+        setContentDescription( "Kein Szenario aktiv." );
+      }
       m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
     }
   };
@@ -54,6 +61,7 @@ public class WorkflowView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_workflowControl.createControl( parent );
+    m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
   }
 
   /**

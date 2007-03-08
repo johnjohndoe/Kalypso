@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.afgui.db.IWorkflowDB;
+import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -210,7 +210,7 @@ public class NewSimulationModelControlBuilder
       String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
       final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
-      IWorkflowDB workflowDB = activeWorkContext.getWorkflowDB();
+      IScenarioManager workflowDB = activeWorkContext.getScenarioManager();
       if( workflowDB == null )
       {
         logger.warning( "no workflow db available" ); //$NON-NLS-1$

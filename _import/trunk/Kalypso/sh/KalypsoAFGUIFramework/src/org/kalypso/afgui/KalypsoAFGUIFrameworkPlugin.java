@@ -1,12 +1,9 @@
 package org.kalypso.afgui;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.scenarios.Scenario;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -50,77 +47,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     }
   }
   
-  public static IPath constructPath( final Scenario scenario )
-  {
-    if( scenario.getParentScenario() != null )
-      return constructPath( scenario.getParentScenario() ).append( scenario.getName() );
-    else
-      return new Path( scenario.getName() );
-  }
-
-  // /**
-  // * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-  // */
-  // public void start(BundleContext context) throws Exception {
-  // super.start(context);
-  // //this.workflow=createWorkflow(context.getBundle());
-  // this.workflowSystem=createWorkflowSystem(context.getBundle());
-  // logger.info("\n======Pluging Workflow"+workflowSystem);
-  // }
-
-  // TODO remove
-  // final private static IWorkflowSystem createWorkflowSystem(Bundle bundle)
-  // {
-  // //Bundle bundle=context.getBundle();
-  // URL specURL= bundle.getEntry(WORKFLOW_SPEC);
-  // URL statusURL=bundle.getEntry(WORKFLOW_STATUS);
-  //		
-  // try
-  // {
-  // WorkflowSystem system= new WorkflowSystem(specURL,statusURL);
-  // return system;
-  // }
-  // catch (IOException e)
-  // {
-  // e.printStackTrace();
-  // return null;
-  // }
-  // }
-
-  // TODO remove
-  // /**
-  // * This is a temporary test method to create a workflow from its specification
-  // * and static files without using projects
-  // * Only for test purpose. the actual should be based a project nature.
-  // *
-  // * @return the test Workflow
-  // */
-  // final private static IWorkflow createWorkflow(Bundle bundle)
-  // {
-  // //Bundle bundle=context.getBundle();
-  // URL specURL= bundle.getEntry(WORKFLOW_SPEC);
-  // URL statusURL=bundle.getEntry(WORKFLOW_STATUS);
-  // WorkflowSystem builder= new WorkflowSystem();
-  // try
-  // {
-  // return builder.createWorkflow(specURL, statusURL);
-  // }
-  // catch (IOException e)
-  // {
-  // e.printStackTrace();
-  // return null;
-  // }
-  // }
-  //	
-  // /*
-  // * (non-Javadoc)
-  // * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-  // */
-  // public void stop(BundleContext context) throws Exception {
-  // plugin = null;
-  // super.stop(context);
-  // }
-
   /**
    * Returns the shared instance
    * 

@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
@@ -47,7 +47,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
   private static Map<Class, String> LOCATION_MAP = new HashMap<Class, String>();
-  
+
   private static final String MODELS_FOLDER = "models";
 
   static
@@ -68,10 +68,17 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
    */
   private Map<Class, IPoolableObjectType> m_keyMap = new HashMap<Class, IPoolableObjectType>();
 
+  private final ScenarioManager m_scenarioManager;
+
+  public SzenarioDataProvider( final ScenarioManager scenarioManager )
+  {
+    m_scenarioManager = scenarioManager;
+  }
+
   public synchronized void setCurrent( final IProject project, @SuppressWarnings("unused")
   final Scenario scenario )
   {
-    final IFolder szenarioFolder = project == null ? null : project.getFolder( KalypsoAFGUIFrameworkPlugin.constructPath( scenario ) );
+    final IFolder szenarioFolder = project == null ? null : project.getFolder( m_scenarioManager.getProjectPath( scenario ) );
 
     try
     {

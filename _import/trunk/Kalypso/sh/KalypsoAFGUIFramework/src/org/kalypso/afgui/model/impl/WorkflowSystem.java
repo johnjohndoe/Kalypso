@@ -9,17 +9,29 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.afgui.scenarios.ScenarioManager;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.workflow.Workflow;
 
 /**
+ * This workflow system manages the workflow instance in a description file in the project .metadata folder
+ * 
  * @author Patrice Congo, Stefan Kurzbach
  */
 public class WorkflowSystem implements IWorkflowSystem
 {
-  final static private Logger logger = Logger.getLogger( WorkflowSystem.class.getName() );
+  public static final String WORKFLOW_FILENAME = "workflow.xml";
+
+  private static final Logger logger = Logger.getLogger( WorkflowSystem.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
 
@@ -33,20 +45,42 @@ public class WorkflowSystem implements IWorkflowSystem
 
   private Workflow m_currentWorkflow;
 
-  public WorkflowSystem( final URL url ) throws JAXBException
+  /**
+   * Loads a workflow instance for the project
+   * 
+   * @exception CoreException
+   *              if this method fails. Reasons include:
+   *              <ul>
+   *              <li> The metadata folder is not accessible.</li>
+   *              <li> There is a problem loading the workflow.</li>
+   */
+  public WorkflowSystem( final IProject project ) throws CoreException
   {
-    loadModel( url );
+    try
+    {
+      final IFolder metadataFolder = project.getFolder( ScenarioManager.METADATA_FOLDER );
+      final IFile workflowFile = metadataFolder.getFile( WORKFLOW_FILENAME );
+      final URL url = workflowFile.getRawLocationURI().toURL();
+      m_currentWorkflow = loadModel( url );
+    }
+    catch( final Throwable e )
+    {
+      // either JAXBException or MalformedURLException
+      IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+      throw new CoreException( status );
+    }
   }
 
-  private void loadModel( final URL url ) throws JAXBException
+  private Workflow loadModel( final URL url ) throws JAXBException
   {
-    m_currentWorkflow = (Workflow) JC.createUnmarshaller().unmarshal( url );
+    return (Workflow) JC.createUnmarshaller().unmarshal( url );
   }
 
   /**
    * @see org.kalypso.afgui.model.IWorkflowSystem#getCurrentWorkFlow()
    */
-  public Workflow getCurrentWorkFlow( )
+  public Workflow getCurrentWorkflow( )
   {
     return m_currentWorkflow;
   }

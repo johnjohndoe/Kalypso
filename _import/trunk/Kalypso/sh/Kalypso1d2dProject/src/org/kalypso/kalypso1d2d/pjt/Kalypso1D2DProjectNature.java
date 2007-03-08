@@ -43,12 +43,8 @@ package org.kalypso.kalypso1d2d.pjt;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
@@ -63,10 +59,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.db.WorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.model.impl.WorkflowSystem;
+import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -89,21 +84,15 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
 
-  public static final String METADATA_FOLDER = ".metadata";
-
-  public static final String WORKFLOW_DESC = "workflow.xml";
-
-  public static final String WORKFLOW_DATA_DESC = "scenarios.xml";
-
   private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip";
 
-  private IWorkflowSystem workflowSystem;
+  private IWorkflowSystem m_workflowSystem;
 
-  private IWorkflowDB workflowDB;
+  private ScenarioManager m_scenarioManager;
 
   private IProject m_project;
 
-  private IFolder metaDataFolder;
+  private IFolder m_metaDataFolder;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -113,7 +102,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     logger.info( "Configuring: " + m_project );
     addNature( m_project );
 
-    final IFolder metaFolder = getProject().getFolder( METADATA_FOLDER );
+    final IFolder metaFolder = getProject().getFolder( ScenarioManager.METADATA_FOLDER );
     if( !metaFolder.exists() )
     {
       final NullProgressMonitor monitor = new NullProgressMonitor();
@@ -127,25 +116,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
    */
   public void deconfigure( )
   {
-    // URL specURL=null;
-    // URL statusURL=null;
-    // try
-    // {
-    // workflowSystem= new WorkflowSystem(specURL, statusURL);
-    //			
-    // }
-    // catch(IOException th)
-    // {
-    // final String MSG="Error while creating workflow system";
-    //			
-    // IStatus status=
-    // new Status( IStatus.ERROR,
-    // Kalypso1d2dProjectPlugin.PLUGIN_ID,
-    // 0,
-    // MSG,
-    // th);
-    // throw new CoreException(status);
-    // }
+    // not possible
   }
 
   /**
@@ -165,46 +136,41 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     this.m_project = project;
   }
 
-  synchronized public IWorkflowDB getWorkflowDB( )
+  private void init( )
   {
-    if( workflowDB == null )
-    {
-      makeWorkflowDB_Sys();
-    }
-
-    return workflowDB;
-
-  }
-
-  private void makeWorkflowDB_Sys( )
-  {
-    metaDataFolder = m_project.getFolder( METADATA_FOLDER );
-
+    m_metaDataFolder = m_project.getFolder( ScenarioManager.METADATA_FOLDER );
     try
     {
-      workflowDB = new WorkflowDB( metaDataFolder.getFile( WORKFLOW_DATA_DESC ) );
-      workflowSystem = new WorkflowSystem( metaDataFolder.getFile( WORKFLOW_DESC ).getRawLocationURI().toURL() );
+      m_scenarioManager = new ScenarioManager( m_project );
+      m_workflowSystem = new WorkflowSystem( m_project );
     }
-    catch( final MalformedURLException e )
+    catch( final CoreException e )
     {
-      logger.log( Level.SEVERE, "Bad url to work flow desc data", e );
+      // this exception has already been logged
+      m_scenarioManager = null;
+      m_workflowSystem = null;
     }
-    catch( final JAXBException e )
+  }
+
+  synchronized public ScenarioManager getScenarioManager( )
+  {
+    if( m_scenarioManager == null )
     {
-      logger.log( Level.SEVERE, "Workflow could not be loaded.", e );
+      init();
     }
+    return m_scenarioManager;
   }
 
   synchronized public IWorkflowSystem getWorkflowSystem( )
   {
-    if( workflowSystem == null )
+    if( m_workflowSystem == null )
     {
-      makeWorkflowDB_Sys();
+      init();
     }
-    return workflowSystem;
+    return m_workflowSystem;
   }
 
-  public static final boolean isOfThisNature( IProject project ) throws CoreException
+  public static final boolean isOfThisNature( final IProject project ) throws CoreException
   {
     return project.hasNature( ID );
   }
@@ -215,7 +181,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     return (Kalypso1D2DProjectNature) project.getNature( ID );
   }
 
-  public static final void addNature( IProject project ) throws CoreException
+  public static final void addNature( final IProject project ) throws CoreException
   {
     if( project.hasNature( ID ) )
     {
@@ -232,7 +198,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature
       description.setNatureIds( newNatures );
       project.setDescription( description, new NullProgressMonitor() );
     }
-
   }
 
   /**
@@ -273,7 +238,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 
   public IFolder getImportFolder( )
   {
-    return metaDataFolder;
+    return m_metaDataFolder;
   }
 
 }
