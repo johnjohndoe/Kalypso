@@ -3,7 +3,7 @@ Changelog of Kalypso-WSPM
 
 since 15.02.2007
 ----------------
-XX
+- non-uniform bankfull calculation: Results are now retrieved as functions (singular points) over h and may be displayed as diagramms. Furthermore, polynomials (as input for the instationary calculation) are calulated automatically from the points and displayed as well.
 
 
 since 30.01.2007
