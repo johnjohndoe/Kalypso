@@ -72,10 +72,10 @@ public class ASCTerrainElevationModel implements IElevationProvider
   public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
   private static final List<GM_Position> NULL_LIST = Collections.<GM_Position>emptyList();
 
-  /**
-   * the asc data source File or URL containing the elevation info 
-   */
-  private Object ascSource;
+//  /**
+//   * the asc data source File or URL containing the elevation info 
+//   */
+//  private Object ascSource;
   
   //TODO check using polygons
   /**
@@ -286,7 +286,7 @@ public class ASCTerrainElevationModel implements IElevationProvider
         {
           double x=xmin+j*cellSize;
           double y=ymin+i*cellSize;
-          double z=elevations[i][j];
+          double z=elevations[row+i][col+j];
           
           GM_Position position=
               GeometryFactory.createGM_Position(x,y,z );
@@ -331,9 +331,9 @@ public class ASCTerrainElevationModel implements IElevationProvider
           double xPlusCellSize=x+cellSize;
           double y = ymin+i*cellSize;
           double yPlusCellSize=y+cellSize;
-          double z = elevations[i][j];
-          GM_Position position=
-            GeometryFactory.createGM_Position(x,y,z );
+          double z = elevations[row+i][col+j];
+//          GM_Position position=
+//            GeometryFactory.createGM_Position(x,y,z );
           double[] exterior = 
             new double[]{
               x,y,z,//lowerleft corner

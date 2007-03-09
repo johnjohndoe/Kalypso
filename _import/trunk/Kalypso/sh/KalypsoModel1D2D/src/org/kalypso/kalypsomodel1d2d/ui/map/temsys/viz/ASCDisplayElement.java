@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -47,7 +48,6 @@ import java.awt.Polygon;
 import java.awt.geom.Area;
 import java.util.List;
 
-import org.deegree.model.geometry.GM_Point;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
@@ -116,10 +116,10 @@ public class ASCDisplayElement
         new SimpleElevationColorModel(
             ascElevationModel.getMinElevation(),
             ascElevationModel.getMaxElevation(),
-            Color.RED,
+            Color.GRAY,
             0.10,
             0.80,
-            Color.WHITE);
+            Color.BLUE.brighter().brighter());
     }
     else
     {
@@ -257,7 +257,7 @@ public class ASCDisplayElement
 //      
 //      System.out.println("destRect="+worldRect);
       ascElevationModel.aceptSurfacePatches( 
-                    ascElevationModel.getBoundingBox(), 
+                    projection.getSourceRect(),//ascElevationModel.getBoundingBox(), 
                     this );
       
     }
@@ -549,6 +549,10 @@ public class ASCDisplayElement
         graphics.setColor( colorModel.getColor( elevationSample ) );
 //        drawPolygon( graphics, area );
         ((Graphics2D)graphics).fill( area );
+        
+        java.awt.Stroke bs2= new BasicStroke(3);
+        ((Graphics2D)graphics).setStroke( bs2 );
+        ((Graphics2D)graphics).draw(  area );
     }
     catch (Exception e) 
     {
