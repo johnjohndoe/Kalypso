@@ -68,7 +68,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
   public boolean performFinish( )
   {
     boolean result = super.performFinish();
-    final String MSG = "Error while adding natur od metadata folder";
+    final String MSG = "Error while adding nature or metadata folder";
 
     if( !result )
     {

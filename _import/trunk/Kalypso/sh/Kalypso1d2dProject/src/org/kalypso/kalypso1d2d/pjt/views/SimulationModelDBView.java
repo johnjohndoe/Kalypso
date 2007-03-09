@@ -67,6 +67,9 @@ public class SimulationModelDBView extends ViewPart
     @SuppressWarnings("synthetic-access")
     public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
+      // TODO: change of project is not handled at all (except changeing the description...)
+      // this causes some quite strange bugs!
+      
       final IScenarioManager scenarioManager = activeWorkContext.getScenarioManager();
       if( tv.getInput() != scenarioManager )
       {

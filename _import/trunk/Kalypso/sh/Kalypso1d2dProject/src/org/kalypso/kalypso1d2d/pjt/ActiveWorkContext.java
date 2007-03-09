@@ -245,6 +245,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     {
       return;
     }
+    // TODO: this is buggy! when the project changes, this gets called but we have the same szenario-id
     else if( scenario != null && currentScenario != null && currentScenario.getURI().equals( scenario.getURI() ) )
     {
       return;

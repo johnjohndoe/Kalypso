@@ -293,7 +293,10 @@
 	                   name="org.kalypso.kalypso1d2d.pjt.OpenFeatureViewCommand.resource"
 	                   value="templates/control.gft"/>           
 		       </class>
-	     </handler>     
+	     </handler>
+      <handler
+            class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
+            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap"/>     
 	</extension>
         <extension
          point="org.eclipse.ui.commands">
