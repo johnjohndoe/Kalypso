@@ -74,6 +74,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -322,7 +323,6 @@ public class CreateMainChannelComposite extends Composite
         updateControl( true );
       }
     } );
-    
 
     /* Group Segmentdaten */
     final Group groupSegment = new Group( sectionClient, SWT.NULL );
@@ -350,7 +350,7 @@ public class CreateMainChannelComposite extends Composite
     labelNumIntersSegment.setLayoutData( gridDatalabel );
 
     final Spinner spinnerNumIntersSegment = new Spinner( compSegmentDataHeader, 0 );
-    
+
     final GridData gridDataNumIntersSpinner = new GridData( SWT.LEFT, SWT.CENTER, true, false );
     gridDataNumIntersSpinner.horizontalSpan = 1;
     spinnerNumIntersSegment.setLayoutData( gridDataNumIntersSpinner );
@@ -373,7 +373,7 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( SelectionEvent e )
       {
         m_data.setNumBankIntersections( spinnerSegment.getSelection(), spinnerNumIntersSegment.getSelection() );
-        //just update the selected segment
+        // just update the selected segment
         updateSegmentData( false, m_currentSegment );
         m_widget.getPanel().repaint();
       }
@@ -386,15 +386,15 @@ public class CreateMainChannelComposite extends Composite
     final GridData gridDataSegmBanks = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDataSegmBanks.horizontalSpan = 1;
     compSegmBanks1.setLayoutData( gridDataSegmBanks );
-    
+
     final Label labelBankline1 = new Label( compSegmBanks1, SWT.NULL );
     labelBankline1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
 
-    m_buttonEditBank1 = new Button( compSegmBanks1, SWT.TOGGLE  );
+    m_buttonEditBank1 = new Button( compSegmBanks1, SWT.TOGGLE );
     m_buttonEditBank1.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
     final Image editImage = KalypsoModel1D2DUIImages.ID_EDIT.createImage();
     m_buttonEditBank1.setImage( editImage );
-    
+
     m_buttonEditBank1.setSelection( m_bankEdit1 );
     // editButtonUpdateBank1();
     m_buttonEditBank1.addSelectionListener( new SelectionAdapter()
@@ -410,7 +410,7 @@ public class CreateMainChannelComposite extends Composite
     final Composite compSegmBanks2 = new Composite( groupSegment, SWT.NULL );
     compSegmBanks2.setLayout( gridLayoutSegmBanks );
     compSegmBanks2.setLayoutData( gridDataSegmBanks );
-    
+
     final Label labelBankline2 = new Label( compSegmBanks2, SWT.NULL );
     labelBankline2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.12" ) ); //$NON-NLS-1$
 
@@ -434,7 +434,7 @@ public class CreateMainChannelComposite extends Composite
     m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
     final Image convImage = KalypsoModel1D2DUIImages.ID_OK.createImage();
     m_buttonConvertToModel.setImage( convImage );
-    
+
     m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -806,14 +806,14 @@ public class CreateMainChannelComposite extends Composite
 
     // init while first load
     if( m_data.getCurrentProfile() == 0 )
-      {
+    {
       m_data.setCurrentProfile( 1 );
-      //here repaint!!
-      }
+      // here repaint!!
+    }
     m_widget.getPanel().repaint();
 
     final IProfilEventManager pem = m_data.getProfilEventManager();
-    
+
     final IProfil profil = pem.getProfil();
     if( profil == null )
     {
@@ -824,7 +824,7 @@ public class CreateMainChannelComposite extends Composite
     {
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       final ProfilChartView profilChartView = new ProfilChartView( pem, m_viewData, new IStationResult[0], m_colorRegistry, new Insets( 0, 0, 0, 0 ) );
-
+      profilChartView.setLayerProvider( new ProfilOverlayLayerProvider() );
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
       manager.createControl( sectionClient );
 
@@ -839,7 +839,7 @@ public class CreateMainChannelComposite extends Composite
       final IChartLayer overlayLayer = profilChartView.getChart().getLayer( IWspmOverlayConstants.LAYER_OVERLAY );
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
-        //currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+        // currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
         if( currentSegment != null )
         {
           final IProfil layerData;
