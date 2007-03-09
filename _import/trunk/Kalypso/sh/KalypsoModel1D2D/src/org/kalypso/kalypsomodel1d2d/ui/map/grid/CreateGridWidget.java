@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -442,9 +443,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public Control createControl( Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-     Control control = gridWidgetFace.createControl( parent );
+     Control control = gridWidgetFace.createControl( parent, toolkit );
      gridWidgetFace.setInput( gridPointCollector );
      return control;
   }

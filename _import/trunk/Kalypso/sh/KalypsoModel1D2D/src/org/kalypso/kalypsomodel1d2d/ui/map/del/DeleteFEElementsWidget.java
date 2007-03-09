@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -322,7 +323,7 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public Control createControl( Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     return widgetFace.createControl( parent );
   }

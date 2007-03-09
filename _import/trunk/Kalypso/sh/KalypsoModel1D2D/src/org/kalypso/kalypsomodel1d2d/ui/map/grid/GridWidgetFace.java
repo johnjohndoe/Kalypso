@@ -267,15 +267,16 @@ class GridWidgetFace
 //      m_widget = widget;      
     }
     
-    public Control createControl( Composite parent )
+    public Control createControl( Composite parent, final FormToolkit toolkit )
     {
+      this.toolkit = toolkit;
+
       preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
       initStoreDefaults();
       
       parent.setLayout( new FillLayout() );
       rootPanel=new Composite(parent, SWT.FILL);
       rootPanel.setLayout( new FillLayout() );
-      toolkit= new FormToolkit(parent.getDisplay());
       ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
       
       scrolledForm.getBody().setLayout(new TableWrapLayout() );
@@ -394,7 +395,6 @@ class GridWidgetFace
         handleWidth.setPropertyChangeListener( null );
         handleWidth.store();
         rootPanel.dispose();
-        toolkit.dispose();
       }
       
     }
