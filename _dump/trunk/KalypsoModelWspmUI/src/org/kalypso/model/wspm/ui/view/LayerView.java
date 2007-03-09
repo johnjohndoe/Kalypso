@@ -136,7 +136,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_creator.createControl( parent, SWT.NONE, SWT.NONE );
+    m_creator.createControl( parent, SWT.H_SCROLL | SWT.V_SCROLL, SWT.NONE );
 
     onActiveLayerChanged( m_provider == null ? null : m_provider.getActiveLayer() );
   }
