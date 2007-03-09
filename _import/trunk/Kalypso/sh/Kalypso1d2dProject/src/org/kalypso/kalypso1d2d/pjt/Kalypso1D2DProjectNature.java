@@ -59,9 +59,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.afgui.model.impl.WorkflowSystem;
 import org.kalypso.afgui.scenarios.ScenarioManager;
+import org.kalypso.afgui.workflow.IWorkflowSystem;
+import org.kalypso.afgui.workflow.WorkflowSystem;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 

@@ -1,6 +1,5 @@
-package org.kalypso.afgui.model;
+package org.kalypso.afgui.workflow;
 
-import org.kalypso.workflow.Workflow;
 
 /**
  * A workflow system has one running workflow instance.

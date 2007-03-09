@@ -30,9 +30,6 @@ Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
  lib/jena_2_3/xml-apis.jar,
  .
 Export-Package: org.kalypso.afgui,
- org.kalypso.afgui.model,
- org.kalypso.afgui.model.impl,
  org.kalypso.afgui.scenarios,
  org.kalypso.afgui.views,
- org.kalypso.scenarios,
- org.kalypso.workflow
+ org.kalypso.afgui.workflow

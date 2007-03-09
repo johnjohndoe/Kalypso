@@ -22,19 +22,19 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.scenarios.IScenarioManager;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
+import org.kalypso.afgui.workflow.IWorkflowSystem;
+import org.kalypso.afgui.workflow.Workflow;
 import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
-import org.kalypso.scenarios.Scenario;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.workflow.Workflow;
 
 /**
  * Represents the work context for a user. A work context is made of:

@@ -10,8 +10,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
-import org.kalypso.scenarios.Scenario;
 
 public class SzenarioSourceProvider extends AbstractSourceProvider
 {

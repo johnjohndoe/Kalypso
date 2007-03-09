@@ -9,11 +9,11 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.afgui.views.WorkflowControl2;
+import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.views.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.scenarios.Scenario;
 
 /**
  * @author Patrice Congo
@@ -31,7 +31,7 @@ public class WorkflowView extends ViewPart
       LOGGER.setUseParentHandlers( false );
   }
 
-  WorkflowControl2 m_workflowControl;
+  WorkflowControl m_workflowControl;
 
   final ActiveWorkContext m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
 
@@ -81,7 +81,7 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_workflowControl = new WorkflowControl2();
+    m_workflowControl = new WorkflowControl();
     m_workflowControl.restoreState( memento );
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
   }

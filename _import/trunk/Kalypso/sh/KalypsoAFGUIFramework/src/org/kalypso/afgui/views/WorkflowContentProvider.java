@@ -7,15 +7,15 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.workflow.Phase;
-import org.kalypso.workflow.Task;
-import org.kalypso.workflow.TaskGroup;
-import org.kalypso.workflow.Workflow;
+import org.kalypso.afgui.workflow.Phase;
+import org.kalypso.afgui.workflow.Task;
+import org.kalypso.afgui.workflow.TaskGroup;
+import org.kalypso.afgui.workflow.Workflow;
 
 /**
  * @author Stefan Kurzbach
  */
-public class WorkflowContentProvider2 implements ITreeContentProvider
+public class WorkflowContentProvider implements ITreeContentProvider
 {
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)

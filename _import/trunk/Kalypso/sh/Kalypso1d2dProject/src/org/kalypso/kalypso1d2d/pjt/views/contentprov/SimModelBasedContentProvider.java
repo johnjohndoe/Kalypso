@@ -11,8 +11,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.IScenarioManagerListener;
-import org.kalypso.scenarios.Scenario;
-import org.kalypso.scenarios.ScenarioList;
+import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioList;
 
 /**
  * Content provider for the simulation model based data view

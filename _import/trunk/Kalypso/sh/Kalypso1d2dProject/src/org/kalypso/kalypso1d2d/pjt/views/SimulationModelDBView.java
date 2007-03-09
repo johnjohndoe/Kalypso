@@ -26,12 +26,12 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.IScenarioManager;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvider;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.WorkflowDataLabelProvider;
-import org.kalypso.scenarios.Scenario;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach

@@ -23,12 +23,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.scenarios.ProjectScenarios;
-import org.kalypso.scenarios.Scenario;
-import org.kalypso.scenarios.ScenarioList;
 
 /**
  * This implementation of {@link IScenarioManager} persists the scenario model data in the project workspace.
@@ -52,7 +50,7 @@ public class ScenarioManager implements IScenarioManager
       logger.setUseParentHandlers( false );
   }
 
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.scenarios.ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class );
 
   private final List<IScenarioManagerListener> m_listeners = new ArrayList<IScenarioManagerListener>();
 
@@ -87,15 +85,15 @@ public class ScenarioManager implements IScenarioManager
       {
         try
         {
-          project.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+          project.refreshLocal( IResource.DEPTH_INFINITE, null );
           if( !folder.exists() )
           {
-            folder.create( false, true, monitor );
+            folder.create( false, true, null );
           }
           if( !metadataFile.exists() )
           {
-            m_projectScenarios = new org.kalypso.scenarios.ObjectFactory().createProjectScenarios();
-            persist( monitor );
+            m_projectScenarios = new org.kalypso.afgui.scenarios.ObjectFactory().createProjectScenarios();
+            persist( null );
           }
           else
           {
@@ -111,7 +109,7 @@ public class ScenarioManager implements IScenarioManager
         }
       }
     };
-    project.getWorkspace().run( action, new NullProgressMonitor() );
+    project.getWorkspace().run( action, null );
   }
 
   /**
@@ -259,31 +257,30 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#persist(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void persist( final IProgressMonitor monitor ) throws CoreException
+  public void persist( IProgressMonitor monitor ) throws CoreException
   {
+    if( monitor == null )
+    {
+      monitor = new NullProgressMonitor();
+    }
+
     ByteArrayInputStream bis = null;
     try
     {
+      monitor.beginTask( "Szenarios speichern.", 5000 );
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       JC.createMarshaller().marshal( m_projectScenarios, bos );
-      if( monitor != null )
-      {
-        monitor.worked( 1 );
-      }
+      monitor.worked( 2000 );
       bis = new ByteArrayInputStream( bos.toByteArray() );
       bos.close();
-      m_metaDataFile.refreshLocal( IResource.DEPTH_ONE, monitor );
+      m_metaDataFile.refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 1000 ) );
       if( m_metaDataFile.exists() )
       {
-        m_metaDataFile.setContents( bis, false, true, monitor );
+        m_metaDataFile.setContents( bis, false, true, new SubProgressMonitor( monitor, 2000 ) );
       }
       else
       {
-        m_metaDataFile.create( bis, false, monitor );
-      }
-      if( monitor != null )
-      {
-        monitor.worked( 1 );
+        m_metaDataFile.create( bis, false, new SubProgressMonitor( monitor, 2000 ) );
       }
     }
     catch( final Exception e )
@@ -293,6 +290,7 @@ public class ScenarioManager implements IScenarioManager
     finally
     {
       IOUtils.closeQuietly( bis );
+      monitor.done();
     }
   }
 

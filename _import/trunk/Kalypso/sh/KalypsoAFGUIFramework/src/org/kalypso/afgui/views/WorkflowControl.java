@@ -41,20 +41,20 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.workflow.Activity;
+import org.kalypso.afgui.workflow.Phase;
+import org.kalypso.afgui.workflow.Task;
+import org.kalypso.afgui.workflow.TaskGroup;
+import org.kalypso.afgui.workflow.Workflow;
+import org.kalypso.afgui.workflow.Activity.Help;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.workflow.Activity;
-import org.kalypso.workflow.Phase;
-import org.kalypso.workflow.Task;
-import org.kalypso.workflow.TaskGroup;
-import org.kalypso.workflow.Workflow;
-import org.kalypso.workflow.Activity.Help;
 
 /**
  * @author Stefan Kurzbach
  */
-public class WorkflowControl2
+public class WorkflowControl
 {
-  final static Logger logger = Logger.getLogger( WorkflowControl2.class.getName() );
+  final static Logger logger = Logger.getLogger( WorkflowControl.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
 
@@ -94,7 +94,7 @@ public class WorkflowControl2
         }
       }
     };
-    m_treeViewer.setContentProvider( new WorkflowContentProvider2() );
+    m_treeViewer.setContentProvider( new WorkflowContentProvider() );
 
     final Tree tree = m_treeViewer.getTree();
     final Display display = tree.getDisplay();

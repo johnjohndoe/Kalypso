@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.afgui.model.impl;
+package org.kalypso.afgui.workflow;
 
 import java.net.URL;
 import java.util.logging.Logger;
@@ -16,11 +16,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.workflow.Workflow;
 
 /**
  * This workflow system manages the workflow instance in a description file in the project .metadata folder
@@ -41,7 +39,7 @@ public class WorkflowSystem implements IWorkflowSystem
       logger.setUseParentHandlers( false );
   }
 
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.workflow.ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.workflow.ObjectFactory.class );
 
   private Workflow m_currentWorkflow;
 

@@ -51,12 +51,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
-import org.kalypso.scenarios.Scenario;
 
 /**
  * @author Stefan Kurzbach

@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.scenarios.Scenario;
 
 /**
  * @author congo

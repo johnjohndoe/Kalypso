@@ -9,9 +9,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.workflow.Activity;
-import org.kalypso.workflow.Phase;
-import org.kalypso.workflow.Task;
+import org.kalypso.afgui.workflow.Activity;
+import org.kalypso.afgui.workflow.Phase;
+import org.kalypso.afgui.workflow.Task;
 
 public class WorkflowLabelProvider extends LabelProvider implements IFontProvider // , IColorProvider
 {

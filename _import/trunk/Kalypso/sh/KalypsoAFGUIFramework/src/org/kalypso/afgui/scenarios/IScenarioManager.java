@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.scenarios.Scenario;
 
 /**
  * An {@link IScenarioManager} manages all the scenarios in a project. It provides metadata about the scenarios and

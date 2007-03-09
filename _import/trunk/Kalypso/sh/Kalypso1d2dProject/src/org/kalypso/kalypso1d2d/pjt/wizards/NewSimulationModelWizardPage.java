@@ -5,7 +5,7 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.Scenario;
 
 /**
  * @author pat_dev
