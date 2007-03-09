@@ -44,6 +44,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -57,6 +58,7 @@ import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.IntersPointData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.SegmentData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -150,6 +152,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final double firstProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final double lastProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
 
+    /* if not force it to do so */
     if( width < firstProfileWidth )
       width = firstProfileWidth;
     else if( width > lastProfileWidth )
@@ -163,77 +166,117 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
-    /* save the first and last widths of the intersected profile for comparing width the new widths */
+
+    /* get the geo coordinates for the moved profile point */
+    GM_Point gmPoint = null;
+
+    try
+    {
+      gmPoint = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    /* save the first and last widths of the intersected profile for comparing them with the new widths */
     final double oldStartWdith = m_profile.getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final double oldEndWdith = m_profile.getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    
-    /* set the new values to the moved point */
+
+    /* set the new values for the moved profile point */
     profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
     profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, gmPoint.getX() );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, gmPoint.getY() );
 
     /* sort profile points by width */
     final LinkedList<IProfilPoint> points = m_profile.getPoints();
     final ProfilComparator comparator = new ProfilComparator( IWspmConstants.POINT_PROPERTY_BREITE );
     Collections.sort( points, comparator );
 
-    // get the current segment
-    final SegmentData segment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
-
     /* check if the first or last intersection point was moved -> update bank linestrings */
-    final double newStartWidth = m_profile.getPoints().getFirst().getValueFor(  IWspmConstants.POINT_PROPERTY_BREITE );
-    if( oldStartWdith != newStartWidth ) // right intersection point has been moved
-    {
-      // update the intersection points (necessary? -> yes)
-      /* geo.coordinates */
-      GM_Point gmPoint = null;
-      
-      try
-      {
-        gmPoint = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
-      }
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-//      final double x = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-//      final double y = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-//      final double z = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-//
-//      final CS_CoordinateSystem crs = m_data.getBankTheme1().getMapModell().getCoordinatesSystem();
-//      final GM_Point gmpoint = GeometryFactory.createGM_Point( x, y, z, crs );
-      
-      /* intersection point data */
-      final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT; //LEFT == Bankline 1
-      final CreateChannelData.WIDTHORDER widthorder = CreateChannelData.WIDTHORDER.FIRST; //first point sorted by width
-      
-      CreateChannelData.PROF prof = null;
-      if( m_data.getCurrentProfile() == 1 )
-      {
-        prof = CreateChannelData.PROF.UP;
-      }
-      else if ( m_data.getCurrentProfile() == 2 )
-      {
-        prof = CreateChannelData.PROF.DOWN;
-      }
-      segment.setIntersPoint( gmPoint, prof, side , widthorder);
-      m_data.setIntersectedProfile(m_profile, prof);
-      
-      // calc the new RW/HW for the points depended on the new width (X)
+    checkIntersectionPoints( gmPoint, oldStartWdith, oldEndWdith );
 
-      // update the banklines (move the first/last point to the new intersection point
-      // update the profile data for the neighboring segment
-
-    }
-    else if( oldEndWdith != m_profile.getPoints().getLast().getValueFor(  IWspmConstants.POINT_PROPERTY_BREITE ) ) // left intersection point has been moved
-    {
-
-    }
     getProfilChartView().getChart().repaint();
+    m_data.completationCheck();
+  }
+
+  /**
+   * checks if the intersection points have been moved and updates them in the data class (also for the neighbour
+   * segments).
+   */
+  private void checkIntersectionPoints( GM_Point gmPoint, double oldStartWdith, double oldEndWdith )
+  {
+    final double newStartWidth = m_profile.getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    CreateChannelData.PROF prof = m_data.getCurrentProfile();
+
+    if( oldStartWdith != newStartWidth ) // first intersection point has been moved
+    {
+      // update the intersection points
+
+      /* define the intersection point data */
+      // the width order
+      final CreateChannelData.WIDTHORDER widthorder = CreateChannelData.WIDTHORDER.FIRST; // last point sorted by width
+
+      updateIntersectionPoint( gmPoint, prof, widthorder );
+    }
+    else if( oldEndWdith != m_profile.getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) ) // rigth
+    {
+      // update the intersection points
+
+      /* define the intersection point data */
+      // the width order
+      final CreateChannelData.WIDTHORDER widthorder = CreateChannelData.WIDTHORDER.LAST; // first point sorted by width
+
+      updateIntersectionPoint( gmPoint, prof, widthorder );
+    }
+
+    /* update the intersected profile */
+    m_data.setIntersectedProfile( m_data.getCurrentSegment( m_data.m_selectedSegment ), m_profile, prof );
+
+    /* update the banklines */
+    // m_data.setIntersectedBanklines( m_data.getSelectedSegment(), prof );
+  }
+
+  private void updateIntersectionPoint( GM_Point gmPoint, CreateChannelData.PROF prof, CreateChannelData.WIDTHORDER widthorder )
+  {
+    /* get the current segment to set the new intersectionpoint for it */
+    final int currentSegmentNum = m_data.getSelectedSegment();
+    final SegmentData currentSegment = m_data.getCurrentSegment( currentSegmentNum );
+
+    currentSegment.setIntersPoint( gmPoint, prof, widthorder );
+
+    /* get the neighbour segments */
+    List<SegmentData> neighbourSegments = new LinkedList<SegmentData>();
+    neighbourSegments = m_data.getNeighbourSegments( currentSegmentNum );
+
+    /* change prof, because now it is the profile of the other side of the segment */
+    CreateChannelData.PROF profNeighbour = prof;
+    if( prof == CreateChannelData.PROF.DOWN )
+    {
+      profNeighbour = CreateChannelData.PROF.UP;
+    }
+    else if( prof == CreateChannelData.PROF.UP )
+    {
+      profNeighbour = CreateChannelData.PROF.DOWN;
+    }
+
+    for( SegmentData segment : neighbourSegments )
+    {
+      //ust look if the changed profile is in the neighbour segment, if not, do nothing.
+      if( segment != currentSegment )
+      {
+        if( segment.getProfilDownOrg().getStation() == m_profile.getStation() || segment.getProfilUpOrg().getStation() == m_profile.getStation() )
+        {
+          segment.setIntersPoint( gmPoint, profNeighbour, widthorder );
+          /* update the intersected profile */
+          m_data.setIntersectedProfile( segment, m_profile, profNeighbour );
+        }
+      }
+    }
+
   }
 
   /**

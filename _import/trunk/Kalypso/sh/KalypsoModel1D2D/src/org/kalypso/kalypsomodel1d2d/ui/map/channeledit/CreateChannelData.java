@@ -154,7 +154,7 @@ public class CreateChannelData
 
   public int m_selectedSegment;
 
-  private int m_selectedProfile; // 1 = up, 2 = down
+  private CreateChannelData.PROF m_selectedProfile; 
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -354,7 +354,7 @@ public class CreateChannelData
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
 
     final IProfil profil;
-    if( m_selectedProfile == 1 )
+    if( m_selectedProfile == PROF.UP )
     {
       profil = segment.getProfilUpOrg();
     }
@@ -767,9 +767,9 @@ public class CreateChannelData
       {
         // working on the segment
         final int numBankIntersections = getGlobNumBankIntersections();
-        final SegmentData segment = new SegmentData( this, lastProfile, profile, m_selectedBanks, numBankIntersections );
-        System.out.println( "Last profile: " + lastProfile.getStation() );
-        System.out.println( "Profile: " + profile.getStation() );
+        final SegmentData segment = new SegmentData( this, profile, lastProfile,  m_selectedBanks, numBankIntersections );
+        System.out.println( "up profile: " + lastProfile.getStation() );
+        System.out.println( "down profile: " + profile.getStation() );
 
         // add to list
         m_segmentList.add( segment );
@@ -933,7 +933,9 @@ public class CreateChannelData
   }
 
   /**
-   * this method updates the segment data
+   * this method possibly updates the segment data and pushes the calculation of the mesh.
+   * inputs: boolean edit: false-> update of the bankline and profile intersections
+   * true: -> no data update
    */
   public void updateSegments( boolean edit )
   {
@@ -997,39 +999,67 @@ public class CreateChannelData
     completationCheck();
   }
 
-  public final int getCurrentProfile( ) // 1 = up, 2 = down
+  public final CreateChannelData.PROF getCurrentProfile( ) 
   {
     return m_selectedProfile;
   }
 
-  public void setCurrentProfile( int profile )
+  public void setCurrentProfile( CreateChannelData.PROF profile )
   {
     m_selectedProfile = profile;
   }
 
   public void switchProfile( )
   {
-    if( m_selectedProfile == 1 )
-      m_selectedProfile = 2;
+    if( m_selectedProfile == PROF.UP )
+      m_selectedProfile = PROF.DOWN;
     else
-      m_selectedProfile = 1;
+      m_selectedProfile = PROF.UP;
   }
 
-  public void setIntersectedProfile( IProfil profile, PROF prof )
+  public void setIntersectedProfile( SegmentData segment, IProfil profile, PROF prof )
   {
-    final SegmentData segment = m_segmentList.get( m_selectedSegment - 1 );
     segment.setNewIntersectedProfile( profile, prof );
-    
-    completationCheck();
-    //TODO: handle neighbouring segment!!
-    if ( prof == PROF.DOWN )
-    {
-      
-    }
-    else if ( prof == PROF.UP)
-    {
-      
-    }
   }
 
+  public List getNeighbourSegments( int currentSegmentNum )
+  {
+    final int numOfSegments = m_segmentList.size();
+    final List<SegmentData> neighbours = new LinkedList<SegmentData>();
+    /* check the neighbours */
+    if( currentSegmentNum > 1 & currentSegmentNum < numOfSegments )
+    {
+      // the current segment lies inbetween -> two neighbours
+      neighbours.add( m_segmentList.get( currentSegmentNum - 2 ) ); // neighbour before
+      neighbours.add( m_segmentList.get( currentSegmentNum  ) ); // neighbour after
+    }
+    else if( currentSegmentNum > 1 & currentSegmentNum == numOfSegments )
+    {
+      // the current segment is the last segment -> one neighbour
+      neighbours.add( m_segmentList.get( currentSegmentNum - 2 ) );
+
+    }
+    else if( currentSegmentNum == 1 & currentSegmentNum == numOfSegments )
+    {
+      // there is only one segment, no neighbours
+    }
+    else if( currentSegmentNum == 1 & currentSegmentNum < numOfSegments )
+    {
+      // the current segment is the first segment -> one neighbour
+      neighbours.add( m_segmentList.get( currentSegmentNum ) );
+    }
+    return neighbours;
+  }
+
+//  /**
+//   * updates the intersected banklines of the specified segment
+//   * called after re-setting the intersection points and intersected profiles
+//   */
+//  public void setIntersectedBanklines( final int segmentNum, PROF prof )
+//  {
+//    final SegmentData segment = m_segmentList.get( segmentNum - 1 );
+//    segment.setNewBankIntersection( prof );
+//    completationCheck();
+//  }
+//
 }

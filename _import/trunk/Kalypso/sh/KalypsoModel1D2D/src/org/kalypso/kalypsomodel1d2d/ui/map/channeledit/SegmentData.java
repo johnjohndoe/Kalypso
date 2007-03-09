@@ -108,19 +108,19 @@ public class SegmentData
   private LineString m_bankRightOrg;
 
   /* intersected lines */
-  private LineString m_profUpInters;
+  private LineString m_upIntersLinestring;
 
-  private LineString m_profDownInters;
+  private LineString m_downIntersLinestring;
 
   private LineString m_bankLeftInters;
 
   private LineString m_bankRightInters;
 
-  private IProfil m_previousIntersProfile;
+  private IProfil m_upIntersProfile;
 
-  private IProfil m_nextCroppedProfile;
+  private IProfil m_downCroppedProfile;
 
-  private IProfil m_nextIntersProfile;
+  private IProfil m_downIntersProfile;
 
   /* intersection data */
   private final List<IntersPointData> m_intersPoints = new ArrayList<IntersPointData>();
@@ -130,37 +130,37 @@ public class SegmentData
   // original data
   private Map<Feature, CreateChannelData.SIDE> m_bankLines;
 
-  private WspmProfile m_previousProfile;
+  private WspmProfile m_upProfile;
 
-  private WspmProfile m_nextProfile;
+  private WspmProfile m_DownProfile;
 
-  private LineString m_previousProfLineString;
+  private LineString m_upProfLineString;
 
-  private LineString m_nextProfLineString;
+  private LineString m_downProfLineString;
 
   private final CreateChannelData m_channelData;
 
-  private IProfil m_previousCroppedProfile;
+  private IProfil m_upCroppedProfile;
 
   /* areas of the profiles */
-  private double m_areaPreviousCroppedProfile;
+  private double m_areaUpCroppedProfile;
 
-  private double m_areaNextCroppedProfile;
+  private double m_areaDownCroppedProfile;
 
-  private double m_areaPreviousIntersProfile;
+  private double m_areaUpIntersProfile;
 
-  private double m_areaNextIntersProfile;
+  private double m_areaDownIntersProfile;
 
-  public SegmentData( final CreateChannelData channelData, final WspmProfile previousProfile, final WspmProfile nextProfile, final Map<Feature, CreateChannelData.SIDE> bankLines, final int numBankIntersections )
+  public SegmentData( final CreateChannelData channelData, final WspmProfile upProfile, final WspmProfile downProfile, final Map<Feature, CreateChannelData.SIDE> bankLines, final int numBankIntersections )
   {
 
     m_channelData = channelData;
-    m_previousProfile = previousProfile;
-    m_nextProfile = nextProfile;
+    m_upProfile = upProfile;
+    m_DownProfile = downProfile;
     m_bankLines = bankLines;
 
-    m_previousProfLineString = convertProfilesToLineStrings( previousProfile );
-    m_nextProfLineString = convertProfilesToLineStrings( nextProfile );
+    m_upProfLineString = convertProfilesToLineStrings( upProfile );
+    m_downProfLineString = convertProfilesToLineStrings( downProfile );
     m_numBankIntersections = numBankIntersections;
 
     intersectOrigBanks();
@@ -194,7 +194,7 @@ public class SegmentData
 
   public LineString getProfDownIntersLineString( )
   {
-    return m_profDownInters;
+    return m_downIntersLinestring;
   }
 
   public LineString getProfDownOrg( )
@@ -204,7 +204,7 @@ public class SegmentData
 
   public LineString getProfUpIntersLineString( )
   {
-    return m_profUpInters;
+    return m_upIntersLinestring;
   }
 
   public LineString getProfUpOrg( )
@@ -214,27 +214,27 @@ public class SegmentData
 
   public IProfil getProfilUpOrg( )
   {
-    return m_previousProfile.getProfil();
+    return m_upProfile.getProfil();
   }
 
   public IProfil getProfilDownOrg( )
   {
-    return m_nextProfile.getProfil();
-  }
-
-  public IProfil getProfUpIntersProfile( )
-  {
-    return m_previousIntersProfile;
-  }
-
-  public IProfil getProfUpCroppedProfile( )
-  {
-    return m_previousCroppedProfile;
+    return m_DownProfile.getProfil();
   }
 
   public IProfil getProfDownIntersProfile( )
   {
-    return m_nextIntersProfile;
+    return m_downIntersProfile;
+  }
+
+  public IProfil getProfUpCroppedProfile( )
+  {
+    return m_upCroppedProfile;
+  }
+
+  public IProfil getProfUpIntersProfile( )
+  {
+    return m_upIntersProfile;
   }
 
   /**
@@ -251,22 +251,22 @@ public class SegmentData
     {
       /* crop the profile */
       // IProfil
-      m_previousCroppedProfile = createCroppedIProfile( m_previousProfile, CreateChannelData.PROF.DOWN );
+      m_upCroppedProfile = createCroppedIProfile( m_upProfile, CreateChannelData.PROF.UP );
 
       /* the cropped profile area is the desired value for the intersected profile area */
-      m_areaPreviousCroppedProfile = ProfilUtil.calcArea( m_previousCroppedProfile );
+      m_areaUpCroppedProfile = ProfilUtil.calcArea( m_upCroppedProfile );
 
       /* intersect the cropped profile */
-      final IProfil tempPreviousIntersProfile = createIntersectedIProfile( m_previousCroppedProfile );
+      final IProfil tempUpIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
       // LineString
-      m_previousProfLineString = createCroppedProfileLineString( m_previousProfile, CreateChannelData.PROF.DOWN );
-      m_areaPreviousIntersProfile = ProfilUtil.calcArea( tempPreviousIntersProfile );
+      m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
+      m_areaUpIntersProfile = ProfilUtil.calcArea( tempUpIntersProfile );
 
       // Flächenausgleich!!
-      m_previousIntersProfile = adjustProfileArea( tempPreviousIntersProfile, m_areaPreviousCroppedProfile, m_areaPreviousIntersProfile );
+      m_upIntersProfile = adjustProfileArea( tempUpIntersProfile, m_areaUpCroppedProfile, m_areaUpIntersProfile );
 
       GeometryFactory factory = new GeometryFactory();
-      m_profDownInters = factory.createLineString( convertProfileToCoordinates( m_previousIntersProfile ) );
+      m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
 
     }
     catch( Exception e )
@@ -279,22 +279,22 @@ public class SegmentData
     {
       /* crop the profile */
       // LineString
-      m_nextProfLineString = createCroppedProfileLineString( m_nextProfile, CreateChannelData.PROF.UP );
+      m_downProfLineString = createCroppedProfileLineString( m_DownProfile, CreateChannelData.PROF.DOWN );
       // IProfil
-      m_nextCroppedProfile = createCroppedIProfile( m_nextProfile, CreateChannelData.PROF.UP );
+      m_downCroppedProfile = createCroppedIProfile( m_DownProfile, CreateChannelData.PROF.DOWN );
 
       /* the cropped profile area is the desired value for the intersected profile area */
-      m_areaNextCroppedProfile = ProfilUtil.calcArea( m_nextCroppedProfile );
+      m_areaDownCroppedProfile = ProfilUtil.calcArea( m_downCroppedProfile );
 
       /* intersect the cropped profile */
-      final IProfil tempNextIntersProfile = createIntersectedIProfile( m_nextCroppedProfile );
-      m_areaNextIntersProfile = ProfilUtil.calcArea( tempNextIntersProfile );
+      final IProfil tempDownIntersProfile = createIntersectedIProfile( m_downCroppedProfile );
+      m_areaDownIntersProfile = ProfilUtil.calcArea( tempDownIntersProfile );
 
       // Flächenausgleich!!
-      m_nextIntersProfile = adjustProfileArea( tempNextIntersProfile, m_areaNextCroppedProfile, m_areaNextIntersProfile );
+      m_downIntersProfile = adjustProfileArea( tempDownIntersProfile, m_areaDownCroppedProfile, m_areaDownIntersProfile );
 
       GeometryFactory factory = new GeometryFactory();
-      m_profUpInters = factory.createLineString( convertProfileToCoordinates( m_nextIntersProfile ) );
+      m_downIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
 
     }
     catch( Exception e )
@@ -308,7 +308,9 @@ public class SegmentData
   {
     final int numProfPoints = profile.getPoints().size();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
-
+    
+    tmpProfil.setStation( profile.getStation() );
+    
     final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
 
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -381,7 +383,9 @@ public class SegmentData
 
     final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
-
+    
+    tmpProfil.setStation( profile.getStation() );
+    
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
@@ -639,59 +643,19 @@ public class SegmentData
         final LineString bankLine = (LineString) JTSAdapter.export( bankCurve );
 
         /* intersect it with the first (previous) profile of this segment */
-        final Geometry intersectionPreviousProfile = bankLine.intersection( m_previousProfLineString );
-        if( intersectionPreviousProfile instanceof Point )
+        final Geometry intersectionUpProfile = bankLine.intersection( m_upProfLineString );
+        if( intersectionUpProfile instanceof Point )
         {
           /* there should be only one intersection point for each proflie */
-          final double x = intersectionPreviousProfile.getCoordinate().x;
-          final double y = intersectionPreviousProfile.getCoordinate().y;
+          final double x = intersectionUpProfile.getCoordinate().x;
+          final double y = intersectionUpProfile.getCoordinate().y;
           double z = 0;
           // get the z-value from the profile data
           try
           {
-            final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionPreviousProfile );
-            final double width = WspmProfileHelper.getWidthPosition( gmpoint, m_previousProfile.getProfil() );
-            z = WspmProfileHelper.getHeigthPositionByWidth( width, m_previousProfile.getProfil() );
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
-
-          GeometryFactory factory = new GeometryFactory();
-
-          Coordinate coordinates = new Coordinate( x, y, z );
-          Point point = factory.createPoint( coordinates );
-
-          // store it in the point class including corresponding profile information
-          final IntersPointData IntersPoint = new IntersPointData( point, CreateChannelData.PROF.DOWN, side );
-          m_intersPoints.add( IntersPoint );
-
-          // store it in the local point list
-          intersPointList.add( (Point) intersectionPreviousProfile );
-        }
-        else if( intersectionPreviousProfile instanceof GeometryCollection )
-        {
-          /*
-           * if there are more than one intersection point for one profile, the bank line does not match correctly for
-           * this section
-           */
-        }
-
-        /* intersect it with the second (next) profile of this segment */
-        final Geometry intersectionNextProfile = bankLine.intersection( m_nextProfLineString );
-        if( intersectionNextProfile instanceof Point )
-        {
-          /* there should be only one intersection point for each proflie */
-          final double x = intersectionNextProfile.getCoordinate().x;
-          final double y = intersectionNextProfile.getCoordinate().y;
-          double z = 0;
-          // get the z-value from the profile data
-          try
-          {
-            final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionNextProfile );
-            final double width = WspmProfileHelper.getWidthPosition( gmpoint, m_nextProfile.getProfil() );
-            z = WspmProfileHelper.getHeigthPositionByWidth( width, m_nextProfile.getProfil() );
+            final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionUpProfile );
+            final double width = WspmProfileHelper.getWidthPosition( gmpoint, m_upProfile.getProfil() );
+            z = WspmProfileHelper.getHeigthPositionByWidth( width, m_upProfile.getProfil() );
           }
           catch( Exception e )
           {
@@ -708,9 +672,49 @@ public class SegmentData
           m_intersPoints.add( IntersPoint );
 
           // store it in the local point list
-          intersPointList.add( (Point) intersectionNextProfile );
+          intersPointList.add( (Point) intersectionUpProfile );
         }
-        else if( intersectionNextProfile instanceof GeometryCollection )
+        else if( intersectionUpProfile instanceof GeometryCollection )
+        {
+          /*
+           * if there are more than one intersection point for one profile, the bank line does not match correctly for
+           * this section
+           */
+        }
+
+        /* intersect it with the second (next) profile of this segment */
+        final Geometry intersectionDownProfile = bankLine.intersection( m_downProfLineString );
+        if( intersectionDownProfile instanceof Point )
+        {
+          /* there should be only one intersection point for each proflie */
+          final double x = intersectionDownProfile.getCoordinate().x;
+          final double y = intersectionDownProfile.getCoordinate().y;
+          double z = 0;
+          // get the z-value from the profile data
+          try
+          {
+            final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionDownProfile );
+            final double width = WspmProfileHelper.getWidthPosition( gmpoint, m_DownProfile.getProfil() );
+            z = WspmProfileHelper.getHeigthPositionByWidth( width, m_DownProfile.getProfil() );
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
+
+          GeometryFactory factory = new GeometryFactory();
+
+          Coordinate coordinates = new Coordinate( x, y, z );
+          Point point = factory.createPoint( coordinates );
+
+          // store it in the point class including corresponding profile information
+          final IntersPointData IntersPoint = new IntersPointData( point, CreateChannelData.PROF.DOWN, side );
+          m_intersPoints.add( IntersPoint );
+
+          // store it in the local point list
+          intersPointList.add( (Point) intersectionDownProfile );
+        }
+        else if( intersectionDownProfile instanceof GeometryCollection )
         {
           /*
            * there should be only one intersection point for each proflie if there are more or less than two
@@ -764,35 +768,30 @@ public class SegmentData
     }
   }
 
-  public void paintSegment( final Graphics g, final MapPanel mapPanel )
+  public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws GM_Exception
   {
     // g.dispose();
 
     // if( m_bankRightOrg != null )
-    // paintBankLine( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
+    // paintLineString( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
     // if( m_bankLeftOrg != null )
-    // paintBankLine( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
+    // paintLineString( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
     // if( m_profDownInters != null )
     // paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
     // if( m_profUpInters != null )
     // paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    // if( m_bankLeftInters != null )
-    // paintLinePoints( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    // if( m_bankRightInters != null )
-    // paintLinePoints( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    // if( m_intersPoints != null )
-    // {
-    // final Point[] points = new Point[m_intersPoints.size()];
-    // for( int i = 0; i < m_intersPoints.size(); i++ )
-    // {
-    // points[i] = m_intersPoints.get( i ).getPoint() ;
-    // }
-    // paintPoints( points, g, mapPanel, new Color( 100, 255, 50 ) );
-    // }
+    if( m_bankLeftInters != null )
+      paintLineString( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
+    if( m_bankRightInters != null )
+      paintLineString( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
   }
 
   private void paintLineStringPoints( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color )
   {
+    if( line == null )
+      return;
+    
+    
     final Color oldColor = g.getColor();
     g.setColor( color );
 
@@ -810,12 +809,29 @@ public class SegmentData
     g.setColor( oldColor );
   }
 
+  private void paintPoint( final Point point, final Graphics g, final MapPanel mapPanel, final Color color )
+  {
+    final Color oldColor = g.getColor();
+    g.setColor( color );
+
+    final int pointRectWidth = 8;
+    final int halfRectWidth = pointRectWidth / 2;
+
+    final double x = point.getCoordinate().x;
+    final double y = point.getCoordinate().y;
+    final int xs = (int) mapPanel.getProjection().getDestX( x );
+    final int ys = (int) mapPanel.getProjection().getDestY( y );
+    g.fill3DRect( xs - halfRectWidth, ys - halfRectWidth, pointRectWidth, pointRectWidth, true );
+
+    g.setColor( oldColor );
+  }
+
   public boolean complete( )
   {
     boolean check;
     check = false;
 
-    if( m_profDownInters != null & m_profUpInters != null & m_bankLeftInters != null & m_bankRightInters != null )
+    if( m_downIntersLinestring != null & m_upIntersLinestring != null & m_bankLeftInters != null & m_bankRightInters != null )
     {
       check = true;
     }
@@ -835,8 +851,7 @@ public class SegmentData
   }
 
   /**
-   * gets the intersection point (Point) of the profile (prof) for the specified bank side (side). TODO: there has to be
-   * a set-method, too!!
+   * gets the intersection point (Point) of the profile (prof) for the specified bank side (side). 
    */
   private Point getIntersPoint( CreateChannelData.PROF prof, CreateChannelData.SIDE side )
   {
@@ -857,28 +872,29 @@ public class SegmentData
   /**
    * sets the intersection point (Point) of the profile (prof) for the specified bank side (side).
    */
-  public void setIntersPoint( GM_Point gmpoint, PROF prof, SIDE side, WIDTHORDER widthorder )
+  public void setIntersPoint( GM_Point gmpoint, PROF prof, WIDTHORDER widthorder )
   {
     for( int i = 0; i < m_intersPoints.size(); i++ )
     {
       final IntersPointData data = m_intersPoints.get( i );
 
-      if( side == data.getSide() & prof == data.getProf() & data.getWidthOrder() == widthorder )
+      if( prof == data.getProf() & data.getWidthOrder() == widthorder )
       {
-        //store the old point to get the right banklne points
+        // store the old point to get the right banklne points
         Point oldPoint = data.getPoint();
-        
+
         GeometryFactory factory = new GeometryFactory();
         Point point = factory.createPoint( new Coordinate( gmpoint.getX(), gmpoint.getY(), gmpoint.getZ() ) );
         data.setPoint( point );
 
-        updateBanklines( oldPoint, point );
+        if( point.distance( oldPoint ) > 0.01 )
+          updateBanklines( oldPoint, point );
       }
     }
-    
+
   }
 
-  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint ) throws ProfilDataException
+  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint ) 
   {
     final double bx = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final double by = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
@@ -960,7 +976,7 @@ public class SegmentData
     return reduced;
   }
 
-  protected Point[] reducePoints( final Point[] points, final Point[] pointsToKeep, final double allowedDistance ) throws ProfilDataException
+  protected Point[] reducePoints( final Point[] points, final Point[] pointsToKeep, final double allowedDistance ) 
   {
     // reduce segment wise
     final Set<Point> pointsToKeepList = new HashSet<Point>( Arrays.asList( pointsToKeep ) );
@@ -1026,6 +1042,42 @@ public class SegmentData
       m_bankRightInters = intersectLineString( m_bankRightOrg, m_numBankIntersections );
   }
 
+//  /**
+//   * sets the new banklines because of user-changes in the intersected profiles and intersection points. takes the old
+//   * intersected bankline and moves their start and end points to the new intersection points.
+//   */
+//  public void setNewBankIntersection( PROF prof )
+//  {
+//    /*
+//     * check all the start and end point of the allready intersected bank line 
+//     * and compare them with the intersection points?!
+//     */
+//    
+//    // left side
+//    
+//    Point startPoint = m_bankLeftInters.getStartPoint();
+//    Point endPoint = m_bankLeftInters.getEndPoint();
+//
+//    GeometryFactory factory = new GeometryFactory();
+//    Coordinate[] coords = m_bankLeftInters.getCoordinates();
+//
+//    for( int i = 0; i < m_intersPoints.size(); i++ )
+//    {
+//      if( m_intersPoints.get( i ).getSide().LEFT == CreateChannelData.SIDE.LEFT & m_intersPoints.get( i ).getProf() == prof )
+//      {
+//        if( m_intersPoints.get( i ).getPoint().intersects( endPoint ) )
+//        {
+//
+//        }
+//      }
+//
+//    }
+//
+//    // m_bankLeftInters =
+//    // m_bankRightInters =
+//
+//  }
+
   /**
    * manages the update of the profile data, after the intersected profiles were chaged by the chart view layer in the
    * gui. things to do: -update the intersection points -> will be done by the layer -update the intersected banklines
@@ -1045,24 +1097,26 @@ public class SegmentData
 
         /* crop the profile */
         // IProfil
-        m_previousCroppedProfile = createCroppedIProfile( m_previousProfile, CreateChannelData.PROF.DOWN );
+        m_upCroppedProfile = createCroppedIProfile( m_upProfile, CreateChannelData.PROF.UP );
 
         /* the cropped profile area is the desired value for the intersected profile area */
-        final double areaPreviousCroppedProfile = ProfilUtil.calcArea( m_previousCroppedProfile );
+        final double areaUpCroppedProfile = ProfilUtil.calcArea( m_upCroppedProfile );
 
         /* intersect the cropped profile */
         // here not necessary, because the initial intersection was allready done. The intersection here will be
         // handeled by the user.
         // final IProfil tempPreviousIntersProfile = createIntersectedIProfile( m_previousCroppedProfile );
         // LineString
-        m_previousProfLineString = createCroppedProfileLineString( m_previousProfile, CreateChannelData.PROF.DOWN );
-        final double areaPreviousIntersProfile = ProfilUtil.calcArea( m_previousIntersProfile );
+        //m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
+        final double areaUpIntersProfile = ProfilUtil.calcArea( m_upIntersProfile );
 
         // Flächenausgleich!!
-        m_previousIntersProfile = adjustProfileArea( m_previousIntersProfile, areaPreviousCroppedProfile, areaPreviousIntersProfile );
-
+        // m_upIntersProfile = adjustProfileArea( m_upIntersProfile, areaUpCroppedProfile, areaUpIntersProfile );
+        
+        m_upIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
+        
         GeometryFactory factory = new GeometryFactory();
-        m_profDownInters = factory.createLineString( convertProfileToCoordinates( m_previousIntersProfile ) );
+        m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
 
       }
       catch( Exception e )
@@ -1075,23 +1129,24 @@ public class SegmentData
       {
         /* crop the profile */
         // IProfil
-        m_nextCroppedProfile = createCroppedIProfile( m_nextProfile, CreateChannelData.PROF.UP );
+        m_downCroppedProfile = createCroppedIProfile( m_DownProfile, CreateChannelData.PROF.DOWN );
 
         /* the cropped profile area is the desired value for the intersected profile area */
-        final double areaNextCroppedProfile = ProfilUtil.calcArea( m_nextCroppedProfile );
+        final double areaDownCroppedProfile = ProfilUtil.calcArea( m_downCroppedProfile );
 
         /* intersect the cropped profile */
         // here not necessary, because the initial intersection was allready done. The intersection here will be
         // handeled by the user.
         // LineString
         // final IProfil tempNextIntersProfile = createIntersectedIProfile( m_nextCroppedProfile );
-        final double areaNextIntersProfile = ProfilUtil.calcArea( m_nextIntersProfile );
+        final double areaDownIntersProfile = ProfilUtil.calcArea( m_downIntersProfile );
 
         // Flächenausgleich!!
-        m_nextIntersProfile = adjustProfileArea( m_nextIntersProfile, areaNextCroppedProfile, areaNextIntersProfile );
+        // m_downIntersProfile = adjustProfileArea( m_downIntersProfile, areaDownCroppedProfile, areaDownIntersProfile
+        // );
 
         GeometryFactory factory = new GeometryFactory();
-        m_profUpInters = factory.createLineString( convertProfileToCoordinates( m_nextIntersProfile ) );
+        m_downIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
 
       }
       catch( Exception e )
@@ -1205,14 +1260,14 @@ public class SegmentData
     int i;
 
     i = 0;
-    if( m_profUpInters != null )
+    if( m_upIntersLinestring != null )
     {
-      boundary[0] = m_profUpInters.getBoundary();
+      boundary[0] = m_upIntersLinestring.getBoundary();
       i = i + 1;
     }
-    if( m_profDownInters != null )
+    if( m_downIntersLinestring != null )
     {
-      boundary[1] = m_profDownInters.getBoundary();
+      boundary[1] = m_downIntersLinestring.getBoundary();
       i = i + 1;
     }
     if( m_bankLeftInters != null )
@@ -1312,6 +1367,9 @@ public class SegmentData
 
   private void paintLineString( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception
   {
+    if( line == null )
+      return;
+    
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
 
@@ -1352,15 +1410,15 @@ public class SegmentData
     m_bankRightInters = bankRightInters;
   }
 
-  public void paintProfile( int currentProfile, MapPanel panel, Graphics g, Color color )
+  public void paintProfile( CreateChannelData.PROF currentProfile, MapPanel panel, Graphics g, Color color )
   {
     LineString line = null;
     final GeometryFactory factory = new GeometryFactory();
 
-    if( currentProfile == 1 )
-      line = factory.createLineString( convertProfileToCoordinates( m_previousIntersProfile ) );
-    else if( currentProfile == 2 )
-      line = factory.createLineString( convertProfileToCoordinates( m_nextIntersProfile ) );
+    if( currentProfile == PROF.UP )
+      line = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
+    else if( currentProfile == PROF.DOWN )
+      line = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
 
     try
     {
@@ -1371,6 +1429,19 @@ public class SegmentData
       e.printStackTrace();
     }
     paintLineStringPoints( line, g, panel, color );
+
+  }
+
+  public void paintIntersectionPoints( MapPanel panel, Graphics g, Color color, PROF prof )
+  {
+    for( int i = 0; i < m_intersPoints.size(); i++ )
+    {
+      if( m_intersPoints.get( i ).getProf() == prof )
+      {
+        final Point point = m_intersPoints.get( i ).getPoint();
+        paintPoint( point, g, panel, color );
+      }
+    }
 
   }
 
@@ -1390,67 +1461,67 @@ public class SegmentData
 
   public void setNewIntersectedProfile( IProfil profile, PROF prof )
   {
-    if (prof == PROF.DOWN)
-      {
-        m_previousIntersProfile = profile;
-      }
-    else if (prof == PROF.UP)
-      {
-      m_nextIntersProfile = profile;
-      }
+    if( prof == PROF.UP )
+    {
+      m_upIntersProfile = profile;
+    }
+    else if( prof == PROF.DOWN )
+    {
+      m_downIntersProfile = profile;
+    }
 
     updateProfileIntersection();
   }
 
   /**
-   * updates the intersected bankline linestring with the new edge point (moved by profile chart)
-   * by moving the first/last line point (oldPoint) to the new location (newPoint).
+   * updates the intersected bankline linestring with the new edge point (moved by profile chart) by moving the
+   * first/last line point (oldPoint) to the new location (newPoint).
    */
-  private void updateBanklines(Point oldPoint, Point newPoint )
+  private void updateBanklines( Point oldPoint, Point newPoint )
   {
-    //find the correct bankline
+    // find the correct bankline
     Point point = m_bankLeftInters.getPointN( 0 );
-    
-    if ( point.distance( oldPoint ) < 0.01 )
+
+    if( point.distance( oldPoint ) < 0.01 )
     {
-      Coordinate[] coords = new Coordinate[m_numBankIntersections - 1];
+      Coordinate[] coords = new Coordinate[m_numBankIntersections];
       coords = m_bankLeftInters.getCoordinates();
       coords[0] = newPoint.getCoordinate();
-      
+
       GeometryFactory factory = new GeometryFactory();
       m_bankLeftInters = factory.createLineString( coords );
     }
-    
+
     point = m_bankLeftInters.getPointN( m_numBankIntersections - 1 );
-    if ( point.distance( oldPoint ) < 0.01 )
+    if( point.distance( oldPoint ) < 0.01 )
     {
-      Coordinate[] coords = new Coordinate[m_numBankIntersections - 1];
+      Coordinate[] coords = new Coordinate[m_numBankIntersections];
       coords = m_bankLeftInters.getCoordinates();
       coords[m_numBankIntersections - 1] = newPoint.getCoordinate();
-      
+
       GeometryFactory factory = new GeometryFactory();
       m_bankLeftInters = factory.createLineString( coords );
     }
-    
-    point = m_bankRightInters.getPointN( 0 ); 
-    if ( point.distance( oldPoint ) < 0.01 )
+
+    point = m_bankRightInters.getPointN( 0 );
+    if( point.distance( oldPoint ) < 0.01 )
     {
-      Coordinate[] coords = new Coordinate[m_numBankIntersections - 1];
-      coords = m_bankLeftInters.getCoordinates();
+      Coordinate[] coords = new Coordinate[m_numBankIntersections];
+      coords = m_bankRightInters.getCoordinates();
       coords[0] = newPoint.getCoordinate();
-      
+
       GeometryFactory factory = new GeometryFactory();
       m_bankRightInters = factory.createLineString( coords );
-      
+
     }
-    
+
     point = m_bankRightInters.getPointN( m_numBankIntersections - 1 );
-    if ( point.distance( oldPoint ) < 0.01 )
+    if( point.distance( oldPoint ) < 0.01 )
     {
-      Coordinate[] coords = new Coordinate[m_numBankIntersections - 1];
-      coords = m_bankLeftInters.getCoordinates();
+      Coordinate[] coords = new Coordinate[m_numBankIntersections];
+      coords = m_bankRightInters.getCoordinates();
       coords[m_numBankIntersections - 1] = newPoint.getCoordinate();
-      
+
       GeometryFactory factory = new GeometryFactory();
       m_bankRightInters = factory.createLineString( coords );
     }

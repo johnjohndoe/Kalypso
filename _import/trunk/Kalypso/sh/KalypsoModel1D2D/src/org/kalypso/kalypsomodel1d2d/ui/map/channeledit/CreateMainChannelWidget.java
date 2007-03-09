@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -85,9 +86,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public Control createControl( final Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_composite = new CreateMainChannelComposite( parent, SWT.NONE, m_data, this );
+    m_composite = new CreateMainChannelComposite( parent, toolkit, SWT.NONE, m_data, this );
     return m_composite;
   }
 
@@ -126,6 +127,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   @Override
   public void paint( final Graphics g )
   {
+    if( m_composite == null )
+      return;
+    
     final Feature[] selectedProfiles = m_data.getSelectedProfiles();
 
     for( final Feature feature : selectedProfiles )
@@ -150,22 +154,28 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     final MapPanel mapPanel = getMapPanel();
 
+    
     /* draw intersected profile */
     drawIntersProfiles( g, new Color( 0, 153, 255 ) );
+    /* draw cropped profile */
+    //drawCroppedProfiles( g, new Color( 100, 153, 255 ) );
+
+    /* draw intersection points */
+    drawIntersPoints( g, new Color( 255, 153, 0 ) );
 
     /* draw mesh */
     if( m_data.getMeshStatus() == true )
       m_data.paintAllSegments( g, mapPanel );
 
     /* draw editable bankline */
-    // if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
-    // {
-    // m_data.drawBankLine( m_composite.m_currentSegment, 1, g );
-    // }
-    // if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
-    // {
-    // m_data.drawBankLine( m_composite.m_currentSegment, 2, g );
-    // }
+     if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
+     {
+     m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
+     }
+     if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
+     {
+     m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
+     }
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
 
@@ -179,6 +189,17 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       if( currentSegment != null )
         if( currentSegment.complete() == true )
           currentSegment.paintProfile( m_data.getCurrentProfile(), getPanel(), g, color );
+    }
+  }
+  
+  private void drawIntersPoints( Graphics g, Color color )
+  {
+    if( m_data.getSelectedSegment() != 0 )
+    {
+      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      if( currentSegment != null )
+        if( currentSegment.complete() == true )
+          currentSegment.paintIntersectionPoints( getPanel(), g, color, m_data.getCurrentProfile() );
     }
   }
 
@@ -205,9 +226,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
         de.paint( g, getMapPanel().getProjection() );
 
-        // TODO: Set the Stroke back to default
         symb.setStroke( defaultstroke );
-
       }
       catch( final IncompatibleGeometryTypeException e )
       {
@@ -305,6 +324,8 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     // TODO!
     if( m_delegateWidget != null )
       m_delegateWidget.finish();
+    
+//    m_delegateWidget = null;
   }
 
   /**
@@ -314,6 +335,8 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   @Override
   public void keyPressed( KeyEvent e )
   {
+    
+    //TODO:
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
   }
