@@ -107,7 +107,11 @@ public class KalypsoModelWspmUIExtensions
     {
       final String type = element.getAttribute( "profiletype" );
       final String id = element.getAttribute( "id" );
-      if( type.equals( profiletype ) && id.equals(providerId ) )
+      
+      /* If a provider id is given, only accept this one, else use the first one. 
+       * TODO: Kim: if providerID == null, return default provider
+       * */
+      if( type.equals( profiletype ) && ( providerId == null || id.equals( providerId ) ) )
       {
         try
         {
@@ -131,6 +135,7 @@ public class KalypsoModelWspmUIExtensions
  */
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
   {
+    return createProfilLayerProvider( profiletype, null );
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
 
