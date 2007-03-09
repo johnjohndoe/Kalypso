@@ -61,6 +61,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
@@ -70,10 +71,14 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 /**
  * ActionOptionsView is a view on the selected widget of an active map view. It provides a panel where the selected
  * widgets can place GUI elements for their options.
+ * 
+ * @author doemming
  */
 public class ActionOptionsView extends ViewPart implements IWindowListener, IPageListener, IPartListener, IWidgetChangeListener
 {
   public static final String ID = "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView";
+
+  private FormToolkit m_toolkit;
 
   /**
    * top level composite of view
@@ -102,7 +107,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   private boolean m_modeForce = false;
 
   /*
-   * @author doemming TODO update view when model changes (on selected modellevents)
+   * TODO update view when model changes (on selected modellevents)
    */
   public ActionOptionsView( )
   {
@@ -266,8 +271,10 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
+    m_toolkit = new FormToolkit( parent.getDisplay() );
+
     m_topLevel = new Composite( parent, SWT.NONE );
 
     Layout gridLayout = new FillLayout();
@@ -330,7 +337,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
         if( newWidget instanceof IWidgetWithOptions )
         {
           final IWidgetWithOptions widget = (IWidgetWithOptions) m_activeWidget;
-          final Control control = widget.createControl( m_group );
+          final Control control = widget.createControl( m_group, m_toolkit );
           control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
           m_group.layout();
@@ -367,6 +374,10 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
       if( registry instanceof IWorkbenchPage )
         ((IWorkbenchPage) registry).removePartListener( this );
     }
+
+    m_toolkit.dispose();
+    m_toolkit = null;
+
     super.dispose();
   }
 }

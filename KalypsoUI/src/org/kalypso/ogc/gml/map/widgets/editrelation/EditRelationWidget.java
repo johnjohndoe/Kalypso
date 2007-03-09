@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeVisiterAbortException;
@@ -568,7 +569,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public Control createControl( Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
     Layout gridLayout = new GridLayout( 1, false );

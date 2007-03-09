@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -300,7 +301,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public Control createControl( final Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
     m_topLevel.setLayout( new GridLayout( 1, false ) );
