@@ -57,6 +57,7 @@ import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 
 /**
  * @author Stefan Kurzbach
@@ -109,6 +110,10 @@ public class ProjectChangeListener implements IActiveContextChangeListener
             return true;
           }
           else if( SimulationModelDBView.ID.equals( viewId ) )
+          {
+            return true;
+          }
+          else if( GisMapOutlineView.ID.equals( viewId ) )
           {
             return true;
           }

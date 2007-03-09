@@ -9,6 +9,12 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -54,9 +60,56 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class WorkflowControl
 {
+  /**
+   * @author Stefan Kurzbach
+   */
+  private final class ExecutionListener implements IExecutionListener
+  {
+    private final Task m_task;
+
+    ExecutionListener( final Task task )
+    {
+      m_task = task;
+    }
+
+    public void notHandled( final String commandId, final NotHandledException exception )
+    {
+
+    }
+
+    public void postExecuteFailure( final String commandId, final ExecutionException exception )
+    {
+
+    }
+
+    public void postExecuteSuccess( final String commandId, final Object returnValue )
+    {
+
+    }
+
+    public void preExecute( final String commandId, final ExecutionEvent event )
+    {
+      final TaskGroup contextTaskGroup = m_task.getContext();
+      if( contextTaskGroup != null )
+      {
+        try
+        {
+          doTask( contextTaskGroup );
+        }
+        catch( final Exception e )
+        {
+          logger.log( Level.INFO, e.getLocalizedMessage() );
+          logger.info( "Context task could not be executed: " + contextTaskGroup.getName() );
+        }
+      }
+    }
+  }
+
   final static Logger logger = Logger.getLogger( WorkflowControl.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
+
+  private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands"; //$NON-NLS-1$
 
   private static final String MEMENTO_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
@@ -173,8 +226,6 @@ public class WorkflowControl
     m_treeViewer.setLabelProvider( new WorkflowLabelProvider( m_treeViewer ) );
     m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
-      private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands"; //$NON-NLS-1$
-
       public void doubleClick( final DoubleClickEvent event )
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
@@ -183,44 +234,20 @@ public class WorkflowControl
         {
           if( first instanceof Task )
           {
-            doTask( (Task) first );
+            final Task task = (Task) first;
+            try
+            {
+              doTask( task );
+            }
+            catch( final Throwable e )
+            {
+              final IStatus status = StatusUtilities.statusFromThrowable( e );
+              ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) + task.getName(), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+              logger.log( Level.SEVERE, "Failed to execute task: " + task.getName(), e ); //$NON-NLS-1$
+            }
           }
         }
-      }
-
-      private final void doTask( final Task task )
-      {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-        final String name = task.getURI();
-        try
-        {
-          final Command command = getCommand( commandService, name );
-          final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-          handlerService.executeCommand( command.getId(), null );
-        }
-        catch( final Throwable e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) + name, status ); //$NON-NLS-1$ //$NON-NLS-2$
-          KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-          logger.log( Level.SEVERE, "Failed to execute command: " + name, e ); //$NON-NLS-1$
-        }
-      }
-
-      Command getCommand( final ICommandService commandService, final String commandId )
-      {
-        final Command command = commandService.getCommand( commandId );
-        if( !command.isDefined() )
-        {
-          final Category category = commandService.getCategory( "org.kalypso.afgui.tasks" ); //$NON-NLS-1$
-          if( !category.isDefined() )
-          {
-            category.define( TASKS_COMMANDS_CATEGORY, null );
-          }
-          command.define( commandId, null, category );
-        }
-        return command;
       }
     } );
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -264,6 +291,35 @@ public class WorkflowControl
         }
       }
     } );
+  }
+
+  final void doTask( final Task task ) throws ExecutionException, NotDefinedException, NotEnabledException, NotHandledException
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    final String name = task.getURI();
+
+    final Command command = getCommand( commandService, name );
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IExecutionListener executionListener = new ExecutionListener( task );
+    command.addExecutionListener( executionListener );
+    handlerService.executeCommand( command.getId(), null );
+    command.removeExecutionListener( executionListener );
+  }
+
+  Command getCommand( final ICommandService commandService, final String commandId )
+  {
+    final Command command = commandService.getCommand( commandId );
+    if( !command.isDefined() )
+    {
+      final Category category = commandService.getCategory( "org.kalypso.afgui.tasks" ); //$NON-NLS-1$
+      if( !category.isDefined() )
+      {
+        category.define( TASKS_COMMANDS_CATEGORY, null );
+      }
+      command.define( commandId, null, category );
+    }
+    return command;
   }
 
   private TreePath findPart( final String uri, final Workflow workflow )

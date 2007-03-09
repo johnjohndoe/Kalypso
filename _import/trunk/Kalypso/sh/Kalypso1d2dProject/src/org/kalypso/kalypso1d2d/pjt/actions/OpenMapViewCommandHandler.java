@@ -45,6 +45,8 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
   public static final String PARAM_LAYER_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"; //$NON-NLS-1$
 
+  public static final String NO_LAYER = "NO_LAYER";
+
   private String m_resource;
 
   String m_featureType;
@@ -97,22 +99,26 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
           @Override
           protected IStatus run( final IProgressMonitor monitor )
           {
-            try
-            {
-              Job.getJobManager().join( MapView.JOB_FAMILY, monitor );
-            }
-            catch( final OperationCanceledException e )
-            {
-              return StatusUtilities.statusFromThrowable( e );
-            }
-            catch( final InterruptedException e )
-            {
-              return StatusUtilities.statusFromThrowable( e );
-            }
+//            try
+//            {
+//              Job.getJobManager().join( MapView.JOB_FAMILY, monitor );
+//            }
+//            catch( final OperationCanceledException e )
+//            {
+//              return StatusUtilities.statusFromThrowable( e );
+//            }
+//            catch( final InterruptedException e )
+//            {
+//              return StatusUtilities.statusFromThrowable( e );
+//            }
 
             m_mapModell = mapPanel.getMapModell();
             final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-            if( !m_featureType.equals( activeTheme.getContext() ) )
+            if( activeTheme != null && m_featureType.equals( NO_LAYER ) )
+            {
+              m_mapModell.activateTheme( null );
+            }
+            else if( !m_featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
             {
               final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
               for( final IKalypsoTheme theme : allThemes )
@@ -130,6 +136,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
             return Status.OK_STATUS;
           }
         };
+        job.setRule( mapPanel.getSchedulingRule().getActivateLayerSchedulingRule() );
         job.setUser( true );
         job.schedule();
       }

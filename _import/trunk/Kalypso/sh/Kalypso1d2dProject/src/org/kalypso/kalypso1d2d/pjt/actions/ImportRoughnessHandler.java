@@ -72,13 +72,13 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     wizard.init( workbench, selection );
     wizard.initModelProperties( data );
     
-    final String mapFileName = "maps/roughness.gmt";
-    final OpenMapViewCommandHandler openMapViewCommandHandler = new OpenMapViewCommandHandler();
-    final HashMap<String, String> paramMap = new HashMap<String, String>();
-    paramMap.put( OpenMapViewCommandHandler.PARAM_RESOURCE, mapFileName );
-    openMapViewCommandHandler.setInitializationData( null, null, paramMap );
-    openMapViewCommandHandler.executeInternal( event );
-    openMapViewCommandHandler.dispose();
+//    final String mapFileName = "maps/roughness.gmt";
+//    final OpenMapViewCommandHandler openMapViewCommandHandler = new OpenMapViewCommandHandler();
+//    final HashMap<String, String> paramMap = new HashMap<String, String>();
+//    paramMap.put( OpenMapViewCommandHandler.PARAM_RESOURCE, mapFileName );
+//    openMapViewCommandHandler.setInitializationData( null, null, paramMap );
+//    openMapViewCommandHandler.executeInternal( event );
+//    openMapViewCommandHandler.dispose();
     
     if( wizardDialog.open() == Window.OK )
     {

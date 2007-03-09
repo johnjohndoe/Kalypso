@@ -41,10 +41,6 @@
 					<Help>Laden eines Finite-Elemente-1D-Netzes (KALYPSO2D)</Help>
 					<Name>1D-Netz laden</Name>
 				</Task>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DRivElts">
-					<Help>Zeichnen, löschen und weitere Bearbeitung von 1D-Elementen</Help>
-					<Name>1D-Netz bearbeiten</Name>
-				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EditDataTable">
 					<Help>Editierfunktionen zur Bearbeitung der Datentabelle von Profilen</Help>
 					<Name>Polynomdaten bearbeiten</Name>
@@ -64,10 +60,6 @@
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport">
 					<Help>Importiert ein 2D-Netz (KALYPSO2D)</Help>
 					<Name>2D-Netz laden</Name>
-				</Task>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit2DElts">
-					<Help>Zeichnen, löschen und andere manuelle Bearbeitungen des 2D-Netzes</Help>
-					<Name>2D-Netz bearbeiten</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
 					<Help>Generiert Flussschlauchelemente aus Profilen</Help>
