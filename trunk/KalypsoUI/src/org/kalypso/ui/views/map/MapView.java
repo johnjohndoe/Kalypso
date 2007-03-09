@@ -75,7 +75,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   public static final String ID = "org.kalypso.ui.views.mapView";
 
-  public static final String JOB_FAMILY = "mapViewJobFamily";
+//  public static final String JOB_FAMILY = "mapViewJobFamily";
 
   private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose";
 
@@ -182,15 +182,15 @@ public class MapView extends AbstractMapPart implements IViewPart
         }
         return Status.OK_STATUS;
       }
-
-      /**
-       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-       */
-      @Override
-      public boolean belongsTo( final Object family )
-      {
-        return MapView.JOB_FAMILY.equals( family );
-      }
+//
+//      /**
+//       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+//       */
+//      @Override
+//      public boolean belongsTo( final Object family )
+//      {
+//        return MapView.JOB_FAMILY.equals( family );
+//      }
     };
     disposeJob.setRule( file );
     disposeJob.setUser( true );
