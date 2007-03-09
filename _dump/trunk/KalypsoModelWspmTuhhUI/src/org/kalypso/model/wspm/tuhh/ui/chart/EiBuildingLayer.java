@@ -66,6 +66,7 @@ public class EiBuildingLayer extends AbstractBuildingLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
    */
+  @Override
   public Rectangle2D getBounds( )
   {
     try
@@ -98,6 +99,7 @@ public class EiBuildingLayer extends AbstractBuildingLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
+  @Override
   public void paint( final GCWrapper gc )
   {
     

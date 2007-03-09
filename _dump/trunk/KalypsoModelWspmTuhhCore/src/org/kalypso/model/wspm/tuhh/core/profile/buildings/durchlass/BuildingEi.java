@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
 import java.util.Arrays;
 
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**

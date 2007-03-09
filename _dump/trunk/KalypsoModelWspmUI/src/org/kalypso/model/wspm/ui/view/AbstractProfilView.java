@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 /**
  * @author belger

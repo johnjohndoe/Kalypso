@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import java.io.InvalidObjectException;
 import java.util.LinkedList;
 
 /**
