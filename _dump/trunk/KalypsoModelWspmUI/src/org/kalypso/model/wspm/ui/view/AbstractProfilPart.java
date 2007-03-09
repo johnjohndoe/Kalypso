@@ -56,11 +56,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
+import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
@@ -104,7 +104,10 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   private IProfilEventManager m_pem;
 
   private ValidationProfilListener m_profilValidator;
-
+  
+  private IProfilLayerProvider m_layerProvider;
+  
+  
   public Control createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
@@ -146,7 +149,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     m_pem = null;
   }
 
-  public void updateControl( )
+  public void updateControl()
   {
     if( m_chartview != null )
     {
@@ -183,7 +186,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
       m_chartview = new ProfilChartView( m_pem, m_viewdata, m_profilColorRegistry );
-      m_chartview.setLayerProvider( KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_pem.getProfil().getType(),"org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider" ));
+      m_chartview.setLayerProvider(m_layerProvider);
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );
 

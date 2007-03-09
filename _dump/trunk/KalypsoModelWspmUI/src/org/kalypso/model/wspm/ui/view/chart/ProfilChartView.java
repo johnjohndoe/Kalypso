@@ -109,10 +109,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   private AxisRange m_valueRangeLeft;
 
   private AxisRange m_valueRangeRight;
-  
+
   private IProfilLayerProvider m_layerProvider;
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry)
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
   {
     this( pem, viewdata, new IStationResult[0], colorRegistry );
   }
@@ -122,7 +122,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     this( pem, viewdata, results, colorRegistry, new Insets( 20, 0, 0, 0 ) );
   }
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets)
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets )
   {
     super( pem, viewdata, results );
     m_colorRegistry = colorRegistry;
@@ -157,10 +157,15 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     final IProfil profil = getProfil();
     if( profil != null )
     {
-      //final String profiletype = profil.getType();
-     // final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
+      // final String profiletype = profil.getType();
+      // final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
       if( m_layerProvider == null )
-        return;
+      {
+        m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
+
+        if( m_layerProvider == null )
+          return;
+      }
       // call provider
       final String[] requieredLayer = m_layerProvider.getRequiredLayer( this );
       final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
