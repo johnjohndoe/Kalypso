@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/scenarios" xmlns:scm="http://www.kalypso.org/scenarios" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/afgui/scenarios" xmlns:scm="http://www.kalypso.org/afgui/scenarios" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
 
 	<!-- ==============================================================
 		elements and types

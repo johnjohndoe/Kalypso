@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.kalypso.org/workflow" xmlns:kwf="http://www.kalypso.org/workflow" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0" xml:lang="en">
+<schema targetNamespace="http://www.kalypso.org/afgui/workflow" xmlns:kwf="http://www.kalypso.org/afgui/workflow" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0" xml:lang="en">
 	<!-- ==============================================================
 		elements and types
 		============================================================== -->
@@ -42,7 +42,7 @@
 			<element name="Name" type="string" maxOccurs="1" minOccurs="1" />
 		</sequence>
 		<attribute name="state" type="kwf:EActivityExeState" />
-		<attribute name="URI" type="anyURI" use="required" />
+		<attribute name="URI" type="ID" use="required" />
 	</complexType>
 
 	<complexType name="Task">
@@ -56,6 +56,15 @@
 					</annotation>
 					<element name="Activity" type="kwf:Activity" maxOccurs="unbounded" />
 				</sequence>
+				<attribute name="context" type="IDREF">
+					<annotation>
+						<appinfo>
+							<jaxb:property>
+								<jaxb:baseType name="TaskGroup" />
+							</jaxb:property>
+						</appinfo>
+					</annotation>
+				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
