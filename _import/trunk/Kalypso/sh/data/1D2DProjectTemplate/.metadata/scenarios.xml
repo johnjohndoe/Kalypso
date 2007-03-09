@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scm:ProjectScenarios xmlns:scm="http://www.kalypso.org/scenarios" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kalypso.org/scenarios">
+<scm:ProjectScenarios xmlns:scm="http://www.kalypso.org/afgui/scenarios" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kalypso.org/afgui/scenarios">
 	<scm:Scenario URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis">
 		<scm:Name>Basis</scm:Name>
 		<scm:StaticModel URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis#IstZustand">
