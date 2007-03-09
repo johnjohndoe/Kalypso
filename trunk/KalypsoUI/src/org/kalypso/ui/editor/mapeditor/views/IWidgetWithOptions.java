@@ -42,12 +42,11 @@ package org.kalypso.ui.editor.mapeditor.views;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public interface IWidgetWithOptions
 {
+  public Control createControl( final Composite parent, final FormToolkit toolkit );
+
   public void disposeControl();
-
-  public Control createControl( Composite parent );
-
 }
