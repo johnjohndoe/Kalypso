@@ -135,12 +135,12 @@ public class Transformer implements ICoreRunnableWithProgress
   private void serialize( ) throws IOException, GmlSerializeException
   {
     GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
-    String relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "szenario" + File.separator + "models" + File.separator + "terrain.gml";
+    String relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator + "models" + File.separator + "terrain.gml";
     String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
     FileWriter writer = new FileWriter( absPath );
     GmlSerializer.serializeWorkspace( writer, myWorkspace );
     writer.close();
-    relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "szenario" + File.separator + "maps" + File.separator + "base.gmt";
+    relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator + "maps" + File.separator + "base.gmt";
     absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
     //    
     // GisTemplateMapModell model = GisTemplateHelper.loadGisMapView( new File(absPath) );

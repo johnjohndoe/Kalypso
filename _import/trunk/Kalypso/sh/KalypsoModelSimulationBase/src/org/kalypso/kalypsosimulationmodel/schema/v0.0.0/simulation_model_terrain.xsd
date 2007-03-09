@@ -431,9 +431,7 @@
 	<xs:complexType name="RoughnessClassPropertyType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>
-					project:/.metadata/roughness.gml
-				</kapp:documentReference>
+				<kapp:documentReference>project:/.metadata/roughness.gml</kapp:documentReference>
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
