@@ -340,7 +340,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       }
       return resultLayers.toArray( new IProfilChartLayer[0] );
     }
-    return null;
+    return new IProfilChartLayer[0];
   }
 
 }

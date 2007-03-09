@@ -48,12 +48,11 @@ import org.eclipse.swt.widgets.Control;
  * Allgemeines Interface für eine ProfilView
  * </p>
  * <p>
- * Enthält eine Referenz auf ein {@link org.kalypso.model.wspm.core.profil.IProfil}
- * und eine Referenz auf ein {@link org.kalypso.model.wspm.ui.profil.view.ProfilViewData}
+ * Enthält eine Referenz auf ein {@link org.kalypso.model.wspm.core.profil.IProfil} und eine Referenz auf ein
+ * {@link org.kalypso.model.wspm.ui.profil.view.ProfilViewData}
  * </p>
  * 
  * @author gernot
- * 
  */
 public interface IProfilView extends IProfilViewProvider
 {
@@ -70,4 +69,5 @@ public interface IProfilView extends IProfilViewProvider
   public Control getControl( );
 
   public void dispose( );
-}
+
+ }

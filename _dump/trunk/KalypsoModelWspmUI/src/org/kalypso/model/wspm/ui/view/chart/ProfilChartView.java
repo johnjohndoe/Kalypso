@@ -109,8 +109,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   private AxisRange m_valueRangeLeft;
 
   private AxisRange m_valueRangeRight;
+  
+  private IProfilLayerProvider m_layerProvider;
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry)
   {
     this( pem, viewdata, new IStationResult[0], colorRegistry );
   }
@@ -120,7 +122,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     this( pem, viewdata, results, colorRegistry, new Insets( 20, 0, 0, 0 ) );
   }
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets )
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets)
   {
     super( pem, viewdata, results );
     m_colorRegistry = colorRegistry;
@@ -155,16 +157,16 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     final IProfil profil = getProfil();
     if( profil != null )
     {
-      final String profiletype = profil.getType();
-      final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
-      if( provider == null )
+      //final String profiletype = profil.getType();
+     // final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
+      if( m_layerProvider == null )
         return;
       // call provider
-      final String[] requieredLayer = provider.getRequiredLayer( this );
+      final String[] requieredLayer = m_layerProvider.getRequiredLayer( this );
       final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
       for( final String layerId : requieredLayer )
       {
-        for( final IProfilChartLayer layer : provider.getLayer( layerId, this ) )
+        for( final IProfilChartLayer layer : m_layerProvider.getLayer( layerId, this ) )
         {
           layers.add( layer );
         }
@@ -220,6 +222,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_chart.setAxisRenderer( m_valueRangeLeft, leftrenderer );
     m_chart.setAxisRenderer( m_valueRangeRight, rightrenderer );
     m_chart.setFixAspectRatio( null );
+
     try
     {
       createLayer();
@@ -444,5 +447,15 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     if( m_actions != null )
       m_actions.saveState( memento, MEM_ACTION_CHECK );
+  }
+
+  public IProfilLayerProvider getLayerProvider( )
+  {
+    return m_layerProvider;
+  }
+
+  public void setLayerProvider( IProfilLayerProvider layerProvider )
+  {
+    m_layerProvider = layerProvider;
   }
 }

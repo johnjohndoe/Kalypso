@@ -95,7 +95,9 @@ public class KalypsoModelWspmUIExtensions
 
     return targets.toArray( a );
   }
-
+  /**
+   * @return the LayerProvider for the given profiletype and providerId or null
+   */
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype, final String providerId )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -124,9 +126,33 @@ public class KalypsoModelWspmUIExtensions
     return null;
 
   }
-
+/**
+ * @return the first LayerProvider for the given profiletype
+ */
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
   {
-    return createProfilLayerProvider( profiletype, "org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider" );
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
+
+    for( final IConfigurationElement element : elements )
+    {
+      final String type = element.getAttribute( "profiletype" );
+      if( type.equals( profiletype )  )
+      {
+        try
+        {
+          final Object layerProvider = element.createExecutableExtension( "provider" );
+          if( layerProvider instanceof IProfilLayerProvider )
+            return (IProfilLayerProvider) layerProvider;
+        }
+        catch( final CoreException e )
+        {
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( e.getStatus() );
+        }
+      }
+    }
+    final IStatus status = StatusUtilities.createWarningStatus( "No profile layer provider for type: " + profiletype );
+    KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+    return null;
   }
 }

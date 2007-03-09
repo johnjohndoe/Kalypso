@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
@@ -182,6 +183,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
       m_chartview = new ProfilChartView( m_pem, m_viewdata, m_profilColorRegistry );
+      m_chartview.setLayerProvider( KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_pem.getProfil().getType(),"org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider" ));
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );
 
