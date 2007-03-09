@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -48,11 +47,13 @@ import java.awt.Polygon;
 import java.awt.geom.Area;
 import java.util.List;
 
+import org.deegree.model.geometry.GM_Point;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -62,6 +63,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -70,20 +72,23 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
-
 /**
  * Provide display mechanism for asc terrain elevation model
  *  
  * @author Madanagopal 
  * @author Patrice Congo
  */
-public class ASCDisplayElement implements DisplayElementDecorator
+public class ASCDisplayElement 
+                implements  DisplayElementDecorator,
+                            SurfacePatchVisitor
 {
+  private SimpleElevationColorModel colorModel; 
+    
   private NativeTerrainElevationModelWrapper elevationModel;
   
   private boolean isHighlighted=false;
  
+  private Graphics graphics=null;
   
   private boolean isSelected=false;
 
@@ -92,7 +97,10 @@ public class ASCDisplayElement implements DisplayElementDecorator
   private Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
   
   private DisplayElement decorated;
+
+  private GeoTransform projection;
  
+  
   public ASCDisplayElement(
                 NativeTerrainElevationModelWrapper elevationModel )
   {
@@ -104,6 +112,14 @@ public class ASCDisplayElement implements DisplayElementDecorator
     if(elevationProvider instanceof ASCTerrainElevationModel)
     {
       ascElevationModel=(ASCTerrainElevationModel)elevationProvider;
+      colorModel = 
+        new SimpleElevationColorModel(
+            ascElevationModel.getMinElevation(),
+            ascElevationModel.getMaxElevation(),
+            Color.RED,
+            0.10,
+            0.80,
+            Color.WHITE);
     }
     else
     {
@@ -231,8 +247,32 @@ public class ASCDisplayElement implements DisplayElementDecorator
     {
       decorated.paint( g, projection );
     }
-    paint( g, projection, elevationModel.getBoundingBox() );
+//    paint( g, projection, elevationModel.getBoundingBox() );
+    try
+    {
+      //TODO Patrice try to get the current paint box
+      this.graphics=g;
+      this.projection=projection;
+//      GM_Envelope worldRect = projection.getSourceRect();
+//      
+//      System.out.println("destRect="+worldRect);
+      ascElevationModel.aceptSurfacePatches( 
+                    ascElevationModel.getBoundingBox(), 
+                    this );
+      
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      this.graphics = null;
+      this.projection = null;
+    }
   }
+  
+  
   
   public void paint( Graphics g, GeoTransform projection,GM_Envelope env )
   {
@@ -492,6 +532,29 @@ public class ASCDisplayElement implements DisplayElementDecorator
   public void setDecorated( DisplayElement decorated )
   {
     this.decorated=decorated;    
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor#accept(org.kalypsodeegree.model.geometry.GM_Surface, double)
+   */
+  public boolean visit( GM_Surface surfacePatch, double elevationSample )
+  {
+    try
+    {
+//        System.out.println(
+//            "Drawing:"+
+//            "\n\tsurface:"+surfacePatch+
+//            "\n\televation:"+elevationSample);
+        Area area = calcTargetCoordinates( this.projection, surfacePatch );
+        graphics.setColor( colorModel.getColor( elevationSample ) );
+//        drawPolygon( graphics, area );
+        ((Graphics2D)graphics).fill( area );
+    }
+    catch (Exception e) 
+    {
+      e.printStackTrace();
+    }
+    return true;
   }
 
 }

@@ -52,8 +52,10 @@ import java.util.List;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -159,7 +161,8 @@ public class ASCTerrainElevationModel implements IElevationProvider
       minElevation=Double.MAX_VALUE;
       maxElevation=Double.MIN_VALUE;
       String[] strRow;
-      for(int y=0; y<N_ROWS; y++)
+//      for(int y=0; y<N_ROWS; y++)
+      for(int y=N_ROWS-1; y>=0; y--)
       {
         strRow = br.readLine().trim().split( " " );
         for(int x=0; x<N_COLS; x++)
@@ -275,8 +278,8 @@ public class ASCTerrainElevationModel implements IElevationProvider
     
     if(col<N_COLS && row<N_ROWS && col>=0 && row>=0)
     {
-      int N_COL_ENV = (int)Math.floor( env.getWidth()/cellSize );
-      int N_ROW_ENV = (int)Math.floor( env.getHeight()/cellSize );
+      int N_COL_ENV = (int)Math.floor( env.getWidth()/cellSize);
+      int N_ROW_ENV = (int)Math.floor( env.getHeight()/cellSize);
       for(int i=0;i<N_ROW_ENV;i++)
       {
         for(int j=0;j<N_COL_ENV;j++)
@@ -299,6 +302,62 @@ public class ASCTerrainElevationModel implements IElevationProvider
     }
     
     
+  }
+  
+  public void aceptSurfacePatches(GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  {
+    GM_Envelope env = 
+      GMRectanglesClip.getIntersectionEnv(  
+                      maxEnvelope, envToVisit );
+    double xmin = env.getMin().getX();
+    int col = (int)Math.floor( (xmin-xllcorner)/cellSize );
+    double ymin = env.getMin().getY();
+    int row = (int)Math.floor( (ymin-yllcorner)/cellSize );
+    if(row<0)
+    {
+     row=0;
+    }
+    
+    if(col<N_COLS && row<N_ROWS && col>=0 && row>=0)
+    {
+      int N_COL_ENV = (int)Math.floor( env.getWidth()/cellSize);
+      int N_ROW_ENV = (int)Math.floor( env.getHeight()/cellSize);
+      GM_Surface surfacePatch=null;
+      for(int i=0;i<N_ROW_ENV;i++)
+      {
+        for(int j=0;j<N_COL_ENV;j++)
+        {
+          double x = xmin+j*cellSize;
+          double xPlusCellSize=x+cellSize;
+          double y = ymin+i*cellSize;
+          double yPlusCellSize=y+cellSize;
+          double z = elevations[i][j];
+          GM_Position position=
+            GeometryFactory.createGM_Position(x,y,z );
+          double[] exterior = 
+            new double[]{
+              x,y,z,//lowerleft corner
+              xPlusCellSize,y,z,//lower right side
+              xPlusCellSize,yPlusCellSize,z,//upper right corner
+              x,yPlusCellSize,z, //upper left corner
+              x,y,z
+            };
+          double[][] interior=new double[][]{};
+          surfacePatch = 
+              GeometryFactory.createGM_Surface( 
+                      exterior, interior, 3, getCoordinateSystem() );
+          if(!surfacePatchVisitor.visit( surfacePatch, z ))
+          {
+            return;
+          }          
+        }
+      }    
+    }
+    else
+    {
+      
+    }
+    return;
   }
   
   /**
