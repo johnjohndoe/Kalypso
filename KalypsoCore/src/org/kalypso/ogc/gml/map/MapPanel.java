@@ -55,6 +55,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -175,6 +176,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
 
+  private MapSchedulingRule m_mapSchedulingRule;
+  
   private String m_message = "";
 
   IWorkbenchPartSite m_site;
@@ -908,5 +911,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_message = message;
 
     fireMessageChanged();
+  }
+
+  public MapSchedulingRule getSchedulingRule( )
+  {
+    if( m_mapSchedulingRule == null )
+    {
+      m_mapSchedulingRule = new MapSchedulingRule( this );
+    }
+    return m_mapSchedulingRule;
   }
 }

@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -396,15 +397,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         return Status.OK_STATUS;
       }
 
-      /**
-       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-       */
-      @Override
-      public boolean belongsTo( final Object family )
-      {
-        return MapView.JOB_FAMILY.equals( family );
-      }
+//      /**
+//       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+//       */
+//      @Override
+//      public boolean belongsTo( final Object family )
+//      {
+//        return MapView.JOB_FAMILY.equals( family );
+//      }
     };
+    job.setRule( getSchedulingRule() );
     job.setUser( true );
     job.schedule();
   }
@@ -469,14 +471,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
               return Status.OK_STATUS;
             }
 
-            /**
-             * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-             */
-            @Override
-            public boolean belongsTo( final Object family )
-            {
-              return MapView.JOB_FAMILY.equals( family );
-            }
+//            /**
+//             * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+//             */
+//            @Override
+//            public boolean belongsTo( final Object family )
+//            {
+//              return MapView.JOB_FAMILY.equals( family );
+//            }
           };
           job.schedule();
         }
@@ -500,6 +502,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final String partName = fileName;
       setCustomName( partName );
     }
+  }
+
+  public ISchedulingRule getSchedulingRule( )
+  {    
+    return m_mapPanel.getSchedulingRule();
   }
 
   /**

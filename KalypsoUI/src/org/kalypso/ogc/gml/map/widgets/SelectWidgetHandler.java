@@ -9,14 +9,19 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -80,15 +85,26 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       workbenchPart = mapView;
     }
 
-    //customized widget
-    customizedWidget(widget, applicationContext);
+    // customized widget
+    customizedWidget( widget, applicationContext );
     if( workbenchPart != null )
     {
       activePage.activate( workbenchPart );
       final MapPanel mapPanel = (MapPanel) workbenchPart.getAdapter( MapPanel.class );
       if( mapPanel != null && widget != null )
       {
-        mapPanel.getWidgetManager().setActualWidget( widget );
+        final UIJob job = new UIJob( workbenchWindow.getShell().getDisplay(), "Widget auswählen" )
+        {
+          @Override
+          public IStatus runInUIThread( IProgressMonitor monitor )
+          {
+            mapPanel.getWidgetManager().setActualWidget( widget );
+            return Status.OK_STATUS;
+          }
+        };
+        job.setRule( mapPanel.getSchedulingRule().getSelectWidgetSchedulingRule() );
+        job.setUser( true );
+        job.schedule();
       }
     }
     return null;
@@ -96,20 +112,20 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
   private final void customizedWidget( IWidget widget, IEvaluationContext applicationContext )
   {
-    if(widget instanceof IEvaluationContextConsumer)
+    if( widget instanceof IEvaluationContextConsumer )
     {
       try
       {
-        ((IEvaluationContextConsumer)widget).setEvaluationContext( applicationContext );
+        ((IEvaluationContextConsumer) widget).setEvaluationContext( applicationContext );
       }
-      catch (Throwable e) 
+      catch( Throwable e )
       {
-        e.printStackTrace(); 
+        e.printStackTrace();
       }
     }
     else
     {
-     //yes it is empty 
+      // yes it is empty
     }
   }
 
