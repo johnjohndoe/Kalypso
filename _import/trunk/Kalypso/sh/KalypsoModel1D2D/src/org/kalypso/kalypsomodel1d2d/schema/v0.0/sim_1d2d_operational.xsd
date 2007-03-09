@@ -24,7 +24,7 @@
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<xs:import namespace="http://www.opengis.net/om"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
-
+	 
 	<!-- ================================================
 		
 		================================================== -->
@@ -78,5 +78,5 @@
 
 	<xs:element name="Timeserie1D" type="om:ObservationType"
 		substitutionGroup="om:Observation" />
-
-</xs:schema>
+ 
+ </xs:schema>
