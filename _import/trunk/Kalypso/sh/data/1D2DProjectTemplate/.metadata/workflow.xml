@@ -41,6 +41,10 @@
 					<Help>Laden eines Finite-Elemente-1D-Netzes (KALYPSO2D)</Help>
 					<Name>1D-Netz laden</Name>
 				</Task>
+				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
+					<Help>Zeigt Profile als Thema in Karte</Help>
+					<Name>Profile in Karte anzeigen</Name>
+				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EditDataTable">
 					<Help>Editierfunktionen zur Bearbeitung der Datentabelle von Profilen</Help>
 					<Name>Polynomdaten bearbeiten</Name>
