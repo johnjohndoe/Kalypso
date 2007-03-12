@@ -75,8 +75,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     m_scenarioManager = scenarioManager;
   }
 
-  public synchronized void setCurrent( final IProject project, @SuppressWarnings("unused")
-  final Scenario scenario )
+  public synchronized void setCurrent( final IProject project, final Scenario scenario )
   {
     final IFolder szenarioFolder = project == null ? null : project.getFolder( m_scenarioManager.getProjectPath( scenario ) );
 
