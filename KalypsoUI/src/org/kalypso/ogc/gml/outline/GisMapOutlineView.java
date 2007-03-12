@@ -50,9 +50,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
@@ -63,7 +61,6 @@ import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
-import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
@@ -96,7 +93,8 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
     container.setLayout( new FillLayout() );
     m_viewer = new GisMapOutlineViewer( null, null );
     m_viewer.createControl( container );
-    getSite().setSelectionProvider( this );
+
+    getSite().setSelectionProvider( m_viewer );
   }
 
   /**
@@ -133,6 +131,19 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
       }
     };
     site.getPage().addPartListener( m_partListener );
+
+    // TODO: this is no good!
+    // do not set this to the selection provider of another part!
+    // Instead: set this to the slection provider of my site, the StyleEditor should listen to any selection
+    // and react accordingly
+    // // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
+    // final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    // final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView(
+    // "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+    //
+    // if( part != null )
+    // part.setSelectionChangedProvider( m_viewer );
+
   }
 
   void setMapPart( final AbstractMapPart mapPart )
@@ -165,6 +176,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
   {
     if( m_viewer != null )
     {
+      getSite().setSelectionProvider( null );
       m_viewer.dispose();
     }
     if( m_mapPart != null )
@@ -180,12 +192,8 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
   @Override
   public void setFocus( )
   {
-    // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
-
-    if( part != null )
-      part.setSelectionChangedProvider( m_viewer );
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+      m_viewer.getControl().setFocus();
   }
 
   /**
