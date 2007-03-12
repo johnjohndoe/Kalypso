@@ -18,10 +18,10 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
@@ -224,9 +224,9 @@ public class WorkflowControl
     tree.addListener( SWT.MouseHover, treeListener );
 
     m_treeViewer.setLabelProvider( new WorkflowLabelProvider( m_treeViewer ) );
-    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
+    m_treeViewer.addOpenListener( new IOpenListener()
     {
-      public void doubleClick( final DoubleClickEvent event )
+      public void open( final OpenEvent event )
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
         final Object first = selection.getFirstElement();
@@ -242,9 +242,9 @@ public class WorkflowControl
             catch( final Throwable e )
             {
               final IStatus status = StatusUtilities.statusFromThrowable( e );
-              ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) + task.getName(), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) + task.getURI(), status ); //$NON-NLS-1$ //$NON-NLS-2$
               KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-              logger.log( Level.SEVERE, "Failed to execute task: " + task.getName(), e ); //$NON-NLS-1$
+              logger.log( Level.SEVERE, "Failed to execute task: " + task.getURI(), e ); //$NON-NLS-1$
             }
           }
         }

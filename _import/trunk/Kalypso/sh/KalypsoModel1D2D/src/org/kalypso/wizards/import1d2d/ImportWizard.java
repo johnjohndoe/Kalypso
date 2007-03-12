@@ -80,7 +80,8 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     try
     {
       IResource resource = (IResource) selection.getFirstElement();
-      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+      if( resource != null )
+        resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( Exception e )
     {
@@ -95,15 +96,15 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     m_pageMain.saveDataToModel();
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
     ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
-//    try
-//    {
-//      IResource resource = (IResource) selection.getFirstElement();
-//      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//    }
+    // try
+    // {
+    // IResource resource = (IResource) selection.getFirstElement();
+    // resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+    // }
+    // catch( Exception e )
+    // {
+    // e.printStackTrace();
+    // }
 
     return status.isOK();
   }
