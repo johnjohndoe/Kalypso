@@ -70,7 +70,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
    */
   private final List<Object> m_registries = new ArrayList<Object>();
 
-  private final SzenarioSourceProvider m_simModelProvider = new SzenarioSourceProvider( this );
+  private SzenarioSourceProvider m_simModelProvider;
 
   private final ProjectChangeListener m_projectChangeListener = new ProjectChangeListener();
 
@@ -99,6 +99,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
       if( registry instanceof ActiveWorkContext )
         ((ActiveWorkContext) registry).removeActiveContextChangeListener( m_projectChangeListener );
     }
+    m_simModelProvider.dispose();
   }
 
   synchronized public void setActiveProject( final IProject activeProject )
@@ -306,6 +307,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     final IHandlerService handlerService = (IHandlerService) page.getWorkbenchWindow().getService( IHandlerService.class );
     if( perspective.getId().equals( Perspective.ID ) )
     {
+      m_simModelProvider = new SzenarioSourceProvider( this );
       handlerService.addSourceProvider( m_simModelProvider );
       addActiveContextChangeListener( m_projectChangeListener );
       page.addPartListener( this );
@@ -315,7 +317,12 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     }
     else
     {
-      handlerService.removeSourceProvider( m_simModelProvider );
+      if( m_simModelProvider != null )
+      {
+        handlerService.removeSourceProvider( m_simModelProvider );
+        m_simModelProvider.dispose();
+        m_simModelProvider = null;
+      }
       removeActiveContextChangeListener( m_projectChangeListener );
       page.removePartListener( this );
       m_registries.remove( page );

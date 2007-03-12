@@ -35,14 +35,14 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
 
   /** data provider for the current szenario */
   private SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
-  
+
   private IActiveContextChangeListener workContextChangeListener = new IActiveContextChangeListener()
   {
     @SuppressWarnings("synthetic-access")
     public void activeContextChanged( final IProject newProject, Scenario scenario )
     {
       m_dataProvider.setCurrent( getSzenarioFolder() );
-      
+
       fireSourceChanged( 0, getCurrentState() );
     }
   };
@@ -58,7 +58,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
    */
   public void dispose( )
   {
-    activeWorkContext = null;
+    activeWorkContext.removeActiveContextChangeListener( workContextChangeListener );
   }
 
   /**
@@ -85,7 +85,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   {
     if( szenarioFolder == null )
       return null;
-    
+
     if( szenarioFolder.getFile( modelFile ).exists() )
     {
       return szenarioFolder;
