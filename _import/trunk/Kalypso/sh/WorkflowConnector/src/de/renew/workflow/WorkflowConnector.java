@@ -38,11 +38,6 @@ public class WorkflowConnector
       logger.setUseParentHandlers( false );
   }
 
-  public static boolean isWorkflowMode( )
-  {
-    return false;
-  }
-
   private LoginInfo m_login;
 
   List<IWorklistChangeListener> m_listenerCache = Collections.synchronizedList( new Vector<IWorklistChangeListener>() );
@@ -305,7 +300,7 @@ public class WorkflowConnector
   /**
    * Requests a new WorkItem and confirms the active Activity, if there is one
    */
-  public Activity request( final String id )
+  public void request( final String id )
   {
     if( canRequest( id ) )
     {
@@ -317,14 +312,12 @@ public class WorkflowConnector
         }
         final Activity activity = getWorkItem( id ).request( m_login, m_client );
         logger.info( "requested " + activity.getWorkItem().getTask().getName() );
-        return activity;
       }
       catch( final RemoteException e )
       {
         handleRemoteException( e );
       }
     }
-    return null;
   }
 
   /**
@@ -443,10 +436,4 @@ public class WorkflowConnector
   {
     logger.log( Level.SEVERE, "cannot cancel", e );
   }
-
-  public static boolean checkWorkflowMode( )
-  {
-    return !isWorkflowMode() || getConnector().isConnected();
-  }
-
 }

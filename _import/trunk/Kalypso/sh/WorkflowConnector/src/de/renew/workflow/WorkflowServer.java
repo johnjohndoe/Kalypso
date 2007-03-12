@@ -5,7 +5,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.log4j.BasicConfigurator;
 import org.eclipse.core.runtime.Platform;
 
 import de.renew.plugin.PluginManager;
@@ -45,11 +44,6 @@ public class WorkflowServer
   {
     if( !log )
       logger.setUseParentHandlers( false );
-  }
-
-  static
-  {
-    BasicConfigurator.configure();
   }
 
   public static void main( String[] args )
