@@ -75,6 +75,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -397,7 +398,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     };
     job.setRule( getSchedulingRule() );
-    job.setUser( true );    
+    job.setUser( true );
     job.schedule();
   }
 
@@ -607,14 +608,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setCustomName( final String name )
   {
     m_partName = name;
-    getSite().getShell().getDisplay().asyncExec( new Runnable()
+    final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+    if( !workbench.isClosing() )
     {
-      @SuppressWarnings("synthetic-access")
-      public void run( )
+      workbench.getDisplay().asyncExec( new Runnable()
       {
-        setPartName( m_partName );
-      }
-    } );
+        @SuppressWarnings("synthetic-access")
+        public void run( )
+        {
+          setPartName( m_partName );
+        }
+      } );
+    }
   }
 
   public void setMapModellView( final IMapModellView mapModellView )
