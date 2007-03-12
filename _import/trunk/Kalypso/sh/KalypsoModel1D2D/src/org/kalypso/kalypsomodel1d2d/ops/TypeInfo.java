@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provides mechanism to get the type info for
@@ -104,5 +108,87 @@ public class TypeInfo
       }
     }
     return false;
+  }
+
+  /**
+   * checks whether the provided feature is of type Element1D
+   * The check is base on {@link QName} equality and not on 
+   * substitution
+   * @param feature the feature to check for type
+   * @return true if the given feature is an element 1d feature
+   */
+  public static final boolean isElement1DFeature( Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      QName featureQName = feature.getFeatureType().getQName();
+      return featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+    }
+  }
+  
+  /**
+   * checks whether the provided feature is of type Poly element
+   * The check is base on {@link QName} equality and not on 
+   * substitution
+   * @param feature the feature to check for type
+   * @return true if the given feature is an element 1d feature
+   */
+  public static final boolean isPolyElementFeature( Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      QName featureQName = feature.getFeatureType().getQName();
+      return featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    }
+  }
+
+  public static final boolean isContinuityLine( Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      QName featureQName = feature.getFeatureType().getQName();
+      return featureQName.equals( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+    }
+  }
+
+  public static final boolean isEdgeToEdgeJunction( Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      QName featureQName = feature.getFeatureType().getQName();
+      return featureQName.equals( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE );
+    }
+  }
+
+  public static final boolean isEdgeToCLineJunction( Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      QName featureQName = feature.getFeatureType().getQName();
+      return featureQName.equals( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE );
+    }
   }
 }

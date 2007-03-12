@@ -11,7 +11,8 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteFE1D2DElement2DCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -227,25 +228,25 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
           Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
       CommandableWorkspace workspace = featureTheme.getWorkspace();
       
-      //TODO check for feature type
       ChangeDiscretiationModelCommand modelChangeCmd=
                       new ChangeDiscretiationModelCommand(
                           workspace,
                           model1d2d);
-      for(EasyFeatureWrapper easyFeatureWrapper:selected)
-      {
-        try
-        {
-          Feature feature = easyFeatureWrapper.getFeature();
-          DeleteFE1D2DElement2DCmd cmd = 
-            new DeleteFE1D2DElement2DCmd(model1d2d,feature);
-          modelChangeCmd.addCommand( cmd );
-        }
-        catch(Throwable th)
-        {
-         th.printStackTrace(); 
-        }
-      }
+//      for(EasyFeatureWrapper easyFeatureWrapper:selected)
+//      {
+//        try
+//        {
+//          Feature feature = easyFeatureWrapper.getFeature();
+//          DeleteFE1D2DElement2DCmd cmd = 
+//            new DeleteFE1D2DElement2DCmd(model1d2d,feature);
+//          modelChangeCmd.addCommand( cmd );
+//        }
+//        catch(Throwable th)
+//        {
+//         th.printStackTrace(); 
+//        }
+//      }
+      DeleteCmdFactory.createDeleteCmd( model1d2d, selected, modelChangeCmd );
       workspace.postCommand( modelChangeCmd );
       
       

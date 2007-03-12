@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -260,7 +261,18 @@ public class ModelGeometryBuilder
     
   }
 
-  public static GM_Object computeEdgeToCLineJunction1D2DGeometry( FEEdgeToCLineJunction1D2D junction1D2D ) throws GM_Exception
+  public static final GM_Object computeEdgeToCLineJunction1D2DGeometry( FEEdgeToCLineJunction1D2D junction1D2D ) throws GM_Exception
+  {
+    Assert.throwIAEOnNullParam( junction1D2D, "junction1D2D" );
+    IFE1D2DEdge edge = junction1D2D.getEdge();
+    if(edge==null)
+    {
+      return null;
+    }
+    return computeEgdeGeometry( edge );
+  }
+  
+  public static final GM_Object computeEdgeToCLineJunction1D2DGeometry( IFEEdgeToCLineJunction1D2D junction1D2D ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( junction1D2D, "junction1D2D" );
     IFE1D2DEdge edge = junction1D2D.getEdge();

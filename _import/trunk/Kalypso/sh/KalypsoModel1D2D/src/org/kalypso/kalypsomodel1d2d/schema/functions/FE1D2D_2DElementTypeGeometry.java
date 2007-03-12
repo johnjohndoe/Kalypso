@@ -17,6 +17,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypsodeegree.model.feature.Feature;
@@ -52,6 +53,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
       if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
       {
         element = new FE1D2DContinuityLine( feature );
+        return  element.recalculateElementGeometry();
       }
       else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D ) )
       {
@@ -70,11 +72,18 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
        
         return ModelGeometryBuilder.computeEdgeToEdgeJunction1D2DGeometry( junction1D2D );
       }
+      else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE ) )
+      {
+        IFEEdgeToCLineJunction1D2D junction1D2D=
+          (IFEEdgeToCLineJunction1D2D) feature.getAdapter( IFEEdgeToCLineJunction1D2D.class );
+       
+        return ModelGeometryBuilder.computeEdgeToCLineJunction1D2DGeometry( junction1D2D );
+      }
       else
       {
         element = new FE1D2D_2DElement( feature );
+        return element.recalculateElementGeometry();
       }
-      return element.recalculateElementGeometry();
     }
     catch( final GM_Exception e )
     {

@@ -62,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -305,6 +306,22 @@ public class ModelOps
     
     junction1D2D.set1DEdge( edge1D );
     junction1D2D.set2DEdge( edge2D );
+    
+    return junction1D2D;
+  }
+  
+  public static final IFEJunction1D2D createElement1DToCLineJunction(
+                                      IFEDiscretisationModel1d2d model1d2d,
+                                      IFE1D2DEdge edge)
+  {
+    IFeatureWrapperCollection<IFE1D2DElement> elements = 
+                      model1d2d.getElements();
+    IFEEdgeToCLineJunction1D2D junction1D2D = 
+    (IFEEdgeToCLineJunction1D2D) elements.addNew( 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE );
+    
+    junction1D2D.setEdge( edge );
+    edge.addContainer( junction1D2D.getGmlID() );
     
     return junction1D2D;
   }

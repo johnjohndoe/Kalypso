@@ -102,8 +102,8 @@ public class ContinuityLineOps
 
         // TODO: eventuell das original segment stückeln, um komische wegführungen zu vermeiden (d.h. nächer an der
         // linie beiben)
-        final /*FE1D2DNode*/ IFE1D2DNode startNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( startPoint ), model );
-        final /*FE1D2DNode*/ IFE1D2DNode endNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( endPoint ), model );
+        final IFE1D2DNode startNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( startPoint ), model );
+        final IFE1D2DNode endNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( endPoint ), model );
 
         if( startNode != null && endNode != null )
         {
@@ -135,9 +135,12 @@ public class ContinuityLineOps
       {
         final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = model.createContinuityLine();
         final FeatureList edgesList = (FeatureList) contiLine.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
-
+        final String cLineGmlID=contiLine.getGmlID();
         for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edgeList )
-          edgesList.add( edge.getWrappedFeature().getId() );
+        {
+          edgesList.add( edge.getGmlID()/*getWrappedFeature().getId()*/ );
+          edge.getContainers().getWrappedList().add( cLineGmlID );
+        }
 
         return contiLine;
       }
