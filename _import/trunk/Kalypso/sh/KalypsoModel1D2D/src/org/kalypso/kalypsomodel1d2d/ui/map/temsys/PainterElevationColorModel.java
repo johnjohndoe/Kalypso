@@ -41,10 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import org.eclipse.swt.graphics.Color;
-
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
 
 /**
  * @author madanago

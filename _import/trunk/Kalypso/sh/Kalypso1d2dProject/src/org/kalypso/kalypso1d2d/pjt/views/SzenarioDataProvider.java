@@ -10,12 +10,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
@@ -39,7 +36,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Gernot Belger
  */
-public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvider
+public class SzenarioDataProvider implements ISzenarioDataProvider
 {
   /**
    * Maps the (adapted) feature-wrapper-classes onto the (szenario-relative) path of its gml-file.
@@ -61,28 +58,72 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     // TODO: add other model types here
   }
 
+  private static final class KeyPoolListener implements IPoolListener
+  {
+    private final IPoolableObjectType m_key;
+
+    public KeyPoolListener( final IPoolableObjectType key )
+    {
+      m_key = key;
+    }
+
+    public IPoolableObjectType getKey( )
+    {
+      return m_key;
+    }
+
+    /**
+     * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+     */
+    public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+    {
+      // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @see org.kalypso.util.pool.IPoolListener#isDisposed()
+     */
+    public boolean isDisposed( )
+    {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    /**
+     * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
+     *      java.lang.Object)
+     */
+    public void objectInvalid( IPoolableObjectType key, Object oldValue )
+    {
+      // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+     *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+     */
+    public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+    {
+      // TODO Auto-generated method stub
+
+    }
+  }
+
   /**
    * Maps the (adapted) feature-wrapper-classes onto the corresponding pool key.
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private Map<Class, IPoolableObjectType> m_keyMap = new HashMap<Class, IPoolableObjectType>();
+  private Map<Class, KeyPoolListener> m_keyMap = new HashMap<Class, KeyPoolListener>();
 
-  private final ScenarioManager m_scenarioManager;
-
-  public SzenarioDataProvider( final ScenarioManager scenarioManager )
+  public synchronized void setCurrent( final IFolder szenarioFolder )
   {
-    m_scenarioManager = scenarioManager;
-  }
-
-  public synchronized void setCurrent( final IProject project, final Scenario scenario )
-  {
-    final IFolder szenarioFolder = project == null ? null : project.getFolder( m_scenarioManager.getProjectPath( scenario ) );
-
     try
     {
-      if( project != null )
-        project.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+      if( szenarioFolder != null )
+        szenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
     }
     catch( Throwable th )
     {
@@ -128,19 +169,24 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     }
 
     /* If nothing changed, return */
-    final IPoolableObjectType oldKey = m_keyMap.get( wrapperClass );
+    final KeyPoolListener oldListener = m_keyMap.get( wrapperClass );
+    final IPoolableObjectType oldKey = oldListener == null ?  null : oldListener.getKey();
     if( ObjectUtils.equals( oldKey, newKey ) )
       return;
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
     if( oldKey != null )
-      pool.removePoolListener( this );
+      pool.removePoolListener( oldListener );
 
-    m_keyMap.put( wrapperClass, newKey );
-
-    if( newKey != null )
-      pool.addPoolListener( this, newKey );
+    if( newKey == null )
+      m_keyMap.put( wrapperClass, null );
+    else
+    {
+      final KeyPoolListener newListener = new KeyPoolListener( newKey );
+      m_keyMap.put( wrapperClass, newListener );
+      pool.addPoolListener( newListener, newKey );
+    }
   }
 
   /**
@@ -169,45 +215,12 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
-    final IPoolableObjectType key = m_keyMap.get( wrapperClass );
+    final KeyPoolListener keyPoolListener = m_keyMap.get( wrapperClass );
+    final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
       return null;
 
     final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
     return workspace;
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
-   */
-  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
-  {
-    // i dont mind
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
-   */
-  public boolean isDisposed( )
-  {
-    // we are never disposed?
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
-   */
-  public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
-  {
-    // ignore for now
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
-   */
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
-  {
-    // we ignore it, if we access the object, we class pool.getObject() instead
   }
 }

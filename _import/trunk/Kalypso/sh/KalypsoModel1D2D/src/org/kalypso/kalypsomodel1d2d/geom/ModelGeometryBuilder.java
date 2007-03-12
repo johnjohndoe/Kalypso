@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FEEdgeToCLineJunction1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;

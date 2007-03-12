@@ -172,7 +172,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 
   public static final boolean isOfThisNature( final IProject project ) throws CoreException
   {
-    return project.hasNature( ID );
+    return project == null ? false : project.hasNature( ID );
   }
 
   public static final Kalypso1D2DProjectNature toThisNature( IProject project ) throws CoreException

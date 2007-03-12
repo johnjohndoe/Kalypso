@@ -3,9 +3,7 @@
  */
 package org.kalypso.kalypsomodel1d2d;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.osgi.framework.BundleContext;
 
 /**

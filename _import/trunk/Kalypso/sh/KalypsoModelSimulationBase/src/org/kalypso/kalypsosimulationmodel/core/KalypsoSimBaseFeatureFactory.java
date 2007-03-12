@@ -7,9 +7,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.apache.commons.collections.collection.AbstractSerializableCollectionDecorator;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -29,7 +26,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import java.util.HashMap;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -97,7 +95,7 @@ public class ImportElevationHandler extends WorkflowCommandHandler
     final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
 
-    final HashMap<String, Object> data = new HashMap<String, Object>();
+//    final HashMap<String, Object> data = new HashMap<String, Object>();
     // data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
     // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
 

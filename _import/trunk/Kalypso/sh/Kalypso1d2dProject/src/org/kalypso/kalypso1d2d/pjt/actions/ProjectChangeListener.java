@@ -75,12 +75,15 @@ public class ProjectChangeListener implements IActiveContextChangeListener
   {
     if( newProject != m_newProject || scenario != m_scenario )
     {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      if( workbench.isClosing() )
+        return;
+      
       final UIJob job = new UIJob( "Changing work context..." )
       {
         @Override
         public IStatus runInUIThread( IProgressMonitor monitor )
         {
-          final IWorkbench workbench = PlatformUI.getWorkbench();
           final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
           final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
           try

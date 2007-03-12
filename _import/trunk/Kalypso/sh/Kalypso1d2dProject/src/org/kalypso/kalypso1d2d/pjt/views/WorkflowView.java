@@ -31,7 +31,7 @@ public class WorkflowView extends ViewPart
       LOGGER.setUseParentHandlers( false );
   }
 
-  WorkflowControl m_workflowControl;
+  private WorkflowControl m_workflowControl;
 
   final ActiveWorkContext m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
 
@@ -42,15 +42,7 @@ public class WorkflowView extends ViewPart
      */
     public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
-      if( scenario != null )
-      {
-        setContentDescription( "Aktives Szenario: " + scenario.getName() );
-      }
-      else
-      {
-        setContentDescription( "Kein Szenario aktiv." );
-      }
-      m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
+      handleContenxtChanged( scenario );
     }
   };
 
@@ -61,6 +53,19 @@ public class WorkflowView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_workflowControl.createControl( parent );
+    m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
+  }
+
+  protected void handleContenxtChanged( final Scenario scenario )
+  {
+    if( scenario != null )
+    {
+      setContentDescription( "Aktives Szenario: " + scenario.getName() );
+    }
+    else
+    {
+      setContentDescription( "Kein Szenario aktiv." );
+    }
     m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
   }
 

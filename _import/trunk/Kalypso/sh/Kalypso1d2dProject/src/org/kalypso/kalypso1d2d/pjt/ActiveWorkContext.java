@@ -29,8 +29,6 @@ import org.kalypso.afgui.workflow.IWorkflowSystem;
 import org.kalypso.afgui.workflow.Workflow;
 import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
-import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
-import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
@@ -46,7 +44,7 @@ import org.kalypso.ui.views.map.MapView;
  */
 public class ActiveWorkContext implements IWindowListener, IPartListener, IPerspectiveListener
 {
-  final static Logger logger = Logger.getLogger( ActiveWorkContext.class.getName() );
+  private final static Logger logger = Logger.getLogger( ActiveWorkContext.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
 
@@ -64,7 +62,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
 
   private IProject m_activeProject;
 
-  private List<IActiveContextChangeListener> activeProjectChangeListener = new ArrayList<IActiveContextChangeListener>();
+  private final List<IActiveContextChangeListener> activeProjectChangeListener = new ArrayList<IActiveContextChangeListener>();
 
   /**
    * list of registries where we are registered as listeners <br>
@@ -76,9 +74,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
 
   private final ProjectChangeListener m_projectChangeListener = new ProjectChangeListener();
 
-  private MapModellContextSwitcher m_contextSwitcher = new MapModellContextSwitcher();
-
-  private SzenarioDataProvider m_dataProvider;
+  private final MapModellContextSwitcher m_contextSwitcher = new MapModellContextSwitcher();
 
   public ActiveWorkContext( )
   {
@@ -119,7 +115,6 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
         m_activeProject = activeProject;
         m_scenarioManager = nature.getScenarioManager();
-        m_dataProvider = new SzenarioDataProvider( m_scenarioManager );
         m_workflowSystem = nature.getWorkflowSystem();
         logger.info( "WorkflowDB=" + m_scenarioManager );
         logger.info( "WorkflowSystem:" + m_workflowSystem );
@@ -138,14 +133,12 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     }
     finally
     {
+      /* Set base szenarion as current for the newly selected project */
+      final Scenario baseScenario = m_scenarioManager == null ? null : m_scenarioManager.getScenario( BASIS_SCENARIO );
+
       if( m_scenarioManager != null )
-      {
-        fireActiveProjectChanged( activeProject, m_scenarioManager.getScenario( BASIS_SCENARIO ) );
-      }
-      else
-      {
-        fireActiveProjectChanged( activeProject, null );
-      }
+        m_scenarioManager.setCurrentScenario( baseScenario );
+      fireActiveProjectChanged( m_activeProject, baseScenario );
     }
   }
 
@@ -233,22 +226,14 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     }
   }
 
-  public ISzenarioDataProvider getSzenarioDataProvider( )
-  {
-    return m_dataProvider;
-  }
-
   public void setCurrentSzenario( final Scenario scenario )
   {
     final Scenario currentScenario = m_scenarioManager.getCurrentScenario();
     // this fixes the bug mentioned below.
-    m_dataProvider.setCurrent( m_activeProject, scenario );
     if( currentScenario == null && scenario == null )
     {
       return;
     }
-    // TODO: this is buggy! when the project changes, this gets called but we have the same szenario-id
-    // maybe scenario needs a reference to its project so we can check if scenario to set is in current project?
     else if( scenario != null && currentScenario != null && currentScenario.getURI().equals( scenario.getURI() ) )
     {
       return;
@@ -308,6 +293,8 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
   {
     window.removePerspectiveListener( this );
     m_registries.remove( window );
+
+    setActiveProject( null );
   }
 
   /**

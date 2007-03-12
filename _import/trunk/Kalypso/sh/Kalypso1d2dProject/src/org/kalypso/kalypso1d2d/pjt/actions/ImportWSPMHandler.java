@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -59,6 +60,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -102,7 +107,7 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     }
     catch( final Exception e )
     {
-      // will never happen
+      // will never happen?
       e.printStackTrace();
     }
 
@@ -110,6 +115,14 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     // TODO: add a new layer containing the new profiles in the profile-network map
 
     /* Zoom to new elements in fe-map? */
+    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    if( mapView != null )
+    {
+      final Feature[] newFEFeatures = importWizard.getDiscretisationModelAdds();
+      final GM_Envelope envelope = FeatureHelper.getEnvelope( newFEFeatures );
+      if( envelope != null )
+        mapView.getMapPanel().setBoundingBox( envelope );
+    }
 
     return Status.OK_STATUS;
   }

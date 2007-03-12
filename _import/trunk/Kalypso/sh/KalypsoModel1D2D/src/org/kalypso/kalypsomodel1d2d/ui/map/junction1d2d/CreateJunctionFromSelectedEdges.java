@@ -41,16 +41,12 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionElementFromClAndElement1DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionElementFromEdgesCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;

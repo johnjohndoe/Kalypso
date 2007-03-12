@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
@@ -53,7 +50,6 @@ import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author congo

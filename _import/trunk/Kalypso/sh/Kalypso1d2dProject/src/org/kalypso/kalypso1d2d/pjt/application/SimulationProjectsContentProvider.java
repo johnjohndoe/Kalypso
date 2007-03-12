@@ -77,14 +77,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
 
     public void resourceChanged( final IResourceChangeEvent event )
     {
-      PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
-      {
-
-        public void run( )
-        {
-          m_site.reflow( SimulationProjectsContentProvider.this, false );
-        }
-      } );
+      handleResourceChanged();
     }
   }
 
@@ -98,6 +91,18 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   public void init( final IIntroContentProviderSite site )
   {
     m_site = site;
+  }
+
+  public void handleResourceChanged( )
+  {
+    final IIntroContentProviderSite site = m_site;
+    PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        site.reflow( SimulationProjectsContentProvider.this, false );
+      }
+    } );
   }
 
   /**
@@ -186,9 +191,9 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
     final Element img = dom.createElement( "img" );
     img.setAttribute( "class", "link" );
     img.setAttribute( "border", "0" );
-    img.setAttribute( "src", "css/redx.gif" );    
+    img.setAttribute( "src", "css/redx.gif" );
 
-    a.appendChild( img );    
+    a.appendChild( img );
     a.appendChild( dom.createTextNode( "löschen" ) );
     return a;
   }

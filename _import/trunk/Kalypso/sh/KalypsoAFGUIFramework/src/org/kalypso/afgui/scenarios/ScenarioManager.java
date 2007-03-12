@@ -137,7 +137,8 @@ public class ScenarioManager implements IScenarioManager
   }
 
   /**
-   * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String, org.kalypso.afgui.scenarios.Scenario)
+   * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String,
+   *      org.kalypso.afgui.scenarios.Scenario)
    */
   public Scenario deriveScenario( final String name, final Scenario parentScenario ) throws CoreException
   {
@@ -145,10 +146,10 @@ public class ScenarioManager implements IScenarioManager
     newScenario.setURI( parentScenario.getURI() + "/" + name );
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
-    
+
     final IFolder newFolder = m_project.getFolder( getProjectPath( newScenario ) );
     newFolder.create( false, true, null );
-    
+
     ScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
     if( derivedScenarios == null )
     {

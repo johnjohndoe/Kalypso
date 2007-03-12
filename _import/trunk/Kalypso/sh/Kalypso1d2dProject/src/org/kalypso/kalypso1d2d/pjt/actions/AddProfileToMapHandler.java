@@ -51,12 +51,18 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -75,10 +81,35 @@ public class AddProfileToMapHandler extends WorkflowCommandHandler implements IH
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ISzenarioDataProvider modelProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
-    final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
+    /* Get the map */
+    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    if( mapView == null )
+      throw new CoreException( StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." ) );
+    final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
 
+    /* Get network collection */
+    final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
     final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
 
+    /* ask user and add everything to map */
+    final Object[] result = showNetworksDialog( shell, riverProfileNetworkCollection );
+    for( final Object object : result )
+    {
+      final IRiverProfileNetwork network = (IRiverProfileNetwork) object;
+
+      final FeaturePath networkPath = new FeaturePath( network.getWrappedFeature() );
+      final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
+      final String source = terrainModel.getWrappedFeature().getWorkspace().getContext().toString();
+      // TODO: aktivates the theme, is this ok?
+      final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source );
+      mapView.postCommand( command, null );
+    }
+
+    return Status.OK_STATUS;
+  }
+
+  private Object[] showNetworksDialog( final Shell shell, final IRiverProfileNetworkCollection riverProfileNetworkCollection ) throws CoreException
+  {
     final ListDialog dialog = new ListDialog( shell );
     dialog.setTitle( "Profile in Karte anzeigen" );
     dialog.setMessage( "Wählen Sie die Profilnetzwerke aus, welche Sie als Themen in die Karte übernehmen möchten:" );
@@ -95,14 +126,16 @@ public class AddProfileToMapHandler extends WorkflowCommandHandler implements IH
         return "'" + network.getName() + "' - " + network.getDescription();
       }
     } );
+
     dialog.setInput( riverProfileNetworkCollection );
+
     if( riverProfileNetworkCollection.size() > 0 )
       dialog.setInitialSelections( new Object[] { riverProfileNetworkCollection.get( 0 ) } );
 
     if( dialog.open() != Window.OK )
-      return Status.CANCEL_STATUS;
+      throw new CoreException( Status.CANCEL_STATUS );
 
-    return Status.OK_STATUS;
+    return dialog.getResult();
   }
 
 }

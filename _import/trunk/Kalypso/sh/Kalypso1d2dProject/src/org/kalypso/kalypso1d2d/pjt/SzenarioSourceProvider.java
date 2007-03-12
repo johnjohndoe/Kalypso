@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 
 public class SzenarioSourceProvider extends AbstractSourceProvider
 {
@@ -32,15 +33,18 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
 
   protected ActiveWorkContext activeWorkContext;
 
+  /** data provider for the current szenario */
+  private SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
+  
   private IActiveContextChangeListener workContextChangeListener = new IActiveContextChangeListener()
   {
-
     @SuppressWarnings("synthetic-access")
     public void activeContextChanged( final IProject newProject, Scenario scenario )
     {
+      m_dataProvider.setCurrent( getSzenarioFolder() );
+      
       fireSourceChanged( 0, getCurrentState() );
     }
-
   };
 
   public SzenarioSourceProvider( final ActiveWorkContext context )
@@ -79,6 +83,9 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
 
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
   {
+    if( szenarioFolder == null )
+      return null;
+    
     if( szenarioFolder.getFile( modelFile ).exists() )
     {
       return szenarioFolder;
@@ -97,6 +104,6 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
 
   private ISzenarioDataProvider getDataProvider( )
   {
-    return activeWorkContext.getSzenarioDataProvider();
+    return m_dataProvider;
   }
 }

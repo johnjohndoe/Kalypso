@@ -23,8 +23,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
-import com.vividsolutions.jts.geomgraph.Edge;
-
 /**
  * @author Gernot Belger
  */
