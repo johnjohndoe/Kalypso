@@ -34,15 +34,15 @@ public interface IScenarioManager
   public List<Scenario> getRootScenarios( );
 
   /**
-   * Returns the scenario with the given name. The scenario may either be a root scenario or a derived scenario. If no
-   * scenario with the given name exists, <code>null</code> will be returned.
+   * Returns the scenario with the given uri. The scenario may either be a root scenario or a derived scenario. If no
+   * scenario with the given uri exists, <code>null</code> will be returned.
    */
-  public Scenario getScenario( final String name );
+  public Scenario getScenario( final String uri );
 
   /**
    * Creates a new scenario with the given name. It is derived from <code>parentScenario</code>. The scenario
    * metadata file and the database will be updated to reflect the change. The name must be unique within the context of
-   * the project. A notification will be sent to registered listeners that the scenarios have changed. If
+   * parentScenario. A notification will be sent to registered listeners that the scenarios have changed. If
    * <code>parentScenario</code> is <code>null</code>, a new root scenario is created.
    * 
    * @exception CoreException

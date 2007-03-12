@@ -137,14 +137,18 @@ public class ScenarioManager implements IScenarioManager
   }
 
   /**
-   * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String, org.kalypso.scenarios.Scenario)
+   * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String, org.kalypso.afgui.scenarios.Scenario)
    */
-  public Scenario deriveScenario( final String id, final Scenario parentScenario ) throws CoreException
+  public Scenario deriveScenario( final String name, final Scenario parentScenario ) throws CoreException
   {
     final Scenario newScenario = new Scenario();
-    newScenario.setURI( parentScenario.getURI() + "/" + id );
-    newScenario.setName( id );
+    newScenario.setURI( parentScenario.getURI() + "/" + name );
+    newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
+    
+    final IFolder newFolder = m_project.getFolder( getProjectPath( newScenario ) );
+    newFolder.create( false, true, null );
+    
     ScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
     if( derivedScenarios == null )
     {
@@ -153,8 +157,6 @@ public class ScenarioManager implements IScenarioManager
     }
     derivedScenarios.getScenarios().add( newScenario );
 
-    final IFolder newFolder = m_project.getFolder( getProjectPath( newScenario ) );
-    newFolder.create( false, true, null );
     persist( null );
     fireWorkflowDBChange();
     return newScenario;
