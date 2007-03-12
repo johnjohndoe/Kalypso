@@ -189,7 +189,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                   return new FEEdgeToEdgeJunction1D2D(feature);     
                 }
                 else if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE) )
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE) )
                 {
                   return new FEEdgeToCLineJunction1D2D(feature);     
                 }

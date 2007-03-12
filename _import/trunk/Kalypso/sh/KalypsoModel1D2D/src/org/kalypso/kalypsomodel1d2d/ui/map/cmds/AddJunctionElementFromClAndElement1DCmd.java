@@ -171,7 +171,7 @@ public class AddJunctionElementFromClAndElement1DCmd implements IDiscrModel1d2dC
         }
         
         addedJunction = 
-          ModelOps.createJunction( model, curEdge );
+          ModelOps.createElement1DToCLineJunction( model, curEdge );
       }
       catch( Exception e )
       {

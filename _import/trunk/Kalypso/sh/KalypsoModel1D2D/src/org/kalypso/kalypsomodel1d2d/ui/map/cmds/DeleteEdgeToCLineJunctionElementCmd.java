@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
@@ -49,6 +50,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -58,34 +61,40 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Command For deleting element
+ * Command For deleting an edge to edge junction element
  * 
  * @author Patrice Congo
  */
-public class DeleteFE1D2DElement2DCmd implements IDiscrModel1d2dChangeCommand
+public class DeleteEdgeToCLineJunctionElementCmd implements IDiscrModel1d2dChangeCommand
 {
   
   private IFEDiscretisationModel1d2d model1d2d;
-  private IFE1D2DElement element2D;
+  private IFEEdgeToCLineJunction1D2D junction;
+  
+  /**
+   * Contains 4 points the first 2 points are the end and start
+   * of the 1d edge and  the last 2 point are the start and
+   * end of the 2d second 2d edge
+   */
   private GM_Point[] elementPoints;
   
   private IFE1D2DComplexElement[] complexElements;
-//  private IFE1D2DEdge edges[]
   
-  public DeleteFE1D2DElement2DCmd(
+  public DeleteEdgeToCLineJunctionElementCmd(
                       IFEDiscretisationModel1d2d model1d2d,
-                      Feature element2DFeature)
+                      Feature junctionFeature)
   {
     this.model1d2d = model1d2d;
-    this.element2D = 
-        (IFE1D2DElement)element2DFeature.getAdapter( IFE1D2DElement.class );
+    this.junction = 
+        (IFEEdgeToCLineJunction1D2D)
+            junctionFeature.getAdapter( IFEEdgeToCLineJunction1D2D.class );
   }
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return "Delete element 2D";
+    return "Delete element 1d to continuity line junction element 2D";
   }
 
   /**
@@ -101,9 +110,10 @@ public class DeleteFE1D2DElement2DCmd implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    String elementID=element2D.getGmlID();
+    String elementID=junction.getGmlID();
     
-    List<IFE1D2DNode> nodes = element2D.getNodes();
+    List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>();//junction.getNodes();
+    nodes.addAll( junction.getEdge().getNodes() );
     
     elementPoints = makeElementPoints(nodes);
     
@@ -157,20 +167,21 @@ public class DeleteFE1D2DElement2DCmd implements IDiscrModel1d2dChangeCommand
     }
     
     //delete element from model
-    model1d2d.getElements().remove( element2D );
+    model1d2d.getElements().remove( junction );
     
   }
   
   private IFE1D2DEdge[] makeElementEdges( )
   {
-    IFeatureWrapperCollection edges = element2D.getEdges();
-    IFE1D2DEdge[] edgeArray=(IFE1D2DEdge[])edges.toArray( new  IFE1D2DEdge[]{});
+    
+    IFE1D2DEdge[] edgeArray =
+        new IFE1D2DEdge[]{junction.getEdge()};
     return edgeArray;
   }
   
   private IFE1D2DComplexElement[] getElementComplexElement( )
   {
-    IFeatureWrapperCollection containers = element2D.getContainers();
+    IFeatureWrapperCollection containers = junction.getContainers();
     IFE1D2DComplexElement[] cElements = 
         (IFE1D2DComplexElement[]) containers.toArray( new IFE1D2DComplexElement[]{} );
     return cElements;
@@ -229,7 +240,7 @@ public class DeleteFE1D2DElement2DCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{element2D};
+    return new IFeatureWrapper[]{junction};
   }
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()

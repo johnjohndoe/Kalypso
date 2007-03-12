@@ -153,11 +153,11 @@ public class FEEdgeToCLineJunction1D2D
 
   public void setEdge( IFE1D2DEdge newEdge )
   {
-    if(!TypeInfo.is1DEdge( newEdge ))
-    {
-      throw new IllegalArgumentException(
-          "1D edge Expected:"+newEdge);
-    }
+//    if(!TypeInfo.is1DEdge( newEdge ))
+//    {
+//      throw new IllegalArgumentException(
+//          "1D edge Expected:"+newEdge);
+//    }
     unrergisterAsContainer(getEdge());
     setEdge( 
         newEdge, 

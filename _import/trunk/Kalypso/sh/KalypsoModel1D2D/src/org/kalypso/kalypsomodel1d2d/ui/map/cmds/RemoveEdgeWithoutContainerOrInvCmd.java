@@ -126,11 +126,46 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
     else
     {//for normal edges
       
-      if(edge.getEdgeInv()!=null)
+      
+      IEdgeInv edgeInv = edge.getEdgeInv();
+      if(edgeInv!=null)
+      {
+        if(!edgeInv.getContainers().isEmpty())
+        {
+          System.out.println("Edge inverted has container");
+          
+          return;
+        }
+        else
+        {
+          //remode  edge inv without container
+          IFE1D2DEdge inverted = edgeInv.getInverted();
+          inverted.resetInvEdge();
+          
+          //remove link to nodes
+          String edgeID = edgeInv.getGmlID();
+          IFE1D2DNode[] nodeArray = 
+            (IFE1D2DNode[])inverted.getNodes().toArray( new IFE1D2DNode[]{} );
+          RemoveNodeWithoutContainer remNode = 
+                  new RemoveNodeWithoutContainer(null,model1d2d);
+          for(IFE1D2DNode node: nodeArray)
+          {
+            node.getContainers().getWrappedList().remove( edgeID );
+            
+          }
+          
+          for(;model1d2d.getEdges().remove( edgeInv );)
+          {
+            //does remove all ocurence;
+          }
+        }
+      }
+      edgeInv=edge.getEdgeInv();
+      if(edgeInv!=null)
       {
   //    TODO care with edge with invedge and no element
   //    may be readjust the network
-        System.out.println("Edge has inverteddd");
+        System.out.println("Edge still has inverted");
         return;
       }
       else
