@@ -95,6 +95,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 // import org.eclipse.draw2d.FigureUtilities;
@@ -836,5 +837,44 @@ class ApplyElevationWidgetFace
       }
 
     };
+  }
+  
+  //TODO patrice use scheduling rule to wait for map load
+  //See OpenMapViewCommand
+  private static final void waitOnMap(IMapModell mapModell, MapPanel mapPanel)
+  {
+//      final Job job = 
+//        new Job("Wait on map start") 
+//      {
+//        @Override
+//        protected IStatus run( final IProgressMonitor monitor )
+//        {
+//          final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+//          if( activeTheme != null && m_featureType.equals( NO_LAYER ) )
+//          {
+//            mapModell.activateTheme( null );
+//          }
+//          else if( !m_featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
+//          {
+//            final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+//            for( final IKalypsoTheme theme : allThemes )
+//            {
+//              if( !theme.isLoaded() )
+//              {
+//                theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
+//              }
+//              else
+//              {
+//                maybeActivateTheme( theme );
+//              }
+//            }
+//          }
+//          return Status.OK_STATUS;
+//        }
+//      };
+//      job.setRule( mapPanel.getSchedulingRule().getActivateLayerSchedulingRule() );
+//      job.setUser( true );
+//      job.schedule();
+   
   }
 }

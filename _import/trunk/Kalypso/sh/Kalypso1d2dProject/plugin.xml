@@ -269,6 +269,29 @@
 	        </class>
 	     </handler>
 	     
+	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
+	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+		           <parameter
+		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+		                 value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromClAnd1DEleWidget"/>
+		           <parameter
+		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+		                 value="org.kalypso.model1d2d"/>
+	        </class>
+	     </handler>
+	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
+	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+		           <parameter
+		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+		                 value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromSelectedEdges"/>
+		           <parameter
+		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+		                 value="org.kalypso.model1d2d"/>
+	        </class>
+	     </handler>
+	     
 	      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
@@ -278,13 +301,13 @@
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
 		                 value="org.kalypso.model1d2d"/>
 	        </class>
-		           <activeWhen>   
+		           <!--activeWhen>   
 			       		<with variable="activeContexts">
 				       		<iterate operator="or">
 				       			<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Node"/>
 				       		</iterate>
 			       		</with>
-			       </activeWhen>
+			       </activeWhen-->
 	     </handler>
 	     
 	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
