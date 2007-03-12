@@ -9,6 +9,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -16,6 +17,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -171,40 +173,33 @@ public class RoughnessPolygon implements IRoughnessPolygon
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getLinestring()
    */
-  public GM_Polygon getPolygon( )
+  public GM_MultiSurface getSurface( )
   {
-    Object pol = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
-    if( pol instanceof GM_Polygon )
+    Object object = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
+    if( object instanceof GM_MultiSurface )
     {
-      return (GM_Polygon) pol;
+      return (GM_MultiSurface) object;
     }
-    else if( pol instanceof GM_Surface )
+    else if( object instanceof GM_Surface )
     {
-      if( ((GM_Surface) pol).getNumberOfSurfacePatches() <= 0 )
+      if( ((GM_Surface) object).getNumberOfSurfacePatches() <= 0 )
       {
         return null;
       }
       else
       {
-        try
-        {
-          GM_SurfacePatch sp = ((GM_Surface) pol).getSurfacePatchAt( 0 );
-          return new GM_PolygonImpl( sp );
-        }
-        catch( Throwable th )
-        {
-          return null;
-        }
-
+        final GM_Surface surface = (GM_Surface) object;
+        final GM_Surface[] surfaces = new GM_Surface[] { surface };
+        return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
       }
     }
-    else if( pol == null )
+    else if( object == null )
     {
       return null;
     }
     else
     {
-      throw new RuntimeException( "GM_Polynom expected ut got:" + "\n\ttype=" + pol.getClass() + "\n\tvalue=" + pol );
+      throw new RuntimeException( "GM_MultiSurface expected but got:" + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object );
     }
 
   }
@@ -231,20 +226,25 @@ public class RoughnessPolygon implements IRoughnessPolygon
     }
   }
 
-  public void setPolygon( GM_Polygon polygon )
+  public void setSurface( GM_MultiSurface polygon )
   {
-    throw new RuntimeException( "Do not use it any more" );
-    // Assert.throwIAEOnNull(
-    // polygon, "Paramerter polynom must not be null");
-    // feature.setProperty(
-    // KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON,
-    // polygon);
+    Assert.throwIAEOnNull( polygon, "Parameter cannot be null." );
+    feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, polygon );
   }
 
-  public void setSurface( GM_Surface polygon )
+  public void setSurface( GM_Object object ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNull( polygon, "Paramerter polynom must not be null" );
-    feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, polygon );
+    Assert.throwIAEOnNull( object, "Parameter cannot be null." );
+    if( object instanceof GM_MultiSurface )
+      setSurface( (GM_MultiSurface) object );
+    else if( object instanceof GM_Surface )
+    {
+      final GM_Surface surface = (GM_Surface) object;
+      final GM_Surface[] surfaces = new GM_Surface[] { surface };
+      setSurface( GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() ) );
+    }
+    else
+      throw new IllegalArgumentException( "Type not supported: " + object.getClass().getName() );
   }
 
   /*
@@ -284,8 +284,8 @@ public class RoughnessPolygon implements IRoughnessPolygon
 
     buf.append( "[ roughnessID=" );
     buf.append( getRoughnessStyle() );
-    buf.append( ", polygon=" );
-    buf.append( getPolygon() );
+    buf.append( ", polygonProperty=" );
+    buf.append( getSurface() );
     buf.append( ']' );
     return buf.toString();
   }
@@ -319,8 +319,8 @@ public class RoughnessPolygon implements IRoughnessPolygon
         return false;
       }
 
-      GM_Polygon pol1 = getPolygon();
-      GM_Polygon pol2 = ((IRoughnessPolygon) obj).getPolygon();
+      GM_MultiSurface pol1 = getSurface();
+      GM_MultiSurface pol2 = ((IRoughnessPolygon) obj).getSurface();
       if( pol1 == pol2 )
       {
         return true;

@@ -23,7 +23,7 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -104,12 +104,10 @@ public class Transformer implements ICoreRunnableWithProgress
       shapeFeature = (Feature) shapeFeatureList.get( i );
       final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
       final Object gm_Whatever = shapeFeature.getProperty( shpGeomPropertyName );
-      GM_Surface gm_Surface = null;
-      if( gm_Whatever instanceof GM_Surface )
-        gm_Surface = (GM_Surface) gm_Whatever;
+      if( gm_Whatever instanceof GM_Object )
+        roughnessPolygon.setSurface( (GM_Object)gm_Whatever );
       else
         throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
-      roughnessPolygon.setSurface( gm_Surface );
       m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
     }
     isDataPrepared = true;

@@ -1,6 +1,5 @@
 package org.kalypso.ui.wizards.imports.baseMap;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +39,8 @@ public class BaseMapMainPage extends WizardPage
   Combo cmb_CoordinateSystem;
 
   private IPath initialSourcePath;
+  
+  private IPath m_sourcePath = null;
 
   List<String> fileExtensions = new LinkedList<String>();
 
@@ -131,7 +132,7 @@ public class BaseMapMainPage extends WizardPage
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
-      Object item = (Object) iter.next();
+      Object item = iter.next();
       if( item instanceof IFile )
       {
         IFile file = (IFile) item;
@@ -166,7 +167,7 @@ public class BaseMapMainPage extends WizardPage
   /**
    * Update the current page complete state based on the field content.
    */
-  private void updatePageComplete( )
+  protected void updatePageComplete( )
   {
     setPageComplete( false );
 
@@ -241,13 +242,15 @@ public class BaseMapMainPage extends WizardPage
    */
   public IPath getSourceLocation( )
   {
+    if(m_sourcePath != null)
+      return m_sourcePath;
     String text = sourceFileField.getText().trim();
     if( text.length() == 0 )
       return null;
-    IPath path = new Path( text );
-    if( !path.isAbsolute() )
-      path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( path );
-    return path;
+    m_sourcePath = new Path( text );
+    if( !m_sourcePath.isAbsolute() )
+      m_sourcePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( m_sourcePath );
+    return m_sourcePath;
   }
 
   public String getCoordinateSystem( )

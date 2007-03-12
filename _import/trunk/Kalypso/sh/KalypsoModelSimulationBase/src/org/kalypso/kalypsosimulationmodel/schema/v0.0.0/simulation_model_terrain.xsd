@@ -412,7 +412,7 @@
 					-->
 					<!-- By Dejan: -->
 					<xs:element name="polygonProperty"
-						type="gml:PolygonPropertyType" minOccurs="0" maxOccurs="1" />
+						type="gml:MultiPolygonPropertyType" minOccurs="0" maxOccurs="1" />
 
 					<!--xs:element 
 						name="polygonProperty"

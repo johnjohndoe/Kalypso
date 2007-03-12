@@ -77,6 +77,8 @@ import org.kalypso.ui.wizards.imports.Messages;
 public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport
 {
   private IStructuredSelection initialSelection;
+  
+  private IPath m_sourceLocation = null;
 
   BaseMapMainPage mPage;
 
@@ -85,7 +87,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   // private IProject m_project;
 
   IFolder m_scenarioFolder;
-
+  
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
@@ -174,7 +176,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
             final Layers layers = gismapview.getLayers();
             final StyledLayerType layer = new StyledLayerType();
 
-            layer.setName( mPage.getSourceLocation().removeFileExtension().lastSegment() );
+            layer.setName( getSourceLocation().removeFileExtension().lastSegment() );
 //            layer.setName( "BaseMap" ); //$NON-NLS-1$
             
             layer.setVisible( true );
@@ -261,7 +263,9 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
    */
   public IPath getSourceLocation( )
   {
-    return mPage.getSourceLocation();
+    if(m_sourceLocation == null)
+      m_sourceLocation = mPage.getSourceLocation();
+    return m_sourceLocation;
   }
 
 }
