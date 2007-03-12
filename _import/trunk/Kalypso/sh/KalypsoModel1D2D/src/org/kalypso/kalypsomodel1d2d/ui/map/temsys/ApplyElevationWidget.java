@@ -40,29 +40,48 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.font.LineMetrics;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.internal.dtree.DeltaDataTree;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * 
@@ -74,6 +93,9 @@ public class ApplyElevationWidget
                     extends FENetConceptSelectionWidget//AbstractWidget 
                     implements IWidgetWithOptions, IEvaluationContextConsumer
 {
+  
+  
+
   private Composite rootComposite;
   
   private WizardComposite wizardComposite;
@@ -82,6 +104,8 @@ public class ApplyElevationWidget
   ApplyElevationWidgetDataModel dataModel= new ApplyElevationWidgetDataModel();
   private ApplyElevationWidgetFace widgetFace = 
     new ApplyElevationWidgetFace(dataModel);
+
+  private Point point;
   
   public ApplyElevationWidget()
   {
@@ -108,6 +132,7 @@ public class ApplyElevationWidget
           mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
     dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
+    dataModel.setMapPanel( mapPanel );
     ElevationTheme theme= null;//new ElevationTheme("ASC Theme",mapModell);
     /*for(IKalypsoTheme curTheme:mapModell.getAllThemes())
     {
@@ -217,4 +242,223 @@ public class ApplyElevationWidget
     }
   }
   
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( Point p )
+  {
+    super.moved(p);
+    this.point=p;
+  }
+  
+  
+  private final void drawElevationData(Graphics g, Point p)
+  {
+    if(p==null)
+    {
+      return;
+    }
+    MapPanel mapPanel = dataModel.getMapPanel();
+    if(mapPanel==null)
+    {
+      System.out.println("map panel is null");
+      return;
+    }
+    
+    //finde node
+    GM_Point point = 
+          MapUtilities.transform( 
+                mapPanel, p );
+    final double DELTA = 
+      MapUtilities.calculateWorldDistance( 
+                                    mapPanel, 
+                                    point, 
+                                    10 );
+    IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( 
+                              point, 
+                              DELTA );
+    if(node!=null)
+    {
+      GM_Point nodePoint = node.getPoint();
+      StringBuffer nodeElevationText= new StringBuffer(64);
+      if(nodePoint.getCoordinateDimension()<=2)
+      {
+        nodeElevationText.append( "Keine Höhendaten" );
+      }
+      else
+      {
+        nodeElevationText.append( "Aktuelle Höhe=" );
+        nodeElevationText.append( nodePoint.getZ() );
+      }
+      
+      //show info
+      g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
+      
+      StringBuffer modelEleText = new StringBuffer(64);
+      IElevationProvider elevationProvider=getElevationProvider();
+      if(elevationProvider!=null)
+      {
+        double elevation = elevationProvider.getElevation( nodePoint );
+        modelEleText.append( "Model-Höhe=" );
+        modelEleText.append(elevation);
+        
+      }
+      else
+      {
+        modelEleText.append("Höhen model nicht gefunden");
+      }
+      FontMetrics fontMetrics = g.getFontMetrics();
+      LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
+      double height = lineMetrics.getHeight()*1.2;
+      g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
+    }
+    return;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedLeft(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedLeft( Point p )
+  {
+    super.doubleClickedLeft(p);
+    assignElevationToSelectedNodes(p);
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedRight(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedRight( Point p )
+  {
+    super.doubleClickedRight(p);
+    assignElevationToSelectedNodes( p );
+  }
+  
+  private void assignElevationToSelectedNodes( Point p )
+  {
+    MapPanel mapPanel = dataModel.getMapPanel();
+    if(mapPanel==null)
+    {
+      System.out.println("map panel is null");
+      return;
+    }
+    
+    IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+    IKalypsoFeatureTheme theme = getTheme( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+    if(theme==null)
+    {
+      System.out.println("Could not get node theme");
+      return;
+    }
+    CommandableWorkspace workspace = theme.getWorkspace();
+    ChangeDiscretiationModelCommand modelCommand = 
+      new ChangeDiscretiationModelCommand(workspace,model1d2d);
+    ChangeNodePositionCommand changeNodePosCmd = null;
+
+    IElevationProvider elevationProvider=getElevationProvider();
+    if(elevationProvider==null)
+    {
+      System.out.println("could not find elevation provider 1");
+      return;
+    }
+    
+    if(!selectionManager.isEmpty())
+    {
+      double elevation;
+      for(EasyFeatureWrapper easyFeatureWrapper:selectionManager.getAllFeatures())
+      {
+        if(easyFeatureWrapper!=null)
+        {
+          Feature feature = easyFeatureWrapper.getFeature();
+          if(feature!=null)
+          {
+            IFE1D2DNode node = (IFE1D2DNode)feature.getAdapter( IFE1D2DNode.class );
+            if(node!=null)
+            {
+              elevation = elevationProvider.getElevation( node.getPoint() );
+              changeNodePosCmd = new ChangeNodePositionCommand(model1d2d,node,elevation);
+              modelCommand.addCommand( changeNodePosCmd );
+            }
+          }
+        }
+      }
+      
+      try
+      {
+        workspace.postCommand( modelCommand );
+      }
+      catch( Throwable th )
+      {
+        th.printStackTrace();
+      }
+      
+    }
+    else
+    {
+    
+      if(p==null)
+      {
+        return;
+      }
+      
+      
+      //finde node
+      GM_Point point = 
+            MapUtilities.transform( 
+                  mapPanel, p );
+      final double DELTA = 
+        MapUtilities.calculateWorldDistance( 
+                                      mapPanel, 
+                                      point, 
+                                      10 );
+      IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( 
+                                point, 
+                                DELTA );
+      if(node!=null)
+      {
+        //
+        double elevation = elevationProvider.getElevation( node.getPoint() );
+        changeNodePosCmd = new ChangeNodePositionCommand(model1d2d,node,elevation);
+        modelCommand.addCommand( changeNodePosCmd );
+        try
+        {
+          workspace.postCommand( modelCommand );
+        }
+        catch( Throwable th )
+        {
+          th.printStackTrace();
+        }
+        
+      }
+      return;
+    }
+  }
+  
+  private final IElevationProvider getElevationProvider()
+  {
+    IElevationProvider elevationProvider = dataModel.getElevationModel();
+    if(elevationProvider==null)
+    {
+      System.out.println("Could not found selected elevation model; trying to use elevation model system");
+      elevationProvider = dataModel.getElevationModelSystem();
+      if(elevationProvider==null)
+      {
+        System.out.println("Could not find elevation model system");
+      }
+    }
+    return elevationProvider;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( Graphics g )
+  {
+    super.paint(g);
+    drawElevationData( g, point );
+  }
 }

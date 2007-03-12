@@ -195,7 +195,7 @@
 				base="simBase:AbstractTerrainElevationModelType">
 				<xs:sequence>
 					<xs:element 
-						name="fileName" type="xs:anyURI" 
+						name="fileName" type="xs:string" 
 						minOccurs="0" maxOccurs="1" />
 					<xs:element 
 						name="geometry" 
