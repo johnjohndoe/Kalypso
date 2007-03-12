@@ -225,7 +225,7 @@
 	        </class>
 	     </handler>
 	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod">
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
 	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
 	            <parameter
 	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
