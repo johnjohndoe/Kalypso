@@ -241,6 +241,8 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
   public void setCurrentSzenario( final Scenario scenario )
   {
     final Scenario currentScenario = m_scenarioManager.getCurrentScenario();
+    // this fixes the bug mentioned below.
+    m_dataProvider.setCurrent( m_activeProject, scenario );
     if( currentScenario == null && scenario == null )
     {
       return;
@@ -254,7 +256,6 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
     else
     {
       m_scenarioManager.setCurrentScenario( scenario );
-      m_dataProvider.setCurrent( m_activeProject, scenario );
       fireActiveProjectChanged( m_activeProject, scenario );
     }
   }
