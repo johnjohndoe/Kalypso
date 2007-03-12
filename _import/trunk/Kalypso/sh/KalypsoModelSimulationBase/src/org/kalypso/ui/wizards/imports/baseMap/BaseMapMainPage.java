@@ -47,8 +47,8 @@ public class BaseMapMainPage extends WizardPage
   public BaseMapMainPage( )
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.2" ) );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
   }
 
   /**
