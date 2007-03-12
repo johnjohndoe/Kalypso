@@ -65,7 +65,8 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  * Shows a map of all themes. The sources of the themes can be edited.
  * </p>
  * 
- * @author Stefan Kurzbach, belger
+ * @author Stefan Kurzbach
+ * @author Gernot Belger
  */
 public class MapView extends AbstractMapPart implements IViewPart
 {
@@ -75,7 +76,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   public static final String ID = "org.kalypso.ui.views.mapView";
 
-//  public static final String JOB_FAMILY = "mapViewJobFamily";
+  // public static final String JOB_FAMILY = "mapViewJobFamily";
 
   private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose";
 
@@ -157,7 +158,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   public void startLoadJob( final IStorage storage )
   {
     final IFile file = getFile();
-    if( file != null && !file.equals( storage))
+    if( file != null && !file.equals( storage ) )
     {
       startSaveJob();
     }
@@ -182,15 +183,15 @@ public class MapView extends AbstractMapPart implements IViewPart
         }
         return Status.OK_STATUS;
       }
-//
-//      /**
-//       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-//       */
-//      @Override
-//      public boolean belongsTo( final Object family )
-//      {
-//        return MapView.JOB_FAMILY.equals( family );
-//      }
+      //
+      // /**
+      // * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+      // */
+      // @Override
+      // public boolean belongsTo( final Object family )
+      // {
+      // return MapView.JOB_FAMILY.equals( family );
+      // }
     };
     disposeJob.setRule( file );
     disposeJob.setUser( true );
