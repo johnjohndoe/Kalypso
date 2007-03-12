@@ -73,9 +73,12 @@ public class CreateJunctionFromClAnd1DEleWidget
 
   public CreateJunctionFromClAnd1DEleWidget()
   {
-    super(new QName[]{
+    super(
+        new QName[]{
           Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
-          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D});
+          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D},
+          "Junction element hinzufügen",
+          "Junction element hinzufügen");
     selectionFilter= new QNameBasedSelectionFilter();
     selectionFilter.add( 
         Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );

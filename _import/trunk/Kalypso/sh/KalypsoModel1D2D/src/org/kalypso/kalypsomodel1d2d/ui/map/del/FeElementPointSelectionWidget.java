@@ -56,7 +56,10 @@ public class FeElementPointSelectionWidget
   
   public FeElementPointSelectionWidget()
   {
-    super(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT);
+    super(
+        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, 
+        "Selectiere ein fe element",
+        "Selectiere ein fe element");
   }
   
 }

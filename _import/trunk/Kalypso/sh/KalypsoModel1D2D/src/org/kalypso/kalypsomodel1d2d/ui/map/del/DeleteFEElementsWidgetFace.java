@@ -151,7 +151,8 @@ class DeleteFEElementsWidgetFace
       {
         final private FENetConceptSelectionWidget nodeSelectionWidget=
           new FENetConceptSelectionWidget(
-              Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
+              Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
+              "Delete Node","Delete node");
 
         /**
          * @see org.eclipse.jface.action.Action#run()

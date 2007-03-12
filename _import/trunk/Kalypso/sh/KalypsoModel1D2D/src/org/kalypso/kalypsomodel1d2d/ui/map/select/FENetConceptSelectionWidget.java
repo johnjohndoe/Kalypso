@@ -212,13 +212,21 @@ public class FENetConceptSelectionWidget implements IWidget
   
   private ISelectionFilter selectionFilter;
   
-  public FENetConceptSelectionWidget(QName themeElementsQName )
+  public FENetConceptSelectionWidget(
+                      QName themeElementsQName,
+                      String name, 
+                      String toolTip )
   {
-    this(new QName[]{themeElementsQName});
+    this(new QName[]{themeElementsQName},name,toolTip);    
   }
   
-  public FENetConceptSelectionWidget(QName themeElementsQNames[] )
+  public FENetConceptSelectionWidget(
+                  QName themeElementsQNames[],
+                  String name, 
+                  String toolTip )
   {
+    this.name=name;
+    this.toolTip=toolTip;
     this.selectionContexts= new QNameBasedSelectionContext[themeElementsQNames.length];
     for(int i=0;i<themeElementsQNames.length;i++)
     {
@@ -324,6 +332,10 @@ public class FENetConceptSelectionWidget implements IWidget
 
   private Point currentPoint;
 
+  private String toolTip;
+
+  private String name;
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
@@ -353,17 +365,29 @@ public class FENetConceptSelectionWidget implements IWidget
    */
   public String getName( )
   {
-    return null;
+    return name;
   }
 
+  public void setName( String name )
+  {
+    this.name = name;
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getToolTip()
    */
   public String getToolTip( )
   {
-    return null;
+    return toolTip;
   }
-
+ 
+  public void setToolTip(String newToolTip)
+  {
+    Assert.throwIAEOnNullParam( newToolTip, "newToolTip" );
+  }
+  
+  
+  
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */

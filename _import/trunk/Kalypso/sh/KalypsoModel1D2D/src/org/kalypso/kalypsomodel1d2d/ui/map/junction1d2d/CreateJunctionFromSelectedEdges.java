@@ -74,7 +74,10 @@ public class CreateJunctionFromSelectedEdges
 
   public CreateJunctionFromSelectedEdges()
   {
-    super(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
+    super(
+        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
+        "Junction element hinzufügen",
+        "Junction element hinzufügen");
     selectionFilter= new QNameBasedSelectionFilter();
     selectionFilter.add( 
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );

@@ -49,7 +49,7 @@ public class FENodeLabelProvider implements ITableLabelProvider {
       case 1:
       {
         GM_Point point = node.getPoint();
-        if(point.getDimension()<=2)
+        if(point.getCoordinateDimension()<=2)
         {
           return String.valueOf( Double.NaN );
         }

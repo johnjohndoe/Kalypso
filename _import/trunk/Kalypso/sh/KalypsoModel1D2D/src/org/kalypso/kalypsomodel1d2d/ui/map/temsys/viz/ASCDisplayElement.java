@@ -205,16 +205,16 @@ public class ASCDisplayElement
 
 
   
-  public void paint( 
-                  Graphics g, 
-                  GeoTransform p, 
-                  double scale, 
-                  GM_Envelope bbox, 
-                  boolean selected,
-                  IElevationColorModel colorModel)
-  {
-    paint( g, p, bbox );
-  }
+//  public void paint( 
+//                  Graphics g, 
+//                  GeoTransform p, 
+//                  double scale, 
+//                  GM_Envelope bbox, 
+//                  boolean selected,
+//                  IElevationColorModel colorModel)
+//  {
+//    paint( g, p, bbox );
+//  }
   
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
@@ -274,46 +274,46 @@ public class ASCDisplayElement
   
   
   
-  public void paint( Graphics g, GeoTransform projection,GM_Envelope env )
-  {
-    try
-    {
-      
-      Area area = null;
-      List<GM_Surface> surfaces=null;
-      List<GM_Position> cellLLCornerList = 
-          this.ascElevationModel.getCellLLCornerIterator( env );
-      //TODO patrice remove that from hier
-      CS_CoordinateSystem crs=ascElevationModel.getCoordinateSystem();
-      GM_Envelope bbox=null;
-      double cellSize=ascElevationModel.getCellSize();
-      Graphics graphics = g;//.create();
-      SimpleElevationColorModel colorModel = 
-            new SimpleElevationColorModel(
-                        ascElevationModel.getMinElevation(),
-                        ascElevationModel.getMaxElevation(),
-                        Color.RED,
-                        0.10,
-                        0.80,
-                        Color.WHITE);
-//      g.setPaintMode();
-      for(GM_Position position:cellLLCornerList)
-      {
-        double minx=position.getX();
-        double miny=position.getY();
-        bbox = GeometryFactory.createGM_Envelope( minx, miny, minx+cellSize, miny+cellSize ); 
-        GM_Surface surface= GeometryFactory.createGM_Surface( bbox, crs );
-        area = calcTargetCoordinates( projection, surface );
-        g.setColor( colorModel.getColor( position.getZ() ) );
-        drawPolygon( graphics, area );
-      }
-//      graphics.dispose();
-    }
-    catch (Exception e) 
-    {
-      e.printStackTrace();
-    }
-  }
+//  public void paint( Graphics g, GeoTransform projection,GM_Envelope env )
+//  {
+//    try
+//    {
+//      
+//      Area area = null;
+//      List<GM_Surface> surfaces=null;
+//      List<GM_Position> cellLLCornerList = 
+//          this.ascElevationModel.getCellLLCornerIterator( env );
+//      //TODO patrice remove that from hier
+//      CS_CoordinateSystem crs=ascElevationModel.getCoordinateSystem();
+//      GM_Envelope bbox=null;
+//      double cellSize=ascElevationModel.getCellSize();
+//      Graphics graphics = g;//.create();
+//      SimpleElevationColorModel colorModel = 
+//            new SimpleElevationColorModel(
+//                        ascElevationModel.getMinElevation(),
+//                        ascElevationModel.getMaxElevation(),
+//                        Color.RED,
+//                        0.10,
+//                        0.80,
+//                        Color.WHITE);
+////      g.setPaintMode();
+//      for(GM_Position position:cellLLCornerList)
+//      {
+//        double minx=position.getX();
+//        double miny=position.getY();
+//        bbox = GeometryFactory.createGM_Envelope( minx, miny, minx+cellSize, miny+cellSize ); 
+//        GM_Surface surface= GeometryFactory.createGM_Surface( bbox, crs );
+//        area = calcTargetCoordinates( projection, surface );
+//        g.setColor( colorModel.getColor( position.getZ() ) );
+//        drawPolygon( graphics, area );
+//      }
+////      graphics.dispose();
+//    }
+//    catch (Exception e) 
+//    {
+//      e.printStackTrace();
+//    }
+//  }
   
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.

@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+import org.apache.tools.ant.util.optional.NoExitSecurityManager;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -51,6 +56,7 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -84,11 +90,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.ide.IDE;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
@@ -97,6 +107,10 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
+import org.kalypsodeegree.model.feature.Feature;
 
 // import org.eclipse.draw2d.FigureUtilities;
 // import org.eclipse.draw2d.FigureUtilities.*;
@@ -154,19 +168,110 @@ class ApplyElevationWidgetFace
 
   private Button checkBtnOptionMinMax;
 
-  // private ElevationTheme elevationTheme;//= new ElevationTheme();
+  private IFeatureSelectionListener featureSelectionListener=
+      new IFeatureSelectionListener()
+  {
 
+    @SuppressWarnings("synthetic-access")
+    public void selectionChanged( IFeatureSelection selection )
+    {
+      if(selection instanceof IStructuredSelection)
+      {
+        
+        
+        final List<IFE1D2DNode> nodeList= new ArrayList<IFE1D2DNode>();
+        Feature selecFeature=null;
+        IFE1D2DNode selecNode=null;
+        for(Object selected:selection.toList())
+        {
+          if(selected instanceof Feature)
+          {
+            selecFeature=(Feature)selected;
+          }
+          else if(selected instanceof EasyFeatureWrapper)
+          {
+            selecFeature = ((EasyFeatureWrapper)selected).getFeature(); 
+          }
+          
+          if(selecFeature!=null)
+          {
+            selecNode=(IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
+            if(selecNode!=null)
+            {
+              nodeList.add( selecNode );
+            }
+          }
+          
+        }
+//        IFE1D2DNode[] nodes = new IFE1D2DNode[]{};
+        
+        if(nodeElevationViewer.getControl().isDisposed())
+        {
+          return;
+        }
+        try
+        {
+          
+          IWorkbench workbench = PlatformUI.getWorkbench();
+          
+          nodeElevationViewer.getControl().getDisplay().syncExec( 
+                new Runnable()
+                {
+
+                  public void run( )
+                  {
+                    IContentProvider cp = nodeElevationViewer.getContentProvider();
+                    if(cp instanceof ArrayContentProvider) 
+                    {
+                      //because it is complaining about content provider not set
+                      nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+                    }
+                    else
+                    {
+                      nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+                    }
+                    nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[]{}) );
+                  }
+                  
+                });
+          
+          IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+          if(activeWorkbenchWindow==null)
+          {
+            System.out.println("Active workbench is null");
+            return;
+          }
+          
+        }
+        catch (Throwable th) 
+        {
+          th.printStackTrace();
+        }
+        
+        
+      }
+    }
+    
+  };
+
+  
+  
   public ApplyElevationWidgetFace( )
   {
+  
   }
 
-  public ApplyElevationWidgetFace( ApplyElevationWidgetDataModel dataModel )
+  public ApplyElevationWidgetFace( 
+              ApplyElevationWidgetDataModel dataModel )
   {
     this.dataModel = dataModel;
+
   }
 
   public Control createControl( Composite parent )
   {
+    this.dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
+    
     preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
     initStoreDefaults();
 
@@ -588,13 +693,18 @@ class ApplyElevationWidgetFace
       {
         areaSelectSection.setEnabled( true );
         areaSelectSection.setExpanded( true );
-        IMapModell mapModell = dataModel.getMapModell();
-        System.out.println( "themes=" + Arrays.asList( mapModell.getAllThemes() ) );
-        ElevationTheme elevationTheme = dataModel.getElevationTheme();
-        elevationTheme.setTerrainElevationModel( dataModel.getElevationModel() );
-        dataModel.getMapPanel().setBoundingBox( elevationTheme.getBoundingBox() );
-
-        elevationTheme.fireModellEvent( null );
+//        IMapModell mapModell = dataModel.getMapModell();
+//        System.out.println( "themes=" + Arrays.asList( mapModell.getAllThemes() ) );
+//        ElevationTheme elevationTheme = dataModel.getElevationTheme();
+//        elevationTheme.setTerrainElevationModel( elevationModel );
+//        dataModel.getMapPanel().setBoundingBox( elevationTheme.getBoundingBox() );
+        
+        ITerrainElevationModel elevationModel = dataModel.getElevationModel();
+        if(elevationModel!=null)
+        {
+          dataModel.getMapPanel().setBoundingBox(elevationModel.getBoundingBox());
+        }
+//        elevationTheme.fireModellEvent( null );
         // mapModell.fireModellEvent( null );
 
       }
@@ -616,6 +726,13 @@ class ApplyElevationWidgetFace
       toolkit.dispose();
     }
 
+    
+    MapPanel mapPanel = dataModel.getMapPanel();
+    if(mapPanel!=null)
+    {
+      mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
+    }
+    
   }
 
   public void setInput( Object input )
@@ -678,6 +795,8 @@ class ApplyElevationWidgetFace
 
   private Table table;
 
+  private TableViewer nodeElevationViewer;
+
   private void initStoreDefaults( )
   {
 
@@ -721,7 +840,7 @@ class ApplyElevationWidgetFace
     // Dummy Label to Provide a Empty Cell in the GridLayout
     // Label areaSelectLabel1 = new Label( clientComposite, SWT.FLAT );
 
-    TableViewer nodeElevationViewer = new TableViewer( clientComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
+    nodeElevationViewer = new TableViewer( clientComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
     table = nodeElevationViewer.getTable();
     GridData tableGridData = new GridData( GridData.FILL_BOTH );
     tableGridData.horizontalSpan = 3;

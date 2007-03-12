@@ -51,6 +51,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -70,7 +71,7 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
  *
  */
 public class ApplyElevationWidget 
-                    extends AbstractWidget 
+                    extends FENetConceptSelectionWidget//AbstractWidget 
                     implements IWidgetWithOptions, IEvaluationContextConsumer
 {
   private Composite rootComposite;
@@ -89,7 +90,8 @@ public class ApplyElevationWidget
   
   public ApplyElevationWidget( String name, String toolTip )
   {
-    super( name, toolTip );
+//    super( name, toolTip );
+    super( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, name, toolTip );    
   }
 
   /**
@@ -107,10 +109,10 @@ public class ApplyElevationWidget
     dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
     ElevationTheme theme= null;//new ElevationTheme("ASC Theme",mapModell);
-    for(IKalypsoTheme curTheme:mapModell.getAllThemes())
+    /*for(IKalypsoTheme curTheme:mapModell.getAllThemes())
     {
       if(curTheme instanceof ElevationTheme)
-      {
+      {                                             
         theme=(ElevationTheme)curTheme;
       }
     }
@@ -122,6 +124,7 @@ public class ApplyElevationWidget
       
     }
     
+     */
     dataModel.setElevationTheme( theme );
     dataModel.setMapPanel( mapPanel );
   }
@@ -132,7 +135,15 @@ public class ApplyElevationWidget
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    return widgetFace.createControl( parent );
+    try
+    {
+      return widgetFace.createControl( parent );
+    }
+    catch (Throwable th) 
+    {
+      th.printStackTrace();
+      return null;
+    }
   }
 
   /**

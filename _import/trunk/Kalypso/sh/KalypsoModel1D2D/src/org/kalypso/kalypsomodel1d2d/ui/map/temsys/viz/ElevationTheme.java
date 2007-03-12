@@ -111,22 +111,22 @@ public class ElevationTheme extends AbstractKalypsoTheme
   {
 
     
-    System.out.println(
-        "drawing elevation:"+
-        "\n\tscale="+scale+
-        "\n\tbb="+bbox);
-   if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
-   {
-     IElevationProvider elevationProvider = 
-       ((NativeTerrainElevationModelWrapper)
-                   terrainElevationModel).getElevationProvider();
-     if(elevationProvider instanceof ASCTerrainElevationModel)
-     {
-       ASCDisplayElement displayElement = new ASCDisplayElement(
-           (NativeTerrainElevationModelWrapper)terrainElevationModel);
-       displayElement.paint( g, p, scale, bbox, selected,colorModel );       
-     }
-   }
+//    System.out.println(
+//        "drawing elevation:"+
+//        "\n\tscale="+scale+
+//        "\n\tbb="+bbox);
+//   if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
+//   {
+//     IElevationProvider elevationProvider = 
+//       ((NativeTerrainElevationModelWrapper)
+//                   terrainElevationModel).getElevationProvider();
+//     if(elevationProvider instanceof ASCTerrainElevationModel)
+//     {
+//       ASCDisplayElement displayElement = new ASCDisplayElement(
+//           (NativeTerrainElevationModelWrapper)terrainElevationModel);
+//       displayElement.paint( g, p, scale, bbox, selected,colorModel );       
+//     }
+//   }
    
   }
   
