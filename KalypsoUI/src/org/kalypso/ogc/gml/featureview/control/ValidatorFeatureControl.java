@@ -81,7 +81,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
 
   /* This creates the images once for the ValidatorFeature once, cause they are not disposed at this time. */
   // TODO: use Plugin-Imageprovider to handle life-cycle of images!
-  private static Image image_empty;
+  protected static Image image_empty;
 
   private static Image image_ok;
 
