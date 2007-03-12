@@ -37,10 +37,14 @@
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
 				<Help></Help>
 				<Name>1D-Gewässernetz</Name>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport">
-					<Help>Laden eines Finite-Elemente-1D-Netzes (KALYPSO2D)</Help>
-					<Name>1D-Netz laden</Name>
-				</Task>
+				<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport">
+					<Help>Importieren von Finite-Elemente-1D-Netzen aus externen Daten</Help>
+					<Name>1D-Netz importieren</Name>
+					<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm">
+						<Help>stationäres Modell (WSPM) also FE-1D-Netz importieren</Help>
+						<Name>WSPM Modell</Name>
+					</Task>
+				</TaskGroup>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
 					<Help>Zeigt Profile als Thema in Karte</Help>
 					<Name>Profile in Karte anzeigen</Name>
