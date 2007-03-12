@@ -42,14 +42,36 @@ package org.kalypso.model.wspm.core.profil;
 
 /**
  * @author kimwerner
- *
  */
 public interface IProfilPointProperty
 {
-public double getPrecision();
-public boolean isOptional();
-public double doInterpolation(final double value1,final double value2);
-public String[] getDependencies();
-public String getId();
-public String getLabel();
+  /**
+   * @return the smallest doubleValue two values can differ(i.e. 0.00010)
+   */
+  public double getPrecision( );
+
+  /**
+   * @return false if this property is not removeable from profile
+   */
+  public boolean isOptional( );
+
+  /**
+   * @return the doubleValue a new profilePoint should have for this property,
+   *         <p>
+   *         when added between two other profilePoints
+   */
+  public double doInterpolation( final IProfilPoint point1, final IProfilPoint point2 );
+/**
+ * @return all ProfilePointPropertyIds this Property depends on
+ */
+  public String[] getDependencies( );
+/**
+ * {@link IWspmConstants}
+ */
+  public String getId( );
+/**
+ * @return a friendly name for this ProfilepointProperty
+ * should be the same used in the dictonary {@link IWspmConstants}
+ */
+  public String getLabel( );
 }

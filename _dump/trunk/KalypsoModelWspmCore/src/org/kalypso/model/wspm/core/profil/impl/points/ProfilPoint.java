@@ -65,9 +65,9 @@ public class ProfilPoint implements IProfilPoint
 
   }
 
-  public final void addProperty( final String pointProperty )
+  public final void addProperty( final String pointPropertyId )
   {
-    m_pointProperties.put( pointProperty, new Double( 0 ) );
+    m_pointProperties.put( pointPropertyId, new Double( 0 ) );
   }
 
   /**
@@ -93,19 +93,19 @@ public class ProfilPoint implements IProfilPoint
     return m_pointProperties.keySet().toArray( new String[0] );
   }
 
-  public final double getValueFor( final String pointProperty ) throws IllegalArgumentException
+  public final double getValueFor( final String pointPropertyId ) throws IllegalArgumentException
   {
-    if( !(m_pointProperties.containsKey( pointProperty )) )
-      throw new IllegalArgumentException( "Profileigenschaft existiert nicht: " + pointProperty.toString() );
-    return m_pointProperties.get( pointProperty ).doubleValue();
+    if( !(m_pointProperties.containsKey( pointPropertyId )) )
+      throw new IllegalArgumentException( "Profileigenschaft existiert nicht: " + pointPropertyId.toString() );
+    return m_pointProperties.get( pointPropertyId ).doubleValue();
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfilPoint#hasTableData(org.kalypso.model.wspm.core.profildata.tabledata.TableDataKey)
    */
-  public boolean hasProperty( String pointProperty )
+  public boolean hasProperty( String pointPropertyId )
   {
-    return m_pointProperties.containsKey( pointProperty );
+    return m_pointProperties.containsKey( pointPropertyId );
 
   }
 
@@ -114,11 +114,11 @@ public class ProfilPoint implements IProfilPoint
     m_pointProperties.remove( pointProperty );
   }
 
-  public final boolean setValueFor( final String pointProperty, final double value )
+  public final boolean setValueFor( final String pointPropertyId, final double value )
   {
-    if( !(m_pointProperties.containsKey( pointProperty )) )
+    if( !(m_pointProperties.containsKey( pointPropertyId )) )
       return false;
-    m_pointProperties.put( pointProperty, new Double( value ) );
+    m_pointProperties.put( pointPropertyId, new Double( value ) );
     return true;
   }
 

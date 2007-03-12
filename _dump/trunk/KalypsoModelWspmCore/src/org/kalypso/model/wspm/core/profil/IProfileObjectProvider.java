@@ -47,7 +47,13 @@ public interface IProfileObjectProvider
 {
   public IProfileObject createObject( final String objectId );
 
+  /**
+   * @return all ObjectIds handled by this provider
+   */
   public String[] getObjectIds( );
 
+  /**
+   * @return true if the ObjectId is handled by this provider
+   */
   public boolean providesProfileObject( final String objectId );
 }

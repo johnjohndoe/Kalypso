@@ -50,7 +50,6 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -101,7 +100,7 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
     {
       return ProfileFeatureFactory.toProfile( getFeature() );
     }
-    catch( final ProfilDataException e )
+    catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );

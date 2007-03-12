@@ -45,21 +45,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 
 /**
  * @author kimwerner
  */
 public abstract class AbstractBuilding implements IProfileObject
 {
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getGmlObjectFor(java.lang.String)
-   */
-  public Object getGmlObjectFor( String objectProperty )
-  {
-    return getValueFor( objectProperty );
-  }
-
+  
   private String m_name;
 
   protected final String m_buildingTyp;
@@ -106,7 +98,7 @@ public abstract class AbstractBuilding implements IProfileObject
   {
     if( m_buildingValues.containsKey( buildingValue ) )
       return m_buildingValues.get( buildingValue );
-    throw new IllegalArgumentException( "Die Eigenschaft " + buildingValue.toString() + " wird von diesem Bauwerk nicht unterstützt." );
+    throw new IllegalArgumentException( "Die Eigenschaft " + buildingValue + " wird von diesem Bauwerk nicht unterstützt." );
   }
 
   /**
@@ -122,10 +114,10 @@ public abstract class AbstractBuilding implements IProfileObject
    * @see org.kalypso.model.wspm.core.profilinterface.IProfilBuilding#setValue(org.kalypso.model.wspm.core.profilinterface.IProfil.BUILDING_PROPERTY,
    *      Object)
    */
-  public Object setValue( final String property, final Object value ) throws ProfilDataException
+  public Object setValue( final String property, final Object value ) throws IllegalArgumentException
   {
     if( !m_buildingValues.containsKey( property ) )
-      throw new ProfilDataException( "Die Eigenschaft " + property.toString() + " wird von diesem Bauwerk nicht unterstützt." );
+      throw new IllegalArgumentException( "Die Eigenschaft " + property + " wird von diesem Bauwerk nicht unterstützt." );
 
     final Object oldValue = m_buildingValues.get( property );
 

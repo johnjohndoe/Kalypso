@@ -49,8 +49,33 @@ import org.kalypso.model.wspm.core.IWspmConstants;
  */
 public interface IWspmTuhhConstants extends IWspmConstants
 {
+  public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
+
+  /*
+   * sind Tuhh-Konstanten werden aber wegen der Abwärtskompatibilität in
+   * {@link org.kalypso.model.wspm.schema.dict_profile_point} geführt
+   */
+
+  public static final String POINTMARKER_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerProperty#";
+
+  public static final String MARKER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
+
   public static final String BUILDING_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#";
 
+  public static final String BUILDING_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#";
+
+  public static final String POINT_PROPERTY = IWspmConstants.POINT_PROPERTY;
+
+  /*----------------------*/
+
+  /* POINT_PROPERTY */
+  public static final String POINT_PROPERTY_OBERKANTEBRUECKE = POINT_PROPERTY + "OBERKANTEBRUECKE";
+
+  public static final String POINT_PROPERTY_OBERKANTEWEHR = POINT_PROPERTY + "OBERKANTEWEHR";
+
+  public static final String POINT_PROPERTY_UNTERKANTEBRUECKE = POINT_PROPERTY + "UNTERKANTEBRUECKE";
+
+  /* BUILDING_PROPERTY */
   public static final String BUILDING_PROPERTY_BEZUGSPUNKT_X = BUILDING_PROPERTY + "BEZUGSPUNKT_X";
 
   public static final String BUILDING_PROPERTY_BEZUGSPUNKT_Y = BUILDING_PROPERTY + "BEZUGSPUNKT_Y";
@@ -71,8 +96,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static final String BUILDING_PROPERTY_WEHRART = BUILDING_PROPERTY + "WEHRART";
 
-  public static final String BUILDING_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#";
-
+  /* BUILDING_TYP */
   public static final String BUILDING_TYP_BRUECKE = BUILDING_TYP + "BRUECKE";
 
   public static final String BUILDING_TYP_EI = BUILDING_TYP + "EI";
@@ -84,11 +108,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static final String BUILDING_TYP_TRAPEZ = BUILDING_TYP + "TRAPEZ";
 
   public static final String BUILDING_TYP_WEHR = BUILDING_TYP + "WEHR";
-  
-  public static final String[] BUILDING_TYPES ={BUILDING_TYP_BRUECKE,BUILDING_TYP_KREIS,BUILDING_TYP_EI,BUILDING_TYP_MAUL,BUILDING_TYP_TRAPEZ,BUILDING_TYP_WEHR}; 
 
-  public static final String MARKER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
-
+  /* MARKER_TYP */
   public static final String MARKER_TYP_BORDVOLL = MARKER_TYP + "BORDVOLL";
 
   public static final String MARKER_TYP_DURCHSTROEMTE = MARKER_TYP + "DURCHSTROEMTE";
@@ -97,15 +118,15 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static final String MARKER_TYP_WEHR = MARKER_TYP + "WEHR";
 
-  public static final String[] MARKER_TYPES = { MARKER_TYP_BORDVOLL, MARKER_TYP_DURCHSTROEMTE, MARKER_TYP_TRENNFLAECHE, MARKER_TYP_WEHR };
-
-  public static final String POINTMARKER_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerProperty#";
-
+  /* POINTMARKER_PROPERTY */
   public static final String POINTMARKER_PROPERTY_BEIWERT = POINTMARKER_PROPERTY + "BEIWERT";
 
   public static final String POINTMARKER_PROPERTY_BOESCHUNG = POINTMARKER_PROPERTY + "BOESCHUNG";
 
   public static final String POINTMARKER_PROPERTY_RAUHEIT = POINTMARKER_PROPERTY + "RAUHEIT";
+
+  /* Profil MetaStrings */
+  public static final String PROFIL_PROPERTY = "org.kalypso.model.wspm.tuhh.core.profil.PROFIL_PROPERTY_";
 
   public static final String PROFIL_PROPERTY_MEHRFELDBRUECKE = PROFIL_PROPERTY + "MEHRFELDBRUECKE";
 
@@ -117,7 +138,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static final String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL";
 
-  public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP_";
+  /* Rauheiten */
+  public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.tuhh.core.profil.RAUHEIT_TYP_";
 
   public static final String RAUHEIT_TYP_KS = RAUHEIT_TYP + "KS";
 
@@ -125,7 +147,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
 
-  public static final String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_";
+  /* Wehrtypen */
+  public static final String WEHR_TYP = "org.kalypso.model.wspm.tuhh.core.profile.buildings.WEHR_TYP_";
 
   public static final String WEHR_TYP_BEIWERT = WEHR_TYP + "BEIWERT";
 
@@ -135,14 +158,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static final String WEHR_TYP_SCHARFKANTIG = WEHR_TYP + "SCHARFKANTIG";
 
-  public static final String POINT_PROPERTY_OBERKANTEBRUECKE = POINT_PROPERTY + "OBERKANTEBRUECKE";
-
-  public static final String POINT_PROPERTY_OBERKANTEWEHR = POINT_PROPERTY + "OBERKANTEWEHR";
-
-  public static final String POINT_PROPERTY_UNTERKANTEBRUECKE = POINT_PROPERTY + "UNTERKANTEBRUECKE";
-
-  public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
-
+  /* Layer */
   public static String PROFILE_LAYER = "org.kalypso.model.wspm.tuhh.ui.chart.LAYER_";
 
   public static String LAYER_BEWUCHS = PROFILE_LAYER + "BEWUCHS";
@@ -168,6 +184,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_DEVIDER = PROFILE_LAYER + "DEVIDER";
 
   public static String LAYER_EI = PROFILE_LAYER + "EI";
+
+  /* Layer_Colors */
 
   public static String LAYER_RAUHEIT_COLOR_BACKGROUND = LAYER_RAUHEIT + "_COLOR_BACKGROUND";
 

@@ -55,14 +55,15 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrap
  */
 public class BuildingProvider implements IProfileObjectProvider
 {
-
+  private static final String[] m_buildingTypes = { IWspmTuhhConstants.BUILDING_TYP_BRUECKE, IWspmTuhhConstants.BUILDING_TYP_KREIS, IWspmTuhhConstants.BUILDING_TYP_EI,
+      IWspmTuhhConstants.BUILDING_TYP_MAUL, IWspmTuhhConstants.BUILDING_TYP_TRAPEZ, IWspmTuhhConstants.BUILDING_TYP_WEHR };
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#createObject(java.lang.String)
    */
   public IProfileObject createObject( String objectId )
   {
-    
+
     if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( objectId ) )
       return new BuildingBruecke();
     if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( objectId ) )
@@ -79,14 +80,12 @@ public class BuildingProvider implements IProfileObjectProvider
     return null;
   }
 
-  
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#getObjectIds()
    */
   public String[] getObjectIds( )
   {
-    return IWspmTuhhConstants.BUILDING_TYPES;
+    return m_buildingTypes;
   }
 
   /**
@@ -94,7 +93,7 @@ public class BuildingProvider implements IProfileObjectProvider
    */
   public boolean providesProfileObject( String objectId )
   {
-    for( String building : IWspmTuhhConstants.BUILDING_TYPES )
+    for( String building : m_buildingTypes )
     {
       if( building.equals( objectId ) )
         return true;

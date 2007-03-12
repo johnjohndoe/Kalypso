@@ -40,29 +40,55 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-
 /**
  * @author kimwerner
  */
 public interface IProfileObject
 {
-  
+
   public String getId( );
 
+  /**
+   * @return the ProfilePointProperties used by this Object
+   */
   public String[] getPointProperties( );
 
+  /**
+   * @return the keys this Object held as a key,value
+   * @see getValueFor(key)
+   */
   public String[] getObjectProperties( );
 
+  /**
+   * @return the value this Object held as a key,value
+   * @throws IllegalArgumentException
+   *           if the key is not supported by this Object
+   * @see hasProperty(key)
+   * @see setValue(key,value)
+   */
   public Object getValueFor( final String key ) throws IllegalArgumentException;
-  
+/**
+ * @return a friendly Name for the given key used as key,value, stored in this ProfileObject 
+ */
   public String getLabelFor( final String key );
 
-  public Object setValue( final String key, final Object value ) throws ProfilDataException;
+  /**
+   * @return the added Object
+   * @throws IllegalArgumentException
+   *           if the key is not supported by this Object
+   * @see hasProperty(key)
+   * @see getValueFor(key)
+   */
+  public Object setValue( final String key, final Object value ) throws IllegalArgumentException;
+
+  /**
+   * @return true if the Object support the given key
+   * @see setValue(key,value)
+   * @see getValueFor(key)
+   */
 
   public boolean hasProperty( final String key );
-  
-  public String getName();
-  
-  public Object getGmlObjectFor(final String objectProperty);
-  
+
+  public String getName( );
+
 }

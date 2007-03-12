@@ -65,7 +65,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.IPhenomenon;
@@ -140,11 +139,11 @@ public class ProfileFeatureFactory implements IWspmConstants
     //
     // Name + Description
     //
-    final String name = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_NAME );
+    final String name = profile.getName();
     final List<String> namelist = new ArrayList<String>( 1 );
     namelist.add( name );
     changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
-    final String description = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_KOMMENTAR );
+    final String description = profile.getComment().toString();
     changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_DESCRIPTION ), description ) );
 
     //
@@ -289,7 +288,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     return observation;
   }
 
-  public static IProfil toProfile( final Feature profileFeature ) throws ProfilDataException
+  public static IProfil toProfile( final Feature profileFeature )
   {
     final IFeatureType featureType = profileFeature.getFeatureType();
 
@@ -413,7 +412,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     profileFeature.setProperty( QNAME_STATION, decimal );
   }
 
-  private static IProfileObject buildingFromFeature( final IProfil profil, final Feature buildingFeature ) throws ProfilDataException
+  private static IProfileObject buildingFromFeature( final IProfil profil, final Feature buildingFeature )
   {
     final IObservation<TupleResult> buildingObs = buildingFeature == null ? null : ObservationFeatureFactory.toObservation( buildingFeature );
     

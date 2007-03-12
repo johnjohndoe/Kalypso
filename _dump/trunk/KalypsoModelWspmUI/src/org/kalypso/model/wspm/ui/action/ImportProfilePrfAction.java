@@ -67,13 +67,11 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -190,19 +188,14 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
         final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
         final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" );
 
-        profil.setProperty( IWspmConstants.PROFIL_PROPERTY_NAME, "Import" );
+        profil.setName( "Import" );
 
         final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
-        profil.setProperty( IWspmConstants.PROFIL_PROPERTY_KOMMENTAR, description );
+        profil.addComment(  description );
 
         profiles.add( profil );
       }
       catch( final IOException e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " );
-        prfReadStatus.add( status );
-      }
-      catch( final ProfilDataException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " );
         prfReadStatus.add( status );

@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
@@ -58,7 +57,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -100,25 +98,25 @@ public class PrfSource implements IProfilSource
           readBuilding( p, pr );
       }
     }
-    catch( ProfilDataException e )
+    catch( IllegalArgumentException e )
     {
       m_logger.log( Level.SEVERE, e.getMessage() );
       e.printStackTrace();
     }
   }
 
-  private void readComment( IProfil p, PrfReader pr ) throws ProfilDataException
+  private void readComment( IProfil p, PrfReader pr )
   {
 
     final IDataBlock db = pr.getDataBlock( "KOM" );
     if( db == null )
       return;
-    ArrayList<String> sl = new ArrayList<String>();
+    //ArrayList<String> sl = new ArrayList<String>();
     for( String line : db.getText() )
     {
-      sl.add( line.substring( 3 ) );
+      p.addComment( line.substring( 3 ) );
     }
-    p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_KOMMENTAR, sl );
+    //p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_KOMMENTAR, sl );
   }
 
   private void readBewuchs( IProfil p, PrfReader pr )
@@ -157,7 +155,7 @@ public class PrfSource implements IProfilSource
     writePointProperty( p, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT, dbr );
   }
 
-  private void readBuilding( IProfil p, PrfReader pr ) throws ProfilDataException
+  private void readBuilding( IProfil p, PrfReader pr )
   {
     IDataBlock db = pr.getDataBlock( "EI" );
     if( db == null )
@@ -270,7 +268,7 @@ public class PrfSource implements IProfilSource
         building.setValue( property, Double.parseDouble( sT.nextToken() ) );
         return true;
       }
-      catch( ProfilDataException e )
+      catch( IllegalArgumentException e )
       {
         m_logger.log( Level.SEVERE, e.getMessage() );
         return false;
@@ -282,7 +280,7 @@ public class PrfSource implements IProfilSource
     return false;
   }
 
-  private boolean readBridge( IProfil p, PrfReader pr ) throws ProfilDataException
+  private boolean readBridge( IProfil p, PrfReader pr )
   {
     final IDataBlock dbo = pr.getDataBlock( "OK-B" );
     final IDataBlock dbu = pr.getDataBlock( "UK-B" );
@@ -352,26 +350,18 @@ public class PrfSource implements IProfilSource
       return;
     p.addPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
     final String rks = db.getSecondLine().toUpperCase();
-    try
+    if( rks.startsWith( "KST" ) )
     {
-      if( rks.startsWith( "KST" ) )
-      {
-        p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KST );
-      }
-      else if( rks.startsWith( "KS" ) )
-      {
-        p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS );
-      }
-      else if( rks.startsWith( "K-S " ) )
-      {
-        p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS );
-      }
+      p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KST );
     }
-    catch( ProfilDataException e )
+    else if( rks.startsWith( "KS" ) )
     {
-      m_logger.log( Level.SEVERE, "Rauheitstyp konnte nicht geschrieben werden" );
+      p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS );
     }
-
+    else if( rks.startsWith( "K-S " ) )
+    {
+      p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS );
+    }
     for( int i = 0; i < db.getCoordCount(); i++ )
     {
       final IProfilPoint point = ProfilUtil.findPoint( p, i, db.getX()[i], 0 );
@@ -505,7 +495,7 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private boolean readWehr( final IProfil p, final PrfReader pr ) throws ProfilDataException
+  private boolean readWehr( final IProfil p, final PrfReader pr )
   {
     final IDataBlock dbw = pr.getDataBlock( "OK-WEHR" );
     if( dbw == null )
@@ -641,7 +631,7 @@ public class PrfSource implements IProfilSource
     {
       prfReader.readFromReader( new BufferedReader( reader ) );
       readSource( prfReader, profil );
-     
+
       return true;
     }
     catch( IOException e )

@@ -201,13 +201,13 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-       // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
-        IProfilChange change = new VisibleMarkerEdit(getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
+        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
+        IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setMarkerMoved();
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
-        //getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
+        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -235,13 +235,13 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        //getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() );
+        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() );
         IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setMarkerMoved();
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
-        //getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
+        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -269,13 +269,13 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-       // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() );
+        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() );
         IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setMarkerMoved();
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
-        //getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
+        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -291,14 +291,16 @@ public class TrennerPanel extends AbstractProfilView
         final IProfil profil = getProfil();
         final IProfilPointMarker[] bv_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
 
-        if( bv_devs.length < 1)
+        if( bv_devs.length < 1 )
         {
           final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-          if( db_devs.length < 2 ) 
+          if( db_devs.length < 2 )
             return;
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte einfügen:", getProfilEventManager(), true );
-          operation.addChange( new PointMarkerAdd( profil, db_devs[0].getPoint() , IWspmTuhhConstants.MARKER_TYP_BORDVOLL) );
+          operation.addChange( new PointMarkerAdd( profil, db_devs[0].getPoint(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
           operation.addChange( new PointMarkerAdd( profil, db_devs[1].getPoint(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
+          operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, true ) );
+
           operation.addChange( new ActiveObjectEdit( getProfil(), db_devs[1].getPoint(), null ) );
           new ProfilOperationJob( operation ).schedule();
 

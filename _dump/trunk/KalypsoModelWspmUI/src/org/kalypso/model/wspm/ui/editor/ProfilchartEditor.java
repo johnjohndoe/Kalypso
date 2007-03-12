@@ -447,6 +447,16 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     final IProfilEventManager oldPem = m_profilPart.getProfilEventManager();
     final ProfilViewData oldViewData = m_profilPart.getViewData();
 
+    if( (oldPem == null) && (oldViewData != null)&& (pem!= null) )
+    {
+      final IProfil profile = pem.getProfil();
+      if( profile != null )
+      {
+        for( final String markerId : profile.getPointMarkerTypes() )
+          oldViewData.setMarkerVisibility( markerId, true );
+      }
+    }
+    
     m_profilPart.setProfil( pem, file, getEditorSite().getId() );
 
     fireOnProfilProviderChanged( oldPem, m_profilPart.getProfilEventManager(), oldViewData, m_profilPart.getViewData() );

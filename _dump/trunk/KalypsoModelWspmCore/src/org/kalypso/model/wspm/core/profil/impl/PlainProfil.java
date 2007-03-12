@@ -67,8 +67,6 @@ import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
 public class PlainProfil implements IProfil
 {
 
-  
-
   private IProfileObject m_building;
 
   private final Map<String, List<IProfilPointMarker>> m_pointMarker = new HashMap<String, List<IProfilPointMarker>>();
@@ -91,6 +89,10 @@ public class PlainProfil implements IProfil
 
   private final String m_type;
 
+  private String m_name = "";
+
+  private final List<String> m_comment = new ArrayList<String>();
+
   public PlainProfil( final String type )
   {
     m_type = type;
@@ -106,22 +108,6 @@ public class PlainProfil implements IProfil
     if( !pointIsValid( point ) )
       return false;
     m_points.add( point );
-    return true;
-  }
-
-  private boolean pointIsValid( final IProfilPoint point )
-  {
-    final String[] propertyIds = point.getProperties();
-    for( final String propertyId : propertyIds )
-    {
-      if( !hasPointProperty( propertyId ) )
-        return false;
-    }
-    for( final String property : m_pointProperties.keySet() )
-    {
-      if( !point.hasProperty( property ) )
-        return false;
-    }
     return true;
   }
 
@@ -218,14 +204,6 @@ public class PlainProfil implements IProfil
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getBuilding()
-   */
-  public IProfileObject getProfileObject( )
-  {
-    return m_building;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getDependenciesFor(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
    */
   public String[] getDependenciesFor( final String property )
@@ -258,6 +236,20 @@ public class PlainProfil implements IProfil
     {
       if( pmp.providesPointMarker( markerId ) )
         return pmp;
+    }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getObjectProviderFor(java.lang.String)
+   */
+  public IProfileObjectProvider getObjectProviderFor( final String profileObjectId )
+  {
+    final IProfileObjectProvider[] objectProviders = KalypsoModelWspmCoreExtensions.getObjectProviders( m_type );
+    for( final IProfileObjectProvider pop : objectProviders )
+    {
+      if( pop.providesProfileObject( profileObjectId ) )
+        return pop;
     }
     return null;
   }
@@ -334,6 +326,14 @@ public class PlainProfil implements IProfil
     return m_points;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getBuilding()
+   */
+  public IProfileObject getProfileObject( )
+  {
+    return m_building;
+  }
+
   public Object getProperty( Object key )
   {
     return m_profilMetaData.get( key );
@@ -371,20 +371,20 @@ public class PlainProfil implements IProfil
     return m_pointProperties.containsKey( propertyId );
   }
 
-  /**
-   * @throws ProfilDataException
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removeBuilding()
-   */
-  public IProfileObject removeProfileObject( )
+  private boolean pointIsValid( final IProfilPoint point )
   {
-    final IProfileObject oldBuilding = m_building;
-    final String[] properties = m_building.getPointProperties();
-    for( final String property : properties )
+    final String[] propertyIds = point.getProperties();
+    for( final String propertyId : propertyIds )
     {
-      removePointProperty( property );
+      if( !hasPointProperty( propertyId ) )
+        return false;
     }
-
-    return oldBuilding;
+    for( final String property : m_pointProperties.keySet() )
+    {
+      if( !point.hasProperty( property ) )
+        return false;
+    }
+    return true;
   }
 
   /**
@@ -420,6 +420,22 @@ public class PlainProfil implements IProfil
   }
 
   /**
+   * @throws ProfilDataException
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removeBuilding()
+   */
+  public IProfileObject removeProfileObject( )
+  {
+    final IProfileObject oldBuilding = m_building;
+    final String[] properties = m_building.getPointProperties();
+    for( final String property : properties )
+    {
+      removePointProperty( property );
+    }
+
+    return oldBuilding;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProperty(java.lang.Object)
    */
   public Object removeProperty( Object key )
@@ -435,17 +451,10 @@ public class PlainProfil implements IProfil
     m_activePoint = point;
   }
 
-  public void setActivePointProperty( final String activeProperty )
-  {
-    final IProfilPointProperty property = m_pointProperties.get( activeProperty );
-    if( property != null )
-      m_activeProperty = property;
-  }
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setActiveproperty(org.kalypso.model.wspm.core.profil.IProfilPointProperty)
    */
-  public void setActiveProperty( String pointProperty )
+  public void setActivePointProperty( String pointProperty )
   {
     if( hasPointProperty( pointProperty ) )
       m_activeProperty = m_pointProperties.get( pointProperty );
@@ -454,16 +463,18 @@ public class PlainProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setBuilding(org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP)
    */
-  public void setProfileObject( final IProfileObject building )
+  public IProfileObject setProfileObject( final IProfileObject building )
   {
-    if( m_building != null )
-      removeProfileObject();
+    if( building == null )
+      return null;
+    final IProfileObject oldObject = (m_building != null) ? removeProfileObject() : null;
     m_building = building;
     final String[] properties = building == null ? new String[0] : m_building.getPointProperties();
     for( final String property : properties )
     {
       addPointProperty( property );
     }
+    return oldObject;
   }
 
   /**
@@ -482,17 +493,33 @@ public class PlainProfil implements IProfil
     m_station = station;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getObjectProviderFor(java.lang.String)
-   */
-  public IProfileObjectProvider getObjectProviderFor( final String profileObjectId )
+  public String[] getComment( )
   {
-    final IProfileObjectProvider[] objectProviders = KalypsoModelWspmCoreExtensions.getObjectProviders( m_type );
-    for( final IProfileObjectProvider pop : objectProviders )
-    {
-      if( pop.providesProfileObject( profileObjectId ) )
-        return pop;
-    }
-    return null;
+    return m_comment.toArray( new String[0] );
+  }
+
+  public void removeComment( final int lineNumber )
+  {
+    m_comment.remove( lineNumber );
+  }
+
+  public void addComment( final int lineNumber, final String comment )
+  {
+    m_comment.add( lineNumber, comment );
+  }
+
+  public void addComment( final String comment )
+  {
+    m_comment.add( comment );
+  }
+
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  public void setName( String name )
+  {
+    m_name = name;
   }
 }

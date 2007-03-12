@@ -44,10 +44,14 @@ package org.kalypso.model.wspm.core.profil;
  * @author kimwerner
  */
 public interface IProfilPointPropertyProvider
-{
+{/**
+   * @return all PointPropertyIds handled by this provider
+   */
   public String[] getPointProperties( );
 
   public boolean providesPointProperty( final String property );
-
+  /**
+   * the pointProperty Factory
+   */
   public IProfilPointProperty getPointProperty( final String property );
 }

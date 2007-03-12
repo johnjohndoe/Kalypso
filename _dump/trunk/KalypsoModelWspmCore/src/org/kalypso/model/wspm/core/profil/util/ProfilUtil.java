@@ -142,7 +142,7 @@ public class ProfilUtil
     for( final IProfilPointProperty property : properties )
     {
       final String propertyId = property.toString();
-      final Double m_x = property.doInterpolation( startPoint.getValueFor( propertyId ), endPoint.getValueFor( propertyId ) );
+      final Double m_x = property.doInterpolation( startPoint, endPoint );
       point.setValueFor( propertyId, m_x );
     }
     return point;

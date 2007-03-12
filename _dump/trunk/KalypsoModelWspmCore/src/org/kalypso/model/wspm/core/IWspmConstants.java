@@ -67,7 +67,7 @@ public interface IWspmConstants
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary";
 
-  // TODO: get number of fractions digits from gml-schema
+  // TODO Kim: get number of fractions digits from gml-schema
   public static final String FMT_STATION = "%.4f";
 
   public static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
@@ -90,9 +90,4 @@ public interface IWspmConstants
 
   public static final String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT";
 
-  public static final String PROFIL_PROPERTY = "org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY_";
-
-  public static final String PROFIL_PROPERTY_KOMMENTAR = PROFIL_PROPERTY + "KOMMENTAR";
-
-  public static final String PROFIL_PROPERTY_NAME = PROFIL_PROPERTY + "NAME";
 }

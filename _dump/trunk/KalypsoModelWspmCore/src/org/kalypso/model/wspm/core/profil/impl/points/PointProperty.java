@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl.points;
 
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 
 /**
@@ -67,8 +68,10 @@ public class PointProperty implements IProfilPointProperty
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointProperty#doInterpolation(double, double)
    */
-  public double doInterpolation( double value1, double value2 )
+  public double doInterpolation( final IProfilPoint point1,final IProfilPoint point2 )
   {
+    final double value1 = point1.getValueFor( m_id );
+    final double value2 = point2.getValueFor( m_id );
     return (value1+value2)/2.0;
   }
 

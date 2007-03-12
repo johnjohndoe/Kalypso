@@ -41,21 +41,48 @@
 package org.kalypso.model.wspm.core.profil;
 
 /**
- * Kim: Document the interface methods
- * 
  * @author kimwerner
  */
 public interface IProfilPoint
 {
-  public double getValueFor( final String pointProperty ) throws IllegalArgumentException;
+  /**
+   * @return doubleValue stored with its corresponding profilPointPropertyId
+   * @see {@link IProfilPointProperty.getId()}
+   * @throws IllegalArgumentException
+   *           if the pointProperty is not supported
+   * @see #hasProperty(String)
+   * @see #addProperty(String)
+   * @see #getProperties()
+   */
+  public double getValueFor( final String pointPropertyId ) throws IllegalArgumentException;
 
-  public boolean setValueFor( final String pointProperty, final double value );
+  /**
+   * @return false if the pointPropertyId is not a valid key in the underlying HashMap
+   * @see #hasProperty(String)
+   * @see #addProperty(String)
+   * @see #getProperties()
+   */
+  public boolean setValueFor( final String pointPropertyId, final double value );
 
-  public boolean hasProperty( final String pointProperty );
+  /**
+   * @return false if the pointPropertyId is not a valid key in the underlying HashMap
+   */
+  public boolean hasProperty( final String pointPropertyId );
 
-  public void addProperty( final String pointProperty );
+  /**
+   * adds the pointPropertyId as a valid key to the underlying HashMap
+   */
+  public void addProperty( final String pointPropertyId );
 
+  /**
+   * @return a Copy of this point, addable its profile
+   * @see {@link IProfil.addPoint(point)}
+   */
   public IProfilPoint clonePoint( );
 
+  /**
+   * @return all supperted ProfilPointProperties 
+   * @see #hasProperty(String)
+   */
   public String[] getProperties( );
 }

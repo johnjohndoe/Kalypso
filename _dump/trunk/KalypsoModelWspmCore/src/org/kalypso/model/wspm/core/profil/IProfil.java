@@ -48,6 +48,24 @@ import java.util.LinkedList;
 public interface IProfil
 {
   /**
+   * @return something stored in the profile as Strings
+   */
+  public String[] getComment( );
+
+  public void addComment( final int lineNumber, final String comment );
+
+  public void addComment( final String comment );
+
+  public void removeComment( final int lineNumber );
+
+  /**
+   * @return the friendly name for this profile
+   */
+  public String getName( );
+
+  public void setName( final String Name );
+
+  /**
    * @return false if the point does not match all the properties in this profile
    */
   public boolean addPoint( final IProfilPoint point );
@@ -99,6 +117,9 @@ public interface IProfil
    */
   public IProfilPointMarkerProvider getMarkerProviderFor( final String markerId );
 
+  /**
+   * @return the first profileObjectProvider wich provides the given ObjectId
+   */
   public IProfileObjectProvider getObjectProviderFor( final String profileObject );
 
   /**
@@ -116,11 +137,14 @@ public interface IProfil
    */
   public String[] getPointMarkerTypes( );
 
-  
   public IProfilPointProperty[] getPointProperties( );
 
   public IProfilPointProperty getPointProperty( final String pointPrioperty );
 
+  /**
+   * @return the nested PointList of this profile, changes will be reflected in the profile. May cause
+   *         ConcurrentModificationException
+   */
   public LinkedList<IProfilPoint> getPoints( );
 
   /**
@@ -130,13 +154,15 @@ public interface IProfil
 
   /**
    * @param key
-   *          see IProfil.PROFIL_PROPERTY
+   * @return the value from HashMap<key,ProfileObject>
    */
   public Object getProperty( Object key );
 
+  /**
+   * @return the first pointPropertyProvider wich provides the given propertyId
+   */
   public IProfilPointPropertyProvider getPropertyProviderFor( final String property );
 
-  
   public double getStation( );
 
   /**
@@ -152,31 +178,38 @@ public interface IProfil
   public String getType( );
 
   public boolean hasPointProperty( final String propertyId );
-  
-  
+
   /**
    * @param point
    *          to remove
+   * @return false if the point is captured by a marker and will NOT remove the point from pointList
    */
   public boolean removePoint( final IProfilPoint point );
 
+  /**
+   * @return the removed PointMarker
+   */
   public IProfilPointMarker removePointMarker( final IProfilPointMarker pointMarker );
 
   /**
    * @param pointProperty
    *          to remove
+   * @return false if the pointProperty is not used in this profile
    */
   public boolean removePointProperty( final String pointProperty );
 
   /**
-   * @return the extracted building, IProfil.getBuilding() will return null
-   * @throws ProfilDataException
+   * @return the extracted ProfileObject
+   *         <p>
+   *         all pointProperties used by this Object will be removed
+   *         <p>
+   *         the ProfileObject is set to null
    */
-  public IProfileObject removeProfileObject( ) throws ProfilDataException;
+  public IProfileObject removeProfileObject( );
 
   /**
    * @param key
-   * @see IProfil.PROFIL_PROPERTY
+   *          removes the key and its value of the profiles HashMap
    */
   public Object removeProperty( final Object key );
 
@@ -184,24 +217,21 @@ public interface IProfil
 
   public void setActivePointProperty( final String activeProperty );
 
-  public void setActiveProperty( final String pointProperty );
-
   /**
-   * replace the current building
+   * remove the current ProfileObject and adds the given ProfileObject
    * 
-   * @see ProfilBuildingFactory
+   * @return the oldObject
    * @param building
-   * @throws ProfilDataException
+   *          must not be null, in this case use removeProfileObject()
    */
-  public void setProfileObject( final IProfileObject building ) throws ProfilDataException;
+  public IProfileObject setProfileObject( final IProfileObject building );
 
   /**
    * @param key
    * @param value
-   * @throws ProfilDataException
-   * @see IProfil.PROFIL_PROPERTY
+   *          saves the the key,value in its own HashMap
    */
-  public void setProperty( final Object key, final Object value ) throws ProfilDataException;
+  public void setProperty( final Object key, final Object value );
 
   public void setStation( final double station );
 }

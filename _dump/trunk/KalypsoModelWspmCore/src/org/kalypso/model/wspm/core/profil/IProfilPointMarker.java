@@ -40,32 +40,60 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import java.util.Collection;
-
 public interface IProfilPointMarker
 {
-  public Object getValueFor( final String key );
-  
+  /**
+   * @return the stored objectValue belongs to this key
+   * @throws IllegalArgumentException
+   *           if the key is not supported
+   * @see setValueFor(key,value)
+   */
+  public Object getValueFor( final String key ) throws IllegalArgumentException;
+
+  /**
+   * @throws IllegalArgumentException
+   *           if the key is not supported
+   *           <p>
+   *           otherwise overwrite the stored object with the given value
+   */
   public void setValueFor( final String key, final Object value ) throws IllegalArgumentException;
 
-  public Collection<String> getKeys( );
+  /**
+   * @return all the keys supported by this pointMarker
+   */
+  public String[] getKeys( );
 
+  /**
+   * @return the ProfilePoint captured by this pointMarker
+   * @see {@link IProfil.getPointMarkerFor(point)}
+   */
   public IProfilPoint getPoint( );
 
+  /**
+   * capture the profilePoint
+   * 
+   * @return the profilePoint captured before, may be null
+   * @see {@link IProfil.getPointMarkerFor(point)}
+   */
   public IProfilPoint setPoint( final IProfilPoint point );
 
   /**
-   * Muss dictionary id sein (und zwar swe:ItemDefinition's)!
+   * Muss dictionary id sein (und zwar see:ItemDefinition's)!
    */
   public String getMarkerId( );
-  
+
   /**
-   * Returns the value of this marker as it should be written into gml. Must fit to the type defined in the component ItemDefinition
+   * Returns the value of this marker as it should be written into gml. Must fit to the type defined in the component
+   * ItemDefinition
+   * 
    * @return May not return <code>null</code>.
    * @see #getMarkerId()
    */
   public Object getGmlObject( );
 
-  public String getMarkerLabel();
+  /**
+   * @return a friendly name for this PointMarker should be the same used in the dictonary
+   */
+  public String getMarkerLabel( );
 
 }

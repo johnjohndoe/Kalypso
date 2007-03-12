@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -161,7 +160,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         }
       }
     }
-    catch( final ProfilDataException e )
+    catch( final Exception e )
     {
       final KalypsoModelWspmUIPlugin wspmPlugin = KalypsoModelWspmUIPlugin.getDefault();
       wspmPlugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
@@ -282,7 +281,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IStationResult[] results = m_pem == null ? null : m_pem.getResults();
         setProfile( profil, results, m_feature, m_workspace );
       }
-      catch( final ProfilDataException e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         final IStatus status = StatusUtilities.statusFromThrowable( e );

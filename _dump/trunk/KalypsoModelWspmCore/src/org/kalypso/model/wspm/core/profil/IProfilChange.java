@@ -42,12 +42,24 @@ package org.kalypso.model.wspm.core.profil;
 
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 
-
 public interface IProfilChange
 {
+  /**
+   * @param
+   *          the Themes , affected by this ProfilChange should be set true
+   * @return the undo operation for this ProfilChange
+   */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException;
-
+/**
+ * @return something stored in this ProfilChange
+ */
   public Object getObject( );
-  public String getInfo();
-  public Double getValue();
+  /**
+   * @return a String stored in this ProfilChange
+   */
+  public String getInfo( );
+  /**
+   * @return a Double stored in this ProfilChange
+   */
+  public Double getValue( );
 }

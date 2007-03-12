@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -94,8 +92,10 @@ public class ProfilDevider implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getValueFor(java.lang.String)
    */
-  public Object getValueFor( String key )
+  public Object getValueFor( String key ) throws IllegalArgumentException
   {
+    if (!m_values.containsKey( key ))
+      throw new IllegalArgumentException(key + "wird nicht unterstützt.");
     return m_values.get( key );
   }
 
@@ -123,9 +123,9 @@ public class ProfilDevider implements IProfilPointMarker
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getKeys()
    */
-  public Collection<String> getKeys( )
+  public String[] getKeys( )
   {
-    return Collections.unmodifiableCollection( m_values.keySet() );
+    return m_values.keySet().toArray( new String[0]) ;
   }
 
   /**

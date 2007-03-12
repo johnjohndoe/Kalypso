@@ -72,7 +72,7 @@ public class ActiveObjectEdit implements IProfilChange
     final IProfilPointProperty oldProperty = m_profil.getActiveProperty();
 
     m_profil.setActivePoint( m_point );
-    m_profil.setActiveProperty( m_property );
+    m_profil.setActivePointProperty( m_property );
 
     return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty.toString() );
   }

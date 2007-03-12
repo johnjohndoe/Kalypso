@@ -52,6 +52,8 @@ import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
 {
+  private static final String[] m_markerTypes = { IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,
+      IWspmTuhhConstants.MARKER_TYP_WEHR };
 
   
   /**
@@ -95,7 +97,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
    */
   public String[] getMarkerTypes( )
   {
-    return IWspmTuhhConstants.MARKER_TYPES;
+    return m_markerTypes;
   }
 
   /**
