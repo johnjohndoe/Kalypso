@@ -246,6 +246,7 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
       return;
     }
     // TODO: this is buggy! when the project changes, this gets called but we have the same szenario-id
+    // maybe scenario needs a reference to its project so we can check if scenario to set is in current project?
     else if( scenario != null && currentScenario != null && currentScenario.getURI().equals( scenario.getURI() ) )
     {
       return;

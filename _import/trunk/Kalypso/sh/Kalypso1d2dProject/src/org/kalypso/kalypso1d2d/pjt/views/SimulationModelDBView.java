@@ -64,26 +64,26 @@ public class SimulationModelDBView extends ViewPart
 
   private IActiveContextChangeListener activeProjectChangeListener = new IActiveContextChangeListener()
   {
+    private IProject m_oldProject;
+
     @SuppressWarnings("synthetic-access")
     public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
       // TODO: change of project is not handled at all (except changeing the description...)
       // this causes some quite strange bugs!
-      
-      final IScenarioManager scenarioManager = activeWorkContext.getScenarioManager();
-      if( tv.getInput() != scenarioManager )
+      // fixed bug? compare old and new projects to set new tree viewer input
+      Scenario scenarioToSet = scenario;
+      if( m_oldProject != newProject )
       {
+        m_oldProject = newProject;
+        final IScenarioManager scenarioManager = activeWorkContext.getScenarioManager();
         tv.setInput( scenarioManager );
-      }
-      final Scenario scenarioToSet;
-      if( m_scenarioFromMemento != null )
-      {
-        scenarioToSet = scenarioManager.getScenario( m_scenarioFromMemento );
-        m_scenarioFromMemento = null;
-      }
-      else
-      {
-        scenarioToSet = scenario;
+
+        if( m_scenarioFromMemento != null )
+        {
+          scenarioToSet = scenarioManager.getScenario( m_scenarioFromMemento );
+          m_scenarioFromMemento = null;
+        }
       }
       if( scenarioToSet != null )
       {
