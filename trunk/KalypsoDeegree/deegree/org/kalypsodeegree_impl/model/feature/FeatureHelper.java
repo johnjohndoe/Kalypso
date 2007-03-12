@@ -36,6 +36,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -128,6 +129,7 @@ public class FeatureHelper
   /**
    * @deprecated Do not use strings as property names. Use {@link IFeatureType#getProperty(QName)} instead.
    */
+  @Deprecated
   public static IPropertyType getPT( final Feature feature, final String propName )
   {
     final IPropertyType[] properties = feature.getFeatureType().getProperties();
@@ -144,6 +146,7 @@ public class FeatureHelper
   /**
    * @deprecated use booleanIsTrue( Feature feature, QName propQName, boolean defaultStatus )
    */
+  @Deprecated
   public static boolean booleanIsTrue( Feature feature, String propName, boolean defaultStatus )
   {
     final Object property = feature.getProperty( propName );
@@ -188,6 +191,7 @@ public class FeatureHelper
   /**
    * @deprecated use instead of propName the QName of the property
    */
+  @Deprecated
   public static double getAsDouble( Feature feature, String propName, double defaultValue )
   {
     final Object value = feature.getProperty( propName );
@@ -1085,4 +1089,29 @@ public class FeatureHelper
         return false;
     }
   }
+
+  /**
+   * Calculates the minimal envelope containing all envelopes of the given features.
+   * 
+   * @return <code>null</code> if none of the given features contains a valid envelope.
+   */
+  public static GM_Envelope getEnvelope( final Feature[] features )
+  {
+    GM_Envelope result = null;
+
+    for( final Feature feature : features )
+    {
+      final GM_Envelope envelope = feature.getEnvelope();
+      if( envelope != null )
+      {
+        if( result == null )
+          result = envelope;
+        else
+          result = result.getMerged( envelope );
+      }
+    }
+
+    return result;
+  }
+
 }
