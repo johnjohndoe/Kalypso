@@ -395,25 +395,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         }
         return Status.OK_STATUS;
       }
-
-//      /**
-//       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-//       */
-//      @Override
-//      public boolean belongsTo( final Object family )
-//      {
-//        return MapView.JOB_FAMILY.equals( family );
-//      }
     };
     job.setRule( getSchedulingRule() );
-    job.setUser( true );
+    job.setUser( true );    
     job.schedule();
   }
 
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
+  public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
@@ -470,14 +461,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
               return Status.OK_STATUS;
             }
 
-//            /**
-//             * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-//             */
-//            @Override
-//            public boolean belongsTo( final Object family )
-//            {
-//              return MapView.JOB_FAMILY.equals( family );
-//            }
+            // /**
+            // * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+            // */
+            // @Override
+            // public boolean belongsTo( final Object family )
+            // {
+            // return MapView.JOB_FAMILY.equals( family );
+            // }
           };
           job.schedule();
         }
@@ -504,7 +495,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   public ISchedulingRule getSchedulingRule( )
-  {    
+  {
     return m_mapPanel.getSchedulingRule();
   }
 
@@ -517,65 +508,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final IFile file = input.getFile();
     saveMap( monitor, file );
-    // if( m_mapModell == null )
-    // return;
-    //
-    // m_saving = true;
-    // ByteArrayInputStream bis = null;
-    // try
-    // {
-    // monitor.beginTask( "Kartenvorlage speichern", 2000 );
-    // final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
-    // final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-    // final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
-    //
-    // final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    //
-    // GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
-    //
-    // bis = new ByteArrayInputStream( bos.toByteArray() );
-    // bos.close();
-    // monitor.worked( 1000 );
-    //
-    // if( file.exists() )
-    // file.setContents( bis, false, true, monitor );
-    // else
-    // file.create( bis, false, monitor );
-    // }
-    // catch( final CoreException e )
-    // {
-    // m_saving = false;
-    // throw e;
-    // }
-    // catch( final Throwable e )
-    // {
-    // System.out.println( e.getLocalizedMessage() );
-    // e.printStackTrace();
-    // m_saving = false;
-    // throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt
-    // werden." ) );
-    // }
-    // finally
-    // {
-    // monitor.done();
-    //
-    // if( bis != null )
-    // try
-    // {
-    // bis.close();
-    // }
-    // catch( IOException e1 )
-    // {
-    // // never occurs with a byteinputstream
-    // e1.printStackTrace();
-    // }
-    // }
-    // m_saving = false;
   }
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    if( m_mapModell == null )
+    if( m_mapModell == null || m_saving )
       return;
 
     m_saving = true;
