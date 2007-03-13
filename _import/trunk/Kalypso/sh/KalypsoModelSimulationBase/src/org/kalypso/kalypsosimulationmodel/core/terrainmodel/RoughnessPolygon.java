@@ -247,21 +247,6 @@ public class RoughnessPolygon implements IRoughnessPolygon
       throw new IllegalArgumentException( "Type not supported: " + object.getClass().getName() );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRougthnessID(java.lang.String)
-   */
-  public void setRoughnessStyle( String style ) throws IllegalArgumentException
-  {
-    return;
-    // Assert.throwIAEOnNullOrEmpty(id);
-    // feature.setProperty(
-    // KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_ID,
-    // id);
-
-  }
-
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRoughnessClassMember(org.kalypso.gmlschema.property.relation.RelationType)
    */

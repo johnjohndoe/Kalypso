@@ -20,14 +20,6 @@ public interface IRoughnessPolygon extends IFeatureWrapper
    */
   public String getRoughnessStyle( );
 
-  /**
-   * @param id
-   *          the new ID for the rougthness associated to the polygon
-   * @throws IllegalArgumentException
-   *           if id is null or empty
-   */
-  public void setRoughnessStyle( String id ) throws IllegalArgumentException;
-
   public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException;
 
   /**
