@@ -180,11 +180,9 @@ public class WspmProfileHelper
     return coordProfileOne.x + toProfilePointLength;
   }
 
-  
   /**
-   * returns the geographic coordinates (x, y, z) for an given width coordinate as GM_Point.
-   * Input: width coordinate (double), profile (Iprofil)
-   * Output: point (GM_Point)
+   * returns the geographic coordinates (x, y, z) for an given width coordinate as GM_Point. Input: width coordinate
+   * (double), profile (Iprofil) Output: point (GM_Point)
    */
   public static GM_Point getGeoPosition( double width, IProfil profile ) throws Exception
   {
@@ -235,8 +233,7 @@ public class WspmProfileHelper
         final double x = ((width - widthValueOne) * (rechtsWertTwo - rechtsWertOne) / (widthValueTwo - widthValueOne)) + rechtsWertOne;
         final double y = ((width - widthValueOne) * (hochWertTwo - hochWertOne) / (widthValueTwo - widthValueOne)) + hochWertOne;
         final double z = ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
-        
-       
+
         Coordinate geoCoord = new Coordinate( x, y, z );
         GeometryFactory factory = new GeometryFactory();
 
@@ -250,13 +247,18 @@ public class WspmProfileHelper
   }
 
   /**
-   * returns the corresponding heigth for an giben width coordinate.
-   * Input: width coordinate (double), profile (Iprofil)
-   * Output: heigth (double)
+   * returns the corresponding heigth for an giben width coordinate. Input: width coordinate (double), profile (Iprofil)
+   * Output: heigth (Double)
+   * <p>
+   * if the width is outside of the profile points, the first / last point heigth is returned.
+   * 
+   * @return The height
    */
   public static Double getHeigthPositionByWidth( double width, IProfil profile ) throws Exception
   {
     LinkedList<IProfilPoint> points = profile.getPoints();
+    if( points.size() < 1 )
+      return null;
 
     for( int i = 0; i < points.size() - 1; i++ )
     {
@@ -269,14 +271,18 @@ public class WspmProfileHelper
       double widthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
       double heigthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
 
-      /* searching for the rigth segment */
-      if( widthValueOne < width & widthValueTwo > width )
+      /* searching for the right segment */
+      if( widthValueOne <= width & widthValueTwo >= width )
       {
         /* calculate the heigth */
-        final double heigth = ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
-        return heigth;
+        return ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
       }
+
     }
+    if( width < points.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) )
+      return points.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    else if( width > points.get( points.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) )
+      return points.get( points.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     return null;
   }
 }
