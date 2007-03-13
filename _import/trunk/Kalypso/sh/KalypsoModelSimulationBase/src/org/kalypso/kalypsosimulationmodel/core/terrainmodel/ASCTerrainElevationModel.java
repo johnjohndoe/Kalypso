@@ -67,9 +67,10 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Patrice Congo 
  *
  */
-public class ASCTerrainElevationModel implements IElevationProvider
+public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatchVisitable
 {
-  public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
+  
+  
   private static final List<GM_Position> NULL_LIST = Collections.<GM_Position>emptyList();
 
 //  /**
@@ -380,11 +381,13 @@ public class ASCTerrainElevationModel implements IElevationProvider
   public CS_CoordinateSystem getCoordinateSystem( )
   {
     //TODO Patrice introduce the it in the schema
-    CS_CoordinateSystem cs= 
-      ConvenienceCSFactory.getInstance().getOGCCSByName( 
-                          CS_KEY_GAUSS_KRUEGER );
-    return cs;
+//    CS_CoordinateSystem cs= 
+//      ConvenienceCSFactory.getInstance().getOGCCSByName( 
+//                          CS_KEY_GAUSS_KRUEGER );
+//    return cs;
+    return CRS_GAUSS_KRUEGER;
   }
+  
   
   public double getMaxElevation( )
   {
