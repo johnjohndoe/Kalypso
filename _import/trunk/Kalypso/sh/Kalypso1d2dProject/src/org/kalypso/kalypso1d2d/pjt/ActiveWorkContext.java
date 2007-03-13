@@ -80,6 +80,13 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     windowOpened( workbench.getActiveWorkbenchWindow() );
+
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    m_simModelProvider = new SzenarioSourceProvider( this );
+    handlerService.addSourceProvider( m_simModelProvider );
+    addActiveContextChangeListener( m_projectChangeListener );
+    m_registries.add( handlerService );
+    m_registries.add( this );
   }
 
   public void dispose( )
@@ -304,30 +311,15 @@ public class ActiveWorkContext implements IWindowListener, IPartListener, IPersp
    */
   public void perspectiveActivated( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )
   {
-    final IHandlerService handlerService = (IHandlerService) page.getWorkbenchWindow().getService( IHandlerService.class );
     if( perspective.getId().equals( Perspective.ID ) )
     {
-      m_simModelProvider = new SzenarioSourceProvider( this );
-      handlerService.addSourceProvider( m_simModelProvider );
-      addActiveContextChangeListener( m_projectChangeListener );
       page.addPartListener( this );
       m_registries.add( page );
-      m_registries.add( handlerService );
-      m_registries.add( this );
     }
     else
     {
-      if( m_simModelProvider != null )
-      {
-        handlerService.removeSourceProvider( m_simModelProvider );
-        m_simModelProvider.dispose();
-        m_simModelProvider = null;
-      }
-      removeActiveContextChangeListener( m_projectChangeListener );
       page.removePartListener( this );
       m_registries.remove( page );
-      m_registries.remove( handlerService );
-      m_registries.remove( this );
     }
   }
 

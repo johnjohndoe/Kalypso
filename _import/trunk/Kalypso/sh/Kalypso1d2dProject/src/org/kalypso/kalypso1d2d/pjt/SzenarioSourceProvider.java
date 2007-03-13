@@ -34,7 +34,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   protected ActiveWorkContext activeWorkContext;
 
   /** data provider for the current szenario */
-  private SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
+  private final SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
 
   private IActiveContextChangeListener workContextChangeListener = new IActiveContextChangeListener()
   {

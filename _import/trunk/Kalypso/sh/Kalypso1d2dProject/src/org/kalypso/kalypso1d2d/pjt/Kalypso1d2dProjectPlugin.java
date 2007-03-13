@@ -59,6 +59,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void stop( BundleContext context ) throws Exception
   {
     plugin = null;
+    // TODO: dispose activeWorkContext
     m_activeWorkContext = null;
     super.stop( context );
   }

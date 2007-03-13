@@ -303,6 +303,7 @@ public class WorkflowControl
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IExecutionListener executionListener = new ExecutionListener( task );
     command.addExecutionListener( executionListener );
+    //TODO Patrice show exception in list
     handlerService.executeCommand( command.getId(), null );
     command.removeExecutionListener( executionListener );
   }

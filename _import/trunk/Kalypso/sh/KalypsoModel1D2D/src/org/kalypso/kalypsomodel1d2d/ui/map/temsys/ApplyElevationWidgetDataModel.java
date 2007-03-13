@@ -154,7 +154,14 @@ public class ApplyElevationWidgetDataModel
   public void setTerrainModel( ITerrainModel terrainModel )
   {
     this.terrainModel = terrainModel;
-    this.elevationModelSystem=terrainModel.getTerrainElevationModelSystem();
+    if(terrainModel!=null)
+    {
+      this.elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
+    }
+    else
+    {
+      this.elevationModelSystem = null;
+    }
   }
   
   public ElevationTheme getElevationTheme( )
