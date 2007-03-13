@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -989,7 +988,7 @@ public class SegmentData
   // }
   // }
   /** @return the points witch are redundant */
-  private IProfilPoint[] reduceIt( final IProfilPoint[] points, final int begin, final int end, final double allowedDistance ) throws ProfilDataException
+  private IProfilPoint[] reduceIt( final IProfilPoint[] points, final int begin, final int end, final double allowedDistance ) 
   {
     if( end - begin < 2 )
       return new IProfilPoint[0];
@@ -1053,7 +1052,7 @@ public class SegmentData
     return pointsToRemove.toArray( new Point[pointsToRemove.size()] );
   }
 
-  protected IProfilPoint[] reducePoints( final IProfilPoint[] points, final IProfilPoint[] pointsToKeep, final double allowedDistance ) throws ProfilDataException
+  protected IProfilPoint[] reducePoints( final IProfilPoint[] points, final IProfilPoint[] pointsToKeep, final double allowedDistance ) 
   {
     // reduce segment wise
     final Set<IProfilPoint> pointsToKeepList = new HashSet<IProfilPoint>( Arrays.asList( pointsToKeep ) );
