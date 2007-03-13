@@ -186,6 +186,10 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_EI = PROFILE_LAYER + "EI";
 
   /* Layer_Colors */
+  /**
+   * the layer store their colors themselves in the
+   * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
+   */
 
   public static String LAYER_RAUHEIT_COLOR_BACKGROUND = LAYER_RAUHEIT + "_COLOR_BACKGROUND";
 

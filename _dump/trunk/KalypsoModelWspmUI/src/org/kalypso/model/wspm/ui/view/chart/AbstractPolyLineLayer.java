@@ -217,7 +217,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   // }
 
   // private Point2D.Double convertPoint( final IProfilPoint p, final POINT_PROPERTY pointProperty ) throws
-  // ProfilDataException
+  // IllegalProfileOperationException
   // {
   // final double x = p.getValueFor( POINT_PROPERTY.BREITE );
   // final double y = p.getValueFor( pointProperty );

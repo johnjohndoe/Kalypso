@@ -46,7 +46,7 @@ import java.util.LinkedList;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 public class BuildingWehr extends AbstractProfilBuilding
@@ -59,7 +59,7 @@ public class BuildingWehr extends AbstractProfilBuilding
   }
 
   @Override
-  public void addProfilProperties( IProfil profil ) throws ProfilDataException
+  public void addProfilProperties( IProfil profil )
   {
     super.addProfilProperties( profil );
     final LinkedList<IProfilPoint> points = profil.getPoints();
@@ -73,14 +73,14 @@ public class BuildingWehr extends AbstractProfilBuilding
   }
 
   @Override
-  public void removeProfilProperties( final IProfil profil ) throws ProfilDataException
+  public void removeProfilProperties( final IProfil profil )throws IllegalProfileOperationException
   {
     super.removeProfilProperties( profil );
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
     for( final IProfilPointMarker devider : deviders )
     {
       if( profil.removePointMarker( devider ) == null )
-        throw new ProfilDataException( devider.getValueFor( "label" ) + " kann nicht entfernt werden." );
+        throw new IllegalProfileOperationException( devider.getValueFor( "label" ) + " kann nicht entfernt werden." );
     }
   }
 

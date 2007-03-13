@@ -420,7 +420,7 @@ public class PlainProfil implements IProfil
   }
 
   /**
-   * @throws ProfilDataException
+   * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removeBuilding()
    */
   public IProfileObject removeProfileObject( )

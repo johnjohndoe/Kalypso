@@ -134,7 +134,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
     // changes[i--] = new PointAdd( pem.getProfil(), null, point );
     // }
     // }
-    // catch( ProfilDataException e )
+    // catch( IllegalProfileOperationException e )
     // {
     // // should never happen, raise NullPointerException in ProfilOperation.doChange
     // changes[0] = null;

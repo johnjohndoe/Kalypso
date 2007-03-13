@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 /**
  * @author kimwerner
@@ -60,7 +60,7 @@ public class IllegalChange implements IProfilChange
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
   @SuppressWarnings("unused")
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     /**
      * do nothing

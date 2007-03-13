@@ -189,9 +189,9 @@ public class ProfilChangesTest extends TestCase
 //    {
 //      firstPkt.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
 //    }
-//    catch( ProfilDataException e )
+//    catch( IllegalProfileOperationException e )
 //    {
-//      assertEquals( "Exception erwartet: ", ProfilDataException.class, e.getClass() );
+//      assertEquals( "Exception erwartet: ", IllegalProfileOperationException.class, e.getClass() );
 //    }
 //
 //  }
@@ -220,9 +220,9 @@ public class ProfilChangesTest extends TestCase
 //    {
 //      firstPkt.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
 //    }
-//    catch( ProfilDataException e )
+//    catch( IllegalProfileOperationException e )
 //    {
-//      assertEquals( "Exception erwartet: ", ProfilDataException.class, e.getClass() );
+//      assertEquals( "Exception erwartet: ", IllegalProfileOperationException.class, e.getClass() );
 //    }
 //
 //  }

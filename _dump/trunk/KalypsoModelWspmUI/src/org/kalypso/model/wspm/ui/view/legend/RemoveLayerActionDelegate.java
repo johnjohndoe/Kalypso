@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 
@@ -68,10 +67,10 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
       handleError( "Dieser Datensatz kann nicht gelöscht werden." );
       return ;
     }
-    catch( ProfilDataException e )
-    {
-      handleError("Feler beim löschen der Datensätze.");
-      return;
-    }
+//    catch( IllegalProfileOperationException e )
+//    {
+//      handleError("Feler beim löschen der Datensätze.");
+//      return;
+//    }
   }
 }

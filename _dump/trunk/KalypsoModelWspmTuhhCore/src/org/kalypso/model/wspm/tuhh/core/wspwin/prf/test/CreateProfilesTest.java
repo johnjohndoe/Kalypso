@@ -86,7 +86,7 @@ public class CreateProfilesTest extends TestCase
 //    return p;
 //  }
 //
-//  public IProfil createBruecke( ) throws ProfilDataException
+//  public IProfil createBruecke( ) throws IllegalProfileOperationException
 //  {
 //    final IProfil p = createMinProf();
 //    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
@@ -114,7 +114,7 @@ public class CreateProfilesTest extends TestCase
 //    return p;
 //  }
 //
-//  public IProfil createDurchlass( String bt ) throws ProfilDataException
+//  public IProfil createDurchlass( String bt ) throws IllegalProfileOperationException
 //  {
 //    final IProfil p = createWspWinProf();
 //    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
@@ -136,7 +136,7 @@ public class CreateProfilesTest extends TestCase
 //    return p;
 //  }
 //
-//  public IProfil createWehr( ) throws ProfilDataException
+//  public IProfil createWehr( ) throws IllegalProfileOperationException
 //  {
 //    final IProfil p = createMinProf();
 //    p.addPointProperty( POINT_PROPERTY.RAUHEIT );

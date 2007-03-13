@@ -46,12 +46,15 @@ package org.kalypso.model.wspm.core.profil;
 public interface IProfilPointPropertyProvider
 {/**
    * @return all PointPropertyIds handled by this provider
+   * NOTE: the natural order in this Array is the initial columnsort used in the tableview
    */
   public String[] getPointProperties( );
-
-  public boolean providesPointProperty( final String property );
+/**
+ * @return true if the provider supports the propertyId
+ */
+  public boolean providesPointProperty( final String pointPropertyId );
   /**
    * the pointProperty Factory
    */
-  public IProfilPointProperty getPointProperty( final String property );
+  public IProfilPointProperty getPointProperty( final String pointPropertyId );
 }

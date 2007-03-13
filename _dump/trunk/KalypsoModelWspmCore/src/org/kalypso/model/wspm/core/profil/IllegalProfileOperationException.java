@@ -43,14 +43,14 @@ package org.kalypso.model.wspm.core.profil;
 /**
  * @author kimwerner
   */
-public class ProfilDataException extends Exception
+public class IllegalProfileOperationException extends Exception
 {
-  public ProfilDataException( final String msg )
+  public IllegalProfileOperationException( final String msg )
   {
     super( msg );
   }
 
-  public ProfilDataException( final String msg, final Throwable t )
+  public IllegalProfileOperationException( final String msg, final Throwable t )
   {
     super( msg, t );
   }

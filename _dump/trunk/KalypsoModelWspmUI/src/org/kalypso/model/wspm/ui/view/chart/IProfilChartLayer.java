@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -61,11 +60,11 @@ public interface IProfilChartLayer extends IChartLayer
    * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer
    * repräsentiert werden.
    * 
-   * @throws ProfilDataException
+   * @throws IllegalProfileOperationException
    * @throws UnsupportedOperationException
    *           Falls diese Art von Layer nicht gelöscht werden kann.
    */
-  public void removeYourself( ) throws ProfilDataException;
+  public void removeYourself( );
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 

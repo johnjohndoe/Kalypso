@@ -54,7 +54,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -143,7 +143,7 @@ public final class ProfilOperation extends AbstractOperation
             monitor.worked( 1 );
           }
         }
-        catch( final ProfilDataException e )
+        catch( final IllegalProfileOperationException e )
         {
           rollback( undoChanges );
           doneChanges.clear();
@@ -170,7 +170,7 @@ public final class ProfilOperation extends AbstractOperation
       {
         undo.doChange( hint );
       }
-      catch( ProfilDataException e )
+      catch( IllegalProfileOperationException e )
       {
         // should never happen
         e.printStackTrace();

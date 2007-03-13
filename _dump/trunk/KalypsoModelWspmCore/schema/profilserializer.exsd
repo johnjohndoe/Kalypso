@@ -6,7 +6,7 @@
          <meta.schema plugin="org.kalypso.model.wspm.core" id="profilserializer" name="profilserializer"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         
       </documentation>
    </annotation>
 

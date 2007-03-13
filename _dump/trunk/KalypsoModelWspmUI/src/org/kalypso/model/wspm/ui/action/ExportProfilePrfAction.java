@@ -72,7 +72,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -175,11 +174,11 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
       final IStatus status = ProgressUtilitites.busyCursorWhile( op, "Konnte Datei nicht schreiben" );
       ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
     }
-    catch( final ProfilDataException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status );
-    }
+//    catch( final IllegalProfileOperationException e )
+//    {
+//      final IStatus status = StatusUtilities.statusFromThrowable( e );
+//      ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status );
+//    }
     catch( final CoreException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
@@ -190,7 +189,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
   /**
    * @return profil to filename
    */
-  private final Map<IProfil, String> getProfiles( ) throws ProfilDataException
+  private final Map<IProfil, String> getProfiles( )
   {
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
     final IRelationType rt = fate.getAssociationTypeProperty();

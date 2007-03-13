@@ -114,7 +114,7 @@ public class SelectionPointsProvider implements IPointsProvider
         m_points = points.toArray( new IProfilPoint[points.size()] );
         return;
 //      }
-//      catch( final ProfilDataException e )
+//      catch( final IllegalProfileOperationException e )
 //      {
 //        m_errorMessage = "Fehler beim Prüfen der Selektion: " + e.getLocalizedMessage();
 //        return;

@@ -45,7 +45,7 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
@@ -62,7 +62,7 @@ public class BuildingBruecke extends AbstractProfilBuilding
    * erzeugt die verknüpften Objekte des Bauwerks im Profil und setzt sie auf einen default Wert
    */
   @Override
-  public void addProfilProperties( IProfil profil ) throws ProfilDataException
+  public void addProfilProperties( IProfil profil )
   {
     super.addProfilProperties( profil );
     final LinkedList<IProfilPoint> points = profil.getPoints();

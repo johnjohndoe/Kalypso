@@ -45,12 +45,17 @@ package org.kalypso.model.wspm.core.profil;
  */
 public interface IProfileObjectProvider
 {
-  public IProfileObject createObject( final String objectId );
+  /**
+   * the profileObject Factory
+   * @param the profileObjectId {@see IWspmTuhhConstants}
+   * 
+   */
+  public IProfileObject createProfileObject( final String profileObjectId );
 
   /**
    * @return all ObjectIds handled by this provider
    */
-  public String[] getObjectIds( );
+  public String[] getProfileObjectIds( );
 
   /**
    * @return true if the ObjectId is handled by this provider

@@ -67,9 +67,10 @@ public interface IProfileObject
    * @see setValue(key,value)
    */
   public Object getValueFor( final String key ) throws IllegalArgumentException;
-/**
- * @return a friendly Name for the given key used as key,value, stored in this ProfileObject 
- */
+
+  /**
+   * @return a friendly Name for the given key used as key,value, stored in this ProfileObject
+   */
   public String getLabelFor( final String key );
 
   /**
@@ -86,8 +87,7 @@ public interface IProfileObject
    * @see setValue(key,value)
    * @see getValueFor(key)
    */
-
-  public boolean hasProperty( final String key );
+ public boolean hasProperty( final String key );
 
   public String getName( );
 

@@ -49,7 +49,7 @@ public interface IProfilChange
    *          the Themes , affected by this ProfilChange should be set true
    * @return the undo operation for this ProfilChange
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException;
+  public IProfilChange doChange( final ProfilChangeHint hint )throws IllegalProfileOperationException;
 /**
  * @return something stored in this ProfilChange
  */

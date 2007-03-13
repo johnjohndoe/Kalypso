@@ -68,7 +68,6 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getPointProperties()
-   * the order of these entries is the initial columnsort usesd in the tableview
    */
   public String[] getPointProperties( )
   {
@@ -100,16 +99,16 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createPointProperty(java.lang.String)
    */
-  public IProfilPointProperty getPointProperty( final String property )
+  public IProfilPointProperty getPointProperty( final String pointPropertyId )
   {
-    IProfilPointProperty prop = m_properties.get( property );
+    IProfilPointProperty prop = m_properties.get( pointPropertyId );
     if( prop != null )
       return prop;
-    if( m_properties.containsKey( property ) )
+    if( m_properties.containsKey( pointPropertyId ) )
     {
-      prop = createPointProperty( property );
+      prop = createPointProperty( pointPropertyId );
       if( prop != null )
-        m_properties.put( property, prop );
+        m_properties.put( pointPropertyId, prop );
     }
     return prop;
   }
@@ -117,9 +116,9 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
    */
-  public boolean providesPointProperty( String property )
+  public boolean providesPointProperty( String pointPropertyId )
   {
-    return m_properties.containsKey( property );
+    return m_properties.containsKey( pointPropertyId );
   }
 
 }

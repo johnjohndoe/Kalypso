@@ -61,20 +61,20 @@ public class BuildingProvider implements IProfileObjectProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#createObject(java.lang.String)
    */
-  public IProfileObject createObject( String objectId )
+  public IProfileObject createProfileObject( String profileObjectId )
   {
 
-    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( objectId ) )
+    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( profileObjectId ) )
       return new BuildingBruecke();
-    if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( objectId ) )
+    if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( profileObjectId ) )
       return new BuildingWehr();
-    if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( objectId ) )
+    if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( profileObjectId ) )
       return new BuildingKreis();
-    if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( objectId ) )
+    if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( profileObjectId ) )
       return new BuildingMaul();
-    if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( objectId ) )
+    if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( profileObjectId ) )
       return new BuildingEi();
-    if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( objectId ) )
+    if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( profileObjectId ) )
       return new BuildingTrapez();
 
     return null;
@@ -83,7 +83,7 @@ public class BuildingProvider implements IProfileObjectProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#getObjectIds()
    */
-  public String[] getObjectIds( )
+  public String[] getProfileObjectIds( )
   {
     return m_buildingTypes;
   }

@@ -47,13 +47,39 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public interface IProfilPointMarkerProvider
 {
+  /**
+   * the Factory
+   * 
+   * @param markerId
+   *          the Id representing the PointMarker {@link org.kalypso.model.wspm.core.IWspmConstants}
+   */
   public IProfilPointMarker createMarker( final String markerId );
 
+  /**
+   * @return all pointMarkerIds the provider supports
+   */
   public String[] getMarkerTypes( );
 
+  /**
+   * @return true if the provider supports the pointMarker with given Id
+   * @see #getMarkerTypes()
+   */
   public boolean providesPointMarker( final String markerId );
 
+  /**
+   * @return the icon for this markerId, used in the TableView
+   */
   public ImageDescriptor getImageFor( final String markerId );
 
+  /**
+   * creates a PointMarker from Gml
+   * 
+   * @param compId
+   *          the markerId from the dictonary
+   *          <p>
+   *          {@see org.kalypso.model.wspm.tuhh.schema.dict.dict_profile_marker.gml}
+   * @param value
+   *          the valueObject from Gml
+   */
   public IProfilPointMarker createMarkerFromGml( final String compId, final Object value );
 }

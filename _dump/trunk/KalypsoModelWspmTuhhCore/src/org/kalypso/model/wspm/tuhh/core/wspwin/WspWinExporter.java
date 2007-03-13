@@ -71,7 +71,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -183,7 +182,7 @@ public class WspWinExporter
    * @param context
    *          Context to resolve links inside the gml structure.
    */
-  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException, ProfilDataException
+  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException
   {
     dir.mkdirs();
 
@@ -378,7 +377,7 @@ public class WspWinExporter
 
   }
 
-  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException, ProfilDataException
+  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
   {
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
 

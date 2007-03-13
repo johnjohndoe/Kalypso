@@ -59,7 +59,7 @@ public class PointMarkerRemove implements IProfilChange
   }
 
   /**
-   * @throws ProfilDataException
+   * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
   public IProfilChange doChange( final ProfilChangeHint hint )

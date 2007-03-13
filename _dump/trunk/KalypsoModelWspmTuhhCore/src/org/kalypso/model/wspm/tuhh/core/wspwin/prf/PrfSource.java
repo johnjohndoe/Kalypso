@@ -180,7 +180,7 @@ public class PrfSource implements IProfilSource
         case 6:// Trapez
         {
           final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
-          final IProfileObject building = pop == null ? null : pop.createObject( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
+          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -201,7 +201,7 @@ public class PrfSource implements IProfilSource
         case 7:// Kreis
         {
           final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_KREIS );
-          final IProfileObject building = pop == null ? null : pop.createObject( IWspmTuhhConstants.BUILDING_TYP_KREIS );
+          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_KREIS );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -218,7 +218,7 @@ public class PrfSource implements IProfilSource
         case 8:// Ei
         {
           final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_EI );
-          final IProfileObject building = pop == null ? null : pop.createObject( IWspmTuhhConstants.BUILDING_TYP_EI );
+          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_EI );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -237,7 +237,7 @@ public class PrfSource implements IProfilSource
         case 9:// Maulprofil
         {
           final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_MAUL );
-          final IProfileObject building = pop == null ? null : pop.createObject( IWspmTuhhConstants.BUILDING_TYP_MAUL );
+          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_MAUL );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -287,7 +287,7 @@ public class PrfSource implements IProfilSource
     if( dbo == null || dbu == null )
       return false;
     final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
-    final IProfileObject bridge = pop == null ? null : pop.createObject( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
+    final IProfileObject bridge = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " );
     if( sT.countTokens() > 4 )
     {
@@ -501,7 +501,7 @@ public class PrfSource implements IProfilSource
     if( dbw == null )
       return false;
     final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_WEHR );
-    final IProfileObject wehr = pop == null ? null : pop.createObject( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+    final IProfileObject wehr = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_WEHR );
     final String secLine = dbw.getSecondLine();
     final String wa = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );

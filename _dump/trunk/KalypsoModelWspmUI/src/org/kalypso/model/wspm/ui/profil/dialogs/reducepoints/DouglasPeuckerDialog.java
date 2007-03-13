@@ -79,7 +79,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -459,15 +458,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
     final IProfilPoint[] pointsToKeep = profil.getMarkedPoints();
     final IProfilPoint[] pointsToRemove;
-    try
-    {
-      pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
-    }
-    catch( final ProfilDataException e )
-    {
-      return StatusUtilities.statusFromThrowable( e );
-    }
-
+    pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
     if( pointsToRemove.length == 0 )
       return StatusUtilities.createOkStatus( "Keine Punkte gelöscht." );
 
@@ -500,7 +491,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     return Status.OK_STATUS;
   }
 
-  protected IProfilPoint[] reducePoints( final IProfilPoint[] points, final IProfilPoint[] pointsToKeep, final double allowedDistance ) throws ProfilDataException
+  protected IProfilPoint[] reducePoints( final IProfilPoint[] points, final IProfilPoint[] pointsToKeep, final double allowedDistance )
   {
     // reduce segment wise
     final Set<IProfilPoint> pointsToKeepList = new HashSet<IProfilPoint>( Arrays.asList( pointsToKeep ) );
@@ -525,7 +516,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
   }
 
   /** @return the points with are redundant */
-  private IProfilPoint[] reduceIt( final IProfilPoint[] points, final int begin, final int end, final double allowedDistance ) throws ProfilDataException
+  private IProfilPoint[] reduceIt( final IProfilPoint[] points, final int begin, final int end, final double allowedDistance )
   {
     if( end - begin < 2 )
       return new IProfilPoint[0];
@@ -565,9 +556,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     return reduced;
   }
 
-  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint ) 
+  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint )
   {
-    final double bx = beginPoint.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE);
+    final double bx = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final double by = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final double ex = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final double ey = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );

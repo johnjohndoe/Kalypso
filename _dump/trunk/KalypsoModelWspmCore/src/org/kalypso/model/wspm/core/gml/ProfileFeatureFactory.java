@@ -421,7 +421,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       return null;
 
     final IProfileObjectProvider pop = buildingObs == null ? null : profil.getObjectProviderFor( phenomenon.getID() );
-    final IProfileObject building = pop == null ? null : pop.createObject( buildingObs.getName() );
+    final IProfileObject building = pop == null ? null : pop.createProfileObject( buildingObs.getName() );
 
     final TupleResult result = buildingObs.getResult();
     if( building == null || result == null )

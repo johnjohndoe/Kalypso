@@ -189,7 +189,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_KREIS ) )
     {
       final IProfileObjectProvider buildingProvider = profil.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_KREIS );
-      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createObject( IWspmTuhhConstants.BUILDING_TYP_KREIS );
+      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_KREIS );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, building );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
@@ -199,7 +199,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_MAUL ) )
     {
       final IProfileObjectProvider buildingProvider = profil.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_MAUL );
-      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createObject( IWspmTuhhConstants.BUILDING_TYP_MAUL );
+      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_MAUL );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, building );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
@@ -209,7 +209,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_TRAPEZ ) )
     {
       final IProfileObjectProvider buildingProvider = profil.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
-      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createObject( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
+      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, building );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
@@ -219,7 +219,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_EI ) )
     {
       final IProfileObjectProvider buildingProvider = profil.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_EI );
-      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createObject( IWspmTuhhConstants.BUILDING_TYP_EI );
+      final IProfileObject building = buildingProvider == null ? null : buildingProvider.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_EI );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, building );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );

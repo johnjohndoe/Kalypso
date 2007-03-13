@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 public final class ProfilPropertyEdit implements IProfilChange
 {
@@ -59,10 +59,10 @@ public final class ProfilPropertyEdit implements IProfilChange
   }
 
   /**
-   * @throws ProfilDataException
+   * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if (hint!=null) hint.setProfilPropertyChanged(true);
     

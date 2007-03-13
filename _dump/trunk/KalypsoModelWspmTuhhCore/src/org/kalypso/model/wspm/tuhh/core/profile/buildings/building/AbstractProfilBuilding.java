@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 import java.util.Collection;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractBuilding;
 
@@ -64,14 +64,14 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   }
 
   @SuppressWarnings("unused")
-  public void addProfilProperties( final IProfil profil ) throws ProfilDataException
+  public void addProfilProperties( final IProfil profil )
   {
     for( final String property : getPointProperties() )
       profil.addPointProperty( property );
   }
 
   @SuppressWarnings("unused")
-  public void removeProfilProperties( final IProfil profil ) throws ProfilDataException
+  public void removeProfilProperties( final IProfil profil )throws IllegalProfileOperationException
   {
     for( final String property : getPointProperties() )
       profil.removePointProperty( property );

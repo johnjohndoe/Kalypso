@@ -85,7 +85,7 @@ public class ProfilUtil
   }
 
   /**
-   * @throws ProfilDataException
+   * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getValuesFor(org.kalypso.model.wspm.core.profildata.tabledata.ColumnKey)
    */
   public static Double[] getValuesFor( final IProfil profil, final String pointProperty )
