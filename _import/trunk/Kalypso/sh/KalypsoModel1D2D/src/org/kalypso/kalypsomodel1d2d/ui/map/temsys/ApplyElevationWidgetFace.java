@@ -100,6 +100,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -120,7 +121,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 class ApplyElevationWidgetFace
 {
-  ListViewer elevationList;
+  //TableViewer elevationList;
 
   static int index = 0;
 
@@ -175,6 +176,15 @@ class ApplyElevationWidgetFace
     @SuppressWarnings("synthetic-access")
     public void selectionChanged( IFeatureSelection selection )
     {
+      if(nodeElevationViewer==null)
+      {
+        return;
+      }
+      if(nodeElevationViewer.getControl().isDisposed())
+      {
+        return;
+      }
+      
       if(selection instanceof IStructuredSelection)
       {
         
@@ -195,20 +205,17 @@ class ApplyElevationWidgetFace
           
           if(selecFeature!=null)
           {
-            selecNode=(IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
-            if(selecNode!=null)
-            {
-              nodeList.add( selecNode );
-            }
+              selecNode=(IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
+              if(selecNode!=null)
+              {
+                nodeList.add( selecNode );
+              }
           }
           
         }
 //        IFE1D2DNode[] nodes = new IFE1D2DNode[]{};
         
-        if(nodeElevationViewer.getControl().isDisposed())
-        {
-          return;
-        }
+        
         try
         {
           
@@ -253,6 +260,8 @@ class ApplyElevationWidgetFace
     }
     
   };
+
+  private TableViewer elevationListTableViewer;
 
   public ApplyElevationWidgetFace( )
   {
@@ -318,8 +327,6 @@ class ApplyElevationWidgetFace
     createSelectElevationModel( elevationSelectStatus );
     createSelectColor( elevationColorSection );
     createSelectRegion( areaSelectSection );
-    // createElevationColorSetup(elevationColorSection, drawListener);
-
     return rootPanel;
   }
 
@@ -610,40 +617,72 @@ class ApplyElevationWidgetFace
 
   private final void createSelectElevationModel( Section workStatusSection )
   {
-    workStatusSection.setLayout( new GridLayout() );
+    workStatusSection.setLayout( new FillLayout() );
 
     Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
     workStatusSection.setClient( clientComposite );
     // clientComposite.setSize( 400, 300 );
-    GridLayout elevationGrid = new GridLayout( 2, false );
-    clientComposite.setLayout( elevationGrid );
-    Label terrainModelLabel = new Label( clientComposite, SWT.NONE );
-    GridData labelGridData = new GridData( GridData.FILL_BOTH );
-    labelGridData.horizontalSpan = 2;
-    terrainModelLabel.setText( "Select the Terrain Model" );
-    terrainModelLabel.setLayoutData( labelGridData );
+    FormLayout formLayout = new FormLayout();
+    clientComposite.setLayout( formLayout );
+    FormData formData = new FormData();
+    formData.left = new FormAttachment(0,5);
+    formData.top = new FormAttachment(0,5);
+    formData.bottom = new FormAttachment(100,5);
+    clientComposite.setLayoutData( formData );
+    guiCreateSelectElevationModel(clientComposite);
+    
+  }
 
-    elevationList = new ListViewer( clientComposite, SWT.FILL | SWT.BORDER );
-    elevationList.setContentProvider( new ArrayContentProvider() );
-    elevationList.setLabelProvider( new ElevationListLabelProvider() );
+  private void guiCreateSelectElevationModel( Composite elevationComposite )
+  {
+    FormData elevFormData;
+    
+    elevFormData = new FormData();
+    elevFormData.left = new FormAttachment(0,5);
+    elevFormData.top = new FormAttachment(0,5);
+    Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
+//    GridData labelGridData = new GridData( GridData.FILL_BOTH );
+//    labelGridData.horizontalSpan = 2;
+    terrainModelLabel.setText( "Select the Terrain Model" );
+    terrainModelLabel.setLayoutData( elevFormData );
+
+    elevFormData = new FormData();
+    elevFormData.left = new FormAttachment(0,10);
+    elevFormData.top = new FormAttachment(terrainModelLabel,5);
+    elevFormData.height = 60;
+    
+    elevationListTableViewer = new TableViewer( elevationComposite, SWT.FILL | SWT.BORDER );
+    Table elevationList = elevationListTableViewer.getTable();
+    elevationListTableViewer.setContentProvider( new ArrayContentProvider() );
+    elevationListTableViewer.setLabelProvider( new ElevationListLabelProvider() );
+    elevationList.setLinesVisible( true );
+    elevationList.setLayoutData( elevFormData );
+    
+//    TableViewer nodeElevationViewer = new TableViewer( cComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
+//    
+//    table = nodeElevationViewer.getTable();
+//    table.setLayoutData( regionFormData );
+    
+    
     ITerrainElevationModelSystem elevationModelSystem = dataModel.getElevationModelSystem();
     if( elevationModelSystem == null )
     {
-      elevationList.setInput( new Object[] {} );
+      elevationListTableViewer.setInput( new Object[] {} );
     }
     else
     {
       IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
       if( terrainElevationModels == null )
       {
-        elevationList.setInput( new Object[] {} );
+        elevationListTableViewer.setInput( new Object[] {} );
       }
       else
       {
-        elevationList.setInput( terrainElevationModels.toArray() );
+        System.out.println("SIZE : "+terrainElevationModels.size());
+        elevationListTableViewer.setInput( terrainElevationModels.toArray() );
       }
     }
-    elevationList.addSelectionChangedListener( new ISelectionChangedListener()
+    elevationListTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
@@ -679,9 +718,63 @@ class ApplyElevationWidgetFace
 //      }
 //
 //    } );
+    
+    elevFormData = new FormData();
+    elevFormData.left = new FormAttachment(elevationList,5);
+    elevFormData.top = new FormAttachment(terrainModelLabel,5);
+       
+    Button moveUpBtn = new Button( elevationComposite, SWT.PUSH );
+    moveUpBtn.setText( "U" );
+    moveUpBtn.setLayoutData( elevFormData );
+    moveUpBtn.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent event )
+      {
+//        areaSelectSection.setEnabled( true );
+//        areaSelectSection.setExpanded( true );
+//        ITerrainElevationModel elevationModel = dataModel.getElevationModel();
+//        if(elevationModel!=null)
+//        {
+//          dataModel.getMapPanel().setBoundingBox(elevationModel.getBoundingBox());
+//        }
+//        
+//        // mapModell.fireModellEvent( null );
 
-    Button showTerrain = new Button( clientComposite, SWT.PUSH );
+      }
+
+    } );
+    elevFormData = new FormData();
+    elevFormData.left = new FormAttachment(elevationList,5);
+    elevFormData.top = new FormAttachment(moveUpBtn,3);
+    
+    Button moveDownBtn = new Button( elevationComposite, SWT.PUSH );
+    moveDownBtn.setText( "D" );
+    moveDownBtn.setLayoutData( elevFormData );
+    moveDownBtn.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent event )
+      {
+//        areaSelectSection.setEnabled( true );
+//        areaSelectSection.setExpanded( true );
+//        ITerrainElevationModel elevationModel = dataModel.getElevationModel();
+//        if(elevationModel!=null)
+//        {
+//          dataModel.getMapPanel().setBoundingBox(elevationModel.getBoundingBox());
+//        }
+//        
+//        // mapModell.fireModellEvent( null );
+//
+      }
+
+    } );
+
+    elevFormData = new FormData();
+    elevFormData.left = new FormAttachment(0,5);
+    elevFormData.top = new FormAttachment(elevationList,5);
+    
+    Button showTerrain = new Button( elevationComposite, SWT.PUSH );
     showTerrain.setText( "Goto Terrain" );
+    showTerrain.setLayoutData( elevFormData );
     showTerrain.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
@@ -699,6 +792,8 @@ class ApplyElevationWidgetFace
       }
 
     } );
+
+    
   }
 
   public void disposeControl( )

@@ -191,4 +191,13 @@ public class TypeInfo
               Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE );
     }
   }
+
+  public static boolean isNode( Feature selecFeature )
+  {
+    if(selecFeature==null)
+    {
+      return false;
+    }
+    return Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( selecFeature.getFeatureType().getQName() );
+  }
 }

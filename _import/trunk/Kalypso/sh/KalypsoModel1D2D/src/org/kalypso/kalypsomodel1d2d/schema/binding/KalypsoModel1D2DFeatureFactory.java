@@ -111,9 +111,13 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 {
                   return new FEMiddleNode(feature);
                 }
-                else
+                else if(Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureType.getQName() ))
                 {
                   return new FE1D2DNode(feature);
+                }
+                else
+                {
+                  return null;
                 }
 			}
 		};
