@@ -136,7 +136,8 @@ public class ProfilUtil
   public static final IProfilPoint splitSegment( final IProfil profile, IProfilPoint startPoint, IProfilPoint endPoint )
   {
     if( (startPoint == null) || (endPoint == null) )
-      throw new IllegalArgumentException( "Profilpunkt existiert nicht" );
+      return null;
+      //throw new IllegalArgumentException( "Profilpunkt existiert nicht" );
     final IProfilPoint point = profile.createProfilPoint();
     final IProfilPointProperty[] properties = profile.getPointProperties();
     for( final IProfilPointProperty property : properties )
@@ -171,17 +172,16 @@ public class ProfilUtil
   {
     final LinkedList<IProfilPoint> points = profile.getPoints();
     final IProfilPoint[] segment = new IProfilPoint[] { null, null };
-    for( final IProfilPoint point : points )
+
+    for( int i = 0; i < points.size() - 1; i++ )
     {
-
-      if( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) > breite )
+      final double segmentStartWidth = points.get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double segmentEndWidth = points.get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      if( segmentStartWidth <= breite & segmentEndWidth >= breite )
       {
-        segment[1] = point;
-        return segment;
+        segment[0] = points.get( i );
+        segment[1] = points.get( i + 1 );
       }
-      else
-        segment[0] = point;
-
     }
     return segment;
   }
@@ -484,15 +484,35 @@ public class ProfilUtil
     final LinkedList<IProfilPoint> points = profile.getPoints();
     final IProfilPoint[] segment1 = getSegment( profile, start );
     final IProfilPoint[] segment2 = getSegment( profile, end );
-    final IProfilPoint startPoint = splitSegment( profile, segment1[0], segment1[1] );
-    final IProfilPoint endPoint = splitSegment( profile, segment2[0], segment2[1] );
-    
-    final int index1 = points.indexOf( segment1[1] );
+    IProfilPoint startPoint = null;
+    IProfilPoint endPoint = null;
+    int index1 = 0;
+    int index2 = 0;
+
+    startPoint = splitSegment( profile, segment1[0], segment1[1] );
+    if( startPoint == null )
+    {
+      System.out.println( "Profil konnte nicht abgeschnitten werden. Startpunkt nicht auf Profil. Setze ersten Profilpunkt.");
+      startPoint = profile.getPoints().getFirst();
+      index1 = 0;
+    }
+    else
+      index1 = points.indexOf( segment1[1] );
+
     points.add( index1, startPoint );
 
-    final int index2 = points.indexOf( segment2[1] );
-    points.add( index2, endPoint );
+    endPoint = splitSegment( profile, segment2[0], segment2[1] );
+    if( endPoint == null )
+    {
+      System.out.println( "Profil konnte nicht abgeschnitten werden. Endpunkt nicht auf Profil. Setze letzten Profilpunkt.");
+      endPoint = profile.getPoints().getLast();
+      index2 = points.size() - 1;
+    }
+    else
+      index2 = points.indexOf( segment2[1] );
     
+    points.add( index2, endPoint );
+
     final IProfilPoint[] toDelete_1 = points.subList( 0, index1 ).toArray( new IProfilPoint[0] );
     final IProfilPoint[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IProfilPoint[0] );
     for( int i = 0; i < toDelete_1.length; i++ )
