@@ -138,7 +138,7 @@ public class CreateMainChannelComposite extends Composite
 
     m_toolkit = toolkit;
     m_toolkit.adapt( this );
-    
+
     m_data = data;
     m_widget = widget;
 
@@ -210,8 +210,8 @@ public class CreateMainChannelComposite extends Composite
           }
         } );
 
-        m_toolkit.createLabel(compConversion, "FE-Netz generieren", SWT.NULL );
-        
+        m_toolkit.createLabel( compConversion, "FE-Netz generieren", SWT.NULL );
+
         return contentCompo;
       }
     };
@@ -262,12 +262,9 @@ public class CreateMainChannelComposite extends Composite
   {
     final Control client = m_segmentSection.getClient();
 
-    
     if( client != null && !client.isDisposed() )
       client.dispose();
-    
-    
-    
+
     final Composite sectionClient = m_toolkit.createComposite( m_segmentSection, SWT.NONE );
     sectionClient.setLayout( new GridLayout( 4, false ) );
 
@@ -281,7 +278,7 @@ public class CreateMainChannelComposite extends Composite
     /** ************************ Header ***************************** */
     /* label */
 
-    Label labelSpinnnerSegment = m_toolkit.createLabel(sectionClient, "", SWT.NULL );
+    Label labelSpinnnerSegment = m_toolkit.createLabel( sectionClient, "", SWT.NULL );
     labelSpinnnerSegment.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.1" ) ); //$NON-NLS-1$
     GridData gridDataLabelSpinner = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDataLabelSpinner.horizontalSpan = 1;
@@ -402,7 +399,7 @@ public class CreateMainChannelComposite extends Composite
     /* spinner for specifiying the number of intersection points for the current segment */
     final Spinner spinnerNumIntersSegment = new Spinner( compSegmentDataHeader, 0 );
     m_toolkit.adapt( spinnerNumIntersSegment );
-    
+
     final GridData gridDataNumIntersSpinner = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
     gridDataNumIntersSpinner.horizontalSpan = 1;
     spinnerNumIntersSegment.setLayoutData( gridDataNumIntersSpinner );
@@ -748,7 +745,7 @@ public class CreateMainChannelComposite extends Composite
     m_buttonList.add( chooseProfilesButton );
     chooseProfilesButton.setLayoutData( gridData );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
-    
+
     final Image selImage = KalypsoModel1D2DUIImages.ID_SELECT.createImage();
     chooseProfilesButton.setImage( selImage );
     chooseProfilesButton.addSelectionListener( new SelectionAdapter()
@@ -810,10 +807,20 @@ public class CreateMainChannelComposite extends Composite
    */
   public void updateControl( boolean edit )
   {
-    updateSegmentSwitchSection();
-    m_data.updateSegments( edit );
-    updateProfilSection();
-    m_buttonConvertToModel.setEnabled( m_data.getMeshStatus() );
+    try
+    {
+      updateSegmentSwitchSection();
+      // TODO: check if there is already a mesh calculated and no update is needed
+      m_data.updateSegments( edit );
+      updateProfilSection();
+      m_buttonConvertToModel.setEnabled( m_data.getMeshStatus() );
+      this.layout();
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
   }
 
   /**

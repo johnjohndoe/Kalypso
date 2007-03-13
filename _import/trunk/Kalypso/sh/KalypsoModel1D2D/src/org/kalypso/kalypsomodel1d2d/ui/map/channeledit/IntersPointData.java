@@ -58,13 +58,16 @@ public class IntersPointData
   private final SIDE m_side;
 
   private WIDTHORDER m_widthOrder;
+  
+  private double m_width;
 
-  public IntersPointData( Point point, CreateChannelData.PROF prof, CreateChannelData.SIDE side )
+  public IntersPointData( Point point, CreateChannelData.PROF prof, CreateChannelData.SIDE side, double width )
   {
     m_point = point;
     m_prof = prof;
     m_side = side;
     m_widthOrder = null;
+    m_width = width;
   }
 
   public Point getPoint( )
@@ -77,6 +80,16 @@ public class IntersPointData
     m_point = point;
   }
 
+  public double getWidth( )
+  {
+    return m_width;
+  }
+
+  public void setWidth( double width)
+  {
+    m_width = width;
+  }
+  
   public CreateChannelData.PROF getProf( )
   {
     return m_prof;

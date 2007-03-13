@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -97,13 +98,13 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     final Set<Feature> selectedProfileSet = new HashSet<Feature>( Arrays.asList( selectedProfiles ) );
 
     final List list = featureList.query( envelope, null );
-    
+
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Object o = iter.next();
       final Feature feature = FeatureHelper.getFeature( workspace, o );
-      
+
       final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
       try
       {
@@ -123,21 +124,26 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
       // empty selection: remove selection
       // TODO: maybe extra button for that?
       m_data.removeSelectedProfiles( selectedProfiles );
-      
+
     }
     else
     {
+      final List<Feature> featureToAdd = new ArrayList<Feature>();
+      final List<Feature> featureToRemove = new ArrayList<Feature>();
+
       for( int i = 0; i < list.size(); i++ )
       {
         final Object o = list.get( i );
         final Feature feature = FeatureHelper.getFeature( workspace, o );
 
         if( selectedProfileSet.contains( feature ) )
-          m_data.removeSelectedProfiles( new Feature[] { feature } );
+          featureToRemove.add( feature );
         else
-          m_data.addSelectedProfiles( new Feature[] { feature } );
+          featureToAdd.add( feature );
       }
 
+      m_data.removeSelectedProfiles( featureToRemove.toArray( new Feature[featureToRemove.size()] ) );
+      m_data.addSelectedProfiles( featureToAdd.toArray( new Feature[featureToAdd.size()] ) );
     }
   }
 

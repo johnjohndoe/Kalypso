@@ -51,7 +51,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -120,6 +127,8 @@ public class CreateChannelData
     LAST;
   }
 
+  private static ISchedulingRule THE_SEGMENT_INIT_MUTEX = new MutexRule();
+  
   private IKalypsoFeatureTheme m_profileTheme;
 
   private IKalypsoFeatureTheme m_bankTheme1; // LEFT = 1
@@ -146,11 +155,9 @@ public class CreateChannelData
 
   private Coordinate[][] m_meshCoords;
 
-  private boolean m_meshStatus;
-
   public int m_selectedSegment;
 
-  private CreateChannelData.PROF m_selectedProfile; 
+  private CreateChannelData.PROF m_selectedProfile;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -252,46 +259,48 @@ public class CreateChannelData
   public void addSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.addAll( Arrays.asList( profileFeatures ) );
-    m_segmentList.clear(); // changes in the profile list force an initialisation of the segments
-    m_coordList.clear();
     initSegments();
-    m_widget.update();
   }
 
   public void removeSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.removeAll( Arrays.asList( profileFeatures ) );
-    m_segmentList.clear();// changes in the profile list force an initialisation of the segments
-    m_coordList.clear();
     initSegments();
-    m_widget.update();
   }
 
-  private void initSegments( )
+  public void initSegments( )
   {
-    datacomplete = false;
-
-    // there must be at least two selected profiles and one selected bank.
-    if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
+    final Job job = new Job( "Init segments" )
     {
-      datacomplete = true;
-    }
-    else if( m_selectedProfiles.size() <= 1 )
-    {
-      m_segmentList.clear();
-      m_coordList.clear();
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        datacomplete = false;
 
-    }
+        // there must be at least two selected profiles and one selected bank.
+        if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
+        {
+          datacomplete = true;
+        }
+        else if( m_selectedProfiles.size() <= 1 )
+        {
+          m_segmentList.clear();
+          m_coordList.clear();
+        }
 
-    if( datacomplete == false )
-    {
-      m_segmentList.clear();
-      m_coordList.clear();
-    }
+        // final IProgressMonitor monitor = new NullProgressMonitor();
+        if( datacomplete == true )
+          /* intersects the banks with the profiles and manages the initial segment creation */
+          intersectBanksWithProfs( monitor ); // initial calculation of the segments by global parameters
 
-    if( datacomplete == true )
-      /* intersects the banks with the profiles and manages the initial segment creation */
-      intersectBanksWithProfs(); // initial calculation of the segments by global parameters
+        m_widget.update();
+
+        return Status.OK_STATUS;
+      }
+    };
+    job.setRule( THE_SEGMENT_INIT_MUTEX );
+    job.setUser( true );
+    job.schedule();
   }
 
   public Feature[] getSelectedProfiles( )
@@ -309,7 +318,6 @@ public class CreateChannelData
       m_selectedBanks.put( feature, side );
 
     initSegments();
-    m_widget.update();
   }
 
   public Feature[] getSelectedBanks( final SIDE side )
@@ -335,9 +343,8 @@ public class CreateChannelData
     m_widget.update();
 
     m_selectedBanks.keySet().removeAll( Arrays.asList( bankFeatures ) );
-    intersectBanksWithProfs();
 
-    m_widget.update();
+    initSegments();
   }
 
   /* --------------------- profile chart handling ---------------------------------- */
@@ -370,7 +377,7 @@ public class CreateChannelData
    */
   public void completationCheck( )
   {
-    m_meshStatus = false;
+    m_meshCoords = null;
     datacomplete = false;
 
     // there must be at least two selected profiles and one selected bank.
@@ -398,14 +405,12 @@ public class CreateChannelData
     {
       manageQuadMesher();
       mergeMeshList();
-      if( m_meshCoords[0].length > 0 )
-        m_meshStatus = true;
     }
   }
 
   public boolean getMeshStatus( )
   {
-    return m_meshStatus;
+    return m_meshCoords != null;
   }
 
   /**
@@ -524,6 +529,7 @@ public class CreateChannelData
    */
   private void mergeMeshList( )
   {
+    m_meshCoords = null;
     final int overallYCoordNum = calculateOverallYCoordNum();
     final int numX = m_numbProfileIntersections;
     final int numY = overallYCoordNum;
@@ -535,19 +541,22 @@ public class CreateChannelData
     // loop over all segments -> coords
     for( int i = 0; i < m_coordList.size(); i++ )
     {
+      Coordinate[][] coordinates = m_coordList.get( i );
+      if( numX != coordinates.length )
+        return;
       // coordSegmentPointer = coordYPosPointer;
       // loop over all profile intersections -> coords [x][]
-      for( int j = 0; j < numX; j++ )
+      for( int j = 0; j < coordinates.length; j++ )
       {
         // loop over all bank intersections -> coords [][x]
 
-        for( int k = 0; k < m_coordList.get( i )[j].length; k++ )
+        for( int k = 0; k < coordinates[j].length; k++ )
         {
           coordYPosPointer = coordSegmentPointer + k;
-          newCoords[j][coordYPosPointer] = m_coordList.get( i )[j][k];
+          newCoords[j][coordYPosPointer] = coordinates[j][k];
         }
       }
-      coordSegmentPointer = coordSegmentPointer + m_coordList.get( i )[0].length - 1;
+      coordSegmentPointer = coordSegmentPointer + coordinates[0].length - 1;
     }
     if( coordYPosPointer != overallYCoordNum - 1 )
       System.out.println( "consolidateMesh: wrong number of coord array!! " );
@@ -734,7 +743,7 @@ public class CreateChannelData
    * all selected banks will be intersected by the selected profiles Input: all selected banks and profiles Output:
    * intersected banks as linestrings (including the intersection point)
    */
-  private void intersectBanksWithProfs( )
+  private void intersectBanksWithProfs( final IProgressMonitor monitor )
   {
     /* at first -> clear the segment list! */
     m_segmentList.clear();
@@ -743,6 +752,8 @@ public class CreateChannelData
 
     if( profileFeatures.length == 0 )
       return;
+
+    monitor.beginTask( "Processing profiles", profileFeatures.length );
 
     final IPropertyType stationProperty = profileFeatures[0].getFeatureType().getProperty( WspmProfile.QNAME_STATION );
     Arrays.sort( profileFeatures, new FeatureComparator( stationProperty ) );
@@ -759,11 +770,13 @@ public class CreateChannelData
       // get the profile line
       final WspmProfile profile = new WspmProfile( profileFeature );
 
+      monitor.subTask( "Station km " + profile.getStation() );
+
       if( lastProfile != null )
       {
         // working on the segment
         final int numBankIntersections = getGlobNumBankIntersections();
-        final SegmentData segment = new SegmentData( this, profile, lastProfile,  m_selectedBanks, numBankIntersections );
+        final SegmentData segment = new SegmentData( this, profile, lastProfile, m_selectedBanks, numBankIntersections );
         System.out.println( "up profile: " + lastProfile.getStation() );
         System.out.println( "down profile: " + profile.getStation() );
 
@@ -775,6 +788,11 @@ public class CreateChannelData
         // tu nix
       }
       lastProfile = profile;
+
+      if( monitor.isCanceled() )
+        throw new OperationCanceledException();
+
+      monitor.worked( 1 );
     }
   }
 
@@ -803,8 +821,8 @@ public class CreateChannelData
     if( m_numbProfileIntersections != numProfileIntersections )
     {
       m_numbProfileIntersections = numProfileIntersections;
-      updateSegments( false );
-      // initSegments();
+      // updateSegments( false );
+      initSegments();
     }
   }
 
@@ -929,9 +947,8 @@ public class CreateChannelData
   }
 
   /**
-   * this method possibly updates the segment data and pushes the calculation of the mesh.
-   * inputs: boolean edit: false-> update of the bankline and profile intersections
-   * true: -> no data update
+   * this method possibly updates the segment data and pushes the calculation of the mesh. inputs: boolean edit: false->
+   * update of the bankline and profile intersections true: -> no data update
    */
   public void updateSegments( boolean edit )
   {
@@ -995,7 +1012,7 @@ public class CreateChannelData
     completationCheck();
   }
 
-  public final CreateChannelData.PROF getCurrentProfile( ) 
+  public final CreateChannelData.PROF getCurrentProfile( )
   {
     return m_selectedProfile;
   }
@@ -1013,11 +1030,6 @@ public class CreateChannelData
       m_selectedProfile = PROF.UP;
   }
 
-  public void setIntersectedProfile( SegmentData segment, IProfil profile, PROF prof )
-  {
-    segment.setNewIntersectedProfile( profile, prof );
-  }
-
   public List getNeighbourSegments( int currentSegmentNum )
   {
     final int numOfSegments = m_segmentList.size();
@@ -1027,7 +1039,7 @@ public class CreateChannelData
     {
       // the current segment lies inbetween -> two neighbours
       neighbours.add( m_segmentList.get( currentSegmentNum - 2 ) ); // neighbour before
-      neighbours.add( m_segmentList.get( currentSegmentNum  ) ); // neighbour after
+      neighbours.add( m_segmentList.get( currentSegmentNum ) ); // neighbour after
     }
     else if( currentSegmentNum > 1 & currentSegmentNum == numOfSegments )
     {
@@ -1047,15 +1059,15 @@ public class CreateChannelData
     return neighbours;
   }
 
-//  /**
-//   * updates the intersected banklines of the specified segment
-//   * called after re-setting the intersection points and intersected profiles
-//   */
-//  public void setIntersectedBanklines( final int segmentNum, PROF prof )
-//  {
-//    final SegmentData segment = m_segmentList.get( segmentNum - 1 );
-//    segment.setNewBankIntersection( prof );
-//    completationCheck();
-//  }
-//
+  // /**
+  // * updates the intersected banklines of the specified segment
+  // * called after re-setting the intersection points and intersected profiles
+  // */
+  // public void setIntersectedBanklines( final int segmentNum, PROF prof )
+  // {
+  // final SegmentData segment = m_segmentList.get( segmentNum - 1 );
+  // segment.setNewBankIntersection( prof );
+  // completationCheck();
+  // }
+  //
 }

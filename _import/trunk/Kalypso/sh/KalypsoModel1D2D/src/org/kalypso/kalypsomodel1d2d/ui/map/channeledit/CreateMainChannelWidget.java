@@ -127,9 +127,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   @Override
   public void paint( final Graphics g )
   {
-    if( m_composite == null )
+    if( m_composite == null || m_composite.isDisposed() )
       return;
-    
+
     final Feature[] selectedProfiles = m_data.getSelectedProfiles();
 
     for( final Feature feature : selectedProfiles )
@@ -154,12 +154,10 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     final MapPanel mapPanel = getMapPanel();
 
-    
     /* draw intersected profile */
     drawIntersProfiles( g, new Color( 0, 153, 255 ) );
     /* draw cropped profile */
-    //drawCroppedProfiles( g, new Color( 100, 153, 255 ) );
-
+    // drawCroppedProfiles( g, new Color( 100, 153, 255 ) );
     /* draw intersection points */
     drawIntersPoints( g, new Color( 255, 153, 0 ) );
 
@@ -168,14 +166,14 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       m_data.paintAllSegments( g, mapPanel );
 
     /* draw editable bankline */
-     if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
-     {
-     m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
-     }
-     if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
-     {
-     m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
-     }
+    if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
+    {
+      m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
+    }
+    if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
+    {
+      m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
+    }
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
 
@@ -191,7 +189,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
           currentSegment.paintProfile( m_data.getCurrentProfile(), getPanel(), g, color );
     }
   }
-  
+
   private void drawIntersPoints( Graphics g, Color color )
   {
     if( m_data.getSelectedSegment() != 0 )
@@ -324,8 +322,8 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     // TODO!
     if( m_delegateWidget != null )
       m_delegateWidget.finish();
-    
-//    m_delegateWidget = null;
+
+    // m_delegateWidget = null;
   }
 
   /**
@@ -335,8 +333,8 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   @Override
   public void keyPressed( KeyEvent e )
   {
-    
-    //TODO:
+
+    // TODO:
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
   }
@@ -480,14 +478,17 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   public void update( )
   {
-    m_composite.getDisplay().asyncExec( new Runnable()
+    if( m_composite == null || m_composite.isDisposed() )
+      return;
+
+    m_composite.getDisplay().syncExec( new Runnable()
     {
       public void run( )
       {
         // check if all needed data is specified
         // m_data.completationCheck();
-
-        m_composite.updateControl( false );
+        if( !m_composite.isDisposed() )
+          m_composite.updateControl( false ); // false means calc all again
       }
     } );
 
