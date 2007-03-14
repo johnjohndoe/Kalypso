@@ -217,4 +217,20 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
   {
     return elevationProvider.getCoordinateSystem();
   }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   */
+  public double getMaxElevation( )
+  {
+    return elevationProvider.getMaxElevation();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
+   */
+  public double getMinElevation( )
+  {
+    return elevationProvider.getMinElevation();
+  }
 }

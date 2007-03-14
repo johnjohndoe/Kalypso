@@ -45,9 +45,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.shiftone.cache.Cache;
+import org.shiftone.cache.CacheFactory;
+import org.shiftone.cache.adaptor.CacheMap;
+import org.shiftone.cache.policy.fifo.FifoCacheFactory;
+
+import com.vividsolutions.jts.io.ParseException;
 
 public class NativeTerrainElevationModelFactory
 {
+  private static final Cache cache = 
+        new FifoCacheFactory(  ).newInstance( 
+            "NativeTerrainElevationModelFactory_CACHE", 60*60*1000,8);
+  
+  CacheMap chCacheMap;
   
   private NativeTerrainElevationModelFactory()
   {
@@ -74,10 +85,24 @@ public class NativeTerrainElevationModelFactory
                                                       File ascFile) throws IllegalArgumentException, IOException
   {
     String filePath=ascFile.getAbsolutePath();
-    FileInputStream inputStream= new FileInputStream(ascFile);
+    Object cachedEleModel = cache.getObject( filePath );
+    
     if(filePath.endsWith( ".asc" ))
     {
       return new ASCTerrainElevationModel(ascFile.toURL(),null);
+    }
+    else if(filePath.endsWith( ".hmo" ))
+    {
+      try
+      {
+        return new HMOTerrainElevationModel(ascFile.toURL(),null);
+      }
+      catch( ParseException e )
+      {
+        e.printStackTrace();
+        throw new IllegalArgumentException(
+            "File has bad format could not parse it",e);
+      }
     }
     else
     {

@@ -381,10 +381,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
   public CS_CoordinateSystem getCoordinateSystem( )
   {
     //TODO Patrice introduce the it in the schema
-//    CS_CoordinateSystem cs= 
-//      ConvenienceCSFactory.getInstance().getOGCCSByName( 
-//                          CS_KEY_GAUSS_KRUEGER );
-//    return cs;
     return CRS_GAUSS_KRUEGER;
   }
   

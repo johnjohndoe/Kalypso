@@ -50,6 +50,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -57,6 +58,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 import com.bce.gis.io.hmo.HMOReader;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
@@ -74,7 +76,9 @@ public class HMOTerrainElevationModel
   
   public static final double[][] NO_INTERIOR = {};
   
-  
+  private double minElevation;
+  private double maxElevation;
+  private Envelope union;
   
   class TriangleData implements SurfacePatchVisitable
   {
@@ -92,7 +96,7 @@ public class HMOTerrainElevationModel
     
     public double getCenterElevation()
     {
-      return ring.getCentroid().getCoordinate().x;
+      return ring.getCentroid().getCoordinate().z;
     }
 
     /**
@@ -106,7 +110,8 @@ public class HMOTerrainElevationModel
             {   
             coordinates[0].x,coordinates[0].y,coordinates[0].z,
             coordinates[1].x,coordinates[1].y,coordinates[1].z,
-            coordinates[2].x,coordinates[2].y,coordinates[2].z}; 
+            coordinates[2].x,coordinates[2].y,coordinates[2].z,
+            coordinates[0].x,coordinates[0].y,coordinates[0].z}; 
       
       GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( 
                                         exterior, 
@@ -114,17 +119,92 @@ public class HMOTerrainElevationModel
                                         3,
                                         CRS_GAUSS_KRUEGER);
       surfacePatchVisitor.visit( surfacePatch, getCenterElevation() );
-    }    
+    }   
+    
+    public double getMinElevation()
+    {
+      Coordinate[] coordinates = 
+        ring.getCoordinates();
+      double min = coordinates[0].z;
+      if(min>coordinates[1].z)
+      {
+        min = coordinates[1].z;
+      }
+      
+      if(min>coordinates[2].z)
+      {
+        min = coordinates[2].z;
+      }
+      return min;
+    }
+    
+    
+    public double getMaxElevation()
+    {
+      Coordinate[] coordinates = 
+        ring.getCoordinates();
+      double max = coordinates[0].z;
+      if(max<coordinates[1].z)
+      {
+        max = coordinates[1].z;
+      }
+      
+      if(max<coordinates[2].z)
+      {
+        max = coordinates[2].z;
+      }
+      return max;
+    }
+    
+    public final double getMinX()
+    {
+      Coordinate[] coordinates = 
+        ring.getCoordinates();
+      
+      double min = coordinates[0].x;
+      if(min>coordinates[1].x)
+      {
+        min = coordinates[1].x;
+      }
+      
+      if(min>coordinates[2].x)
+      {
+        min = coordinates[2].x;
+      }
+      return min;
+    }
+    
+    public final double getMinY()
+    {
+      Coordinate[] coordinates = 
+        ring.getCoordinates();
+      
+      double min = coordinates[0].y;
+      if(min>coordinates[1].y)
+      {
+        min = coordinates[1].y;
+      }
+      
+      if(min>coordinates[2].y)
+      {
+        min = coordinates[2].y;
+      }
+      return min;
+      
+    }
     
   }
   
   private Quadtree triangles;
+
+  private Object regionOfInterest;
  
   public HMOTerrainElevationModel(
                 URL hmoFileURL,
-                GM_Envelope regionOfInterest )
+                GM_Envelope regionOfInterest ) throws IOException, ParseException
   {
-    
+    this.regionOfInterest = regionOfInterest;
+    parseFile( hmoFileURL );
   }
   
   private final void parseFile(URL hmoFileURL) throws IOException, ParseException
@@ -133,11 +213,36 @@ public class HMOTerrainElevationModel
     Reader r= new InputStreamReader(hmoFileURL.openStream());
     LinearRing[] rings = hmoReader.read( r );
     this.triangles= new Quadtree();
+    TriangleData triangleData;
+    minElevation = Double.MAX_VALUE;
+    maxElevation = Double.MIN_VALUE;
+    double extremum;
+    
+    
+    System.out.println("Parsing:"+rings.length);
+    union = rings[0].getEnvelopeInternal();
     for(LinearRing ring:rings)
     {
+      System.out.println("ring:"+ring);
+      triangleData=new TriangleData(ring);
+      Envelope envelopeInternal = ring.getEnvelopeInternal();
       triangles.insert( 
-          ring.getEnvelopeInternal(), 
-          new TriangleData(ring));
+          envelopeInternal, 
+          triangleData);
+      //set min
+      extremum=triangleData.getMinElevation();
+      if(minElevation>extremum)
+      {
+        minElevation=extremum;
+      }      
+      //set max 
+      extremum=triangleData.getMaxElevation();
+      if(maxElevation<extremum)
+      {
+        maxElevation = extremum;
+      }
+      
+      union.expandToInclude( envelopeInternal );
     }
   }
   
@@ -146,7 +251,22 @@ public class HMOTerrainElevationModel
    */
   public GM_Envelope getBoundingBox( )
   {
-    return null;
+    //TODO patrice why not return the real geo object
+    try
+    {
+//      GM_Position min = JTSAdapter.wrap( union. ).getEnvelope();
+      return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( 
+                                              union.getMinX(),//minx,
+                                              union.getMinY(),//miny,
+                                              union.getMaxX(),//maxx,
+                                              union.getMaxY()//maxy 
+                                              );
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -154,8 +274,7 @@ public class HMOTerrainElevationModel
    */
   public CS_CoordinateSystem getCoordinateSystem( )
   {
-    //TODO Patrice this hard coded and not okay put it into the gml
-    
+    //TODO Patrice this hard coded and not okay put it into the gml    
     return CRS_GAUSS_KRUEGER;
   }
 
@@ -194,17 +313,31 @@ public class HMOTerrainElevationModel
     Coordinate max = JTSAdapter.export( envToVisit.getMax());
     Coordinate min = JTSAdapter.export( envToVisit.getMin());
     Envelope jtsEnv= new Envelope(min,max);
-    GM_Surface surface = null;
     
     List triToVisit = triangles.query( jtsEnv );
     
-    CS_CoordinateSystem crs=getCoordinateSystem();
     for(Object tri:triToVisit)
     {
       ((TriangleData)tri).aceptSurfacePatches( 
                                 envToVisit, 
                                 surfacePatchVisitor ); 
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   */
+  public double getMaxElevation( )
+  {
+    return maxElevation;
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
+   */
+  public double getMinElevation( )
+  {
+    return minElevation;
   }
 
 }

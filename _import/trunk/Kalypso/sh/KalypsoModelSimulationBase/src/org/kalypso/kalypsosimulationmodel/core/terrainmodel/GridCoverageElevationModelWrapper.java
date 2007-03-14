@@ -174,4 +174,20 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
     //TODO Patrice get crs from grid coverate
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   */
+  public double getMaxElevation( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
+   */
+  public double getMinElevation( )
+  {
+    throw new UnsupportedOperationException();
+  }
 }

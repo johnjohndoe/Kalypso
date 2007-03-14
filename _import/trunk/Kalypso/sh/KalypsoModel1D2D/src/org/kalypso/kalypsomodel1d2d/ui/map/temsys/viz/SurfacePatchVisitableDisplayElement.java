@@ -46,13 +46,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Area;
-import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -62,15 +61,12 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provide display mechanism for asc terrain elevation model
@@ -78,7 +74,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Madanagopal 
  * @author Patrice Congo
  */
-public class ASCDisplayElement 
+public class SurfacePatchVisitableDisplayElement 
                 implements  DisplayElementDecorator,
                             SurfacePatchVisitor
 {
@@ -92,7 +88,7 @@ public class ASCDisplayElement
   
   private boolean isSelected=false;
 
-  private ASCTerrainElevationModel ascElevationModel;
+  private SurfacePatchVisitable/*ASCTerrainElevationModel*/ ascElevationModel;
 
   private Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
   
@@ -101,7 +97,7 @@ public class ASCDisplayElement
   private GeoTransform projection;
  
   
-  public ASCDisplayElement(
+  public SurfacePatchVisitableDisplayElement(
                 NativeTerrainElevationModelWrapper elevationModel )
   {
     Assert.throwIAEOnNullParam( elevationModel, "elevationModel" );
@@ -109,13 +105,13 @@ public class ASCDisplayElement
     IElevationProvider elevationProvider = 
               elevationModel.getElevationProvider();
     //TODO continue
-    if(elevationProvider instanceof ASCTerrainElevationModel)
+    if(elevationProvider instanceof SurfacePatchVisitable)
     {
-      ascElevationModel=(ASCTerrainElevationModel)elevationProvider;
+      ascElevationModel=(SurfacePatchVisitable)elevationProvider;
       colorModel = 
         new SimpleElevationColorModel(
-            ascElevationModel.getMinElevation(),
-            ascElevationModel.getMaxElevation(),
+            elevationProvider.getMinElevation(),
+            elevationProvider.getMaxElevation(),
             Color.GRAY,
             0.10,
             0.80,
@@ -498,7 +494,7 @@ public class ASCDisplayElement
   
   
   
-  public static final ASCDisplayElement createDisplayElement(Feature feature)
+  public static final SurfacePatchVisitableDisplayElement createDisplayElement(Feature feature)
   {
     if(feature == null)
     {
@@ -508,7 +504,7 @@ public class ASCDisplayElement
             (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
     if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
     {
-      return new ASCDisplayElement(
+      return new SurfacePatchVisitableDisplayElement(
                       (NativeTerrainElevationModelWrapper)terrainElevationModel);
     }
     else

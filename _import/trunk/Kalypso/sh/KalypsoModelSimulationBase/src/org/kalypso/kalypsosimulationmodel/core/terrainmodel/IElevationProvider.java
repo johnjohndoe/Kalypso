@@ -68,5 +68,7 @@ public interface IElevationProvider
 
   public GM_Envelope getBoundingBox( );
   public CS_CoordinateSystem getCoordinateSystem();
+  public double getMinElevation();
+  public double getMaxElevation();
 
 }

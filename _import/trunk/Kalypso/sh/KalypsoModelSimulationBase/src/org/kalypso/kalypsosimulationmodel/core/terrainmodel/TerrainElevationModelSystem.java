@@ -190,4 +190,54 @@ public class TerrainElevationModelSystem
     //TODO Patrice check whether the elevation do have the same system and return it
     return null;
   }
+
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   */
+  public double getMaxElevation( )
+  {
+    if(terrainElevationModels.isEmpty())
+    {
+      return Double.NaN;
+    }
+    
+    double maxEle= Double.MIN_VALUE;
+    double curMaxEle;
+    for(ITerrainElevationModel eleModel:terrainElevationModels)
+    {
+      curMaxEle = eleModel.getMinElevation();
+      if(maxEle<curMaxEle)
+      {
+        maxEle=curMaxEle;
+      }
+    }
+    
+    return maxEle;
+  }
+
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
+   */
+  public double getMinElevation( )
+  {
+    if(terrainElevationModels.isEmpty())
+    {
+      return Double.NaN;
+    }
+    
+    double minEle= Double.MAX_VALUE;
+    double curMinEle;
+    for(ITerrainElevationModel eleModel:terrainElevationModels)
+    {
+      curMinEle = eleModel.getMinElevation();
+      if(minEle>curMinEle)
+      {
+        minEle=curMinEle;
+      }
+    }
+    
+    return minEle;
+  }
 }

@@ -103,7 +103,8 @@ public class ElevationMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "asc" ) );
+    fileExtensions.add( "asc");
+    fileExtensions.add( "hmo"  );
     // fileExtensions.add( new String ("tif") );
 
     // Find the first plugin.xml file.
@@ -187,7 +188,7 @@ public class ElevationMainPage extends WizardPage
   private IPath browse( IPath path, boolean mustExist )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.asc" } );
+    dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
