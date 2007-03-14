@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -99,7 +101,10 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
@@ -112,6 +117,9 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 // import org.eclipse.draw2d.FigureUtilities;
 // import org.eclipse.draw2d.FigureUtilities.*;
 
@@ -705,41 +713,22 @@ class ApplyElevationWidgetFace
       }
     } );
 
-//    // Dummy Label to create a Empty Cell in GridLayout
-//    Label autoFocus1 = new Label( clientComposite, SWT.FLAT );
-//    Label autoFocus = new Label( clientComposite, SWT.FLAT );
-//    autoFocus.setText( "Action - Auto Focus" );
-//    Button focusButton = new Button( clientComposite, SWT.CHECK );
-//    focusButton.addSelectionListener( new SelectionAdapter()
-//    {
-//      public void widgetSelected( SelectionEvent event )
-//      {
-//        // TODO Send the Focus on the particular area of the Map
-//      }
-//
-//    } );
     
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment(elevationList,5);
     elevFormData.top = new FormAttachment(terrainModelLabel,5);
-       
     Button moveUpBtn = new Button( elevationComposite, SWT.PUSH );
-    moveUpBtn.setText( "U" );
+    Image image_Up = new Image(elevationComposite.getDisplay(),
+                            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( 
+                                PluginUtilities.id(KalypsoModel1D2DPlugin.getDefault()),
+                                "icons/elcl16/list_up.gif" )
+                                .getImageData());
+    moveUpBtn.setImage(image_Up);
     moveUpBtn.setLayoutData( elevFormData );
     moveUpBtn.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
       {
-//        areaSelectSection.setEnabled( true );
-//        areaSelectSection.setExpanded( true );
-//        ITerrainElevationModel elevationModel = dataModel.getElevationModel();
-//        if(elevationModel!=null)
-//        {
-//          dataModel.getMapPanel().setBoundingBox(elevationModel.getBoundingBox());
-//        }
-//        
-//        // mapModell.fireModellEvent( null );
-
       }
 
     } );
@@ -748,29 +737,26 @@ class ApplyElevationWidgetFace
     elevFormData.top = new FormAttachment(moveUpBtn,3);
     
     Button moveDownBtn = new Button( elevationComposite, SWT.PUSH );
-    moveDownBtn.setText( "D" );
+    Image image_Down = new Image(elevationComposite.getDisplay(),
+        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( 
+            PluginUtilities.id(KalypsoModel1D2DPlugin.getDefault()),
+            "icons/elcl16/list_down.gif" )
+            .getImageData());
+   moveDownBtn.setImage( image_Down );
+    
     moveDownBtn.setLayoutData( elevFormData );
     moveDownBtn.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
       {
-//        areaSelectSection.setEnabled( true );
-//        areaSelectSection.setExpanded( true );
-//        ITerrainElevationModel elevationModel = dataModel.getElevationModel();
-//        if(elevationModel!=null)
-//        {
-//          dataModel.getMapPanel().setBoundingBox(elevationModel.getBoundingBox());
-//        }
-//        
-//        // mapModell.fireModellEvent( null );
 //
       }
 
     } );
 
     elevFormData = new FormData();
-    elevFormData.left = new FormAttachment(0,5);
-    elevFormData.top = new FormAttachment(elevationList,5);
+    elevFormData.left = new FormAttachment(elevationList,5);
+    elevFormData.bottom = new FormAttachment(100,0);
     
     Button showTerrain = new Button( elevationComposite, SWT.PUSH );
     showTerrain.setText( "Goto Terrain" );
@@ -916,11 +902,6 @@ class ApplyElevationWidgetFace
     Label infoLabel = new Label( cComposite, SWT.FLAT );
     infoLabel.setText( "Selected Terrain Model" );
     infoLabel.setLayoutData( regionFormData );
-//    GridData infoLabelGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    infoLabelGridData.horizontalSpan = 2;
-//    infoLabelGridData.verticalSpan = 1;
-//    infoLabel.setLayoutData( infoLabelGridData );
-
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment(infoLabel,10);
     regionFormData.top = new FormAttachment(0,5);    
@@ -928,25 +909,12 @@ class ApplyElevationWidgetFace
     inputText.setEditable( false );
     inputText.setText( nameSel );
     inputText.setLayoutData( regionFormData );
-    
-//    GridData inputTextGridData = new GridData( GridData.BEGINNING );
-//    inputTextGridData.horizontalSpan = 2;
-//    inputTextGridData.verticalSpan = 1;
-//    inputText.setLayoutData( inputTextGridData );
-
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment(0,5);
     regionFormData.top = new FormAttachment (infoLabel,10);
     Label areaSelectLabel = new Label( cComposite, SWT.FLAT );
     areaSelectLabel.setText( "Select Area" );
     areaSelectLabel.setLayoutData( regionFormData );
-//    GridData areaSelectGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    areaSelectGridData.horizontalSpan = 4;
-//    areaSelectGridData.verticalSpan = 1;
-//    areaSelectLabel.setLayoutData( areaSelectGridData );
-
-    // Dummy Label to Provide a Empty Cell in the GridLayout
-    // Label areaSelectLabel1 = new Label( cComposite, SWT.FLAT );
 
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment(0,10);
@@ -957,11 +925,6 @@ class ApplyElevationWidgetFace
     table = nodeElevationViewer.getTable();
     table.setLayoutData( regionFormData );
     
-//    GridData tableGridData = new GridData( GridData.FILL_BOTH );
-//    tableGridData.horizontalSpan = 3;
-//    tableGridData.verticalSpan = 3;
-//    // nodeElevationViewer.set
-//    table.setLayoutData( tableGridData );
     TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
     lineColumn.setText( "Node" );
     lineColumn.setWidth( 100 / 1 );
@@ -999,13 +962,10 @@ class ApplyElevationWidgetFace
     regionFormData.left = new FormAttachment(table,5);
     regionFormData.top = new FormAttachment(0,50);
     Button selectAll = new Button( cComposite, SWT.PUSH );
-//    GridData applyAllGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    applyAllGridData.horizontalSpan = 1;
-//    applyAllGridData.verticalSpan = 1;
-//    selectAll.setLayoutData( applyAllGridData );
+
     selectAll.setText( "Select All" );
     selectAll.setLayoutData( regionFormData );
-    // applyAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
     selectAll.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
@@ -1019,20 +979,15 @@ class ApplyElevationWidgetFace
     regionFormData.left = new FormAttachment(table,5);
     regionFormData.top = new FormAttachment(selectAll,5);
     Button deSelectAll = new Button( cComposite, SWT.PUSH );
-//    GridData deSelectGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    deSelectGridData.horizontalSpan = 1;
-//    deSelectGridData.verticalSpan = 1;
-//    deSelectAll.setLayoutData( deSelectGridData );
     deSelectAll.setLayoutData(regionFormData );
     deSelectAll.setText( "DeSelect All" );
-    // deSelectAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
       {
         table.deselectAll();
         selectionNodeList.clear();
-        // nodeElevationViewer.setSelection( selection, reveal )
       }
 
     } );
@@ -1041,13 +996,8 @@ class ApplyElevationWidgetFace
     regionFormData.left = new FormAttachment(table,5);
     regionFormData.top = new FormAttachment(deSelectAll,5);
     Button applySelected = new Button( cComposite, SWT.PUSH );
-//    GridData applySelectedGridData = new GridData( GridData.FILL_HORIZONTAL );
-//    applySelectedGridData.horizontalSpan = 1;
-//    applySelectedGridData.verticalSpan = 1;
-//    applySelected.setLayoutData( applySelectedGridData );
     applySelected.setLayoutData( regionFormData );
     applySelected.setText( "Apply Selected" );
-   // applySelected.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     applySelected.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
