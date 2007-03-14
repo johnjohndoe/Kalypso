@@ -43,10 +43,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.util;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd;
@@ -56,9 +58,18 @@ import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -156,7 +167,21 @@ public class TempGrid
         drawHandles( g, arrayX, arrayY, pointRectSize);        
         
         //cache draw points
-        drawPoints=points;   
+        drawPoints=points; 
+        try
+        {
+          paintEdges( g, projection );
+        }
+        catch( GM_Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( IncompatibleGeometryTypeException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
     }
       
   }
@@ -227,9 +252,55 @@ public class TempGrid
             true//raised
             );
     }    
-    g.setColor( oldColor );    
+    g.setColor( oldColor );  
+    
+    
+    
   }
   
+  private void paintEdges( final Graphics g, GeoTransform projection ) throws GM_Exception, IncompatibleGeometryTypeException
+  {
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+    defaultstroke = symb.getStroke();
+    Color grey = new Color( 100, 100, 100 );
+
+    stroke.setWidth( 1 );
+    stroke.setStroke( grey );
+    symb.setStroke( stroke );
+    DisplayElement de;
+    
+    
+    
+    GM_Position[] pos = new GM_Position[2];
+
+    for( int i = 0; i < gridPoints.length; i++ )
+    {
+      org.kalypsodeegree_impl.model.geometry.GeometryFactory factory = new org.kalypsodeegree_impl.model.geometry.GeometryFactory();
+      for( int j = 0; j < gridPoints[i].length - 1; j++ )
+      {
+        pos[0] = gridPoints[i][j].getPosition();
+        pos [1] = gridPoints[i][j+1].getPosition();
+        final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
+        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        de.paint( g, projection );
+      }
+    }
+    for( int j = 0; j < gridPoints[0].length; j++ )
+    {
+      GeometryFactory factory = new GeometryFactory();
+      for( int i = 0; i < gridPoints.length - 1; i++ )
+      {
+        pos[0] = gridPoints[i][j].getPosition();
+        pos [1] = gridPoints[i+1][j].getPosition();
+        final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
+        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        de.paint( g,projection );
+      }
+    }
+  }
+
   /**
    * Reset this {@link TempGrid}.
    * It is empty, i.e. contains no points after reset
