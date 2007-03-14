@@ -97,44 +97,47 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
 
   public static final String PARAM_PLUGIN_ID = COMMAND_ID + ".plugin";
 
-  private String context = null;
+  private String m_context = null;
 
-  private String widgetClass = null;
+  private String m_widgetClass = null;
 
-  private String pluginId;
+  private String m_pluginId;
 
   /**
    * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException 
   {
     super.setInitializationData( config, propertyName, data );
 
     if( data instanceof Map )
     {
-      Map parameterMap = (Map) data;
-      widgetClass = (String) parameterMap.get( PARAM_WIDGET_CLASS );
-      context = (String) parameterMap.get( PARAM_CONTEXT );
-      pluginId = (String) parameterMap.get( PARAM_PLUGIN_ID );
+      final Map<String, String> parameterMap = (Map<String, String>) data;
+      m_widgetClass = parameterMap.get( PARAM_WIDGET_CLASS );
+      m_context = parameterMap.get( PARAM_CONTEXT );
+      m_pluginId = parameterMap.get( PARAM_PLUGIN_ID );
     }
 
-    if( widgetClass == null || context == null || pluginId == null )
+    if( m_widgetClass == null || m_context == null || m_pluginId == null )
     {
-      String id = config.getAttribute( "id" );
-      Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, "The '" + id + "' action won't work without a context, a widget class and a plugin id.", null );
+      final String id = config.getAttribute( "id" );
+      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, "The '" + id + "' action won't work without a context, a widget class and a plugin id.", null );
       throw new CoreException( status );
     }
   }
 
   /**
+   * TODO: makes almost the same as in GenericCommandActionDelegat: better code reuse is needed
+   * 
    * @see org.kalypso.ui.GenericCommandActionDelegate#createCommand(org.eclipse.ui.commands.ICommandService)
    */
   @Override
   protected ParameterizedCommand createCommand( final ICommandService commandService )
   {
-    final String cmdName = COMMAND_ID + "#" + context;
+    final String cmdName = COMMAND_ID + "#" + m_context;
     final Command command = commandService.getCommand( cmdName );
     try
     {
@@ -143,10 +146,9 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
         final Command selectWidgetCmd = commandService.getCommand( COMMAND_ID );
         command.define( cmdName, cmdName, selectWidgetCmd.getCategory(), selectWidgetCmd.getParameters() );
       }
-      command.addCommandListener( this );
-      updateActionState( command );
-      return new ParameterizedCommand( command, new Parameterization[] { new Parameterization( command.getParameter( PARAM_WIDGET_CLASS ), widgetClass ),
-          new Parameterization( command.getParameter( PARAM_PLUGIN_ID ), pluginId ) } );
+      
+      return new ParameterizedCommand( command, new Parameterization[] { new Parameterization( command.getParameter( PARAM_WIDGET_CLASS ), m_widgetClass ),
+          new Parameterization( command.getParameter( PARAM_PLUGIN_ID ), m_pluginId ) } );
     }
     catch( final NotDefinedException e )
     {

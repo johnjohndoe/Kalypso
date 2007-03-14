@@ -526,11 +526,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
       GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
+      bos.close();
 
       bis = new ByteArrayInputStream( bos.toByteArray() );
-      bos.close();
       monitor.worked( 1000 );
 
       if( file.exists() )

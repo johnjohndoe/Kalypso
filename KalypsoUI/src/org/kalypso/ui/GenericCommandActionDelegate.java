@@ -53,7 +53,13 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionBars;
@@ -69,16 +75,18 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
- * @author w00t
+ * @author Stefan Kurzbach
  */
 public class GenericCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
     IActionDelegate2
 {
   private static final Object PARAM_COMMAND_ID = "commandId";
 
-  private ParameterizedCommand m_parameterizedCommand = null;
+  ParameterizedCommand m_parameterizedCommand = null;
 
   private IHandlerService m_handlerService = null;
 
@@ -95,6 +103,9 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    */
   public void dispose( )
   {
+    if( m_parameterizedCommand != null )
+      m_parameterizedCommand.getCommand().removeCommandListener( this );
+
     m_handlerService = null;
     m_parameterizedCommand = null;
     m_action = null;
@@ -102,35 +113,15 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( IAction action )
-  {
-    if( m_handlerService == null )
-    {
-      return;
-    }
-    if( m_parameterizedCommand != null )
-    {
-      try
-      {
-        m_handlerService.executeCommand( m_parameterizedCommand, null );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     // we don't care, handlers get their selection from the
     // ExecutionEvent application context
+    m_action = action;
+    updateActionState();
   }
 
   /**
@@ -146,7 +137,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     }
     if( data instanceof Map )
     {
-      m_parameterMap = (Map) data;
+      m_parameterMap = (Map<String, String>) data;
       m_commandId = m_parameterMap.get( PARAM_COMMAND_ID );
     }
   }
@@ -166,6 +157,11 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     m_handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
     m_parameterizedCommand = createCommand( commandService );
+
+    if( m_parameterizedCommand != null )
+      m_parameterizedCommand.getCommand().addCommandListener( this );
+
+    updateActionState();
   }
 
   /**
@@ -188,6 +184,9 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       m_actionBars = targetEditor.getEditorSite().getActionBars();
       init( targetEditor.getSite().getWorkbenchWindow() );
     }
+
+    m_action = action;
+    updateActionState();
   }
 
   /**
@@ -197,9 +196,10 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     if( targetPart != null )
-    {
       init( targetPart.getSite().getWorkbenchWindow() );
-    }
+
+    m_action = action;
+    updateActionState();
   }
 
   /**
@@ -207,10 +207,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    */
   public void commandChanged( final CommandEvent commandEvent )
   {
-    if( m_action != null )
-    {
-      updateActionState( commandEvent.getCommand() );
-    }
+    updateActionState();
   }
 
   /**
@@ -219,43 +216,65 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   public void init( final IAction action )
   {
     m_action = action;
-    updateActionState( null );
+    updateActionState();
   }
 
   /**
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
-  public void runWithEvent( IAction action, Event event )
+  public void runWithEvent( final IAction action, final Event event )
   {
-    run( action );
+    if( m_handlerService == null )
+    {
+      return;
+    }
+
+    if( m_parameterizedCommand != null )
+    {
+      try
+      {
+        m_handlerService.executeCommand( m_parameterizedCommand, null );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoGisPlugin.getDefault().getLog().log( status );
+        ErrorDialog.openError( event.display.getActiveShell(), action.getText() , "Operation konnte nicht ausgeführt werden.", status );
+      }
+    }
+  }
+  
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run( final IAction action )
+  {
+    throw new UnsupportedOperationException();
   }
 
   protected ParameterizedCommand createCommand( final ICommandService commandService )
   {
-    final String cmdName = m_commandId;
-    final Command command = commandService.getCommand( cmdName );
+    final Command command = commandService.getCommand( m_commandId );
     try
     {
       if( !command.isDefined() )
-      {
         command.define( m_commandId, m_commandId, commandService.getCategory( "org.kalypso.ui.commands.default" ) );
-      }
+
       final ArrayList<Parameterization> parameters = new ArrayList<Parameterization>();
       for( String parmName : m_parameterMap.keySet() )
       {
         if( PARAM_COMMAND_ID.equals( parmName ) )
-        {
           continue;
-        }
+
         final IParameter parm = command.getParameter( parmName );
         if( parm == null )
         {
           // asking for a bogus parameter? No problem
           continue;
         }
+
         parameters.add( new Parameterization( parm, m_parameterMap.get( parmName ) ) );
       }
-      updateActionState( command );
       return new ParameterizedCommand( command, parameters.toArray( new Parameterization[parameters.size()] ) );
     }
     catch( final NotDefinedException e )
@@ -265,28 +284,46 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     return null;
   }
 
-  protected void updateActionState( final Command command )
+  private void updateActionState( )
   {
+    if( m_action == null || m_actionBars == null )
+      return;
+
+    final Command command = m_parameterizedCommand == null ? null : m_parameterizedCommand.getCommand();
+
     final boolean enabledState = command != null ? command.isEnabled() : false;
 
     m_action.setEnabled( enabledState );
 
-    // final String actionId = m_action.getId();
-    // final IContributionManager toolBarManager = m_actionBars.getToolBarManager();
-    // final IContributionManager menuManager = m_actionBars.getMenuManager();
-    // final IContributionItem toolbarContribution = toolBarManager.find( actionId );
-    // if( toolbarContribution != null )
-    // {
-    // toolbarContribution.setVisible( enabledState );
-    // toolBarManager.update( true );
-    // }
-    // final IContributionItem menuContribution = menuManager.find( actionId );
-    // if( menuContribution != null )
-    // {
-    // menuContribution.setVisible( enabledState );
-    // menuManager.update( true );
-    // }
-    // m_actionBars.updateActionBars();
-  }
+    final String actionId = m_action.getId();
+    final IContributionManager toolBarManager = m_actionBars.getToolBarManager();
+    final IContributionManager menuManager = m_actionBars.getMenuManager();
 
+    final IActionBars actionBars = m_actionBars;
+    final UIJob job = new UIJob( "Update Action-Bars" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        // final IContributionItem toolbarContribution = toolBarManager == null?null: toolBarManager.find( actionId );
+        final IContributionItem toolbarContribution = toolBarManager.find( actionId );
+        if( toolbarContribution != null )
+        {
+          toolbarContribution.setVisible( enabledState );
+          toolBarManager.update( true );
+        }
+        final IContributionItem menuContribution = menuManager.find( actionId );
+        if( menuContribution != null )
+        {
+          menuContribution.setVisible( enabledState );
+          menuManager.update( true );
+        }
+
+        actionBars.updateActionBars();
+        return Status.OK_STATUS;
+      }
+    };
+    job.setPriority( UIJob.INTERACTIVE );
+    job.schedule();
+  }
 }
