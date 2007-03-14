@@ -9,10 +9,10 @@
         <mapv:layer visible="true" name="Element1D" id="ID_6" featurePath="#fid#root/element[Element1D]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="Element2D" id="ID_7" featurePath="#fid#root/element[Element2D]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="Junction1D2D" id="ID_13" featurePath="#fid#root/element[_Junction1D2D]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="1D-Netzparameter" id="ID_14" featurePath="#fid#root/flowRelationshipMember" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="Höhenmodel" id="ID_11" featurePath="#fid#Scenario_Terrain_Elevation_ModelSystem/terrainElevationModel[NativeTerrainElevationModelWrapper]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest"/>
-    	<mapv:layer visible="true" name="Rauhigkeiten" linktype="gmt" xlink:type="simple" xlink:href="roughness.gmt" xlink:actuate="onRequest"/>
-    	<mapv:layer visible="true" name="Basiskarten" linktype="gmt" xlink:type="simple" xlink:href="base.gmt" xlink:actuate="onRequest"/>
-    	
+    	<mapv:layer visible="true" name="Rauhigkeiten" id="ID_15" linktype="gmt" xlink:type="simple" xlink:href="roughness.gmt" xlink:actuate="onRequest"/>
+    	<mapv:layer visible="true" name="Basiskarten" id="ID_16" linktype="gmt" xlink:type="simple" xlink:href="base.gmt" xlink:actuate="onRequest"/>
     </mapv:layers>
 </mapv:gismapview>
 

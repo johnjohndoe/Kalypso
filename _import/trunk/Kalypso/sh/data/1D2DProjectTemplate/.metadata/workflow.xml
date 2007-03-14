@@ -18,10 +18,14 @@
 				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
 				<Name>Import eines Gewässernetzes</Name>
 			</Task>
-			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad">
+			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad">
 				<Help>Einladen von 1D-Profildaten (WSPWIN/DA66)</Help>
 				<Name>Import von 1D-Profilen</Name>
-			</Task>
+				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
+					<Help>Zeigt Profile als Thema in Karte</Help>
+					<Name>Profile in Karte anzeigen</Name>
+				</Task>
+			</TaskGroup>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad">
 				<Help>Einladen von Polygonen zur Rauheitszonenabgrenzung (SHP)</Help>
 				<Name>Rauheitsshapes laden</Name>
@@ -38,30 +42,28 @@
 				<Help></Help>
 				<Name>1D-Gewässernetz</Name>
 				<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport">
-					<Help>Importieren von Finite-Elemente-1D-Netzen aus externen Daten</Help>
-					<Name>1D-Netz importieren</Name>
+					<Help>Importieren von 1D-Finite-Elemente aus externen Daten</Help>
+					<Name>Fremddaten importieren</Name>
 					<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm">
-						<Help>stationäres Modell (WSPM) also FE-1D-Netz importieren</Help>
+						<Help>FE-1D-Netz aus stationärem Modell (WSPM) erzeugen</Help>
 						<Name>WSPM Modell</Name>
 					</Task>
 				</TaskGroup>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
-					<Help>Zeigt Profile als Thema in Karte</Help>
-					<Name>Profile in Karte anzeigen</Name>
-				</Task>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#EditDataTable">
-					<Help>Editierfunktionen zur Bearbeitung der Datentabelle von Profilen</Help>
-					<Name>Polynomdaten bearbeiten</Name>
+				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNet">
+					<Help>Bearbeitung von 1D-Elementen</Help>
+					<Name>Netz bearbeiten</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GeneratePolynoms">
-					<Help>Erstellen der Polynomeingabedaten für die FE-Berechnung</Help>
-					<Name>Polynome erstellen</Name>
+					<Help>Bearbeitung von 1D Parametern</Help>
+					<Name>Netzparameter bearbeiten</Name>
 				</Task>
 			</TaskGroup>
+			<!--  What does the Kanalnetz mean?
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DChanGroup">
 				<Help></Help>
 				<Name>1D-Kanalnetz</Name>
 			</TaskGroup>
+			-->
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup">
 				<Help></Help>
 				<Name>2D-Netz</Name>
