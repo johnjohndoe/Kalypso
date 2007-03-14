@@ -45,16 +45,13 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
@@ -146,9 +143,22 @@ public class MapView extends AbstractMapPart implements IViewPart
     final String saveOnCloseString = getConfigurationElement().getAttribute( SAVE_MAP_ON_CLOSE );
     if( "true".equals( saveOnCloseString ) )
     {
-      startSaveJob();
+      final IFile file = getFile();
+      saveMap( file );
     }
     super.dispose();
+  }
+
+  private void saveMap( final IFile file )
+  {
+    try
+    {
+      saveMap( new NullProgressMonitor(), file );
+    }
+    catch( final CoreException e )
+    {
+      ErrorDialog.openError( getSite().getShell(), "Fehler", "Karte konnte nicht gespeichert werden.", e.getStatus() );
+    }
   }
 
   /**
@@ -160,41 +170,8 @@ public class MapView extends AbstractMapPart implements IViewPart
     final IFile file = getFile();
     if( file != null && !file.equals( storage ) )
     {
-      startSaveJob();
+      saveMap( file );
     }
     super.startLoadJob( storage );
-  }
-
-  public void startSaveJob( )
-  {
-    final IFile file = getFile();
-    final Job disposeJob = new Job( "Saving map state..." )
-    {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        try
-        {
-          saveMap( monitor, file );
-        }
-        catch( final CoreException e )
-        {
-          return StatusUtilities.statusFromThrowable( e );
-        }
-        return Status.OK_STATUS;
-      }
-      //
-      // /**
-      // * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-      // */
-      // @Override
-      // public boolean belongsTo( final Object family )
-      // {
-      // return MapView.JOB_FAMILY.equals( family );
-      // }
-    };
-    disposeJob.setRule( file );
-    disposeJob.setUser( true );
-    disposeJob.schedule();
   }
 }

@@ -114,9 +114,10 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
     public void dispose( )
     {
+      setTheme( null );
+      PlatformUI.getWorkbench().getDisplay().asyncExec( this );
       m_contextService = null;
       m_oldContext = null;
-      m_theme = null;
     }
   }
 
