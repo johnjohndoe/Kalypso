@@ -235,11 +235,11 @@ public class FileUtilities
   }
 
   /**
-   * Rekursives l?schen von Dateien und Verzeichnissen
+   * Rekursives löschen von Dateien und Verzeichnissen
    * 
    * @param file
-   *          Falls das Argument eine Datei ist, wird diese gel?scht. Ist es ein Verzeichnis, werden alle dieses mitsamt
-   *          aller darin liegenden Verzeichnisse und Dateien gel?scht.
+   *          Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt aller
+   *          darin liegenden Verzeichnisse und Dateien gelöscht.
    */
   public static void deleteRecursive( final File file )
   {
@@ -512,17 +512,14 @@ public class FileUtilities
   public static String nameFromPath( final String path )
   {
     final int lastIndexOfSlash = path.lastIndexOf( '/' );
-    
+
     /**
-     * Bug fixed by Dejan, 18.01.2007
-     * It was
-     * final int lastIndexOfBackslash = path.lastIndexOf( '\\' );
-     * i.e. the same value as lastIndexOfSlash, so it was not working for backslashes
-     * 
-     * TODO: consider using java.io.File.separatorChar instead of slash & backslash
+     * Bug fixed by Dejan, 18.01.2007 It was final int lastIndexOfBackslash = path.lastIndexOf( '\\' ); i.e. the same
+     * value as lastIndexOfSlash, so it was not working for backslashes TODO: consider using java.io.File.separatorChar
+     * instead of slash & backslash
      */
     final int lastIndexOfBackslash = path.lastIndexOf( '\\' );
-    
+
     final int lastIndexOf = Math.max( lastIndexOfSlash, lastIndexOfBackslash );
 
     if( lastIndexOf == -1 )
@@ -537,14 +534,16 @@ public class FileUtilities
   /**
    * Sets a certain suffix to the given file name. If the file name already has a suffix (that is a non-empty string
    * after the last '.') it will be replaced.
-   * @param suffix The suffix without the point '.'
+   * 
+   * @param suffix
+   *          The suffix without the point '.'
    */
   public static String setSuffix( final String fileName, final String suffix )
   {
     final int index = fileName.indexOf( '.' );
     if( index == -1 )
       return fileName + '.' + suffix;
-    
+
     return fileName.substring( 0, index ) + suffix;
   }
 }
