@@ -144,6 +144,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
           }
       }
       addedElement=ModelOps.createElement2d( model, edges );
+      System.out.println( "Element added" );
     }
   }
 

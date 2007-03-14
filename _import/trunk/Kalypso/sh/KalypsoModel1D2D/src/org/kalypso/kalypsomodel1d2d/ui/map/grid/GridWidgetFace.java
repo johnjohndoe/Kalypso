@@ -130,7 +130,7 @@ class GridWidgetFace
           }
           else
           {
-            return "NaN";
+            return "0";
           }
         }
         case 2:
@@ -145,7 +145,7 @@ class GridWidgetFace
           }
           else
           {
-            return "NaN";
+            return "0";
           }
         }
         default:
@@ -295,7 +295,7 @@ class GridWidgetFace
                       Section.TREE_NODE | Section.CLIENT_INDENT | 
                         Section.TWISTIE | Section.DESCRIPTION | 
                         Section.TITLE_BAR);
-      workStatus.setText( "Aktuelle Bearbeitungsstatus" );
+      workStatus.setText( "aktueller Bearbeitungsstatus" );
       TableWrapData tableWrapData = 
             new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
@@ -357,11 +357,11 @@ class GridWidgetFace
       table.setLayoutData(gridData);
         
       TableColumn lineColumn= new TableColumn(table,SWT.LEFT);
-       lineColumn.setText( "Linie" ); 
+       lineColumn.setText( "Liniennr." ); 
        lineColumn.setWidth( 100/1 );
        
       TableColumn actualPointNum= new TableColumn(table,SWT.LEFT);
-      actualPointNum.setText( "Akt. PunktAnzahl" ); 
+      actualPointNum.setText( "Akt. Punktanzahl" ); 
     actualPointNum.setWidth( 100/2 );  
       
       TableColumn targetPointNum= new TableColumn(table,SWT.LEFT|SWT.WRAP);
@@ -530,19 +530,19 @@ class GridWidgetFace
       clientComposite.setLayout( new GridLayout() );
       
      handleWidth=
-        new IntegerFieldEditor(HANDLE_WIDTH_NAME,"Handle Breite", clientComposite);
+        new IntegerFieldEditor(HANDLE_WIDTH_NAME,"Weite des Punktfangs", clientComposite);
      handleWidth.setPreferenceStore( preferenceStore ); 
      handleWidth.load();
      handleWidth.setPropertyChangeListener( storePropertyChangeListener );
       
      lineColorFieldEditor[0]=
-       new ColorFieldEditor(LINE_COLOR_0,"Farbe Linie0",clientComposite);
+       new ColorFieldEditor(LINE_COLOR_0,"Farbe für Linie 1",clientComposite);
      lineColorFieldEditor[1]=
-       new ColorFieldEditor(LINE_COLOR_1,"Farbe Linie1",clientComposite);
+       new ColorFieldEditor(LINE_COLOR_1,"Farbe für Linie 2",clientComposite);
      lineColorFieldEditor[2]=
-       new ColorFieldEditor(LINE_COLOR_2,"Farbe Linie2",clientComposite);
+       new ColorFieldEditor(LINE_COLOR_2,"Farbe für Linie 3",clientComposite);
      lineColorFieldEditor[3]=
-       new ColorFieldEditor(LINE_COLOR_3,"Farbe Linie3",clientComposite);
+       new ColorFieldEditor(LINE_COLOR_3,"Farbe für Linie 4",clientComposite);
      
      
      for(ColorFieldEditor colorFieldEditor:lineColorFieldEditor)

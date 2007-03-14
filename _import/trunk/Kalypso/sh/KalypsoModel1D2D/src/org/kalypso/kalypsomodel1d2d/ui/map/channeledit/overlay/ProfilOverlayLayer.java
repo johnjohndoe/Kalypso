@@ -55,6 +55,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.SegmentData;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -77,6 +78,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
 {
   private IProfil m_profile;
 
+  CreateMainChannelWidget m_widget;
+
   private final Color m_color;
 
   private CreateChannelData m_data;
@@ -89,6 +92,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     if( !cr.getKeySet().contains( IWspmOverlayConstants.LAYER_OVERLAY ) )
       cr.put( IWspmOverlayConstants.LAYER_OVERLAY, new RGB( 0, 153, 255 ) );
     m_color = cr.get( IWspmOverlayConstants.LAYER_OVERLAY );
+    m_widget = null;
   }
 
   /**
@@ -189,6 +193,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     checkIntersectionPoints( gmPoint, oldStartWdith, oldEndWdith );
 
     m_data.completationCheck();
+    m_widget.getPanel().repaint();
 
   }
 
@@ -224,7 +229,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
 
     if( widthorder != null )
       currentSegment.setIntersPoint( gmPoint, prof, widthorder, width );
-    
+
     currentSegment.setNewIntersectedProfile( m_profile, prof );
     currentSegment.updateProfileIntersection();
 
@@ -297,7 +302,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       final Rectangle hover = RectangleUtils.buffer( p );
       if( hover.contains( point ) )
       {
-        return new EditInfo( this, hover, new EditData( index, "" ), "HoverInfo" );
+
+        String string = String.format( "Breite: %.4f  \nRW: %.4f \nHW: %.4f", points.get( index ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), points.get( index ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), points.get( index ).getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+
+        return new EditInfo( this, hover, new EditData( index, "" ), string );
       }
       index++;
     }
@@ -381,10 +389,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     // do nothing
   }
 
-  public void setProfile( final IProfil profile, CreateChannelData data )
+  public void setProfile( final IProfil profile, CreateChannelData data, CreateMainChannelWidget widget )
   {
     m_profile = profile;
     m_data = data;
+    m_widget = widget;
   }
 
   /**

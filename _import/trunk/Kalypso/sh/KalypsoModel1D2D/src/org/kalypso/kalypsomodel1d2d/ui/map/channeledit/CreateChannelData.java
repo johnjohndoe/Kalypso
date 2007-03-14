@@ -351,7 +351,7 @@ public class CreateChannelData
 
   public IProfilEventManager getProfilEventManager( )
   {
-    if( m_selectedProfiles.size() == 0 )
+    if( m_selectedProfiles.size() <= 1 )
       return new ProfilEventManager( null, null );
 
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
@@ -431,7 +431,7 @@ public class CreateChannelData
     tempGrid.importMesh( importingGridPoints );
     try
     {
-      final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0.50 );
+      final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0 );
       workspace.postCommand( command );
     }
     catch( Exception e )

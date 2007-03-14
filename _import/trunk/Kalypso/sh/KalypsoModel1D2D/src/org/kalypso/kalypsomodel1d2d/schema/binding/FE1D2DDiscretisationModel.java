@@ -300,7 +300,7 @@ public class FE1D2DDiscretisationModel
     foundNodes=nodeList.query(reqEnvelope,foundNodes);
     if(foundNodes.isEmpty())
     {
-      System.out.println("Node not found Found:"+reqEnvelope);
+      //System.out.println("Node not found Found:"+reqEnvelope);
       return null;
     }
     else

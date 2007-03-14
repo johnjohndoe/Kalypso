@@ -109,7 +109,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   {
     addedNode=discretisationModel.createNode( 
                     nodePoint,searchRectWidth, notCreated );
-//    <System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
+    System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
   }
 
   /**

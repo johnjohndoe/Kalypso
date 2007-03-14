@@ -101,7 +101,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     for(int i=0;i<sides.length;i++)
     {
       lpcConfigs[i]= 
-        new LinePointCollectorConfig("Linie "+i,colors[i],sides[i]);
+        new LinePointCollectorConfig("Linie "+(i+1),colors[i],sides[i]);
       lpcConfigs[i].setPointRectSize( pointRectSize );
     }
   }

@@ -903,7 +903,7 @@ public class CreateMainChannelComposite extends Composite
           else
             layerData = currentSegment.getProfDownIntersProfile();
 
-          ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data );
+          ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data, m_widget );
           m_widget.getPanel().repaint();
         }
       }
