@@ -86,16 +86,23 @@ public class NativeTerrainElevationModelFactory
   {
     String filePath=ascFile.getAbsolutePath();
     Object cachedEleModel = cache.getObject( filePath );
-    
+    if(cachedEleModel!=null)
+    {
+      return (IElevationProvider) cachedEleModel;
+    }
     if(filePath.endsWith( ".asc" ))
     {
-      return new ASCTerrainElevationModel(ascFile.toURL(),null);
+      ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel(ascFile.toURL(),null);
+      cache.addObject( filePath, terrainElevationModel );
+      return terrainElevationModel;
     }
     else if(filePath.endsWith( ".hmo" ))
     {
       try
       {
-        return new HMOTerrainElevationModel(ascFile.toURL(),null);
+        HMOTerrainElevationModel terrainElevationModel = new HMOTerrainElevationModel(ascFile.toURL(),null);
+        cache.addObject( filePath, terrainElevationModel );
+        return terrainElevationModel;
       }
       catch( ParseException e )
       {
