@@ -47,9 +47,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    final IWorkbench workbench = PlatformUI.getWorkbench();
     m_activeWorkContext = new ActiveWorkContext();
-    workbench.addWindowListener( m_activeWorkContext );
   }
 
   /**
@@ -59,7 +57,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void stop( BundleContext context ) throws Exception
   {
     plugin = null;
-    // TODO: dispose activeWorkContext
+    m_activeWorkContext.dispose();
     m_activeWorkContext = null;
     super.stop( context );
   }

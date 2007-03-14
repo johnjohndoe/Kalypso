@@ -89,6 +89,8 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
       {
         m_mapView.startLoadJob( file );
       }
+      
+      mapPanel.getWidgetManager().setActualWidget( null );
 
       if( m_featureType != null )
       {
@@ -98,30 +100,33 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
           protected IStatus run( final IProgressMonitor monitor )
           {
             m_mapModell = mapPanel.getMapModell();
-            final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-            if( activeTheme != null && m_featureType.equals( NO_LAYER ) )
+            if( m_mapModell != null )
             {
-              m_mapModell.activateTheme( null );
-            }
-            else if( !m_featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
-            {
-              final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
-              for( final IKalypsoTheme theme : allThemes )
+              final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+              if( activeTheme != null && m_featureType.equals( NO_LAYER ) )
               {
-                if( !theme.isLoaded() )
+                m_mapModell.activateTheme( null );
+              }
+              else if( !m_featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
+              {
+                final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+                for( final IKalypsoTheme theme : allThemes )
                 {
-                  theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
-                }
-                else
-                {
-                  maybeActivateTheme( theme );
+                  if( !theme.isLoaded() )
+                  {
+                    theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
+                  }
+                  else
+                  {
+                    maybeActivateTheme( theme );
+                  }
                 }
               }
             }
             return Status.OK_STATUS;
           }
         };
-        job.setRule( mapPanel.getSchedulingRule().getActivateLayerSchedulingRule() );
+        job.setRule( m_mapView.getSchedulingRule().getActivateLayerSchedulingRule() );
         job.setUser( true );
         job.schedule();
       }
