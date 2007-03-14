@@ -431,7 +431,7 @@ public class CreateChannelData
     tempGrid.importMesh( importingGridPoints );
     try
     {
-      final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0.01 );
+      final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0.50 );
       workspace.postCommand( command );
     }
     catch( Exception e )

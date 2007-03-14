@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfilComparator;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfileUtilities;
@@ -89,6 +90,73 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class SegmentData
 {
+
+  /**
+   * @author bce
+   */
+  private static final class ProfileSegmentData
+  {
+    public final IProfilPoint[] segmPoints;
+
+    public final int startInd;
+
+    public final int endInd;
+
+    public final double distance;
+
+    public int distInd;
+
+    public ProfileSegmentData( IProfilPoint[] points, int start, int end )
+    {
+      segmPoints = points;
+      startInd = start;
+      endInd = end;
+      distance = maxSegmentDistance();
+    }
+
+    private final double maxSegmentDistance( )
+    {
+      double maxDistance = Double.NEGATIVE_INFINITY;
+      if( (endInd - startInd) >= 2 )
+        for( int i = 1; i < (endInd - startInd) - 1; i++ )
+        {
+          final double currentDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + i] );
+          if( currentDistance > maxDistance )
+          {
+            maxDistance = currentDistance;
+            distInd = (startInd + i);
+          }
+        }
+      else if( (endInd - startInd) == 2 )
+      {
+        maxDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + 1] );
+        distInd = (startInd + 1);
+      }
+      else if( (endInd - startInd) == 1 )
+      {
+        maxDistance = 0;
+        distInd = startInd;
+      }
+
+      return maxDistance;
+    }
+
+    private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint )
+    {
+      final double bx = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double by = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final double ex = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double ey = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final double mx = middlePoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double my = middlePoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+      final double f = (ey - by) / (ex - bx);
+
+      final double distance = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
+      return Math.abs( distance );
+    }
+
+  }
 
   // LineStrings derived from the original data
   private LineString m_profUpOrg;
@@ -255,7 +323,8 @@ public class SegmentData
       m_areaUpIntersProfile = ProfilUtil.calcArea( tempUpIntersProfile );
 
       // Flächenausgleich!!
-      m_upIntersProfile = adjustProfileArea( tempUpIntersProfile, m_areaUpCroppedProfile, m_areaUpIntersProfile );
+      m_upIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
+      //m_upIntersProfile = adjustProfileArea( tempUpIntersProfile, m_areaUpCroppedProfile, m_areaUpIntersProfile );
 
       GeometryFactory factory = new GeometryFactory();
       m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
@@ -283,7 +352,8 @@ public class SegmentData
       m_areaDownIntersProfile = ProfilUtil.calcArea( tempDownIntersProfile );
 
       // Flächenausgleich!!
-      m_downIntersProfile = adjustProfileArea( tempDownIntersProfile, m_areaDownCroppedProfile, m_areaDownIntersProfile );
+      m_downIntersProfile =createIntersectedIProfile( m_downCroppedProfile );
+      //m_downIntersProfile = adjustProfileArea( tempDownIntersProfile, m_areaDownCroppedProfile, m_areaDownIntersProfile );
 
       GeometryFactory factory = new GeometryFactory();
       m_downIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_downIntersProfile ) );
@@ -371,9 +441,9 @@ public class SegmentData
   private IProfil createIntersectedIProfile( IProfil profile ) throws Exception
   {
     final int numProfInters = m_channelData.getNumProfileIntersections();
-    final int numProfPoints = profile.getPoints().size();
+    LinkedList<IProfilPoint> profilPointList = profile.getPoints();
+    final int numProfPoints = profilPointList.size();
 
-    final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     tmpProfil.setStation( profile.getStation() );
@@ -383,62 +453,79 @@ public class SegmentData
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
-    // start point
-    IProfilPoint point = tmpProfil.createProfilPoint();
-    double width = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    double heigth = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    double x = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    double y = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, x );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, y );
-    tmpProfil.addPoint( point );
-
-    // if( numProfInters > numProfPoints )
-    // {
-    /* do it by equidistant points */
-    // keep in mind, that equidistants width doesn't get equidistant georeferenced lengths!
-    final double startWidth = profilPointList.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double endWidth = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double totalWidth = endWidth - startWidth;
-    final double dWidth = totalWidth / (m_channelData.getNumProfileIntersections() - 1); // equidistant widths
-
-    for( int i = 1; i < m_channelData.getNumProfileIntersections() - 1; i++ )
+    if( numProfInters > numProfPoints )
     {
-      point = tmpProfil.createProfilPoint();
-
-      width = startWidth + i * dWidth;
-      heigth = WspmProfileHelper.getHeigthPositionByWidth( width, profile );
-      final GM_Point geoPoint = WspmProfileHelper.getGeoPosition( width, profile );
-
+      // start point
+      IProfilPoint point = tmpProfil.createProfilPoint();
+      double width = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      double heigth = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      double x = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double y = profilPointList.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
       point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
       point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
-      point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint.getX() );
-      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint.getY() );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, x );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, y );
+      tmpProfil.addPoint( point );
 
+      /* do it by equidistant points */
+      // keep in mind, that equidistants width doesn't get equidistant georeferenced lengths!
+      final double startWidth = profilPointList.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double endWidth = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double totalWidth = endWidth - startWidth;
+      final double dWidth = totalWidth / (m_channelData.getNumProfileIntersections() - 1); // equidistant widths
+
+      for( int i = 1; i < m_channelData.getNumProfileIntersections() - 1; i++ )
+      {
+        point = tmpProfil.createProfilPoint();
+
+        width = startWidth + i * dWidth;
+        heigth = WspmProfileHelper.getHeigthPositionByWidth( width, profile );
+        final GM_Point geoPoint = WspmProfileHelper.getGeoPosition( width, profile );
+
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint.getX() );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint.getY() );
+
+        tmpProfil.addPoint( point );
+      }
+
+      // end point
+      point = tmpProfil.createProfilPoint();
+      width = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      heigth = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      x = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      y = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, x );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, y );
       tmpProfil.addPoint( point );
     }
-
-    // }
-    // else
-    // {
-    // // do it by Douglas-Peucker
-    //
-    // }
-
-    // end point
-    point = tmpProfil.createProfilPoint();
-    width = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    heigth = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    x = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    y = profilPointList.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, x );
-    point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, y );
-    tmpProfil.addPoint( point );
-
+    else
+    {
+      // get the most important points (some kind of Douglas-Peucker)
+      final IProfilPoint[] profPoints = profilPointList.toArray( new IProfilPoint[profilPointList.size()] );
+      // do it by Douglas-Peucker
+      final IProfilPoint[] DPpoints = findIProfileVIPPoints( profPoints, numProfInters );
+      
+      Arrays.sort( DPpoints, new ProfilComparator( IWspmConstants.POINT_PROPERTY_BREITE ) );
+      for( int i = 0; i < DPpoints.length; i++ )
+      {
+        final IProfilPoint point = tmpProfil.createProfilPoint();
+        final double width = DPpoints[i].getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+        final double heigth = DPpoints[i].getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+        final double x = DPpoints[i].getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+        final double y = DPpoints[i].getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+        
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, x );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, y );
+        
+        tmpProfil.addPoint( point );
+      }
+    }
     return tmpProfil;
   }
 
@@ -732,9 +819,9 @@ public class SegmentData
    */
   private void calcWidthOrder( )
   {
-    IntersPointData DataUp[]  = new IntersPointData[2];
-    IntersPointData DataDown[]  = new IntersPointData[2];
-    
+    IntersPointData DataUp[] = new IntersPointData[2];
+    IntersPointData DataDown[] = new IntersPointData[2];
+
     double width1 = 0;
     double width2 = 0;
     int j = 0;
@@ -744,12 +831,12 @@ public class SegmentData
     {
       if( m_intersPoints.get( i ).getProf() == CreateChannelData.PROF.UP )
       {
-        DataUp[j] =  m_intersPoints.get( i );
+        DataUp[j] = m_intersPoints.get( i );
         j = j + 1;
       }
       if( m_intersPoints.get( i ).getProf() == CreateChannelData.PROF.DOWN )
       {
-        DataDown[k] =  m_intersPoints.get( i );
+        DataDown[k] = m_intersPoints.get( i );
         k = k + 1;
       }
     }
@@ -757,31 +844,31 @@ public class SegmentData
     {
       width1 = DataUp[0].getWidth();
       width2 = DataUp[1].getWidth();
-      if ( width2 > width1)
+      if( width2 > width1 )
       {
         DataUp[0].setWidthOrder( WIDTHORDER.FIRST );
         DataUp[1].setWidthOrder( WIDTHORDER.LAST );
       }
-      else 
+      else
       {
         DataUp[0].setWidthOrder( WIDTHORDER.LAST );
         DataUp[1].setWidthOrder( WIDTHORDER.FIRST );
-      }  
+      }
     }
     if( k == 2 )
     {
       width1 = DataDown[0].getWidth();
       width2 = DataDown[1].getWidth();
-      if ( width2 > width1)
+      if( width2 > width1 )
       {
         DataDown[0].setWidthOrder( WIDTHORDER.FIRST );
         DataDown[1].setWidthOrder( WIDTHORDER.LAST );
       }
-      else 
+      else
       {
         DataDown[0].setWidthOrder( WIDTHORDER.LAST );
         DataDown[1].setWidthOrder( WIDTHORDER.FIRST );
-      }  
+      }
     }
 
   }
@@ -946,134 +1033,54 @@ public class SegmentData
 
   }
 
-  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint )
-  {
-    final double bx = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double by = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final double ex = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double ey = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final double mx = middlePoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double my = middlePoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-
-    final double f = (ey - by) / (ex - bx);
-
-    final double distance = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
-    return Math.abs( distance );
-  }
-
-  /*
-   * // /** @return the points witch are redundant
+  /**
+   * gets the most important profile points by sequently adding the points with the maximum distance to the segment
+   * initially defined by the start and end point of the profile
    */
-  // private Point[] reduceIt( final Point[] points, final int begin, final int end, final double allowedDistance )
-  // throws ProfilDataException
-  // {
-  // if( end - begin < 2 )
-  // return new Point[0];
-  //
-  // // für alle punkte abstand zu segment[begin-end] ausrechnen
-  // final double[] distances = new double[end - (begin + 1)];
-  // double maxdistance = 0.0;
-  // int maxdistIndex = -1;
-  //
-  // for( int i = 0; i < distances.length; i++ )
-  // {
-  // final double distance = calcDistance( points[begin], points[end], points[i + begin + 1] );
-  // distances[i] = distance;
-  //
-  // if( distance > maxdistance )
-  // {
-  // maxdistance = distance;
-  // maxdistIndex = i + begin + 1;
-  // }
-  // }
-  // }
-  /** @return the points witch are redundant */
-  private IProfilPoint[] reduceIt( final IProfilPoint[] points, final int begin, final int end, final double allowedDistance ) 
+  protected IProfilPoint[] findIProfileVIPPoints( final IProfilPoint[] points, final int allowedNumPoints )
   {
-    if( end - begin < 2 )
-      return new IProfilPoint[0];
+    final List<IProfilPoint> pointsToKeep = new ArrayList<IProfilPoint>( allowedNumPoints - 1 );
 
-    // für alle punkte abstand zu segment[begin-end] ausrechnen
-    final double[] distances = new double[end - (begin + 1)];
-    double maxdistance = 0.0;
-    int maxdistIndex = -1;
-    for( int i = 0; i < distances.length; i++ )
+    // store the first point of the input profile in the profile point list.
+    pointsToKeep.add( points[0] );
+
+    LinkedList<ProfileSegmentData> profSegmentList = new LinkedList<ProfileSegmentData>();
+
+    /* begin with the start and end point of the profile */
+    final ProfileSegmentData startSegment = new ProfileSegmentData( points, 0, points.length - 1 );
+    profSegmentList.add( startSegment );
+
+    for( int i = 1; i < allowedNumPoints - 1; i++ )
     {
-      final double distance = calcDistance( points[begin], points[end], points[i + begin + 1] );
-      distances[i] = distance;
+      double maxDist = Double.NEGATIVE_INFINITY;
+      int indexMax = 0;
 
-      if( distance > maxdistance )
+      for( int j = 0; j < profSegmentList.size(); j++ )
       {
-        maxdistance = distance;
-        maxdistIndex = i + begin + 1;
+        // find the maxDistanceSegment
+
+        final ProfileSegmentData currentProfSegment = profSegmentList.get( j );
+        final double currentDist = currentProfSegment.distance;
+        if( currentDist > maxDist )
+        {
+          maxDist = currentDist;
+          indexMax = j;
+        }
       }
+      // store the found maximum in the profile point list
+      pointsToKeep.add( points[profSegmentList.get( indexMax ).distInd] );
+
+      // split the maxDistanceSegment
+      final ProfileSegmentData firstSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).startInd, profSegmentList.get( indexMax ).distInd );
+      final ProfileSegmentData secondSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).distInd, profSegmentList.get( indexMax ).endInd );
+
+      // store the new segments in the list
+      profSegmentList.set( indexMax, firstSplittedSegment );
+      profSegmentList.add( indexMax + 1, secondSplittedSegment );
+
     }
-
-    // falls ein punkt dabei, dessen diff > maxdiff, splitten
-    if( maxdistance > allowedDistance && maxdistIndex != -1 )
-    {
-      final IProfilPoint[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
-      final IProfilPoint[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
-      final List<IProfilPoint> reduced = new ArrayList<IProfilPoint>( beginReduced.length + endReduced.length );
-      reduced.addAll( Arrays.asList( beginReduced ) );
-      reduced.addAll( Arrays.asList( endReduced ) );
-      return reduced.toArray( new IProfilPoint[reduced.size()] );
-    }
-
-    // kein Punkt mehr wichtig: alle zwischenpunkte zurückgeben
-    final IProfilPoint[] reduced = new IProfilPoint[end - (begin + 1)];
-    for( int i = 0; i < reduced.length; i++ )
-      reduced[i] = points[i + begin + 1];
-
-    return reduced;
-  }
-
-  protected Point[] reducePoints( final Point[] points, final Point[] pointsToKeep, final double allowedDistance )
-  {
-    // reduce segment wise
-    final Set<Point> pointsToKeepList = new HashSet<Point>( Arrays.asList( pointsToKeep ) );
-    final List<Point> pointsToRemove = new ArrayList<Point>( points.length - 2 );
-
-    int segmentBegin = 0;
-    for( int i = 0; i < points.length; i++ )
-    {
-      if( i == segmentBegin )
-        continue;
-
-      final Point point = points[i];
-      if( pointsToKeepList.contains( point ) || i == points.length - 1 )
-      {
-        // final Point[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
-        // pointsToRemove.addAll( Arrays.asList( toRemove ) );
-        segmentBegin = i;
-      }
-    }
-
-    return pointsToRemove.toArray( new Point[pointsToRemove.size()] );
-  }
-
-  protected IProfilPoint[] reducePoints( final IProfilPoint[] points, final IProfilPoint[] pointsToKeep, final double allowedDistance ) 
-  {
-    // reduce segment wise
-    final Set<IProfilPoint> pointsToKeepList = new HashSet<IProfilPoint>( Arrays.asList( pointsToKeep ) );
-    final List<IProfilPoint> pointsToRemove = new ArrayList<IProfilPoint>( points.length - 2 );
-
-    int segmentBegin = 0;
-    for( int i = 0; i < points.length; i++ )
-    {
-      if( i == segmentBegin )
-        continue;
-
-      final IProfilPoint point = points[i];
-      if( pointsToKeepList.contains( point ) || i == points.length - 1 )
-      {
-        final IProfilPoint[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
-        pointsToRemove.addAll( Arrays.asList( toRemove ) );
-        segmentBegin = i;
-      }
-    }
-
-    return pointsToRemove.toArray( new IProfilPoint[pointsToRemove.size()] );
+    pointsToKeep.add( points[points.length - 1] );
+    return pointsToKeep.toArray( new IProfilPoint[pointsToKeep.size()] );
   }
 
   public int getNumBankIntersections( )
@@ -1093,8 +1100,6 @@ public class SegmentData
     if( m_bankRightInters != null )
       m_bankRightInters = intersectLineString( m_bankRightOrg, m_numBankIntersections );
   }
-
-
 
   /**
    * manages the update of the profile data, after the intersected profiles were chaged by the chart view layer in the
