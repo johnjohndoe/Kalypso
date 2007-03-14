@@ -167,12 +167,43 @@
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad"/>
+	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
+	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+	           <parameter
+	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+	                 value="maps/fenet.gmt"/>
+	           <parameter
+	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+	        </class>
+	     </handler>
       <handler
             class="de.renew.workflow.NullWorkflowCommandHandler"
             commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport"/>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm"/>
+      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNet">
+         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+            <parameter
+                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+                  value="maps/fenet.gmt"/>
+            <parameter
+                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+         </class>
+      </handler>
+      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GeneratePolynoms">
+         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+            <parameter
+                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+                  value="maps/fenet.gmt"/>
+            <parameter
+                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FlowRelationship"/>
+         </class>
+      </handler>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportDiscreatisationModel1D2DHandler"
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport"/>
@@ -214,17 +245,6 @@
 	           <parameter
 	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
 	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
-	        </class>
-	     </handler>
-	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
-	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
-	           <parameter
-	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-	                 value="maps/fenet.gmt"/>
-	           <parameter
-	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
 	        </class>
 	     </handler>
 	     

@@ -29,6 +29,8 @@
 		
 		================================================== -->
 
+	<!-- TODO: consider deriving from FlowRelationship-Stuff  -->
+
 	<xs:element name="OperationalConcept"
 		type="op1d2d:OperationalConceptType" substitutionGroup="gml:_Feature" />
 
@@ -53,7 +55,7 @@
 	</xs:complexType>
 
 	<xs:element name="BoundaryCondition"
-		type="op1d2d:BoundaryConditionType" />
+		type="op1d2d:BoundaryConditionType" substitutionGroup="gml:_Feature" />
 
 	<xs:complexType name="BoundaryConditionType">
 		<xs:complexContent>

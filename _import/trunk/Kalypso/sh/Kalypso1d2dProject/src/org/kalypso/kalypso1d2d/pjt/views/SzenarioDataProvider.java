@@ -17,6 +17,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -43,7 +44,7 @@ public class SzenarioDataProvider implements ISzenarioDataProvider
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private static Map<Class, String> LOCATION_MAP = new HashMap<Class, String>();
+  private static final Map<Class, String> LOCATION_MAP = new HashMap<Class, String>();
 
   private static final String MODELS_FOLDER = "models";
 
@@ -52,9 +53,9 @@ public class SzenarioDataProvider implements ISzenarioDataProvider
     // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
     // simulation model gets its own wrapper.
     LOCATION_MAP.put( IFeatureWrapper2.class, MODELS_FOLDER + "/simulation.gml" );
-    // LOCATION_MAP.put( IDiscretisationModel.class, "discretisation.gml" );
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
+    LOCATION_MAP.put( IFlowRelationshipCollection.class, MODELS_FOLDER + "/flowrelations.gml" );
     // TODO: add other model types here
   }
 

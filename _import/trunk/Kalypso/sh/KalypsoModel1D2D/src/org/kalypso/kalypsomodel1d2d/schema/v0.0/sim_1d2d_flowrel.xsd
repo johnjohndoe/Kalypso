@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema for the concrete (1d) flow relations of the 1d2d model
+	@author Gernot Belger
+-->
+
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
+	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
+	<xs:import namespace="org.kalypso.model.wspmprofile" />
+	<xs:import namespace="org.kalypso.gml.common.math" />
+	
+
+	<!-- ================================================
+		King Flow Relation		
+		================================================== -->
+
+	<xs:element name="KingFlowRelation" type="wb1d2d:KingFlowRelationType"
+		substitutionGroup="simBase:_FlowRelationship" />
+
+	<xs:complexType name="KingFlowRelationType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractFlowRelationshipType">
+				<xs:sequence>
+					<!--  TODO: restrict to profiles of certain type -->
+					<xs:element name="kingProfileMember" type="wb1d2d:KingProfilePropertyType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="KingProfilePropertyType">
+		<xs:sequence>
+			<xs:element ref="wspmprof:Profile" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ================================================
+		Polynomial Flow Relation (Teschke)		
+		================================================== -->
+	<xs:element name="TeschkeFlowRelation" type="wb1d2d:TeschkeFlowRelationType"
+		substitutionGroup="simBase:_FlowRelationship" />
+
+	<xs:complexType name="TeschkeFlowRelationType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractFlowRelationshipType">
+				<xs:sequence>
+					<xs:element name="pointsMember" type="wb1d2d:HPointsPropertyType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Punkte</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Points</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="polynomialMember" type="math:Polynomial1DPropertyType" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Polygon</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Polygone</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								Link to any profile. Just for documentation reason.
+								<xs:label>Profil</xs:label>
+								<xs:tooltip>Referenz auf Profil</xs:tooltip>
+								<xs:description>Referenz auf Profil</xs:description>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Profile</xs:label>
+								<xs:tooltip>Profile Reference</xs:tooltip>
+								<xs:description>Reference to profile</xs:description>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="LinkedProfilePropertyType">
+		<xs:annotation>
+			<xs:documentation>A link to a wspm profile.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="wspmprof:Profile" minOccurs="0" maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+
+	<xs:complexType name="HPointsPropertyType">
+		<xs:annotation>
+			<xs:documentation>An inline Observation-Member.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element ref="wb1d2d:HPointsObservation" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="HPointsObservation" type="om:ObservationType" substitutionGroup="om:Observation" />
+
+</xs:schema>

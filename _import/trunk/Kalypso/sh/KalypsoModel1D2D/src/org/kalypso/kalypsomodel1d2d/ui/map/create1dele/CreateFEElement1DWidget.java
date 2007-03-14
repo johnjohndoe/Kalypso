@@ -18,7 +18,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.map.widgets.providers.QNameFeaturesProvider;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -37,10 +36,6 @@ public class CreateFEElement1DWidget extends AbstractWidget
   private IKalypsoFeatureTheme theme;
 
   private final int m_radius = 20;
-
-  private final QNameFeaturesProvider m_provider = 
-            new QNameFeaturesProvider( 
-                 Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
 
   private IFEDiscretisationModel1d2d model1d2d;
 

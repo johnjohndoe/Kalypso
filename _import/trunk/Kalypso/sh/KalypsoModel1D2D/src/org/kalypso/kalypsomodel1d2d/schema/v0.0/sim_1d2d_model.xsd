@@ -17,35 +17,13 @@
 		namespace="http://www.opengis.net/gml" 
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
-	<!-- xs:import 
-			namespace="http://www.opengis.net/gml" 
-			schemaLocation="D:/congo\eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
-		/ -->
-	
 	 
-	<!-- xs:import 
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-		schemaLocation="simulation_model.xsd"
-		/-->
-	<!-- xs:import 
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-		schemaLocation="platform:/resource/KalypsoModel1D2D/src/org/kalypso/kalypsomodel1d2d/schema/v0.0/sim_1d2d_sub_model_static.xsd"
-		/ -->
-	
 	<!-- **************************INCLUDES********************************** -->
 	<!-- xs:include schemaLocation="simulation_model.xsd"/ -->
-	<xs:include schemaLocation="simulation_model_discretisation_1d2d.xsd"></xs:include>
-	<!-- xs:include 
-		schemaLocation="sim_1d2d_sub_model_static.xsd"/>
-	<xs:include 
-		schemaLocation="sim_1d2d_sub_model_operational.xsd"/>
-	<xs:include 
-		schemaLocation="sim_1d2d_sub_model_control.xsd"/>
-	<xs:include 
-		schemaLocation="sim_1d2d_sub_model_result.xsd"/>
-	<xs:include 
-		schemaLocation="sim_1d2d_sub_model_evaluation.xsd"/>
-	
+	<xs:include schemaLocation="sim_1d2d_discretisation.xsd"/>
+	<xs:include schemaLocation="sim_1d2d_flowrel.xsd"/>
+
+	<!-- 
 	<xs:element 
 		name="SimulationModel1D2D"
 		type="wb:SimulationModelType1D2D"

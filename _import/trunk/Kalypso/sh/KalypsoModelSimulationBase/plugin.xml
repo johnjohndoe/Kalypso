@@ -29,6 +29,7 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection"/>
       </factory>
       
       <!--factory

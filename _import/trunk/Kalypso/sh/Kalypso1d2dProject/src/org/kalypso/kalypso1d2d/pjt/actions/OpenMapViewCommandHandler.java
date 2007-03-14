@@ -39,7 +39,6 @@ import de.renew.workflow.WorkflowCommandHandler;
  */
 public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension, IKalypsoThemeListener
 {
-
   public static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"; //$NON-NLS-1$
 
   public static final String PARAM_LAYER_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"; //$NON-NLS-1$
@@ -48,9 +47,9 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
   private String m_resource;
 
-  String m_featureType;
+  private String m_featureType;
 
-  IMapModell m_mapModell;
+  private IMapModell m_mapModell;
 
   private MapView m_mapView;
 
@@ -98,19 +97,6 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
           @Override
           protected IStatus run( final IProgressMonitor monitor )
           {
-//            try
-//            {
-//              Job.getJobManager().join( MapView.JOB_FAMILY, monitor );
-//            }
-//            catch( final OperationCanceledException e )
-//            {
-//              return StatusUtilities.statusFromThrowable( e );
-//            }
-//            catch( final InterruptedException e )
-//            {
-//              return StatusUtilities.statusFromThrowable( e );
-//            }
-
             m_mapModell = mapPanel.getMapModell();
             final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
             if( activeTheme != null && m_featureType.equals( NO_LAYER ) )

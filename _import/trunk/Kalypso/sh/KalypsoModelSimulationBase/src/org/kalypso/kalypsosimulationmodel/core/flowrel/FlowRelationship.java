@@ -40,20 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger
  */
-public interface IFlowRelationship extends IFeatureWrapper2
+public abstract class FlowRelationship extends AbstractFeatureBinder implements IFlowRelationship
 {
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "_FlowRelationship" );
+  public FlowRelationship( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME );
+  }
 
-  public static final QName QNAME_PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "position" );
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship#getPosition()
+   */
+  public GM_Point getPosition( )
+  {
+    return (GM_Point) getWrappedFeature().getProperty( QNAME_PROP_POSITION );
+  }
 
-  public GM_Point getPosition( );
 }
