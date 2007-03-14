@@ -154,7 +154,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       pool.addPoolListener( this, m_layerKey );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       // catch any exception
