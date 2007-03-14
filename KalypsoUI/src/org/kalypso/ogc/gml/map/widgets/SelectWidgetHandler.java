@@ -11,20 +11,17 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.views.map.MapView;
 import org.osgi.framework.Bundle;
@@ -67,7 +64,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
     final IEditorPart editor = (IEditorPart) applicationContext.getVariable( ISources.ACTIVE_EDITOR_NAME );
-    IWorkbenchPart workbenchPart = null;
+    AbstractMapPart abstractMapPart = null;
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) applicationContext.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     if( workbenchWindow == null )
     {
@@ -77,20 +74,20 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWorkbenchPage activePage = workbenchWindow.getActivePage();
     if( editor != null && editor.getEditorSite().getId().equals( GisMapEditor.ID ) )
     {
-      workbenchPart = editor;
+      abstractMapPart = (AbstractMapPart) editor;
     }
     else
     {
       final IViewPart mapView = activePage.findView( MapView.ID );
-      workbenchPart = mapView;
+      abstractMapPart = (AbstractMapPart) mapView;
     }
 
     // customized widget
     customizedWidget( widget, applicationContext );
-    if( workbenchPart != null )
+    if( abstractMapPart != null )
     {
-      activePage.activate( workbenchPart );
-      final MapPanel mapPanel = (MapPanel) workbenchPart.getAdapter( MapPanel.class );
+      activePage.activate( abstractMapPart );
+      final MapPanel mapPanel = (MapPanel) abstractMapPart.getAdapter( MapPanel.class );
       if( mapPanel != null && widget != null )
       {
         final UIJob job = new UIJob( workbenchWindow.getShell().getDisplay(), "Widget auswählen" )
@@ -102,7 +99,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
             return Status.OK_STATUS;
           }
         };
-        job.setRule( mapPanel.getSchedulingRule().getSelectWidgetSchedulingRule() );
+        job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
         job.setUser( true );
         job.schedule();
       }

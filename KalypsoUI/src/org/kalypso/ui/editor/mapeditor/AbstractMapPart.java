@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -96,6 +95,7 @@ import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.ITemplateTheme;
+import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
@@ -405,8 +405,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
+  void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
+    if( m_saving )
+      return;
+
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
     final IWorkbenchPartSite site = getSite();
@@ -461,15 +464,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
               return Status.OK_STATUS;
             }
-
-            // /**
-            // * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-            // */
-            // @Override
-            // public boolean belongsTo( final Object family )
-            // {
-            // return MapView.JOB_FAMILY.equals( family );
-            // }
           };
           job.schedule();
         }
@@ -495,9 +489,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
   }
 
-  public ISchedulingRule getSchedulingRule( )
+  public BaseMapSchedulingRule getSchedulingRule( )
   {
-    return m_mapPanel.getSchedulingRule();
+    return new BaseMapSchedulingRule( m_mapPanel, m_file );
   }
 
   /**
@@ -563,6 +557,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         }
     }
     m_saving = false;
+
   }
 
   public void saveTheme( final ITemplateTheme theme, final IProgressMonitor monitor ) throws CoreException

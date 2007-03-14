@@ -175,8 +175,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
 
-  private MapSchedulingRule m_mapSchedulingRule;
-  
+  private BaseMapSchedulingRule m_mapSchedulingRule;
+
   private String m_message = "";
 
   IWorkbenchPartSite m_site;
@@ -910,14 +910,5 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_message = message;
 
     fireMessageChanged();
-  }
-
-  public MapSchedulingRule getSchedulingRule( )
-  {
-    if( m_mapSchedulingRule == null )
-    {
-      m_mapSchedulingRule = new MapSchedulingRule( this );
-    }
-    return m_mapSchedulingRule;
   }
 }
