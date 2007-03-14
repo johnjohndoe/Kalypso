@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.baseMap;
+package org.kalypso.ui.wizards.imports.lineShp;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -74,13 +74,13 @@ import org.kalypso.ui.wizards.imports.Messages;
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Madanagopal
  */
-public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport
+public class ImportLineShpWizard extends Wizard implements INewWizardKalypsoImport
 {
   private IStructuredSelection initialSelection;
   
   private IPath m_sourceLocation = null;
 
-  BaseMapMainPage mPage;
+  LineShpMainPage mPage;
 
   // private String m_projectFolder;
   //
@@ -91,7 +91,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public ImportBaseMapWizard( )
+  public ImportLineShpWizard( )
   {
     super();
   }
@@ -106,7 +106,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   {
     initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard.0" ) );
   }
 
   /**
@@ -122,7 +122,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   @Override
   public void addPages( )
   {
-    mPage = new BaseMapMainPage();
+    mPage = new LineShpMainPage();
     addPage( mPage );
     mPage.init( initialSelection );
   }
@@ -134,30 +134,30 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   public boolean performFinish( )
   {
     final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" );
-    final File srcFileImage = new File( mPage.getSourceLocation().toOSString() );
-    final IFile dstFileImage = dstFilePath.getFile( mPage.getSourceLocation().lastSegment() );
-    File srcFileGeoreference = null;
-    IFile dstFileGeoreference = null;
+    final File srcFileShape = new File( mPage.getSourceLocation().toOSString() );
+    final IFile dstFileShape = dstFilePath.getFile( mPage.getSourceLocation().lastSegment() );
+    File srcFileIndex = null;
+    IFile dstFileIndex = null;
+    File srcFileDBase = null;
+    IFile dstFileDBase = null;
     final String extension = mPage.getSourceLocation().getFileExtension();
-    if( extension.equalsIgnoreCase( "tif" ) )
+    if( extension.equalsIgnoreCase( "shp" ) )
     {
-      srcFileGeoreference = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
-      dstFileGeoreference = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
-    }
-    else if( extension.equalsIgnoreCase( "jpg" ) )
-    {
-      srcFileGeoreference = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() );
-      dstFileGeoreference = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() );
+      srcFileIndex = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).toOSString() );
+      dstFileIndex = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).lastSegment() );
+      srcFileDBase = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).toOSString() );
+      dstFileDBase = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).lastSegment() );
     }
     else
     {
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) + ": " + extension );
+      throw new UnsupportedOperationException( "Unsuported file type: " + extension );
     }
     try
     {
-      final File finalSrcGeoreference = srcFileGeoreference;
-      final IFile finalDstGeoreference = dstFileGeoreference;
-      final String coordinateSystem = mPage.getCoordinateSystem();
+      final File finalSrcIndex = srcFileIndex;
+      final IFile finalDstIndex = dstFileIndex;
+      final File finalSrcDBase = srcFileDBase;
+      final IFile finalDstDBase = dstFileDBase;
       getContainer().run( true, true, new IRunnableWithProgress()
       {
         public void run( final IProgressMonitor monitor )
@@ -168,9 +168,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
             {
               dstFilePath.create( true, true, monitor );
             }
-            copy( srcFileImage, dstFileImage, monitor );
-            copy( finalSrcGeoreference, finalDstGeoreference, monitor );
-            final IFile file = m_scenarioFolder.getFile( "maps/base.gmt" );
+            copy( srcFileShape, dstFileShape, monitor );
+            copy( finalSrcIndex, finalDstIndex, monitor );
+            copy( finalSrcDBase, finalDstDBase, monitor );
+            final IFile file = m_scenarioFolder.getFile( "maps/fenet.gmt" );
             m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
             final Gismapview gismapview = GisTemplateHelper.loadGisMapView( file );
             final Layers layers = gismapview.getLayers();
@@ -181,9 +182,9 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
             
             layer.setVisible( true );
             layer.setFeaturePath( "" ); //$NON-NLS-1$
-            layer.setHref( "file:/" + dstFileImage.getLocation().toOSString() + "#" + coordinateSystem ); //$NON-NLS-1$ //$NON-NLS-2$
+            layer.setHref( "file:/" + dstFileShape.getLocation().toOSString() ); //$NON-NLS-1$ //$NON-NLS-2$
             layer.setType( "simple" ); //$NON-NLS-1$
-            layer.setLinktype( extension.toLowerCase() ); //$NON-NLS-1$
+            layer.setLinktype( "shp" ); //$NON-NLS-1$
             layer.setActuate( "onRequest" ); //$NON-NLS-1$
             layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
             layers.getLayer().add( layer );

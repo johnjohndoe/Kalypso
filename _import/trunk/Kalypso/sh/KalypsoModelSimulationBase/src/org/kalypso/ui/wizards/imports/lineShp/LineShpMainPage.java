@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.baseMap;
+package org.kalypso.ui.wizards.imports.lineShp;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,24 +19,18 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypso.ui.wizards.imports.roughness.DataContainer;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
- * @author Madanagopal
- * @author Dejan
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class BaseMapMainPage extends WizardPage
+public class LineShpMainPage extends WizardPage
 {
   private Text sourceFileField;
-
-  Combo cmb_CoordinateSystem;
 
   private IPath initialSourcePath;
   
@@ -44,11 +38,11 @@ public class BaseMapMainPage extends WizardPage
 
   List<String> fileExtensions = new LinkedList<String>();
 
-  public BaseMapMainPage( )
+  public LineShpMainPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
   }
 
   /**
@@ -70,12 +64,12 @@ public class BaseMapMainPage extends WizardPage
     final GridData gridData = new GridData();
     gridData.horizontalSpan = 3;
     label.setLayoutData( gridData );
-    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
+    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.4" ) );
+    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.4" ) );
 
     sourceFileField = new Text( container, SWT.BORDER );
     sourceFileField.addModifyListener( new ModifyListener()
@@ -97,18 +91,6 @@ public class BaseMapMainPage extends WizardPage
     } );
     button.setText( "Browse.." );
 
-    // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
-    cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
-    final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
-    cmb_CoordinateSystem.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
-    GridData gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.widthHint = 75;
-    cmb_CoordinateSystem.setEnabled( true );
-    cmb_CoordinateSystem.setLayoutData( gd );
-
     button.setFocus();
     initContents();
   }
@@ -124,11 +106,8 @@ public class BaseMapMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "tif" ) );
-    fileExtensions.add( new String( "jpg" ) );
-    // fileExtensions.add( new String( "gml" ) );
+    fileExtensions.add( new String( "shp" ) );
 
-    // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
@@ -176,19 +155,13 @@ public class BaseMapMainPage extends WizardPage
     if( sourceLoc == null || !sourceLoc.toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.6" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.6" ) );
       return;
     }
-    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile())
+    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
-      return;
-    }
-    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile())
-    {
-      setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment()} ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
       return;
     }
     setPageComplete( true );
@@ -222,7 +195,7 @@ public class BaseMapMainPage extends WizardPage
   private IPath browse( IPath path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.tif; *.jpg" } );
+    dialog.setFilterExtensions( new String[] { "*.shp" } );
     // dialog.setFilterExtensions( (String[]) fileExtensions.toArray() );
     if( path != null )
     {
@@ -251,11 +224,6 @@ public class BaseMapMainPage extends WizardPage
     if( !m_sourcePath.isAbsolute() )
       m_sourcePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( m_sourcePath );
     return m_sourcePath;
-  }
-
-  public String getCoordinateSystem( )
-  {
-    return cmb_CoordinateSystem.getText();
   }
 
 }
