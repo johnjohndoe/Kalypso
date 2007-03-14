@@ -418,7 +418,7 @@ class ApplyElevationWidgetFace
 
     } );
 
-    windowCanvas.setForeground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GRAY ) );
+    windowCanvas.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GRAY ) );
 
     formData = new FormData();
     formData.width = 22;// 22;

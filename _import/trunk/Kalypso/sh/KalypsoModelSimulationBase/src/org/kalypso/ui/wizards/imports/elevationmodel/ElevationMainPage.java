@@ -174,9 +174,23 @@ public class ElevationMainPage extends WizardPage
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
     sourceFileField.setText( path.toString() );
+    
+// Multiple Elevation Model Select.. Still under development
+/*      IPath[] ar = null;
+    IPath[] path = browse( getSourceLocation(), false );
+    if( path == null )
+      return;
+    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    for (int i = 0; i<path.length;i++){
+    if( rootLoc.isPrefixOf( path[i] ) )
+      ar[i] = path[i].setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
+    sourceFileField.setText(ar.toString());
+    }*/
+  
   }
 
   /**
+   * Multiple Elevation Model Select.. Still under development 
    * Open a file dialog for selecting a file
    * 
    * @param path
@@ -185,7 +199,38 @@ public class ElevationMainPage extends WizardPage
    *          <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
-  private IPath browse( IPath path, boolean mustExist )
+
+  
+//  private IPath[] browse( IPath path, boolean mustExist )
+//  {
+//    String fileFilterPath;
+//    String[] selectedFiles;
+//    Path[] arrPaths = null;
+//    FileDialog dialog = new FileDialog( getShell(), SWT.OPEN|SWT.MULTI );
+//    dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
+//    if( path != null )
+//    {
+//      if( path.segmentCount() > 1 )
+//        dialog.setFilterPath( path.removeLastSegments( 1 ).toOSString() );
+//      if( path.segmentCount() > 0 )
+//        dialog.setFileName( path.lastSegment() );
+//    }
+//    String result = dialog.open();
+//    if( result == null )
+//      return null;
+//    else {
+//      fileFilterPath = dialog.getFilterPath();
+//      selectedFiles = dialog.getFileNames();
+//      for(int i=0; i<selectedFiles.length; i++) {
+//        selectedFiles[i]= dialog.getFilterPath()+"\\"+selectedFiles[i];
+//        arrPaths[i]= new Path(selectedFiles[i]); 
+//      }
+//    return arrPaths;
+//    }
+//
+//  }
+  
+    private IPath browse( IPath path, boolean mustExist )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
     dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
