@@ -45,11 +45,9 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
@@ -91,10 +89,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class SegmentData
 {
-
-  /**
-   * @author bce
-   */
   private static final class ProfileSegmentData
   {
     public final IProfilPoint[] segmPoints;

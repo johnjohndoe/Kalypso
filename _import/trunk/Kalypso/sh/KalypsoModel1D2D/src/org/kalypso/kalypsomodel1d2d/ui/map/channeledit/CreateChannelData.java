@@ -243,7 +243,8 @@ public class CreateChannelData
         final IFeatureType featureType = fTheme.getFeatureType();
 
         if( featureType == null )
-          return new IKalypsoFeatureTheme[0];
+          continue;
+        
         final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
         // choose only the linestrings
         // just take the first found property
