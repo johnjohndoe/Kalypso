@@ -40,15 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -58,130 +59,162 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
  * @author Patrice Congo
  *
  */
-public class ApplyElevationWidgetDataModel
+public class ApplyElevationWidgetDataModel extends KeyBasedDataModel
 {
-  private ITerrainModel terrainModel;
-  private ITerrainElevationModelSystem elevationModelSystem;
-  private ITerrainElevationModel elevationModel;
-  private IFEDiscretisationModel1d2d discretisationModel;
-  private List<IFE1D2DNode> selectedNode;
-  private GM_Polygon selectionArea;
-  private IMapModell mapModell;
-  private ElevationTheme elevationTheme;
-  private MapPanel mapPanel;
+  public static final String SELECTED_NODE_KEY="_SELECTED_NODE_KEY";
+
+  public static final String[] KEYS = 
+                    {
+                    ITerrainModel.class.toString(),
+                    ITerrainElevationModelSystem.class.toString(),
+                    ITerrainElevationModel.class.toString(),
+                    IMapModell.class.toString(),
+                    SELECTED_NODE_KEY,
+                    GM_Polygon.class.toString(),
+                    IFEDiscretisationModel1d2d.class.toString(),
+                    MapPanel.class.toString(),
+                    ElevationTheme.class.toString()};
+  
+//  private ITerrainModel terrainModel;
+//  private ITerrainElevationModelSystem elevationModelSystem;
+//  private ITerrainElevationModel elevationModel;
+//  private IFEDiscretisationModel1d2d discretisationModel;
+//  private List<IFE1D2DNode> selectedNode;
+//  private GM_Polygon selectionArea;
+//  private IMapModell mapModell;
+//  private ElevationTheme elevationTheme;
+//  private MapPanel mapPanel;
   
   public ApplyElevationWidgetDataModel( )
   {
-    //empty
+    super( KEYS );
   }
 
   public void setMapModell( IMapModell mapModell )
   {
-    this.mapModell = mapModell;
+//    this.mapModell = mapModell;
+    setData( IMapModell.class.toString(), mapModell );
   }
   
   public IMapModell getMapModell( )
   {
-    return mapModell;
+//    return mapModell;
+    return (IMapModell) getData( IMapModell.class.toString() );
   }
   
   public IFEDiscretisationModel1d2d getDiscretisationModel( )
   {
-    return discretisationModel;
+//    return discretisationModel;
+    return (IFEDiscretisationModel1d2d) getData( IFEDiscretisationModel1d2d.class.toString() );
   }
 
   public void setDiscretisationModel( IFEDiscretisationModel1d2d discretisationModel )
   {
-    this.discretisationModel = discretisationModel;
+//    this.discretisationModel = discretisationModel;
+    setData( 
+        IFEDiscretisationModel1d2d.class.toString(),
+        discretisationModel);
   }
 
   public ITerrainElevationModel getElevationModel( )
   {
-    return elevationModel;
+//    return elevationModel;
+    return (ITerrainElevationModel) getData( ITerrainElevationModel.class.toString() );
   }
 
   public void setElevationModel( ITerrainElevationModel elevationModel )
   {
-    this.elevationModel = elevationModel;
+//    this.elevationModel = elevationModel;
+    setData( ITerrainElevationModel.class.toString(), elevationModel);
   }
 
   public ITerrainElevationModelSystem getElevationModelSystem( )
   {
-    return elevationModelSystem;
+//    return elevationModelSystem;
+    return (ITerrainElevationModelSystem) getData( ITerrainElevationModelSystem.class.toString() );
   }
   
   public void setElevationModelSystem( ITerrainElevationModelSystem elevationModelSystem )
   {
-    this.elevationModelSystem = elevationModelSystem;
+//    this.elevationModelSystem = elevationModelSystem;
+     setData( ITerrainElevationModelSystem.class.toString(), elevationModelSystem );
   }
 
   public List<IFE1D2DNode> getSelectedNode( )
   {
-    if (this.discretisationModel == null)
-      return new ArrayList<IFE1D2DNode>();
-    else
-    {
-      ArrayList<IFE1D2DNode> fakeSelection = 
-      new ArrayList<IFE1D2DNode>( this.discretisationModel.getNodes());
-      selectedNode=fakeSelection;      
-      return selectedNode;
-    }
-    
+//    if (this.discretisationModel == null)
+//      return new ArrayList<IFE1D2DNode>();
+//    else
+//    {
+//      ArrayList<IFE1D2DNode> fakeSelection = 
+//      new ArrayList<IFE1D2DNode>( this.discretisationModel.getNodes());
+//      selectedNode=fakeSelection;      
+//      return selectedNode;
+//    }
+    return (List<IFE1D2DNode>) getData( SELECTED_NODE_KEY );
     
   }
 
   public void setSelectedNode( List<IFE1D2DNode> selectedNode )
   {
-    
-    this.selectedNode = selectedNode;
+    setData( SELECTED_NODE_KEY, selectedNode );
+//    this.selectedNode = selectedNode;
   }
 
   public GM_Polygon getSelectionArea( )
   {
-    return selectionArea;
+//    return selectionArea;
+    return (GM_Polygon) getData( GM_Polygon.class.toString() );
   }
 
   public void setSelectionArea( GM_Polygon selectionArea )
   {
-    this.selectionArea = selectionArea;
+//    this.selectionArea = selectionArea;
+    setData( GM_Polygon.class.toString(), selectionArea);
   }
 
   public ITerrainModel getTerrainModel( )
   {
-    return terrainModel;
+//    return terrainModel;
+    return (ITerrainModel) getData( TerrainModel.class.toString() );
   }
 
   public void setTerrainModel( ITerrainModel terrainModel )
   {
-    this.terrainModel = terrainModel;
-    if(terrainModel!=null)
-    {
-      this.elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
-    }
-    else
-    {
-      this.elevationModelSystem = null;
-    }
+//    this.terrainModel = terrainModel;
+//    if(terrainModel!=null)
+//    {
+//      this.elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
+//    }
+//    else
+//    {
+//      this.elevationModelSystem = null;
+//    }
+    setData( TerrainModel.class.toString(),terrainModel );
   }
   
   public ElevationTheme getElevationTheme( )
   {
-    return elevationTheme;
+    //return elevationTheme;
+    return (ElevationTheme) getData( ElevationTheme.class.toString() );
   }
   
   public void setElevationTheme( ElevationTheme elevationTheme )
   {
-    this.elevationTheme = elevationTheme;
+    //this.elevationTheme = elevationTheme;
+    setData( ElevationTheme.class.toString(), elevationTheme );
   }
   
   public MapPanel getMapPanel( )
   {
-    return mapPanel;
+//    return mapPanel;
+    return (MapPanel) getData( MapPanel.class.toString() );
   }
   
   public void setMapPanel( MapPanel mapPanel )
   {
-    this.mapPanel = mapPanel;
+//    this.mapPanel = mapPanel;
+    setData( MapPanel.class.toString(), mapPanel );
   }
   
 }

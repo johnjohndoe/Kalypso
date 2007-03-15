@@ -48,6 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -64,7 +65,9 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -123,27 +126,24 @@ public class ApplyElevationWidget
     IMapModell mapModell = mapPanel.getMapModell();
     IFEDiscretisationModel1d2d model1d2d = 
       UtilMap.findFEModelTheme( 
-          mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
+          mapModell, 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
     dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
     dataModel.setMapPanel( mapPanel );
-    ElevationTheme theme= null;//new ElevationTheme("ASC Theme",mapModell);
-    /*for(IKalypsoTheme curTheme:mapModell.getAllThemes())
-    {
-      if(curTheme instanceof ElevationTheme)
-      {                                             
-        theme=(ElevationTheme)curTheme;
-      }
-    }
-    if(theme==null)
-    {
-      theme = 
-        new ElevationTheme("ASC Theme",mapModell);
-      mapModell.addTheme( theme );
-      
-    }
+    ElevationTheme theme= null;
+    //find and set Elevation model system
+    IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableThem( 
+          mapModell, 
+          KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL
+          );
+    Feature eleSystemFeature = 
+      terrainElevationTheme.getFeatureList().getParentFeature();
+    ITerrainElevationModelSystem system = 
+      (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( 
+                                      ITerrainElevationModelSystem.class );
+    dataModel.setElevationModelSystem( system );
     
-     */
     dataModel.setElevationTheme( theme );
     dataModel.setMapPanel( mapPanel );
   }
@@ -454,5 +454,14 @@ public class ApplyElevationWidget
   {
     super.paint(g);
     drawElevationData( g, point );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
+  {
+    return true;//super.canBeActivated(selection, mapPanel);
   }
 }

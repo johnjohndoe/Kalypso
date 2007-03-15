@@ -108,6 +108,16 @@
               style="radio"
               toolbarPath="karte/tools"
               tooltip="Grid draw tool"/>
+              
+        <action
+          class="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationActionDelegate"
+          id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
+          label="Ele"
+          menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+          style="radio"
+          toolbarPath="karte/tools"
+          tooltip="Höhen zuweisen"/>
+              
         <action
               class="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFECLineActionDelegate"
               id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"

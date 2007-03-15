@@ -68,7 +68,9 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Patrice Congo
  *
  */
-public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
+public class NativeTerrainElevationModelWrapper 
+                        extends TerrainElevationModel
+                        implements INativeTerrainElevationModelWrapper
 {
 
   private IElevationProvider elevationProvider;
@@ -232,5 +234,13 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
   public double getMinElevation( )
   {
     return elevationProvider.getMinElevation();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper#getSourceURL()
+   */
+  public URL getSourceURL( )
+  {
+    return sourceURL;
   }
 }
