@@ -117,16 +117,16 @@ public class TestShape2RoughnessPolygon extends TestCase
 		assertEquals(
 				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
 				rp.getRoughnessStyle());
-		GM_Polygon pol=rp.getPolygon();
-		GM_Position[] positions=pol.getExteriorRing();
-		double[][] posArray={{0,0},{0,1},{1,1},{1,0},{0,0}};
-		
-		int i=0;
-		for(GM_Position pos:positions)
-		{
-			assertTrue(Arrays.equals(posArray[i], pos.getAsArray()));
-			i++;
-		}
+//		GM_Polygon pol=rp.getPolygon();
+//		GM_Position[] positions=pol.getExteriorRing();
+//		double[][] posArray={{0,0},{0,1},{1,1},{1,0},{0,0}};
+//		
+//		int i=0;
+//		for(GM_Position pos:positions)
+//		{
+//			assertTrue(Arrays.equals(posArray[i], pos.getAsArray()));
+//			i++;
+//		}
 		
 		
 	}
