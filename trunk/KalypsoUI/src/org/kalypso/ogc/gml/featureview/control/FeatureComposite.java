@@ -105,6 +105,7 @@ import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.template.featureview.Extensioncontrol.Param;
+import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
@@ -512,13 +513,21 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof Table )
     {
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
-      fc.setFeature( feature );
+      final TableFeatureContol fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
+      
+      final Gistableview gistableview = ((Table) controlType).getGistableview();
+      if( gistableview != null )
+      {
+        fc.setTableTemplate( gistableview );
+      }
 
+      fc.setFeature( feature );
+      
       addFeatureControl( fc );
 
       final Control control = fc.createControl( parent, SWT.NONE );
       control.setLayoutData( new GridData() );
+      
       return control;
     }
 

@@ -131,7 +131,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
-  public static final String COLUMN_PROP_FORMAT = "columnFormat";  
+  public static final String COLUMN_PROP_FORMAT = "columnFormat";
 
   private final IFeatureModifierFactory m_featureControlFactory;
 
@@ -278,7 +278,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // disable capture to let selection of table and tableviewer in sync
     table.setCapture( false );
 
-    final TableCursor tc = new ExcelTableCursor( this, SWT.NONE,ExcelTableCursor.ADVANCE_MODE.DOWN, true );
+    final TableCursor tc = new ExcelTableCursor( this, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.DOWN, true );
     m_tableCursor = tc;
 
     final OpenStrategy strategy = new OpenStrategy( tc );
@@ -399,6 +399,25 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
+  public void applyTableTemplate( final Gistableview tableView )
+  {
+    m_isApplyTemplate = true;
+    disposeTheme( getInput() );
+
+    if( tableView != null )
+    {
+      final Layer layer = tableView.getLayer();
+      final Sort sort = layer.getSort();
+      final List<Column> columnList = layer.getColumn();
+      setSortAndColumns( sort, columnList );
+    }
+
+    refreshCellEditors();
+    refreshColumnProperties();
+    refresh();
+    m_isApplyTemplate = false;
+  }
+
   public void applyTableTemplate( final Gistableview tableView, final URL context )
   {
     m_isApplyTemplate = true;
@@ -416,18 +435,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       setInput( theme );
 
       final Sort sort = layer.getSort();
-      if( sort != null )
-      {
-        m_sorter.setPropertyName( sort.getPropertyName() );
-        m_sorter.setInverse( sort.isInverse() );
-      }
-
-      final List columnList = layer.getColumn();
-      for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
-      {
-        final Column ct = (Column) iter.next();
-        addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
-      }
+      final List<Column> columnList = layer.getColumn();
+      setSortAndColumns( sort, columnList );
     }
 
     refreshCellEditors();
@@ -435,6 +444,20 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     refresh();
     checkColumns();
     m_isApplyTemplate = false;
+  }
+
+  private void setSortAndColumns( final Sort sort, final List<Column> columnList )
+  {
+    if( sort != null )
+    {
+      m_sorter.setPropertyName( sort.getPropertyName() );
+      m_sorter.setInverse( sort.isInverse() );
+    }
+    for( final Iterator<Column> iter = columnList.iterator(); iter.hasNext(); )
+    {
+      final Column ct = iter.next();
+      addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
+    }
   }
 
   public IKalypsoFeatureTheme getTheme( )
@@ -478,7 +501,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     {
       refreshCellEditors();
       refreshColumnProperties();
-
       refresh();
     }
   }
@@ -502,6 +524,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     catch( Exception e )
     {
       // if data is not loaded yet, we provide the propertyname
+      e.printStackTrace();
       text = propertyName;
       tooltip = null;
     }
