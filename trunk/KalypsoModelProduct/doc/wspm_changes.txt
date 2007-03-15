@@ -4,7 +4,8 @@ Changelog of Kalypso-WSPM
 since 15.02.2007
 ----------------
 - non-uniform bankfull calculation: Results are now retrieved as functions (singular points) over h and may be displayed as diagramms. Furthermore, polynomials (as input for the instationary calculation) are calulated automatically from the points and displayed as well.
-
+- Rougness-Intersection now supports multi-surface polygones.
+- Bugfix: TODO# creation of water-boundary works now with not-sorted reach-segments.
 
 since 30.01.2007
 ----------------
