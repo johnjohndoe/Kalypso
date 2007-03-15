@@ -48,7 +48,6 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd;
