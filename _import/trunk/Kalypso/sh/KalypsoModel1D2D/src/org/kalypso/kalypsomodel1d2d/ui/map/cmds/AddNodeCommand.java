@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -48,44 +47,38 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-
 /**
- * Undoable command to add node to a simulation model
- * Broken links are not removed
+ * Undoable command to add node to a simulation model Broken links are not removed
  * 
  * @author Patrice Congo
  */
 public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 {
-  
-  private IFE1D2DNode<IFE1D2DEdge>  addedNode;
-  private GM_Point nodePoint;
+  private IFE1D2DNode<IFE1D2DEdge> addedNode;
+
+  private GM_Point m_nodePoint;
+
   private IFEDiscretisationModel1d2d discretisationModel;
-  private boolean notCreated[]= new boolean[1];
-  private double searchRectWidth;
-  
-  public AddNodeCommand(
-              IFEDiscretisationModel1d2d model, 
-              GM_Point nodePoint,
-              double searchRectWidth)
+
+  private boolean notCreated[] = new boolean[1];
+
+  private final double m_searchRectWidth;
+
+  public AddNodeCommand( IFEDiscretisationModel1d2d model, GM_Point nodePoint, double searchRectWidth )
   {
-    this.discretisationModel=model;
-    if (nodePoint.getCoordinateDimension()==3)
-    this.nodePoint=
-      GeometryFactory.createGM_Point(
-              nodePoint.getX(),
-              nodePoint.getY(),
-              nodePoint.getZ(),
-              nodePoint.getCoordinateSystem());
-    else 
-      this.nodePoint=
-        GeometryFactory.createGM_Point(
-                nodePoint.getX(),
-                nodePoint.getY(),
-                nodePoint.getCoordinateSystem());
-    this.searchRectWidth=searchRectWidth;
+    discretisationModel = model;
+    m_searchRectWidth = searchRectWidth;
+    if( nodePoint.getCoordinateDimension() == 3 )   
+      m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getZ(), nodePoint.getCoordinateSystem() );
+    else
+      m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() );
+
+    // PERFORMANCE-BUGFIX: first search for all nodes, then add it
+    addedNode = model.findNode( nodePoint, searchRectWidth );
+    if( addedNode != null )
+      notCreated[0] = true;
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
@@ -102,14 +95,16 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     return true;
   }
 
+  public static boolean[] dummyNotCreated = new boolean[1];
+
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process( ) throws Exception
   {
-    addedNode=discretisationModel.createNode( 
-                    nodePoint,searchRectWidth, notCreated );
-    System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
+    if( addedNode == null )
+      addedNode = discretisationModel.createNode( m_nodePoint, -1, dummyNotCreated );
+    System.out.println( "Adding node from command:" + addedNode + " " + notCreated[0] );
   }
 
   /**
@@ -117,7 +112,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedNode==null)
+    if( addedNode == null )
     {
       process();
     }
@@ -128,18 +123,17 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(notCreated[0])
+    if( notCreated[0] )
     {
       return;
     }
     else
     {
-      //TODO check broken links issue
+      // TODO check broken links issue
       discretisationModel.getNodes().remove( addedNode.getGmlID() );
-      addedNode=null;
+      addedNode = null;
     }
-    
-    
+
   }
 
   public IFE1D2DNode<IFE1D2DEdge> getAddedNode( )
@@ -147,14 +141,24 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     return addedNode;
   }
   
+  public GM_Point getNodePoint( )
+  {
+    return m_nodePoint;
+  }
+  
+  public double getSearchRectWidth( )
+  {
+    return m_searchRectWidth;
+  }
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{addedNode};
+    return new IFeatureWrapper[] { addedNode };
   }
-  
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
@@ -162,16 +166,16 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   {
     return discretisationModel;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   @Override
   public String toString( )
   {
-    StringBuffer buf= new StringBuffer();
+    StringBuffer buf = new StringBuffer();
     buf.append( "AddNodeCommand[" );
-    buf.append( nodePoint );
+    buf.append( m_nodePoint );
     buf.append( ']' );
     return buf.toString();
   }
