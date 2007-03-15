@@ -30,33 +30,11 @@ public class FENodeLabelProvider implements ITableLabelProvider {
     {
       case 0:
       {
-        String name = node.getName();
-        if(name!=null)
-        {
-          name=name.trim();
-          System.out.println("name: "+name );
-          if(name.length()==0)
-          {
-            name=node.getGmlID();
-          }
-          return name;
-        }
-        else
-        {
-          return node.getGmlID();
-        }
+        return getNameOrID( node );
       }
       case 1:
       {
-        GM_Point point = node.getPoint();
-        if(point.getCoordinateDimension()<=2)
-        {
-          return String.valueOf( Double.NaN );
-        }
-        else
-        {
-          point.getZ();
-        }
+        return getElevationString( node );
       }
       default:
       {
@@ -81,4 +59,36 @@ public class FENodeLabelProvider implements ITableLabelProvider {
 	public void removeListener(ILabelProviderListener listener) {
 		
 	}
+    
+    public static final String getNameOrID(IFE1D2DNode node)
+    {
+      String name = node.getName();
+      if(name!=null)
+      {
+        name=name.trim();
+//        System.out.println("name: "+name );
+        if(name.length()==0)
+        {
+          name=node.getGmlID();
+        }
+        return name;
+      }
+      else
+      {
+        return node.getGmlID();
+      }
+    }
+    
+    public static final String getElevationString(IFE1D2DNode node)
+    {
+      GM_Point point = node.getPoint();
+      if(point.getCoordinateDimension()<=2)
+      {
+        return String.valueOf( Double.NaN );
+      }
+      else
+      {
+        return String.valueOf( point.getZ() );
+      }
+    }
 }

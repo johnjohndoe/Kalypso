@@ -52,6 +52,8 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
@@ -59,7 +61,9 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
  * @author Patrice Congo
  *
  */
-public class ApplyElevationWidgetDataModel extends KeyBasedDataModel
+public class ApplyElevationWidgetDataModel 
+                  extends KeyBasedDataModel 
+                  implements IFeatureSelectionListener
 {
   public static final String SELECTED_NODE_KEY="_SELECTED_NODE_KEY";
 
@@ -213,8 +217,17 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel
   
   public void setMapPanel( MapPanel mapPanel )
   {
-//    this.mapPanel = mapPanel;
+    mapPanel.getSelectionManager().addSelectionListener( this );
     setData( MapPanel.class.toString(), mapPanel );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
+   */
+  public void selectionChanged( IFeatureSelection selection )
+  {
+    // TODO Auto-generated method stub
+    
   }
   
 }

@@ -98,6 +98,10 @@ public class AssignNodeElevationFaceComponent
       {
         return true;
       }
+      else if(property.equals( nodeElevationViewer.getColumnProperties()[0] ))
+      {
+        return true;
+      }
       else
       {
         return false;
@@ -106,12 +110,34 @@ public class AssignNodeElevationFaceComponent
 
     public Object getValue( Object element, String property )
     {
-      return ((IFE1D2DNode)element).getName();
+      if(property.equals( nodeElevationViewer.getColumnProperties()[1] ))
+      {
+        return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
+      }
+      else if(property.equals( nodeElevationViewer.getColumnProperties()[0] ))
+      {
+        return FENodeLabelProvider.getNameOrID( (IFE1D2DNode) element );
+      }
+      else
+      {
+        return null;
+      }
     }
 
     public void modify( Object element, String property, Object value )
     {
-      
+      if(property.equals( nodeElevationViewer.getColumnProperties()[1] ))
+      {
+        //return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
+      }
+      else if(property.equals( nodeElevationViewer.getColumnProperties()[0] ))
+      {
+        ( (IFE1D2DNode) element ).setName( (String)value );
+      }
+      else
+      {
+        
+      }
     }
     
   };

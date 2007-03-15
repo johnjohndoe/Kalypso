@@ -78,7 +78,7 @@ public class SurfacePatchVisitableDisplayElement
                 implements  DisplayElementDecorator,
                             SurfacePatchVisitor
 {
-  private SimpleElevationColorModel colorModel; 
+  private IElevationColorModel/*SimpleElevationColorModel*/ colorModel; 
     
   private NativeTerrainElevationModelWrapper elevationModel;
   
