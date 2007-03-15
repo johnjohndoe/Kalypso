@@ -249,6 +249,10 @@ public class FE1D2DDiscretisationModel
                           boolean[] alreadyExists)
   { 
     Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" );
+
+    // TODO: major performance bug for adding large numbers of points:
+    // searching and adding each single node/location will cause
+    // the geo-index of the nodes to be reindexed for each call of this method
     
     IFE1D2DNode node=null;
     if(searchRectWidth>=0)
