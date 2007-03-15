@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.contexts.Context;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
@@ -203,10 +204,14 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
   private synchronized void activateContextFor( final IKalypsoTheme theme )
   {
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    if( display.isDisposed() )
+      return;
+    
     for( final ContextSwitcherThread thread : m_contextSwitcherThreads.values() )
     {
       thread.setTheme( theme );
-      PlatformUI.getWorkbench().getDisplay().asyncExec( thread );
+      display.asyncExec( thread );
     }
   }
 
