@@ -29,6 +29,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
+import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -56,8 +57,9 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final IFeatureChangeListener m_fcl;
 
-  public TableFeatureContol( final IPropertyType ftp,
-      final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  private Gistableview m_tableView;
+
+  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     super( ftp );
 
@@ -85,7 +87,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       {
         manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( new Separator() );
-        //    mgr.add(selectAllAction);
+        // mgr.add(selectAllAction);
       }
     } );
 
@@ -106,7 +108,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_viewer != null )
       m_viewer.dispose();
@@ -144,7 +146,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       final CommandableWorkspace c_workspace;
       if( workspace instanceof CommandableWorkspace )
-        c_workspace = (CommandableWorkspace)workspace;
+        c_workspace = (CommandableWorkspace) workspace;
       else
         c_workspace = new CommandableWorkspace( workspace );
 
@@ -153,21 +155,33 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_viewer.setInput( m_kft );
 
       // create columns
-      // add all columns: TODO: use template?
-      final IFeatureType featureType = m_kft.getFeatureType();
-      final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
-      for( int i = 0; i < properties.length; i++ )
+      // add all columns
+      if( m_tableView != null )
       {
-        final IPropertyType ftp = properties[i];
-        m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$
+        m_viewer.applyTableTemplate( m_tableView );
+      }
+      else
+      {
+        final IFeatureType featureType = m_kft.getFeatureType();
+        final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
+        for( int i = 0; i < properties.length; i++ )
+        {
+          final IPropertyType ftp = properties[i];
+          m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$        
+        }
       }
     }
+  }
+
+  public void setTableTemplate( final Gistableview tableView )
+  {
+    m_tableView = tableView;
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl()
+  public void updateControl( )
   {
     m_viewer.refresh();
   }
@@ -175,7 +189,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid()
+  public boolean isValid( )
   {
     return true;
   }
@@ -203,8 +217,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   {
     if( modellEvent != null )
     {
-      if( modellEvent instanceof IGMLWorkspaceModellEvent
-          && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
+      if( modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == m_kft.getWorkspace() )
       {
         final Event event = new Event();
         final Control control = m_viewer.getControl();
@@ -212,12 +225,12 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         {
           control.getDisplay().asyncExec( new Runnable()
           {
-            public void run()
+            public void run( )
             {
               event.widget = control;
               final ModifyEvent me = new ModifyEvent( event );
               for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
-                ( (ModifyListener)mIt.next() ).modifyText( me );
+                ((ModifyListener) mIt.next()).modifyText( me );
 
             }
           } );
