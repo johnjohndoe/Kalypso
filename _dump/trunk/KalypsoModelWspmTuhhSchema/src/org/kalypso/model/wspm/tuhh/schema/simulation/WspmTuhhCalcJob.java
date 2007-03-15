@@ -51,6 +51,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -61,7 +62,9 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.observation.IObservation;
@@ -247,6 +250,7 @@ public class WspmTuhhCalcJob implements ISimulation
       // laengsschnitt.txt
       //
       final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
+      final TuhhReach reach = calculation.getReach();
       if( lenSecFile.exists() )
       {
         resultEater.addResult( "LengthSection", lenSecFile );
@@ -287,7 +291,10 @@ public class WspmTuhhCalcJob implements ISimulation
           final TupleResult result = lengthSectionObs.getResult();
           final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
           final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
-          final TuhhReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+          final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+          /* sort the segments */
+          final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
+          Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
           //
           // Diagramm
@@ -296,7 +303,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             final File diagFile = new File( tmpDir, "Längsschnitt.kod" );
 
-            final WspmWaterBody waterBody = calculation.getReach().getWaterBody();
+            final WspmWaterBody waterBody = reach.getWaterBody();
             LaengsschnittHelper.createDiagram( diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
             if( diagFile.exists() )
             {
@@ -413,7 +420,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             mapContentStream = ovwMapURL.openStream();
             final String mapContent = IOUtils.toString( mapContentStream );
-            final FeaturePath ftPath = calculation.getReach().getFeature().getWorkspace().getFeaturepathForFeature( calculation.getReach().getFeature() );
+            final FeaturePath ftPath = reach.getFeature().getWorkspace().getFeaturepathForFeature( reach.getFeature() );
             final String newMapContent = mapContent.replaceAll( "%FID%", ftPath.toString() );
             final File mapFile = new File( tmpDir, "map.gmt" );
             mapWriter = new PrintWriter( new BufferedWriter( new FileWriter( mapFile ) ) );

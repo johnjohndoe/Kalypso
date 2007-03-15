@@ -64,7 +64,6 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -202,6 +201,7 @@ public class BreakLinesHelper implements IWspmConstants
     return curve;
   }
 
+  /** Creates a boundary from the given profiles. The profiles must be sorted. */
   public static void createModelBoundary( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final File file, final boolean useWsp ) throws GMLSchemaException, GM_Exception, InvocationTargetException, IOException, GmlSerializeException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
@@ -284,10 +284,15 @@ public class BreakLinesHelper implements IWspmConstants
 
   private static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
   {
-//    final IProfilPointProperty[] pointProperties = profil.getPointProperties(  );
-//    final POINT_PROPERTY ppRW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ? IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT : null;
-//    final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ? IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
-   if( !profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ||!profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ) // ignore profile without geo-coordinates
+    // final IProfilPointProperty[] pointProperties = profil.getPointProperties( );
+    // final POINT_PROPERTY ppRW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ?
+    // IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT : null;
+    // final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ?
+    // IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
+    if( !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) || !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ) // ignore
+                                                                                                                                                              // profile
+                                                                                                                                                              // without
+                                                                                                                                                              // geo-coordinates
       return new GM_Point[] {};
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
@@ -342,7 +347,7 @@ public class BreakLinesHelper implements IWspmConstants
     final double[] xValues = new double[points.size()];
     final double[] yValues = new double[points.size()];
     final IProfilPointProperty pp = profil.getPointProperty( yProperty );
-    final double dy = pp==null?0.001:pp.getPrecision();
+    final double dy = pp == null ? 0.001 : pp.getPrecision();
     int count = 0;
     for( final IProfilPoint point : points )
     {
