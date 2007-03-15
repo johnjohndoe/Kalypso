@@ -59,8 +59,8 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -139,10 +139,12 @@ public class RoughnessIntersector
     for( final Object polyObject : foundPolygones )
     {
       final Feature polygoneFeature = (Feature) polyObject;
-      final GM_Surface surface = (GM_Surface) polygoneFeature.getProperty( m_polygoneGeomType );
+      
+      // BUGFIX: use any gm_object here, because we do not know what is it (surface, multusurface, ...)
+      final GM_Object gmObject = (GM_Object) polygoneFeature.getProperty( m_polygoneGeomType );
 
-      final Geometry jtsSurface = JTSAdapter.export( surface );
-      if( jtsSurface.contains( jtsPoint ) )
+      final Geometry jtsGeom = JTSAdapter.export( gmObject );
+      if( jtsGeom.contains( jtsPoint ) )
       {
         final Object polygoneValue = polygoneFeature.getProperty( m_polygoneValueType );
         if( polygoneValue != null )
