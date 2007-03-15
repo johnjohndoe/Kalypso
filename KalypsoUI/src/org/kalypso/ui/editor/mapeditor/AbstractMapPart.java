@@ -405,7 +405,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
+  public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     if( m_saving )
       return;
