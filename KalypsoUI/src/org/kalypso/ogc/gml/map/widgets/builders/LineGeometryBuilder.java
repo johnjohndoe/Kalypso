@@ -189,4 +189,13 @@ public class LineGeometryBuilder implements IGeometryBuilder
     for( int i = 0; i < y.length; i++ )
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
+
+  /* Remove the last add from this line builder. */
+  public void removeLast( )
+  {
+    if( m_points.isEmpty() )
+      return;
+    
+    m_points.remove( m_points.size() -1  );
+  }
 }
