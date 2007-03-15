@@ -143,6 +143,17 @@
 		       </with>
 		    </activeWhen>
 		 </handler>
+   <handler
+         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Parameters1D">
+      <activeWhen>
+         <with variable="activeContexts">
+            <iterate operator="or">
+               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
+            </iterate>
+         </with>
+      </activeWhen>
+   </handler>
 		 <handler
 		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#ContinuityLine">
@@ -175,7 +186,7 @@
 	                 value="maps/fenet.gmt"/>
 	           <parameter
 	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+	                 value="NO_LAYER"/>
 	        </class>
 	     </handler>
       <handler
@@ -194,14 +205,14 @@
                   value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
          </class>
       </handler>
-      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#GeneratePolynoms">
+      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNetParameters">
          <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
             <parameter
                   name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
                   value="maps/fenet.gmt"/>
             <parameter
                   name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FlowRelationship"/>
+                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
          </class>
       </handler>
 	     <handler

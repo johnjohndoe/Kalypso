@@ -117,7 +117,7 @@
               toolbarPath="karte/tools"
               tooltip="Root a Continuity Line"/>
         <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.create1dele.CreateFE1DElementActionDelegate"
+              class="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFE1DElementActionDelegate"
               id="org.kalypso.kalypsomodel1d2d.ui.map.create1dele.CreateFEElement1DWidget"
               label="1DCreate"
               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
@@ -283,14 +283,13 @@
                 tooltip="Ein neues FE-Element erzeugen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.create1dele.CreateFEElement1DWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="Element1D"/>
 	       			</class>
 			</action>    
-			
 			<action
 	           icon="icons/elcl16/cut.png"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE1DElement"               
@@ -307,7 +306,70 @@
 	                     	value="Element1D"/>
 	       			</class>
 			</action>
-			            
+          <action
+                icon="icons/elcl16/edit1d2d.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateTeschkeFlowrelationWidgetAction"
+                label="Teschke Parameter hinzufügen"
+                style="radio"
+                toolbarPath="karte/edit"
+                tooltip="Teschke Parameter einem FE-Knoten zuordnen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateTeschkeFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Parameters1D"/>
+	       			</class>
+			</action>    
+          <action
+                icon="icons/elcl16/edit1d2d.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateKingFlowrelationWidgetAction"
+                label="King Parameter hinzufügen"
+                style="radio"
+                toolbarPath="karte/edit"
+                tooltip="King Parameter einem FE-Knoten zuordnen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateKingFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Parameters1D"/>
+	       			</class>
+			</action>    
+          <action
+                icon="icons/elcl16/edit1d2d.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.EditFlowrelationWidget"
+                label="Parameter bearbeiten"
+                style="radio"
+                toolbarPath="karte/edit"
+                tooltip="Zugeordnete Parameter eines FE-Knoten bearbeiten">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.EditFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Parameters1D"/>
+	       			</class>
+			</action>    
+			<action
+	           icon="icons/elcl16/cut.png"
+	           id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.DeleteFlowrelationWidgetAction"               
+	           label="Parameter löschen"
+	           style="radio"
+	           toolbarPath="karte/edit"
+	           tooltip="einem FE-Koten zugeordnete Parameter löschen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.DeleteFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Parameters1D"/>
+	       			</class>
+			</action>
         </viewContribution>
      </extension>
      <extension

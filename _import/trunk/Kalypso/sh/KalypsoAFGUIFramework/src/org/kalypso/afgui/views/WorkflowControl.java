@@ -94,7 +94,8 @@ public class WorkflowControl
       {
         try
         {
-          doTask( contextTaskGroup );
+//          doTask( contextTaskGroup );
+          System.out.println("HIHI");
         }
         catch( final Exception e )
         {

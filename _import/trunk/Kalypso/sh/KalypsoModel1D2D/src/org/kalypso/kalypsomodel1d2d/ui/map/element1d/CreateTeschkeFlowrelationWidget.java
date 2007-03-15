@@ -38,23 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.create1dele;
+package org.kalypso.kalypsomodel1d2d.ui.map.element1d;
 
-import org.eclipse.ui.IEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
+import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 
 /**
- * Action delegate for testing {@link CreateFEElement1DWidget}
- * 
- * @author Patrice Congo
+ * @author Gernot Belger
  */
-public class CreateFE1DElementActionDelegate 
-                extends AbstractGisMapEditorActionDelegate 
-                implements IEditorActionDelegate
+public class CreateTeschkeFlowrelationWidget extends AbstractWidget
 {
-  public CreateFE1DElementActionDelegate( )
+  public CreateTeschkeFlowrelationWidget(  )
   {
-    super( new CreateFEElement1DWidget() );
+    super( "Teschke Parameter hinzufügen", "Teschke Parameter einem FE-Knoten zuordnen" );
   }
-
 }

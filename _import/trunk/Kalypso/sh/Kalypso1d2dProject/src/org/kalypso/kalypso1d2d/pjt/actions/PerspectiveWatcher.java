@@ -184,6 +184,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
   @Override
   public void partClosed( final IWorkbenchPart part )
   {
+    // TODO consider (de)registering the mapModellContextSwitcher in the MapPanel itself
     if( part instanceof AbstractMapPart )
     {
       // deregister contextSwitcher on map panel
@@ -211,7 +212,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     }
   }
 
-  boolean shouldKeepView( final IViewReference reference )
+  protected boolean shouldKeepView( final IViewReference reference )
   {
     final String viewId = reference.getId();
     if( shouldKeepView( viewId ) )
@@ -228,7 +229,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     }
   }
 
-  boolean shouldKeepView( final IViewPart view )
+  protected boolean shouldKeepView( final IViewPart view )
   {
     final String viewId = view.getSite().getId();
     return shouldKeepView( viewId );

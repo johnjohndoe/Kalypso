@@ -1,4 +1,4 @@
-package org.kalypso.kalypsomodel1d2d.ui.map.create1dele;
+package org.kalypso.kalypsomodel1d2d.ui.map.element1d;
 
 import java.awt.Graphics;
 import java.awt.Point;
