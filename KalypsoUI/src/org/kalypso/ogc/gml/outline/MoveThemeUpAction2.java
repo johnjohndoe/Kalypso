@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
  * @author belger
@@ -58,10 +59,10 @@ public class MoveThemeUpAction2 implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      PluginMapOutlineActionDelegate outlineaction = ( (PluginMapOutlineActionDelegate)action );
+      PluginMapOutlineActionDelegate outlineaction = ((PluginMapOutlineActionDelegate) action);
       IListManipulator listManipulator = outlineaction.getListManipulator();
-      GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
-      listManipulator.moveElementUp( ( (IStructuredSelection)viewer.getSelection() ).getFirstElement() );
+      IMapModellView viewer = outlineaction.getOutlineviewer();
+      listManipulator.moveElementUp( ((IStructuredSelection) viewer.getSelection()).getFirstElement() );
     }
   }
 
@@ -71,22 +72,26 @@ public class MoveThemeUpAction2 implements PluginMapOutlineAction
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    boolean bEnable = false;
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      PluginMapOutlineActionDelegate outlineaction = ( (PluginMapOutlineActionDelegate)action );
-      GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
-
-      final IStructuredSelection s = (IStructuredSelection)viewer.getSelection();
-      //    if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme) )
-      if( !s.isEmpty() && ( s.getFirstElement() instanceof IKalypsoTheme ) )
+      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate) action;
+      IMapModellView viewer = outlineaction.getOutlineviewer();
+      boolean bEnable = false;
+      if( selection instanceof IStructuredSelection )
       {
-        final Object[] elements = viewer.getContentProvider().getElements( viewer.getMapModell() );
+        final IStructuredSelection s = (IStructuredSelection) selection;
 
-        bEnable = ( elements[0] != s.getFirstElement() );
+        if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
+        {
+          final Object[] elements = viewer.getMapModell().getAllThemes();
+
+          bEnable = (elements[elements.length - 1] != s.getFirstElement());
+        }
+        action.setEnabled( bEnable );
+
       }
 
-      action.setEnabled( bEnable );
     }
+
   }
 }

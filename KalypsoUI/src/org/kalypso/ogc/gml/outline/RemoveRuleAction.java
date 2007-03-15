@@ -48,6 +48,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
@@ -56,7 +57,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  */
 public class RemoveRuleAction extends AbstractOutlineAction
 {
-  public RemoveRuleAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
+  public RemoveRuleAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer, final IListManipulator listManip )
   {
     super( text, image, tooltipText, outlineViewer, listManip );
     refresh();

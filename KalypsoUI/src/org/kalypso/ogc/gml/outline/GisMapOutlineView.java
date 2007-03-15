@@ -46,13 +46,17 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.commons.list.IListManipulator;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
@@ -61,6 +65,7 @@ import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
@@ -71,7 +76,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  * 
  * @author Stefan Kurzbach
  */
-public class GisMapOutlineView extends ViewPart implements IMapModellView, IListManipulator
+public class GisMapOutlineView extends ViewPart implements IMapModellView
 {
   public static final String ID = "org.kalypso.ui.views.outline";
 
@@ -79,7 +84,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
 
   private JobExclusiveCommandTarget m_commandTarget;
 
-  private AbstractMapPart m_mapPart;
+  AbstractMapPart m_mapPart;
 
   private IPartListener m_partListener;
 
@@ -93,8 +98,23 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
     container.setLayout( new FillLayout() );
     m_viewer = new GisMapOutlineViewer( null, null );
     m_viewer.createControl( container );
+    final IWorkbenchPartSite site = getSite();
+    site.setSelectionProvider( m_viewer );
 
-    getSite().setSelectionProvider( m_viewer );
+    // initialize view with active map editor or view if any
+    final IWorkbenchPage page = site.getPage();
+    page.addPartListener( m_partListener );
+    final IEditorPart activeEditor = page.getActiveEditor();
+    final IViewPart mapView = page.findView( MapView.ID );
+    // try to find map editor first
+    if( activeEditor != null && activeEditor instanceof AbstractMapPart )
+    {
+      setMapPart( (AbstractMapPart) activeEditor );
+    }
+    else if( mapView != null )
+    {
+      setMapPart( (AbstractMapPart) mapView );
+    }
   }
 
   /**
@@ -126,11 +146,13 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
       {
         if( part instanceof AbstractMapPart )
         {
-          setMapPart( null );
+          if( m_mapPart == part )
+          {
+            setMapPart( null );
+          }
         }
       }
     };
-    site.getPage().addPartListener( m_partListener );
 
     // TODO: this is no good!
     // do not set this to the selection provider of another part!
@@ -310,6 +332,17 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView, IList
   public void setSelection( ISelection selection )
   {
     m_viewer.setSelection( selection );
+  }
+
+  /**
+   * @param command
+   * @param runnable
+   * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
+   */
+  public void postCommand( ICommand command, Runnable runnable )
+  {
+    m_commandTarget.postCommand( command, runnable );
   }
 
 }

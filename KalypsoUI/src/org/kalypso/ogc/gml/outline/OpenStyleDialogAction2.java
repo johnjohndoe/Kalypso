@@ -48,6 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
 /**
@@ -64,7 +65,7 @@ public class OpenStyleDialogAction2 implements PluginMapOutlineAction
     if( action instanceof PluginMapOutlineActionDelegate )
     {
       PluginMapOutlineActionDelegate actionDelegate = (PluginMapOutlineActionDelegate) action;
-      GisMapOutlineViewer viewer = actionDelegate.getOutlineviewer();
+      IMapModellView viewer = actionDelegate.getOutlineviewer();
       StyleEditorViewPart part = null;
       IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();

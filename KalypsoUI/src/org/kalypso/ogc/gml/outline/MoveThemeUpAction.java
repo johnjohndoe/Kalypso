@@ -44,14 +44,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
  * @author belger
  */
 public class MoveThemeUpAction extends AbstractOutlineAction
 {
-  public MoveThemeUpAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
+  public MoveThemeUpAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer, final IListManipulator listManip )
   {
     super( text, image, tooltipText, outlineViewer, listManip );
   }
@@ -60,23 +60,23 @@ public class MoveThemeUpAction extends AbstractOutlineAction
    * @see org.eclipse.jface.action.Action#run()
    */
   @Override
-  public void run()
+  public void run( )
   {
-    getListManipulator().moveElementUp( ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
+    getListManipulator().moveElementUp( ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement() );
   }
 
   @Override
-  protected final void refresh()
+  protected final void refresh( )
   {
     boolean bEnable = false;
 
-    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
-    //    if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme) )
-    if( !s.isEmpty() && ( s.getFirstElement() instanceof IKalypsoTheme ) )
+    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
+    // if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme) )
+    if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
     {
-      final Object[] elements = getOutlineviewer().getContentProvider().getElements( getOutlineviewer().getMapModell() );
+      final Object[] elements = getOutlineviewer().getMapModell().getAllThemes();
 
-      bEnable = ( elements[0] != s.getFirstElement() );
+      bEnable = (elements[0] != s.getFirstElement());
     }
 
     setEnabled( bEnable );

@@ -63,6 +63,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -72,6 +73,7 @@ import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.xml.XMLTools;
@@ -84,12 +86,9 @@ import org.w3c.dom.Document;
  */
 public class SaveStyleAction extends AbstractOutlineAction
 {
-  private final Shell shell;
-
-  public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer )
+  public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
-    shell = outlineViewer.getControl().getShell();
   }
 
   /**
@@ -106,7 +105,7 @@ public class SaveStyleAction extends AbstractOutlineAction
       if( theme instanceof IKalypsoFeatureTheme )
       {
         KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
-        saveUserStyle( kalypsoStyle, shell );
+        saveUserStyle( kalypsoStyle, PlatformUI.getWorkbench().getDisplay().getActiveShell() );
       }
     }
   }

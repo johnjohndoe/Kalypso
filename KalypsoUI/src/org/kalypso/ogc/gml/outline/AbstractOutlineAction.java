@@ -45,18 +45,19 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
  * @author belger
  */
 public abstract class AbstractOutlineAction extends FullAction implements ISelectionChangedListener
 {
-  private final GisMapOutlineViewer m_outlineViewer;
+  private final IMapModellView m_outlineViewer;
 
   private IListManipulator m_listManipulator;
 
   public AbstractOutlineAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer selectionProvider, final IListManipulator listManip )
+      final IMapModellView selectionProvider, final IListManipulator listManip )
   {
     super( text, image, tooltipText );
 
@@ -86,7 +87,7 @@ public abstract class AbstractOutlineAction extends FullAction implements ISelec
     return m_listManipulator;
   }
 
-  public GisMapOutlineViewer getOutlineviewer()
+  public IMapModellView getOutlineviewer()
   {
     return m_outlineViewer;
   }

@@ -58,17 +58,19 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
+import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
  */
-public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, SelectionListener, ICommandTarget
+public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListener, SelectionListener, ICommandTarget
 {
-  protected StructuredViewer m_viewer;
+  protected TableTreeViewer m_viewer;
 
   private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
 
@@ -92,10 +94,11 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
 
   public void createControl( final Composite parent )
   {
-    final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
-    tree.addSelectionListener( this );
+//    final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
+//    tree.addSelectionListener( this );
 
-    m_viewer = new TableTreeViewer( tree );
+    m_viewer = new TableTreeViewer( parent, SWT.SINGLE | SWT.CHECK);
+    m_viewer.getTableTree().addSelectionListener( this );
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 

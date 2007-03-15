@@ -44,6 +44,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
  * @author belger
@@ -58,9 +59,8 @@ public class MoveThemeDownAction2 implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      PluginMapOutlineActionDelegate actionDelegate = (PluginMapOutlineActionDelegate)action;
-      actionDelegate.getListManipulator().moveElementDown(
-          ( (IStructuredSelection)actionDelegate.getOutlineviewer().getSelection() ).getFirstElement() );
+      PluginMapOutlineActionDelegate actionDelegate = (PluginMapOutlineActionDelegate) action;
+      actionDelegate.getListManipulator().moveElementDown( ((IStructuredSelection) actionDelegate.getOutlineviewer().getSelection()).getFirstElement() );
 
     }
   }
@@ -73,18 +73,18 @@ public class MoveThemeDownAction2 implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
-      GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
+      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate) action;
+      IMapModellView viewer = outlineaction.getOutlineviewer();
       boolean bEnable = false;
       if( selection instanceof IStructuredSelection )
       {
-        final IStructuredSelection s = (IStructuredSelection)selection;
+        final IStructuredSelection s = (IStructuredSelection) selection;
 
-        if( !s.isEmpty() && ( s.getFirstElement() instanceof IKalypsoTheme ) )
+        if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
         {
-          final Object[] elements = viewer.getContentProvider().getElements( viewer.getMapModell() );
+          final Object[] elements = viewer.getMapModell().getAllThemes();
 
-          bEnable = ( elements[elements.length - 1] != s.getFirstElement() );
+          bEnable = (elements[elements.length - 1] != s.getFirstElement());
         }
         action.setEnabled( bEnable );
 

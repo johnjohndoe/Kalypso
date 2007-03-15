@@ -40,51 +40,61 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.kalypso.commons.list.IListManipulator;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * Superclass for plugins that modify the map model
- * 
- * @author kuepfer
+ * @author Stefan Kurzbach
  */
-public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
+public abstract class MapModellViewActionDelegate extends ActionDelegate implements IViewActionDelegate, PluginMapOutlineAction
 {
-  private final PluginMapOutlineAction m_innerAction;
+  private IMapModellView m_view;
 
-  public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView selectionProvider, PluginMapOutlineAction outlineAction, final IListManipulator listManip )
+  private IKalypsoTheme m_selectedElement;
+
+  public IMapModellView getView( )
   {
-    super( text, image, tooltipText, selectionProvider, listManip );
-    m_innerAction = outlineAction;
+    return m_view;
+  }
+
+  public IKalypsoTheme getSelectedTheme( )
+  {
+    return m_selectedElement;
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
-  @Override
-  public void run( )
+  public void init( final IViewPart view )
   {
-    // m_innerAction.run( getOutlineviewer(), getListManipulator() );
-    m_innerAction.run( this );
+    if( view instanceof IMapModellView )
+    {
+      m_view = (IMapModellView) view;
+    }
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( IAction action, ISelection selection )
   {
-    m_innerAction.selectionChanged( this, event.getSelection() );
-  }
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection s = (IStructuredSelection) selection;
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#refresh()
-   */
-  @Override
-  protected void refresh( )
-  {
-    //
+      final Object firstElement = s.getFirstElement();
+      if( !s.isEmpty() && firstElement instanceof IKalypsoTheme )
+      {
+        m_selectedElement = (IKalypsoTheme) firstElement;
+      }
+    }
   }
 }

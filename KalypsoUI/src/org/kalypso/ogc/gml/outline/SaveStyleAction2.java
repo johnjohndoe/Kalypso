@@ -65,6 +65,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -72,6 +73,7 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -92,7 +94,7 @@ public class SaveStyleAction2 implements IActionDelegate
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      IMapModellView viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
       Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
       if( o instanceof ThemeStyleTreeObject )
       {
@@ -100,7 +102,7 @@ public class SaveStyleAction2 implements IActionDelegate
         if( theme instanceof IKalypsoFeatureTheme )
         {
           KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
-          saveUserStyle( kalypsoStyle, viewer.getControl().getShell() );
+          saveUserStyle( kalypsoStyle, PlatformUI.getWorkbench().getDisplay().getActiveShell() );
         }
       }
     }

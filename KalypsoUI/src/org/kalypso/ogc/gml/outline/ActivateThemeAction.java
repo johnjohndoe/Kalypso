@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
  * @author belger
@@ -53,7 +54,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 public class ActivateThemeAction extends AbstractOutlineAction
 {
   public ActivateThemeAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer outlineViewer )
+      final IMapModellView outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
 

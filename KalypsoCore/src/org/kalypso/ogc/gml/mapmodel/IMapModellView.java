@@ -41,6 +41,8 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.list.IListManipulator;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -48,7 +50,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * 
  * @author doemming, Stefan Kurzbach
  */
-public interface IMapModellView extends ModellEventListener, ISelectionProvider
+public interface IMapModellView extends ModellEventListener, ISelectionProvider, IListManipulator, ICommandTarget
 {
   public IMapModell getMapModell( );
 

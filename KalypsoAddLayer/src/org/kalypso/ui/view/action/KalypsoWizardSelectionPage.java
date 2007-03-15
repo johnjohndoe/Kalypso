@@ -49,7 +49,7 @@ import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardListSelectionPage;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardNode;
 import org.eclipse.ui.model.AdaptableList;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
@@ -58,9 +58,9 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 @SuppressWarnings("restriction")
 public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
 {
-  protected GisMapOutlineViewer m_outline;
+  protected IMapModellView m_outline;
 
-  public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, IStructuredSelection selection, AdaptableList wizardElts, String message, GisMapOutlineViewer outlineview )
+  public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, IStructuredSelection selection, AdaptableList wizardElts, String message, IMapModellView outlineview )
   {
     super( aWorkbench, selection, wizardElts, message, null );
     m_outline = outlineview;
