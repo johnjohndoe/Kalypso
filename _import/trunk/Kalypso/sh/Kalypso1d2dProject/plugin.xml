@@ -178,6 +178,9 @@
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportLineShpHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShapeImport"/>	           
 	     
 	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
 	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
