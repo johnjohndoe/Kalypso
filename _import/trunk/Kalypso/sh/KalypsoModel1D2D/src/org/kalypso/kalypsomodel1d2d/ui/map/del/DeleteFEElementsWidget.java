@@ -28,13 +28,13 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Patrice Congo
  */
-public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWithOptions, WidgetStrategyContext
+public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetWithOptions,*/ WidgetStrategyContext
 {
 
-  private DeleteFEElementsWidgetFace widgetFace=
-                      new DeleteFEElementsWidgetFace(this);
+//  private DeleteFEElementsWidgetFace widgetFace=
+//                      new DeleteFEElementsWidgetFace(this);
 
-  private IWidget widgetStrategy;
+  private IWidget widgetStrategy = new FeElementPointSelectionWidget();
   
   
   public DeleteFEElementsWidget( )
@@ -51,6 +51,10 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
   {
     super.activate( commandPoster, mapPanel );
     reinit();
+    if(widgetStrategy!=null)
+    {
+      widgetStrategy.activate( commandPoster, mapPanel );
+    }
   }
 
   private final void reinit( )
@@ -325,7 +329,8 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    return widgetFace.createControl( parent );
+//    return widgetFace.createControl( parent );
+    return null;
   }
   
   /**
@@ -333,7 +338,7 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
    */
   public void disposeControl( )
   {
-    widgetFace.disposeControl();
+//    widgetFace.disposeControl();
   }
   
   public void setStrategy(IWidget widgetStrategy)

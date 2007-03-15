@@ -140,6 +140,17 @@ public class KeyBasedDataModel
     }
   }
   
+  public void removeKeyBasedDataChangeListener(
+                    KeyBasedDataModelChangeListener newListener)
+  {
+    Assert.throwIAEOnNullParam( newListener, "newListener" );
+    if(listeners.contains( newListener ))
+    {
+      listeners.remove( newListener );
+    }
+  }
+  
+  
   public void fireDataChanged(String key, Object newValue)
   {
     
@@ -147,5 +158,10 @@ public class KeyBasedDataModel
     {
       l.dataChanged( key, newValue );
     }
+  }
+  
+  public void removeAllListeners( )
+  {
+     listeners.clear();    
   }
 }

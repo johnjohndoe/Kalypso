@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,13 +62,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Madanagopal
@@ -76,7 +82,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
  */
 public class AssignNodeElevationFaceComponent
 {
-  private ApplyElevationWidgetDataModel dataModel;
+  ApplyElevationWidgetDataModel dataModel;
   
   private FormToolkit toolKit;
 
@@ -126,13 +132,42 @@ public class AssignNodeElevationFaceComponent
 
     public void modify( Object element, String property, Object value )
     {
+     
+      IFE1D2DNode node=null;
+      if(element instanceof TableItem)
+      {  
+        Object data  = ((TableItem)element).getData();
+        if(data instanceof IFE1D2DNode)
+        {
+          node =(IFE1D2DNode) data;
+        }
+        
+      }
       if(property.equals( nodeElevationViewer.getColumnProperties()[1] ))
       {
-        //return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
+        IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+        if(model1d2d!=null)
+        {
+          //return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
+          ChangeNodePositionCommand command = 
+            new ChangeNodePositionCommand(
+                                    model1d2d ,
+                                    node,
+                                    Double.parseDouble( (String)value ));
+          IKalypsoFeatureTheme nodeTheme = 
+                (IKalypsoFeatureTheme) dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
+          if(nodeTheme==null)
+          {
+            return;
+          }
+          nodeTheme.postCommand( command, null );
+          nodeElevationViewer.refresh();//true);//, new String[]{property});
+        }
       }
       else if(property.equals( nodeElevationViewer.getColumnProperties()[0] ))
       {
-        ( (IFE1D2DNode) element ).setName( (String)value );
+        node.setName( (String)value );
+        nodeElevationViewer.refresh();//true);//, new String[]{property});
       }
       else
       {
@@ -164,7 +199,7 @@ public class AssignNodeElevationFaceComponent
     new KeyBasedDataModelChangeListener()
   {
 
-    public void dataChanged( String key, Object newValue )
+    public void dataChanged( String key, final Object newValue )
     {
       System.out.println("Key="+key);
       if(ITerrainElevationModel.class.toString().equals( key ))
@@ -177,6 +212,44 @@ public class AssignNodeElevationFaceComponent
         }
         inputText.setText( name );
       }
+      else if(ApplyElevationWidgetDataModel.SELECTED_NODE_KEY.equals( key ))
+      {
+        
+        if(nodeElevationViewer==null)
+        {
+          return;
+        }
+        Runnable todo=new Runnable()
+        {
+
+          public void run( )
+          {
+            nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+            nodeElevationViewer.setInput( newValue );
+          }
+          
+        };
+        nodeElevationViewer.getControl().getDisplay().syncExec( todo );
+      }
+    }
+    
+  };
+
+  private ICellEditorValidator doubleValidator= new ICellEditorValidator()
+  {
+
+    public String isValid( Object value )
+    {
+      try
+      {
+        Double.parseDouble( ( String)value);
+        return null;
+      }
+      catch(Throwable th)
+      {
+        return "Geben Sie eine Zahl ein";
+      }
+      
     }
     
   };
@@ -312,14 +385,16 @@ public class AssignNodeElevationFaceComponent
     } );
     
     TextCellEditor textCellEditor= new TextCellEditor(table);
-    ((Text)textCellEditor.getControl()).setTextLimit( 15 );
+    TextCellEditor eleCellEditor= new TextCellEditor(table);
+    ((Text)eleCellEditor.getControl()).setTextLimit( 15 );
+    eleCellEditor.setValidator( this.doubleValidator );
     
-    
-    CellEditor[] editors= new CellEditor[]{textCellEditor,textCellEditor};
+    CellEditor[] editors= new CellEditor[]{textCellEditor,eleCellEditor};
     nodeElevationViewer.setCellEditors( editors );
     
     
     nodeElevationViewer.setCellModifier( modifier );
+    
     
   }
 }

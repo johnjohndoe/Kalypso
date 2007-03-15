@@ -40,20 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
@@ -66,8 +70,10 @@ public class ApplyElevationWidgetDataModel
                   implements IFeatureSelectionListener
 {
   public static final String SELECTED_NODE_KEY="_SELECTED_NODE_KEY";
-
-  public static final String[] KEYS = 
+  public static final String ELEVATION_THEME="_ELEVATION_THEME_";
+  public static final String NODE_THEME="_NODE_THEME_";
+  
+  private static final String[] KEYS = 
                     {
                     ITerrainModel.class.toString(),
                     ITerrainElevationModelSystem.class.toString(),
@@ -77,17 +83,9 @@ public class ApplyElevationWidgetDataModel
                     GM_Polygon.class.toString(),
                     IFEDiscretisationModel1d2d.class.toString(),
                     MapPanel.class.toString(),
-                    ElevationTheme.class.toString()};
+                    ELEVATION_THEME,
+                    NODE_THEME};
   
-//  private ITerrainModel terrainModel;
-//  private ITerrainElevationModelSystem elevationModelSystem;
-//  private ITerrainElevationModel elevationModel;
-//  private IFEDiscretisationModel1d2d discretisationModel;
-//  private List<IFE1D2DNode> selectedNode;
-//  private GM_Polygon selectionArea;
-//  private IMapModell mapModell;
-//  private ElevationTheme elevationTheme;
-//  private MapPanel mapPanel;
   
   public ApplyElevationWidgetDataModel( )
   {
@@ -197,16 +195,16 @@ public class ApplyElevationWidgetDataModel
     setData( TerrainModel.class.toString(),terrainModel );
   }
   
-  public ElevationTheme getElevationTheme( )
+  public IKalypsoFeatureTheme getElevationTheme( )
   {
     //return elevationTheme;
-    return (ElevationTheme) getData( ElevationTheme.class.toString() );
+    return (IKalypsoFeatureTheme) getData( ELEVATION_THEME );
   }
   
-  public void setElevationTheme( ElevationTheme elevationTheme )
+  public void setElevationTheme( IKalypsoFeatureTheme elevationTheme )
   {
     //this.elevationTheme = elevationTheme;
-    setData( ElevationTheme.class.toString(), elevationTheme );
+    setData( ELEVATION_THEME, elevationTheme );
   }
   
   public MapPanel getMapPanel( )
@@ -226,8 +224,20 @@ public class ApplyElevationWidgetDataModel
    */
   public void selectionChanged( IFeatureSelection selection )
   {
-    // TODO Auto-generated method stub
-    
+    //TODO pat maybe get th list from dataModel
+    List<IFE1D2DNode> nodes =  new ArrayList<IFE1D2DNode>();
+    for(EasyFeatureWrapper wrapper:selection.getAllFeatures())
+    {
+      Feature feature = wrapper.getFeature();
+      if(TypeInfo.isNode( feature ))
+      {
+        nodes.add( (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class ) );
+      }
+    }
+
+    setSelectedNode( nodes );
   }
+
+  
   
 }

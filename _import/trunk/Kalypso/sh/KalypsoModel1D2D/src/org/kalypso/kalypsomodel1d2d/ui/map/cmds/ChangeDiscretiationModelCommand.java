@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -74,6 +75,9 @@ public class ChangeDiscretiationModelCommand implements ICommand
   
   private List<IDiscrModel1d2dChangeCommand> commands = 
                       new ArrayList<IDiscrModel1d2dChangeCommand>();
+  private List<IDiscrModel1d2dChangeCommand> nodeCommands = 
+                      new ArrayList<IDiscrModel1d2dChangeCommand>();
+  
   private boolean isUndoable=true;
 
 
@@ -122,6 +126,36 @@ public class ChangeDiscretiationModelCommand implements ICommand
   public void process( ) throws Exception
   {
     List<Feature> changedFeatures= new ArrayList<Feature>();
+    
+    //build nodes with geo indexing
+    for(IDiscrModel1d2dChangeCommand command:nodeCommands)
+    {
+      try
+      {
+        command.process();
+        for(IFeatureWrapper changedFeature :command.getChangedFeature())
+        {
+          if(changedFeature!=null)
+          {
+            Feature wrappedFeature = 
+                      changedFeature.getWrappedFeature();
+            if(wrappedFeature!=null)
+            {
+              changedFeatures.add( wrappedFeature );
+              wrappedFeature.invalidEnvelope();
+            }
+          }
+        }
+      }
+      catch (Exception e) 
+      {
+        e.printStackTrace();
+      }      
+    }
+    
+    //build edges and element without indexing
+    GeometryCalcControl.doCalcEdge=false;
+    GeometryCalcControl.doCalcElement=false;
     for(IDiscrModel1d2dChangeCommand command:commands)
     {
       try
@@ -146,6 +180,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
       }      
     }
     
+    GeometryCalcControl.doCalcEdge = true;
+    GeometryCalcControl.doCalcElement = true;
     model1d2d.getEdges().getWrappedList().invalidate();
     model1d2d.getElements().getWrappedList().invalidate();
     model1d2d.getNodes().getWrappedList().invalidate();
@@ -207,7 +243,15 @@ public class ChangeDiscretiationModelCommand implements ICommand
   public void addCommand(IDiscrModel1d2dChangeCommand command)
   {
     Assert.throwIAEOnNullParam( command, "command" );
-    commands.add( command );
+    if(commands instanceof AddNodeCommand)
+    {
+      nodeCommands.add( command );
+    }
+    else
+    {
+      commands.add( command );
+      
+    }
     
     isUndoable=isUndoable && command.isUndoable();
     

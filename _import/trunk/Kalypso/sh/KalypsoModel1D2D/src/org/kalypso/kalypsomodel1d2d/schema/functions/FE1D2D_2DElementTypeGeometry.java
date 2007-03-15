@@ -44,13 +44,22 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-
+    if(!GeometryCalcControl.doCalcEdge)
+    {
+      return null;
+    }
+    
     try
     {
       final IFeatureType featureType = feature.getFeatureType();
       final FE1D2D_2DElement element;
       QName featureQName = featureType.getQName();
-      if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
+      if(featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ))
+      {
+        element = new FE1D2D_2DElement( feature );
+        return element.recalculateElementGeometry();        
+      }
+      else if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
       {
         element = new FE1D2DContinuityLine( feature );
         return  element.recalculateElementGeometry();
@@ -81,6 +90,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
       }
       else
       {
+        //TODO Patrice remove me
         element = new FE1D2D_2DElement( feature );
         return element.recalculateElementGeometry();
       }

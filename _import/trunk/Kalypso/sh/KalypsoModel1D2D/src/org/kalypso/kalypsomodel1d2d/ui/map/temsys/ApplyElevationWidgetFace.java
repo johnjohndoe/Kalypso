@@ -467,7 +467,8 @@ class ApplyElevationWidgetFace
     elevFormData.bottom = new FormAttachment( 100, 0 );
 
     Button showTerrain = new Button( elevationComposite, SWT.PUSH );
-    showTerrain.setText( "Goto Terrain" );
+//    showTerrain.setText( "Goto Terrain" );
+    showTerrain.setToolTipText( "Geländemodell anzeigen und maximieren" );
     image_goToTerrain = new Image( 
                         elevationComposite.getDisplay(), 
                         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),

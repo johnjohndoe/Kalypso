@@ -131,7 +131,7 @@ public class ApplyElevationWidget
     dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
     dataModel.setMapPanel( mapPanel );
-    ElevationTheme theme= null;
+    
     //find and set Elevation model system
     IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableThem( 
           mapModell, 
@@ -142,9 +142,17 @@ public class ApplyElevationWidget
     ITerrainElevationModelSystem system = 
       (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( 
                                       ITerrainElevationModelSystem.class );
-    dataModel.setElevationModelSystem( system );
     
-    dataModel.setElevationTheme( theme );
+    IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableThem( 
+        mapModell, 
+        KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL
+        );
+    dataModel.setElevationModelSystem( system );
+    dataModel.setData( 
+          ApplyElevationWidgetDataModel.NODE_THEME, 
+          nodeTheme );
+    
+    dataModel.setElevationTheme( terrainElevationTheme ); 
     dataModel.setMapPanel( mapPanel );
   }
   
@@ -174,6 +182,7 @@ public class ApplyElevationWidget
     {
       widgetFace.disposeControl();
     }
+    dataModel.removeAllListeners();
   }
 
   /**
