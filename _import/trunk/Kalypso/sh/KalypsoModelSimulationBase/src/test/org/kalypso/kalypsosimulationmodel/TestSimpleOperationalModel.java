@@ -110,10 +110,10 @@ public class TestSimpleOperationalModel extends TestCase
     {
       fail( TestUtils.getStackTraceAsString( th ) );
     }
-    Feature rFeature = workspace.getRootFeature();
-    FeatureList list = (FeatureList) rFeature.getProperty( TestWorkspaces.GML_PROP_FEATURE_MEMBER );
-    RoughnessPolygon rp = new RoughnessPolygon( (Feature) list.get( 0 ) );
-    assertEquals( "htpp://wwww.tuhh.de/wb/roughness_db/grass", rp.getRoughnessStyle() );
+//    Feature rFeature = workspace.getRootFeature();
+//    FeatureList list = (FeatureList) rFeature.getProperty( TestWorkspaces.GML_PROP_FEATURE_MEMBER );
+//    RoughnessPolygon rp = new RoughnessPolygon( (Feature) list.get( 0 ) );
+//    assertEquals( "htpp://wwww.tuhh.de/wb/roughness_db/grass", rp.getRoughnessStyle() );
 //    GM_Polygon pol = rp.getPolygon();
 //    GM_Position[] positions = pol.getExteriorRing();
 //    double[][] posArray = { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, 0 } };
