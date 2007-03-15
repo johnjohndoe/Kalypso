@@ -116,7 +116,11 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
     public void dispose( )
     {
       setTheme( null );
-      PlatformUI.getWorkbench().getDisplay().asyncExec( this );
+      final Display display = PlatformUI.getWorkbench().getDisplay();
+      if( !display.isDisposed() )
+      {
+        display.asyncExec( this );
+      }
       m_contextService = null;
       m_oldContext = null;
     }
@@ -207,7 +211,7 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
     final Display display = PlatformUI.getWorkbench().getDisplay();
     if( display.isDisposed() )
       return;
-    
+
     for( final ContextSwitcherThread thread : m_contextSwitcherThreads.values() )
     {
       thread.setTheme( theme );
