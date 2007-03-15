@@ -40,51 +40,52 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.list.IListManipulator;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * Superclass for plugins that modify the map model
- * 
- * @author kuepfer
+ * @author Stefan Kurzbach
  */
-public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
+public class MoveThemeDownAction3 extends MapModellViewActionDelegate
 {
-  private final PluginMapOutlineAction m_innerAction;
-
-  public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView selectionProvider, PluginMapOutlineAction outlineAction, final IListManipulator listManip )
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  @Override
+  public void run( final IAction action )
   {
-    super( text, image, tooltipText, selectionProvider, listManip );
-    m_innerAction = outlineAction;
+    IListManipulator listManipulator = getView();
+    IKalypsoTheme selectedElement = getSelectedTheme();
+    if( listManipulator != null && selectedElement != null )
+    {
+      listManipulator.moveElementDown( selectedElement );
+    }
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void run( )
+  public void selectionChanged( IAction action, ISelection selection )
   {
-    // m_innerAction.run( getOutlineviewer(), getListManipulator() );
-    m_innerAction.run( this );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  @Override
-  public void selectionChanged( SelectionChangedEvent event )
-  {
-    m_innerAction.selectionChanged( this, event.getSelection() );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#refresh()
-   */
-  @Override
-  protected void refresh( )
-  {
-    //
+    super.selectionChanged( action, selection );
+    final IKalypsoTheme selectedTheme = getSelectedTheme();
+    boolean bEnable = false;
+    final IMapModellView view = getView();
+    if( selectedTheme != null && view != null )
+    {
+      final IMapModell mapModell = view.getMapModell();
+      if( mapModell != null )
+      {
+        final Object[] elements = mapModell.getAllThemes();
+        bEnable = elements[elements.length - 1] != selectedTheme;
+      }
+    }
+    action.setEnabled( bEnable );
   }
 }

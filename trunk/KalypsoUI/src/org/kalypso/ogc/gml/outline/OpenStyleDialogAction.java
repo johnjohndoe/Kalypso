@@ -48,6 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
 /**
@@ -56,7 +57,7 @@ import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 public class OpenStyleDialogAction extends AbstractOutlineAction
 {
   public OpenStyleDialogAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer outlineViewer )
+      final IMapModellView outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
 

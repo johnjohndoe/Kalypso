@@ -45,7 +45,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
@@ -59,8 +60,8 @@ public class AddThemeAction implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      final GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
-      final Shell shell = viewer.getControl().getShell();
+      final IMapModellView viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
       final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
       wizard.init( activeWorkbenchWindow.getWorkbench() );
@@ -78,7 +79,7 @@ public class AddThemeAction implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      final GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      final IMapModellView viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
       if( viewer == null )
         action.setEnabled( false );
       else

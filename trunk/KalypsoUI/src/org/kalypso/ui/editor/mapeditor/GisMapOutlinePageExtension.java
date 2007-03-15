@@ -39,8 +39,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.commons.list.IListManipulator;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.ImageProvider;
@@ -52,7 +51,7 @@ public class GisMapOutlinePageExtension
 {
   // private final static String GIS_MAP_OUTLINE_EXTENSION_POINT = "org.kalypso.ui.mapviewaction";
 
-  public static List<PluginMapOutlineActionDelegate> getRegisteredMapOutlineActions( final GisMapOutlineViewer gisMapOutlineViewer, final IListManipulator listManip )
+  public static List<PluginMapOutlineActionDelegate> getRegisteredMapOutlineActions( final IMapModellView gisMapOutlineViewer )
   {
     final ArrayList<PluginMapOutlineActionDelegate> actions = new ArrayList<PluginMapOutlineActionDelegate>();
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
@@ -88,7 +87,7 @@ public class GisMapOutlinePageExtension
         try
         {
           PluginMapOutlineAction action = (PluginMapOutlineAction) configurationElement.createExecutableExtension( "class" );
-          actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, gisMapOutlineViewer, action, listManip );
+          actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, gisMapOutlineViewer, action, gisMapOutlineViewer );
           actionDelegate.setEnabled( visible );
           actions.add( actionDelegate );
         }

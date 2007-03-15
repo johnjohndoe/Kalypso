@@ -79,7 +79,7 @@ public class URLActionAddThemeGMT extends AbstractURLAction
         final GisMapOutlinePage gisOutlinePage = (GisMapOutlinePage) outlineView;
         final GisMapOutlineViewer viewer = gisOutlinePage.getModellView();
         final Shell shell = viewer.getControl().getShell();
-        final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
+        final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( gisOutlinePage );
         final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         wizard.init( activeWorkbenchWindow.getWorkbench() );
         wizard.setForcePreviousAndNextButtons( true );

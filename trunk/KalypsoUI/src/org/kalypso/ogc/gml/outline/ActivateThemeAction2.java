@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
  * @author belger
@@ -60,7 +61,7 @@ public class ActivateThemeAction2 implements PluginMapOutlineAction
     if( action instanceof PluginMapOutlineActionDelegate )
     {
       PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
-      GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
+      IMapModellView viewer = outlineaction.getOutlineviewer();
       final Object o = ( (IStructuredSelection)viewer.getSelection() ).getFirstElement();
 
       if( o instanceof IKalypsoTheme )

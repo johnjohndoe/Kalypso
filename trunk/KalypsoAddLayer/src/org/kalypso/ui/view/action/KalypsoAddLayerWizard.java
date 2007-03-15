@@ -46,7 +46,7 @@ import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.registry.WizardsRegistryReader;
 import org.eclipse.ui.model.AdaptableList;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 
 /**
@@ -56,14 +56,14 @@ import org.kalypso.ui.KalypsoAddLayerPlugin;
 @SuppressWarnings("restriction")
 public class KalypsoAddLayerWizard extends Wizard
 {
-  private GisMapOutlineViewer m_outlineviewer;
+  private IMapModellView m_outlineviewer;
 
   private IWorkbench m_workbench;
 
   /**
    * Returns the import wizards that are available for invocation.
    */
-  public KalypsoAddLayerWizard( GisMapOutlineViewer outlineviewer )
+  public KalypsoAddLayerWizard( IMapModellView outlineviewer )
   {
     m_outlineviewer = outlineviewer;
     setWindowTitle( "Kalypso Daten Import" ); //$NON-NLS-1$
@@ -94,7 +94,7 @@ public class KalypsoAddLayerWizard extends Wizard
     return wizards;
   }
 
-  public GisMapOutlineViewer getOutlineViewer( )
+  public IMapModellView getOutlineViewer( )
   {
     return m_outlineviewer;
   }

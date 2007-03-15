@@ -65,6 +65,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
@@ -116,7 +117,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
     m_modellView.addDoubleClickListener( this );
 
-    m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( m_modellView, this );
+    m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( this );
 
     onModellChange( null );
   }
@@ -341,5 +342,15 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   public void selectionChanged( final SelectionChangedEvent event )
   {
     // 
+  }
+
+  /**
+   * @param command
+   * @param runnable
+   * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   */
+  public void postCommand( ICommand command, Runnable runnable )
+  {
+    m_commandTarget.postCommand( command, runnable );
   }
 }

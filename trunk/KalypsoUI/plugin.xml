@@ -1097,6 +1097,30 @@
 				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.tooltip">
 			</action>
 		</viewContribution>
+    <viewContribution
+          id="org.kalypso.ui.views.outline.actions"
+          targetID="org.kalypso.ui.views.outline">
+       <action
+             class="org.kalypso.ogc.gml.outline.MoveThemeUpAction3"
+             icon="icons/full/elcl16/prev_nav.gif"
+             id="org.kalypso.ui.views.outline.moveThemeUp"
+             label="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.label"
+             style="push"
+             toolbarPath="outline/tools"
+             tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.tooltip"/>
+       <action
+             class="org.kalypso.ogc.gml.outline.MoveThemeDownAction3"
+             icon="icons/full/elcl16/next_nav.gif"
+             id="org.kalypso.ui.views.outline.moveThemeDown"
+             label="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.label"
+             style="push"
+             toolbarPath="outline/tools"
+             tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.tooltip"/>
+       <menu
+             id="org.kalypso.ui.views.outline.actions.tools"
+             label="Tools"
+             path="outline/tools"/>
+    </viewContribution>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">

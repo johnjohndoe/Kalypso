@@ -57,7 +57,6 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
@@ -71,13 +70,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -88,7 +85,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -146,15 +142,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private IFile m_file;
 
-  private IPartListener m_partListener;
-
   private final IWidgetChangeListener m_wcl = new IWidgetChangeListener()
   {
     public void widgetChanged( final IWidget newWidget )
     {
       if( PlatformUI.getWorkbench().isClosing() )
         return;
-      
+
       // the widget changed and there is something to show, so bring this
       // view to top
       try
@@ -251,39 +245,15 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( this );
-    m_partListener = new PartAdapter()
+
+    final IWorkbenchPage page = site.getPage();
+
+    // init outlineview if any
+    final IViewPart outlineView = page.findView( GisMapOutlineView.ID );
+    if( outlineView != null )
     {
-
-      /**
-       * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
-       */
-      @Override
-      public void partActivated( final IWorkbenchPart part )
-      {
-        if( part instanceof GisMapOutlineView )
-        {
-          initMapModellView( (IMapModellView) part );
-        }
-      }
-
-      /**
-       * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partClosed(org.eclipse.ui.IWorkbenchPart)
-       */
-      @Override
-      public void partClosed( final IWorkbenchPart part )
-      {
-        if( part instanceof GisMapOutlineView )
-        {
-          setMapModellView( null );
-        }
-      }
-
-      private void initMapModellView( final IMapModellView mapModellView )
-      {
-        setMapModellView( mapModellView );
-      }
-    };
-    site.getPage().addPartListener( m_partListener );
+      setMapModellView( (GisMapOutlineView) outlineView );
+    }
 
     m_resourceChangeListener = new IResourceChangeListener()
     {
@@ -737,8 +707,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_mapPanel.getWidgetManager().removeWidgetChangeListener( m_wcl );
     m_mapPanel.dispose();
-
-    getSite().getPage().removePartListener( m_partListener );
 
     if( m_file != null )
     {
