@@ -67,6 +67,7 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.Messages;
 
@@ -77,7 +78,7 @@ import org.kalypso.ui.wizards.imports.Messages;
 public class ImportLineShpWizard extends Wizard implements INewWizardKalypsoImport
 {
   private IStructuredSelection initialSelection;
-  
+
   private IPath m_sourceLocation = null;
 
   LineShpMainPage mPage;
@@ -87,7 +88,7 @@ public class ImportLineShpWizard extends Wizard implements INewWizardKalypsoImpo
   // private IProject m_project;
 
   IFolder m_scenarioFolder;
-  
+
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
@@ -171,20 +172,20 @@ public class ImportLineShpWizard extends Wizard implements INewWizardKalypsoImpo
             copy( srcFileShape, dstFileShape, monitor );
             copy( finalSrcIndex, finalDstIndex, monitor );
             copy( finalSrcDBase, finalDstDBase, monitor );
-            final IFile file = m_scenarioFolder.getFile( "maps/fenet.gmt" );
+            final IFile file = m_scenarioFolder.getFile( "maps/base.gmt" );
             m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
             final Gismapview gismapview = GisTemplateHelper.loadGisMapView( file );
             final Layers layers = gismapview.getLayers();
             final StyledLayerType layer = new StyledLayerType();
 
             layer.setName( getSourceLocation().removeFileExtension().lastSegment() );
-//            layer.setName( "BaseMap" ); //$NON-NLS-1$
-            
+            // layer.setName( "BaseMap" ); //$NON-NLS-1$
+
             layer.setVisible( true );
-            layer.setFeaturePath( "" ); //$NON-NLS-1$
-            layer.setHref( "file:/" + dstFileShape.getLocation().toOSString() ); //$NON-NLS-1$ //$NON-NLS-2$
+            layer.setFeaturePath( "featureMember" ); //$NON-NLS-1$
+            layer.setHref( "file:/" + dstFileShape.getLocation().removeFileExtension().toOSString() + "#" + KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName() ); //$NON-NLS-1$ //$NON-NLS-2$
             layer.setType( "simple" ); //$NON-NLS-1$
-            layer.setLinktype( "shp" ); //$NON-NLS-1$
+            layer.setLinktype( "shape" ); //$NON-NLS-1$
             layer.setActuate( "onRequest" ); //$NON-NLS-1$
             layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
             layers.getLayer().add( layer );
@@ -264,7 +265,7 @@ public class ImportLineShpWizard extends Wizard implements INewWizardKalypsoImpo
    */
   public IPath getSourceLocation( )
   {
-    if(m_sourceLocation == null)
+    if( m_sourceLocation == null )
       m_sourceLocation = mPage.getSourceLocation();
     return m_sourceLocation;
   }
