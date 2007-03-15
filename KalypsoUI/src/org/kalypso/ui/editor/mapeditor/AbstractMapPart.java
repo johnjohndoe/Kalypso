@@ -57,6 +57,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
@@ -79,6 +80,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -150,6 +152,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     public void widgetChanged( final IWidget newWidget )
     {
+      if( PlatformUI.getWorkbench().isClosing() )
+        return;
+      
       // the widget changed and there is something to show, so bring this
       // view to top
       try
