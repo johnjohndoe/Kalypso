@@ -58,6 +58,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,6 +67,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -713,6 +716,7 @@ class ApplyElevationWidgetFace
       }
     } );
 
+   
     
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment(elevationList,5);
@@ -920,7 +924,7 @@ class ApplyElevationWidgetFace
     regionFormData.left = new FormAttachment(0,10);
     regionFormData.top = new FormAttachment(areaSelectLabel,5);
     regionFormData.height = 70;
-    TableViewer nodeElevationViewer = new TableViewer( cComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
+    final TableViewer nodeElevationViewer = new TableViewer( cComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
     
     table = nodeElevationViewer.getTable();
     table.setLayoutData( regionFormData );
@@ -931,9 +935,12 @@ class ApplyElevationWidgetFace
     TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
     actualPointNum.setText( "Elevation" );
     actualPointNum.setWidth( 100 / 2 );
+    
+    nodeElevationViewer.setUseHashlookup(true);
+    nodeElevationViewer.setColumnProperties( new String[]{"Node","Elevation"} );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-
+    
     nodeElevationViewer.setLabelProvider( new FENodeLabelProvider() );
     nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
     List<IFE1D2DNode> selectedNode = dataModel.getSelectedNode();
@@ -1006,7 +1013,42 @@ class ApplyElevationWidgetFace
       }
 
     } );
+    
+    TextCellEditor textCellEditor= new TextCellEditor(table);
+    ((Text)textCellEditor.getControl()).setTextLimit( 15 );
+    
+    
+    CellEditor[] editors= new CellEditor[]{textCellEditor,textCellEditor};
+    nodeElevationViewer.setCellEditors( editors );
+    
+    ICellModifier modifier = new ICellModifier(){
 
+      public boolean canModify( Object element, String property )
+      {
+        System.out.println("CanmOdiy="+property);
+//      Find the index of the column
+        if(property.equals( nodeElevationViewer.getColumnProperties()[1] ))
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+
+      public Object getValue( Object element, String property )
+      {
+        return ((IFE1D2DNode)element).getName();
+      }
+
+      public void modify( Object element, String property, Object value )
+      {
+        
+      }
+      
+    };
+    nodeElevationViewer.setCellModifier( modifier );
     
   }
 
