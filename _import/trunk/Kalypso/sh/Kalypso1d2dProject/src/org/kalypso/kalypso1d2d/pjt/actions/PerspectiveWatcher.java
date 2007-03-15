@@ -194,6 +194,10 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
       m_mapModellContextSwitcher.removeContextService( contextService );
       mapPanel.getWidgetManager().setActualWidget( null );
     }
+    else if( part instanceof SimulationModelDBView )
+    {
+      Kalypso1d2dProjectPlugin.getActiveWorkContext().setActiveProject( null );
+    }
   }
 
   /**
