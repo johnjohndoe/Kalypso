@@ -63,6 +63,7 @@ import javax.media.jai.TiledImage;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
@@ -71,11 +72,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
@@ -112,15 +116,17 @@ public class ExportThemeAction implements PluginMapOutlineAction
     if( action instanceof PluginMapOutlineActionDelegate )
     {
       PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
-      GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
+      IMapModellView viewer = outlineaction.getOutlineviewer();
       final IKalypsoTheme activeTheme = viewer.getMapModell().getActiveTheme();
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final Shell activeShell = workbench.getDisplay().getActiveShell();
       if( activeTheme instanceof GisTemplateFeatureTheme )
       {
         IFeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
         if( featureType.getName().equals( "RectifiedGridCoverage" ) ) //$NON-NLS-1$
         {
           //System.out.println( "CreateImage" );
-          String targetFileName = chooseFile( viewer.getControl().getShell(), m_targetFile, new String[]
+          String targetFileName = chooseFile( activeShell, m_targetFile, new String[]
           {
               "*.jpg", //$NON-NLS-1$
               ".JPG", //$NON-NLS-1$
@@ -149,12 +155,12 @@ public class ExportThemeAction implements PluginMapOutlineAction
         }
         else
         {
-          MessageDialog.openConfirm( viewer.getControl().getShell(), Messages.getString("action.ExportThemeAction.Information"), Messages.getString("action.ExportThemeAction.ExportFunctionNotImplemented") ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openConfirm( activeShell, Messages.getString("action.ExportThemeAction.Information"), Messages.getString("action.ExportThemeAction.ExportFunctionNotImplemented") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       else
       {
-        MessageDialog.openConfirm( viewer.getControl().getShell(), Messages.getString("action.ExportThemeAction.Information"), Messages.getString("action.ExportThemeAction.ExportFunctionNotImplemented") ); //$NON-NLS-1$ //$NON-NLS-2$
+        MessageDialog.openConfirm( activeShell, Messages.getString("action.ExportThemeAction.Information"), Messages.getString("action.ExportThemeAction.ExportFunctionNotImplemented") ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
