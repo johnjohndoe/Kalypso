@@ -34,6 +34,10 @@
 				<Help>Einladen von Zeitreihendaten (WISKI)</Help>
 				<Name>Import von Zeitreihen</Name>
 			</Task>
+			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShapeImport">
+				<Help>ESRI Shapedateien importieren</Help>
+				<Name>Import von Shapedateien</Name>
+			</Task>			
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
 			<Help>Hier sind alle Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes enthalten</Help>
