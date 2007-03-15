@@ -140,7 +140,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
 
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
-      m_viewer.getControl().getDisplay().syncExec( new Runnable()
+      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
       {
         public void run( )
         {

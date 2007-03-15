@@ -84,6 +84,49 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 public class GenericCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
     IActionDelegate2
 {
+  /**
+   * @author bce
+   */
+  private static final class UpdateActionbarsJob extends UIJob
+  {
+    private final IActionBars m_bars;
+
+    private final String m_id;
+
+    private final boolean m_state;
+
+    public UpdateActionbarsJob( final String name, final IActionBars bars, final String id, final boolean state )
+    {
+      super( name );
+      m_bars = bars;
+      m_id = id;
+      m_state = state;
+    }
+
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      final IContributionManager toolBarManager = m_bars.getToolBarManager();
+      final IContributionManager menuManager = m_bars.getMenuManager();
+
+      final IContributionItem toolbarContribution = toolBarManager.find( m_id );
+      if( toolbarContribution != null )
+      {
+        toolbarContribution.setVisible( m_state );
+        toolBarManager.update( true );
+      }
+      final IContributionItem menuContribution = menuManager.find( m_id );
+      if( menuContribution != null )
+      {
+        menuContribution.setVisible( m_state );
+        menuManager.update( true );
+      }
+
+      m_bars.updateActionBars();
+      return Status.OK_STATUS;
+    }
+  }
+
   private static final Object PARAM_COMMAND_ID = "commandId";
 
   ParameterizedCommand m_parameterizedCommand = null;
@@ -239,11 +282,11 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoGisPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( event.display.getActiveShell(), action.getText() , "Operation konnte nicht ausgeführt werden.", status );
+        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), "Operation konnte nicht ausgeführt werden.", status );
       }
     }
   }
-  
+
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
@@ -296,33 +339,9 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     m_action.setEnabled( enabledState );
 
     final String actionId = m_action.getId();
-    final IContributionManager toolBarManager = m_actionBars.getToolBarManager();
-    final IContributionManager menuManager = m_actionBars.getMenuManager();
-
     final IActionBars actionBars = m_actionBars;
-    final UIJob job = new UIJob( "Update Action-Bars" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        // final IContributionItem toolbarContribution = toolBarManager == null?null: toolBarManager.find( actionId );
-        final IContributionItem toolbarContribution = toolBarManager.find( actionId );
-        if( toolbarContribution != null )
-        {
-          toolbarContribution.setVisible( enabledState );
-          toolBarManager.update( true );
-        }
-        final IContributionItem menuContribution = menuManager.find( actionId );
-        if( menuContribution != null )
-        {
-          menuContribution.setVisible( enabledState );
-          menuManager.update( true );
-        }
 
-        actionBars.updateActionBars();
-        return Status.OK_STATUS;
-      }
-    };
+    final UIJob job = new UpdateActionbarsJob( "Update Action-Bars", actionBars, actionId, enabledState );
     job.setPriority( UIJob.INTERACTIVE );
     job.schedule();
   }
