@@ -105,7 +105,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       m_selection = new StructuredSelection( selectedResources );
     }
 
-    setWindowTitle( "Title" );
+    setWindowTitle( "Auswahl Observation" );
     setNeedsProgressMonitor( true );
   }
 

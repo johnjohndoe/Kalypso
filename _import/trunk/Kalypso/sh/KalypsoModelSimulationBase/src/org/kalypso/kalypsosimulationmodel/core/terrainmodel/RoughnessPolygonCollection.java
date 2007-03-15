@@ -14,6 +14,7 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -83,19 +84,19 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     int[] containsList = getEmptyList( srcPolygonsList.size() );
     IRoughnessPolygon roughnessPolygon1, roughnessPolygon2;
     Feature feature1, feature2;
-    Polygon polygon1, polygon2;
+    MultiPolygon polygon1, polygon2;
     try
     {
       for( int i = 0; i < srcPolygonsList.size(); i++ )
       {
         feature1 = srcPolygonsList.get( i );
         roughnessPolygon1 = new RoughnessPolygon( feature1 );
-        polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryProperty() );
+        polygon1 = (MultiPolygon) JTSAdapter.export( feature1.getDefaultGeometryProperty() );
         for( int j = i + 1; j < srcPolygonsList.size(); j++ )
         {
           feature2 = srcPolygonsList.get( j );
           roughnessPolygon2 = new RoughnessPolygon( feature2 );
-          polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryProperty() );
+          polygon2 = (MultiPolygon) JTSAdapter.export( feature2.getDefaultGeometryProperty() );
           final Geometry jtsIntersection = polygon1.intersection( polygon2 );
           if( jtsIntersection.getArea() > 0 )
           {

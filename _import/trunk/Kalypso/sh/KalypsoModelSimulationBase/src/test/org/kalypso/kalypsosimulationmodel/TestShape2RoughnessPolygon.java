@@ -1,15 +1,11 @@
 package test.org.kalypso.kalypsosimulationmodel;
 
-import java.util.Arrays;
-
 import junit.framework.TestCase;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Tests the {@link RoughnessPolygon} class by loading a gml workspace

@@ -1,7 +1,6 @@
 package test.org.kalypso.kalypsosimulationmodel;
 
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -11,7 +10,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
