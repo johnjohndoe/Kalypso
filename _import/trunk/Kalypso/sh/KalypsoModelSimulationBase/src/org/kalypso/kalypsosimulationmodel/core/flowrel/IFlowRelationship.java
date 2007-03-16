@@ -56,4 +56,6 @@ public interface IFlowRelationship extends IFeatureWrapper2
   public static final QName QNAME_PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "position" );
 
   public GM_Point getPosition( );
+
+  public void setPosition( final GM_Point point );
 }

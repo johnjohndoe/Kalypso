@@ -41,13 +41,17 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 {
   public static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"; //$NON-NLS-1$
 
+  public static final String PARAM_LAYER_ID = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layerID"; //$NON-NLS-1$
+
   public static final String PARAM_LAYER_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"; //$NON-NLS-1$
 
   public static final String NO_LAYER = "NO_LAYER";
 
   private String m_resource;
 
-  private String m_featureType;
+  private String m_layerContext;
+
+  private String m_layerID;
 
   private IMapModell m_mapModell;
 
@@ -89,47 +93,73 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
       {
         m_mapView.startLoadJob( file );
       }
-      
+
       mapPanel.getWidgetManager().setActualWidget( null );
 
-      if( m_featureType != null )
+      final IMapModell mapModell = mapPanel.getMapModell();
+      if( mapModell == null )
+        return Status.OK_STATUS; // OK status ok?
+
+      final String layerContext = m_layerContext;
+      final String layerID = m_layerID;
+      m_mapModell = mapModell;
+
+      final Job job = new Job( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.3" ) ) //$NON-NLS-1$
       {
-        final Job job = new Job( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.3" ) ) //$NON-NLS-1$
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
         {
-          @Override
-          protected IStatus run( final IProgressMonitor monitor )
+          if( layerContext != null )
           {
-            m_mapModell = mapPanel.getMapModell();
-            if( m_mapModell != null )
+            final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+            if( activeTheme != null && layerContext.equals( NO_LAYER ) )
             {
-              final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-              if( activeTheme != null && m_featureType.equals( NO_LAYER ) )
+              mapModell.activateTheme( null );
+            }
+            else if( !layerContext.equals( activeTheme != null ? activeTheme.getContext() : null ) )
+            {
+              final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+              for( final IKalypsoTheme theme : allThemes )
               {
-                m_mapModell.activateTheme( null );
-              }
-              else if( !m_featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
-              {
-                final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
-                for( final IKalypsoTheme theme : allThemes )
+                if( !theme.isLoaded() )
                 {
-                  if( !theme.isLoaded() )
-                  {
-                    theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
-                  }
-                  else
-                  {
-                    maybeActivateTheme( theme );
-                  }
+                  theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
+                }
+                else
+                {
+                  maybeActivateTheme( theme );
                 }
               }
             }
-            return Status.OK_STATUS;
           }
-        };
-        job.setRule( m_mapView.getSchedulingRule().getActivateLayerSchedulingRule() );
-        job.setUser( true );
-        job.schedule();
-      }
+          else if( layerID != null )
+          {
+            final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+            final String activeId = activeTheme == null ? null : activeTheme.getID();
+            if( !layerID.equals( activeId ) )
+            {
+              final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+              for( final IKalypsoTheme theme : allThemes )
+              {
+                if( !theme.isLoaded() )
+                {
+                  theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
+                }
+                else
+                {
+                  maybeActivateTheme( theme );
+                }
+              }
+            }
+
+          }
+
+          return Status.OK_STATUS;
+        }
+      };
+      job.setRule( m_mapView.getSchedulingRule().getActivateLayerSchedulingRule() );
+      job.setUser( true );
+      job.schedule();
     }
     return Status.OK_STATUS;
   }
@@ -144,7 +174,8 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
     {
       final Map parameterMap = (Map) data;
       m_resource = (String) parameterMap.get( PARAM_RESOURCE );
-      m_featureType = (String) parameterMap.get( PARAM_LAYER_FEATURE_TYPE );
+      m_layerContext = (String) parameterMap.get( PARAM_LAYER_FEATURE_TYPE );
+      m_layerID = (String) parameterMap.get( PARAM_LAYER_ID );
     }
     else
     {
@@ -167,11 +198,23 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
   void maybeActivateTheme( final IKalypsoTheme themeToActivate )
   {
-    final String themeContext = themeToActivate.getContext();
-    if( m_featureType.equals( themeContext ) )
+    try
     {
-      logger.info( themeToActivate + " theme activated with feature type " + m_featureType ); //$NON-NLS-1$
+    final String themeContext = themeToActivate.getContext();
+    if( m_layerContext != null && m_layerContext.equals( themeContext ) )
+    {
+      logger.info( themeToActivate + " theme activated with feature type " + m_layerContext ); //$NON-NLS-1$
       m_mapModell.activateTheme( themeToActivate );
+    }
+    else if( m_layerID != null && m_layerID.equals( themeToActivate.getID() ) )
+    {
+      logger.info( themeToActivate + " theme activated with layer id " + m_layerID ); //$NON-NLS-1$
+      m_mapModell.activateTheme( themeToActivate );
+    }
+    }
+    catch( final Throwable t)
+    {
+      t.printStackTrace();
     }
   }
 }

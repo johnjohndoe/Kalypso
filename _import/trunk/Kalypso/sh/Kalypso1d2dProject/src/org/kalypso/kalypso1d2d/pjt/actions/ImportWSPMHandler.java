@@ -58,6 +58,7 @@ import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.views.map.MapView;
@@ -84,11 +85,12 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
 
     final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( IFEDiscretisationModel1d2d.class );
+    final IFlowRelationshipCollection flowRelationModel = (IFlowRelationshipCollection) modelProvider.getModel( IFlowRelationshipCollection.class );
 
     /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
-
-    final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel );
+    
+    final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel, flowRelationModel );
     importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
@@ -112,7 +114,7 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     }
 
     /* Add new layer to profile-collection-map */
-    // TODO: add a new layer containing the new profiles in the profile-network map
+    // TODO: add a new layer containing the new profiles in the profile-network map?
 
     /* Zoom to new elements in fe-map? */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );

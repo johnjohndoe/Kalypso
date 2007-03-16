@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
+import java.util.List;
+
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
@@ -51,5 +58,42 @@ public class FlowRelationshipCollection extends FeatureWrapperCollection<IFlowRe
   public FlowRelationshipCollection( final Feature featureCol )
   {
     super( featureCol, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
+  }
+
+  /**
+   * TODO: make this method common to all FeatureWrapperCollections?
+   * 
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  public IFlowRelationship findFlowrelationship( final GM_Point position, final double searchRectWidth )
+  {
+    final FeatureList nodeList = getWrappedList();
+    final double posX = position.getX();
+    final double posY = position.getY();
+    final double searchWidthHalf = searchRectWidth / 2;
+
+    final GM_Position minPos = GeometryFactory.createGM_Position( posX - searchWidthHalf, posY - searchWidthHalf );
+    final GM_Position maxPos = GeometryFactory.createGM_Position( posX + searchWidthHalf, posY + searchWidthHalf );
+    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
+
+    final List<Feature> foundFeatures = nodeList.query( reqEnvelope, null );
+    if( foundFeatures.isEmpty() )
+      return null;
+
+    double min = Double.MAX_VALUE;
+    IFlowRelationship nearest = null;
+    for( final Feature feature : foundFeatures )
+    {
+      final IFlowRelationship curNode = new FlowRelationship( feature, IFlowRelationship.QNAME )
+      {
+      };
+      final double curDist = position.distance( curNode.getPosition() );
+      if( min > curDist )
+      {
+        nearest = curNode;
+        min = curDist;
+      }
+    }
+    return nearest;
   }
 }
