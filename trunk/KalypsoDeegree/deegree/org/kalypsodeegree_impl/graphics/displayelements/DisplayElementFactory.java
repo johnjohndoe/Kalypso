@@ -64,6 +64,7 @@ import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -125,7 +126,8 @@ public class DisplayElementFactory
 
     try
     {
-      final QName featureTypeQName = feature.getFeatureType().getQName();
+      final IFeatureType featureType = feature.getFeatureType();
+      final QName featureTypeQName = featureType.getQName();
 
       for( final UserStyle userStyle : styles )
       {
@@ -144,7 +146,8 @@ public class DisplayElementFactory
           {
             final QName styleFTQName = fts[k].getFeatureTypeName();
             if( styleFTQName == null //
-                || featureTypeQName.equals( styleFTQName ) //
+//                || featureTypeQName.equals( styleFTQName ) //
+                ||  GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
                 || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
             {
               final Rule[] rules = fts[k].getRules();
@@ -219,7 +222,6 @@ public class DisplayElementFactory
   {
     DisplayElement displayElement = null;
 
-
     // determine the geometry property to be used
     GM_Object geoProperty = null;
     Geometry geometry = symbolizer.getGeometry();
@@ -274,14 +276,13 @@ public class DisplayElementFactory
     {
       System.out.println( "symbolizer...?" );
     }
-    
-//  //TODO Patrice Check changes
-//  //decorate the display with another get through adapation
-    DisplayElement displayElementDecorator = 
-          (DisplayElement) feature.getAdapter( DisplayElementDecorator.class );
-    if(displayElementDecorator instanceof DisplayElementDecorator)
+
+    // //TODO Patrice Check changes
+    // //decorate the display with another get through adapation
+    DisplayElement displayElementDecorator = (DisplayElement) feature.getAdapter( DisplayElementDecorator.class );
+    if( displayElementDecorator instanceof DisplayElementDecorator )
     {
-      ((DisplayElementDecorator)displayElementDecorator).setDecorated( displayElement );
+      ((DisplayElementDecorator) displayElementDecorator).setDecorated( displayElement );
       return displayElementDecorator;
     }
 
