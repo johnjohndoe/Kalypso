@@ -89,7 +89,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( name, mapModel );
+    super( name, "FeatureTheme", mapModel );
 
     m_workspace = workspace;
     m_featurePath = featurePath;

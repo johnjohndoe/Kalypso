@@ -128,7 +128,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), mapModel ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), layerType.getLinktype(), mapModel ); //$NON-NLS-1$
+
     m_selectionManager = selectionManager;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     final String source = layerType.getHref();
@@ -190,14 +191,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     super.dispose();
   }
 
-  // private void removeTemplateUserStyles()
-  // {
-  // for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
-  // {
-  // final GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
-  // removeStyle( style );
-  // }
-  // }
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,

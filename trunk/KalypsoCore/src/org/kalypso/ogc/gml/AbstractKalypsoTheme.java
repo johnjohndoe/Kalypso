@@ -61,19 +61,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 {
   private String m_name;
 
-  private String m_type = "unknown type";
+  private String m_type;
 
   private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
 
   private final KalypsoThemeEventProviderAdapter m_themeEventProvider = new KalypsoThemeEventProviderAdapter();
 
   private final IMapModell m_mapModel;
-
-  public AbstractKalypsoTheme( final String name, final IMapModell mapModel )
-  {
-    m_name = name;
-    m_mapModel = mapModel;
-  }
 
   public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel )
   {

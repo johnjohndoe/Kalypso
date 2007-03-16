@@ -77,7 +77,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme implements IKalypso
 
   public KalypsoLegendTheme( final IMapModell mapModell )
   {
-    super( "Legende", KalypsoLegendTheme.class.getName(), mapModell );
+    super( KalypsoLegendTheme.class.getName(), "Legende", mapModell );
   }
 
   /**
@@ -151,6 +151,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme implements IKalypso
     for( final IKalypsoFeatureTheme featureTheme : visibleThemes )
     {
       final UserStyle[] styles = featureTheme.getStyles();
+      if( styles.length == 0 )
+        return;
+      
       final IFeatureType ft = featureTheme.getFeatureType();
       final int width = widthPerLegend / styles.length;
       for( int n = 0; n < styles.length; n++ )

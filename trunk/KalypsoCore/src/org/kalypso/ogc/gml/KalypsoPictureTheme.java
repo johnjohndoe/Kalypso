@@ -87,7 +87,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel ) throws CoreException
+  public KalypsoPictureTheme( final String themeName, final String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel ) throws CoreException
   {
     super( themeName, linktype.toUpperCase(), mapModel );
     m_themeName = themeName;
