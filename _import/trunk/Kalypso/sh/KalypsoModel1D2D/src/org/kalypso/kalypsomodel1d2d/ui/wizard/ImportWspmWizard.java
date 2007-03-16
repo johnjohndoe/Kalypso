@@ -93,6 +93,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
@@ -248,50 +249,65 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final Feature qresultCollectionFeature = qresultsWorkspace.getRootFeature();
       final IRelationType qresultParentRelation = (IRelationType) qresultCollectionFeature.getFeatureType().getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResultCollection_resultMember );
       final List resultList = (List) qresultCollectionFeature.getProperty( qresultParentRelation );
-      
+
       final IFeatureType flowRelFT = qresultsWorkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
+      final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
+      final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
       final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
       final IRelationType flowRelParentRelation = flowRelModel.getWrappedList().getParentFeatureTypeProperty();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
-      
+
       for( final Object o : resultList )
       {
-        final Feature resultFeature = FeatureHelper.getFeature( qresultsWorkspace, o );
-        final Feature pointObsFeature = (Feature) resultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
-        final List polynomeFeatures = (List) resultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
-        final XLinkedFeature_Impl profileFeature = (XLinkedFeature_Impl) resultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_profileMember );
+        final Feature qresultFeature = FeatureHelper.getFeature( qresultsWorkspace, o );
+        final Feature pointObsFeature = (Feature) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
+        final List polynomeFeatures = (List) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
+        final XLinkedFeature_Impl profileFeature = (XLinkedFeature_Impl) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_profileMember );
 
-        final String name = NamedFeatureHelper.getName( resultFeature );
-        final String description = NamedFeatureHelper.getDescription( resultFeature );
+        final String name = NamedFeatureHelper.getName( qresultFeature );
+        final String description = NamedFeatureHelper.getDescription( qresultFeature );
 
-        final BigDecimal station = (BigDecimal) resultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_station );
+        final BigDecimal station = (BigDecimal) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_station );
 
         // get corresponding 1d-element
-        final IFE1D2DNode node = elementsByStation.get( station );
+        final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
         if( node == null )
         {
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "No node for resutl at station " + station ) );
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "No node for result at station " + station ) );
         }
         else
         {
           /* create new flow relation at node position */
           final Feature flowRelFeature = flowRelworkspace.createFeature( flowRelParentFeature, flowRelParentRelation, flowRelFT );
           flowRelworkspace.addFeatureAsComposition( flowRelParentFeature, flowRelParentRelation, -1, flowRelFeature );
-          
+
           final ITeschkeFlowRelation flowRel = (ITeschkeFlowRelation) flowRelFeature.getAdapter( ITeschkeFlowRelation.class );
+          flowRel.setName( name );
+          flowRel.setName( description );
           flowRel.setPosition( node.getPoint() );
 
           /* copy results into new flow relation */
-          
-          
-          
+
+          /* clone observation */
+          FeatureHelper.cloneFeature( flowRelFeature, flowRelObsRelation, pointObsFeature );
+
+          // TODO
+          /* relink profile to corresponding profile in profile network */
+
+          /* clone polynomes */
+          for( final Object object : polynomeFeatures )
+          {
+            final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
+            if( polynomeFeature != null )
+              FeatureHelper.cloneFeature( flowRelFeature, flowRelPolynomeRelation, polynomeFeature );
+          }
         }
       }
     }
     catch( final FileNotFoundException fnfe )
     {
       fnfe.printStackTrace();
-      
+
       /* Results are noit available, just inform user */
       return StatusUtilities.createWarningStatus( "Es liegen keine Ergebnisse für diese Rechenvariante vor. Es wurde nur die 1D-Netzgeometrie erzeugt." );
     }

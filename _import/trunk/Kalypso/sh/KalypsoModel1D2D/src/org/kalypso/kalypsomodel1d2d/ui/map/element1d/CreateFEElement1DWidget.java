@@ -9,6 +9,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
@@ -36,15 +37,17 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class CreateFEElement1DWidget extends AbstractWidget
 {
-  private final int m_radius = 20;
-
-  private Point m_currentPoint = null;
+  private final int m_grabRadius = 20;
 
   private LineGeometryBuilder m_lineBuilder = null;
 
   private IKalypsoFeatureTheme m_theme;
 
   private IFEDiscretisationModel1d2d m_model1d2d;
+
+  private GM_Point m_currentPos = null;
+
+  private IFE1D2DNode m_node;
 
   public CreateFEElement1DWidget( )
   {
@@ -77,7 +80,13 @@ public class CreateFEElement1DWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    m_currentPoint = p;
+    m_currentPos = MapUtilities.transform( getMapPanel(), p );
+
+    /* find node */
+    m_node = null;
+
+    final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), m_currentPos, m_grabRadius * 2 );
+    m_node = m_model1d2d.findNode( m_currentPos, grabDistance );
   }
 
   /**
@@ -88,7 +97,8 @@ public class CreateFEElement1DWidget extends AbstractWidget
   {
     final MapPanel mapPanel = getMapPanel();
 
-    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
+    /* If we have a node, take this position, else take the current one */
+    final GM_Point currentPos = m_node == null ? MapUtilities.transform( mapPanel, p ) : m_node.getPoint();
 
     mapPanel.setMessage( "Doppelklick: Beenden -  <ESC> abbrechen - <BACKSPACE> löschen" );
 
@@ -141,6 +151,9 @@ public class CreateFEElement1DWidget extends AbstractWidget
     /* create 1d elements */
     final CS_CoordinateSystem crs = curve.getCoordinateSystem();
 
+    final CommandableWorkspace workspace = m_theme.getWorkspace();
+    final ChangeDiscretiationModelCommand modelChangeCmd = new ChangeDiscretiationModelCommand( workspace, m_model1d2d );
+
     final int numberOfCurveSegments = curve.getNumberOfCurveSegments();
     for( int i = 0; i < numberOfCurveSegments; i++ )
     {
@@ -155,19 +168,17 @@ public class CreateFEElement1DWidget extends AbstractWidget
         final GM_Point startPoint = GeometryFactory.createGM_Point( startPosition, crs );
         final GM_Point endPoint = GeometryFactory.createGM_Point( endPosition, crs );
 
-        final AddNodeCommand addNode0 = new AddNodeCommand( m_model1d2d, startPoint, m_radius );
-        final AddNodeCommand addNode1 = new AddNodeCommand( m_model1d2d, endPoint, m_radius );
+        final AddNodeCommand addNode0 = new AddNodeCommand( m_model1d2d, startPoint, m_grabRadius );
+        final AddNodeCommand addNode1 = new AddNodeCommand( m_model1d2d, endPoint, m_grabRadius );
 
         final Add1DElementFromNodeCmd eleCmd = new Add1DElementFromNodeCmd( m_model1d2d, new AddNodeCommand[] { addNode0, addNode1 } );
-        CommandableWorkspace workspace = m_theme.getWorkspace();
-        ChangeDiscretiationModelCommand modelChangeCmd = new ChangeDiscretiationModelCommand( workspace, m_model1d2d );
         modelChangeCmd.addCommand( addNode0 );
         modelChangeCmd.addCommand( addNode1 );
         modelChangeCmd.addCommand( eleCmd );
-        m_theme.postCommand( modelChangeCmd, null );
       }
-
     }
+
+    m_theme.postCommand( modelChangeCmd, null );
 
     reinit();
   }
@@ -178,14 +189,18 @@ public class CreateFEElement1DWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final Point currentPoint = m_currentPoint;
-
-    if( currentPoint != null )
+    if( m_currentPos != null )
     {
+      final Point currentPoint = MapUtilities.retransform( getMapPanel(), m_currentPos );
       if( m_lineBuilder != null )
         m_lineBuilder.paint( g, getMapPanel().getProjection(), currentPoint );
+    }
 
-      g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
+    if( m_node != null )
+    {
+      final int smallRect = 10;
+      final Point nodePoint = MapUtilities.retransform( getMapPanel(), m_node.getPoint() );
+      g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
     }
   }
 

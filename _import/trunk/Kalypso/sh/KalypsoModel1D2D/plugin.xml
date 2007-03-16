@@ -66,21 +66,14 @@
                tooltip="Eine neue Kontinuitätslinie definieren">
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineWidget"/>
  	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="ContinuityLine"/>
 	       			</class>
          </action>
-         <!--action
-               	class="xp.ActivateModelMapEditProtocolViewDelegate"
-               	id="xp.ActivateModelMapEditProtocolViewDelegate"
-               	label="1d 2d zeichen element activieren"
-               	style="radio"
-               	toolbarPath="karte/edit"
-				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
-               	tooltip="1d 2d zeichen element activieren"/-->
+         
         <action
                	id="xp.CreateGridDelegate"
                	label="FE-Elementgitter erzeugen"
@@ -238,7 +231,7 @@
               id="org.kalypso.ui.views.mapView.widgets1d2d"
               targetID="org.kalypso.ui.views.mapView">
          	<action
-	           icon="icons/elcl16/edit1d2d.gif"
+	           icon="icons/elcl16/add_2delement.gif"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementDelegate"               
 	           label="FE-Element hinzufügen"
 	           style="radio"
@@ -272,23 +265,43 @@
 			</action>
 			
          	<action
-                icon="icons/elcl16/edit1d2d.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineDelegate"
-                label="Kontinuitätslinie definieren"
+                icon="icons/elcl16/add_contiline.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineDelegate"
+                label="Kontinuitätslinie hinzufügen"
                 style="radio"
                 toolbarPath="karte/edit"
                 tooltip="Eine neue Kontinuitätslinie definieren">
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineWidget"/>
  	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="ContinuityLine"/>
 	       			</class>
          	</action>
+
+
+         	<action
+                icon="icons/elcl16/cut_contiline.png"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.cline.DeleteFEContlineDelegate"
+                label="Kontinuitätslinie löschen"
+                style="radio"
+                toolbarPath="karte/edit"
+                tooltip="Eine neue Kontinuitätslinie definieren">
+               		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.cline.DeleteFEContlineWidget"/>
+ 	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="ContinuityLine"/>
+	       			</class>
+         	</action>
+
+
           <action
-                icon="icons/elcl16/edit1d2d.gif"
+                icon="icons/elcl16/add_1delement.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE1DElementDelegate"
                 label="FE-Element hinzufügen"
                 style="radio"
@@ -389,7 +402,7 @@
                 label="Randbedingung hinzufügen"
                 style="radio"
                 toolbarPath="karte/edit"
-                tooltip="King Parameter einem FE-Knoten zuordnen">
+                tooltip="neue Randbedinung einem FE-Element zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget"/>
@@ -405,7 +418,7 @@
                 label="Randbedingung bearbeiten"
                 style="radio"
                 toolbarPath="karte/edit"
-                tooltip="Zugeordnete Parameter eines FE-Knoten bearbeiten">
+                tooltip="Zugeordnete Randbedinung eines FE-Elements bearbeiten">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
@@ -421,7 +434,7 @@
 	           label="Randbedingung löschen"
 	           style="radio"
 	           toolbarPath="karte/edit"
-	           tooltip="einem FE-Koten zugeordnete Parameter löschen">
+	           tooltip="einem FE-Element zugeordnete Randbedinung löschen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>

@@ -33,7 +33,7 @@
 					</Stroke>
 				</Mark>
 				<Opacity>1.0</Opacity>
-				<Size>14.0</Size>
+				<Size>20.0</Size>
 				<Rotation>0.0</Rotation>
 			</Graphic>
 		</PointSymbolizer>

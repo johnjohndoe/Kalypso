@@ -68,6 +68,15 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
   @Override
   protected void flowRelationGrabbed( final IKalypsoFeatureTheme flowTheme, final IFlowRelationship flowRelation )
   {
+    /* Select the feature */
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    
+    final Feature featureToSelect = flowRelation.getWrappedFeature();
+    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+    
+    final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+    selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
+
     /* Open the feature view */
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
@@ -86,15 +95,6 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
         }
       }
     } );
-
-    /* Select the feature */
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    
-    final Feature featureToSelect = flowRelation.getWrappedFeature();
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-    
-    final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-    selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
   }
 
 

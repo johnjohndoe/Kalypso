@@ -69,6 +69,8 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -87,8 +89,6 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
   private IKalypsoFeatureTheme m_flowTheme = null;
 
   private IKalypsoFeatureTheme m_nodeTheme = null;
-
-  private GM_Point m_currentPos = null;
 
   private IFE1D2DNode m_node = null;
 
@@ -146,7 +146,7 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    m_currentPos = MapUtilities.transform( getMapPanel(), p );
+    final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
 
     /* Grab next node */
     if( m_nodeTheme == null )
@@ -157,8 +157,8 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) m_nodeTheme.getFeatureList().getParentFeature().getAdapter( IFEDiscretisationModel1d2d.class );
 
-    final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), m_currentPos, m_grabRadius * 2 );
-    m_node = model.findNode( m_currentPos, grabDistance );
+    final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
+    m_node = model.findNode( currentPos, grabDistance );
 
     /* Node has already a flow relation? */
     m_existingFlowRelation = null;
@@ -174,13 +174,6 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    if( m_currentPos == null )
-      return;
-
-    final Point currentPoint = MapUtilities.retransform( getMapPanel(), m_currentPos );
-
-    g.drawRect( (int) currentPoint.getX() - m_grabRadius, (int) currentPoint.getY() - m_grabRadius, m_grabRadius * 2, m_grabRadius * 2 );
-
     if( m_node == null )
       return;
 
@@ -197,6 +190,8 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void leftClicked( final Point p )
   {
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+
     final String problemMessage;
     if( m_node == null )
       problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
@@ -208,7 +203,6 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     if( problemMessage != null )
     {
-      final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
         public void run( )
@@ -217,25 +211,59 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
           MessageDialog.openWarning( shell, getName(), problemMessage );
         }
       } );
-      return;
     }
 
     /* Check preconditions */
+    if( m_node == null )
+      return;
     if( m_flowRelCollection == null )
       return;
 
     final CommandableWorkspace workspace = m_flowTheme.getWorkspace();
 
-    /* Create flow relation at position */
-    final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
-    final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( m_qnameToCreate );
-    final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
-    final IFlowRelationship flowRel = (IFlowRelationship) newFeature.getAdapter( m_binderClass );
-    flowRel.setPosition( m_node.getPoint() );
+    if( m_existingFlowRelation == null )
+    {
+      /* Create flow relation at position */
+      final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
+      final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
+      final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( m_qnameToCreate );
+      final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
+      final IFlowRelationship flowRel = (IFlowRelationship) newFeature.getAdapter( m_binderClass );
+      flowRel.setPosition( m_node.getPoint() );
+
+      /* Post it as an command */
+      final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newFeature, selectionManager, true, true );
+      try
+      {
+        workspace.postCommand( command );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        display.asyncExec( new Runnable()
+        {
+          public void run( )
+          {
+            final Shell shell = display.getActiveShell();
+            ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+          }
+        } );
+      }
+    }
+    else
+    {
+      /* Just select the existing element */
+      final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+      
+      final Feature featureToSelect = m_existingFlowRelation.getWrappedFeature();
+      final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+      
+      final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+      selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
+    }
 
     /* Open the feature view in order to show the newly created parameters */
-    final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
     {
       public void run( )
@@ -252,25 +280,5 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
         }
       }
     } );
-
-    /* Post it as an command */
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newFeature, selectionManager, true, true );
-    try
-    {
-      workspace.postCommand( command );
-    }
-    catch( final Throwable e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      display.asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
-        }
-      } );
-    }
   }
 }

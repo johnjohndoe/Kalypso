@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.afgui.views;
 
@@ -199,6 +199,12 @@ public class WorkflowControl
           {
             if( tip != null && !tip.isDisposed() )
               tip.dispose();
+
+            final Object help = item.getData( "_HELP" ); //$NON-NLS-1$
+            final String helpString = help == null ? null : ((Help) help).getValue().trim();
+			if( helpString == null || helpString.length() == 0 )
+				return;
+
             tip = new Shell( display, SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL );
             tip.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
             final FillLayout layout = new FillLayout();
@@ -208,11 +214,7 @@ public class WorkflowControl
             label.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
             label.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
             label.setData( "_TREEITEM", item ); //$NON-NLS-1$
-            final Object help = item.getData( "_HELP" ); //$NON-NLS-1$
-            if( help != null )
-            {
-              label.setText( ((Help) help).getValue() );
-            }
+            label.setText( helpString );
             label.addListener( SWT.MouseExit, labelListener );
             label.addListener( SWT.MouseDown, labelListener );
             final Point size = tip.computeSize( SWT.DEFAULT, SWT.DEFAULT );
@@ -244,6 +246,11 @@ public class WorkflowControl
             try
             {
               doTask( task );
+            }
+            catch( final NotHandledException nhe  )
+            {
+              final IStatus status = StatusUtilities.createWarningStatus( "Command not handled: " + task.getURI() );
+              KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
             }
             catch( final Throwable e )
             {

@@ -78,8 +78,6 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
 
   private IKalypsoFeatureTheme m_flowTheme = null;
 
-  private GM_Point m_currentPos = null;
-
   private IFlowRelationship m_flowRelation;
 
   public AbstractSelectFlowrelationWidget( final String name, final String toolTip )
@@ -129,14 +127,14 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
   {
     m_flowRelation = null;
 
-    m_currentPos = MapUtilities.transform( getMapPanel(), p );
+    final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
 
     /* Grab next flowrelation */
     if( m_flowTheme == null || m_flowRelCollection == null )
       return;
 
-    final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), m_currentPos, m_grabRadius * 2 );
-    m_flowRelation = m_flowRelCollection.findFlowrelationship( m_currentPos, grabDistance );
+    final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
+    m_flowRelation = m_flowRelCollection.findFlowrelationship( currentPos, grabDistance );
   }
 
   /**
@@ -145,13 +143,6 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    if( m_currentPos == null )
-      return;
-
-    final Point currentPoint = MapUtilities.retransform( getMapPanel(), m_currentPos );
-
-    g.drawRect( (int) currentPoint.getX() - m_grabRadius, (int) currentPoint.getY() - m_grabRadius, m_grabRadius * 2, m_grabRadius * 2 );
-
     if( m_flowRelation == null )
       return;
 

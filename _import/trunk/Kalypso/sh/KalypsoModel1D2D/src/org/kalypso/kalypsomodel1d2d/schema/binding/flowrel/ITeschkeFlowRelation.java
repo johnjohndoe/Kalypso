@@ -52,4 +52,8 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TeschkeFlowRelation" );
 
+  public static final QName QNAME_PROP_POINTSOBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "pointsMember" );
+
+  public static final QName QNAME_PROP_POLYNOMES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "polynomialMember" );
+
 }
