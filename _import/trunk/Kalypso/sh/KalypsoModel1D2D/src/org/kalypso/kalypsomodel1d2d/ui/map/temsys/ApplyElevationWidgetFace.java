@@ -51,33 +51,19 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -86,12 +72,10 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -107,13 +91,10 @@ import org.kalypsodeegree.model.feature.Feature;
 class ApplyElevationWidgetFace
 {
   static int index = 0;
-
-
   private Composite rootPanel;
-
   private FormToolkit toolkit;
 
- 
+  private ListViewer areaViewer;
 
   private Section elevationSelectStatus;
 
@@ -126,6 +107,8 @@ class ApplyElevationWidgetFace
   private ApplyElevationWidgetDataModel dataModel;
 
   private Section elevationColorSection;
+  
+ // private SimpleElevationColorModel colorModel;
 
   
   private IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
@@ -215,11 +198,15 @@ class ApplyElevationWidgetFace
 
   };
 
-  
+  private TableViewer elevationListTableViewer;
   private ColorModelChangeComponent colorModelChangeComponent;
-  
   private ElevationModelSystemEditorComponent eleSystemEditorComponent;
- 
+
+  private Image image_goToTerrain;
+
+  private Image image_Down;
+
+  private Image image_Up;
 
   private IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
 
@@ -316,13 +303,13 @@ class ApplyElevationWidgetFace
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 5 );
     clientComposite.setLayoutData( formData );
-//    guiCreateSelectElevationModel( clientComposite );
     eleSystemEditorComponent= new ElevationModelSystemEditorComponent();
     eleSystemEditorComponent.createControl( dataModel, toolkit, clientComposite );
 
+
   }
 
-  
+
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
@@ -344,9 +331,8 @@ class ApplyElevationWidgetFace
 
   }
 
-  
 
-  
+
 
   private IntegerFieldEditor handleWidth;
 

@@ -92,7 +92,7 @@ public class ColorModelChangeComponent
 
   private Label minLabel;
 
-  private RGB rgbChoice;
+  //private RGB rgbChoice;
 
   //private Color colorChoice;
   private Color colorAWTChoice;
@@ -107,6 +107,7 @@ public class ColorModelChangeComponent
   private double MAXI_ELEVATION = 100;
   private Color gotColor;
   private ApplyElevationWidgetDataModel dataModel;
+  private ColorSelector noColorSelector;
   
   public void createControl(
       ApplyElevationWidgetDataModel dataModel,
@@ -200,24 +201,23 @@ public class ColorModelChangeComponent
     
    // float part = ((float) (0.917 - rgbChoice.getHSB()[2])) / selectedRects;
     //System.out.println("Part :"+part+", HSB Brightness :"+rgbChoice.getHSB()[2]);
-    
-    float brightnessCount = rgbChoice.getHSB()[2];
+    float[] colorsHSB = colorAWTChoice.RGBtoHSB( colorAWTChoice.getRed(),
+                                                 colorAWTChoice.getGreen(),
+                                                 colorAWTChoice.getBlue(),null);
+    float brightnessCount = colorsHSB[2];
     double selectElevation = MINI_ELEVATION;
     //update the color control
     ElevationColorControl.setBaseColor( colorAWTChoice );
-    ElevationColorControl.setNoElevatonColor( noColorAWTChoice);
+    ElevationColorControl.setNoElevationColor( noColorAWTChoice);
     colorModel = 
         ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
-//        new SimpleElevationColorModel(
-//                          MINI_ELEVATION ,
-//                          MAXI_ELEVATION,
-//                          colorAWTChoice,
-//                          noColorAWTChoice
-//                          );
+
+    System.out.println("NiColorElevation : "+ElevationColorControl.getNoElevationColor()+","+noColorAWTChoice);
     
     double part1 = ((MAXI_ELEVATION - MINI_ELEVATION)) /selectedRects;
-    
+   
     System.out.println("part1 :"+part1+", Select Elevation :"+selectElevation);
+    System.out.println("noColorAWTChoice :"+noColorAWTChoice);
     
    if( !checkBtnOptionMinMax.getSelection() )
     {      
@@ -233,23 +233,18 @@ public class ColorModelChangeComponent
               gotColor.getBlue()
               )
               )));
-          System.out.println("RGB: "+gotColor.getRed()+","+gotColor.getGreen()+","+gotColor.getBlue());
           graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
-
         }
         else
         {
           System.out.println( "Out of Range" );
         }
-      
         selectElevation = selectElevation + part1;
-        
       }    
     }
     else
     {
       selectElevation = (float) MINI_ELEVATION;
-
       for( int i = selectedRects - 1; i >= 0; i-- )
       {
         if( colorAWTChoice != null )
@@ -262,19 +257,17 @@ public class ColorModelChangeComponent
               gotColor.getBlue()
               )
               )));
-         
           graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
         }
         else
         {
           System.out.println( "Out Of Range" );
         }
-
         selectElevation = selectElevation + part1;
       }
     }
   }
-  
+  /*
   private final Color interpolateColor(double elevation, double minElevation, double maxElevation, Color baseColor)
   {
 
@@ -284,8 +277,8 @@ public class ColorModelChangeComponent
     
     
     hsb1 = Color.RGBtoHSB(baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(), null);
-//    double minBrightness = hsb1[2];
-//    double maxBrightness = 0.917;
+    double minBrightness = hsb1[2];
+    double maxBrightness = 0.917;
 
     //    if(Double.isNaN( elevation ))
 //    {
@@ -298,8 +291,8 @@ public class ColorModelChangeComponent
 //      
 //      System.out.println("This Color HS Brightness :"+hsb[0]+","+hsb[1]+","+brightness);
       Color color1 = Color.getHSBColor( hsb1[0], hsb1[1], hsb1[2] );
-//      System.out.println("This Color - HSB+++++++++++:"+hsb1[0]+","+hsb1[1]+","+hsb1[2]+", Cololr:"+baseColor+ " color="+color1 +"Converted :" +
-//          new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )));
+      System.out.println("This Color - HSB+++++++++++:"+hsb1[0]+","+hsb1[1]+","+hsb1[2]+", Cololr:"+baseColor+ " color="+color1 +"Converted :" +
+          new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )));
       //return Color.getHSBColor( hsb[0], hsb[1], (float)brightness );
       return color1;
     }
@@ -312,6 +305,7 @@ public class ColorModelChangeComponent
           "\n\tcurrentElevation="+elevation);
     }
   }
+  */
 
   private void secondGroup( Group optionsColorGroup )
   {
@@ -335,61 +329,37 @@ public class ColorModelChangeComponent
       public void widgetSelected( SelectionEvent e )
       {
         
-        rgbChoice = colorSelector.getColorValue();
-        //java.awt.Color awtColor = Color.;
-        colorAWTChoice = new Color(rgbChoice.red, rgbChoice.green, rgbChoice.blue);
-//        colorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
-        System.out.println("color choice - HSB :" +rgbChoice.getHSB()[0]+"," +rgbChoice.getHSB()[1]+"," +rgbChoice.getHSB()[2] );
-        System.out.println("color choice - RGB :" +colorAWTChoice.getRed()+"," +colorAWTChoice.getGreen()+"," +colorAWTChoice.getBlue());
-        //colorChoice = new Color( disp, rgbChoice );
-        paintModel.setBaseColor( colorAWTChoice );
-        //selectedRects = 1;
+        colorAWTChoice = new Color(colorSelector.getColorValue().red,
+                                   colorSelector.getColorValue().green,
+                                   colorSelector.getColorValue().blue);
+        //System.out.println(colorAWTChoice+"'s  choice - RGB :" +colorAWTChoice.getRed()+"," +colorAWTChoice.getGreen()+"," +colorAWTChoice.getBlue());
+        //paintModel.setBaseColor( colorAWTChoice );
         windowCanvas.redraw();
-
       }
     } );
     maxColorBtn.setText( "SELECT" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( maximumColor, 5 );
     optionsColorFormData.top = new FormAttachment( 0, 5 );
-
     maxColorBtn.setLayoutData( optionsColorFormData );
-
     Label noElevationColorLabel = new Label( optionsColorGroup, SWT.NONE );
     noElevationColorLabel.setText( "No Elevation Color" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
     optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
     noElevationColorLabel.setLayoutData( optionsColorFormData );
-
-//    final ColorSelector noColorSelector = new ColorSelector( optionsColorGroup );
-//    Button noElevationColorBtn = noColorSelector.getButton();
-//    noElevationColorBtn.addSelectionListener( new SelectionAdapter()
-//    {
-//      
-//
-//      public void widgetSelected( SelectionEvent e )
-//      {
-//        rgbChoice = colorSelector.getColorValue();
-//        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
-//        paintModel.setNoElevationColor( noColorAWTChoice );
-//      }
-//    } );
-    final ColorSelector noColorSelector = new ColorSelector( optionsColorGroup );
+    
+    noColorSelector = new ColorSelector( optionsColorGroup );
     Button noElevationColorBtn = noColorSelector.getButton();
     noElevationColorBtn.addSelectionListener( new SelectionAdapter()
     {
-      
-
       public void widgetSelected( SelectionEvent e )
       {
-        redrawElevationLayer();
-//        rgbChoice = colorSelector.getColorValue();
-//        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
-//        paintModel.setNoElevationColor( noColorAWTChoice );
+        noColorAWTChoice = new Color(noColorSelector.getColorValue().red,
+            noColorSelector.getColorValue().green,
+            noColorSelector.getColorValue().blue);
       }
     } );
-
     optionsColorFormData = new FormData();
     noElevationColorBtn.setText( "SELECT" );
     optionsColorFormData.left = new FormAttachment( noElevationColorLabel, 5 );
@@ -412,7 +382,6 @@ public class ColorModelChangeComponent
     {
       public void widgetSelected( SelectionEvent e )
       {
-
         selectedRects = stepper.getSelection();
         if( selectedRects == 0 )
           selectedRects = 1;
@@ -449,26 +418,21 @@ public class ColorModelChangeComponent
     } );
     // checkBtnOptionMinMax.getEnabled()= false;
     
-//    Button noElevationColorBtn = noColorSelector.getButton();
-//    noElevationColorBtn.addSelectionListener( new SelectionAdapter()
-//    {
-//      
-//
-//      public void widgetSelected( SelectionEvent e )
-//      {
-//        redrawElevationLayer();
-//        rgbChoice = colorSelector.getColorValue();
-//        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
-//        paintModel.setNoElevationColor( noColorAWTChoice );
-//      }
-//    } );
-//
-//    optionsColorFormData = new FormData();
-//    noElevationColorBtn.setText( "SELECT" );
-//    optionsColorFormData.left = new FormAttachment( noElevationColorLabel, 5 );
-//    optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
-//    noElevationColorBtn.setLayoutData( optionsColorFormData );
-//
+    Button applyColors = new Button(optionsColorGroup, SWT.NONE);
+    applyColors.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+
+        redrawElevationLayer();
+      }
+    } );
+    optionsColorFormData = new FormData();
+    applyColors.setText( "Apply Colors");
+    optionsColorFormData.bottom = new FormAttachment( 100, -1 );
+    optionsColorFormData.left = new FormAttachment( checkBtnOptionMinMax, 5 );
+    applyColors.setLayoutData( optionsColorFormData );
+
     
   }
   
