@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.awt.Color;
+
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
+//import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
@@ -62,6 +64,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SimpleElevationColorModel;
 
 /**
  * @author congo
@@ -84,13 +90,19 @@ public class ColorModelChangeComponent
 
   private RGB rgbChoice;
 
-  private Color colorChoice;
+  //private Color colorChoice;
+  private Color colorAWTChoice;
   
   private FormToolkit toolkit;
   private Button checkBtnOptionMinMax;
   private Display disp;
   private Composite parent;
-  
+  private Color noColorAWTChoice;
+  private IElevationColorModel colorModel;
+  private double MINI_ELEVATION = 0;
+  private double MAXI_ELEVATION = 100;
+  private Color gotColor;
+  private ApplyElevationWidgetDataModel dataModel;
   
   public void createControl(
       ApplyElevationWidgetDataModel dataModel,
@@ -99,6 +111,7 @@ public class ColorModelChangeComponent
   {
    this.toolkit=toolkit;
    this.parent = parent;
+   this.dataModel=dataModel;
    createSelectColor(parent );
   }
   
@@ -158,7 +171,7 @@ public class ColorModelChangeComponent
     windowCanvas.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GRAY ) );
 
     formData = new FormData();
-    formData.width = 22;// 22;
+    formData.width = 20;// 22;
     formData.height = 100;// 106;
     // windowCanvasFormData.top = new FormAttachment(0,1,0);
     formData.top = new FormAttachment( 0, 5 );
@@ -180,54 +193,72 @@ public class ColorModelChangeComponent
   {
     int coord = (((int) (Math.ceil( 100D / selectedRects ))));
 
-    float hsb[] = colorChoice.getRGB().getHSB();
-    float part = ((float) (0.917 - hsb[2])) / selectedRects;
-    float brightnessCount = 0;
+    
+   // float part = ((float) (0.917 - rgbChoice.getHSB()[2])) / selectedRects;
+    //System.out.println("Part :"+part+", HSB Brightness :"+rgbChoice.getHSB()[2]);
+    
+    float brightnessCount = rgbChoice.getHSB()[2];
+    double selectElevation = MINI_ELEVATION;
+    //update the color control
+    ElevationColorControl.setBaseColor( colorAWTChoice );
+    ElevationColorControl.setNoElevatonColor( noColorAWTChoice);
+    colorModel = 
+        ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
+//        new SimpleElevationColorModel(
+//                          MINI_ELEVATION ,
+//                          MAXI_ELEVATION,
+//                          colorAWTChoice,
+//                          noColorAWTChoice
+//                          );
+    
+    double part1 = ((MAXI_ELEVATION - MINI_ELEVATION)) /selectedRects;
+    
+    System.out.println("part1 :"+part1+", Select Elevation :"+selectElevation);
     
    if( !checkBtnOptionMinMax.getSelection() )
-    {
-     paintModel.setFirstColor(
-         new Color(disp,
-         (new RGB( (colorChoice.getRGB().getHSB()[0]),
-                    colorChoice.getRGB().getHSB()[1],
-                    colorChoice.getRGB().getHSB()[2] + brightnessCount )) ) );
+    {      
       for( int i = 0; i < selectedRects; i++ )
       {
-        if( colorChoice != null )
+        if( colorAWTChoice != null )
         {
-          graphicCanvas.setBackground( new Color( disp, (new RGB( (colorChoice.getRGB().getHSB()[0]), colorChoice.getRGB().getHSB()[1], colorChoice.getRGB().getHSB()[2] + brightnessCount )) ) );
-
-          graphicCanvas.setForeground( new Color( disp, (new RGB( (colorChoice.getRGB().getHSB()[0]), colorChoice.getRGB().getHSB()[1], colorChoice.getRGB().getHSB()[2] + brightnessCount )) ) );
+          gotColor = colorModel.getColor( selectElevation );
+          graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color(disp,(new RGB
+              (
+              gotColor.getRed(),
+              gotColor.getGreen(),
+              gotColor.getBlue()
+              )
+              )));
+          System.out.println("RGB: "+gotColor.getRed()+","+gotColor.getGreen()+","+gotColor.getBlue());
           graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
+
         }
         else
         {
           System.out.println( "Out of Range" );
         }
-        brightnessCount = brightnessCount + part;
-      }
-      paintModel.setSecondColor(
-          new Color(disp,
-          (new RGB( (colorChoice.getRGB().getHSB()[0]),
-                     colorChoice.getRGB().getHSB()[1],
-                     colorChoice.getRGB().getHSB()[2] + brightnessCount-part )) ) );      
+      
+        selectElevation = selectElevation + part1;
+        
+      }    
     }
     else
     {
-      brightnessCount = 0;
-      paintModel.setSecondColor(
-          new Color(disp,
-          (new RGB( (colorChoice.getRGB().getHSB()[0]),
-                     colorChoice.getRGB().getHSB()[1],
-                     colorChoice.getRGB().getHSB()[2] + brightnessCount )) ) );
+      selectElevation = (float) MINI_ELEVATION;
+
       for( int i = selectedRects - 1; i >= 0; i-- )
       {
-        if( colorChoice != null )
+        if( colorAWTChoice != null )
         {
-          graphicCanvas.setBackground( new Color( disp, (new RGB( (colorChoice.getRGB().getHSB()[0]), colorChoice.getRGB().getHSB()[1], colorChoice.getRGB().getHSB()[2] + brightnessCount )) ) );
-
-          graphicCanvas.setForeground( new Color( disp, (new RGB( (colorChoice.getRGB().getHSB()[0]), colorChoice.getRGB().getHSB()[1], colorChoice.getRGB().getHSB()[2] + brightnessCount )) ) );
-
+          gotColor = colorModel.getColor( selectElevation );
+          graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color(disp,(new RGB
+              (
+              gotColor.getRed(),
+              gotColor.getGreen(),
+              gotColor.getBlue()
+              )
+              )));
+         
           graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
         }
         else
@@ -235,13 +266,46 @@ public class ColorModelChangeComponent
           System.out.println( "Out Of Range" );
         }
 
-        brightnessCount = brightnessCount + part;
+        selectElevation = selectElevation + part1;
       }
-      paintModel.setFirstColor(
-          new Color(disp,
-          (new RGB( (colorChoice.getRGB().getHSB()[0]),
-                     colorChoice.getRGB().getHSB()[1],
-                     colorChoice.getRGB().getHSB()[2] + brightnessCount-part )) ) );
+    }
+  }
+  
+  private final Color interpolateColor(double elevation, double minElevation, double maxElevation, Color baseColor)
+  {
+
+    
+    float[] hsb1;
+    
+    
+    
+    hsb1 = Color.RGBtoHSB(baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(), null);
+    double minBrightness = hsb1[2];
+    double maxBrightness = 0.917;
+
+    //    if(Double.isNaN( elevation ))
+//    {
+//      return noElevationColor;
+//    }
+     if(elevation>=minElevation && elevation<=maxElevation)
+    {
+
+//      double brightness = minBrightness+elevation*(maxBrightness-minBrightness)/(maxElevation-minElevation);
+//      
+//      System.out.println("This Color HS Brightness :"+hsb[0]+","+hsb[1]+","+brightness);
+      Color color1 = Color.getHSBColor( hsb1[0], hsb1[1], hsb1[2] );
+      System.out.println("This Color - HSB+++++++++++:"+hsb1[0]+","+hsb1[1]+","+hsb1[2]+", Cololr:"+baseColor+ " color="+color1 +"Converted :" +
+          new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )));
+      //return Color.getHSBColor( hsb[0], hsb[1], (float)brightness );
+      return color1;
+    }
+    else
+    {
+      throw new IllegalArgumentException(
+          "Elevation is out of range:"+
+          "\n\tminElevation="+minElevation+
+          "\n\tmaxElevation="+maxElevation+
+          "\n\tcurrentElevation="+elevation);
     }
   }
 
@@ -266,10 +330,15 @@ public class ColorModelChangeComponent
     {
       public void widgetSelected( SelectionEvent e )
       {
-        System.out.println("color choice");
-        rgbChoice = colorSelector.getColorValue();        
-        colorChoice = new Color( disp, rgbChoice );
-        paintModel.setBaseColor( colorChoice );
+        
+        rgbChoice = colorSelector.getColorValue();
+        //java.awt.Color awtColor = Color.;
+        colorAWTChoice = new Color(rgbChoice.red, rgbChoice.green, rgbChoice.blue);
+//        colorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
+        System.out.println("color choice - HSB :" +rgbChoice.getHSB()[0]+"," +rgbChoice.getHSB()[1]+"," +rgbChoice.getHSB()[2] );
+        System.out.println("color choice - RGB :" +colorAWTChoice.getRed()+"," +colorAWTChoice.getGreen()+"," +colorAWTChoice.getBlue());
+        //colorChoice = new Color( disp, rgbChoice );
+        paintModel.setBaseColor( colorAWTChoice );
         //selectedRects = 1;
         windowCanvas.redraw();
 
@@ -289,15 +358,31 @@ public class ColorModelChangeComponent
     optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
     noElevationColorLabel.setLayoutData( optionsColorFormData );
 
+//    final ColorSelector noColorSelector = new ColorSelector( optionsColorGroup );
+//    Button noElevationColorBtn = noColorSelector.getButton();
+//    noElevationColorBtn.addSelectionListener( new SelectionAdapter()
+//    {
+//      
+//
+//      public void widgetSelected( SelectionEvent e )
+//      {
+//        rgbChoice = colorSelector.getColorValue();
+//        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
+//        paintModel.setNoElevationColor( noColorAWTChoice );
+//      }
+//    } );
     final ColorSelector noColorSelector = new ColorSelector( optionsColorGroup );
     Button noElevationColorBtn = noColorSelector.getButton();
     noElevationColorBtn.addSelectionListener( new SelectionAdapter()
     {
+      
+
       public void widgetSelected( SelectionEvent e )
       {
-        rgbChoice = colorSelector.getColorValue();
-        colorChoice = new Color( disp, rgbChoice );
-        paintModel.setNoElevationColor( colorChoice );
+          redrawElevationLayer();
+//        rgbChoice = colorSelector.getColorValue();
+//        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
+//        paintModel.setNoElevationColor( noColorAWTChoice );
       }
     } );
 
@@ -376,5 +461,18 @@ public class ColorModelChangeComponent
     return createCanvas( parent, SWT.NONE, pl );
   }
   
+  private final void redrawElevationLayer()
+  {
+    ElevationTheme elevationTheme = dataModel.getElevationTheme();
+    if(elevationTheme==null)
+    {
+      System.out.println("Elevation theme model is null");
+      return;
+    }
+    else
+    {
+      elevationTheme.fireKalypsoThemeEvent( null );
+    }
+  }
   
 }

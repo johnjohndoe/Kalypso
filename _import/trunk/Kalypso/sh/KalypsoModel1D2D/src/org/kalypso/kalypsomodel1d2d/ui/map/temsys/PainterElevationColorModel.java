@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import org.eclipse.swt.graphics.Color;
+//import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import java.awt.Color;
 
 /**
  * @author madanago
@@ -103,10 +104,15 @@ public class PainterElevationColorModel implements IElevationColorModel2
    */
   
   
-  public Color getColor( double elevation )
+  public java.awt.Color getColor( double elevation )
   {
-    return interpolateColor( elevation );
+    return null;//interpolateColor( elevation );
   }
+  
+//  public Color getSWTColor( double elevation )
+//  {
+//    return interpolateColor( elevation );
+//  }
 
   private final Color interpolateColor(double elevation)
   {
@@ -118,7 +124,8 @@ public class PainterElevationColorModel implements IElevationColorModel2
     {
       double cHue = minHue+elevation*(maxHue-minHue)/(maxElevation-minElevation);
       
-      return new Color(new Display(),new RGB((float) cHue, hsb[1], hsb[2] ));
+      return null;
+      //return new Color(new Display(),new RGB((float) cHue, hsb[1], hsb[2] ));
     }
     else
     {
@@ -164,7 +171,7 @@ public class PainterElevationColorModel implements IElevationColorModel2
     return baseColor;
   }
 
-  public void setBaseColor( org.eclipse.swt.graphics.Color colorChoice )
+  public void setBaseColor( Color colorChoice )
   {
     this.baseColor = colorChoice;
   }
@@ -178,6 +185,26 @@ public class PainterElevationColorModel implements IElevationColorModel2
   {
     this.noElevationColor = noElevationColor;
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.IElevationColorModel2#getSWTColor(double)
+   */
+  public org.eclipse.swt.graphics.Color getSWTColor( double elevation )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getHSB(double)
+   */
+  public float[] getHSB( double elevation )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
   
   
   

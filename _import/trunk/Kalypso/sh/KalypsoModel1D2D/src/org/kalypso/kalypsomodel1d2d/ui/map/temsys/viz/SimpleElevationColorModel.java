@@ -42,7 +42,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Color;
 
-import org.eclipse.swt.graphics.RGB;
+//import org.eclipse.swt.graphics.Color;
+//import org.eclipse.swt.graphics.Device;
+//import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author Patrice Congo
@@ -50,6 +52,7 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class SimpleElevationColorModel implements IElevationColorModel
 {
+  
   public static final double DEEPEST_POINT_ON_EARTH=-10924;
   public static final double HIGHEST_POINT_ON_EARTH=8850;
   
@@ -59,7 +62,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
   private double maxBrightness;
   private Color noElevationColor;
   private Color baseColor;
+  //private RGB rgb;
   private float[] hsb;
+  private float[] noElevationColorHSB;
   
   public SimpleElevationColorModel(
             double minElevation,
@@ -75,20 +80,39 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.maxBrightness=maxBrightness;
     this.noElevationColor=noElevationColor;
     this.baseColor=baseColor;
-    RGB rgb= new RGB(
-        baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue());
-    this.hsb = rgb.getHSB();
+    this.hsb = Color.RGBtoHSB( baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(),null);
+    this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
+                                               noElevationColor.getGreen(),
+                                               noElevationColor.getBlue(),null);
+  }
+  
+  public SimpleElevationColorModel(
+    double minElevation1,
+    double maxElevation1,
+    Color baseColor,
+    Color noElevationColor)
+  {
+    this.minElevation=minElevation1;
+    this.maxElevation = maxElevation1;
+    this.noElevationColor=noElevationColor;
+    this.baseColor=baseColor;
+    this.hsb = Color.RGBtoHSB( baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(),null);
+    this.minBrightness = this.hsb[2];
+    this.maxBrightness = 0.99;
+    this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
+        noElevationColor.getGreen(),
+        noElevationColor.getBlue(),null);
   }
   
   public SimpleElevationColorModel( )
   {
-    this(
-        DEEPEST_POINT_ON_EARTH,
-        HIGHEST_POINT_ON_EARTH,
-        Color.BLUE,
-        40,
-        100,
-        Color.RED);
+//    this(
+//        DEEPEST_POINT_ON_EARTH,
+//        HIGHEST_POINT_ON_EARTH,
+//        Color.BLUE,
+//        40,
+//        100,
+//        Color.RED);
   }
   
   /**
@@ -98,7 +122,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
   {
     return interpolateColor( elevation );
   }
-
+  
+  
   private final Color interpolateColor(double elevation)
   {
     if(Double.isNaN( elevation ))
@@ -109,13 +134,15 @@ public class SimpleElevationColorModel implements IElevationColorModel
     {
       double brightness = minBrightness+elevation*(maxBrightness-minBrightness)/(maxElevation-minElevation);
       
+      System.out.println("This Color + brightness :"+this.hsb[0]+","+this.hsb[1]+","+brightness);
+      System.out.println("This Color :"+hsb[0]+","+hsb[1]+","+hsb[2]);
+     // Color.HSBtoRGB( hue, saturation, brightness )
+      return Color.getHSBColor( this.hsb[0], this.hsb[1], (float) brightness );
+      //new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )
       
-      return Color.getHSBColor( 
-          hsb[0], hsb[1], (float)brightness );
     }
     else
     {
-      //or return a translucent color
       throw new IllegalArgumentException(
           "Elevation is out of range:"+
           "\n\tminElevation="+minElevation+
@@ -131,7 +158,44 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.minElevation=minElevation;
     this.maxElevation=maxElevation;
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getHSB(double)
+   */
+  public float[] getHSB( double elevation )
+  {
+    if(Double.isNaN( elevation ))
+    {
+      return new float[]{noElevationColorHSB[0],
+                          noElevationColorHSB[1],
+                          noElevationColorHSB[2]};
+    }
+    else if(elevation>=minElevation && elevation<=maxElevation)
+    {
+      double brightness = minBrightness+elevation*(maxBrightness-minBrightness)/(maxElevation-minElevation);
+      return new float[]{ hsb[0], hsb[1], (float)brightness};
+    }
+    else
+    {
+      //or return a translucent color
+      throw new IllegalArgumentException(
+          "Elevation is out of range:"+
+          "\n\tminElevation="+minElevation+
+          "\n\tmaxElevation="+maxElevation+
+          "\n\tcurrentElevation="+elevation);
+    }   
+   
+  }
   
+
+public float[] getRealRGB(double elevation){
+  float[] val = getHSB(elevation);
+  return new float[]{
+        Color.getHSBColor(  val[0], val[1], val[2] ).getRed(),
+        Color.getHSBColor(  val[0], val[1], val[2] ).getGreen(),
+        Color.getHSBColor(  val[0], val[1], val[2] ).getBlue()      
+  };
+  }
   
   
 }

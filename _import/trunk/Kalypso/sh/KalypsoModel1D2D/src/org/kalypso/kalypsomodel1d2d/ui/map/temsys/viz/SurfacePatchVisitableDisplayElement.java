@@ -109,13 +109,16 @@ public class SurfacePatchVisitableDisplayElement
     {
       ascElevationModel=(SurfacePatchVisitable)elevationProvider;
       colorModel = 
-        new SimpleElevationColorModel(
-            elevationProvider.getMinElevation(),
-            elevationProvider.getMaxElevation(),
-            Color.GRAY,
-            0.10,
-            0.80,
-            Color.BLUE.brighter().brighter());
+        ElevationColorControl.getColorModel( 
+                  elevationProvider.getMinElevation(), 
+                  elevationProvider.getMaxElevation() );
+//        new SimpleElevationColorModel(
+//            elevationProvider.getMinElevation(),
+//            elevationProvider.getMaxElevation(),
+//            Color.GRAY,
+//            0.10,
+//            0.80,
+//            Color.BLUE.brighter().brighter());
     }
     else
     {
@@ -542,7 +545,7 @@ public class SurfacePatchVisitableDisplayElement
 //            "\n\tsurface:"+surfacePatch+
 //            "\n\televation:"+elevationSample);
         Area area = calcTargetCoordinates( this.projection, surfacePatch );
-        graphics.setColor( colorModel.getColor( elevationSample ) );
+        graphics.setColor( colorModel.getColor( elevationSample ));
 //        drawPolygon( graphics, area );
         ((Graphics2D)graphics).fill( area );
         

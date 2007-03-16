@@ -38,18 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
+package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
-import org.eclipse.swt.graphics.Color;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
-
-
+import java.awt.Color;
 
 /**
  * @author madanago
  *
  */
-public interface IElevationColorModel2 extends IElevationColorModel
+public class ElevationColorControl
 {
-  public Color getSWTColor(double elevation);
+  private static Color baseColor = Color.GRAY;
+  private static Color noElevatonColor = Color.BLUE;
+  
+  public static final IElevationColorModel getColorModel(double minElevation, double maxElevation)
+  {
+    Color curBaseColor = baseColor;
+    if(curBaseColor==null)
+    {
+      curBaseColor = Color.GREEN.darker();
+    }
+    
+    Color curNoElevatonColor = noElevatonColor;
+    if(curNoElevatonColor==null)
+    {
+      curNoElevatonColor = Color.YELLOW;
+    }
+    return new SimpleElevationColorModel(
+                          minElevation, 
+                          maxElevation, 
+                          curBaseColor,
+                          curNoElevatonColor
+                          );
+  }
+  
+  public static void setBaseColor( Color baseColor )
+  {
+    ElevationColorControl.baseColor = baseColor;
+  }
+  
+  public static Color getBaseColor( )
+  {
+    return baseColor;
+  }
+
+  public static Color getNoElevatonColor( )
+  {
+    return noElevatonColor;
+  }
+
+  public static void setNoElevatonColor( Color noElevatonColor )
+  {
+    ElevationColorControl.noElevatonColor = noElevatonColor;
+  }
+  
+  
 }

@@ -56,5 +56,6 @@ public interface IElevationColorModel
    * @return an {@link Color} for the given elevation
    */
   public Color getColor(double elevation);
+  public float[] getHSB(double elevation);
   
 }
