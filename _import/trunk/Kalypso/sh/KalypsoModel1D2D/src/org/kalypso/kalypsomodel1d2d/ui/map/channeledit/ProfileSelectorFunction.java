@@ -123,7 +123,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     {
       // empty selection: remove selection
       // TODO: maybe extra button for that?
-      m_data.removeSelectedProfiles( selectedProfiles );
+      m_data.changeSelectedProfiles( selectedProfiles, new Feature[0] );
 
     }
     else
@@ -142,8 +142,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
           featureToAdd.add( feature );
       }
 
-      m_data.removeSelectedProfiles( featureToRemove.toArray( new Feature[featureToRemove.size()] ) );
-      m_data.addSelectedProfiles( featureToAdd.toArray( new Feature[featureToAdd.size()] ) );
+      m_data.changeSelectedProfiles( featureToRemove.toArray( new Feature[featureToRemove.size()] ), featureToAdd.toArray( new Feature[featureToAdd.size()] ) );
     }
   }
 

@@ -257,15 +257,10 @@ public class CreateChannelData
 
   /* --------------------- selection handling ---------------------------------- */
 
-  public void addSelectedProfiles( final Feature[] profileFeatures )
+  public void changeSelectedProfiles( final Feature[] profileFeaturesToRemove, final Feature[] profileFeaturesToAdd )
   {
-    m_selectedProfiles.addAll( Arrays.asList( profileFeatures ) );
-    initSegments();
-  }
-
-  public void removeSelectedProfiles( final Feature[] profileFeatures )
-  {
-    m_selectedProfiles.removeAll( Arrays.asList( profileFeatures ) );
+    m_selectedProfiles.removeAll( Arrays.asList( profileFeaturesToRemove ) );
+    m_selectedProfiles.addAll( Arrays.asList( profileFeaturesToAdd ) );
     initSegments();
   }
 
