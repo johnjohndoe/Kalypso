@@ -53,6 +53,7 @@ public class NodalBCSelectionWizard_JUnitTest extends TestCase
   public final void test( )
   {
     NodalBCSelectionWizard wizard = new NodalBCSelectionWizard();
+    wizard.init( null, null );
     WizardDialog dialog = new WizardDialog( null, wizard );
     dialog.create();
     dialog.open();

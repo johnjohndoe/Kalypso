@@ -51,15 +51,21 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
- *
  */
 public class NodalBCSelectionWizardPage1 extends WizardPage
 {
-  
-  protected NodalBCSelectionWizardPage1( String pageName )
+  private Button[] m_radioBtnGroup;
+
+  protected NodalBCSelectionWizardPage1( )
   {
-    super(pageName);
-    // TODO Auto-generated constructor stub
+    super( "Super title" );
+    setTitle( "Title" );
+    setDescription( "Description" );
+  }
+
+  public void init( ISelection selection )
+  {
+    m_radioBtnGroup = new Button[5];
   }
 
   /**
@@ -73,31 +79,37 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    final Label label = new Label( container, SWT.NONE );
     final GridData gridData = new GridData();
     gridData.horizontalSpan = 3;
-    label.setLayoutData( gridData );
-//    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
+    for( int i = 0; i < m_radioBtnGroup.length; i++ )
+    {
+      m_radioBtnGroup[i] = new Button( container, SWT.RADIO );
+      m_radioBtnGroup[i].setText( "Button " + i );
+      m_radioBtnGroup[i].setLayoutData( gridData );
+    }
+    // final Label label = new Label( container, SWT.NONE );
+    // final GridData gridData = new GridData();
+    // gridData.horizontalSpan = 3;
+    // label.setLayoutData( gridData );
+    // // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
+    //
+    // final Label label_1 = new Label( container, SWT.NONE );
+    // final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
+    // label_1.setLayoutData( gridData_1 );
+    // // label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.4" ) );
+    //
+    // final Button button = new Button( container, SWT.NONE );
+    // button.setText( "Click me!" );
+    //
+    // // Coordinate system combo box
+    // // new Label( container, SWT.NONE ).setText( Messages.getString(
+    // // "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
+    // GridData gd = new GridData();
+    // gd.horizontalAlignment = GridData.FILL;
+    // gd.widthHint = 75;
 
-    final Label label_1 = new Label( container, SWT.NONE );
-    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
-    label_1.setLayoutData( gridData_1 );
-//    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.4" ) );
-
-    final Button button = new Button( container, SWT.NONE );
-    button.setText( "Click me!" );
-
-    // Coordinate system combo box
-//    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
-    GridData gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.widthHint = 75;
-
-    button.setFocus();
-//    initContents();
+    m_radioBtnGroup[0].setFocus();
+    // initContents();
   }
-  
-  public void init( ISelection selection ) {
-    
-  }
+
 }

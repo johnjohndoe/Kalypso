@@ -76,7 +76,7 @@ public class NodalBCSelectionWizard extends Wizard implements INewWizardKalypsoI
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     initialSelection = selection;
-//    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
+    setWindowTitle( "Wizard title" );
   }
 
   /**
@@ -84,7 +84,7 @@ public class NodalBCSelectionWizard extends Wizard implements INewWizardKalypsoI
    */
   public void initModelProperties( HashMap<String, Object> map )
   {
-//    m_scenarioFolder = (IFolder) map.get( "ScenarioFolder" );
+    // m_scenarioFolder = (IFolder) map.get( "ScenarioFolder" );
     // m_project = (IProject) map.get( "Project" );
     // m_projectFolder = (String) map.get( "ProjectFolder" );
   }
@@ -92,7 +92,7 @@ public class NodalBCSelectionWizard extends Wizard implements INewWizardKalypsoI
   @Override
   public void addPages( )
   {
-    mPage = new NodalBCSelectionWizardPage1( "aaaaa" );
+    mPage = new NodalBCSelectionWizardPage1();
     addPage( mPage );
     mPage.init( initialSelection );
   }
