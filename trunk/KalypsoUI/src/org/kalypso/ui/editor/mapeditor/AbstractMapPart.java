@@ -246,15 +246,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( this );
 
-    final IWorkbenchPage page = site.getPage();
-
-    // init outlineview if any
-    final IViewPart outlineView = page.findView( GisMapOutlineView.ID );
-    if( outlineView != null )
-    {
-      setMapModellView( (GisMapOutlineView) outlineView );
-    }
-
     m_resourceChangeListener = new IResourceChangeListener()
     {
       public void resourceChanged( final IResourceChangeEvent event )
@@ -292,8 +283,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
-    getSite().setSelectionProvider( m_mapPanel );
+    final IWorkbenchPartSite site = getSite();
+
+    m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, site );
+    site.setSelectionProvider( m_mapPanel );
+
+    final IWorkbenchPage page = site.getPage();
+    // init outlineview if any
+    final IViewPart outlineView = page.findView( GisMapOutlineView.ID );
+    if( outlineView != null )
+    {
+      setMapModellView( (GisMapOutlineView) outlineView );
+    }
   }
 
   /**
