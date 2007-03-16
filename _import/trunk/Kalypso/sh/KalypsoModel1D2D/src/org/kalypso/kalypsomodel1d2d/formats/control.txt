@@ -9,7 +9,6 @@ INHYD						//hydrograph file for interpolation
 INHARM						//Tidal harmonic data file for later computation
 OUTCON						//Output file for time series of flow across continuity lines
 IN3WAVE or INBNWAVE			//wave data file for computation						
-INSTRESS					//Ascii file name containing time series for surface tractions from an external grid
 INCSTR						//file control structure data
 INTIMS						//time series governing on/off of control structures operation
 RESTART						//Angabe Restart soll durchgeführt werden (Datei in INKALYPS ist restart Datei)
@@ -18,7 +17,7 @@ ENDFIL
 nothing to apply at the moment!
 **********************************Control DataBlock************************************
 TI        Willenscharen BuenzerAu Testprojekt für Transplantation							//Header
-C0             0      -2    2001       1   9.000       1   0.200   2000.       0
+C0             0      -2    2001       1   9.000       1   0.200      2.       0
 C1             0       1       1       0       0       0       0       0       0
 C2         54.00   8.400     1.0     1.0     1.0       1
 C3         1.000   1.000   0.100   235.0   0.000   0.010   0.015

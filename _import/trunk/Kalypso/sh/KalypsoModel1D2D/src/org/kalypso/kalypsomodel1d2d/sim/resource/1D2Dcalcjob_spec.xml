@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="Calc1D2D">
 	<input id="DiscretisationModel" description="Steuerdaten - Allgemein"/>
-	<input id="OperationalModel" description="Modelldaten" optional="true"/>
+	<input id="OperationalModel" description="Modelldaten"/>
 	<input id="FlowResistanceModel" description="" optional="true"/>
 	<input id="FlowRelationshipModel" description="" optional="true"/>
-	<input id="SimulationControlModel" description=""/>	
+	<input id="SimulationControlModel" description="Steuerungsdaten"/>	
     <input id="Roughness" description="Rauheitsdatenbank"/>
 	
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="SimulationResultModel" description="Ergebnisdaten"/>
 	<output id="RESULT_DIR_NAME" description="Verzeichnis der Berechnungsergebnisse"/>
+	<output id="RESULT_2d_ZIP" description="ZipFile der Ergebnisse"/>
 </modelspec>

@@ -40,38 +40,40 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.LineNumberReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.StreamHandler;
+import java.util.logging.XMLFormatter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 
 import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
@@ -84,40 +86,7 @@ import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
  */
 public class SimMode1D2DCalcJob implements ISimulation
 {
-  public static final String DISCRETISATIOMODEL_ID = "DiscretisationModel";
-
-  public static final String TERRAINMODEL_ID = "TerrainModel";
-
-  public static final String OPERATIONALMODEL_ID = "OperationalModel";
-
-  public static final String FLOWRESISTANCEMODEL_ID = "FlowResistanceModel";
-
-  public static final String FLOWRELATIONSHIPMODEL_ID = "FlowRelationshipModel";
-
-  public static final String SIMULATIONRESULTMODEL_ID = "SimulationResultModel";
-
-  public static final String CONTROL_ID = "SimulationControlModel";
-
-  public static final String ROUGHNESS_ID = "Roughness";
-
-  public static final String RESULT_DIR_NAME = "result";
-
-  public static final String CALCJOB_SPEC = "resource/1D2Dcalcjob_spec.xml";
-
-  private final String m_resourceBase = "resource/template/";
-
-  private String R10_File = "control.R10";
-
-  private final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
-
-  private final String SIM_EXE_FILE_TEST = "RMA10S35Kalypso.exe";
-
-  private String m_kalypso1D2DKernelPath;
-
-  /**
-   * class logger
-   */
-  final static private Logger logger = Logger.getLogger( SimMode1D2DCalcJob.class.getName() );
+  private RMA10Calculation m_calculation;
 
   private boolean m_succeeded = false;
 
@@ -126,119 +95,133 @@ public class SimMode1D2DCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File exedir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final Date date = new Date( Calendar.getInstance().getTimeInMillis() );
-    logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + date.toString() + " (Serverzeit)\n" );
-    final File resultDir = new File( exedir, RESULT_DIR_NAME );
+    final Logger logger = Logger.getAnonymousLogger();
+    Formatter f = new XMLFormatter();
+    Handler h = null;
+    try
+    {
+      File loggerFile = new File( tmpDir, "infoLog.txt" );
+
+      h = new StreamHandler( new FileOutputStream( loggerFile ), f );
+      logger.addHandler( h );
+      h.flush();
+    }
+    catch( FileNotFoundException e1 )
+    {
+      e1.printStackTrace();
+      logger.fine( e1.getLocalizedMessage() );
+    }
+    logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + (new Date( Calendar.getInstance().getTimeInMillis() )).toString() + " (Serverzeit)\n" );
 
     try
     {
       monitor.setMessage( "richte Berechnungsverzeichnis ein..." );
       if( monitor.isCanceled() )
         return;
+      final File logDir = new File( tmpDir, RMA10SimModelConstants.LOG_DIR_NAME );
+      logDir.mkdirs();
 
       monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
       if( monitor.isCanceled() )
         return;
 
-      // Simulation Model stuff...
-      // Terrainmodell not needed, because mapping to the nodes by the user in the workflow
-      // final URL flowResModelURL = (URL) inputProvider.getInputForID( FLOWRESISTANCEMODEL_ID );
-      // final URL flowRelModelURL = (URL) inputProvider.getInputForID( FLOWRELATIONSHIPMODEL_ID );
-      final URL disModelURL = (URL) inputProvider.getInputForID( DISCRETISATIOMODEL_ID );
-      final GMLWorkspace disModelWorkspace = GmlSerializer.createGMLWorkspace( disModelURL, null );
-      final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( disModelWorkspace.getRootFeature() );
-      final URL modelURL = (new File( exedir, "model.2d" )).toURL();
+      m_calculation = new RMA10Calculation( inputProvider );
+
+      /** convert descretisation model stuff... */
+      // TODO write merged *.2d file for calc core / Dejan starts like this I (Jessica) think
       monitor.setMessage( "Generiere 2D Netz..." );
-      // TODO Netz schreiben / Dejan starts like this I think
+      if( monitor.isCanceled() )
+        return;
+      final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
+      final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
       IPositionProvider positionProvider = new XYZOffsetPositionProvider( ConvenienceCSFactory.getInstance().getOGCCSByName( TestWorkspaces.CS_KEY_GAUSS_KRUEGER ), 35 * 100000, 35 * 100000, 0 );
       Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider, null );
       // converter.toRMA10sModel();
 
-      // OperationalModel stuff...
-//      final URL operationalModelURL = (URL) inputProvider.getInputForID( OPERATIONALMODEL_ID );
-      monitor.setMessage( "Generiere Randbedingungen..." );
+      /** convert control/resistance stuff... */
+      monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
+      if( monitor.isCanceled() )
+        return;
+      // TODO write control and boundary conditions calc core (*.R10 file)
+      PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) ) ) );
+      Control1D2DConverter.writeR10File( m_calculation, pw );
+      pw.close();
 
-      // SimulationControlModel stuff
-      final URL controlURL = (URL) inputProvider.getInputForID( CONTROL_ID );
-      final GMLWorkspace controlWS = GmlSerializer.createGMLWorkspace( controlURL, null );
-      monitor.setMessage( "Generiere Berechnungssteuerung..." );
-      // TODO Randbedingungen schreiben
-      // TODO Berechnungssteuerung schreiben
-      Control1D2DConverter control2asci = new Control1D2DConverter( controlWS );
-      StringBuffer controlSb = control2asci.writeR10ControlData();
-      OutputStreamWriter controlWriter = new OutputStreamWriter( new FileOutputStream( new File( exedir, R10_File ) ), "UTF-8" );
-      controlWriter.write( controlSb.toString() );
-      controlWriter.close();
-      monitor.setMessage( "generating boundary conditions ascii file" );
-
-      // choose simulation kernel
-      chooseSimulationExe( controlWS );
-      copyExecutable( exedir );
-
+      /** start calculation... */
       monitor.setMessage( "starting 2D simulation..." );
-
       if( monitor.isCanceled() )
         return;
       monitor.setProgress( 20 );
-      startCalculation( exedir, monitor );
-      checkSucceeded( exedir );
+      m_calculation.setKalypso1D2DKernelPath();
+      copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
+      startCalculation( tmpDir, monitor );
 
+      /** check succeeded and load results */
+      checkSucceeded( tmpDir );
       if( isSucceeded() )
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse..." );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
-        // final URL simResModelURL = (URL) inputProvider.getInputForID( SIMULATIONRESULTMODEL_ID );
-        // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( flowRelModelURL, null );
-        // loadResults( tmpdir, exeDir, simResWorkspace, monitor, logger, resultDir, resultEater );
-        System.out.println( "Finished 2D Simulation successfully." );
-
-        System.out.println( "This is the end ;-)" );
+        loadResults( tmpDir, monitor, logger, resultEater, tmpDir );
       }
       else
-        System.out.println( "Finished 2D Simulation not successfully." );
+        logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich beendet werden!" );
     }
     catch( Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( "simulation couldn't be finished", e );
+      throw new SimulationException( "Simulation couldn't be finished", e );
     }
+    Handler[] handlers = logger.getHandlers();
+    for( int i = 0; i < handlers.length; i++ )
+    {
+      Handler handl = handlers[i];
+      handl.flush();
+      handl.close();
+    }
+
   }
 
-  private void loadResults( File tmpdir, File exeDir, GMLWorkspace simResWorkspace, ISimulationMonitor monitor, Logger logger, File resultDir, ISimulationResultEater resultEater )
+  private void loadResults( File tmpdir, ISimulationMonitor monitor, Logger logger, ISimulationResultEater resultEater, File tmpDir )
   {
-    resultDir.mkdirs();
-    FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
-    File[] files = exeDir.listFiles( suffixFileFilter );
+    // TODO: check this here and add more handling, if result model is ready (Jessica)
+    monitor.setMessage( "loading results..." );
+    final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
+    outputDir.mkdirs();
 
+    FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
+    File[] files = tmpDir.listFiles( suffixFileFilter );
     monitor.setProgress( 80 );
-    for( int i = 0; i < files.length; i++ )
-    {
-      System.out.println( "name of file_" + i + ":: " + files[i].getName() );
-      if( !files[i].getName().equalsIgnoreCase( "erg.2d" ) && !files[i].getName().equalsIgnoreCase( "fehler.2d" ) && !files[i].getName().equalsIgnoreCase( "out.2d" )
-          && !files[i].getName().equalsIgnoreCase( "marsh.2d" ) )
-      {
-        // TODO write results to the resultsworkspace
-      }
-      monitor.setProgress( 99 );
-    }
+    File outputZip2d = new File( tmpdir, "test.zip" );
+    monitor.setProgress( 99 );
     try
     {
-      resultEater.addResult( SIMULATIONRESULTMODEL_ID, resultDir );
+      ZipUtilities.zip( outputZip2d, files, tmpDir );
     }
-    catch( SimulationException e )
+    catch( IOException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
+    try
+    {
+      resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
+    }
+    catch( SimulationException e )
+    {
+      e.printStackTrace();
+    }
   }
 
-  private void copyExecutable( File tmpdir )
+  /**
+   * copy the executable to from the resources
+   */
+  private void copyExecutable( File tmpdir, String simulationExeName )
   {
-    final String exeResource = m_resourceBase + m_kalypso1D2DKernelPath;
-    final File destFile = new File( tmpdir, m_kalypso1D2DKernelPath );
+    final String exeResource = RMA10SimModelConstants.RESOURCEBASE + simulationExeName;
+    final File destFile = new File( tmpdir, simulationExeName );
     if( !destFile.exists() )
     {
       try
@@ -250,7 +233,6 @@ public class SimMode1D2DCalcJob implements ISimulation
       catch( Exception e )
       {
         e.printStackTrace();
-
         System.out.println( "ERR: " + exeResource + " may not exist" );
       }
     }
@@ -261,39 +243,24 @@ public class SimMode1D2DCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    /**
-     * Relative path to the job specification
-     */
-    return getClass().getResource( CALCJOB_SPEC );
-  }
-
-  /**
-   * @return true if the job was succesfully executed otherwise false
-   */
-  public boolean isSucceeded( )
-  {
-
-    return m_succeeded;
+    return getClass().getResource( RMA10SimModelConstants.CALCJOB_SPEC );
   }
 
   /**
    * starts 2D simulation
-   * 
-   * @param monitor
    */
   private void startCalculation( final File basedir, ISimulationMonitor monitor ) throws SimulationException
   {
-    final File exeFile = new File( basedir, m_kalypso1D2DKernelPath );
+    final File exeFile = new File( basedir, m_calculation.getKalypso1D2DKernelPath() );
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
-    long timeOut = 1000l * 60l * 60l * 24l; // max 60 * 24 minutes = 1 day
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
     try
     {
-      logOS = new FileOutputStream( new File( basedir, "exe.log" ) ); // TODO wie heißen die im 1D2D???
+      logOS = new FileOutputStream( new File( basedir, "exe.log" ) );
       errorOS = new FileOutputStream( new File( basedir, "exe.err" ) );
-      ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, timeOut, logOS, errorOS, null );
+      ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, RMA10SimModelConstants.PROCESS_TIMEOUT, logOS, errorOS, null );
     }
     catch( final Exception e )
     {
@@ -308,51 +275,20 @@ public class SimMode1D2DCalcJob implements ISimulation
   }
 
   /**
+   * @return true if the job was succesfully executed otherwise false
+   */
+  public boolean isSucceeded( )
+  {
+    return m_succeeded;
+  }
+
+  /**
    * checks if calculation of simulations is succeeded
    */
   public void checkSucceeded( final File baseDir )
   {
-    Reader logFileReader = null;
-    LineNumberReader reader = null;
-    try
-    {
-      final File logFile = new File( baseDir, "out.2d" );
-      logFileReader = new FileReader( logFile );
-      reader = new LineNumberReader( logFileReader );
-      String line;
-      while( (line = reader.readLine()) != null )
-      {
-        if( line.indexOf( " KALYPSO-2D: Berechnung ordnungsgemaess gelaufen" ) >= 0 ) // TODO:check it in
-          // the new 1D2D
-          m_succeeded = true;
-      }
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( reader );
-      IOUtils.closeQuietly( logFileReader );
-    }
-  }
-
-  public void chooseSimulationExe( GMLWorkspace controlWS )
-  {
-    Feature controlRootFE = controlWS.getRootFeature();
-    String kalypso1D2DVersion = (String) controlRootFE.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
-    if( kalypso1D2DVersion.equals( "test" ) )
-      m_kalypso1D2DKernelPath = SIM_EXE_FILE_TEST;
-    else if( kalypso1D2DVersion.equals( "neueste" ) || kalypso1D2DVersion.equals( "latest" ) )
-      m_kalypso1D2DKernelPath = SIM_EXE_FILE_3_5;
-    else if( kalypso1D2DVersion.equals( "Version3.5" ) )
-      m_kalypso1D2DKernelPath = SIM_EXE_FILE_3_5;
-    else
-    {
-      logger.log( Level.WARNING, "Sie haben keine Version des Fortran Codes angegeben oder \n" + " die von Ihnen angegebene Version wird nicht weiter unterstützt.\n"
-          + " Es wird mit der neuesten Version gerechnet." );
-      m_kalypso1D2DKernelPath = SIM_EXE_FILE_3_5;
-    }
+    final File finalResultFile = new File( baseDir, "steady.2d" );
+    if( finalResultFile.exists() )
+      m_succeeded = true;
   }
 }

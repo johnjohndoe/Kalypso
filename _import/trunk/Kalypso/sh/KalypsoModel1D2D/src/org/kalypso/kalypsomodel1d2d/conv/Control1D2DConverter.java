@@ -41,79 +41,162 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  */
 public class Control1D2DConverter
 {
-  final private GMLWorkspace m_controlWS;
 
-  public Control1D2DConverter( final GMLWorkspace controlWS)
+  public Control1D2DConverter( )
   {
-    m_controlWS = controlWS;
-    
+    // will not be instantiated
   }
 
-  public StringBuffer writeR10ControlData( )
+  public static void writeR10File( final RMA10Calculation calculation, final PrintWriter pw )
   {
-    final Feature controlRootFE = m_controlWS.getRootFeature();
-    StringBuffer sb = new StringBuffer();
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter printWriter = new PrintWriter( stringWriter );
+    writeR10ControlDataBlock( calculation, pw );
+    writeR10PropertiesDataBlock( calculation, pw );
+//    writeR10ContinuityLineDataBlock( calculation, pw );
+//    writeR10TimeStepDataBlock( calculation, pw );
 
-    // ControlDataBlock
-    sb.append( "OUTFIL  result\\Output\n" );
-    sb.append( "INKALYPSmodel.2d\n" );
-    sb.append( "CONTROL A 1 2d 0\n" );
-    sb.append( "ENDFIL\n" );
-    sb.append( "TI" ); // write Project name
+  }
+
+  /**
+   * writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   */
+  public static void writeR10ControlDataBlock( final RMA10Calculation calculation, final PrintWriter pw )
+  {
+    Locale l = Locale.US;
+    pw.println( "OUTFIL  result\\Output" );
+    // TODO: add hydrograph files if ready and necessary - ask Jessica
+    // pw.println( "INELTFL " ); // Inflow Hydrograph Q
+    // pw.println( "INELEV " ); // Tidalgraph Data H
+    // pw.println( "INHYD " ); // Hydrograph Q
+    // pw.println( "INCSTR " ); // Structures (later)
+    // pw.println( "INTIMS " ); // Structures time series(later)
+    pw.println( "INKALYPSmodel.2d" );
+    pw.println( "CONTROL A " + calculation.getIaccyc() + " 2d 0" );
+    if( calculation.getRestart() )
+      pw.println( "RESTART" );
+
+    pw.println( "ENDFIL" );
+    pw.println( "TI Projekt Name" ); // write Project name
+
     // C0
-    String formatC0 = "C0      %8d%8d%8d%8d%8.6f%8d%8.2f%8.2f%8d";
-    XMLGregorianCalendar calendar = (XMLGregorianCalendar) controlRootFE.getProperty( "startsim" );
-    int year = calendar.getYear();
-    // TODO:calc day of the year!
-    int month = calendar.getMonth();
-    int day = calendar.getDay();
-    int hour = calendar.getHour();
-    Integer property = (Integer) controlRootFE.getProperty( "IOPTZD" );
-    Object[] c0Props = new Object[] { (Integer) controlRootFE.getProperty( "IOPTZD" ), (Integer) controlRootFE.getProperty( "IDNOPT" ), year, day, hour,
-        (Integer) controlRootFE.getProperty( "IEDSW" ), (Double) controlRootFE.getProperty( "TBFACT" ), (Double) controlRootFE.getProperty( "TBMIN" ), (Integer) controlRootFE.getProperty( "IPROJ" ) };
-    printWriter.printf( Locale.US, formatC0 + "\n", c0Props );
-    sb.append( stringWriter.getBuffer() );
+    String formatC0 = "C0             0%8d%8d%8d%8.3f%8d%8.3f%8.2f       0";
+    Object[] c0Props = new Object[] { calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
+        calculation.getTBFACT(), calculation.getTBMIN() };
+    pw.printf( l, formatC0 + "\n", c0Props );
+
     // C1
-    sb.append( "C1             0       1       1       0       0       0       0       0       0\n" ); // fixed
-    // Line
-    sb.append( "C2" ); // add OMEGA, ELEV
-    sb.append( "1.0     1.0     1.0       1\n" ); // fixed Values
-    sb.append( "C3         1.000   1.000   0.100\n" ); // add UDIR,HMIN,DSET,DSETD
-    sb.append( "C4" ); // add SALI,TEMPI,SEDI,UINP,VINP,PRCNT,DMIX,
-    sb.append( "C5" ); // add NITI,NITN,TSTART as fixed value-notused,NCYC
-    sb.append( "       0       1       1       0       1       1\n" ); // fixed values
-    sb.append( "CV" ); // add CONV_1,CONV_2,CONV_3
-    sb.append( "0.050   0.050               1    0.05\n" ); // fixed values
-    sb.append( "VEGETA\n" ); // for roughness with vegetation
+    pw.println( "C1             0       1       1       0       0       0       0       0       0" ); // fixed
 
-    // Properties DataBlock
-    // TODO add ED-Lines from roughnessDB
-    // TODO add SCL and CCL-Lines and ECL from Continuity Lines nodes info - simulation model
-    // what is about MP-Line - ask Nico
-    sb.append( "ENDGEO\n" );
+    // C2
+    String formatC1 = "C2      %8.2f%8.3f     1.0     1.0     1.0       1";
+    Object[] c1Props = new Object[] { calculation.getOMEGA(), calculation.getELEV() };
+    pw.printf( l, formatC1 + "\n", c1Props );
 
-    // Time step DataBlock
-    sb.append( "com -----------------------\n" + "com steady state input data\n" + "com -----------------------" );
-    sb.append( "DT        " );// add DELTA
-    // TODO ask Nico about BC-Lines (equal values for all Lines???)
-    // TODO add continuity Lines inflow here (QC,HC)
-    sb.append( "ENDSTEP  steady" );
-    printWriter.close();
-    return sb;
+    // C3
+    String formatC3 = "C3         1.000   1.000   0.100%8.1f%8.3f%8.3f%8.3f";
+    Object[] c3Props = new Object[] { calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() };
+    pw.printf( l, formatC3+ "\n", c3Props );
+
+    // C4
+    pw.println( "C4          00.0    20.0     0.0" ); // fixed values
+
+    // C5
+    String formatC5 = "C5      %8d%8d        %8d       0       1       1       0       1       1";
+    Object[] c5Props = new Object[] { calculation.getNITI(), calculation.getNITN(), calculation.getNCYC() };
+    pw.printf( l, formatC5+ "\n", c5Props );
+
+    // CV
+    String formatCV = "CV      %8.2f%8.2f%8.2f   0.050   0.050        %8d%8.2f";
+    Object[] cvProps = new Object[] { calculation.getCONV_1(), calculation.getCONV_2(), calculation.getCONV_3(), calculation.getIDRPT(), calculation.getDRFACT() };
+    pw.printf( l, formatCV+ "\n", cvProps );
+
+    // VEGETA
+    if( calculation.getVegeta() )
+      pw.println( "VEGETA" );
+
+    pw.println( "KAL_BC" );
   }
+
+  /**
+   * writes the Properties Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   */
+  private static void writeR10PropertiesDataBlock( RMA10Calculation calculation, PrintWriter pw )
+  {
+    Locale l = Locale.US;
+    List list = calculation.getRoughnessClassList();
+    Iterator iter = list.iterator();
+    int counter = 0;
+    while( iter.hasNext() )
+    {
+      final Feature roughnessFE = (Feature) iter.next();
+      counter = counter + 1;
+
+      // ED1
+      String formatED1 = "ED1     %8d%8.1f%8.1f%8.1f%8.1f    -1.0  1.000   1.000";
+      
+      Double eddy = calculation.getViskosity( roughnessFE );
+      Object[] ed1Props = new Object[] { counter, eddy, eddy, eddy, eddy };
+      pw.printf( l, formatED1+ "\n", ed1Props );
+
+      // ED2
+      pw.println( "ED2                  0.6     0.6   0.001             20.        " );// fixed values
+
+      // ED4
+      String formatED4 = "ED4             %8.2f%8.1f%8.2f";
+      Object[] ed4Props = new Object[] { calculation.getKs( roughnessFE ), calculation.getAxAy( roughnessFE ), calculation.getDp( roughnessFE ) };
+      pw.printf( l, formatED4+ "\n", ed4Props );
+    }
+
+  }
+
+  /**
+   * writes the Continuity Lines Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   */
+
+  private static void writeR10ContinuityLineDataBlock( RMA10Calculation calculation, PrintWriter pw )
+  {
+    Locale l = Locale.US;
+    List list = calculation.getContinuityLineList();
+    // SCL
+    String formatSCL = "SCL     %4d";
+    Object[] sclProps = new Object[] { list.size() };
+    pw.printf( l, formatSCL, sclProps );
+
+    Iterator iter = list.iterator();
+    while( iter.hasNext() )
+      // CC1
+      // CC2
+      pw.println( "ECL" );
+    String formatMP = "MP             %8.2f%8.2f%8.2f";
+    Object[] mpProps = new Object[] { calculation.getAC1(), calculation.getAC2(), calculation.getAC3() };
+    pw.printf( l, formatMP, mpProps );
+    pw.println( "ENDGEO" );
+  }
+
+  /**
+   * writes the Timestep Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   */
+
+  private static void writeR10TimeStepDataBlock( RMA10Calculation calculation, PrintWriter pw )
+  {
+    Locale l = Locale.US;
+    pw.print( "com -----------------------\n" + "com steady state input data\n" + "com -----------------------" );
+    // sb.append( "DT " );// add DELTA
+    // // TODO ask Nico about BC-Lines (equal values for all Lines???)
+    // // TODO add continuity Lines inflow here (QC,HC)
+    // sb.append( "ENDSTEP steady" );
+
+  }
+
 }
