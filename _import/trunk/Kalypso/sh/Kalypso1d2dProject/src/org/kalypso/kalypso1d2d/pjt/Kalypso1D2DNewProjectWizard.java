@@ -5,13 +5,16 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
 /**
@@ -89,15 +92,10 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
       catch( CoreException e )
       {
         logger.log( Level.INFO, MSG, e );
-        Kalypso1d2dProjectPlugin.getDefault().showException( "", e );
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        ErrorDialog.openError( getShell(), "Fehler", "Fehler beim Erzeugen des Projekts.", status );
         return false;
       }
-      // catch (IOException e)
-      // {
-      // logger.info(MSG, e);
-      // Kalypso1d2dProjectPlugin.getDefault().showException(MSG, e);
-      // return false;
-      // }
       catch( Throwable th )
       {
         logger.log( Level.SEVERE, MSG, th );

@@ -1,16 +1,10 @@
 package org.kalypso.kalypso1d2d.pjt;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -70,36 +64,6 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public static Kalypso1d2dProjectPlugin getDefault( )
   {
     return plugin;
-  }
-
-  public void showMessage( final String message )
-  {
-    plugin.getWorkbench().getDisplay().syncExec( new Runnable()
-    {
-      public void run( )
-      {
-        Shell shell = plugin.getWorkbench().getDisplay().getActiveShell();
-        MessageDialog.openInformation( shell, "Message", message );
-      }
-    } );
-  }
-
-  public boolean askQuestion( final String message )
-  {
-
-    Shell shell = plugin.getWorkbench().getDisplay().getActiveShell();
-    return MessageDialog.openConfirm( shell, "Message", message );
-
-  }
-
-  public void showException( String message, Throwable th )
-  {
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter( sw );
-    pw.print( message );
-    pw.print( "\n=======================================\n" );
-    th.printStackTrace( pw );
-    this.showMessage( sw.getBuffer().toString() );
   }
 
   @Override
