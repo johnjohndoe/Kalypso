@@ -46,7 +46,6 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
-
 /**
  * Catalog which provides the url to the roughness schema.
  * 
@@ -54,49 +53,41 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class UrlCatalogRoughness extends AbstractUrlCatalog
 {
-	/**
-	 * Latest version for schema
-	 */
-	final static public String CURRENT_VERSION="v0.0.0";
-	
-	/**
-	 * path for simulation base schema file
-	 */
-	final static public String REL_PATH_ROUGHNESS_DB=
-								CURRENT_VERSION+"/roughness_model.xsd";
-	/**
-	 * Url for simulation base model schema  
-	 */
-	final static public URL ROUGHNESS_MODEL_SCHEMA_URL=
-					UrlCatalogRoughness.class.getResource( 
-														REL_PATH_ROUGHNESS_DB );
-	
-	/**
-	 * Namespace for simulation model base 
-	 */
-	final static public String NS_ROUGHNESS_MODEL="http://www.tu-harburg.de/wb/kalypso/schemata/roughness";
-	
-	/**
-	 * Prefix for the simulation model base 
-	 */
-	final static public String NS_PREFIX_ROUGHNESS="wbr";
-  
-	
-	/**
-	 *Fills the catalog with the roughness base schemas path namespace and location
-	 *
-	 * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-	 */
-	  @Override
-	  protected void fillCatalog( 
-			  				final Class myClass, 
-			  				final Map<String, URL> catalog, 
-			  				Map<String, String> prefixes )
-	  {  
-		catalog.put( 
-	    			NS_ROUGHNESS_MODEL, 
-	    			myClass.getResource( REL_PATH_ROUGHNESS_DB ) );
-	    prefixes.put(NS_ROUGHNESS_MODEL, NS_PREFIX_ROUGHNESS);	    
-	  }
+  /**
+   * Latest version for schema
+   */
+  final static public String CURRENT_VERSION = "v0.0.0";
+
+  /**
+   * path for simulation base schema file
+   */
+  final static public String REL_PATH_ROUGHNESS_DB = CURRENT_VERSION + "/roughness_model.xsd";
+
+  /**
+   * Url for simulation base model schema
+   */
+  final static public URL ROUGHNESS_MODEL_SCHEMA_URL = UrlCatalogRoughness.class.getResource( REL_PATH_ROUGHNESS_DB );
+
+  /**
+   * Namespace for simulation model base
+   */
+  final static public String NS_ROUGHNESS_MODEL = "http://www.tu-harburg.de/wb/kalypso/schemata/roughness";
+
+  /**
+   * Prefix for the simulation model base
+   */
+  final static public String NS_PREFIX_ROUGHNESS = "wbr";
+
+  /**
+   * Fills the catalog with the roughness base schemas path namespace and location
+   * 
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   */
+  @Override
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  {
+    catalog.put( NS_ROUGHNESS_MODEL, myClass.getResource( REL_PATH_ROUGHNESS_DB ) );
+    prefixes.put( NS_ROUGHNESS_MODEL, NS_PREFIX_ROUGHNESS );
+  }
 
 }
