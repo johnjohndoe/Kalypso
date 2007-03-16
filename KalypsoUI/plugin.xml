@@ -1007,12 +1007,12 @@
 				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip"
 				class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
 				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				toolbarPath="karte/tools"
+				toolbarPath="karte/edit"
 				id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
 			</action>
 			<action state="false" style="radio"
 				id="org.kalypso.ui.editor.mapeditor.action.PanAction"
-				toolbarPath="karte/tools"
+				toolbarPath="karte/edit"
 				class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
 				icon="icons/map/pan.gif"
 				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
