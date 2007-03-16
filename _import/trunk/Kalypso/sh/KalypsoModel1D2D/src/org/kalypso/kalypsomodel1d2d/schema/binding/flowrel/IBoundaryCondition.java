@@ -38,17 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.element1d;
+package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
  * @author Gernot Belger
  */
-public class CreateKingFlowrelationWidget extends AbstractWidget
+public interface IBoundaryCondition extends IFlowRelationship
 {
-  public CreateKingFlowrelationWidget( )
-  {
-    super( "King Parameter hinzufügen", "King Parameter einem FE-Knoten zuordnen" );
-  }
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
 }

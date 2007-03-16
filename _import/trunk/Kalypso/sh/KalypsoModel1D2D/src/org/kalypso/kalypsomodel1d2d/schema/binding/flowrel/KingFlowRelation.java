@@ -38,17 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.element1d;
+package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot Belger
+ * @author bce
  */
-public class EditFlowrelationWidget extends AbstractWidget
+public class KingFlowRelation extends FlowRelationship implements IKingFlowRelation
 {
-  public EditFlowrelationWidget(  )
+  public KingFlowRelation( final Feature featureToBind )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten" );
+    super( featureToBind, IKingFlowRelation.QNAME );
   }
 }

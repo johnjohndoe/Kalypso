@@ -208,6 +208,9 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D"/>
          <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
       </factory>
    </extension>
      <!--extension
@@ -317,15 +320,15 @@
 	       			</class>
 			</action>
           <action
-                icon="icons/elcl16/edit1d2d.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateTeschkeFlowrelationWidgetAction"
+                icon="icons/elcl16/flowRelation_add_teschke.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"
                 label="Teschke Parameter hinzufügen"
                 style="radio"
                 toolbarPath="karte/edit"
                 tooltip="Teschke Parameter einem FE-Knoten zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateTeschkeFlowrelationWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
@@ -333,15 +336,15 @@
 	       			</class>
 			</action>    
           <action
-                icon="icons/elcl16/edit1d2d.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateKingFlowrelationWidgetAction"
+                icon="icons/elcl16/flowrelation_addKing.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidgetAction"
                 label="King Parameter hinzufügen"
                 style="radio"
                 toolbarPath="karte/edit"
                 tooltip="King Parameter einem FE-Knoten zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateKingFlowrelationWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
@@ -349,15 +352,15 @@
 	       			</class>
 			</action>    
           <action
-                icon="icons/elcl16/edit1d2d.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.EditFlowrelationWidget"
+                icon="icons/elcl16/flowRelation_edit.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"
                 label="Parameter bearbeiten"
                 style="radio"
                 toolbarPath="karte/edit"
                 tooltip="Zugeordnete Parameter eines FE-Knoten bearbeiten">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.EditFlowrelationWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
@@ -365,19 +368,67 @@
 	       			</class>
 			</action>    
 			<action
-	           icon="icons/elcl16/cut.png"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.element1d.DeleteFlowrelationWidgetAction"               
+	           icon="icons/elcl16/flowRelation_delete.png"
+	           id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidgetAction"               
 	           label="Parameter löschen"
 	           style="radio"
 	           toolbarPath="karte/edit"
 	           tooltip="einem FE-Koten zugeordnete Parameter löschen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.DeleteFlowrelationWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="Parameters1D"/>
+	       			</class>
+			</action>
+          <action
+                icon="icons/elcl16/flowrelation_addNodalBC.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidgetAction"
+                label="Randbedingung hinzufügen"
+                style="radio"
+                toolbarPath="karte/edit"
+                tooltip="King Parameter einem FE-Knoten zuordnen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="NodalBCDef"/>
+	       			</class>
+			</action>    
+          <action
+                icon="icons/elcl16/flowRelation_editNodalBC.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditNodalBCFlowrelationWidget"
+                label="Randbedingung bearbeiten"
+                style="radio"
+                toolbarPath="karte/edit"
+                tooltip="Zugeordnete Parameter eines FE-Knoten bearbeiten">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="NodalBCDef"/>
+	       			</class>
+			</action>    
+			<action
+	           icon="icons/elcl16/flowRelation_deleteNodalBC.png"
+	           id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteNodalBCFlowrelationWidgetAction"               
+	           label="Randbedingung löschen"
+	           style="radio"
+	           toolbarPath="karte/edit"
+	           tooltip="einem FE-Koten zugeordnete Parameter löschen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="NodalBCDef"/>
 	       			</class>
 			</action>
         </viewContribution>

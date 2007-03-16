@@ -69,6 +69,14 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
         IFEJunction1D2D junction1D2D=new FEJunction1D2D(feature);
         return ModelGeometryBuilder.computeJunction1D2DGeometry( junction1D2D );
       }
+      else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ABSTRACT_JUNCTION1D2D ) )
+      {
+        // TODO: check if needed. Happens if we have an empty theme of thesse elements and the legend is active.
+        
+//        IFEJunction1D2D junction1D2D=new FEJunction1D2D(feature);
+//        return ModelGeometryBuilder.computeJunction1D2DGeometry( junction1D2D );
+        return null;
+      }
       else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) )
       {
         IElement1D element1D  = new Element1D(feature);
@@ -88,7 +96,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
        
         return ModelGeometryBuilder.computeEdgeToCLineJunction1D2DGeometry( junction1D2D );
       }
-      else
+      else // TODO: test if its a ELEMENT_2D ?? because they may be other things around....
       {
         //TODO Patrice remove me
         element = new FE1D2D_2DElement( feature );

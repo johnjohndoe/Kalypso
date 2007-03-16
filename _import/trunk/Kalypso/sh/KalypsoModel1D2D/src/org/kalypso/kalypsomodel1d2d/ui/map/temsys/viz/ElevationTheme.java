@@ -63,7 +63,8 @@ public class ElevationTheme extends AbstractKalypsoTheme
   
   public ElevationTheme( String name, IMapModell mapModel )
   {
-    super(name, mapModel);
+    // TODO: provide a unique id
+    super("TODO", name, "Elevation", mapModel);
   }
   
   public void setTerrainElevationModel( ITerrainElevationModel terrainElevationModel )

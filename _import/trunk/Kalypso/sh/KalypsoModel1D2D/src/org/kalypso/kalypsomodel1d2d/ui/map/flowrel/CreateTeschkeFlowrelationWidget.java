@@ -38,17 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.element1d;
+package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 
 /**
  * @author Gernot Belger
  */
-public class CreateTeschkeFlowrelationWidget extends AbstractWidget
+public class CreateTeschkeFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
-  public CreateTeschkeFlowrelationWidget(  )
+  public CreateTeschkeFlowrelationWidget( )
   {
-    super( "Teschke Parameter hinzufügen", "Teschke Parameter einem FE-Knoten zuordnen" );
+    super( "Teschke Parameter hinzufügen", "Teschke Parameter einem FE-Knoten zuordnen", ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
   }
 }

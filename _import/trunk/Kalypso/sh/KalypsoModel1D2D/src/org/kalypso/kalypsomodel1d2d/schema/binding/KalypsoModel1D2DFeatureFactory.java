@@ -12,6 +12,12 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -315,6 +321,62 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         };
         cMap.put(DisplayElementDecorator.class, cTor);
         
+        // KingFlowRelation  
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    IKingFlowRelation.QNAME) )
+                  return new KingFlowRelation(feature);
+                
+                return null;
+            }
+        };
+        cMap.put(IKingFlowRelation.class, cTor);
+        
+        // TeschkeFlowRelation  
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                ITeschkeFlowRelation.QNAME) )
+              return new TeschkeFlowRelation(feature);
+            
+            return null;
+          }
+        };
+        cMap.put(ITeschkeFlowRelation.class, cTor);
+        
+        // TeschkeFlowRelation  
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                IBoundaryCondition.QNAME) )
+              return new BoundaryCondition(feature);
+            
+            return null;
+          }
+        };
+        cMap.put(IBoundaryCondition.class, cTor);
         
 		return Collections.unmodifiableMap(cMap);
 	}
