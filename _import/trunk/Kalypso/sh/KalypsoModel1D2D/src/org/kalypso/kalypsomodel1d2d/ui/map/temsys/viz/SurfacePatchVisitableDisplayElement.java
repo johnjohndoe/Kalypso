@@ -111,7 +111,7 @@ public class SurfacePatchVisitableDisplayElement
       colorModel = 
         ElevationColorControl.getColorModel( 
                   elevationProvider.getMinElevation(), 
-                  elevationProvider.getMaxElevation() );
+                  elevationProvider.getMaxElevation());
 //        new SimpleElevationColorModel(
 //            elevationProvider.getMinElevation(),
 //            elevationProvider.getMaxElevation(),
@@ -545,6 +545,7 @@ public class SurfacePatchVisitableDisplayElement
 //            "\n\tsurface:"+surfacePatch+
 //            "\n\televation:"+elevationSample);
         Area area = calcTargetCoordinates( this.projection, surfacePatch );
+   //     if (colorModel.getColor( elevationSample )!= null){
         graphics.setColor( colorModel.getColor( elevationSample ));
 //        drawPolygon( graphics, area );
         ((Graphics2D)graphics).fill( area );
