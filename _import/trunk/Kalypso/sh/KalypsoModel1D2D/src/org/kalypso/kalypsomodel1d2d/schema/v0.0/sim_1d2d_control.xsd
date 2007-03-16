@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:kapp="org.kalypso.appinfo" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:kapp="org.kalypso.appinfo" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:om="http://www.opengis.net/om" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om" />
+	<import namespace="http://www.opengis.net/om" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd"/>
 	<!-- ==============================================================
 		global element declarations
 		============================================================== -->
@@ -52,10 +52,12 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berücksichtigung Bewuchs</label>
+								<tooltip>Berücksichtigung der Bewuchsparameter bei der Berechnung</tooltip>
 							</documentation>
 						</annotation>
 					</element>
 					<!--C0-->
+					<!-- Jessica: Erst einmal fest auf 0 setzen (laut Nico)
 					<element name="IOPTZD" default="0">
 						<annotation>
 							<documentation xml:lang="de">
@@ -94,15 +96,16 @@
 								</enumeration>
 							</restriction>
 						</simpleType>
-					</element>
+					</element>-->
 					<element name="IDNOPT" default="-1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Marsh Algorithmus</label>
+								<tooltip>Art der gesonderten Behandlung von nur teilweise Durchströmten Elementen (Randelemente).</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
-							<restriction base="string">
+							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
@@ -114,7 +117,7 @@
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Default Werte nutzen</label>
-											<tooltip>Default Werte sind: (a=1,5; Übergangshöhe=0,67; Porosität=0,04)???</tooltip>
+											<tooltip>Default Werte sind: (Deaktivierungstiefe=1.5m; Übergangstiefe=0.67m; Porosität=0.04)</tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -140,15 +143,15 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wirbelviskositätsansatz</label>
-								<tooltip/>
+								<tooltip>Wirbelviskositätsansatz</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
-							<restriction base="string">
+							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Eingabedaten ohne Skalierung</label>
+											<label>konstante Eingabedaten ohne Skalierung</label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -195,8 +198,8 @@
 					<element name="TBFACT" default="0.2">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Faktor Smagorinsky-Ansatz</label>
-								<tooltip>Alfa Wert des Smagorinsky Ansatzes</tooltip>
+								<label>Faktor Smagorinsky-Ansatz [-]</label>
+								<tooltip>Alfa Wert des Smagorinsky Ansatzes [-]</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -206,11 +209,11 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="TBMIN" type="double" default="2000">
+					<element name="TBMIN" type="double" default="2">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Min. Wirbelviskosität</label>
-								<tooltip>Minimale Wirbelviskosität beim Smagorinsky-Ansatz</tooltip>
+								<label>Min. Wirbelviskosität [m²/s]</label>
+								<tooltip>Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -253,7 +256,7 @@
 					<element name="OMEGA" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Breitengrad</label>
+								<label>Breitengrad  [°]</label>
 								<tooltip>Breitengrad zur Ermittlung der Corioliskraft [°]</tooltip>
 							</documentation>
 						</annotation>
@@ -261,7 +264,7 @@
 					<element name="ELEV" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Anfangswasserspiegel</label>
+								<label>Anfangswasserspiegel  [m]</label>
 								<tooltip>Anfangswert des Wasserstandes über jeden Knoten [m]</tooltip>
 							</documentation>
 						</annotation>
@@ -277,7 +280,7 @@
 					<element name="UDIR">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Geschwindigkeitsrichtung</label>
+								<label>Geschwindigkeitsrichtung [°]</label>
 								<tooltip>Ungefähre Fließrichtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [°]</tooltip>
 							</documentation>
 						</annotation>
@@ -291,7 +294,7 @@
 					<element name="HMIN" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Min. Anfangswassertiefe</label>
+								<label>Min. Anfangswassertiefe [m]</label>
 								<tooltip> Minimale Wassertiefe bei Simulationsstart [m]</tooltip>
 							</documentation>
 						</annotation>
@@ -299,7 +302,7 @@
 					<element name="DSET" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Trockenfalltiefe</label>
+								<label>Trockenfalltiefe [m]</label>
 								<tooltip>Wassertiefe ab welcher Knoten trocken fällt [m].</tooltip>
 							</documentation>
 						</annotation>
@@ -307,7 +310,7 @@
 					<element name="DSETD" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wiederbenetzungstiefe</label>
+								<label>Wiederbenetzungstiefe [m]</label>
 								<tooltip>Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m].</tooltip>
 							</documentation>
 						</annotation>
@@ -323,7 +326,7 @@
 						<simpleType>
 							<restriction base="int">
 								<minInclusive value="0"/>
-								<maxInclusive value="50"/>
+								<maxInclusive value="100"/>
 							</restriction>
 						</simpleType>
 					</element>
@@ -352,7 +355,7 @@
 					<element name="CONV_1" type="double" default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Konvergenzschranke vx</label>
+								<label>Konvergenzschranke vx [-]</label>
 								<tooltip>Maximale Änderung der Geschwindigkeit in x-Richtung [-]</tooltip>
 							</documentation>
 						</annotation>
@@ -360,7 +363,7 @@
 					<element name="CONV_2" type="double" default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Konvergenzschranke vy</label>
+								<label>Konvergenzschranke vy [-]</label>
 								<tooltip>Maximale Änderung der Geschwindigkeit in y-Richtung [-]</tooltip>
 								<tooltip/>
 							</documentation>
@@ -369,7 +372,7 @@
 					<element name="CONV_3" type="double" default="0.001">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Konvergenzschranke h</label>
+								<label>Konvergenzschranke h [-]</label>
 								<tooltip>Maximale Änderung der Wassertiefe [-]</tooltip>
 								<tooltip/>
 							</documentation>
@@ -382,7 +385,7 @@
 							</documentation>
 						</annotation>
 						<simpleType>
-							<restriction base="string">
+							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
@@ -394,8 +397,8 @@
 								<enumeration value="1">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Gleichungsdeaktivierung</label>
-											<tooltip>Gleichungsdeaktivierung nach Deaktivierungskriterium</tooltip>
+											<label>mögliche deaktivieren</label>
+											<tooltip>Gleichungsdeaktivierung nach Deaktivierungskriterium (konvergente Freiheitsgrade)</tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -405,7 +408,7 @@
 					<element name="DRFACT" type="double" default="0.05">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Deaktivierungskriterium</label>
+								<label>Deaktivierungskriterium [-]</label>
 								<tooltip>Deaktivierungskriterium für Gleichungen [-]</tooltip>
 							</documentation>
 						</annotation>
@@ -414,15 +417,15 @@
 					<element name="AC1" type="double" default="1.5">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Marsh a???</label>
-								<label>Marsh a???</label>
+								<label>Deaktivierungstiefe  [m]</label>
+								<label>Tiefe unter der Oberfläche zur deaktivierung von Knoten [m]</label>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="AC2" type="double" default="0.67">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Übergangstiefe</label>
+								<label>Übergangstiefe  [m]</label>
 								<tooltip>Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m].</tooltip>
 							</documentation>
 						</annotation>
@@ -430,13 +433,39 @@
 					<element name="AC3" type="double" default="0.04">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Porosität</label>
+								<label>Porosität [-]</label>
 								<tooltip>Porosität des Marsh-Bodens [-].</tooltip>
 							</documentation>
 						</annotation>
 					</element>
+					<!--CV-->
+					<!--TODO: aus vorhandenen Lösungen auswählen...-->
+					<element name="IACCYC" type="int" default="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Restart</label>
+								<tooltip>Angabe des Restart Zeitschrittes (bei 0 wird eine neue Berechnung gestartet).</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="timesteps" type="c1d2d:TimestepPropertyType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	<complexType name="TimestepPropertyType">
+		<sequence>
+			<element ref="c1d2d:Timesteps" minOccurs="0"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</complexType>
+	<!--quasi Stationär Zeitschrittvorgabe-->
+	<element name="Timesteps" type="om:ObservationType" substitutionGroup="om:Observation">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Zeitschrittvorgabe</label>
+				<tooltip>Zeitschrittvorgabe der quasi stationären Berechnung</tooltip>
+			</documentation>
+		</annotation>
+	</element>
 </schema>
