@@ -49,4 +49,14 @@ public class GeometryCalcControl
   public static boolean doCalcEdge = true;
   public static boolean doCalcElement = true;
   
+  public static void setDoCalcEdge( boolean b )
+  {
+    doCalcEdge = b;
+  }
+  
+  public static void setDoCalcElement( boolean b )
+  {
+    doCalcElement = b;
+  }
+  
 }

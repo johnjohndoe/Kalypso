@@ -181,7 +181,7 @@ public class ApplyElevationWidgetDataModel
   public ITerrainModel getTerrainModel( )
   {
 //    return terrainModel;
-    return (ITerrainModel) getData( TerrainModel.class.toString() );
+    return (ITerrainModel) getData( ITerrainModel.class.toString() );
   }
 
   public void setTerrainModel( ITerrainModel terrainModel )
@@ -195,7 +195,7 @@ public class ApplyElevationWidgetDataModel
 //    {
 //      this.elevationModelSystem = null;
 //    }
-    setData( TerrainModel.class.toString(),terrainModel );
+    setData( ITerrainModel.class.toString(),terrainModel );
   }
   
   public IKalypsoFeatureTheme getElevationTheme( )

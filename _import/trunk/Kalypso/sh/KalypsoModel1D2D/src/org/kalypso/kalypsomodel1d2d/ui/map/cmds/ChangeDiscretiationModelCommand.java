@@ -154,8 +154,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
     }
     
     //build edges and element without indexing
-    GeometryCalcControl.doCalcEdge=false;
-    GeometryCalcControl.doCalcElement=false;
+    GeometryCalcControl.setDoCalcEdge(false);
+    GeometryCalcControl.setDoCalcElement(false);
     for(IDiscrModel1d2dChangeCommand command:commands)
     {
       try
@@ -180,8 +180,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
       }      
     }
     
-    GeometryCalcControl.doCalcEdge = true;
-    GeometryCalcControl.doCalcElement = true;
+    GeometryCalcControl.setDoCalcEdge(true);  
+    GeometryCalcControl.setDoCalcElement(true);  
     model1d2d.getEdges().getWrappedList().invalidate();
     model1d2d.getElements().getWrappedList().invalidate();
     model1d2d.getNodes().getWrappedList().invalidate();
