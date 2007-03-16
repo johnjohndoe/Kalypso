@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--  
 	Provides gml schema types and elemen to model rougthnesses.
 	Basic element is the Roughness element which can be gouped 
@@ -7,34 +6,17 @@
 	
 	@author Patrice Congo
 -->
-
-
-<xs:schema
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
-	xmlns:gml="http://www.opengis.net/gml"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
-
+<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" xmlns:xlink="http://www.w3.org/1999/xlink" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
-
-	<xs:import namespace="http://www.opengis.net/gml"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
-
-
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/>
 	<!-- =================================================================
 		RoughnessCollection
 		================================================================== -->
-	<xs:element name="RoughnessClsCollection"
-		type="wbr:RoughnessClsCollectionType"
-		substitutionGroup="gml:_Feature">
-	</xs:element>
-
+	<xs:element name="RoughnessClsCollection" type="wbr:RoughnessClsCollectionType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="RoughnessClsCollectionType">
 		<xs:annotation>
 			<xs:documentation>
@@ -42,45 +24,33 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureCollectionType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element ref="wbr:roughnessClsMember"
-						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="wbr:roughnessClsMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!-- =================================================================
 		roughnessMember; RoughnessPropertyType
 		================================================================== -->
-	<xs:element name="roughnessClsMember"
-		type="wbr:RoughnessClsPropertyType" />
-
+	<xs:element name="roughnessClsMember" type="wbr:RoughnessClsPropertyType"/>
 	<xs:complexType name="RoughnessClsPropertyType">
 		<xs:sequence>
-			<xs:element ref="wbr:RoughnessCls" minOccurs="0"
-				maxOccurs="1" />
+			<xs:element ref="wbr:RoughnessCls" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
-
 	<!-- =================================================================
 		Roughness
 		================================================================== -->
-	<xs:element name="RoughnessCls" type="wbr:RoughnessClsType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="RoughnessCls" type="wbr:RoughnessClsType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
-				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
-				</xs:label>
+				<xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
-				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
-				</xs:label>
+				<xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -88,154 +58,130 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="ks" type="xs:double" minOccurs="0"
-						maxOccurs="1">
+					<xs:element name="ks">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>ks [m]</xs:label>
-								<xs:tooltip>enter KS value (meter)</xs:tooltip>
+								<xs:tooltip>äquivalente Sandrauheit [m]</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>ks [m]</xs:label>
-								<xs:tooltip>enter KS value (meter)</xs:tooltip>
+								<xs:tooltip>equivalent sand-roughness [m]</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minExclusive value="0.0"/>
+								<xs:maxInclusive value="1.0"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
-					<xs:element name="axay" type="xs:double"
-						minOccurs="0" 
-						maxOccurs="1">
+					<xs:element name="axay" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								<xs:label>Ax/Ay [m]</xs:label>
-								<xs:tooltip>enter Ax/Ay value (meter)</xs:tooltip>
+								<xs:label>ax, ay [m]</xs:label>
+								<xs:tooltip>Abstand der Bewuchselemente in und senkrecht zur Fließrichtung [m]</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								<xs:label>Ax/Ay [m]</xs:label>
-								<xs:tooltip>enter Ax/Ay value (meter)</xs:tooltip>
+								<xs:label>Vegetation distance [m]</xs:label>
+								<xs:tooltip>Distance of the vegetation [m]</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0.0"/>
+								<xs:maxInclusive value="200.0"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
-					<xs:element name="dp" type="xs:double" minOccurs="0"
-						maxOccurs="1">
+					<xs:element name="dp" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>dp [m]</xs:label>
-								<xs:tooltip>enter DP value (meter)</xs:tooltip>
+								<xs:tooltip>Durchmesser der Bewuchselemente [m]</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>dp [m]</xs:label>
-								<xs:tooltip>enter dp value (meter)</xs:tooltip>
+								<xs:tooltip>Diameter of the vegetation elements [m]</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0.0"/>
+								<xs:maxInclusive value="10.0"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
-					<xs:element name="eddy" type="xs:double"
-						minOccurs="0" 
-						maxOccurs="1">
+					<xs:element name="eddy" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								<xs:label>eddy [m]</xs:label>
-								<xs:tooltip>enter eddy value (meter)</xs:tooltip>
+								<xs:label>Wirbelviskosität [Pas]</xs:label>
+								<xs:tooltip>Die Wirbelviskosität [Pas] beeinflusst die Turbulenzbildung.</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								<xs:label>eddy [m]</xs:label>
-								<xs:tooltip>enter eddy value (meter)</xs:tooltip>
+								<xs:label>Eddy viskosity [Pas]</xs:label>
+								<xs:tooltip>Eddy viskosity [Pas]</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="1000.0"/>
+								<xs:maxInclusive value="30000.0"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
-					<xs:element name="marsh" type="xs:double"
-						minOccurs="0" 
-						maxOccurs="1">
+					<xs:element name="charactV" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								<xs:label>marsh [m]</xs:label>
-								<xs:tooltip>enter marsh value (meter)</xs:tooltip>
+								<xs:label>charakt. Geschwindigkeit [m/s]</xs:label>
+								<xs:tooltip>Zu erwartende charakteristische Geschwindigkeit [m/s]</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								<xs:label>marsh [m]</xs:label>
-								<xs:tooltip>enter marsh value (meter)</xs:tooltip>
+								<xs:label>charact. velocity [m/s]</xs:label>
+								<xs:tooltip>Expected characteristic velocity [m/s]</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minExclusive value="0.0"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!-- =================================================================
 		roughnessCorrection Property 
 		================================================================== -->
-	<xs:element name="roughnessClsCorrection"
-		type="wbr:RoughnessClsCorrectionPropertyType">
-	</xs:element>
+	<xs:element name="roughnessClsCorrection" type="wbr:RoughnessClsCorrectionPropertyType"/>
 	<xs:complexType name="RoughnessClsCorrectionPropertyType">
 		<xs:sequence>
-			<xs:element ref="wbr:RoughnessClsCorrection" minOccurs="0"
-				maxOccurs="1" />
+			<xs:element ref="wbr:RoughnessClsCorrection" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		Roughnesscorrection
 		================================================================== -->
-	<xs:element name="RoughnessClsCorrection"
-		type="wbr:RoughnessClsCorrectionType"
-		substitutionGroup="gml:_Feature" />
+	<xs:element name="RoughnessClsCorrection" type="wbr:RoughnessClsCorrectionType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="RoughnessClsCorrectionType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="ksCor" type="xs:double"
-						minOccurs="0" maxOccurs="1" />
-
-					<xs:element name="axayCor" type="xs:double"
-						minOccurs="0" maxOccurs="1" />
-
-					<xs:element name="dpCor" type="xs:double"
-						minOccurs="0" maxOccurs="1" />
-
-					<xs:element name="eddyCor" type="xs:double"
-						minOccurs="0" maxOccurs="1" />
-
-					<xs:element name="marshCor" type="xs:double"
-						minOccurs="0" maxOccurs="1" />
-
-
+					<xs:element name="ksCor" type="xs:double" minOccurs="0"/>
+					<xs:element name="axayCor" type="xs:double" minOccurs="0"/>
+					<xs:element name="dpCor" type="xs:double" minOccurs="0"/>
+					<xs:element name="eddyCor" type="xs:double" minOccurs="0"/>
+					<xs:element name="charactVCor" type="xs:double" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-
-	<!--xs:complexType 
-		name="RoughnessPropertyType">
-		<xs:sequence>
-		<xs:element 
-		ref="wbr:Roughness"
-		minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-		</xs:complexType -->
-
-	<!--xs:complexType 
-		name="RoughnessValueComponentType">
-		<xs:complexContent>
-		<xs:restriction 
-		base="gml:ValuePropertyType">
-		<xs:sequence>
-		<xs:element ref="wbr:Roughness"/>
-		</xs:sequence>
-		</xs:restriction>
-		</xs:complexContent>
-		</xs:complexType-->
-
 	<!-- =================================================================
 		DirectRoughnessClassCorrection
 		================================================================== -->
-	<xs:element name="DirectRoughnessClsCorrection"
-		type="wbr:DirectRoughnessClsCorrectionType">
-	</xs:element>
-
+	<xs:element name="DirectRoughnessClsCorrection" type="wbr:DirectRoughnessClsCorrectionType"/>
 	<xs:complexType name="DirectRoughnessClsCorrectionType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
@@ -247,12 +193,9 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element ref="wbr:roughnessClsCorrection"
-						minOccurs="1" maxOccurs="1" />
-
+					<xs:element ref="wbr:roughnessClsCorrection"/>
 					<!--  TODO change to link to roughness-class -->
-					<xs:element name="roughnessURI" type="xs:anyURI"
-						minOccurs="1" maxOccurs="1" />
+					<xs:element name="roughnessURI" type="xs:anyURI"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -260,5 +203,5 @@
 	<!-- =================================================================
 		uri
 		================================================================== -->
-	<xs:element name="uri" type="xs:anyURI" />
+	<xs:element name="uri" type="xs:anyURI"/>
 </xs:schema>
