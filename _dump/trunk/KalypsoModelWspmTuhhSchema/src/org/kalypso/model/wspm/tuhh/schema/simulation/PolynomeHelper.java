@@ -385,10 +385,15 @@ public class PolynomeHelper
 
   private static WspmProfile profileForStation( final SortedMap<BigDecimal, WspmProfile> profileIndex, final BigDecimal station )
   {
+    return (WspmProfile) forStation( profileIndex, station );
+  }
+
+  public static Object forStation( final SortedMap<BigDecimal, ? extends Object> profileIndex, final BigDecimal station )
+  {
     final double delta = 0.00001;
     final BigDecimal pred = new BigDecimal( station.doubleValue() - delta );
     final BigDecimal succ = new BigDecimal( station.doubleValue() + delta );
-    final SortedMap<BigDecimal, WspmProfile> subMap = profileIndex.subMap( pred, succ );
+    final SortedMap<BigDecimal, ? extends Object> subMap = profileIndex.subMap( pred, succ );
     if( !subMap.isEmpty() )
       return subMap.values().iterator().next();
 
