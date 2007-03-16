@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -251,6 +252,7 @@ public class ApplyElevationWidget
   @Override
   public void moved( Point p )
   {
+    dataModel.setIgnoreMapSelection( false );
     super.moved(p);
     this.point=p;
   }
@@ -325,6 +327,7 @@ public class ApplyElevationWidget
   @Override
   public void doubleClickedLeft( Point p )
   {
+    dataModel.setIgnoreMapSelection( false );
     super.doubleClickedLeft(p);
     assignElevationToSelectedNodes(p);
   }
@@ -335,8 +338,19 @@ public class ApplyElevationWidget
   @Override
   public void doubleClickedRight( Point p )
   {
+    dataModel.setIgnoreMapSelection( false );
     super.doubleClickedRight(p);
     assignElevationToSelectedNodes( p );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#leftClicked(java.awt.Point)
+   */
+  @Override
+  public void leftClicked( Point p )
+  {
+    dataModel.setIgnoreMapSelection( false );
+    super.leftClicked(p);
   }
   
   private void assignElevationToSelectedNodes( Point p )
@@ -463,8 +477,27 @@ public class ApplyElevationWidget
   {
     super.paint(g);
     drawElevationData( g, point );
+    drawHandle( g, point, Color.BLUE, 6 );
   }
   
+  public static final void drawHandle(
+                          Graphics g, 
+                          Point currentPoint, 
+                          Color handleColor, 
+                          int squareWidth)
+  {
+    if(currentPoint==null)
+    {
+      return;
+    }
+    
+    int pointRectSizeHalf=squareWidth/2;
+    g.drawRect( 
+        (int) currentPoint.getX() - pointRectSizeHalf, 
+        (int) currentPoint.getY() - pointRectSizeHalf, 
+        squareWidth, 
+        squareWidth );
+  }
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
    */

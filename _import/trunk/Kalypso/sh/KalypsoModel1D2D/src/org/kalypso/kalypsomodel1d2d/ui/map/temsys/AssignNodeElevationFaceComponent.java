@@ -53,6 +53,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -65,6 +69,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
@@ -73,6 +78,8 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -145,38 +152,117 @@ public class AssignNodeElevationFaceComponent
       }
       if(property.equals( nodeElevationViewer.getColumnProperties()[1] ))
       {
+        if(FENodeLabelProvider.getElevationString( node ).equals( value ) )
+        {
+          System.out.println("No change in the elevation!");
+          return;
+        }
+        
         IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
         if(model1d2d!=null)
         {
+          double newElevation;
+          
+          try
+          {
+            newElevation= Double.parseDouble( (String)value );
+          }
+          catch (Throwable  th) 
+          {
+            //TODO Patrice show the user a message
+            th.printStackTrace();
+            return;
+          }
+          
+            
           //return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
           ChangeNodePositionCommand command = 
             new ChangeNodePositionCommand(
                                     model1d2d ,
                                     node,
-                                    Double.parseDouble( (String)value ));
+                                    newElevation);
           IKalypsoFeatureTheme nodeTheme = 
-                (IKalypsoFeatureTheme) dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
+                (IKalypsoFeatureTheme) dataModel.getData( 
+                            ApplyElevationWidgetDataModel.NODE_THEME );
           if(nodeTheme==null)
           {
             return;
           }
-          nodeTheme.postCommand( command, null );
-          nodeElevationViewer.refresh();//true);//, new String[]{property});
+          try
+          {
+            //manual execute of the command needed because otherwise update done
+            //before the command execution by the framework sothat the table does
+            //not display the right label
+            command.process();
+            nodeTheme.postCommand( command, null );
+//            command.process();
+            
+          }
+          catch( Throwable th )
+          {
+            th.printStackTrace();
+          }
+//          nodeElevationViewer.up
+          nodeElevationViewer.refresh(node,true);
+//          nodeElevationViewer.refresh( element, true );
+          System.out.println("adadad"+node.getPoint());
         }
       }
       else if(property.equals( nodeElevationViewer.getColumnProperties()[0] ))
       {
+        if(FENodeLabelProvider.getNameOrID( node ).equals( value ) )
+        {
+          System.out.println("No name change!");
+          return;
+        }
         node.setName( (String)value );
         nodeElevationViewer.refresh();//true);//, new String[]{property});
       }
       else
       {
-        
+        System.out.println("BAD property:"+property);
       }
     }
     
   };
   
+//  FocusListener focusListener = new FocusListener()
+//  {
+//
+//    public void focusGained( FocusEvent e )
+//    {
+//      dataModel.setIgnoreMapSelection( true );
+//    }
+//
+//    public void focusLost( FocusEvent e )
+//    {
+//      dataModel.setIgnoreMapSelection( false );
+//    }
+//    
+//  };
+  
+  MouseListener mouseListener= new MouseListener()
+  {
+
+    public void mouseDoubleClick( MouseEvent e )
+    {
+      System.out.println("mouse klick");
+      dataModel.setIgnoreMapSelection( true );
+    }
+
+    public void mouseDown( MouseEvent e )
+    {
+      dataModel.setIgnoreMapSelection( true );
+      System.out.println("mouse down");
+      
+    }
+
+    public void mouseUp( MouseEvent e )
+    {
+      System.out.println("mouse up");
+    }
+    
+  };
   
   /**
    * Listen to node selection and fill the selection list
@@ -188,11 +274,39 @@ public class AssignNodeElevationFaceComponent
 
     public void selectionChanged( SelectionChangedEvent event )
     {
-      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-      selectionNodeList.clear();
-      selectionNodeList.addAll( selection.toList());
       
+//      if(nodeElevationViewer.getControl().getParent().isFocusControl())
+//      {
+//        dataModel.setIgnoreMapSelection( true );
+     
+        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        selectionNodeList.clear();
+        List tableSelection = selection.toList();
+        selectionNodeList.addAll( tableSelection);
+        //to easy feature wrapper
+        EasyFeatureWrapper featureWrappers[] = new EasyFeatureWrapper[tableSelection.size()];
+        CommandableWorkspace workspace = null;
+        Feature parentFeature = dataModel.getDiscretisationModel().getWrappedFeature();
+        IRelationType property=null;
+        
+        for(int i=featureWrappers.length-1;i>=0;i--)
+        {
+          
+          featureWrappers[i] = 
+              new EasyFeatureWrapper(
+                        workspace,
+                        ((IFE1D2DNode)tableSelection.get( i )).getWrappedFeature(),
+                        parentFeature,
+                        property);
+        }
+        dataModel.getMapPanel().getSelectionManager().setSelection( featureWrappers );
+//      }
+//      else
+//      {
+////        dataModel.setIgnoreMapSelection( false );
+//      }
     }
+    
   };
   
   KeyBasedDataModelChangeListener modelChangeListener =
@@ -315,6 +429,7 @@ public class AssignNodeElevationFaceComponent
     
     nodeElevationViewer.setUseHashlookup(true);
     nodeElevationViewer.setColumnProperties( new String[]{"Node","Elevation"} );
+    
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
     
@@ -332,7 +447,9 @@ public class AssignNodeElevationFaceComponent
 
     
     nodeElevationViewer.addSelectionChangedListener( nodeSelectionListener );
-
+//    nodeElevationViewer.getControl().addFocusListener( focusListener );
+    nodeElevationViewer.getTable().addMouseListener( mouseListener );
+//    nodeElevationViewer.getControl().addMouseListener( mouseListener );
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment(table,5);
     regionFormData.top = new FormAttachment(0,50);

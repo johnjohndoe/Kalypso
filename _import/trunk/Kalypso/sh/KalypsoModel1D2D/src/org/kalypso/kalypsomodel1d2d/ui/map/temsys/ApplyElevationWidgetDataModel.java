@@ -86,6 +86,8 @@ public class ApplyElevationWidgetDataModel
                     ELEVATION_THEME,
                     NODE_THEME};
   
+  private boolean ignoreMapSelection = false;
+  
   
   public ApplyElevationWidgetDataModel( )
   {
@@ -225,6 +227,10 @@ public class ApplyElevationWidgetDataModel
   public void selectionChanged( IFeatureSelection selection )
   {
     //TODO pat maybe get th list from dataModel
+    if(ignoreMapSelection)
+    {
+      return;
+    }
     List<IFE1D2DNode> nodes =  new ArrayList<IFE1D2DNode>();
     for(EasyFeatureWrapper wrapper:selection.getAllFeatures())
     {
@@ -238,6 +244,14 @@ public class ApplyElevationWidgetDataModel
     setSelectedNode( nodes );
   }
 
+  public void setIgnoreMapSelection(boolean ignoreMapSelection)
+  {
+    this.ignoreMapSelection = ignoreMapSelection;
+  }
   
+  public boolean getIgnoreMapSelection()
+  {
+    return ignoreMapSelection;
+  }
   
 }
