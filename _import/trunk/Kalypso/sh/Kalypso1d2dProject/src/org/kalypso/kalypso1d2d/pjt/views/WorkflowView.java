@@ -33,7 +33,7 @@ public class WorkflowView extends ViewPart
 
   private WorkflowControl m_workflowControl;
 
-  final ActiveWorkContext m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+  protected ActiveWorkContext m_activeWorkContext;
 
   private final IActiveContextChangeListener m_contextListener = new IActiveContextChangeListener()
   {
@@ -53,6 +53,8 @@ public class WorkflowView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_workflowControl.createControl( parent );
+    m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+    m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
     m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
   }
 
@@ -87,8 +89,7 @@ public class WorkflowView extends ViewPart
   {
     super.init( site, memento );
     m_workflowControl = new WorkflowControl();
-    m_workflowControl.restoreState( memento );
-    m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
+    m_workflowControl.restoreState( memento );    
   }
 
   /**

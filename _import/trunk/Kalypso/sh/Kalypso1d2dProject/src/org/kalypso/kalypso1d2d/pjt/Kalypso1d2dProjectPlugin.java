@@ -41,7 +41,6 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    m_activeWorkContext = new ActiveWorkContext();
   }
 
   /**
@@ -89,6 +88,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   public static ActiveWorkContext getActiveWorkContext( )
   {
+    if( m_activeWorkContext == null )
+    {
+      m_activeWorkContext = new ActiveWorkContext();
+    }
     return m_activeWorkContext;
   }
 }

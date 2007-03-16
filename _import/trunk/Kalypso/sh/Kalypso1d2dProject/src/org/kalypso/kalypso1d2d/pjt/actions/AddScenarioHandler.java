@@ -14,8 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.wizards.NewSimulationModelControlBuilder;
 
 import de.renew.workflow.WorkflowCommandHandler;
@@ -25,9 +23,6 @@ import de.renew.workflow.WorkflowCommandHandler;
  */
 public class AddScenarioHandler extends WorkflowCommandHandler
 {
-
-  protected ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
-
   /**
    * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */

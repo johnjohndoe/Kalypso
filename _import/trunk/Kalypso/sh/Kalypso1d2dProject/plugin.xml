@@ -50,9 +50,10 @@
 	<extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Kalypso 1d2d"
             class="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+            icon="icons/kalypso1d2d.png"
+            id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            name="Kalypso 1d2d">
       </perspective>      
    </extension>
    
@@ -62,29 +63,15 @@
       <view
             allowMultiple="false"
             class="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
+            icon="icons/tree.gif"
             id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
             name="Szenarien"/>
-      <view
-            allowMultiple="false"
-            class="org.kalypso.kalypso1d2d.pjt.views.ActivitiesView"
-            id="org.kalypso.afgui.views.ActivitiesView"
-            name="Workflow Activities View"/>
        <view
-            allowMultiple="false"
-            class="org.kalypso.kalypso1d2d.pjt.views.TasksView"
-            id="org.kalypso.afgui.views.TasksView"
-            name="Workflow Task View"/>
-       <view
-            allowMultiple="false"
-            class="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
-            id="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
-            name="Aktivitäten"/>
-       <view
-            allowMultiple="false"
-            class="org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessClsCollectionView"
-            id="org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessClsCollectionView"
-            name="Roughness Modeller View"/>
-            
+             allowMultiple="false"
+             class="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
+             icon="icons/nuvola_select/loop.png"
+             id="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
+             name="Aktivitäten"/>         
    </extension>
    
    	
@@ -121,6 +108,8 @@
      </extension>
      
      <extension point="org.eclipse.ui.handlers">
+     
+     <!--*** Element2D context handler ***-->
 		 <handler
 		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Element2D">
@@ -132,6 +121,8 @@
 		       </with>
 		     </activeWhen>
 		 </handler>
+		 
+     <!--*** Element1D context handler ***-->
 		 <handler
 		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Element1D">
@@ -143,28 +134,32 @@
 		       </with>
 		    </activeWhen>
 		 </handler>
-   <handler
-         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Parameters1D">
-      <activeWhen>
-         <with variable="activeContexts">
-            <iterate operator="or">
-               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
-            </iterate>
-         </with>
-      </activeWhen>
-   </handler>
-   <handler
-         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+		 
+     <!--*** _FlowRelationship (Parameters1D) context handler ***-->		 
+		 <handler
+	           class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+	           commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Parameters1D">
+		     <activeWhen>
+		         <with variable="activeContexts">
+		            <iterate operator="or">
+		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
+		            </iterate>
+		         </with>
+		     </activeWhen>
+		 </handler>
+	
+	 <!--*** BoundaryCondition context handler ***-->	 
+		 <handler
+		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
          commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#NodalBCDef">
-      <activeWhen>
-         <with variable="activeContexts">
-            <iterate operator="or">
-               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
-            </iterate>
-         </with>
-      </activeWhen>
-   </handler>
+              <activeWhen>
+                 <with variable="activeContexts">
+                    <iterate operator="or">
+                       <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
+                    </iterate>
+                 </with>
+              </activeWhen>
+         </handler>
 		 <handler
 		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#ContinuityLine">
@@ -176,70 +171,17 @@
 		       </with>
 		    </activeWhen>
 		 </handler>
-			   
+
+ 	 <!--*** handlers for scenario management ***-->			   
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.AddScenarioHandler"
 	           commandId="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenarioHandler"
 	           commandId="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>	     
-	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportBaseMapHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad"/>
-	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad"/>
-	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportLineShpHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShapeImport"/>	           
-	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
-	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
-	           <parameter
-	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-	                 value="maps/fenet.gmt"/>
-	           <parameter
-	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-	                 value="NO_LAYER"/>
-	        </class>
-	     </handler>
-      <handler
-            class="de.renew.workflow.NullWorkflowCommandHandler"
-            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport"/>
-	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm"/>
-      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNet">
-         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
-            <parameter
-                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-                  value="maps/fenet.gmt"/>
-            <parameter
-                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
-         </class>
-      </handler>
-      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNetParameters">
-         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
-            <parameter
-                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-                  value="maps/fenet.gmt"/>
-            <parameter
-                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
-         </class>
-      </handler>
-	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportDiscreatisationModel1D2DHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport"/>
-	      <handler
-	            class="org.kalypso.kalypso1d2d.pjt.actions.ImportObservationHandler"
-	            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSerLoad"/>
-	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>
-	           
-	     <handler
+
+ 	 <!--*** import handlers ***-->
+ 	 	 <handler 
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad">
 	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
 	           <parameter
@@ -251,6 +193,23 @@
 	        </class>
 	     </handler>
 	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportBaseMapHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>			   	           
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportObservationHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSerLoad"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportLineShpHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShapeImport"/>	           
+
+ 	 <!--*** general net editing handler ***-->	     
+	     <handler
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
 	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
 	           <parameter
@@ -261,6 +220,50 @@
 	                 value="NO_LAYER"/>
 	        </class>
 	     </handler>
+	     
+ 	 <!--*** 1D-editing handlers ***-->	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
+	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+	           <parameter
+	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+	                 value="maps/fenet.gmt"/>
+	           <parameter
+	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+	                 value="NO_LAYER"/>
+	        </class>
+	     </handler>
+	     <handler
+	           class="de.renew.workflow.NullWorkflowCommandHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport"/>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm"/>
+	     <handler
+               class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
+               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap"/>	           	           
+	     <handler
+	     	   commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNet">
+         	<class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+	                  value="maps/fenet.gmt"/>
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+	                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+	        </class>
+      	 </handler>
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNetParameters">
+	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+	                  value="maps/fenet.gmt"/>
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+	                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship"/>
+	        </class>
+	     </handler>
+	     
+ 	 <!--*** 2D-editing handlers ***-->	     
 	     <handler
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup">
 	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
@@ -272,52 +275,44 @@
 	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
 	        </class>
 	     </handler>
-	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
-	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
-	            <parameter
-	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-	                  value="maps/roughness.gmt"/>
-	            <parameter
-	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-	                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}RoughnessPolygon"/>
-	        </class>
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportDiscreatisationModel1D2DHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport"/>	           
+	     <handler
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
 	     </handler>
-	     
-      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
-         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
-            <parameter
-                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-                  value="maps/fenet.gmt"/>
-            <parameter
-                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
-         </class>
-      </handler>
-	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
-	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-		                 value="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget"/>
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-		                 value="org.kalypso.model1d2d"/>
-	           </class>
+	     <handler
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
 	     </handler>
-	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
-	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-		                 value="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget"/>
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-		                 value="org.kalypso.model1d2d"/>
-	        </class>
+	     <handler
+	     	   commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
 	     </handler>
-	     
-	     
+
+ 	 <!--*** 1D/2D transition handlers ***-->	     	     	     	     	     	     	     
 	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
@@ -327,8 +322,7 @@
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
 		                 value="org.kalypso.model1d2d"/>
 	        </class>
-	     </handler>
-	     
+	     </handler>	     
 	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
@@ -340,25 +334,17 @@
 	        </class>
 	     </handler>
 	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
-	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-		                 value="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget"/>
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-		                 value="org.kalypso.model1d2d"/>
+ 	 <!--*** roughness handlers ***-->	     	     	     	     	     	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
+	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+	                  value="maps/roughness.gmt"/>
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+	                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}RoughnessPolygon"/>
 	        </class>
 	     </handler>
-	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
-	    	  <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler">
-	          	 <parameter
-	                   name="org.kalypso.kalypso1d2d.pjt.OpenFeatureViewCommand.resource"
-	                   value="templates/control.gft"/>           
-		       </class>
-	     </handler>
-	     
 	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
 	    	  <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler">
 	          	 <parameter
@@ -366,43 +352,33 @@
 	                   value="templates/roughness.gft"/>           
 		       </class>
 	     </handler>
-      <handler
-            class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
-            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap"/>     
+	     
+ 	 <!--*** boundary conditions handlers ***-->	     	     	     	     	     	     	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
+	        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+	                  value="maps/fenet.gmt"/>
+	            <parameter
+	                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+	                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}BoundaryCondition"/>
+	        </class>
+	     </handler>   
+
+ 	 <!--*** calculation handlers ***-->	     	     	     	     	     	     	     
+	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
+	    	  <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler">
+	          	 <parameter
+	                   name="org.kalypso.kalypso1d2d.pjt.OpenFeatureViewCommand.resource"
+	                   value="templates/control.gft"/>           
+		       </class>
+	     </handler>     
 	</extension>
-        <extension
-         point="org.eclipse.ui.commands">
-      <category
-            id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"
-            name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"/>
-      <command
-            categoryId="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"
-            defaultHandler="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler"
-            description="Opens the map view on a resource"
-            id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand"
-            name="Open map">
-         <commandParameter
-               id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-               name="Resource"
-               optional="false"/>
-         <commandParameter
-               id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-               name="Layer"
-               optional="true"/>
-      </command>
-   </extension>
-    <extension
-          id="KalypsoEnterpriseSH"
-          point="org.eclipse.core.runtime.products">
-       <product
-             application="org.kalypso.afgui.AFGUIApplication"
-             name="KalypsoEnterpriseSH"/>
-    </extension>
     
-         <extension
+   <extension
            point="org.eclipse.ui.intro.configExtension">
         <configExtension
               configId="org.kalypso.model.product.configId"
               content="content/ext.xml"/>
-     </extension>
+   </extension>
 </plugin>

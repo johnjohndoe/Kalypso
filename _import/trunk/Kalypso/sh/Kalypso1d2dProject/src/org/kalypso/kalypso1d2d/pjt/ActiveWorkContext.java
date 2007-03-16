@@ -11,7 +11,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -21,7 +20,6 @@ import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.workflow.IWorkflowSystem;
 import org.kalypso.afgui.workflow.Workflow;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
-import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
 /**
  * Represents the work context for a user. A work context is made of:
@@ -73,12 +71,6 @@ public class ActiveWorkContext
     {
       window.addPerspectiveListener( m_perspectiveWatcher );
       m_registries.add( window );
-
-      final IWorkbenchPage activePage = window.getActivePage();
-      if( activePage.getPerspective().getId().equals( Perspective.ID ) )
-      {
-        activePage.addPartListener( m_perspectiveWatcher );
-      }
     }
 
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
