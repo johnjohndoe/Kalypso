@@ -229,23 +229,14 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       public void widgetSelected( SelectionEvent e )
       {
         m_sourceFile = chooseFile( m_sourceFile );
-        m_textFileSource.setText( m_sourceFile.getPath() );
-        m_targetFile = m_project.getLocation().append( "/imports/" + m_sourceFile.getName() + ".zml" ).toFile();
-        // m_targetFile = new File(m_sourceFile.getParentFile().getPath() + "/TestDWD.zml");
-        // if(m_targetFile.exists())
-        // m_targetFile.delete();
-        // try
-        // {
-        // m_targetFile.createNewFile();
-        // }
-        // catch( IOException e1 )
-        // {
-        // e1.printStackTrace();
-        // }
-        validate();
+        if( m_sourceFile != null )
+        {
+          m_textFileSource.setText( m_sourceFile.getPath() );
+          m_targetFile = m_project.getLocation().append( "/imports/" + m_sourceFile.getName() + ".zml" ).toFile();
+          validate();
+        }
       }
     } );
-    // line 2
 
     Label formatLabel = new Label( group, SWT.NONE );
     formatLabel.setText( "Format " );
@@ -254,6 +245,24 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_formatCombo.add( m_adapter );
     final ListContentProvider provider = new ListContentProvider();
     m_formatCombo.setContentProvider( provider );
+
+//    ViewerFilter filter;
+//
+//    filter = new ViewerFilter()
+//    {
+//      @Override
+//      public boolean select( Viewer viewer, Object parentElement, Object element )
+//      {
+//
+////        if( (( -- ELEMENT TYPE --) element).------------- )
+////          return true;
+////        else
+//          return false;
+//      }
+//    };
+//
+//    m_formatCombo.addFilter( filter );
+
     m_formatCombo.setLabelProvider( new ILabelProvider()
     {
       public Image getImage( Object element )
@@ -370,8 +379,13 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     }
     dialog.open();
     String fileName = dialog.getFileName();
-    String filterPath = dialog.getFilterPath();
-    return new File( filterPath, fileName );
+    if( fileName != null && fileName.length() > 0 )
+    {
+      String filterPath = dialog.getFilterPath();
+      return new File( filterPath, fileName );
+    }
+    else
+      return null;
   }
 
   /**

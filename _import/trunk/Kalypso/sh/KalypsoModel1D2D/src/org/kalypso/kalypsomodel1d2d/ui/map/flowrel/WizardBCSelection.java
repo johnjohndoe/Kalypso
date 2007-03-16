@@ -1,0 +1,110 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+
+import java.util.HashMap;
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.Messages;
+
+/**
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ */
+public class WizardBCSelection extends Wizard implements INewWizardKalypsoImport
+{
+  private IStructuredSelection initialSelection;
+
+  private WizardBCSelectionPage1 mPage;
+
+  IFolder m_scenarioFolder;
+
+  /**
+   * Construct a new instance and initialize the dialog settings for this instance.
+   */
+  public WizardBCSelection( )
+  {
+    super();
+  }
+
+  /**
+   * @param workbench
+   *          the current workbench
+   * @param selection
+   *          the current object selection
+   */
+  public void init( IWorkbench workbench, IStructuredSelection selection )
+  {
+    initialSelection = selection;
+//    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
+  }
+
+  /**
+   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
+   */
+  public void initModelProperties( HashMap<String, Object> map )
+  {
+//    m_scenarioFolder = (IFolder) map.get( "ScenarioFolder" );
+    // m_project = (IProject) map.get( "Project" );
+    // m_projectFolder = (String) map.get( "ProjectFolder" );
+  }
+
+  @Override
+  public void addPages( )
+  {
+    mPage = new WizardBCSelectionPage1( "aaaaa" );
+    addPage( mPage );
+    mPage.init( initialSelection );
+  }
+
+  /**
+   * This method is called by the wizard framework when the user presses the Finish button.
+   */
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
+
+}
