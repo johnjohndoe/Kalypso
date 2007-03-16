@@ -103,7 +103,7 @@ public class RoughnessCls implements IRoughnessCls
 
   public double getMarsh( )
   {
-    return FeatureHelper.getAsDouble( m_Feature, KalypsoModelRoughnessConsts.WBR_PROP_MARSH, Double.NaN );
+    return FeatureHelper.getAsDouble( m_Feature, KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.NaN );
   }
 
   /*
@@ -153,7 +153,7 @@ public class RoughnessCls implements IRoughnessCls
    */
   public void setMarsh( double marsh ) throws IllegalArgumentException
   {
-    m_Feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_MARSH, Double.valueOf( marsh ) );
+    m_Feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.valueOf( marsh ) );
   }
 
   // /Ask nico for details
