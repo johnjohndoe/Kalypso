@@ -4,7 +4,7 @@
  <c1d2d:VEGETA>true</c1d2d:VEGETA>
  <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
  <c1d2d:startsim/>
- <c1d2d:IEDSW>0</c1d2d:IEDSW>
+ <c1d2d:IEDSW>5</c1d2d:IEDSW>
  <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
  <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
  <c1d2d:OMEGA/>

@@ -95,10 +95,10 @@
         <gft:validatorlabel property="c1d2d:startsim" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Anzahl der Zeitschritte (instationär)" visible="true" tooltip="NCYC" style="SWT.NONE">
+        <gft:label text="Anzahl der Zeitschritte (instationär)" visible="true" tooltip="Anzahl der Zeitschritte (instationär)" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:NCYC" tooltip="NCYC" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:NCYC" tooltip="Anzahl der Zeitschritte (instationär)" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -178,7 +178,7 @@
         <gft:label text="Gleichungsdeaktivierung" visible="true" tooltip="Deaktivierung von nicht benötigten Gleichungen (konvergente Freiheitsgrade)" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:combo property="c1d2d:IDRPT" tooltip="IDRPT" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:combo property="c1d2d:IDRPT" tooltip="Deaktivierung von nicht benötigten Gleichungen (konvergente Freiheitsgrade)" style="SWT.DROP_DOWN | SWT.READ_ONLY">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:combo>
         <gft:label visible="false" style="SWT.NONE">

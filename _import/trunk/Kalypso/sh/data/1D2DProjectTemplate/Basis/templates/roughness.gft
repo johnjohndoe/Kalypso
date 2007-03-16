@@ -8,13 +8,11 @@
             <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL" heightHint="200" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
             <ns1:gistableview>
 	            <ns1:layer>
-		            <ns1:column alignment="SWT.CENTER" editable="true" format="" name="description" width="250"/>
-		            <ns1:column alignment="SWT.CENTER" editable="true" format="" name="name" width="250"/>
+		            <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="250"/>
 					<ns1:column alignment="SWT.CENTER" editable="true" format="" name="ks" width="70"/>
 					<ns1:column alignment="SWT.CENTER" editable="true" format="" name="axay" width="70"/>					
 					<ns1:column alignment="SWT.CENTER" editable="true" format="" name="dp" width="70"/>					
-					<ns1:column alignment="SWT.CENTER" editable="true" format="" name="eddy" width="120"/>					
-					<ns1:column alignment="SWT.CENTER" editable="true" format="" name="charactV" width="170"/>					
+		            <ns1:column alignment="SWT.LEFT" editable="true" format="" name="description" width="250"/>
 			        <ns1:sort inverse="false" propertyName="name"/>
 		        </ns1:layer>
             </ns1:gistableview>
