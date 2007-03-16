@@ -163,10 +163,10 @@ public class TempGrid
   
         /* Paint a linestring. */
 //        g.drawPolyline( arrayX, arrayY, arrayX.length );
-        drawHandles( g, arrayX, arrayY, pointRectSize);        
+        //drawHandles( g, arrayX, arrayY, pointRectSize);        
         
         //cache draw points
-        drawPoints=points; 
+        //drawPoints=points; 
         try
         {
           paintEdges( g, projection );
