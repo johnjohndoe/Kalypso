@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 
 
@@ -51,5 +55,18 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   public CreateNodalBCFlowrelationWidget(  )
   {
     super( "Randbedingung erzeugen", "Randbedinung für einen FE-Knoten erzeugen", IBoundaryCondition.QNAME, IBoundaryCondition.class );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#doCreateNewobject()
+   */
+  @Override
+  protected void doCreateNewobject( )
+  {
+    final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard();
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = display.getActiveShell();
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
   }
 }

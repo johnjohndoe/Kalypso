@@ -51,4 +51,13 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
   {
     super( "King Parameter hinzufügen", "King Parameter einem FE-Knoten zuordnen", IKingFlowRelation.QNAME, IKingFlowRelation.class );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#doCreateNewobject()
+   */
+  @Override
+  protected void doCreateNewobject( )
+  {
+    // TODO Auto-generated method stub
+  }
 }

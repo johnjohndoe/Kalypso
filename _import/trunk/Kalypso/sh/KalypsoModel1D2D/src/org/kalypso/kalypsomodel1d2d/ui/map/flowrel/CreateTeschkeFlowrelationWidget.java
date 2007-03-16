@@ -51,4 +51,13 @@ public class CreateTeschkeFlowrelationWidget extends AbstractCreateFlowrelationW
   {
     super( "Teschke Parameter hinzufügen", "Teschke Parameter einem FE-Knoten zuordnen", ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#doCreateNewobject()
+   */
+  @Override
+  protected void doCreateNewobject( )
+  {
+    // TODO Auto-generated method stub
+  }
 }

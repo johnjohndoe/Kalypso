@@ -44,14 +44,14 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class NodalBCSelectionWizard extends Wizard implements INewWizardKalypsoImport
+public class NodalBCSelectionWizard extends Wizard implements IWizard
 {
   private IStructuredSelection initialSelection;
 
@@ -65,17 +65,6 @@ public class NodalBCSelectionWizard extends Wizard implements INewWizardKalypsoI
   public NodalBCSelectionWizard( )
   {
     super();
-  }
-
-  /**
-   * @param workbench
-   *          the current workbench
-   * @param selection
-   *          the current object selection
-   */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
-  {
-    initialSelection = selection;
     setWindowTitle( "Wizard title" );
   }
 

@@ -80,7 +80,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Gernot Belger
  */
-public class AbstractCreateFlowrelationWidget extends AbstractWidget
+public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 {
   private final int m_grabRadius = 20;
 
@@ -219,6 +219,9 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_flowRelCollection == null )
       return;
 
+    doCreateNewobject();
+    // TODO: move the stuff below in the method above
+
     final CommandableWorkspace workspace = m_flowTheme.getWorkspace();
 
     if( m_existingFlowRelation == null )
@@ -281,4 +284,6 @@ public class AbstractCreateFlowrelationWidget extends AbstractWidget
       }
     } );
   }
+
+  protected abstract void doCreateNewobject( );
 }

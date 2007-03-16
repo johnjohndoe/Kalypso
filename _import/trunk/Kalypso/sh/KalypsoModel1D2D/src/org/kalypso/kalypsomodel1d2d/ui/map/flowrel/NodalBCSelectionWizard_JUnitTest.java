@@ -43,6 +43,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author antanas
@@ -52,10 +55,10 @@ public class NodalBCSelectionWizard_JUnitTest extends TestCase
 {
   public final void test( )
   {
-    NodalBCSelectionWizard wizard = new NodalBCSelectionWizard();
-    wizard.init( null, null );
-    WizardDialog dialog = new WizardDialog( null, wizard );
-    dialog.create();
+    final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard();
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = display.getActiveShell();
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
   }
 }
