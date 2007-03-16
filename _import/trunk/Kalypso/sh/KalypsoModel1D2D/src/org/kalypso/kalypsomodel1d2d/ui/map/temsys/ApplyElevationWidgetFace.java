@@ -113,7 +113,7 @@ class ApplyElevationWidgetFace
 
   private FormToolkit toolkit;
 
-  private ListViewer areaViewer;
+ 
 
   private Section elevationSelectStatus;
 
@@ -215,14 +215,11 @@ class ApplyElevationWidgetFace
 
   };
 
-  private TableViewer elevationListTableViewer;
+  
   private ColorModelChangeComponent colorModelChangeComponent;
-
-  private Image image_goToTerrain;
-
-  private Image image_Down;
-
-  private Image image_Up;
+  
+  private ElevationModelSystemEditorComponent eleSystemEditorComponent;
+ 
 
   private IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
 
@@ -270,8 +267,8 @@ class ApplyElevationWidgetFace
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
     areaSelectSection.setLayoutData( tableWrapData );
-    areaSelectSection.setExpanded( false );
-    areaSelectSection.setEnabled( false );
+    areaSelectSection.setExpanded( true );
+    areaSelectSection.setEnabled( true );
 
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
@@ -293,21 +290,6 @@ class ApplyElevationWidgetFace
     createSelectRegion( areaSelectSection );
     return rootPanel;
   }
-
-//  protected Canvas createCanvas( Composite parent, int style, PaintListener pl )
-//  {
-//    Canvas c = new Canvas( parent, style );
-//    if( pl != null )
-//    {
-//      c.addPaintListener( pl );
-//    }
-//    return c;
-//  }
-
-//  protected Canvas createCanvas( Composite parent, PaintListener pl )
-//  {
-//    return createCanvas( parent, SWT.NONE, pl );
-//  }
 
   private void createSelectColor( Section elevationColorConfig )
   {
@@ -334,165 +316,13 @@ class ApplyElevationWidgetFace
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 5 );
     clientComposite.setLayoutData( formData );
-    guiCreateSelectElevationModel( clientComposite );
+//    guiCreateSelectElevationModel( clientComposite );
+    eleSystemEditorComponent= new ElevationModelSystemEditorComponent();
+    eleSystemEditorComponent.createControl( dataModel, toolkit, clientComposite );
 
   }
 
-  private void guiCreateSelectElevationModel( Composite elevationComposite )
-  {
-    FormData elevFormData;
-
-    elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( 0, 5 );
-    elevFormData.top = new FormAttachment( 0, 5 );
-    Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
-    // GridData labelGridData = new GridData( GridData.FILL_BOTH );
-    // labelGridData.horizontalSpan = 2;
-    terrainModelLabel.setText( "Select the Terrain Model" );
-    terrainModelLabel.setLayoutData( elevFormData );
-
-    elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( 0, 10 );
-    elevFormData.top = new FormAttachment( terrainModelLabel, 5 );
-    elevFormData.height = 60;
-
-    elevationListTableViewer = new TableViewer( elevationComposite, SWT.FILL | SWT.BORDER );
-    Table elevationList = elevationListTableViewer.getTable();
-    elevationListTableViewer.setContentProvider( new ArrayContentProvider() );
-    elevationListTableViewer.setLabelProvider( new ElevationListLabelProvider() );
-    elevationList.setLinesVisible( true );
-    elevationList.setLayoutData( elevFormData );
-    
-    ITerrainElevationModelSystem elevationModelSystem = dataModel.getElevationModelSystem();
-    if( elevationModelSystem == null )
-    {
-      elevationListTableViewer.setInput( new Object[] {} );
-    }
-    else
-    {
-      terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
-      if( terrainElevationModels == null )
-      {
-        elevationListTableViewer.setInput( new Object[] {} );
-      }
-      else
-      {
-        System.out.println( "SIZE : " + terrainElevationModels.size() );
-        elevationListTableViewer.setInput( terrainElevationModels.toArray() );
-      }
-    }
-    elevationListTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      public void selectionChanged( SelectionChangedEvent event )
-      {
-        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-
-        // nameSel = (String) selection.getFirstElement();
-        if( selection.getFirstElement() == null )
-          throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
-        else
-        {
-          if( selection.getFirstElement() instanceof ITerrainElevationModel )
-          {
-            ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
-            dataModel.setElevationModel( firstElement );
-//            inputText.setText( firstElement.getName() );
-          }
-        }
-        areaSelectSection.setEnabled( true );
-        areaSelectSection.setExpanded( true );
-      }
-    } );
-
-    elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
-    elevFormData.top = new FormAttachment( terrainModelLabel, 5 );
-    Button moveUpBtn = new Button( elevationComposite, SWT.PUSH );
-    image_Up = new Image( 
-                        elevationComposite.getDisplay(),
-                        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/list_up.gif" ).getImageData() );
-    moveUpBtn.setImage( image_Up );
-    moveUpBtn.setLayoutData( elevFormData );
-    moveUpBtn.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent event )
-      {
-      String selectedString = stringRemoveBraces( elevationListTableViewer.getSelection().toString() );
-        int selectedStringIndex = terrainElevationModels.indexOf( selectedString );
-
-        if( terrainElevationModels.indexOf( selectedString ) != 0 )
-        {
-          ITerrainElevationModel destString = terrainElevationModels.get( (terrainElevationModels.indexOf( selectedString ) - 1) );
-          terrainElevationModels.remove( destString );
-          terrainElevationModels.add( selectedStringIndex, (ITerrainElevationModel) destString );
-          System.out.println( selectedString + " ," + destString );
-          System.out.println( (terrainElevationModels.indexOf( selectedString )) - 1 + " ," + terrainElevationModels.indexOf( selectedString ) );
-        }
-        elevationListTableViewer.refresh();
-      }
-
-    } );
-    elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
-    elevFormData.top = new FormAttachment( moveUpBtn, 3 );
-
-    Button moveDownBtn = new Button( elevationComposite, SWT.PUSH );
-    image_Down = new Image(
-                        elevationComposite.getDisplay(),
-                        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/list_down.gif" ).getImageData() );
-    moveDownBtn.setImage( image_Down );
-
-    moveDownBtn.setLayoutData( elevFormData );
-    moveDownBtn.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent event )
-      {
-       String selectedString = stringRemoveBraces( elevationListTableViewer.getSelection().toString() );
-        int selectedStringIndex = terrainElevationModels.indexOf( selectedString );
-        if( terrainElevationModels.indexOf( selectedString ) != terrainElevationModels.size() - 1 )
-        {
-          ITerrainElevationModel destString = terrainElevationModels.get( (terrainElevationModels.indexOf( selectedString ) + 1) );
-          terrainElevationModels.remove( destString );
-          terrainElevationModels.add( selectedStringIndex, destString );
-        }
-        elevationListTableViewer.refresh();
-//
-      }
-    } );
-
-    elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
-    elevFormData.bottom = new FormAttachment( 100, 0 );
-
-    Button showTerrain = new Button( elevationComposite, SWT.PUSH );
-//    showTerrain.setText( "Goto Terrain" );
-    showTerrain.setToolTipText( "Geländemodell anzeigen und maximieren" );
-    image_goToTerrain = new Image( 
-                        elevationComposite.getDisplay(), 
-                        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/goTo_Terrain.gif" ).getImageData() );
-    showTerrain.setImage( image_goToTerrain );
-    showTerrain.setLayoutData( elevFormData );
-    showTerrain.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent event )
-      {
-        areaSelectSection.setEnabled( true );
-        areaSelectSection.setExpanded( true );
-        ITerrainElevationModel elevationModel = dataModel.getElevationModel();
-        if( elevationModel != null )
-        {
-          dataModel.getMapPanel().setBoundingBox( elevationModel.getBoundingBox() );
-        }
-
-      }
-
-    } );
-
-  }
-
+  
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
@@ -514,49 +344,9 @@ class ApplyElevationWidgetFace
 
   }
 
-  public void setInput( Object input )
-  {
-    Object oldInput = areaViewer.getInput();
-    if( oldInput == input )
-    {
-      areaViewer.refresh();
-    }
-    else
-    {
-      areaViewer.setInput( input );
+  
 
-    }
-  }
-
-  class ElevationListLabelProvider extends LabelProvider
-  {
-
-    public Image getImage( Object element )
-    {
-
-      return null;
-    }
-
-    public String getText( Object element )
-    {
-      if( element instanceof ITerrainElevationModel )
-      {
-        String name = ((ITerrainElevationModel) element).getName();
-        if( name != null )
-        {
-          return name;
-        }
-        else
-        {
-          return ((ITerrainElevationModel) element).getGmlID();
-        }
-      }
-      else
-      {
-        throw new RuntimeException( "Only terrain elevation model are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
-      }
-    }
-  }
+  
 
   private IntegerFieldEditor handleWidth;
 

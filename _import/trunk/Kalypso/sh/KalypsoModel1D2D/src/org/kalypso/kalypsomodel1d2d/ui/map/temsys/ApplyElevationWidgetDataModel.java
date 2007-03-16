@@ -47,6 +47,7 @@ import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -252,6 +253,27 @@ public class ApplyElevationWidgetDataModel
   public boolean getIgnoreMapSelection()
   {
     return ignoreMapSelection;
+  }
+  
+  public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels()
+  {
+    ITerrainModel terrainModel = getTerrainModel();
+    if(terrainModel==null)
+    {
+      return null;
+    }
+    
+    ITerrainElevationModelSystem elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
+    if( elevationModelSystem == null )
+    {
+      return null;
+    }
+    else
+    {
+      
+      IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
+      return terrainElevationModels;
+    }
   }
   
 }
