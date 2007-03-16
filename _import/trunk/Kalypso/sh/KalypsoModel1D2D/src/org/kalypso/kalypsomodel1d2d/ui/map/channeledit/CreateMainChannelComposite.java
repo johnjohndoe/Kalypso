@@ -41,12 +41,19 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.awt.Insets;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -58,6 +65,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -67,9 +75,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
@@ -90,6 +103,8 @@ import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+
+import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;
 
 import de.belger.swtchart.layer.IChartLayer;
 
@@ -206,7 +221,7 @@ public class CreateMainChannelComposite extends Composite
           @Override
           public void widgetSelected( final SelectionEvent e )
           {
-            m_data.convertToModel();
+            handleConvertButtonPressed();
           }
         } );
 
@@ -487,7 +502,7 @@ public class CreateMainChannelComposite extends Composite
   private Control createBankSelectionSection( Composite parent, IKalypsoFeatureTheme[] bankThemes )
   {
     Section bankSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    Composite sectionClient = new Composite( bankSection, SWT.NONE );
+    Composite sectionClient = m_toolkit.createComposite( bankSection, SWT.NONE );
     sectionClient.setLayout( new GridLayout( 2, false ) );
     bankSection.setClient( sectionClient );
     bankSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.16" ) ); //$NON-NLS-1$
@@ -495,6 +510,7 @@ public class CreateMainChannelComposite extends Composite
     bankSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.17" ) ); //$NON-NLS-1$
 
     final ComboViewer combviewerBank1 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_toolkit.adapt( combviewerBank1.getControl(), true, false );
     combviewerBank1.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     combviewerBank1.setContentProvider( new ArrayContentProvider() );
     combviewerBank1.setLabelProvider( new LabelProvider() );
@@ -534,9 +550,9 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     /* Button for the first bank selection */
-    final Button chooseFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
-    chooseFirstBankButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final Button chooseFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE );
     m_buttonList.add( chooseFirstBankButton );
+    chooseFirstBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
     chooseFirstBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
     final Image selImage = KalypsoModel1D2DUIImages.ID_SELECT.createImage();
     chooseFirstBankButton.setImage( selImage );
@@ -569,6 +585,7 @@ public class CreateMainChannelComposite extends Composite
     // drawFirstBankButton.setVisible( false );
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_toolkit.adapt( combviewerBank2.getControl(), true, false );
     combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     combviewerBank2.setContentProvider( new ArrayContentProvider() );
     combviewerBank2.setLabelProvider( new LabelProvider() );
@@ -607,8 +624,8 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     /* Button for the second bank selection */
-    final Button chooseSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
-    chooseSecondBankButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final Button chooseSecondBankButton = m_toolkit.createButton( sectionClient, null, SWT.TOGGLE );
+    chooseSecondBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
     m_buttonList.add( chooseSecondBankButton );
     chooseSecondBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.24" ) ); //$NON-NLS-1$
     chooseSecondBankButton.setImage( selImage );
@@ -642,13 +659,14 @@ public class CreateMainChannelComposite extends Composite
     Label bankLabel = new Label( sectionClient, SWT.NULL );
     bankLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.28" ) ); //$NON-NLS-1$
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridData.horizontalSpan = 1;
+    // gridData.horizontalSpan = 1;
     bankLabel.setLayoutData( gridData );
 
     final Spinner spinNumBankIntersections = new Spinner( sectionClient, SWT.NONE );
 
     final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
-    gridDataSpin.horizontalSpan = 1;
+    // gridDataSpin.horizontalSpan = 1;
+
     spinNumBankIntersections.setLayoutData( gridDataSpin );
     spinNumBankIntersections.setDigits( 0 );
     spinNumBankIntersections.setMinimum( 2 );
@@ -737,10 +755,10 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
-    /* Button for the wspm-profile selection */
     GridData gridData = new GridData();
-    gridData.horizontalAlignment = SWT.FILL;
+    gridData.horizontalAlignment = SWT.RIGHT;
 
+    /* Button for the wspm-profile selection */
     final Button chooseProfilesButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE );
     m_buttonList.add( chooseProfilesButton );
     chooseProfilesButton.setLayoutData( gridData );
@@ -1012,5 +1030,21 @@ public class CreateMainChannelComposite extends Composite
       m_widget.setDelegate( null );
     }
     updateData( true );
+  }
+
+  protected void handleConvertButtonPressed( )
+  {
+    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        m_data.convertToModel();
+        return Status.OK_STATUS;
+      }
+    };
+    final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
+    ErrorDialog.openError( getShell(), "Flussschlauchgenerator", "Konvertierung fehlgeschlagen", status );
   }
 }
