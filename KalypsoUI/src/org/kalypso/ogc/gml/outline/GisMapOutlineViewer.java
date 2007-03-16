@@ -46,21 +46,19 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableTreeViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTree;
-import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
-import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -70,7 +68,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListener, SelectionListener, ICommandTarget
 {
-  protected TableTreeViewer m_viewer;
+  protected TreeViewer m_viewer;
 
   private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
 
@@ -94,11 +92,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
 
   public void createControl( final Composite parent )
   {
-//    final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
-//    tree.addSelectionListener( this );
-
-    m_viewer = new TableTreeViewer( parent, SWT.SINGLE | SWT.CHECK);
-    m_viewer.getTableTree().addSelectionListener( this );
+    m_viewer = new TreeViewer( parent, SWT.SINGLE | SWT.CHECK );
+    m_viewer.getTree().addSelectionListener( this );
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 
@@ -169,11 +164,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
         return;
 
       final StructuredViewer viewer = m_viewer;
-      final TableTree tt = (TableTree) m_viewer.getControl();
+      final Tree tt = m_viewer.getTree();
       if( tt.isDisposed() )
         return;
-
-      final TableTreeItem[] items = tt.getItems();
 
       tt.getDisplay().asyncExec( new Runnable()
       {
@@ -181,9 +174,10 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
         {
           try
           {
+            final TreeItem[] items = tt.getItems();
             for( int i = 0; i < items.length; i++ )
             {
-              final TableTreeItem item = items[i];
+              final TreeItem item = items[i];
 
               if( !item.isDisposed() )
                 item.setChecked( mm.isThemeEnabled( (IKalypsoTheme) item.getData() ) );
@@ -207,7 +201,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
    */
   public void widgetSelected( final SelectionEvent e )
   {
-    final TableTreeItem ti = (TableTreeItem) e.item;
+    final TreeItem ti = (TreeItem) e.item;
     final Object data = ti.getData();
     // if( data instanceof IKalypsoTheme )
     // {
