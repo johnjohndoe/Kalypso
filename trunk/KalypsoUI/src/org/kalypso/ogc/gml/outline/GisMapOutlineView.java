@@ -65,6 +65,7 @@ import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -80,11 +81,11 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 {
   public static final String ID = "org.kalypso.ui.views.outline";
 
-  GisMapOutlineViewer m_viewer;
+  protected GisMapOutlineViewer m_viewer;
 
   private JobExclusiveCommandTarget m_commandTarget;
 
-  AbstractMapPart m_mapPart;
+  protected AbstractMapPart m_mapPart;
 
   private IPartListener m_partListener;
 
@@ -132,7 +133,11 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       @Override
       public void partActivated( final IWorkbenchPart part )
       {
-        if( part instanceof AbstractMapPart )
+        if( part instanceof AbstractMapPart && part instanceof IEditorPart && part.getSite().getWorkbenchWindow().getActivePage().isEditorAreaVisible() )
+        {
+          setMapPart( (AbstractMapPart) part );
+        }
+        else if( part instanceof AbstractMapPart && part instanceof IViewPart )
         {
           setMapPart( (AbstractMapPart) part );
         }
@@ -168,7 +173,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 
   }
 
-  void setMapPart( final AbstractMapPart mapPart )
+  protected void setMapPart( final AbstractMapPart mapPart )
   {
     m_mapPart = mapPart;
     String newName = "Outline";
