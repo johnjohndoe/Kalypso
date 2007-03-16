@@ -54,15 +54,11 @@ public class SimulationModelDBView extends ViewPart
 
   private static final String MEMENTO_PROJECT = "project";
 
-  TreeViewer tv;
+  protected TreeViewer m_tv;
 
-  private SimModelBasedContentProvider simModelBasedCP;
+  protected ActiveWorkContext m_activeWorkContext;
 
-  ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
-
-  private WorkflowDataLabelProvider labelProvider = new WorkflowDataLabelProvider();
-
-  private IActiveContextChangeListener activeProjectChangeListener = new IActiveContextChangeListener()
+  private IActiveContextChangeListener m_contextChangeListener = new IActiveContextChangeListener()
   {
     private IProject m_oldProject;
 
@@ -73,10 +69,10 @@ public class SimulationModelDBView extends ViewPart
       if( m_oldProject != newProject )
       {
         m_oldProject = newProject;
-        final IScenarioManager scenarioManager = activeWorkContext.getScenarioManager();
+        final IScenarioManager scenarioManager = m_activeWorkContext.getScenarioManager();
 
-        if( !tv.getControl().isDisposed() )
-          tv.setInput( scenarioManager );
+        if( !m_tv.getControl().isDisposed() )
+          m_tv.setInput( scenarioManager );
 
         if( m_scenarioFromMemento != null )
         {
@@ -84,13 +80,13 @@ public class SimulationModelDBView extends ViewPart
           m_scenarioFromMemento = null;
         }
       }
-      
-      if( scenarioToSet != null && !tv.getControl().isDisposed() )
+
+      if( scenarioToSet != null && !m_tv.getControl().isDisposed() )
       {
         final ITreeSelection selection = new TreeSelection( constructTreePath( scenarioToSet ) );
-        if( !tv.getSelection().equals( selection ) )
+        if( !m_tv.getSelection().equals( selection ) )
         {
-          tv.setSelection( selection, true );
+          m_tv.setSelection( selection, true );
           getSite().getPage().activate( SimulationModelDBView.this );
         }
       }
@@ -110,8 +106,6 @@ public class SimulationModelDBView extends ViewPart
     }
   };
 
-  private Composite m_top;
-
   private String m_scenarioFromMemento;
 
   private String m_projectFromMemento;
@@ -123,7 +117,8 @@ public class SimulationModelDBView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    activeWorkContext.addActiveContextChangeListener( activeProjectChangeListener );
+    m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+    m_activeWorkContext.addActiveContextChangeListener( m_contextChangeListener );
     if( memento != null )
     {
       m_scenarioFromMemento = memento.getString( MEMENTO_SCENARIO );
@@ -131,24 +126,20 @@ public class SimulationModelDBView extends ViewPart
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_top = new Composite( parent, SWT.FILL );
-    m_top.setLayout( new FillLayout() );
+    final Composite top = new Composite( parent, SWT.FILL );
+    top.setLayout( new FillLayout() );
 
-    tv = new TreeViewer( m_top, SWT.FILL );
-    simModelBasedCP = new SimModelBasedContentProvider();
-    tv.setContentProvider( simModelBasedCP );
-    getSite().setSelectionProvider( tv );
-    tv.setLabelProvider( labelProvider );
-    tv.setInput( activeWorkContext.getScenarioManager() );
-    tv.addSelectionChangedListener( new ISelectionChangedListener()
+    m_tv = new TreeViewer( top, SWT.FILL );
+    m_tv.setContentProvider( new SimModelBasedContentProvider() );
+    getSite().setSelectionProvider( m_tv );
+    m_tv.setLabelProvider( new WorkflowDataLabelProvider() );
+    m_tv.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -159,7 +150,7 @@ public class SimulationModelDBView extends ViewPart
         if( !selection.isEmpty() )
         {
           final Scenario scenario = (Scenario) selection.getPaths()[0].getLastSegment();
-          activeWorkContext.setCurrentSzenario( scenario );
+          m_activeWorkContext.setCurrentSzenario( scenario );
         }
       }
     } );
@@ -169,21 +160,23 @@ public class SimulationModelDBView extends ViewPart
       final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
       if( resource != null && resource.getType() == IResource.PROJECT )
       {
-        activeWorkContext.setActiveProject( (IProject) resource );
+        m_activeWorkContext.setActiveProject( (IProject) resource );
       }
       m_projectFromMemento = null;
     }
+    m_tv.setInput( m_activeWorkContext.getScenarioManager() );
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
   @Override
   public void setFocus( )
   {
-
+    if( m_tv != null )
+    {
+      m_tv.getControl().setFocus();
+    }
   }
 
   /**
@@ -192,14 +185,14 @@ public class SimulationModelDBView extends ViewPart
   @Override
   public void saveState( final IMemento memento )
   {
-    final IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection) m_tv.getSelection();
     final Object firstElement = selection.isEmpty() ? null : selection.getFirstElement();
     if( firstElement != null && firstElement instanceof Scenario )
     {
       final Scenario data = (Scenario) firstElement;
       memento.putString( MEMENTO_SCENARIO, data.getURI() );
     }
-    final IProject activeProject = activeWorkContext.getCurrentProject();
+    final IProject activeProject = m_activeWorkContext.getCurrentProject();
     if( activeProject != null )
     {
       final String projectPath = activeProject.getName();

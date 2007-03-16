@@ -54,6 +54,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.progress.UIJob;
@@ -135,6 +136,22 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     if( perspective.getId().equals( Perspective.ID ) )
     {
       page.addPartListener( this );
+      // set focus to scenario view
+      IViewPart scenarioView;
+      try
+      {
+        scenarioView = page.showView( SimulationModelDBView.ID );
+        if( scenarioView != null )
+        {
+          page.activate( scenarioView );
+        }
+      }
+      catch( final PartInitException e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+        ErrorDialog.openError( page.getWorkbenchWindow().getShell(), "Fehler", "Fehler beim Öffnen der Szenarioansicht", status );
+      }
     }
     else
     {

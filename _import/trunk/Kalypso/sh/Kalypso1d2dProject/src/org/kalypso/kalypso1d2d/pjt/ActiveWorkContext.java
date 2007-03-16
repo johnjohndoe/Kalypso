@@ -21,6 +21,7 @@ import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.workflow.IWorkflowSystem;
 import org.kalypso.afgui.workflow.Workflow;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
 /**
  * Represents the work context for a user. A work context is made of:
@@ -74,9 +75,9 @@ public class ActiveWorkContext
       m_registries.add( window );
 
       final IWorkbenchPage activePage = window.getActivePage();
-      if( activePage != null )
+      if( activePage.getPerspective().getId().equals( Perspective.ID ) )
       {
-        m_perspectiveWatcher.perspectiveActivated( activePage, activePage.getPerspective() );
+        activePage.addPartListener( m_perspectiveWatcher );
       }
     }
 
