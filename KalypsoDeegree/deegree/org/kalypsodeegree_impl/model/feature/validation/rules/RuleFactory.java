@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.validation.rules;
 
+import java.text.ParseException;
 import java.util.Vector;
 
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -53,6 +54,7 @@ import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinLengthRestriction;
 import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * This class serves as factory class. It shall provide created rules from a property. An other aspect is the check if
@@ -149,8 +151,25 @@ public abstract class RuleFactory
         if( restriction instanceof EnumerationRestriction )
         {
           /* Add the Rule. */
-          EnumerationRestriction enumerationrestriction = (EnumerationRestriction) restriction;
-          rules.add( new EnumerationRule( enumerationrestriction.getEnumeration(), enumerationrestriction.getLabels() ) );
+          final EnumerationRestriction enumerationrestriction = (EnumerationRestriction) restriction;
+          final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+          final String[] enumValues = enumerationrestriction.getEnumeration();
+          final Object[] enumValueObjects = new Object[enumValues.length];
+          for( int j = 0; j < enumValues.length; j++ )
+          {
+            final String enumValue = enumValues[j];
+            try
+            {
+              enumValueObjects[j] = typeHandler.parseType( enumValue );
+            }
+            catch( ParseException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+          
+          rules.add( new EnumerationRule( enumValueObjects, enumerationrestriction.getLabels() ) );
         }
 
         /* TODO: Add new rules here. */
