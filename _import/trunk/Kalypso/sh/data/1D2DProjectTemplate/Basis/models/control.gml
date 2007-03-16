@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<c1d2d:Control xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" gml:id="root">
+<c1d2d:Control xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" gml:id="root">
  <c1d2d:Version>NEW</c1d2d:Version>
  <c1d2d:VEGETA>true</c1d2d:VEGETA>
- <c1d2d:IOPTZD>0</c1d2d:IOPTZD>
  <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
  <c1d2d:startsim/>
  <c1d2d:IEDSW>0</c1d2d:IEDSW>
  <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
- <c1d2d:TBMIN>2000.0</c1d2d:TBMIN>
+ <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
  <c1d2d:OMEGA/>
  <c1d2d:ELEV/>
  <c1d2d:UNOM>0.5</c1d2d:UNOM>
@@ -26,4 +25,5 @@
  <c1d2d:AC1>1.5</c1d2d:AC1>
  <c1d2d:AC2>0.67</c1d2d:AC2>
  <c1d2d:AC3>0.04</c1d2d:AC3>
+ <c1d2d:IACCYC>1</c1d2d:IACCYC>
 </c1d2d:Control>

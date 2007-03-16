@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <gft:layer id="layer_1" featurePath="#fid#root" linktype="gml" xlink:href="../models/control.gml"/>
+    <gft:view typename="c1d2d:Timesteps" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
+        <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
+        <gft:gridLayout numColumns="4" horizontalSpacing="10"/>
+        <gft:label text="Zeitschrittvorgabe" visible="true" tooltip="Zeitschrittvorgabe der quasi stationären Berechnung" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="true"/>
+        </gft:label>
+        <gft:tupleResult property="om:result" tooltip="Zeitschrittvorgabe" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:om="http://www.opengis.net/om">
+            <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+        </gft:tupleResult>
+    </gft:view>
     <gft:view typename="c1d2d:Control" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
@@ -12,6 +22,7 @@
                 <gft:label text="Version" visible="true" tooltip="Version des Rechenkerns RMA 10S" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
+        
         <gft:combo property="c1d2d:Version" tooltip="Version des Rechenkerns RMA 10S" style="SWT.DROP_DOWN | SWT.READ_ONLY">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:combo>
@@ -21,10 +32,11 @@
         <gft:validatorlabel property="c1d2d:Version" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-<gft:label text="Berücksichtigung Bewuchs" visible="true" tooltip="VEGETA" style="SWT.NONE">
+        
+		<gft:label text="Berücksichtigung Bewuchs" visible="true" tooltip="Berücksichtigung der Bewuchsparameter bei der Berechnung" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:checkbox editable="true" property="c1d2d:VEGETA" tooltip="VEGETA" style="SWT.NONE">
+        <gft:checkbox editable="true" property="c1d2d:VEGETA" tooltip="Berücksichtigung der Bewuchsparameter bei der Berechnung" style="SWT.NONE">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:checkbox>
         <gft:label visible="false" style="SWT.NONE">
@@ -33,7 +45,8 @@
         <gft:validatorlabel property="c1d2d:VEGETA" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-                <gft:label text="Breitengrad" visible="true" tooltip="Breitengrad zur Ermittlung der Corioliskraft [°]" style="SWT.NONE">
+        
+        <gft:label text="Breitengrad" visible="true" tooltip="Breitengrad zur Ermittlung der Corioliskraft [°]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="c1d2d:OMEGA" tooltip="Breitengrad zur Ermittlung der Corioliskraft [°]" style="SWT.BORDER">
@@ -104,8 +117,22 @@
         <gft:validatorlabel property="c1d2d:NITN" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-		</gft:group>					
-
+        <gft:label text="Restart" visible="true" tooltip="Angabe des Restart Zeitschrittes" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="c1d2d:IACCYC" tooltip="Angabe des Restart Zeitschrittes" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:label visible="false" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:validatorlabel property="c1d2d:IACCYC" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+            <gft:subcomposite property="c1d2d:timesteps" style="SWT.NONE">
+                <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
+            </gft:subcomposite>
+		</gft:group>
 <!-- Konvergenz-->
         <gft:group text="Konvergenz" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
@@ -172,23 +199,11 @@
         </gft:validatorlabel>
 		</gft:group>
 		          
-<!-- Turbulenzmodell-->
+<!-- Wirbelviskosität-->
         <gft:group text="Turbulenzmodell" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
-		        <gft:label text="Turbulenzmodell" visible="true" tooltip="IOPTZD" style="SWT.NONE">
-            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-        </gft:label>
-        <gft:combo property="c1d2d:IOPTZD" tooltip="IOPTZD" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
-        </gft:combo>
-        <gft:label visible="false" style="SWT.NONE">
-            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-        </gft:label>
-        <gft:validatorlabel property="c1d2d:IOPTZD" visible="true" style="SWT.NONE">
-            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-        </gft:validatorlabel>
-                <gft:label text="Wirbelviskositätsansatz" visible="true" tooltip="" style="SWT.NONE">
+        <gft:label text="Wirbelviskositätsansatz" visible="true" tooltip="" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:combo property="c1d2d:IEDSW" tooltip="" style="SWT.DROP_DOWN | SWT.READ_ONLY">
