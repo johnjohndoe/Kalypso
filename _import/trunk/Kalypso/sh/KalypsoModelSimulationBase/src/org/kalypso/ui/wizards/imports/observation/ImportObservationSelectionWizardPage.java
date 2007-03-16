@@ -130,9 +130,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_adapter = createNativeAdapters();
   }
 
-  private List createNativeAdapters( )
+  private List<INativeObservationAdapter> createNativeAdapters( )
   {
-    final List adapters = new ArrayList();
+    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -388,7 +388,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     else
     {
       // m_textFileSource.setText( DEFAUL_FILE_LABEL );
-      error.append( "Quelle nicht ausgewählt\n" );
+      error.append( "Quelle nicht ausgewählt" );
       setPageComplete( false );
     }
     // m_buttonAppend.setEnabled( false );
