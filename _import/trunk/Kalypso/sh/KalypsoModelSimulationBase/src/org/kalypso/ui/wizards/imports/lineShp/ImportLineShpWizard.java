@@ -172,7 +172,7 @@ public class ImportLineShpWizard extends Wizard implements INewWizardKalypsoImpo
             copy( srcFileShape, dstFileShape, monitor );
             copy( finalSrcIndex, finalDstIndex, monitor );
             copy( finalSrcDBase, finalDstDBase, monitor );
-            final IFile file = m_scenarioFolder.getFile( "maps/base.gmt" );
+            final IFile file = m_scenarioFolder.getFile( "maps/fenet.gmt" );
             m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
             final Gismapview gismapview = GisTemplateHelper.loadGisMapView( file );
             final Layers layers = gismapview.getLayers();
