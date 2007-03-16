@@ -47,7 +47,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -210,21 +214,6 @@ public class FeatureCompositeGFTWrapper
   /**
    * GFT Files often points to an special Feature - with this function, you can replace an PLACEHOLDER with a feature
    * id.
-   * <p>
-   * Example:
-   * </p>
-   * <p>
-   * replace
-   * </p>
-   * <p>
-   * <gft:layer id="layer_1" featurePath="#fid#feature0x815" ...
-   * </p>
-   * <p>
-   * with
-   * </p>
-   * <p>
-   * <gft:layer id="layer_1" featurePath="#fid#%PLACEHOLDER%" ...
-   * </p>
    * 
    * @param project
    *          your active eclipse project
@@ -235,9 +224,29 @@ public class FeatureCompositeGFTWrapper
    * @param gmlId
    *          the id which will be replaced
    */
-  static public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final String gmlId ) throws IOException, CoreException
+  public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final String gmlId ) throws IOException, CoreException
   {
-    if( (project == null) || (templateFilePath == null) || (gftFile == null) || (gmlId == null) )
+    final HashMap<String, String> replacement = new HashMap<String, String>();
+    replacement.put( "%PLACEHOLDER%", gmlId );
+
+    createGftFile( project, templateFilePath, gftFile, replacement );
+  }
+
+  /**
+   * dto. - in this function you can replace different kind of keys and values (hashmap)
+   * 
+   * @param project
+   *          your active eclipse project
+   * @param templateFilePath
+   *          project relative file name
+   * @param gftFile
+   *          filePointer to new gft-File which will be created
+   * @param hReplacements
+   *          index[key, value] - keys will be replaced with their assigned values
+   */
+  public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final Map<String, String> hReplacements ) throws IOException, CoreException
+  {
+    if( (project == null) || (templateFilePath == null) || (gftFile == null) || (hReplacements == null) )
     {
       return;
     }
@@ -264,12 +273,17 @@ public class FeatureCompositeGFTWrapper
 
     input.close();
 
-    content = content.replaceAll( "%PLACEHOLDER%", gmlId );
+    final Set<Entry<String, String>> entrySet = hReplacements.entrySet();
+
+    for( final Entry<String, String> entry : entrySet )
+    {
+      content = content.replaceAll( entry.getKey(), entry.getValue() );
+    }
+
     final FileWriter writer = new FileWriter( gftFile );
-
     writer.write( content );
-
     writer.close();
+
     project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 }
