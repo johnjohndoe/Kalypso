@@ -46,12 +46,13 @@ import org.eclipse.jface.wizard.WizardDialog;
 
 /**
  * @author antanas
+ *
  */
-public class WizardBCSelection_JUnitTest extends TestCase
+public class NodalBCSelectionWizard_JUnitTest extends TestCase
 {
   public final void test( )
   {
-    WizardBCSelection wizard = new WizardBCSelection();
+    NodalBCSelectionWizard wizard = new NodalBCSelectionWizard();
     WizardDialog dialog = new WizardDialog( null, wizard );
     dialog.create();
     dialog.open();

@@ -47,23 +47,22 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
-import org.kalypso.ui.wizards.imports.Messages;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class WizardBCSelection extends Wizard implements INewWizardKalypsoImport
+public class NodalBCSelectionWizard extends Wizard implements INewWizardKalypsoImport
 {
   private IStructuredSelection initialSelection;
 
-  private WizardBCSelectionPage1 mPage;
+  private NodalBCSelectionWizardPage1 mPage;
 
   IFolder m_scenarioFolder;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public WizardBCSelection( )
+  public NodalBCSelectionWizard( )
   {
     super();
   }
@@ -93,7 +92,7 @@ public class WizardBCSelection extends Wizard implements INewWizardKalypsoImport
   @Override
   public void addPages( )
   {
-    mPage = new WizardBCSelectionPage1( "aaaaa" );
+    mPage = new NodalBCSelectionWizardPage1( "aaaaa" );
     addPage( mPage );
     mPage.init( initialSelection );
   }

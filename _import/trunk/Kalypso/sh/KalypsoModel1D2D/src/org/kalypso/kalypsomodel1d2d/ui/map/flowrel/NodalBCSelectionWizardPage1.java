@@ -43,29 +43,20 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypso.ui.wizards.imports.roughness.DataContainer;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  *
  */
-public class WizardBCSelectionPage1 extends WizardPage
+public class NodalBCSelectionWizardPage1 extends WizardPage
 {
-
-  protected WizardBCSelectionPage1( String pageName )
+  
+  protected NodalBCSelectionWizardPage1( String pageName )
   {
     super(pageName);
     // TODO Auto-generated constructor stub
