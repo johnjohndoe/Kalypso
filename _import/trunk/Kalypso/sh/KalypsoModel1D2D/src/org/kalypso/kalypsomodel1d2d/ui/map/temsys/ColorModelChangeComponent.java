@@ -68,6 +68,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SimpleElevationColorModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author congo
@@ -379,7 +383,7 @@ public class ColorModelChangeComponent
 
       public void widgetSelected( SelectionEvent e )
       {
-          redrawElevationLayer();
+        redrawElevationLayer();
 //        rgbChoice = colorSelector.getColorValue();
 //        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
 //        paintModel.setNoElevationColor( noColorAWTChoice );
@@ -444,6 +448,28 @@ public class ColorModelChangeComponent
       }
     } );
     // checkBtnOptionMinMax.getEnabled()= false;
+    
+//    Button noElevationColorBtn = noColorSelector.getButton();
+//    noElevationColorBtn.addSelectionListener( new SelectionAdapter()
+//    {
+//      
+//
+//      public void widgetSelected( SelectionEvent e )
+//      {
+//        redrawElevationLayer();
+//        rgbChoice = colorSelector.getColorValue();
+//        noColorAWTChoice = Color.getHSBColor( rgbChoice.getHSB()[0], rgbChoice.getHSB()[1], rgbChoice.getHSB()[2] );
+//        paintModel.setNoElevationColor( noColorAWTChoice );
+//      }
+//    } );
+//
+//    optionsColorFormData = new FormData();
+//    noElevationColorBtn.setText( "SELECT" );
+//    optionsColorFormData.left = new FormAttachment( noElevationColorLabel, 5 );
+//    optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
+//    noElevationColorBtn.setLayoutData( optionsColorFormData );
+//
+    
   }
   
   private Canvas createCanvas( Composite parent, int style, PaintListener pl )
@@ -463,7 +489,7 @@ public class ColorModelChangeComponent
   
   private final void redrawElevationLayer()
   {
-    ElevationTheme elevationTheme = dataModel.getElevationTheme();
+    IKalypsoFeatureTheme elevationTheme = dataModel.getElevationTheme();
     if(elevationTheme==null)
     {
       System.out.println("Elevation theme model is null");
@@ -471,7 +497,12 @@ public class ColorModelChangeComponent
     }
     else
     {
-      elevationTheme.fireKalypsoThemeEvent( null );
+      CommandableWorkspace workspace = elevationTheme.getWorkspace();
+      ModellEvent event= 
+        new FeatureStructureChangeModellEvent(
+            workspace,elevationTheme.getFeatureList().getParentFeature(),
+            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD);
+      workspace.fireModellEvent( event  );
     }
   }
   
