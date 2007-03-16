@@ -118,7 +118,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
 
   public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException
   {
-    super( "Cascading theme", mapModel );
+    super( layerType.getHref(), "Cascading", mapModel );
     m_mapViewRefUrl = layerType.getHref();
     URL url = null;
     try

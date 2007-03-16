@@ -78,7 +78,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
 
   public ScrabLayerFeatureTheme( final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( "", mapModel );
+    super( "Scrab-Layer", "Scrab", mapModel );
     m_selectionManager = selectionManager;
     final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
