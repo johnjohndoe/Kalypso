@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Workflow xmlns="http://www.kalypso.org/afgui/workflow" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#WF_Kalypso1D2D">
 	<Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing">
-		<Help>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</Help>
+		<Help>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. &#xa;Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. &#xa;Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</Help>
 		<Name>Preprocessing: Modellaufbau</Name>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad">
-			<Help>Daten aus dem Dateisystem laden</Help>
+			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
 			<Name>Daten laden</Name>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad">
-				<Help>Einladen einer Hintergrundkarte (TIFF/JPEG)</Help>
-				<Name>Import einer Karte</Name>
+				<Help>Einladen von Hintergrundkarten (TIFF)</Help>
+				<Name>Import von Hintergrundkarten</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad">
 				<Help>Einladen von Höhendaten (TIN/GRID)</Help>
 				<Name>Import von Höhendaten</Name>
 			</Task>
-			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RivNetLoad">
+<!--		<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RivNetLoad">
 				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
 				<Name>Import eines Gewässernetzes</Name>
 			</Task>
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad">
 				<Help>Einladen von 1D-Profildaten (WSPWIN/DA66)</Help>
 				<Name>Import von 1D-Profilen</Name>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
-					<Help>Zeigt Profile als Thema in Karte</Help>
-					<Name>Profile in Karte anzeigen</Name>
-				</Task>
 			</TaskGroup>
-			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad">
+-->		<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad">
 				<Help>Einladen von Polygonen zur Rauheitszonenabgrenzung (SHP)</Help>
-				<Name>Rauheitsshapes laden</Name>
+				<Name>Import von Rauheitsshapes</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSerLoad">
 				<Help>Einladen von Zeitreihendaten (WISKI)</Help>
 				<Name>Import von Zeitreihen</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShapeImport">
-				<Help>ESRI Shapedateien importieren</Help>
+				<Help>Einladen genereller Daten (SHP)</Help>
 				<Name>Import von Shapedateien</Name>
 			</Task>			
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
-			<Help>Hier sind alle Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes enthalten</Help>
+			<Help>Bereitstellung aller Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes.</Help>
 			<Name>Netzaufbau</Name>
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup">
 				<Help></Help>
 				<Name>1D-Gewässernetz</Name>
 				<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport">
-					<Help>Importieren von 1D-Finite-Elemente aus externen Daten</Help>
+					<Help>Importieren von 1D-Finite-Elementen von externen Datenquellen</Help>
 					<Name>Fremddaten importieren</Name>
 					<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm">
 						<Help>FE-1D-Netz aus stationärem Modell (WSPM) erzeugen</Help>
 						<Name>WSPM Modell</Name>
+					</Task>
+					<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
+						<Help>Zeigt Profile als Thema in der Karte an</Help>
+						<Name>Profile in Karte anzeigen</Name>
 					</Task>
 				</TaskGroup>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DNet">
@@ -73,95 +73,101 @@
 				<Name>2D-Netz</Name>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport">
 					<Help>Importiert ein 2D-Netz (KALYPSO2D)</Help>
-					<Name>2D-Netz laden</Name>
+					<Name>FE-2D-Netz laden</Name>
+				</Task>
+				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup">
+					<Help>Bearbeitung von 2D-Elementen</Help>
+					<Name>Netz bearbeiten</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
-					<Help>Generiert Flussschlauchelemente aus Profilen</Help>
+					<Help>Generiert Flussschlauchelemente aus Profilendaten. &#xa;Vorraussetzung hierfür ist ein in der Karte vorhandenes Profillinienthema, &#xa;sowie ein Thema, welches die Uferbereiche definiert.</Help>
 					<Name>Flussschlauchgenerator</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
-					<Help>Generiert ein regelmäßiges Elementnetz im spezifizierten Bereich</Help>
+					<Help>Generiert ein regelmäßiges FE-2D-Elementenetz mittels Definition vier gegenüberliegender Linienzüge.</Help>
 					<Name>Bandgenerator</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
-					<Help>Knoten werden mit Höhendaten versehen</Help>
+					<Help>Weist den FE-2D-Elementknoten mittels zuvor importierter Geländemodelle Höhen zu.</Help>
 					<Name>Höhen zuweisen</Name>
 				</Task>
 			</TaskGroup>
+		<!--
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CntrStrcGroup">
 				<Help></Help>
 				<Name>Bauwerkselemente</Name>
 			</TaskGroup>
+		-->
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransGroup">
 				<Help></Help>
 				<Name>1D-2D-Kopplungen</Name>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
-					<Help>Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie</Help>
+					<Help>Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.</Help>
 					<Name>1D-2D-Linienkopplung</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
-					<Help>Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen</Help>
+					<Help>Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen.</Help>
 					<Name>1D-2D-Elementkopplung</Name>
 				</Task>
 			</TaskGroup>
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod">
-			<Help>Rauheitszonen definieren sowie Bearbeitung der Rauheitsklassen</Help>
+			<Help>Rauheitszonen definieren sowie Rauheitsklassen bearbeiten.</Help>
 			<Name>Rauheitsmodellierung</Name>
-			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
-				<Help>Ermöglicht die Bearbeitung der Einträge in der globalen Rauheitsdatenbank</Help>
-				<Name>Rauheitsdatenbank bearbeiten</Name>
-			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
-				<Help>Ermöglicht die polygonale Definition von Rauheitszonen</Help>
+				<Help>Ermöglicht die Definition von Rauheitszonen auf Basis von Polygonthemen.</Help>
 				<Name>Rauheitszonen definieren</Name>
+			</Task>
+			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
+				<Help>Ermöglicht die Bearbeitung der Rauheitswerte einer Rauheitszone in einer globalen Rauheitsdatenbank.</Help>
+				<Name>Rauheitswerte bearbeiten</Name>
 			</Task>
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond">
 			<Help>Anfangswerte und Randbedingungen festlegen</Help>
 			<Name>Anfangswerte/Randbedingungen</Name>
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup">
-				<Help></Help>
+				<Help>Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.</Help>
 				<Name>Randbedingungen</Name>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodalBCDef">
-					<Help>Definition von Randbedingungen, die nur auf einen Knoten angewendet werden sollen</Help>
+					<Help>Definition von Randbedingungen, die auf einen Knoten angewendet werden.</Help>
 					<Name>Knotenrandbedingungen spezifizieren</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LineBCDef">
-					<Help>Definition von Randbedingungen, die auf eine Linie angewendet werden</Help>
+					<Help>Definition von Randbedingungen, die auf eine Linie angewendet werden.</Help>
 					<Name>Linienrandbedingungen definieren</Name>
 				</Task>
 			</TaskGroup>
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StSolGroup">
-				<Help></Help>
+				<Help>Für das erstmalige Anrechnen eines Modells benötigt man eine sog. Anfangslösung, &#xa;die den Modellzustand vor Beginn der Berechnung beschreibt. </Help>
 				<Name>Anfangslösung</Name>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StSolGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DefManStSol">
-					<Help>Definition von Anfangswerten (z.B. Lake-Solution)</Help>
-					<Name>Anfangswerte schätzen</Name>
+					<Help>Definition von Anfangswerten für die Berechnung (z.B. Teich-Lösung)</Help>
+					<Name>Anfangswerte angeben</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StSolGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ChoseRestSol">
-					<Help>Spezifikation eines Berechnungsergebnisses als Anfangswerte für eine neue Berechnung</Help>
+					<Help>Auswahl eines zuvor berechneten Ergebnisses, das als Anfangszustand &#xa;für eine neue Berechnung dienen soll.</Help>
 					<Name>Restartlösung spezifizieren</Name>
 				</Task>
 			</TaskGroup>
 		</TaskGroup>
 	</Phase>
 	<Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
-		<Help>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</Help>
+		<Help>Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung &#xa;und/oder Szenarienrechnung durchgeführt werden.</Help>
 		<Name>Processing: Kalibrieren und Rechnen</Name>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
-			<Help>Einstellung der generellen Berechnungsparameter</Help>
+			<Help>Einstellung genereller Berechnungsparameter</Help>
 			<Name>Berechnungseinstellungen</Name>
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef">
 			<Help></Help>
 			<Name>spezielle Ausgaben definieren</Name>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcLinesSet">
-				<Help>Kontinuitätslinien festlegen, die besonders behandelt werden sollen.</Help>
+				<Help>Definition von Messlinien, an denen während der Berechnung Daten &#xa;über den Abfluss und Wasserstand gesammelt werden sollen.</Help>
 				<Name>Kontinuitätslinien bestimmen</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodeObserveSet">
-				<Help>Knoten festlegen, für die während der Berechnung weitere Daten herausgeschrieben werden sollen</Help>
+				<Help>Definition von Messpunkten, an denen während der Berechnung Daten &#xa;über den Abfluss und Wasserstand  gesammelt werden sollen.</Help>
 				<Name>Ausgabeknoten bestimmen</Name>
 			</Task>
 		</TaskGroup>
@@ -175,21 +181,21 @@
 		</TaskGroup>
 	</Phase>
 	<Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
-		<Help>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</Help>
+		<Help>Nach der Druchführung der Strömungsberechungen können die Ergebnisse  &#xa;hier ausgewertet und visualisiert werden.</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView">
-			<Help></Help>
-			<Name>Einstellungen Draufsicht</Name>
+			<Help>Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.</Help>
+			<Name>Einstellungen Kartenansicht</Name>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VectorDispl">
-				<Help>Erstellt spezifizierte Ergebnisse in Vektorform</Help>
+				<Help>Stellt Strömungsgeschwindigkeiten anhand von Vektoren dar.</Help>
 				<Name>Vektorendarstellung</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ColoredDispl">
-				<Help>Erstellt spezifizierte Ergebnisse in Farbflächendarstellung</Help>
+				<Help>Stellt Berechnungsergebnisse anhand von Farbflächen dar.</Help>
 				<Name>Farbflächendarstellung</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#IsolineDispl">
-				<Help>Erstellt spezifizierte Ergebnisse in Isoliniendarstellung</Help>
+				<Help>Stellt Berechnungsergebnisse anhand von Isolinien dar.</Help>
 				<Name>Isoliniendarstellung</Name>
 			</Task>
 		</TaskGroup>
@@ -201,7 +207,7 @@
 				<Name>einzelne Schnitte</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Section" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LongSecDef">
-				<Help>Ermöglicht die Definition von Gewässerlängsschnitten auf der Basis definierter Querschnitte</Help>
+				<Help>Ermöglicht die Erstellung von Gewässerlängsschnitten auf Basis zuvor definierter Querschnitte</Help>
 				<Name>Längsschnitt</Name>
 			</Task>
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Section" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSeriesDispl">
