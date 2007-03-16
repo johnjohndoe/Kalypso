@@ -139,7 +139,8 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="IEDSW" default="0">
+					<!--TODO: Nico will implement the options 5 and 6 later-->
+					<element name="IEDSW" default="5">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wirbelviskositätsansatz</label>
@@ -148,6 +149,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="int">
+							<!--
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
@@ -161,23 +163,14 @@
 											<label>Skalierung über Elementlänge</label>
 										</documentation>
 									</annotation>
-								</enumeration>
-								<enumeration value="2">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Smagorinsky-Ansatz</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<!--
-								<enumeration value="-1">
+								</enumeration>-->
+								<!--<enumeration value="-1">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Eingabedaten verwenden Elementtypenabhängig?</label>
 										</documentation>
 									</annotation>
-								</enumeration>-->
-								<!--
+								</enumeration>
 								<enumeration value="3">
 									<annotation>
 										<documentation xml:lang="de">
@@ -192,6 +185,27 @@
 										</documentation>
 									</annotation>
 								</enumeration>-->
+								<enumeration value="5">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Konstante Wirbelviskosität</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="6">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>free shear-layer</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="2">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Smagorinsky-Ansatz</label>
+										</documentation>
+									</annotation>
+								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
@@ -273,7 +287,7 @@
 					<element name="UNOM" type="double" default="0.5">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>1D-Anfangsgeschwindigkeit</label>
+								<label>1D-Anfangsgeschwindigkeit [m/s]</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -382,6 +396,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gleichungsdeaktivierung</label>
+								<tooltip>Deaktivierung von nicht benötigten Gleichungen (konvergente Freiheitsgrade)</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -389,15 +404,15 @@
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>alle aktiv</label>
-											<tooltip>alle Gleichungen aktiv</tooltip>
+											<label>Keine Deaktivierung</label>
+											<tooltip>Alle Gleichungen aktiv</tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="1">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>mögliche deaktivieren</label>
+											<label>Mögliche deaktivieren</label>
 											<tooltip>Gleichungsdeaktivierung nach Deaktivierungskriterium (konvergente Freiheitsgrade)</tooltip>
 										</documentation>
 									</annotation>
@@ -448,7 +463,13 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="timesteps" type="c1d2d:TimestepPropertyType"/>
+					<element name="timesteps" type="c1d2d:TimestepPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zeitschritte</label>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
