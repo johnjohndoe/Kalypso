@@ -81,6 +81,11 @@ public abstract class ObjectCatalog<O> extends Storage
     {
       final ICatalog baseCatalog = m_manager.getBaseCatalog();
       final String uri = baseCatalog.resolve( systemID, publicID );
+      // BUGFIX: if uri now start with 'urn', the id was not resolved, so we just return
+      // Maybe there is a better way to handle that?
+      if( uri.startsWith( "urn" ) )
+        return null;
+      
       final URL urlFeatureStyle = resolver.resolveURL( uri );
 
       final IUrlResolver2 catalogResolver = new IUrlResolver2()
