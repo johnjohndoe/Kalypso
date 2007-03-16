@@ -242,7 +242,23 @@ public class StringModifier implements IFeatureModifier
   public String getLabel( final Feature f )
   {
     final Object value = getValue( f );
-    return value == null ? "" : value.toString(); //$NON-NLS-1$
+
+    // HACK
+    final Object result;
+    if( value instanceof List )
+    {
+      final List list = (List) value;
+      if( (list).size() == 0 )
+        result = null;
+      else if( (list).size() == 1 )
+        result = list.get( 0 );
+      else
+        result = list;
+    }
+    else
+      result = value;
+
+    return result == null ? "" : result.toString(); //$NON-NLS-1$
   }
 
   /**
