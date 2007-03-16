@@ -69,6 +69,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
@@ -89,7 +90,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
     super();
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
-    setWindowTitle( "Import Observation" );
+    setWindowTitle( Messages.getString("ImportObservationWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -105,7 +106,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       m_selection = new StructuredSelection( selectedResources );
     }
 
-    setWindowTitle( "Auswahl Observation" );
+    setWindowTitle( Messages.getString("ImportObservationWizard.1") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -114,7 +115,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
    */
   public void initModelProperties( HashMap<String, Object> map )
   {
-    m_project = (IProject) map.get( "Project" );
+    m_project = (IProject) map.get( "Project" ); //$NON-NLS-1$
   }
   
   /**
@@ -124,9 +125,9 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
   public void addPages( )
   {
     super.addPages();
-    m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" );
+    m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" ); //$NON-NLS-1$
 
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_project );
+    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_project ); //$NON-NLS-1$
     addPage( m_page1 );
     addPage( m_page2 );
 
@@ -230,8 +231,8 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
           for( int a = 0; a < axesNew.length; a++ )
             newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, axesNew[a] ), axesNew[a] );
       }
-      final String href = "";
-      final String id = "";
+      final String href = ""; //$NON-NLS-1$
+      final String id = ""; //$NON-NLS-1$
       final String name = srcObservation.getName();
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
@@ -244,7 +245,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       final Marshaller marshaller =  JaxbUtilities.createMarshaller(zmlJC);
       // use IResource
       final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
-      OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
+      OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );
       writer.close();

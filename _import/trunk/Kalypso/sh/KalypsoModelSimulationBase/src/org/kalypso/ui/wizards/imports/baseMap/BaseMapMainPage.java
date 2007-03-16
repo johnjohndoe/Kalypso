@@ -48,7 +48,7 @@ public class BaseMapMainPage extends WizardPage
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.description" ) );
   }
 
   /**
@@ -66,14 +66,14 @@ public class BaseMapMainPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    final Label label = new Label( container, SWT.NONE );
-    final GridData gridData = new GridData();
-    gridData.horizontalSpan = 3;
-    label.setLayoutData( gridData );
-    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
+    // final Label label = new Label( container, SWT.NONE );
+    // final GridData gridData = new GridData();
+    // gridData.horizontalSpan = 3;
+    //    label.setLayoutData( gridData );
+    //label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
-    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
+    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
     label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.4" ) );
 
@@ -95,7 +95,7 @@ public class BaseMapMainPage extends WizardPage
         browseForSourceFile();
       }
     } );
-    button.setText( "Browse.." );
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.BrowseButton" )); //$NON-NLS-1$
 
     // Coordinate system combo box
     new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$

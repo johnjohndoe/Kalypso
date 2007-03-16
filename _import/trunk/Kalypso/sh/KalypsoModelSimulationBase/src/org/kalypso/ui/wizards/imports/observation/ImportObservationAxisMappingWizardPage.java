@@ -22,6 +22,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.wizards.imports.Messages;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -83,7 +84,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   {
     super( pageName );
     setTitle( pageName );
-    setDescription( "Vorschau der Zuordnung der Axen.\n falls eine neue Observation angelegt wird, kann die Axenbeschriftung editiert werden" );
+    setDescription( Messages.getString("ImportObservationAxisMappingWizardPage.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -101,13 +102,13 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     m_topLevel.setLayout( gridLayout );
 
     Label labelSource = new Label( m_topLevel, SWT.NONE );
-    labelSource.setText( "Quelle" );
+    labelSource.setText( Messages.getString("ImportObservationAxisMappingWizardPage.1") ); //$NON-NLS-1$
     GridData data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelSource.setLayoutData( data );
 
     Label labelTarget = new Label( m_topLevel, SWT.NONE );
-    labelTarget.setText( "Ziel" );
+    labelTarget.setText( Messages.getString("ImportObservationAxisMappingWizardPage.2") ); //$NON-NLS-1$
     data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelTarget.setLayoutData( data );
@@ -175,8 +176,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       catch( Exception e )
       {
         e.printStackTrace();
-        MessageDialog.openInformation( getShell(), "Fehler beim laden der Zieldatei-Datei",
-            "Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich" );
+        MessageDialog.openInformation( getShell(), Messages.getString("ImportObservationAxisMappingWizardPage.3"), //$NON-NLS-1$
+            Messages.getString("ImportObservationAxisMappingWizardPage.4") ); //$NON-NLS-1$
       }
     }
 
@@ -222,7 +223,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
    */
   public IObservation getTargetObservation( final URL url ) throws SensorException
   {
-    final IObservation observation = ZmlFactory.parseXML( url, "targetFile" );
+    final IObservation observation = ZmlFactory.parseXML( url, "targetFile" ); //$NON-NLS-1$
     return observation;
   }
 

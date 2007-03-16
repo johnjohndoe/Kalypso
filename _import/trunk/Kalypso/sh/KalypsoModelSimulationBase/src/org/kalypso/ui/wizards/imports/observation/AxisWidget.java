@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ui.wizards.imports.Messages;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -96,7 +97,7 @@ public class AxisWidget extends Composite
     gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
     m_group.setLayout( gridLayout );
-    m_group.setText( "Axe" );
+    m_group.setText( Messages.getString("AxisWidget.0") ); //$NON-NLS-1$
 
     GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
@@ -106,19 +107,19 @@ public class AxisWidget extends Composite
     m_group.setLayoutData( data1 );
 
     Label labelName = new Label( m_group, SWT.NONE );
-    labelName.setText( "Name" );
+    labelName.setText( Messages.getString("AxisWidget.1") ); //$NON-NLS-1$
     GridData data = new GridData();
     data.horizontalAlignment = GridData.END;
     labelName.setLayoutData( data );
 
     m_textName = new Text( m_group, SWT.BORDER );
-    m_textName.setText( "text2" );
+    m_textName.setText( Messages.getString("AxisWidget.2") ); //$NON-NLS-1$
     data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     m_textName.setLayoutData( data );
 
     Label labelType = new Label( m_group, SWT.NONE );
-    labelType.setText( "Art" );
+    labelType.setText( Messages.getString("AxisWidget.3") ); //$NON-NLS-1$
     data = new GridData();
     data.horizontalAlignment = GridData.END;
     labelType.setLayoutData( data );

@@ -81,6 +81,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ui.wizards.imports.Messages;
 
 /**
  * @author doemming
@@ -90,7 +91,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 {
   protected IProject m_project;
 
-  private static final String DEFAUL_FILE_LABEL = "";
+  private static final String DEFAUL_FILE_LABEL = ""; //$NON-NLS-1$
 
   private final List m_adapter;
 
@@ -123,8 +124,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public ImportObservationSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( "Auswahl Observation" );
-    setTitle( "Auswahl der zu importierenden Observation" );
+    setDescription( Messages.getString("ImportObservationSelectionWizardPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString("ImportObservationSelectionWizardPage.2") ); //$NON-NLS-1$
     setPageComplete( false );
 
     m_adapter = createNativeAdapters();
@@ -136,7 +137,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" ); //$NON-NLS-1$
 
     if( extensionPoint == null )
       return adapters;
@@ -153,7 +154,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
         try
         {
-          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" );
+          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
           adapters.add( adapter );
         }
         catch( final CoreException e )
@@ -193,7 +194,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void createControlSource( Composite parent )
   {
     Group group = new Group( parent, SWT.NONE );
-    group.setText( "Quelle" );
+    group.setText( Messages.getString("ImportObservationSelectionWizardPage.5") ); //$NON-NLS-1$
 
     GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
@@ -206,7 +207,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     // line 1
     Label label = new Label( group, SWT.NONE );
-    label.setText( "von " );
+    label.setText( Messages.getString("ImportObservationSelectionWizardPage.6") ); //$NON-NLS-1$
 
     m_textFileSource = new Text( group, SWT.BORDER );
     m_textFileSource.setText( DEFAUL_FILE_LABEL );
@@ -218,7 +219,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_textFileSource.setLayoutData( data1 );
 
     Button button = new Button( group, SWT.PUSH );
-    button.setText( "Auswahl ..." );
+    button.setText( Messages.getString("ImportObservationSelectionWizardPage.7") ); //$NON-NLS-1$
     GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
@@ -231,15 +232,15 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         m_sourceFile = chooseFile( m_sourceFile );
         if( m_sourceFile != null )
         {
-          m_textFileSource.setText( m_sourceFile.getPath() );
+        m_textFileSource.setText( m_sourceFile.getPath() );
           m_targetFile = m_project.getLocation().append( "/imports/" + m_sourceFile.getName() + ".zml" ).toFile();
-          validate();
-        }
+        validate();
+      }
       }
     } );
 
     Label formatLabel = new Label( group, SWT.NONE );
-    formatLabel.setText( "Format " );
+    formatLabel.setText( Messages.getString("ImportObservationSelectionWizardPage.10") ); //$NON-NLS-1$
 
     m_formatCombo = new ComboViewer( group, SWT.NONE );
     m_formatCombo.add( m_adapter );
@@ -306,7 +307,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void createControlTarget( Composite parent )
   {
     Group group = new Group( parent, SWT.NONE );
-    group.setText( "Ziel" );
+    group.setText( Messages.getString("ImportObservationSelectionWizardPage.11") ); //$NON-NLS-1$
     GridLayout gridLayout3 = new GridLayout();
     group.setLayout( gridLayout3 );
     GridData data4 = new GridData();
@@ -362,10 +363,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     bottom.setLayout( gridLayout2 );
 
     m_buttonRetainMeta = new Button( bottom, SWT.CHECK );
-    m_buttonRetainMeta.setText( "Metadaten beibehalten" );
+    m_buttonRetainMeta.setText( Messages.getString("ImportObservationSelectionWizardPage.12") ); //$NON-NLS-1$
     m_buttonRetainMeta.setSelection( true );
     m_buttonAppend = new Button( bottom, SWT.CHECK );
-    m_buttonAppend.setText( "hinzufuegen statt ueberschreiben" );
+    m_buttonAppend.setText( Messages.getString("ImportObservationSelectionWizardPage.13") ); //$NON-NLS-1$
     m_buttonAppend.setSelection( true );
   }
 
@@ -381,9 +382,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     String fileName = dialog.getFileName();
     if( fileName != null && fileName.length() > 0 )
     {
-      String filterPath = dialog.getFilterPath();
-      return new File( filterPath, fileName );
-    }
+    String filterPath = dialog.getFilterPath();
+    return new File( filterPath, fileName );
+  }
     else
       return null;
   }
@@ -402,7 +403,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     else
     {
       // m_textFileSource.setText( DEFAUL_FILE_LABEL );
-      error.append( "Quelle nicht ausgewählt" );
+      error.append( Messages.getString("ImportObservationSelectionWizardPage.14") ); //$NON-NLS-1$
       setPageComplete( false );
     }
     // m_buttonAppend.setEnabled( false );
@@ -426,7 +427,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     if( error.length() > 0 )
       setErrorMessage( error.toString() );
     else
-      setMessage( "Eingaben OK" );
+      setMessage( Messages.getString("ImportObservationSelectionWizardPage.15") ); //$NON-NLS-1$
     fireSelectionChanged();
   }
 

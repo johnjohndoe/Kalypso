@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class PageSecond extends WizardPage
@@ -29,8 +30,8 @@ public class PageSecond extends WizardPage
   protected PageSecond( DataContainer data ) throws Exception
   {
     super( "Select Files and Relate" );
-    setTitle( "Select Files" );
-    setDescription( "Select the source and Destination Files" );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Title" ));//$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Description" ));//$NON-NLS-1$
     m_data = data;
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
     IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );

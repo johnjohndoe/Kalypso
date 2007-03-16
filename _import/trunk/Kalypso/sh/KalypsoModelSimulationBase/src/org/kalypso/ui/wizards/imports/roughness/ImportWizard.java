@@ -17,6 +17,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.Messages;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -55,7 +56,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
    */
   public void init( IWorkbench iWorkbench, IStructuredSelection iSelection )
   {
-    setWindowTitle( "Shape import" );
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ));//$NON-NLS-1$
     selection = iSelection;
   }
 

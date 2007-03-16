@@ -39,8 +39,8 @@ public class ElevationMainPage extends WizardPage
   public ElevationMainPage( )
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
-    // setDescription(Messages.getString( "ElevationWizard.2" ));
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.4" ) );
+    setDescription(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ));
   }
 
   /**
@@ -58,11 +58,11 @@ public class ElevationMainPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    final Label label = new Label( container, SWT.NONE );
-    final GridData gridData = new GridData();
-    gridData.horizontalSpan = 3;
-    label.setLayoutData( gridData );
-    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
+//    final Label label = new Label( container, SWT.NONE );
+//    final GridData gridData = new GridData();
+//    gridData.horizontalSpan = 3;
+//    label.setLayoutData( gridData );
+//    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
@@ -87,7 +87,7 @@ public class ElevationMainPage extends WizardPage
         browseForSourceFile();
       }
     } );
-    button.setText( "Browse.." );
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse" ) );
 
     initContents();
   }

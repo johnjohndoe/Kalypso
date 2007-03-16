@@ -41,7 +41,7 @@ public class LineShpMainPage extends WizardPage
   public LineShpMainPage( )
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.Title" ) );
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
   }
 
@@ -60,11 +60,11 @@ public class LineShpMainPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    final Label label = new Label( container, SWT.NONE );
-    final GridData gridData = new GridData();
-    gridData.horizontalSpan = 3;
-    label.setLayoutData( gridData );
-    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.3" ) );
+//    final Label label = new Label( container, SWT.NONE );
+//    final GridData gridData = new GridData();
+//    gridData.horizontalSpan = 3;
+//    label.setLayoutData( gridData );
+//    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
@@ -89,7 +89,7 @@ public class LineShpMainPage extends WizardPage
         browseForSourceFile();
       }
     } );
-    button.setText( "Browse.." );
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.Browse" ) );//$NON-NLS-1$
 
     button.setFocus();
     initContents();
