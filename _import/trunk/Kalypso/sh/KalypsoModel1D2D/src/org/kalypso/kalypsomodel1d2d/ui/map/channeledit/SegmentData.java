@@ -389,8 +389,10 @@ public class SegmentData
 
     wi = 0.5 * (startSegmentWidth + endSegmentWidth);
     // add the width of the segments inbetween
-    wi = wi + profile.getPoints().get( numProfPoints - 2 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - profile.getPoints().get( 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-
+    for( int i = 1; i < numProfPoints-2; i++ )
+    {
+      wi = wi + profile.getPoints().get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    }
     dZ = dArea / wi;
 
     String t = String.format( "Schlauchgenerator: Anpassung der Profilhöhen um: %f ", dZ, " m." );

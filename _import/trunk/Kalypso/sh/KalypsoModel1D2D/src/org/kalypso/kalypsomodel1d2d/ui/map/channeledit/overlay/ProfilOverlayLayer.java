@@ -187,12 +187,20 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final ProfilComparator comparator = new ProfilComparator( IWspmConstants.POINT_PROPERTY_BREITE );
     Collections.sort( points, comparator );
 
-    getProfilChartView().getChart().repaint();
+    
 
     /* check if the first or last intersection point was moved -> update bank linestrings */
     checkIntersectionPoints( gmPoint, oldStartWdith, oldEndWdith );
 
     m_data.completationCheck();
+    SegmentData currentSegment = m_data.getCurrentSegment( m_data.m_selectedSegment );
+    CreateChannelData.PROF prof = m_data.getCurrentProfile();
+    if (  prof == CreateChannelData.PROF.UP )
+      m_profile = currentSegment.getProfUpIntersProfile();
+    else
+      m_profile = currentSegment.getProfDownIntersProfile();
+    
+    getProfilChartView().getChart().repaint();
     m_widget.getPanel().repaint();
 
   }
