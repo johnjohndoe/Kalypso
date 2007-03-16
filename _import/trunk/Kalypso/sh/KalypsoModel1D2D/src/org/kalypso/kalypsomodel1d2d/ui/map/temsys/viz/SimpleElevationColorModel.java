@@ -134,8 +134,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
     {
       double brightness = minBrightness+elevation*(maxBrightness-minBrightness)/(maxElevation-minElevation);
       
-      System.out.println("This Color + brightness :"+this.hsb[0]+","+this.hsb[1]+","+brightness);
-      System.out.println("This Color :"+hsb[0]+","+hsb[1]+","+hsb[2]);
+//      System.out.println("This Color + brightness :"+this.hsb[0]+","+this.hsb[1]+","+brightness);
+//      System.out.println("This Color :"+hsb[0]+","+hsb[1]+","+hsb[2]);
      // Color.HSBtoRGB( hue, saturation, brightness )
       return Color.getHSBColor( this.hsb[0], this.hsb[1], (float) brightness );
       //new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )

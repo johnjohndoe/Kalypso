@@ -284,8 +284,8 @@ public class ColorModelChangeComponent
     
     
     hsb1 = Color.RGBtoHSB(baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(), null);
-    double minBrightness = hsb1[2];
-    double maxBrightness = 0.917;
+//    double minBrightness = hsb1[2];
+//    double maxBrightness = 0.917;
 
     //    if(Double.isNaN( elevation ))
 //    {
@@ -298,8 +298,8 @@ public class ColorModelChangeComponent
 //      
 //      System.out.println("This Color HS Brightness :"+hsb[0]+","+hsb[1]+","+brightness);
       Color color1 = Color.getHSBColor( hsb1[0], hsb1[1], hsb1[2] );
-      System.out.println("This Color - HSB+++++++++++:"+hsb1[0]+","+hsb1[1]+","+hsb1[2]+", Cololr:"+baseColor+ " color="+color1 +"Converted :" +
-          new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )));
+//      System.out.println("This Color - HSB+++++++++++:"+hsb1[0]+","+hsb1[1]+","+hsb1[2]+", Cololr:"+baseColor+ " color="+color1 +"Converted :" +
+//          new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )));
       //return Color.getHSBColor( hsb[0], hsb[1], (float)brightness );
       return color1;
     }
