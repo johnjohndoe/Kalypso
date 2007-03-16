@@ -74,17 +74,17 @@ public class WorkflowControl
 
     public void notHandled( final String commandId, final NotHandledException exception )
     {
-
+      // TODO: error handling
     }
 
     public void postExecuteFailure( final String commandId, final ExecutionException exception )
     {
-
+      // TODO error handling
     }
 
     public void postExecuteSuccess( final String commandId, final Object returnValue )
     {
-
+      // TODO error handling
     }
 
     public void preExecute( final String commandId, final ExecutionEvent event )
@@ -96,10 +96,16 @@ public class WorkflowControl
         {
           doTask( contextTaskGroup );
         }
+        catch( final NotHandledException nhe )
+        {
+          // ignore: just a parent task with no handler
+        }
         catch( final Exception e )
         {
           logger.log( Level.INFO, e.getLocalizedMessage() );
           logger.info( "Context task could not be executed: " + contextTaskGroup.getName() );
+          // TODO: error dialog?!
+          logger.log( Level.SEVERE, "Error handling task", e );
         }
       }
     }
@@ -304,9 +310,16 @@ public class WorkflowControl
     final IExecutionListener executionListener = new ExecutionListener( task );
     command.addExecutionListener( executionListener );
     // TODO Patrice show exception in list
-    final Object object = handlerService.executeCommand( command.getId(), null );
-    System.out.println( object );
-    command.removeExecutionListener( executionListener );
+    try
+    {
+      final Object object = handlerService.executeCommand( command.getId(), null );
+      if( object instanceof IStatus )
+        ErrorDialog.openError( m_treeViewer.getControl().getShell(), command.getName(), "Problems executing command", (IStatus) object );
+    }
+    finally
+    {
+      command.removeExecutionListener( executionListener );
+    }
   }
 
   Command getCommand( final ICommandService commandService, final String commandId )
