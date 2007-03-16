@@ -41,8 +41,6 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 {
   public static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"; //$NON-NLS-1$
 
-  public static final String PARAM_LAYER_ID = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layerID"; //$NON-NLS-1$
-
   public static final String PARAM_LAYER_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"; //$NON-NLS-1$
 
   public static final String NO_LAYER = "NO_LAYER";
@@ -50,8 +48,6 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
   private String m_resource;
 
   private String m_layerContext;
-
-  private String m_layerID;
 
   private IMapModell m_mapModell;
 
@@ -101,7 +97,6 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
         return Status.OK_STATUS; // OK status ok?
 
       final String layerContext = m_layerContext;
-      final String layerID = m_layerID;
       m_mapModell = mapModell;
 
       final Job job = new Job( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.3" ) ) //$NON-NLS-1$
@@ -132,27 +127,6 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
               }
             }
           }
-          else if( layerID != null )
-          {
-            final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-            final String activeId = activeTheme == null ? null : activeTheme.getID();
-            if( !layerID.equals( activeId ) )
-            {
-              final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-              for( final IKalypsoTheme theme : allThemes )
-              {
-                if( !theme.isLoaded() )
-                {
-                  theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
-                }
-                else
-                {
-                  maybeActivateTheme( theme );
-                }
-              }
-            }
-
-          }
 
           return Status.OK_STATUS;
         }
@@ -175,7 +149,6 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
       final Map parameterMap = (Map) data;
       m_resource = (String) parameterMap.get( PARAM_RESOURCE );
       m_layerContext = (String) parameterMap.get( PARAM_LAYER_FEATURE_TYPE );
-      m_layerID = (String) parameterMap.get( PARAM_LAYER_ID );
     }
     else
     {
@@ -200,19 +173,14 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
   {
     try
     {
-    final String themeContext = themeToActivate.getContext();
-    if( m_layerContext != null && m_layerContext.equals( themeContext ) )
-    {
-      logger.info( themeToActivate + " theme activated with feature type " + m_layerContext ); //$NON-NLS-1$
-      m_mapModell.activateTheme( themeToActivate );
+      final String themeContext = themeToActivate.getContext();
+      if( m_layerContext != null && m_layerContext.equals( themeContext ) )
+      {
+        logger.info( themeToActivate + " theme activated with feature type " + m_layerContext ); //$NON-NLS-1$
+        m_mapModell.activateTheme( themeToActivate );
+      }
     }
-    else if( m_layerID != null && m_layerID.equals( themeToActivate.getID() ) )
-    {
-      logger.info( themeToActivate + " theme activated with layer id " + m_layerID ); //$NON-NLS-1$
-      m_mapModell.activateTheme( themeToActivate );
-    }
-    }
-    catch( final Throwable t)
+    catch( final Throwable t )
     {
       t.printStackTrace();
     }
