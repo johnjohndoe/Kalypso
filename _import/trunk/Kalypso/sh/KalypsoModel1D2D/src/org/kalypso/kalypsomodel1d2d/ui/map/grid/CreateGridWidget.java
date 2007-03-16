@@ -22,9 +22,13 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -43,7 +47,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   
   private int m_radius=20;
   
-  
+  private IWidget m_delegateWidget = null;
   
   public CreateGridWidget( )
   {
@@ -310,6 +314,166 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     
   }
   public static final char ESC=0X01B; 
+  
+  /**
+   * @param e
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( KeyEvent e )
+  {
+    int code = e.getKeyCode();
+    MapPanel mapPanel = getMapPanel();
+
+    // TODO:
+    // zoom in "-"
+
+    if( e.isActionKey() )
+    {
+      System.out.println( "e:" + e );
+    }
+    /* zoom in */
+    if( code == KeyEvent.VK_PLUS )
+    {
+//      if( e.isShiftDown() )
+//      {
+        final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+        GM_Envelope wishBBox = null;
+
+        final GM_Position currentMax = currentBBox.getMax();
+        final GM_Position currentMin = currentBBox.getMin();
+
+        final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+        final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+        final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+        final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+
+        final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+        final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+        wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+        mapPanel.setBoundingBox( wishBBox );
+        
+//      }
+//      else
+//      {
+//        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+//      }
+
+    }
+    /* zoom out */
+    else if( code == KeyEvent.VK_MINUS )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+
+    // pan "arrows
+    else if( code == KeyEvent.VK_RIGHT )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    else if( code == KeyEvent.VK_LEFT )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    else if( code == KeyEvent.VK_UP )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    else if( code == KeyEvent.VK_DOWN )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    if( m_delegateWidget != null )
+      m_delegateWidget.keyPressed( e );
+    
+    mapPanel.repaint();
+  }
+
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
    */
@@ -361,40 +525,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     }
     else if(typed=='t')
     {
-      IMapModell mapModel=getMapPanel().getMapModell();
-      IFEDiscretisationModel1d2d model1d2d = 
-                 UtilMap.findFEModelTheme(  
-                                mapModel, 
-                                Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-      IKalypsoFeatureTheme theme=
-      UtilMap.findEditableThem(  
-           mapModel, 
-           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-      
-      CommandableWorkspace workspace = theme.getWorkspace();
-      try
-      {
-        ICommand command = 
-          gridPointCollector.getAddToModelCommand( 
-              mapPanel,model1d2d,workspace );
-        
-        workspace.postCommand( command );
-        reinit();//gridPointCollector.reset( mapModel.getCoordinatesSystem() );
-        
-        
-        System.out.println("GridCommand posted");
-      }
-      catch( Throwable e1 )
-      {
-        e1.printStackTrace();
-      }
+      convertToModell();
     }
-    else
-    {
-      
-      System.out.println("Char="+typed);
-    }
-    
   }
   
   /**
@@ -445,7 +577,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-     Control control = gridWidgetFace.createControl( parent, toolkit );
+     Control control = gridWidgetFace.createControl( parent, toolkit, this );
      gridWidgetFace.setInput( gridPointCollector );
      return control;
   }
@@ -458,5 +590,32 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
    gridWidgetFace.disposeControl(); 
   }
   
-   
+  public void convertToModell()
+  {
+    MapPanel mapPanel=getMapPanel();
+    IMapModell mapModel=getMapPanel().getMapModell();
+    IFEDiscretisationModel1d2d model1d2d = 
+             UtilMap.findFEModelTheme(  
+                            mapModel, 
+                            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    IKalypsoFeatureTheme theme=
+      UtilMap.findEditableThem(  
+       mapModel, 
+       Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+  
+    CommandableWorkspace workspace = theme.getWorkspace();
+    try
+    {
+      ICommand command = 
+        gridPointCollector.getAddToModelCommand( 
+            mapPanel,model1d2d,workspace );
+    
+      workspace.postCommand( command );
+      reinit();//gridPointCollector.reset( mapModel.getCoordinatesSystem() );
+    }
+    catch( Throwable e1 )
+    {
+      e1.printStackTrace();
+    }
+  }
 }

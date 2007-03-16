@@ -325,17 +325,23 @@ class GridPointCollector /*implements IGeometryBuilder*/
         int pointRectSize=lpcConfigs[i].getPointRectSize();
         if(b!=builder)
         {
-          b.paint( g, projection, null,pointRectSize);
-          
+          b.paint( g, projection, null, pointRectSize);
         }
         else
         {
-          b.paint( g, projection, currentPoint,pointRectSize );
+          b.paint( g, projection, currentPoint, pointRectSize );
         }
         i++;
     }
+    /* draw selected line */
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      builder=sides[actualSideKey];
+      builder.paintLine( g, projection, i, lpcConfigs[actualSideKey].getColor() );
+      g.setColor( curColor );     
+    }
     
-    g.setColor( curColor );
+    /* draw temp grid */
     tempGrid.paint( g, projection,lpcConfigs[0].getPointRectSize());
    
   }  
@@ -393,6 +399,8 @@ class GridPointCollector /*implements IGeometryBuilder*/
     {
       actualSideKey--;
       sides[actualSideKey].removeLastPoint( false );
+      if ( actualSideKey < 2 )
+        sides[actualSideKey].removeMaxNum(  );
     }
     
     fireStateChanged();
@@ -432,6 +440,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     if(actualSideKey<SIDE_MAX_NUM)
     {
       sides[actualSideKey].setSelected( false );
+      
     }
     
     actualSideKey=(actualSideKey+1) %SIDE_MAX_NUM;
@@ -645,6 +654,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
       return null;
     }
   }
+  
   
   /**
    * To get the with for the square that are drawn to show 

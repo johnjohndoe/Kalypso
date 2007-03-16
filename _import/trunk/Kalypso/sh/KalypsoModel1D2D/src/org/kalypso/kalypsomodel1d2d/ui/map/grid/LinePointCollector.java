@@ -44,19 +44,31 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * This class is a geometry builder for a line.
@@ -179,8 +191,7 @@ public class LinePointCollector
     // is stable in regard to zoom in/out
     if( !m_points.isEmpty() )
     {
-      
-      
+
       if(isSelected)
       {
         final int[][] points = getPointArrays( projection, null );
@@ -188,6 +199,7 @@ public class LinePointCollector
         
         g.drawPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
         g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
+       
         drawHandles( g, points[0], points[1],pointRectSize,selection );
       }
       else
@@ -199,6 +211,10 @@ public class LinePointCollector
   
         /* Paint a linestring. */
         g.drawPolyline( arrayX, arrayY, arrayX.length );
+        
+       
+
+          //paintLine(g, projection, width , color );
 //        if(!isFinished)
 //        {
           //do not draw handle if finish and not selected
@@ -331,6 +347,7 @@ public class LinePointCollector
   {
     m_points.clear();
     isFinished=false;
+    m_cnt_points = 0;
   }
   
   void reset(CS_CoordinateSystem crs)
@@ -633,11 +650,77 @@ public class LinePointCollector
                                       MapPanel mapPanel,
                                       int pointRectSize)
   {
+    if ( m_points.size()>0)
     return MapUtilities.calculateWorldDistance( 
                 mapPanel, m_points.get( 0 ), pointRectSize );
+    else
+      return 0;
+  }
+
+  public void removeMaxNum()
+  {
+    m_cnt_points = 0;
   }
   
+  public boolean isSelected()
+  {
+    return isSelected;
+  }
   
+  public void paintLine( final Graphics g, final GeoTransform projection, double width, Color color ) 
+  {
+    final GM_Position[] positions = new GM_Position[m_points.size()];
+    
+    for( int i = 0; i < positions.length; i++ )
+    {
+      positions[i] = m_points.get( i ).getPosition();
+    }
+    
+    GM_Curve curve = null;
+    try
+    {
+      curve = GeometryFactory.createGM_Curve( positions, m_crs );
+    }
+    catch( GM_Exception e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    
+    if( curve == null )
+      return;
+
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+
+    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+    defaultstroke = symb.getStroke();
+    // float[] dArray = new float[3];
+    // dArray[0] = 6;
+    // dArray[1] = 3;
+    stroke.setWidth( width );
+    stroke.setStroke( color );
+    // stroke.setDashArray( dArray );
+    symb.setStroke( stroke );
+
+
+    final DisplayElement de;
+    try
+    {
+      de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+      de.paint( g, projection );
+    }
+    catch( IncompatibleGeometryTypeException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+ 
+
+    // Set the Stroke back to default
+    symb.setStroke( defaultstroke );
+
+  }
   
   
 }
