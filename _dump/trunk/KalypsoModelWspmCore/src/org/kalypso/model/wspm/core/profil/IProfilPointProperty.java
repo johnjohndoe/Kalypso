@@ -59,19 +59,27 @@ public interface IProfilPointProperty
    * @return the doubleValue a new profilePoint should have for this property,
    *         <p>
    *         when added between two other profilePoints
+   * @param breite
+   *          the absolute position between the two points(i.e  {@link org.kalypso.model.wspm.core.IWspmConstants#POINT_PROPERTY_BREITE})
+   * @throws IllegalArgumentException
+   *           if {@link org.kalypso.model.wspm.core.IWspmConstants#POINT_PROPERTY_BREITE} is not available in both
+   *           points
    */
-  public double doInterpolation( final IProfilPoint point1, final IProfilPoint point2 );
-/**
- * @return all ProfilePointPropertyIds this Property depends on
- */
+  public double doInterpolation( final IProfilPoint point1, final IProfilPoint point2, final double breite );
+
+  /**
+   * @return all ProfilePointPropertyIds this Property depends on
+   */
   public String[] getDependencies( );
-/**
- * {@link IWspmConstants}
- */
+
+  /**
+   * the id for this ProfilepointProperty should be the same used in the dictonary {@link IWspmConstants}
+   */
   public String getId( );
-/**
- * @return a friendly name for this ProfilepointProperty
- * should be the same used in the dictonary {@link IWspmConstants}
- */
+
+  /**
+   * @return a friendly name for this ProfilepointProperty should be the same used in the dictonary
+   *         {@link IWspmConstants}
+   */
   public String getLabel( );
 }

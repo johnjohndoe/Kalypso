@@ -137,13 +137,15 @@ public class ProfilUtil
   {
     if( (startPoint == null) || (endPoint == null) )
       return null;
-      //throw new IllegalArgumentException( "Profilpunkt existiert nicht" );
     final IProfilPoint point = profile.createProfilPoint();
     final IProfilPointProperty[] properties = profile.getPointProperties();
+    final double b1 = startPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double l = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - b1;
+    final double breite = b1 + l / 2.0;
     for( final IProfilPointProperty property : properties )
     {
       final String propertyId = property.toString();
-      final Double m_x = property.doInterpolation( startPoint, endPoint );
+      final Double m_x = property.doInterpolation( startPoint, endPoint, breite );
       point.setValueFor( propertyId, m_x );
     }
     return point;
@@ -492,7 +494,7 @@ public class ProfilUtil
     startPoint = splitSegment( profile, segment1[0], segment1[1] );
     if( startPoint == null )
     {
-      System.out.println( "Profil konnte nicht abgeschnitten werden. Startpunkt nicht auf Profil. Setze ersten Profilpunkt.");
+      System.out.println( "Profil konnte nicht abgeschnitten werden. Startpunkt nicht auf Profil. Setze ersten Profilpunkt." );
       startPoint = profile.getPoints().getFirst();
       index1 = 0;
     }
@@ -504,13 +506,13 @@ public class ProfilUtil
     endPoint = splitSegment( profile, segment2[0], segment2[1] );
     if( endPoint == null )
     {
-      System.out.println( "Profil konnte nicht abgeschnitten werden. Endpunkt nicht auf Profil. Setze letzten Profilpunkt.");
+      System.out.println( "Profil konnte nicht abgeschnitten werden. Endpunkt nicht auf Profil. Setze letzten Profilpunkt." );
       endPoint = profile.getPoints().getLast();
       index2 = points.size() - 1;
     }
     else
       index2 = points.indexOf( segment2[1] );
-    
+
     points.add( index2, endPoint );
 
     final IProfilPoint[] toDelete_1 = points.subList( 0, index1 ).toArray( new IProfilPoint[0] );

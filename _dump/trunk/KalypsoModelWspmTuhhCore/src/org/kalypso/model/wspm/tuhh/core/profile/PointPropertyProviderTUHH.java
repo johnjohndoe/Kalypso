@@ -69,18 +69,20 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
   {
     return m_properties.keySet().toArray( new String[0] );
   }
+
   private final IProfilPointProperty createPointProperty( final String property )
   {
 
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) )
-      return new PointProperty( property,"Oberkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE }, true );
+      return new PointProperty( property, "Oberkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE }, true, true );
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
-      return new PointProperty( property,"Unterkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE }, true );
+      return new PointProperty( property, "Unterkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE }, true, true );
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
-      return new PointProperty( property,"Oberkante Wehr", 0.0001, new String[0], true );
-    
+      return new PointProperty( property, "Oberkante Wehr", 0.0001, new String[0], true, true );
+
     return null;
   }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createPointProperty(java.lang.String)
    */

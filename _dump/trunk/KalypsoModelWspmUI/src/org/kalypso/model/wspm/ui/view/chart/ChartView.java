@@ -58,7 +58,7 @@ public class ChartView extends AbstractProfilViewPart2
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView";
 
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
-  
+
   public ChartView( )
   {
     super();
@@ -85,7 +85,7 @@ public class ChartView extends AbstractProfilViewPart2
       editorID = null;
 
     m_profilPart.setProfil( getProfilEventManager(), getFile(), editorID );
-    
+
     return control;
   }
 
@@ -126,9 +126,9 @@ public class ChartView extends AbstractProfilViewPart2
   public void onProfilViewDataChanged( )
   {
     // probably nothing to do
-    if(( m_profilPart.getViewData() != null) && ( m_profilPart.getProfil() != null) )
+    if( (m_profilPart.getViewData() != null) && (m_profilPart.getProfil() != null) )
     {
-      final String[] markerTypes =  m_profilPart.getProfil().getPointMarkerTypes();
+      final String[] markerTypes = m_profilPart.getProfil().getPointMarkerTypes();
       for( final String markerTyp : markerTypes )
       {
         m_profilPart.getViewData().setMarkerVisibility( markerTyp, true );

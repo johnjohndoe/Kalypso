@@ -71,27 +71,28 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
    */
   public String[] getPointProperties( )
   {
-    return new String[]{IWspmConstants.POINT_PROPERTY_BREITE,  IWspmConstants.POINT_PROPERTY_HOEHE,  IWspmConstants.POINT_PROPERTY_HOCHWERT,  IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmConstants.POINT_PROPERTY_RAUHEIT ,IWspmConstants.POINT_PROPERTY_BEWUCHS_AX,  IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP};
+    return new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT,
+        IWspmConstants.POINT_PROPERTY_RAUHEIT, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP };
   }
 
   private final IProfilPointProperty createPointProperty( final String property )
   {
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return new PointProperty( property,"Breite", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, false );
+      return new PointProperty( property, "Breite", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, false, true );
     if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new PointProperty( property,"Höhe", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BREITE }, false );
+      return new PointProperty( property, "Höhe", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BREITE }, false, true );
     if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-      return new PointProperty( property,"Bewuchs Ax", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP }, true );
+      return new PointProperty( property, "Bewuchs Ax", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP }, true, false );
     if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-      return new PointProperty( property,"Bewuchs Ay", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP }, true );
+      return new PointProperty( property, "Bewuchs Ay", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP }, true, false );
     if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
-      return new PointProperty( property,"Bewuchs dP", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY }, true );
+      return new PointProperty( property, "Bewuchs dP", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY }, true, false );
     if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
-      return new PointProperty( property,"Rechtswert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE}, true );
+      return new PointProperty( property, "Rechtswert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, true, true );
     if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-      return new PointProperty( property,"Hochwert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_RECHTSWERT}, true );
+      return new PointProperty( property, "Hochwert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_RECHTSWERT }, true, true );
     if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT ) )
-      return new PointProperty( property,"Rauheit", 0.0001, new String[0] , false );
+      return new PointProperty( property, "Rauheit", 0.0001, new String[0], false, false );
 
     return null;
   }

@@ -40,39 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl.points;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 
 /**
  * @author kimwerner
- *
  */
 public class PointProperty implements IProfilPointProperty
 {
 
   final double m_precision;
+
   final String[] m_dependencies;
+
   final boolean m_optional;
+
   final String m_id;
+
   final String m_label;
-  
-  public PointProperty(final String id,final String label, final double precision, final String[] dependencies, final boolean optional )
+
+  final boolean m_doInterpolation;
+
+  public PointProperty( final String id, final String label, final double precision, final String[] dependencies, final boolean optional, final boolean doInterpolation )
   {
     m_precision = precision;
     m_dependencies = dependencies;
     m_optional = optional;
     m_id = id;
     m_label = label;
+    m_doInterpolation = doInterpolation;
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointProperty#doInterpolation(double, double)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointProperty#doInterpolation(point,point, double)
    */
-  public double doInterpolation( final IProfilPoint point1,final IProfilPoint point2 )
+  public double doInterpolation( final IProfilPoint point1, final IProfilPoint point2, final double breite )
   {
     final double value1 = point1.getValueFor( m_id );
+    if( !m_doInterpolation )
+      return value1;
     final double value2 = point2.getValueFor( m_id );
-    return (value1+value2)/2.0;
+    final double b1 = point1.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double l = point2.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - b1;
+    return ((value2 - value1) * (breite - b1) / l) + value1;
   }
 
   /**
@@ -98,17 +109,19 @@ public class PointProperty implements IProfilPointProperty
   {
     return m_optional;
   }
-@Override
-public String toString()
-{
-  return m_id;
-}
+
+  @Override
+  public String toString( )
+  {
+    return m_id;
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointProperty#getName()
    */
   public String getId( )
   {
-    
+
     return m_id;
   }
 
@@ -117,7 +130,7 @@ public String toString()
    */
   public String getLabel( )
   {
-        return m_label;
+    return m_label;
   }
 
 }
