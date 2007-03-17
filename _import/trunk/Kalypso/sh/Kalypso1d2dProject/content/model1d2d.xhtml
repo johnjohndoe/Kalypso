@@ -10,20 +10,27 @@
   <body>
     <h1>Kalypso 1D/2D</h1>
     <div class="list">Allgemeine Informationen</div>
-
-    <br/>
+        <p align="justify">
+Das gekoppelte 1D-2D Modell ist ein hydrodynamisches Strömungsmodell, formuliert mit der Methode der finiten Elemente. Es ermöglicht die Berechnung von stationären und instationären hydrodynamischen Problemstellungen. Bei der Gebietsmodellierung können eindimensionale sowie zweidimensionale Approximationsansätze verwendet und gebietsweise miteinander gekoppelt werden.
+ <br/> <br/>
+Das zweidimensionale Strömungsmodell wird über den Ansatz der zweidimensionalen, tiefengemittelten, Reynolds-gemittelten Flachwassergleichungen formuliert. Im polynombasierten eindimensionalen Modell werden die Saint-Venant-Gleichungen verwendet. Mit diesem Ansatz können auch komplexe Gewässerprofile auf Basis einer stationär ungleichförmigen Spiegellinienberechnung berechnet werden, in der die beschreibenden Polynome bestimmt werden.
+ <br/> <br/>
+Die Lösung in KALYPSO-1D2D erfolgt über eine Diskretisierung des Modellgebietes nach dem Finite-Elemente-Verfahren mit der Methode der gewichteten Residuen nach Galerkin. Für die Diskretisierung können unterschiedliche Elementformen verwendet werden: Zweidimensionale Gebiete werden über planare Dreiecke oder Vierecke modelliert. Eindimensionale Bereiche werden über rein lineare Elemente mit zwei Eckknoten für den polynombasierten Berechnungsansatz modelliert. Die Zeitabhängigkeit wird über ein modifiziertes Crank-Nicholson Verfahren abgebildet, wobei das Newton-Raphson Verfahren verwendet wird.
+ <br/> <br/>
+Innovative Ansätze sind in den Bereichen Rauheitsmodellierung und Turbulenz enthalten. Die Rauheitsmodellierung erfolgt über das Colebrook-White’sche Widerstandsgesetz und beinhalten die Modellierung von Fliessverlusten infolge von überströmtem und durchströmtem Bewuchs. Verschiedene Turbulenzmodelle sind bei der Simulation verfügbar: Ein konstantes Wirbelviskositätsmodell, ein bodeninduziertes Turbulenz-Modell, der Prandtl’sche Mischungswegansatz und das Smagorinsky Modell. Als hydrodynamische Model KALYPSO-1D2D berechnet Wasserstände und horizontale Komponenten der Fliessgeschwindigkeiten sowohl für strömenden als auch schiessenden Abfluss in offenen Gewässern.
+ <br/> <br/></p>
 
     <div class="list">Aktionen</div>
     <a class="link"
       href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
       id="newWspmProject">
       <img class="link" border="0" src="css/kalypso16.gif" alt="Starte Modellierung"/>Neues Projekt erstellen...</a>
-      <br />
-      
+      <br/>
+
 
     <div class="list">Vorhandene Projekte:</div>
-      
-    <contentProvider id="1d2dProjectsContentProvider" class="org.kalypso.kalypso1d2d.pjt.application.SimulationProjectsContentProvider" pluginId="org.kalypso.kalypso1d2d.pjt"/> 
+
+    <contentProvider id="1d2dProjectsContentProvider" class="org.kalypso.kalypso1d2d.pjt.application.SimulationProjectsContentProvider" pluginId="org.kalypso.kalypso1d2d.pjt"/>
 
   </body>
 </html>
