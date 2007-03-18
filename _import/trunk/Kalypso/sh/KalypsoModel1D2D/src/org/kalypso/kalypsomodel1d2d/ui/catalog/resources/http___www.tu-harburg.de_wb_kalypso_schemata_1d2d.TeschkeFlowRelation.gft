@@ -29,7 +29,7 @@
 	<gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<gft:label text="Station [km]" visible="true" tooltip="Optionale Angabe der Station. Falls gesetzt, wird die Länge des&#x10;FE-Elements als Differenz der anliegenden Stationierung&#x10;ermittelt." style="SWT.NONE">
+	<gft:label text="Station [km]" visible="true" tooltip="Optionale Angabe der Station. Falls gesetzt, wird die Länge des&#xa;FE-Elements als Differenz der anliegenden Stationierung&#xa;ermittelt." style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING"
 			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
