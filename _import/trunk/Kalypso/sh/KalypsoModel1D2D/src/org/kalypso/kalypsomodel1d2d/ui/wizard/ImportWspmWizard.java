@@ -144,8 +144,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose wspm-reach */
-    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", "Gewässerstrang", null );
-    m_wspmGmlPage.setDescription( "Bitte wählen Sie einen Gewässerstrang aus" );
+    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", "Berechnungsvariante wählen", null );
+    m_wspmGmlPage.setDescription( "Bitte wählen Sie eine Berechnungsvariante (Bordvoll ungleichförmig) aus" );
     m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC } );
     m_wspmGmlPage.setValidKind( true, false );
 
