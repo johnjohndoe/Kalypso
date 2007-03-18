@@ -214,7 +214,7 @@ public class ElevationModelSystemEditorComponent
     Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
     // GridData labelGridData = new GridData( GridData.FILL_BOTH );
     // labelGridData.horizontalSpan = 2;
-    terrainModelLabel.setText( "Vorhandene Höhenmodelle" );
+    terrainModelLabel.setText( "Bitte Höhenmodell auswählen" );
     terrainModelLabel.setLayoutData( elevFormData );
 
     elevFormData = new FormData();
@@ -310,7 +310,7 @@ public class ElevationModelSystemEditorComponent
     elevFormData.bottom = new FormAttachment( 100, 0 );
     Button deleteTerrain = new Button( elevationComposite, SWT.PUSH );
 //  showTerrain.setText( "Goto Terrain" );
-    deleteTerrain.setToolTipText( "Geländemodell entfern" );
+    deleteTerrain.setToolTipText( "Geländemodell löschen" );
     
      image_goToTerrain = new Image( 
                       elevationComposite.getDisplay(), 

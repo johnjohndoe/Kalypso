@@ -262,7 +262,7 @@ class ApplyElevationWidgetFace
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     elevationColorSection.setText( 
-          "Einstellung der Farbe"
+          "Farbeinstellungen"
         //"Select Colors for MAX Elevation and MIN Elevation " 
         );
     // elevationColorSection.addPaintListener( drawListener );

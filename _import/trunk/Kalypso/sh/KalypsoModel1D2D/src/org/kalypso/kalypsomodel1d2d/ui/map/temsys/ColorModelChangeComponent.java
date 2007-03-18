@@ -163,7 +163,7 @@ public class ColorModelChangeComponent
   {
 
     FormLayout minMaxLayout = new FormLayout();
-    minMaxGroup.setText( "Color Space" );
+    minMaxGroup.setText( "Farbbereich" );
     minMaxGroup.setLayout( minMaxLayout );
 
     FormData formData;
@@ -280,11 +280,11 @@ public class ColorModelChangeComponent
   {
     FormData optionsColorFormData;
     FormLayout optionsColorGrpLayout = new FormLayout();
-    optionsColorGroup.setText( "Further Options" );
+    optionsColorGroup.setText( "Optionen" );
     optionsColorGroup.setLayout( optionsColorGrpLayout );
 
     Label maximumColor = new Label( optionsColorGroup, SWT.FLAT );
-    maximumColor.setText( "Choose Color" );
+    maximumColor.setText( "Grundfarbe" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
     optionsColorFormData.top = new FormAttachment( 0, 5 );
@@ -308,17 +308,17 @@ public class ColorModelChangeComponent
         windowCanvas.redraw();
       }
     } );
-    colorSelector.setColorValue( new RGB(ElevationColorControl.getBaseColor().getRed(),
+     colorSelector.setColorValue( new RGB(ElevationColorControl.getBaseColor().getRed(),
         ElevationColorControl.getBaseColor().getGreen(),
-        ElevationColorControl.getBaseColor().getBlue()));    
-    maxColorBtn.setText( "SELECT" );
+        ElevationColorControl.getBaseColor().getBlue()));     
+    maxColorBtn.setText( "Auswahl" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment(maximumColor, 28 );
     optionsColorFormData.top = new FormAttachment( 0, 5 );
     maxColorBtn.setLayoutData( optionsColorFormData );
     
     noElevationColorLabel = new Label( optionsColorGroup, SWT.NONE );
-    noElevationColorLabel.setText( "No Elevation Color" );
+    noElevationColorLabel.setText( "Fehlfarbe" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
     optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
@@ -338,13 +338,13 @@ public class ColorModelChangeComponent
         ElevationColorControl.getNoElevationColor().getGreen(),
         ElevationColorControl.getNoElevationColor().getBlue()));
     optionsColorFormData = new FormData();
-    noElevationColorBtn.setText( "SELECT" );
+    noElevationColorBtn.setText( "Auswahl" );
     optionsColorFormData.left = new FormAttachment( noElevationColorLabel, 5 );
     optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
     noElevationColorBtn.setLayoutData( optionsColorFormData );
 
     Label colorNumberCells = new Label( optionsColorGroup, SWT.NONE );
-    colorNumberCells.setText( "Discrete Color Number" );
+    colorNumberCells.setText( "Anzahl Farbklassen" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
     optionsColorFormData.top = new FormAttachment( noElevationColorBtn, 8 );
@@ -364,7 +364,7 @@ public class ColorModelChangeComponent
           selectedRects = 1;
         ElevationColorControl.setColorIndex( selectedRects );
         
-        System.out.println( "Selected" + selectedRects );
+        System.out.println( "Auswahl" + selectedRects );
         windowCanvas.redraw();
       }
     } );  
@@ -376,7 +376,7 @@ public class ColorModelChangeComponent
     stepper.setLayoutData( optionsColorFormData );
 
     Label optionMinMax = new Label( optionsColorGroup, SWT.NONE );
-    optionMinMax.setText( "Go Darker from Max to Min Elevation" );
+    optionMinMax.setText( "Farbskala umdrehen" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
     optionsColorFormData.top = new FormAttachment( stepper, 8 );
@@ -406,7 +406,7 @@ public class ColorModelChangeComponent
       }
     } );
     optionsColorFormData = new FormData();
-    applyColors.setText( "Apply Colors" );
+    applyColors.setText( "Farben übernehmen" );
     optionsColorFormData.bottom = new FormAttachment( 100, -1 );
     optionsColorFormData.left = new FormAttachment( checkBtnOptionMinMax, 5 );
     applyColors.setLayoutData( optionsColorFormData );

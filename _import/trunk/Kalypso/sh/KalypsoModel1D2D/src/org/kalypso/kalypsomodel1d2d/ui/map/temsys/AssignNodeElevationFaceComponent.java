@@ -418,7 +418,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.left = new FormAttachment(0,5);
     regionFormData.top = new FormAttachment (infoLabel,10);
     Label areaSelectLabel = new Label( cComposite, SWT.FLAT );
-    areaSelectLabel.setText( "Knoten zu bearbeiten"/*"Select Area"*/ );
+    areaSelectLabel.setText( "editierbare Knoten"/*"Select Area"*/ );
     areaSelectLabel.setLayoutData( regionFormData );
 
     regionFormData = new FormData();
@@ -466,7 +466,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment(0,50);
     Button selectAll = new Button( cComposite, SWT.PUSH );
 
-    selectAll.setText( "Alles Selectiere"/*"Select All"*/ );
+    selectAll.setText( "Alles selektieren"/*"Select All"*/ );
     selectAll.setLayoutData( regionFormData );
 
     selectAll.addSelectionListener( new SelectionAdapter()
@@ -483,7 +483,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment(selectAll,5);
     Button deSelectAll = new Button( cComposite, SWT.PUSH );
     deSelectAll.setLayoutData(regionFormData );
-    deSelectAll.setText( "Alle Deselectieren"/*"DeSelect All"*/ );
+    deSelectAll.setText( "Alles deselektieren"/*"DeSelect All"*/ );
 
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {

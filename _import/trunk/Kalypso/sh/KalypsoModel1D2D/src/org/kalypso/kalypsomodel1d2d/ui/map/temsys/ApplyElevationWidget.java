@@ -112,7 +112,7 @@ public class ApplyElevationWidget
   
   public ApplyElevationWidget()
   {
-    this("Höhen zuweise","Höhenzuweisung start");
+    this("Höhen zuweisen","Höhenzuweisung starten");
   }
   
   public ApplyElevationWidget( String name, String toolTip )
