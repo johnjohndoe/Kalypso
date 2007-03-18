@@ -891,7 +891,9 @@ public class CreateMainChannelComposite extends Composite
       // init while first load
       if( m_data.getCurrentProfile() == null )
       {
-        m_data.setCurrentProfile( PROF.UP );
+        final double station = pem.getProfil().getStation();
+        final CreateChannelData.PROF profPlace = m_data.getCurrentProfilePlace( station );
+        m_data.setCurrentProfile( profPlace );
         // here repaint!!
       }
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );

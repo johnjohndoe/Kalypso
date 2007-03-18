@@ -1064,4 +1064,17 @@ public class CreateChannelData
     return neighbours;
   }
 
+  public  CreateChannelData.PROF getCurrentProfilePlace ( final double station )
+  {
+    double stationUp = m_segmentList.get( m_selectedSegment - 1).getProfilUpOrg().getStation();
+    double stationDown = m_segmentList.get( m_selectedSegment - 1).getProfilDownOrg().getStation();
+    
+    if ( stationUp == station )
+      return CreateChannelData.PROF.UP;
+    else if ( stationDown == station )
+      return CreateChannelData.PROF.DOWN;
+      
+    return null;
+  }
+
 }
