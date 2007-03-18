@@ -71,6 +71,11 @@ public class PanToWidget extends AbstractWidget
       int dy = (int)( endPoint.getY() - startPoint.getY() );
       getMapPanel().setOffset( dx, dy );
     }
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   @Override

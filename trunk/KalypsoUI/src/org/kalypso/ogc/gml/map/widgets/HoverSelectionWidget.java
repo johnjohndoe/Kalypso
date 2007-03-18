@@ -44,6 +44,7 @@ import java.awt.Point;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 
 /**
@@ -69,6 +70,11 @@ public class HoverSelectionWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_function.execute( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
+    
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
   }
 
   /**

@@ -45,6 +45,7 @@ import java.awt.Point;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider;
@@ -124,6 +125,11 @@ public class SelectionWidget extends AbstractWidget
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
       getMapPanel().setMessage( "Auswahl durchführen ..." );
     }
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**
@@ -174,6 +180,13 @@ public class SelectionWidget extends AbstractWidget
       m_tooltip = m_tooltipProvider.getTooltip( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
 
     m_current_point = p;
+
+    if ( m_tooltipProvider != null )
+    {
+      MapPanel panel = getMapPanel();
+      if ( panel != null)
+        panel.repaint();
+    }
   }
 
   /**

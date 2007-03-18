@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.Handle;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -128,6 +129,12 @@ public class EditGeometryWidget extends AbstractWidget
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
     final List<Object> features = selector.select( envelope, featureListVisible, false );
     m_handles = createHandles( features, null, envelope );
+    
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
+    
   }
 
   /**
@@ -157,6 +164,11 @@ public class EditGeometryWidget extends AbstractWidget
   public void dragged( Point p )
   {
     m_dragPoint = p;
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**

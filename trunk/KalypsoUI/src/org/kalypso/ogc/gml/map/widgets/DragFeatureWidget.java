@@ -225,6 +225,10 @@ public class DragFeatureWidget extends AbstractWidget
 
         getMapPanel().setMessage( "Lassen Sie den Mausknopf los, um das Feature hier abzusetzen." );
       }
+      //TODO: check if this repaint is really necessary
+      MapPanel panel = getMapPanel();
+      if (panel != null)
+        panel.repaint();
 
     }
 

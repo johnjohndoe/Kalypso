@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -69,6 +70,11 @@ public class ZoomInWidget extends AbstractWidget
     {
       endPoint = p;
     }
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   @Override

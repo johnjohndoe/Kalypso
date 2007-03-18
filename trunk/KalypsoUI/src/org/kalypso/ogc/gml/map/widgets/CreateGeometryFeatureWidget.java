@@ -93,6 +93,12 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   {
     if( myWidget != null )
       myWidget.dragged( p );
+    
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**
@@ -162,7 +168,14 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   public void moved( Point p )
   {
     if( myWidget != null )
+      {
       myWidget.moved( p );
+//    TODO: check if this repaint is necessary for the widget
+      MapPanel panel = getMapPanel();
+      if ( panel != null)
+        panel.repaint();
+      }
+    
   }
 
   /**
