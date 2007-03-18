@@ -73,8 +73,7 @@ public class CreateFEContlineWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_currentPoint = p;
-//  TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if ( panel != null)
       panel.repaint();
   }
@@ -92,11 +91,17 @@ public class CreateFEContlineWidget extends AbstractWidget
         final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
 
         m_builder.addPoint( currentPos );
+        
       }
     }
     catch( final Exception e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+    finally
+    {
+      getMapPanel().repaint();
+      
     }
   }
 
@@ -140,7 +145,8 @@ public class CreateFEContlineWidget extends AbstractWidget
       }
 
       final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = ContinuityLineOps.contilineFromCurve( curve, model );
-
+      continuityLine.getWrappedFeature().invalidEnvelope();
+      
       final Feature parentFeature = model.getFeature();
       final IRelationType rt = 
           (IRelationType) parentFeature.getFeatureType().getProperty( 
