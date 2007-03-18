@@ -257,6 +257,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final IRelationType flowRelParentRelation = flowRelModel.getWrappedList().getParentFeatureTypeProperty();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
+      final List<Feature> addedFeatures = new ArrayList<Feature>();
       for( final Object o : resultList )
       {
         final Feature qresultFeature = FeatureHelper.getFeature( qresultsWorkspace, o );
@@ -301,8 +302,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
             if( polynomeFeature != null )
               FeatureHelper.cloneFeature( flowRelFeature, flowRelPolynomeRelation, polynomeFeature );
           }
+          
+          addedFeatures.add( flowRelFeature );
         }
       }
+      
+      final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
+      flowRelworkspace.fireModellEvent( new FeatureStructureChangeModellEvent( flowRelworkspace, flowRelParentFeature, addedFeatureArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
     }
     catch( final FileNotFoundException fnfe )
     {

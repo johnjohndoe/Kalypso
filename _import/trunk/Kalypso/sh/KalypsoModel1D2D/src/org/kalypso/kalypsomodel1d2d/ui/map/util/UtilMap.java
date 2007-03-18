@@ -64,7 +64,6 @@ public class UtilMap
 {
   /**
    * Get First Theme which is showing elements substituable to the specified QName (i.e. substituting it).
-   * 
    */
   static public IKalypsoFeatureTheme findEditableTheme( IMapModell mapModel, QName editElementQName )
   {
@@ -77,11 +76,8 @@ public class UtilMap
       {
         final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = ftheme.getFeatureType();
-        if( GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
-        {
+        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
           return ftheme;
-          // m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
-        }
       }
     }
     return null;
@@ -102,7 +98,7 @@ public class UtilMap
       {
         final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = ftheme.getFeatureType();
-        if( GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
+        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
           foundThemes.add( ftheme );
       }
     }

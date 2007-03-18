@@ -297,6 +297,8 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
     try
     {
       flowRelationGrabbed( m_flowTheme, new IFlowRelationship[] { m_flowRelation } );
+
+      getMapPanel().repaint();
     }
     catch( final Throwable e )
     {
