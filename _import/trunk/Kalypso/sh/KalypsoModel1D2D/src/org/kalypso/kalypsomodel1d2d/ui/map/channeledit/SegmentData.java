@@ -1516,6 +1516,16 @@ public class SegmentData
     m_bankRightInters = bankRightInters;
   }
 
+  public void setBankLeftOrg( LineString bankLeftInters )
+  {
+    m_bankLeftOrg = bankLeftInters;
+  }
+
+  public void setBankRightOrg( LineString bankRightInters )
+  {
+    m_bankRightOrg = bankRightInters;
+  }
+  
   public void paintProfile( CreateChannelData.PROF currentProfile, MapPanel panel, Graphics g, Color color )
   {
     LineString line = null;

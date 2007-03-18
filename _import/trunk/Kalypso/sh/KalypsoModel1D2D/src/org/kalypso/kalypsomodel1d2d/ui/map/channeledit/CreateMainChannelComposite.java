@@ -967,6 +967,18 @@ public class CreateMainChannelComposite extends Composite
     }
   }
 
+  void resetButtonGuard(  )
+  {
+    for( int i = 0; i < m_buttonList.size(); i++ )
+    {
+      final Button currentButton = m_buttonList.get( i );
+      if( currentButton.getSelection() ==true )
+      {
+        currentButton.setSelection( false );
+      }
+    }
+  }
+  
   public void setConversionButton( )
   {
     Button button = m_buttonList.get( getStyle() );
@@ -992,6 +1004,7 @@ public class CreateMainChannelComposite extends Composite
       {
         DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 1 );
         m_widget.setDelegate( widget );
+
       }
       catch( GM_Exception e1 )
       {
@@ -1040,6 +1053,8 @@ public class CreateMainChannelComposite extends Composite
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
+        m_widget.setDelegate( null );
+        resetButtonGuard();
         m_data.convertToModel();
         return Status.OK_STATUS;
       }
