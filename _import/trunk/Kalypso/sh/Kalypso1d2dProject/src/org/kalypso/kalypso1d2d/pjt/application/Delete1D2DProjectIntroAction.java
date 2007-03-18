@@ -48,6 +48,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 /**
  * @author Gernot Belger
@@ -66,6 +68,11 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
     if( !project.exists() )
       return;
 
+    final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+    final IProject currentProject = activeWorkContext.getCurrentProject();
+    if( project.equals( currentProject ))
+      activeWorkContext.setActiveProject( null );
+    
     final DeleteResourceAction deleteResourceAction = new DeleteResourceAction( site.getShell() );
     deleteResourceAction.selectionChanged( new StructuredSelection( project ) );
     deleteResourceAction.run();

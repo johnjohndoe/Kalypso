@@ -86,8 +86,6 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 
         /* Also activate new project */
         Kalypso1d2dProjectPlugin.getActiveWorkContext().setActiveProject( project );
-
-        logger.info( "DADADADADA:\n" + project );
       }
       catch( CoreException e )
       {

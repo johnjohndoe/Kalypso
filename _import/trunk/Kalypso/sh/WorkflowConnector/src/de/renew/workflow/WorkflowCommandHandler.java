@@ -47,7 +47,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * A {@link WorkflowCommandHandler} is a special command handler that handles requesting and confirming work items for
@@ -110,7 +110,9 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
     }
     catch( final Throwable t )
     {
-      status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, Status.OK, "Problem in internal execution", t );
+      // BUGFIX: use statusFromThrowable instead of always creating an error status, because
+      // the thrown exception may be an CoreException containing a CANCEL or INFO status.
+      status = StatusUtilities.statusFromThrowable( t, "Problem in internal execution" );
     }
     finally
     {
