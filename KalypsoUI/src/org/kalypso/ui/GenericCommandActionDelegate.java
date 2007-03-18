@@ -267,7 +267,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    */
   public void runWithEvent( final IAction action, final Event event )
   {
-    if( m_handlerService == null )
+    if( !action.isChecked() || m_handlerService == null )
     {
       return;
     }

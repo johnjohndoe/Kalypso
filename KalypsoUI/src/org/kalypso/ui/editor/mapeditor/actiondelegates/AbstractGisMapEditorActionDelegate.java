@@ -116,7 +116,8 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
       return;
 // TODO: this is also called when another widget is activated, maybe we have to check here if the 
     // action is checked at the moment
-    mapPanel.getWidgetManager().setActualWidget( getWidget() );
+    if( action.isChecked() )
+      mapPanel.getWidgetManager().setActualWidget( getWidget() );
   }
 
   /**
