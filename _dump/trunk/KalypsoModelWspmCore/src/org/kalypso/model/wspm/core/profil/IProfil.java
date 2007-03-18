@@ -52,6 +52,7 @@ public interface IProfil
    */
   public String[] getComment( );
 
+  // TODO KIM: talk to me about comment stuff
   public void addComment( final int lineNumber, final String comment );
 
   public void addComment( final String comment );
@@ -63,7 +64,7 @@ public interface IProfil
    */
   public String getName( );
 
-  public void setName( final String Name );
+  public void setName( final String name );
 
   /**
    * @return false if the point does not match all the properties in this profile

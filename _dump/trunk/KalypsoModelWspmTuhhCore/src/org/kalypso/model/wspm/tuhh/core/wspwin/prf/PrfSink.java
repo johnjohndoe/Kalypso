@@ -283,7 +283,8 @@ public class PrfSink implements IProfilSink
       writeCoords( profil,IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, dbw );
       try
       {
-        final StringBuffer secLine = new StringBuffer( toDataBlockKey( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) ) );
+        final Object wehrart = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
+        final StringBuffer secLine = new StringBuffer( toDataBlockKey( wehrart ) );
         secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) );
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
         for( IProfilPointMarker devider : deviders )

@@ -273,7 +273,9 @@ public class WehrPanel extends AbstractProfilView
     label.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label.setText( "Wehrart:" );
     label.setToolTipText( tooltip );
+    // TODO: do not use combo! Use ComboViewer instead, than you do not need the .setData/.getData stuff
     m_Wehrart = new Combo( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
+    // TODO: isnt there another solution for the wehrarts?
     m_Wehrart.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     m_Wehrart.setItems( new String[] { "Scharfkantig", "Rundkronig", "Breitkronig", "Überfallbeiwert" } );
     m_Wehrart.setData( "Scharfkantig", IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
@@ -402,8 +404,9 @@ public class WehrPanel extends AbstractProfilView
     final IProfileObject building = getProfil().getProfileObject();
     if( building == null )
       return;
-    // IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
-    m_Wehrart.select( m_Wehrart.indexOf( m_Wehrart.getData( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString() ).toString() ) );
+    final String wehrart = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
+    final String comboString = m_Wehrart.getData( wehrart ).toString();
+    m_Wehrart.select( m_Wehrart.indexOf( comboString ) );
     m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     m_kronenParameter.setText( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ).toString() );
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );

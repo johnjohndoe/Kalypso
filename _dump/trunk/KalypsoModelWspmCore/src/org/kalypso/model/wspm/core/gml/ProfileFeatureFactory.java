@@ -322,11 +322,12 @@ public class ProfileFeatureFactory implements IWspmConstants
     // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG, "0" );
     // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_WASSERSPIEGEL, "Gewaesser" );
     // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_MEHRFELDBRUECKE, "0" );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_NAME, observation.getName() );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_KOMMENTAR, observation.getDescription() );
 
     // observation.getMetadataList().add( new Metadataobject(name, type, value) );
 
+    
+    profil.setName(observation.getName());
+    profil.addComment( observation.getDescription() );
     final BigDecimal station = getProfileStation( profileFeature );
     profil.setStation( station == null ? Double.NaN : station.doubleValue() );
 
