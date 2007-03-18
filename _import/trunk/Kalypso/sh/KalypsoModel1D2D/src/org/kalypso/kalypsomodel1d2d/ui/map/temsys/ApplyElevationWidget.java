@@ -260,52 +260,67 @@ public class ApplyElevationWidget
   
   private final void drawElevationData(Graphics g, Point p)
   {
-    if(p==null)
+    final Color color = g.getColor();
+    g.setColor( Color.BLACK );
+    try
     {
-      return;
-    }
-    MapPanel mapPanel = dataModel.getMapPanel();
-    if(mapPanel==null)
-    {
-      System.out.println("map panel is null");
-      return;
-    }
-    
-    //finde node
-    GM_Point point = 
-          MapUtilities.transform( 
-                mapPanel, p );
-    final double DELTA = 
-      MapUtilities.calculateWorldDistance( 
-                                    mapPanel, 
-                                    point, 
-                                    10 );
-    IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( 
-                              point, 
-                              DELTA );
-    if(node!=null)
-    {
-      GM_Point nodePoint = node.getPoint();
-      StringBuffer nodeElevationText= new StringBuffer(64);
-      if(nodePoint.getCoordinateDimension()<=2)
+      if(p==null)
       {
-        nodeElevationText.append( "Keine Höhendaten" );
+        return;
       }
-      else
+      MapPanel mapPanel = dataModel.getMapPanel();
+      if(mapPanel==null)
       {
-        nodeElevationText.append( "Aktuelle Höhe=" );
-        nodeElevationText.append( nodePoint.getZ() );
+        System.out.println("map panel is null");
+        return;
       }
       
-      //show info
-      g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
+      //finde node
+      GM_Point point = 
+            MapUtilities.transform( 
+                  mapPanel, p );
+      final double DELTA = 
+        MapUtilities.calculateWorldDistance( 
+                                      mapPanel, 
+                                      point, 
+                                      10 );
+      IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( 
+                                point, 
+                                DELTA );
+      double height=0;
+      GM_Point nodePoint=null;
       
+      if(node!=null)
+      {
+        nodePoint = node.getPoint();
+        StringBuffer nodeElevationText= new StringBuffer(64);
+        if(nodePoint.getCoordinateDimension()<=2)
+        {
+          nodeElevationText.append( "Keine Höhendaten am Knoten" );
+        }
+        else
+        {
+          nodeElevationText.append( "Knoten-Höhe=" );
+          nodeElevationText.append( nodePoint.getZ() );
+        }
+        
+        //show info
+        g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
+        FontMetrics fontMetrics = g.getFontMetrics();
+        LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
+        height= lineMetrics.getHeight()*1.2;
+      }
+      
+      if(nodePoint==null)
+      {
+        nodePoint = MapUtilities.transform( mapPanel, p );  
+      }
       StringBuffer modelEleText = new StringBuffer(64);
       IElevationProvider elevationProvider=getElevationProvider();
       if(elevationProvider!=null)
       {
         double elevation = elevationProvider.getElevation( nodePoint );
-        modelEleText.append( "Model-Höhe=" );
+        modelEleText.append( "DGM-Höhe=" );
         modelEleText.append(elevation);
         
       }
@@ -313,12 +328,20 @@ public class ApplyElevationWidget
       {
         modelEleText.append("Höhen model nicht gefunden");
       }
-      FontMetrics fontMetrics = g.getFontMetrics();
-      LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
-      double height = lineMetrics.getHeight()*1.2;
+        
       g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
+      
+      return;
     }
-    return;
+    catch( RuntimeException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    finally
+    {
+      g.setColor( color );
+    }
   }
   
   /**

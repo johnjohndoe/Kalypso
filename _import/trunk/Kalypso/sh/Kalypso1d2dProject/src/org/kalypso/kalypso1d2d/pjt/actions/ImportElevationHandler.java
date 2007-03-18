@@ -58,6 +58,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -74,36 +75,59 @@ public class ImportElevationHandler extends WorkflowCommandHandler
   @Override
   protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-    final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
-    final IFolder modelFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    try
+    {
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+      final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
+      final IFolder modelFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+      final CommandableWorkspace commandableWorkspace = 
+              szenarioDataProvider.getCommandableWorkspace( ITerrainModel.class );
 
-    final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
+      final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
 
-    IStructuredSelection selection = new StructuredSelection( new Object[] { terrainModel, modelFolder, temFolder } );
+      IStructuredSelection selection = 
+              new StructuredSelection( 
+                  new Object[] { 
+                      terrainModel, 
+                      modelFolder, 
+                      temFolder,
+                      commandableWorkspace
+                      } );
 
-    // if(selection == null)
-    // {
-    // final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
-    // selection = new StructuredSelection(currentFolder);
-    // }
-    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IWorkbench workbench = (workbenchWindow).getWorkbench();
+      // if(selection == null)
+      // {
+      // final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+      // selection = new StructuredSelection(currentFolder);
+      // }
+      final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+      final IWorkbench workbench = (workbenchWindow).getWorkbench();
 
-    final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
-    final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
-    final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
+      final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
+      final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
+      final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
 
 //    final HashMap<String, Object> data = new HashMap<String, Object>();
-    // data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
-    // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
+      // data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
+      // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
 
-    wizard.init( workbench, selection );
-    // wizard.initModelProperties( data );
-    if( wizardDialog.open() == Window.OK )
-      return Status.OK_STATUS;
-    return Status.CANCEL_STATUS;
+      wizard.init( workbench, selection );
+      // wizard.initModelProperties( data );
+      if( wizardDialog.open() == Window.OK )
+      {
+        return Status.OK_STATUS;
+      }
+      else
+      {
+        return Status.CANCEL_STATUS;
+      }
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+      
+      return Status.CANCEL_STATUS;
+    }
 
   }
 }

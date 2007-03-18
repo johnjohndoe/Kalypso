@@ -323,6 +323,63 @@ public class Util
 	          ex);
 	    }   
 	  }
+      
+      public static final  Feature createFeatureAsProperty(
+          Feature parentFeature,
+          QName propQName, 
+          QName featureQName,
+          Object[] featureProperties,
+          QName[] featurePropQNames)
+          throws IllegalArgumentException
+      {
+        Assert.throwIAEOnNull(
+        propQName, "Argument propQName must not be null");
+        Assert.throwIAEOnNull(
+            parentFeature, 
+            "Argument roughnessCollection must not be null");
+        
+        try
+        {
+           IPropertyType property = 
+               parentFeature.getFeatureType().getProperty( propQName );
+           if(property.isList())
+           {
+               Feature feature=
+                 FeatureHelper.addFeature( 
+                  parentFeature, 
+                  propQName, 
+                  featureQName,
+                  featureProperties,
+                  featurePropQNames);
+               
+               return feature;
+           }
+           else
+           {
+             GMLWorkspace workspace = parentFeature.getWorkspace();
+             IFeatureType newFeatureType = 
+                     workspace.getGMLSchema().getFeatureType( featureQName );
+             Feature feature=
+               workspace.createFeature( parentFeature, (IRelationType)property, newFeatureType );
+             for(int i = featureProperties.length-1;i>=0;i--)
+             {
+               feature.setProperty( featurePropQNames[i], featureProperties[i] );
+             }
+             
+             parentFeature.setProperty( property, feature );
+             return feature;
+           }
+           
+        }
+        catch(GMLSchemaException ex)
+        {
+          throw new IllegalArgumentException(
+              "Property "+propQName+
+                  " does not accept element of type"+
+              featureQName,
+              ex);
+        }   
+      }
 	  
 	  /**
 	   * TODO complete and test this method

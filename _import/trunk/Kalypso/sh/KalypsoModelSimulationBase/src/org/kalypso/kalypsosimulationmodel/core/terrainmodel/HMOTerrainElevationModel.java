@@ -104,11 +104,11 @@ public class HMOTerrainElevationModel
     double extremum;
     
     
-    System.out.println("Parsing:"+rings.length);
+//    System.out.println("Parsing:"+rings.length);
     union = rings[0].getEnvelopeInternal();
     for(LinearRing ring:rings)
     {
-      System.out.println("ring:"+ring);
+//      System.out.println("ring:"+ring);
       triangleData=new TriangleData(ring);
       Envelope envelopeInternal = ring.getEnvelopeInternal();
       triangles.insert( 

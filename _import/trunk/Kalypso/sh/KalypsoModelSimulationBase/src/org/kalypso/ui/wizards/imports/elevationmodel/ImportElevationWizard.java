@@ -55,6 +55,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -65,9 +67,15 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 
 /**
@@ -96,6 +104,8 @@ public class ImportElevationWizard extends Wizard
    * destination folders for the native terrain elevation model 
    */
   private IFolder temFolder;
+
+  private CommandableWorkspace cmdWorkspace;
    
    /**
     * Construct a new instance and initialize the dialog settings
@@ -110,6 +120,7 @@ public class ImportElevationWizard extends Wizard
     *   <li/>Length=2
     *   <li/>First element an instance of {@link ITerrainModel}
     *   <li/>Second element an instance of {@link IFolder}
+    *   <li/>third element an instance of {@link CommandableWorkspace}
     * </ul> 
     * 
     * @param workbench the current workbench
@@ -122,6 +133,7 @@ public class ImportElevationWizard extends Wizard
       terrainModel = (ITerrainModel) selIterator.next();
       modelFolder = (IFolder)selIterator.next();   
       temFolder = (IFolder)selIterator.next();
+      cmdWorkspace=(CommandableWorkspace)selIterator.next();
    }
    
    @Override
@@ -173,7 +185,10 @@ public class ImportElevationWizard extends Wizard
              {
                nativeTEMRelPath = dstFileTif.toURL().toString();
              }
-              ITerrainElevationModel tem =
+              
+             ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+//             pool.addPoolListener( getPoolListener(), key );
+             ITerrainElevationModel tem =
                      new NativeTerrainElevationModelWrapper(temSys,nativeTEMRelPath);
               
               //TODO introduce in the first page a name imput field and gets the
@@ -181,19 +196,27 @@ public class ImportElevationWizard extends Wizard
               
               String name=dstFileTif.getName();
               tem.setName( name );
-              
+//              System.out.println("Workspace:"+workspace.getClass());
+              cmdWorkspace.fireModellEvent( 
+                  new FeatureStructureChangeModellEvent( 
+                        cmdWorkspace, 
+                        temSys.getWrappedFeature(),
+                        tem.getWrappedFeature(), 
+                        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               
               //TODO check why saving thow pool does not work
-//              KalypsoGisPlugin.getDefault().getPool().saveObject(
-//                                    workspace, new SubProgressMonitor(monitor,1) );
-              //save the workspace old method
-              File workspaceContextFile = 
-                new File(FileLocator.toFileURL( workspace.getContext()).getFile());
               
-              OutputStreamWriter outputStreamWriter= 
-                    new OutputStreamWriter(
-                        new FileOutputStream(workspaceContextFile));
-              GmlSerializer.serializeWorkspace( outputStreamWriter, workspace );
+              pool.saveObject(
+                              cmdWorkspace, 
+                              new SubProgressMonitor(monitor,1) );
+              //save the workspace old method
+//              File workspaceContextFile = 
+//                new File(FileLocator.toFileURL( workspace.getContext()).getFile());
+//              
+//              OutputStreamWriter outputStreamWriter= 
+//                    new OutputStreamWriter(
+//                        new FileOutputStream(workspaceContextFile));
+//              GmlSerializer.serializeWorkspace( outputStreamWriter, workspace );
               
               
           }
@@ -264,8 +287,40 @@ public class ImportElevationWizard extends Wizard
    /**
     * Answer the selected source location
     */
-   public IPath getSourceLocation() {
+   public IPath getSourceLocationsss() {
       return mPage.getSourceLocation();
+   }
+   
+   private final IPoolListener getPoolListener()
+   {
+     return new IPoolListener()
+     {
+
+      public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+      {
+        // TODO Auto-generated method stub
+        
+      }
+
+      public boolean isDisposed( )
+      {
+        // TODO Auto-generated method stub
+        return false;
+      }
+
+      public void objectInvalid( IPoolableObjectType key, Object oldValue )
+      {
+        // TODO Auto-generated method stub
+        
+      }
+
+      public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+      {
+        // TODO Auto-generated method stub
+        
+      }
+       
+     };
    }
 
 //  /**

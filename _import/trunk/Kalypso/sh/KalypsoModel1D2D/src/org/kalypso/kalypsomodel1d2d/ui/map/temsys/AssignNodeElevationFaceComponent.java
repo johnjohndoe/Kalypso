@@ -398,7 +398,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment(0,5);
     
     Label infoLabel = new Label( cComposite, SWT.FLAT );
-    infoLabel.setText( "Selected Terrain Model" );
+    infoLabel.setText( "Aktives Höhenmodell"/*"Selected Terrain Model"*/ );
     infoLabel.setLayoutData( regionFormData );
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment(infoLabel,10);
@@ -411,7 +411,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.left = new FormAttachment(0,5);
     regionFormData.top = new FormAttachment (infoLabel,10);
     Label areaSelectLabel = new Label( cComposite, SWT.FLAT );
-    areaSelectLabel.setText( "Select Area" );
+    areaSelectLabel.setText( "Knoten zu bearbeiten"/*"Select Area"*/ );
     areaSelectLabel.setLayoutData( regionFormData );
 
     regionFormData = new FormData();
@@ -425,10 +425,10 @@ public class AssignNodeElevationFaceComponent
     table.setLayoutData( regionFormData );
     
     TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setText( "Node" );
+    lineColumn.setText( "Knoten"/*"Node"*/ );
     lineColumn.setWidth( 100 / 1 );
     TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
-    actualPointNum.setText( "Elevation" );
+    actualPointNum.setText( "Höhe   "/*"Elevation"*/ );
     actualPointNum.setWidth( 100 / 2 );
     
     nodeElevationViewer.setUseHashlookup(true);
@@ -459,7 +459,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment(0,50);
     Button selectAll = new Button( cComposite, SWT.PUSH );
 
-    selectAll.setText( "Select All" );
+    selectAll.setText( "Alles Selectiere"/*"Select All"*/ );
     selectAll.setLayoutData( regionFormData );
 
     selectAll.addSelectionListener( new SelectionAdapter()
@@ -476,16 +476,13 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment(selectAll,5);
     Button deSelectAll = new Button( cComposite, SWT.PUSH );
     deSelectAll.setLayoutData(regionFormData );
-    deSelectAll.setText( "DeSelect All" );
+    deSelectAll.setText( "Alle Deselectieren"/*"DeSelect All"*/ );
 
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
       {
         table.deselectAll();
-        
-        //TODO check if this is okay
-//        selectionNodeList.clear();
       }
 
     } );
@@ -495,7 +492,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment(deSelectAll,5);
     Button applySelected = new Button( cComposite, SWT.PUSH );
     applySelected.setLayoutData( regionFormData );
-    applySelected.setText( "Apply Selected" );
+    applySelected.setText( "Höhen zuweisen"/*"Apply Selected"*/ );
     applySelected.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )

@@ -240,7 +240,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select Elevation Model"
     elevationSelectStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationSelectStatus.setText( "Select Elevation Model" );
+    elevationSelectStatus.setText( "Höhenmodell-System" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -249,7 +249,9 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
     areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    areaSelectSection.setText( "Select A Region" );
+    areaSelectSection.setText("Knoten bearbeiten" 
+          //"Selectiere  A Region" 
+        );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
@@ -259,7 +261,10 @@ class ApplyElevationWidgetFace
 
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationColorSection.setText( "Select Colors for MAX Elevation and MIN Elevation " );
+    elevationColorSection.setText( 
+          "Einstellung der Farbe"
+        //"Select Colors for MAX Elevation and MIN Elevation " 
+        );
     // elevationColorSection.addPaintListener( drawListener );
 
     tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );

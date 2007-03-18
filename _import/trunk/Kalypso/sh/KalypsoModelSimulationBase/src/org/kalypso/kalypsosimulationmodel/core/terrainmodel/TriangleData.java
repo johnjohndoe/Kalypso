@@ -58,14 +58,26 @@ class TriangleData implements SurfacePatchVisitable
   
   private double[] planeEquation;
   
+  private double centerElevation;
+  
   public TriangleData( LinearRing ring )
   {
     this.ring=ring;
     polygon = new Polygon(ring,null, ring.getFactory());
     Coordinate[] coords = ring.getCoordinates();
     planeEquation = calculateTrianglePlaneEquation( coords );
+    centerElevation = 
+      calculateCenterElevation(coords);
   }
   
+  private double calculateCenterElevation( Coordinate[] coords )
+  {
+    double xCenter = (coords[0].x+coords[1].x+coords[2].x)/3;// TODO Auto-generated method stub
+    double yCenter = (coords[0].y+coords[1].y+coords[2].y)/3;
+    return computeZOfTrianglePlanePoint( xCenter, yCenter );
+    
+  }
+
   public boolean contains(Point point)
   {
     if(point==null)
@@ -85,7 +97,7 @@ class TriangleData implements SurfacePatchVisitable
   
   public double getCenterElevation()
   {
-    return ring.getCoordinateN( 0 ).z;//Centroid().getCoordinate().z;
+    return centerElevation;//ring.getCoordinateN( 0 ).z;//Centroid().getCoordinate().z;
   }
 
   /**

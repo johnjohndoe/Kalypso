@@ -42,6 +42,7 @@ package org.kalypso.kalypso1d2d.pjt.views;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -59,4 +60,6 @@ public interface ISzenarioDataProvider
   public IFeatureWrapper2 getModel( final Class wrapperClass ) throws CoreException;
 
   public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception;
+  
+  public CommandableWorkspace getCommandableWorkspace(final Class wrapperClass ) throws IllegalArgumentException, CoreException; 
 }

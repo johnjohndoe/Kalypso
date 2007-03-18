@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele;
 
+import java.io.File;
+import java.net.URL;
+
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
@@ -83,6 +87,10 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    */
   public IFeatureWrapper[] getChangedFeature( )
   {
+    if(done)
+    {
+      return new IFeatureWrapper[]{elevationModel};
+    }
     return null;
   }
 
@@ -111,8 +119,24 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
     {
       return;
     }    
-    
-    done = true;
+    boolean b = terrainElevationModelSystem.getTerrainElevationModels().remove( elevationModel );
+    if(b)
+    {
+      URL sourceURL = elevationModel.getSourceURL();
+      File file= new File(sourceURL.getFile());
+      if(file.exists())
+      {
+        if(file.canWrite())
+        {
+          file.delete();
+          done = true;
+        }
+      }
+    }
+    else
+    {
+      System.out.println("could not delete elevation");
+    }
   }
 
   /**

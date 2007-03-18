@@ -117,9 +117,13 @@ public class NativeTerrainElevationModelWrapper
       Util.createFeatureAsProperty( 
         parentFeature, 
         propQName, 
-        KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
-    newFeature.setProperty( 
-        KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, sourceName );
+        KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER,
+        new Object[]{sourceName },
+        new QName[]{KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME});
+    
+//    newFeature.setProperty( 
+//        KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, sourceName );
+    
     return newFeature;    
   }
   

@@ -224,4 +224,12 @@ public class SzenarioDataProvider implements ISzenarioDataProvider
     final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
     return workspace;
   }
+  
+  /**
+   * @see org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider#getCommandableWorkspace(java.lang.Class)
+   */
+  public CommandableWorkspace getCommandableWorkspace( Class wrapperClass ) throws IllegalArgumentException, CoreException
+  {
+    return getModelWorkspace( wrapperClass );
+  }
 }
