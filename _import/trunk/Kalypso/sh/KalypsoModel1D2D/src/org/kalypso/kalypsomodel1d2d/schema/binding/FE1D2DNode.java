@@ -291,6 +291,7 @@ public class FE1D2DNode
               Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
 
     // get all elements touching this node
+    // TODO: is this really necessary, causes performance bug in bce.2d loading
     final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
 
     final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();

@@ -445,6 +445,10 @@ public class ModelOps
 
   public static final void sortElementEdges(IFE1D2DElement element)
   {
+    // BUGFIX: Element1D do not support getEdges
+    if( element instanceof IElement1D)
+      return;
+    
     IFeatureWrapperCollection edges = element.getEdges();
     List<IFE1D2DEdge> toSort= new ArrayList<IFE1D2DEdge>(edges);
     edges.clear();
