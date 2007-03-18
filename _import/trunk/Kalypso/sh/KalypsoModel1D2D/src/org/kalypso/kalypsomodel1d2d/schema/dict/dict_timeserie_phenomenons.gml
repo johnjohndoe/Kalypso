@@ -14,7 +14,7 @@
 
 	<!--  Phenomenons -->
 	<gml:dictionaryEntry>
-		<swe:Phenomenon gml:id="phenomenonTimeserieBorderCondition1D">
+		<swe:Phenomenon gml:id="TimeserieBorderCondition1D">
 			<gml:description>Randbedingung 1D</gml:description>
 			<gml:name>Randbedingung 1D</gml:name>
 		</swe:Phenomenon>

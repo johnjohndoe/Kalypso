@@ -2,11 +2,11 @@
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
 	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	
-    <!-- Component Dictionary -->
-	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:1d2d:borderConditionComponents" uri="dict_bordercond_components.gml" />
+    <!-- Timeseries Components Dictionary -->
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components" uri="dict_timeserie_components.gml" />
 	
     <!-- Timeseries Phenomenon Dictionary -->
-	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:1d2d:timeseriePhenomenons" uri="dict_timeserie_phenomenon.gml" />
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons" uri="dict_timeserie_phenomenons.gml" />
 	
 </catalog:catalog>
 

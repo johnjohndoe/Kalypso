@@ -45,10 +45,10 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
-		<swe:ItemDefinition gml:id="Runoff">
+		<swe:ItemDefinition gml:id="Discharge">
 			<gml:description>Q [m³/s]</gml:description>
 			<gml:name>Q</gml:name>
-			<swe:property xlink:href="#phenomenonRunoff" />
+			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
@@ -61,10 +61,10 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
-		<swe:ItemDefinition gml:id="SpecificRunoff1">
+		<swe:ItemDefinition gml:id="SpecificDischarge1D">
 			<gml:description>Q [m³/s/m²]</gml:description>
 			<gml:name>Q</gml:name>
-			<swe:property xlink:href="#phenomenonSpecificRunoff1" />
+			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
@@ -77,10 +77,10 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
-		<swe:ItemDefinition gml:id="SpecificRunoff2">
+		<swe:ItemDefinition gml:id="SpecificDischarge2D">
 			<gml:description>Q [m³/s/m]</gml:description>
 			<gml:name>Q</gml:name>
-			<swe:property xlink:href="#phenomenonSpecificRunoff2" />
+			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
@@ -108,21 +108,21 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
-		<swe:Phenomenon gml:id="phenomenonRunoff">
+		<swe:Phenomenon gml:id="phenomenonDischarge">
 			<gml:description>Abfluss [m³/s]</gml:description>
 			<gml:name>Abfluss [m³/s]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 	
 	<gml:dictionaryEntry>
-		<swe:Phenomenon gml:id="phenomenonSpecificRunoff1">
+		<swe:Phenomenon gml:id="phenomenonSpecificDischarge1D">
 			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
 			<gml:name>spezifischer Abfluss [m³/s/m²]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 	
 	<gml:dictionaryEntry>
-		<swe:Phenomenon gml:id="phenomenonSpecificRunoff2">
+		<swe:Phenomenon gml:id="phenomenonSpecificDischarge2D">
 			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
 			<gml:name>spezifischer Abfluss [m³/s/m]</gml:name>
 		</swe:Phenomenon>
