@@ -267,7 +267,11 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    */
   public void runWithEvent( final IAction action, final Event event )
   {
-    if( !action.isChecked() || m_handlerService == null )
+    /* Do not run for unchecked radio-buttons */
+    if( (action.getStyle() & IAction.AS_RADIO_BUTTON) != 0 && !action.isChecked() )
+      return;
+
+    if( m_handlerService == null )
     {
       return;
     }
