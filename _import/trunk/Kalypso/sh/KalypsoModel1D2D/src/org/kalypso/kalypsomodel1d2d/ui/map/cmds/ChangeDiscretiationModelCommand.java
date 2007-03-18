@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -142,7 +143,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
             if(wrappedFeature!=null)
             {
               changedFeatures.add( wrappedFeature );
-              wrappedFeature.invalidEnvelope();
+//              wrappedFeature.invalidEnvelope();
             }
           }
         }
@@ -182,9 +183,13 @@ public class ChangeDiscretiationModelCommand implements ICommand
     
     GeometryCalcControl.setDoCalcEdge(true);  
     GeometryCalcControl.setDoCalcElement(true);  
+    for(IFE1D2DEdge edge:model1d2d.getEdges())
+    {
+      edge.getWrappedFeature().invalidEnvelope();
+    }
     model1d2d.getEdges().getWrappedList().invalidate();
     model1d2d.getElements().getWrappedList().invalidate();
-    model1d2d.getNodes().getWrappedList().invalidate();
+//    model1d2d.getNodes().getWrappedList().invalidate();
     fireStructureChange( changedFeatures );    
   }
 

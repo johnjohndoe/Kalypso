@@ -44,7 +44,7 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    if(!GeometryCalcControl.doCalcEdge)
+    if(!GeometryCalcControl.doCalcElement)
     {
       return null;
     }

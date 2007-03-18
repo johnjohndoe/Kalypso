@@ -113,7 +113,7 @@ class GridWidgetFace
 
     private String getColumnText( LinePointCollectorConfig elementConfig, int columnIndex )
     {
-      System.out.println( "Getting label:" + elementConfig );
+//      System.out.println( "Getting label:" + elementConfig );
       switch( columnIndex )
       {
         case 0:

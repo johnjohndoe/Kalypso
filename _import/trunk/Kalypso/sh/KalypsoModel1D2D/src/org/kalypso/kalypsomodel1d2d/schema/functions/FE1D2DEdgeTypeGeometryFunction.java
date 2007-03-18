@@ -48,7 +48,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
                       final IPropertyType pt,
                       final Object currentValue) 
     {
-      if(!GeometryCalcControl.doCalcElement)
+      if(!GeometryCalcControl.doCalcEdge)
       {
         return null;
       }
