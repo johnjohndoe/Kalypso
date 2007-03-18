@@ -218,7 +218,9 @@ public class Kalypso1D2DProjectNature implements IProjectNature
       // REMARK: unzipping files with non UTF-8 filename encoding is really awesome in java.
       // We do use the apache tools, which let us at least set the encoding.
       // Try and error led to use the encoding: "IBM850" for WinZippes .zip's.
-      ZipUtilities.unzipApache( zipStream, targetContainer.getLocation().toFile(), true, "IBM850" );
+      // REMARK: This doesn´t work in the deploy (I don´t know why???) -use simple unzip instead works!!!
+//      ZipUtilities.unzipApache( zipStream, targetContainer.getLocation().toFile(), true, "IBM850" );
+      ZipUtilities.unzip( zipStream, targetContainer.getLocation().toFile());
       zipStream.close();
       monitor.worked( 1 );
 
