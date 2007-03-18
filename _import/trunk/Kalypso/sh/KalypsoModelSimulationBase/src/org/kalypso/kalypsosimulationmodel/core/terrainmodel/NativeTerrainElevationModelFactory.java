@@ -117,4 +117,19 @@ public class NativeTerrainElevationModelFactory
     }
   }
   
+  public static final void removeFromCache(File ascFile)
+  {
+    String filePath;
+    try
+    {
+      filePath = ascFile.getAbsolutePath();
+      Object cachedEleModel = cache.getObject( filePath );
+      cache.remove( filePath );
+    }
+    catch( Throwable e )
+    {
+      e.printStackTrace();
+    }
+  }
+  
 }

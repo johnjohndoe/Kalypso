@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -73,8 +74,8 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   
   private CommandableWorkspace commandableWorkspace;
   
-  private List<IDiscrModel1d2dChangeCommand> commands = 
-                      new ArrayList<IDiscrModel1d2dChangeCommand>();
+  private List<IFeatureChangeCommand> commands = 
+                      new ArrayList<IFeatureChangeCommand>();
   private boolean isUndoable=true;
 
 
@@ -120,23 +121,29 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
     List<Feature> changedFeatures= new ArrayList<Feature>();
-    for(IDiscrModel1d2dChangeCommand command:commands)
+    for(IFeatureChangeCommand command:commands)
     {
       try
       {
         command.process();
-        for(IFeatureWrapper changedFeature :command.getChangedFeature())
+        IFeatureWrapper[] changedFeatures2= command.getChangedFeature();
+        if(changedFeatures2!=null)
         {
-          if(changedFeature!=null)
+          for(IFeatureWrapper changedFeature :changedFeatures2)
           {
-            Feature wrappedFeature=changedFeature.getWrappedFeature();
-            if(wrappedFeature!=null)
+            if(changedFeature!=null)
             {
-              changedFeatures.add( wrappedFeature );
-              wrappedFeature.invalidEnvelope();
+              Feature wrappedFeature = 
+                        changedFeature.getWrappedFeature();
+              if(wrappedFeature!=null)
+              {
+                changedFeatures.add( wrappedFeature );
+                wrappedFeature.invalidEnvelope();
+              }
             }
           }
         }
@@ -169,7 +176,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
    */
   public void redo( ) throws Exception
   {
-    for(IDiscrModel1d2dChangeCommand command:commands)
+    for(IFeatureChangeCommand command:commands)
     {
       try
       {
@@ -189,7 +196,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   {
     
 //  reverse order  is taken because of eventual dependencies
-    IDiscrModel1d2dChangeCommand command;
+    IFeatureChangeCommand command;
     for(int index=commands.size()-1;index>=0;index-- )
     {
       command=commands.get( index );
@@ -205,7 +212,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
     
   }
   
-  public void addCommand(IDiscrModel1d2dChangeCommand command)
+  public void addCommand(IFeatureChangeCommand command)
   {
     Assert.throwIAEOnNullParam( command, "command" );
     commands.add( command );

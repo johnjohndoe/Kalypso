@@ -162,7 +162,8 @@ public class NativeTerrainElevationModelWrapper
    }
    sourceURL=makeSourceURL( sourceName, featureToBind.getWorkspace().getContext() );
    File nativeTerrainModelFile= new File(FileLocator.resolve( sourceURL).getFile());
-   elevationProvider = NativeTerrainElevationModelFactory.getTerrainElevationModel(nativeTerrainModelFile);   
+   elevationProvider = NativeTerrainElevationModelFactory.getTerrainElevationModel(nativeTerrainModelFile);
+   sourceURL = nativeTerrainModelFile.toURL();
   }
   
   private final URL makeSourceURL(String sourceName, URL worspaceContex) throws URISyntaxException, MalformedURLException

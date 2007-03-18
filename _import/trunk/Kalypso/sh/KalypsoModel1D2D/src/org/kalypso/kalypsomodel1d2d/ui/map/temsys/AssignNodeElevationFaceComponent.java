@@ -322,13 +322,20 @@ public class AssignNodeElevationFaceComponent
       System.out.println("Key="+key);
       if(ITerrainElevationModel.class.toString().equals( key ))
       {
-        String name=((INativeTerrainElevationModelWrapper)newValue).getName();
-        if(name==null)
+        if(newValue==null)
         {
-          name=((INativeTerrainElevationModelWrapper)newValue).getGmlID();
-          
+          inputText.setText( " " );
         }
-        inputText.setText( name );
+        else
+        {
+          String name=((INativeTerrainElevationModelWrapper)newValue).getName();
+          if(name==null)
+          {
+            name=((INativeTerrainElevationModelWrapper)newValue).getGmlID();
+            
+          }
+          inputText.setText( name );
+        }
       }
       else if(ApplyElevationWidgetDataModel.SELECTED_NODE_KEY.equals( key ))
       {
@@ -574,7 +581,7 @@ public class AssignNodeElevationFaceComponent
         elevation = elevationProvider.getElevation( node.getPoint() );
         changePosCmd = new ChangeNodePositionCommand(
             model1d2d,node,elevation);
-        changePosCmd.process();
+        changePosCmd.process(); 
         compositeCommand.addCommand( changePosCmd );        
       }
     }

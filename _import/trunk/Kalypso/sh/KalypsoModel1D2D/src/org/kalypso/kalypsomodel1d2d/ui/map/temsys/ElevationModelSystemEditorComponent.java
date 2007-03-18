@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import org.apache.commons.vfs.tasks.DeleteTask;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -58,13 +60,23 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.DeleteNativeTerrainElevationWrapper;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * 
@@ -146,22 +158,32 @@ public class ElevationModelSystemEditorComponent
   {
     public void selectionChanged( SelectionChangedEvent event )
     {
-      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-
-      // nameSel = (String) selection.getFirstElement();
-      if( selection.getFirstElement() == null )
-        throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
-      else
+      try
       {
-        if( selection.getFirstElement() instanceof ITerrainElevationModel )
+        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        if(selection==null)
         {
-          ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
-          dataModel.setElevationModel( firstElement );
+          System.out.println("Selection is null");
+          return ;
+        }
+        // nameSel = (String) selection.getFirstElement();
+        if( selection.getFirstElement() == null )
+          throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
+        else
+        {
+          if( selection.getFirstElement() instanceof ITerrainElevationModel )
+          {
+            ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
+            dataModel.setElevationModel( firstElement );
 //          inputText.setText( firstElement.getName() );
+          }
         }
       }
-//      areaSelectSection.setEnabled( true );
-//      areaSelectSection.setExpanded( true );
+      catch( Throwable th )
+      {
+        th.printStackTrace();
+      }
+
     }
   } ;
   
@@ -192,13 +214,13 @@ public class ElevationModelSystemEditorComponent
     Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
     // GridData labelGridData = new GridData( GridData.FILL_BOTH );
     // labelGridData.horizontalSpan = 2;
-    terrainModelLabel.setText( "Select the Terrain Model" );
+    terrainModelLabel.setText( "Vorhandene Höhenmodelle" );
     terrainModelLabel.setLayoutData( elevFormData );
 
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( 0, 10 );
     elevFormData.top = new FormAttachment( terrainModelLabel, 5 );
-    elevFormData.height = 60;
+    elevFormData.height = 90;
 
     elevationListTableViewer = new TableViewer( elevationComposite, SWT.FILL | SWT.BORDER );
     Table elevationList = elevationListTableViewer.getTable();
@@ -255,7 +277,8 @@ public class ElevationModelSystemEditorComponent
 
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( elevationList, 5 );
-    elevFormData.bottom = new FormAttachment( 100, 0 );
+    elevFormData.top = new FormAttachment(moveDownBtn,2);
+//    elevFormData.bottom = new FormAttachment( 100, 0 );
 
     Button showTerrain = new Button( elevationComposite, SWT.PUSH );
 //    showTerrain.setText( "Goto Terrain" );
@@ -279,9 +302,104 @@ public class ElevationModelSystemEditorComponent
       }
 
     } );
+    
+    ////delete
+    elevFormData = new FormData();
+    elevFormData.left = new FormAttachment( elevationList, 5 );
+    elevFormData.top = new FormAttachment(showTerrain,2);
+    elevFormData.bottom = new FormAttachment( 100, 0 );
+    Button deleteTerrain = new Button( elevationComposite, SWT.PUSH );
+//  showTerrain.setText( "Goto Terrain" );
+    deleteTerrain.setToolTipText( "Geländemodell entfern" );
+    
+     image_goToTerrain = new Image( 
+                      elevationComposite.getDisplay(), 
+                      KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+                      "icons/elcl16/cut.png" ).getImageData() );
+  deleteTerrain.setImage( image_goToTerrain );
+  deleteTerrain.setLayoutData( elevFormData );
+  deleteTerrain.addSelectionListener( new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent event )
+    {
+      try
+      {
+        deleteElevationModel();
+        elevationListTableViewer.refresh();
+      }
+      catch( Throwable th )
+      {
+        th.printStackTrace();
+      }
+    }
+
+  } );
 
   }
 
+  private final void deleteElevationModel() throws Exception
+  {
+//    new DeleteNativeTerrainElevationWrapper();
+    IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+    if(model1d2d==null)
+    {
+      System.out.println("model  is null");
+    }
+    
+    IKalypsoFeatureTheme elevationTheme = dataModel.getElevationTheme();
+    if(elevationTheme==null)
+    {
+      return;
+    }
+    CommandableWorkspace workspace = elevationTheme.getWorkspace();
+    if(workspace==null)
+    {
+      return;
+    }
+    
+    ITerrainElevationModelSystem modelSystem = 
+      dataModel.getElevationModelSystem();
+//    IElevationProvider elevationProvider = 
+//          dataModel.getElevationModel();
+//    if(elevationProvider==null)
+//    {
+//      elevationProvider = dataModel.getElevationModelSystem();
+//      if(elevationProvider == null)
+//      {
+//        return;
+//      }
+//    }
+    
+    ChangeTerrainElevationSystemCommand compositeCommand = 
+        new ChangeTerrainElevationSystemCommand(workspace,model1d2d);
+    DeleteNativeTerrainElevationWrapper delCmd;
+    double elevation;
+    
+    ISelection selection = elevationListTableViewer.getSelection();
+    if(!(selection instanceof IStructuredSelection) )
+    {
+      return;
+    }
+    INativeTerrainElevationModelWrapper nativeEleModel;
+    for(Object selected:((IStructuredSelection)selection).toList())
+    {
+      if(selected instanceof INativeTerrainElevationModelWrapper)
+      {
+        nativeEleModel = (INativeTerrainElevationModelWrapper)selected;
+        delCmd = 
+          new DeleteNativeTerrainElevationWrapper(
+                          modelSystem,nativeEleModel,true);
+        delCmd.process();
+        compositeCommand.addCommand( delCmd );        
+      }
+    }
+    dataModel.setElevationModel( null );
+    elevationListTableViewer.setSelection( 
+        new StructuredSelection());
+    //just reveal the command to the undo framework
+    elevationTheme.postCommand( compositeCommand, null );
+    
+  }
   private void moveUpSelectionUp()
   {
     ISelection selection = elevationListTableViewer.getSelection();

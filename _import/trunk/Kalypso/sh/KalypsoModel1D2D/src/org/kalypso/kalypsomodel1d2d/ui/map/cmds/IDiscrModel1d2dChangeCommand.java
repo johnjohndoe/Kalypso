@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public interface IDiscrModel1d2dChangeCommand extends ICommand
+public interface IDiscrModel1d2dChangeCommand extends IFeatureChangeCommand//ICommand
 {
   /**
    * Gets the discretisation model edited by this command

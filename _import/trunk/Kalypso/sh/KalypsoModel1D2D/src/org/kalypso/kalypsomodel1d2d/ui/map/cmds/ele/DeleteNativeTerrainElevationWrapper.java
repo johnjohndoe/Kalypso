@@ -47,6 +47,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,7 +71,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
 
   private boolean deleteFile;
   
-  private boolean done;
+  private boolean done=false;
 
   public DeleteNativeTerrainElevationWrapper(
               ITerrainElevationModelSystem terrainElevationModelSystem,
@@ -119,7 +120,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
     {
       return;
     }    
-    boolean b = terrainElevationModelSystem.getTerrainElevationModels().remove( elevationModel );
+    boolean b = terrainElevationModelSystem.getTerrainElevationModels().remove( elevationModel.getWrappedFeature() );
     if(b)
     {
       URL sourceURL = elevationModel.getSourceURL();
@@ -130,7 +131,16 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
         {
           file.delete();
           done = true;
+          NativeTerrainElevationModelFactory.removeFromCache( file );
         }
+        else
+        {
+          System.out.println("Cannot write or delete file");
+        }
+      }
+      else
+      {
+        System.out.println("File does not exits:"+file);
       }
     }
     else
