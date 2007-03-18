@@ -247,6 +247,35 @@
 	       			</class>
 			</action>
 			
+			<!--action state="false" style="radio"
+				id="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
+				toolbarPath="karte/tools"
+				class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
+				icon="icons/map/select_feature.gif"
+				label="Edit Geometry"
+				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+				tooltip="Die Geometrie des selektierten Features editieren">
+			</action -->
+			<action
+	           icon="icons/elcl16/geom_edit.gif"
+	           id="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate_view"               
+	           label="FE-Knoten bewegen"
+	           style="radio"
+	           toolbarPath="karte/edit"
+	           tooltip="FE-Knote bewegen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.MoveNodeWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Element2D"/>
+	       			</class>
+			</action>
+			
+			
 			<action
 	           icon="icons/elcl16/cut.png"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE2DElement"               
