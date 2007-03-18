@@ -26,14 +26,16 @@
 	<extension
        point="org.eclipse.ui.newWizards">
 		<category
-            id="org.kalypso.wizard"
-            name="K1d2dPjt"
+            id="org.kalypso.wizard.Create1d2dpjt"
+            name="1D-2D Modell"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
-		<wizard name="Kalypso1D2DNewProjectWizard"
-		icon="icons/kalypso1d2d.png"
-		class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
-		project="true"
-		id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard">
+		<wizard
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
+        class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
+        icon="icons/kalypso1d2d.png"
+        id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
+        name="Kalypso 1D-2D gekoppeltes Modell"
+        project="true">
 		<description>
 				Creates a new project
 		</description>

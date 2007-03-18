@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelSimulationBase
-Bundle-SymbolicName: KalypsoModelSimulationBase;singleton:=true
+Bundle-SymbolicName: org.kalypso.ModelSimulationBase;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Require-Bundle: 
@@ -30,3 +30,4 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.ui.wizards.imports.roughness,
  test.org.kalypso.kalypsosimulationmodel
 Eclipse-LazyStart: true 
+Bundle-Vendor: kalypso.org

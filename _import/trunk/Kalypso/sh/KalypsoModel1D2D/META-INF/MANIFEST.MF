@@ -13,7 +13,7 @@ Require-Bundle:
  org.kalypso.core,
  org.kalypso.optimize,
  org.kalypso.simulation.core,
- KalypsoModelSimulationBase,
+ org.kalypso.ModelSimulationBase,
  org.kalypso.ui,
  org.kalypso.ui.addlayer,
  org.kalypso.model.wspm.tuhh.schema,
