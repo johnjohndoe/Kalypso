@@ -41,6 +41,8 @@
 package org.kalypso.kalypso1d2d.pjt.application;
 
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -161,15 +163,32 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
     href.append( pname );
 
     a.setAttribute( "href", href.toString() );
-
+    
+    final String baseUri = dom.getBaseURI();
+    String fileUri = "css/link_obj.gif";
+    if( baseUri != null )
+    {
+      try
+      {
+        final URL baseUrl = new URL( baseUri );
+        final URL url = new URL( baseUrl, "css/link_obj.gif" );
+        fileUri = url.toExternalForm();
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+        fileUri = "css/link_obj.gif";
+      }
+    }
+    
     final Element img = dom.createElement( "img" );
     img.setAttribute( "class", "link" );
     img.setAttribute( "border", "0" );
-    img.setAttribute( "src", "css/link_obj.gif" );
+    img.setAttribute( "src", fileUri );
     img.setAttribute( "alt", pname + " öffnen" );
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( pname ) );
+    a.appendChild( dom.createTextNode( " " + pname ) );
     return a;
   }
 
@@ -188,13 +207,30 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
 
     a.setAttribute( "href", href.toString() );
 
+    final String baseUri = dom.getBaseURI();
+    String fileUri = "css/redx.gif";
+    if( baseUri != null )
+    {
+      try
+      {
+        final URL baseUrl = new URL( baseUri );
+        final URL url = new URL( baseUrl, "css/redx.gif" );
+        fileUri = url.toExternalForm();
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+        fileUri = "css/redx.gif";
+      }
+    }
+    
     final Element img = dom.createElement( "img" );
     img.setAttribute( "class", "link" );
     img.setAttribute( "border", "0" );
-    img.setAttribute( "src", "css/redx.gif" );
+    img.setAttribute( "src", fileUri );
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( "löschen" ) );
+    a.appendChild( dom.createTextNode( " löschen" ) );
     return a;
   }
 

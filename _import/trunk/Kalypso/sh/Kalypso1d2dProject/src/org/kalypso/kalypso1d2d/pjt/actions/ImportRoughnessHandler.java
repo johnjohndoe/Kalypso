@@ -82,6 +82,10 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     
     if( wizardDialog.open() == Window.OK )
     {
+      // TODO: get the list of newly created feature from the map
+      // calculate the extend by FeatureHelper.getEnvelope
+      // get the map-view and set the extent
+      
       return Status.OK_STATUS;
     }
     return Status.CANCEL_STATUS;

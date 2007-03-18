@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * discretisation model elements and links
  * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  *
  */
 @SuppressWarnings("unchecked")
@@ -114,6 +115,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       ModelOps.sortElementEdges( el );      
     }
+//    modelElements.getWrappedFeature().invalidEnvelope();
+    
   }
 
   /**

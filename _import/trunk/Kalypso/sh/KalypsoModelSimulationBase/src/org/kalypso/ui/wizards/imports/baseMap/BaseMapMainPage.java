@@ -29,8 +29,7 @@ import org.kalypso.ui.wizards.imports.roughness.DataContainer;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
- * @author Madanagopal
- * @author Dejan
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class BaseMapMainPage extends WizardPage
 {

@@ -47,7 +47,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -55,17 +55,19 @@ import org.eclipse.swt.widgets.Label;
 public class NodalBCSelectionWizardPage1 extends WizardPage
 {
   private Button[] m_radioBtnGroup;
+  private TimeserieTypeDescription[] m_descriptions;
 
-  protected NodalBCSelectionWizardPage1( )
+  protected NodalBCSelectionWizardPage1( final TimeserieTypeDescription[] descriptions )
   {
     super( "Super title" );
-    setTitle( "Title" );
-    setDescription( "Description" );
+    setTitle( "Art der Randbedingung" );
+    setDescription( "Geben sie auf deiser Seite die Art der Randbedingung ein." );
+    m_descriptions = descriptions;
   }
 
   public void init( ISelection selection )
   {
-    m_radioBtnGroup = new Button[5];
+    m_radioBtnGroup = new Button[m_descriptions.length + 1];
   }
 
   /**
@@ -81,12 +83,24 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
 
     final GridData gridData = new GridData();
     gridData.horizontalSpan = 3;
-    for( int i = 0; i < m_radioBtnGroup.length; i++ )
+    for( int i = 0; i < m_radioBtnGroup.length - 1; i++ )
     {
       m_radioBtnGroup[i] = new Button( container, SWT.RADIO );
-      m_radioBtnGroup[i].setText( "Button " + i );
+      m_radioBtnGroup[i].setText( m_descriptions[i].getName() );
       m_radioBtnGroup[i].setLayoutData( gridData );
     }
+    m_radioBtnGroup[m_radioBtnGroup.length - 1] = new Button( container, SWT.RADIO );
+    m_radioBtnGroup[m_radioBtnGroup.length - 1].setText( "Zeitreihe aus Repository" );
+    
+    final GridData gridData2 = new GridData();
+    gridData2.horizontalSpan = 2;
+    m_radioBtnGroup[m_radioBtnGroup.length - 1].setLayoutData( gridData2 );
+    
+    Button button = new Button(container, SWT.PUSH);
+    button.setText( "Durchsuchen..." );
+    
+    
+    
     // final Label label = new Label( container, SWT.NONE );
     // final GridData gridData = new GridData();
     // gridData.horizontalSpan = 3;
@@ -111,5 +125,13 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     m_radioBtnGroup[0].setFocus();
     // initContents();
   }
-
+  
+  public int getSelectedChoice(){
+    for( int i = 0; i < m_radioBtnGroup.length; i++ )
+    {
+      if( m_radioBtnGroup[i].getSelection()) return i;
+    }
+    // TODO what if nothing is selected (if possible)
+    return 0;
+  }
 }

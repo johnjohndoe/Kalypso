@@ -40,59 +40,170 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Phenomenon;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class NodalBCSelectionWizard extends Wizard implements IWizard
 {
+  protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy H:mm" );
+
   private IStructuredSelection initialSelection;
 
-  private NodalBCSelectionWizardPage1 mPage;
+  private NodalBCSelectionWizardPage1 m_page1;
+
+  private NodalBCSelectionWizardPage2 m_page2;
 
   IFolder m_scenarioFolder;
+
+  private final TimeserieTypeDescription[] m_descriptions;
+
+  private final CommandableWorkspace m_workspace;
+
+  private final IRelationType m_parentRelation;
+
+  private final Feature m_parentFeature;
+
+  private IBoundaryCondition m_boundaryCondition;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( )
+  public NodalBCSelectionWizard( final TimeserieTypeDescription[] descriptions, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
     super();
-    setWindowTitle( "Wizard title" );
-  }
-
-  /**
-   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-   */
-  public void initModelProperties( HashMap<String, Object> map )
-  {
-    // m_scenarioFolder = (IFolder) map.get( "ScenarioFolder" );
-    // m_project = (IProject) map.get( "Project" );
-    // m_projectFolder = (String) map.get( "ProjectFolder" );
+    m_descriptions = descriptions;
+    m_workspace = workspace;
+    m_parentFeature = parentFeature;
+    m_parentRelation = parentRelation;
+    setWindowTitle( "Randbedinung definieren" );
   }
 
   @Override
   public void addPages( )
   {
-    mPage = new NodalBCSelectionWizardPage1();
-    addPage( mPage );
-    mPage.init( initialSelection );
+    m_page1 = new NodalBCSelectionWizardPage1( m_descriptions );
+    addPage( m_page1 );
+    m_page1.init( initialSelection );
+    m_page2 = new NodalBCSelectionWizardPage2();
+    addPage( m_page2 );
   }
-
+  
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#canFinish()
+   */
+  @Override
+  public boolean canFinish( )
+  {
+    return m_page2.isPageComplete();
+  }
+  
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
   @Override
   public boolean performFinish( )
   {
+
+    final TimeserieTypeDescription choosenDesc = getDescription();
+
+    // TODO
+    // - get time intervall
+    // - get source-uri
+
+    /* Create new feature */
+    final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
+    final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
+    final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
+    bc.setName( "1D-Randbedingung" ); // TODO: unterscheide zwischen verschiedenen Typen
+    bc.setDescription( DF.format( new Date() ) );
+
+    /* Initialize observation with components */
+    final Feature obsFeature = bc.getTimeserieFeature();
+
+    final IComponent domainComponent = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" );
+    final IComponent valueComponent = ObservationFeatureFactory.createDictionaryComponent( obsFeature, choosenDesc.getComponentUrn() );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+    obs.setName( valueComponent.getName() );
+    obs.setDescription( valueComponent.getName() );
+    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
+
+    final TupleResult result = obs.getResult();
+    result.addComponent( domainComponent );
+    result.addComponent( valueComponent );
+
+    // TODO: fill timeserie according to from/to/step/default-value
+
+    final BigDecimal value = new BigDecimal( m_page2.getDefaultValue() );
+
+    GregorianCalendar calendarCurrent = new GregorianCalendar();
+    calendarCurrent.setTime( m_page2.getFromDate() );
+
+//    GregorianCalendar calendarStep = new GregorianCalendar();
+//    calendarStep.setTime( m_page2.getStep() );
+    
+    GregorianCalendar calendarTo = new GregorianCalendar();
+    calendarTo.setTime( m_page2.getToDate() );
+    
+    do
+    {
+      final IRecord record = result.createRecord();
+      
+      record.setValue( domainComponent, new XMLGregorianCalendarImpl(calendarCurrent) ); // either Date or XMLGregorianCalendar
+      record.setValue( valueComponent, value ); // BigDecimal or Double
+      
+      result.add( record );
+      
+//      calendarCurrent.add( Calendar.YEAR, calendarStep.get( Calendar.YEAR ) );
+//      calendarCurrent.add( Calendar.MONTH, calendarStep.get( Calendar.MONTH ) );
+//      calendarCurrent.add( Calendar.DAY_OF_MONTH, calendarStep.get( Calendar.DAY_OF_MONTH ) );
+//      calendarCurrent.add( Calendar.HOUR, calendarStep.get( Calendar.HOUR ) );
+      calendarCurrent.add( Calendar.MINUTE, m_page2.getStep() );
+    }
+    while( !calendarCurrent.after( calendarTo ) );
+
+
+    ObservationFeatureFactory.toFeature( obs, obsFeature );
+
+    m_boundaryCondition = bc;
+
     return true;
+  }
+
+  private TimeserieTypeDescription getDescription( )
+  {
+    return m_descriptions[m_page1.getSelectedChoice()];
+  }
+
+  public IBoundaryCondition getBoundaryCondition( )
+  {
+    return m_boundaryCondition;
   }
 
 }
