@@ -45,6 +45,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.font.LineMetrics;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -255,7 +256,45 @@ public class ApplyElevationWidget
     dataModel.setIgnoreMapSelection( false );
     super.moved(p);
     this.point=p;
+    //TODO: check if this repaint is necessary for the widget
+    MapPanel mapPanel = dataModel.getMapPanel();
+    if ( mapPanel != null)
+      mapPanel.repaint();
   }
+  
+  private void drawToolTip( String tooltip, Point p, Graphics g )
+  {
+    Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
+
+    g.setColor( new Color( 255, 255, 225 ) );
+    g.fillRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
+
+    g.setColor( Color.BLUE);
+    g.drawRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
+
+    /* Tooltip zeichnen. */
+    g.drawString( tooltip, (int) p.getX() + 5, (int) p.getY() + 35 );
+
+    
+  }
+
+  private String getElevationMessage( GM_Point nodePoint )
+  {
+    StringBuffer nodeElevationText= new StringBuffer(64);
+    if(nodePoint.getCoordinateDimension()<=2)
+    {
+      nodeElevationText.append( "keine Netzhöhe" );
+    }
+    else
+    {
+      nodeElevationText.append( "Netzhöhe = " );
+      nodeElevationText.append( String.format( "%.3f",nodePoint.getZ()) );
+      nodeElevationText.append( " m");
+    }
+    
+    final String elevationMessage = nodeElevationText.toString();
+    return elevationMessage;
+}
   
   
   private final void drawElevationData(Graphics g, Point p)
@@ -293,22 +332,26 @@ public class ApplyElevationWidget
       if(node!=null)
       {
         nodePoint = node.getPoint();
+        
+        
         StringBuffer nodeElevationText= new StringBuffer(64);
         if(nodePoint.getCoordinateDimension()<=2)
         {
-          nodeElevationText.append( "Keine Höhendaten am Knoten" );
+          nodeElevationText.append( "Keine Höhendaten an FE-Knoten" );
         }
         else
         {
-          nodeElevationText.append( "Knoten-Höhe=" );
-          nodeElevationText.append( nodePoint.getZ() );
+          nodeElevationText.append( "Knotenhöhe = " );
+          nodeElevationText.append( String.format( "%.3f",nodePoint.getZ() ));
+          nodeElevationText.append( " m" );
         }
         
         //show info
-        g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
+        //g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
+        drawToolTip( nodeElevationText.toString() , p, g);
         FontMetrics fontMetrics = g.getFontMetrics();
         LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
-        height= lineMetrics.getHeight()*1.2;
+        height= lineMetrics.getHeight()*1.35;
       }
       
       if(nodePoint==null)
@@ -320,17 +363,19 @@ public class ApplyElevationWidget
       if(elevationProvider!=null)
       {
         double elevation = elevationProvider.getElevation( nodePoint );
-        modelEleText.append( "DGM-Höhe=" );
-        modelEleText.append(elevation);
-        
+        modelEleText.append( "DGM-Höhe = " );
+        modelEleText.append(String.format( "%.3f",elevation));
+        modelEleText.append(" m");
       }
       else
       {
-        modelEleText.append("Höhen model nicht gefunden");
+        modelEleText.append("Geländemodell nicht gefunden");
       }
         
-      g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
-      
+      //g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
+      Point p2 = new Point();
+      p2.setLocation((int)p.getX(), (int)(p.getY()+height) );
+      drawToolTip( modelEleText.toString() , p2, g);
       return;
     }
     catch( RuntimeException e )
