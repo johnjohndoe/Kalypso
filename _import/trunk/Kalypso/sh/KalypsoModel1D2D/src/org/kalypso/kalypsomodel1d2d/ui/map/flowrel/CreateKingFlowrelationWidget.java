@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -49,15 +53,19 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
 {
   public CreateKingFlowrelationWidget( )
   {
-    super( "King Parameter hinzufügen", "King Parameter einem FE-Knoten zuordnen", IKingFlowRelation.QNAME, IKingFlowRelation.class );
+    super( "King Parameter hinzufügen", "King Parameter einem FE-Knoten zuordnen", IKingFlowRelation.QNAME );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#doCreateNewobject()
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#createNewFeature(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.relation.IRelationType,
+   *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected void doCreateNewobject( )
+  protected IKingFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
-    // TODO Auto-generated method stub
+    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IKingFlowRelation.QNAME );
+    final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
+    return (IKingFlowRelation) newFeature.getAdapter( IKingFlowRelation.class );
   }
 }

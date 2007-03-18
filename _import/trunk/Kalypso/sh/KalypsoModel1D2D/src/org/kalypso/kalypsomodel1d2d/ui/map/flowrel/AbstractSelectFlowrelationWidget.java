@@ -146,13 +146,12 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
 
     /* Grab next flowrelation */
     if( m_flowTheme == null || m_flowRelCollection == null )
-    {
       return;
-    }
+
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
     m_flowRelation = m_flowRelCollection.findFlowrelationship( currentPos, grabDistance );
 
-    MapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaint();
   }
@@ -164,7 +163,13 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
   public void dragged( final Point p )
   {
     if( m_rectangleSelector != null )
+    {
       m_rectangleSelector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
+
+      final MapPanel panel = getMapPanel();
+      if( panel != null )
+        panel.repaint();
+    }
   }
 
   /**

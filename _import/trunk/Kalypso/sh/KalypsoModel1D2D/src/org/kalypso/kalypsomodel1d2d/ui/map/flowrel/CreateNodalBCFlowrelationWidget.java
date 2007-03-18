@@ -40,33 +40,132 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Phenomenon;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
-  public CreateNodalBCFlowrelationWidget(  )
+  // TODO: move this to the Nodal...Wizard
+  public final static class TimeserieTypeDescription
   {
-    super( "Randbedingung erzeugen", "Randbedinung für einen FE-Knoten erzeugen", IBoundaryCondition.QNAME, IBoundaryCondition.class );
+    private final String m_name;
+
+    private final String m_componentUrn;
+
+    public TimeserieTypeDescription( final String name, final String componentUrn )
+    {
+      m_name = name;
+      m_componentUrn = componentUrn;
+    }
+
+    public String getName( )
+    {
+      return m_name;
+    }
+
+    public String getComponentUrn( )
+    {
+      return m_componentUrn;
+    }
+  }
+
+  protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy h:mm" );
+
+  public CreateNodalBCFlowrelationWidget( )
+  {
+    super( "Randbedingung erzeugen", "Randbedinung für einen FE-Knoten erzeugen", IBoundaryCondition.QNAME );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#doCreateNewobject()
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#createNewFeature(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.relation.IRelationType,
+   *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected void doCreateNewobject( )
+  protected IBoundaryCondition createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
-    final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard();
     final Display display = PlatformUI.getWorkbench().getDisplay();
-    final Shell shell = display.getActiveShell();
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
+
+    final IBoundaryCondition[] bcresult = new IBoundaryCondition[1];
+
+    display.syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        /* Ask user for type of new feature */
+
+        // TODO: make it dependend on the element type
+        final TimeserieTypeDescription[] descriptions = getTimeserieDescriptions();
+
+        final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( /* descriptions */);
+
+        final Shell shell = display.getActiveShell();
+        final WizardDialog dialog = new WizardDialog( shell, wizard );
+        if( dialog.open() == Window.CANCEL )
+          return;
+
+        final TimeserieTypeDescription choosenDesc = descriptions[0]/* wizard.getDescription() */;
+
+        // TODO
+        // - get time intervall
+        // - get source-uri
+
+        /* Create new feature */
+        final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
+        final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
+        final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
+        bc.setName( "1D-Randbedingung" ); // TODO: unterscheide zwischen verschiedenen Typen
+        bc.setDescription( DF.format( new Date() ) );
+
+        /* Initialize observation with components */
+        final Feature obsFeature = bc.getTimeserieFeature();
+
+        final IComponent valueComponent = ObservationFeatureFactory.createDictionaryComponent( obsFeature, choosenDesc.getComponentUrn() );
+
+        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+        obs.setName( valueComponent.getName() );
+        obs.setDescription( valueComponent.getName() );
+        obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
+
+        final TupleResult result = obs.getResult();
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" ) );
+        result.addComponent( valueComponent );
+
+        // TODO
+        // - maybe apply intervall
+        // - maybe read from source
+
+        ObservationFeatureFactory.toFeature( obs, obsFeature );
+
+        bcresult[0] = bc;
+      }
+    } );
+
+    return bcresult[0];
+  }
+
+  protected TimeserieTypeDescription[] getTimeserieDescriptions( )
+  {
+    return new TimeserieTypeDescription[] { new TimeserieTypeDescription( "", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ) };
   }
 }

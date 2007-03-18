@@ -54,7 +54,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -96,14 +95,11 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
   private final QName m_qnameToCreate;
 
-  private final Class m_binderClass;
-
-  public AbstractCreateFlowrelationWidget( final String name, final String tooltip, final QName qnameToCreate, final Class binderClass )
+  public AbstractCreateFlowrelationWidget( final String name, final String tooltip, final QName qnameToCreate )
   {
     super( name, tooltip );
 
     m_qnameToCreate = qnameToCreate;
-    m_binderClass = binderClass;
   }
 
   /**
@@ -127,11 +123,11 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     mapPanel.setMessage( "Klicken Sie in die Karte um einen Parameter hinzuzufügen." );
 
-    m_flowTheme = UtilMap.findEditableThem( mapModell, m_qnameToCreate );
+    m_flowTheme = UtilMap.findEditableTheme( mapModell, m_qnameToCreate );
     if( m_flowTheme == null )
-      m_flowTheme = UtilMap.findEditableThem( mapModell, IFlowRelationship.QNAME );
+      m_flowTheme = UtilMap.findEditableTheme( mapModell, IFlowRelationship.QNAME );
 
-    m_nodeTheme = UtilMap.findEditableThem( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    m_nodeTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     if( m_flowTheme == null || m_nodeTheme == null )
       return;
 
@@ -152,8 +148,8 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_nodeTheme == null )
     {
       m_node = null;
-//    TODO: check if this repaint is necessary for the widget
-      MapPanel panel = getMapPanel();
+
+      final MapPanel panel = getMapPanel();
       if( panel != null )
         panel.repaint();
       return;
@@ -168,12 +164,15 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     m_existingFlowRelation = null;
     if( m_flowRelCollection == null || m_node == null )
     {
+      final MapPanel panel = getMapPanel();
+      if( panel != null )
+        panel.repaint();
+
       return;
     }
     m_existingFlowRelation = m_flowRelCollection.findFlowrelationship( m_node.getPoint(), 0.0 );
 
-//  TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaint();
   }
@@ -206,7 +205,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_node == null )
       problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
     else if( m_existingFlowRelation != null )
-      // TODO: maybe also select the existing parameter and open the feature view
       problemMessage = "Dieser Knoten besitzt bereits Parameter.";
     else
       problemMessage = null;
@@ -229,9 +227,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_flowRelCollection == null )
       return;
 
-    doCreateNewobject();
-    // TODO: move the stuff below in the method above
-
     final CommandableWorkspace workspace = m_flowTheme.getWorkspace();
 
     if( m_existingFlowRelation == null )
@@ -239,14 +234,18 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       /* Create flow relation at position */
       final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
       final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
-      final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( m_qnameToCreate );
-      final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
-      final IFlowRelationship flowRel = (IFlowRelationship) newFeature.getAdapter( m_binderClass );
+      final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation );
+      if( flowRel == null )
+      {
+        getMapPanel().repaint();
+        return;
+      }
+
       flowRel.setPosition( m_node.getPoint() );
 
       /* Post it as an command */
       final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newFeature, selectionManager, true, true );
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
       try
       {
         workspace.postCommand( command );
@@ -295,5 +294,10 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     } );
   }
 
-  protected abstract void doCreateNewobject( );
+  /**
+   * Really create the new object.
+   * 
+   * @return The new object, if null, nothing happens..
+   */
+  protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation );
 }
