@@ -202,8 +202,8 @@ public class WorkflowControl
 
             final Object help = item.getData( "_HELP" ); //$NON-NLS-1$
             final String helpString = help == null ? null : ((Help) help).getValue().trim();
-			if( helpString == null || helpString.length() == 0 )
-				return;
+            if( helpString == null || helpString.length() == 0 )
+              return;
 
             tip = new Shell( display, SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL );
             tip.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
@@ -247,7 +247,7 @@ public class WorkflowControl
             {
               doTask( task );
             }
-            catch( final NotHandledException nhe  )
+            catch( final NotHandledException nhe )
             {
               final IStatus status = StatusUtilities.createWarningStatus( "Command not handled: " + task.getURI() );
               KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
@@ -255,7 +255,8 @@ public class WorkflowControl
             catch( final Throwable e )
             {
               final IStatus status = StatusUtilities.statusFromThrowable( e );
-              ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) + task.getURI(), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" )
+                  + task.getURI(), status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR ); //$NON-NLS-1$ //$NON-NLS-2$
               KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
               logger.log( Level.SEVERE, "Failed to execute task: " + task.getURI(), e ); //$NON-NLS-1$
             }
@@ -320,8 +321,9 @@ public class WorkflowControl
     try
     {
       final Object object = handlerService.executeCommand( command.getId(), null );
+      /* Show error dialog, but not for ok and not for cancel */
       if( object instanceof IStatus )
-        ErrorDialog.openError( m_treeViewer.getControl().getShell(), command.getName(), "Problems executing command", (IStatus) object );
+        ErrorDialog.openError( m_treeViewer.getControl().getShell(), command.getName(), "Problems executing command", (IStatus) object, IStatus.INFO | IStatus.WARNING | IStatus.ERROR );
     }
     finally
     {
