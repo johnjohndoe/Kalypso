@@ -227,6 +227,8 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
 //      }
     }
     ModelOps.sortElementEdges( this );
+    
+    getWrappedFeature().invalidEnvelope();
   }
 
   /**
@@ -379,6 +381,8 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
       return;
     }
     edgeFeatureList.add( edgeID );
+    
+    getWrappedFeature().invalidEnvelope();
   }
   
   /**
