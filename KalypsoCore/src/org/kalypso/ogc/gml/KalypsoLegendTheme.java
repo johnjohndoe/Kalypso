@@ -77,7 +77,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme implements IKalypso
 
   public KalypsoLegendTheme( final IMapModell mapModell )
   {
-    super( KalypsoLegendTheme.class.getName(), "Legende", mapModell );
+    super( "Legende", "Legende", mapModell );
   }
 
   /**
