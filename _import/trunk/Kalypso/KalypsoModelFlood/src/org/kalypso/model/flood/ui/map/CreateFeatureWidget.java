@@ -120,6 +120,11 @@ public class CreateFeatureWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_currentPoint = p;
+    
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
   }
 
   /**
