@@ -383,4 +383,18 @@
               class="org.kalypso.model.wspm.core.gml.DefaultProfileFeatureProvider"
               id="org.kalypso.model.wspm.core.gml.DefaultProfileFeatureProvider"/>
      </extension>
+   <extension
+         point="org.kalypso.ui.featureViewExtensionControl">
+      <extensionControl
+            class="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory"
+            id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory"/>
+   </extension>
+   
+      <extension
+         point="org.kalypso.chart.LayerProvider">
+      <provider
+            class="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"
+            id="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"/>
+   </extension>
+   
 </plugin>

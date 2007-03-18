@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.featureview;
+package org.kalypso.model.wspm.ui.featureview;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,16 +47,15 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.swtchart.chart.layer.ChartDataProvider;
 import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypsodeegree.model.feature.Feature;
 import org.ksp.chart.configuration.ChartType;
@@ -65,6 +64,13 @@ import org.ksp.chart.configuration.ConfigurationType;
 /**
  * A feature control which shows a chart. The chart configuration comes from the parameters of the extension, its
  * context will be the current feature.
+ * <p>
+ * Supported arguments:
+ * <ul>
+ * <li>configuration: urn to the configuration file for the chart. The urn will be resolved against the catalogue
+ * mechanism and after that relative to the current url.context (TODO: the last thing does not work yet).</li>
+ * <li>featureKeyName: The key-name under which the current feature will be put into the ChartDataProvider. </li>
+ * </ul>
  * 
  * @author Gernot Belger
  */
@@ -77,9 +83,10 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
     final String configurationUrn = arguments.getProperty( "configuration", null );
+    final String featureKeyName = arguments.getProperty( "featureKeyName", null );
 
     final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog().resolve( configurationUrn, configurationUrn );
-    
+
     try
     {
       final URL configUrl = new URL( configurationUrl );
@@ -93,10 +100,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
           charts.add( (ChartType) object );
       }
 
-      // TODO: Better concept to provider data to the chart layer providers
-      final Feature pointsFeature = (Feature) feature.getProperty( new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "pointsMember" ) );
-      ChartDataProvider.FEATURE_MAP.put( "thePointsFeatureKey", pointsFeature );
-      ChartDataProvider.FEATURE_MAP.put( "thePolynomeFeatureKey", feature );
+      ChartDataProvider.FEATURE_MAP.put( featureKeyName, feature );
 
       final ChartType[] chartTypes = charts.toArray( new ChartType[charts.size()] );
       return new ChartFeatureControl( feature, pt, chartTypes, configUrl );

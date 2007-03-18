@@ -197,22 +197,10 @@
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
             provider="org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh"/>
    </extension>
-   <extension
+      <extension
          point="org.kalypso.ui.featureViewExtensionControl">
       <extensionControl
             class="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"
             id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"/>
-      <extensionControl
-            class="org.kalypso.model.wspm.tuhh.ui.featureview.ChartFeatureControlFactory"
-            id="org.kalypso.model.wspm.tuhh.ui.featureview.ChartFeatureControlFactory"/>
-   </extension>
-   <extension
-         point="org.kalypso.chart.LayerProvider">
-      <provider
-            class="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider"
-            id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider"/>
-      <provider
-            class="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider"
-            id="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider"/>
    </extension>
 </plugin>

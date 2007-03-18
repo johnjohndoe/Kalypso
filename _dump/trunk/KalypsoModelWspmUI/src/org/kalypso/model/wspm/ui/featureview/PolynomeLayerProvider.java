@@ -38,27 +38,41 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.featureview;
+package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.kalypso.layerprovider.TupleResultLineChartLayer;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import javax.xml.namespace.QName;
+
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.axis.IAxis;
+import org.kalypso.swtchart.chart.layer.ChartDataProvider;
 import org.kalypso.swtchart.chart.layer.IChartLayer;
 import org.kalypso.swtchart.chart.layer.ILayerProvider;
 import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.ksp.chart.configuration.AxisType;
 import org.ksp.chart.configuration.LayerType;
 
 /**
+ * Layer provider for the {@link PolynomeChartLayer}.
+ * <p>
+ * the following parameters are supported:
+ * <ul>
+ * <li>featureKey: String. Key, where to get the feature from the ChartDataProvider.</li>
+ * <li>propertyName: QName. QName of the list-property of polynomes inside the given feature.</li>
+ * <li>domainId: String. If set, the polynomes are filtered by this domain-phenomenon-id</li>
+ * <li>pixelsPerTick: Integer, default 5. Determines the resolution how the polynomes are rendered. 1 means: for every
+ * pixel in x-diretion, a polynome value is calculated and rendered.</li>
+ * </ul>
+ * 
  * @author Gernot Belger
  */
-public class TupleResultLayerProvider implements ILayerProvider
+public class PolynomeLayerProvider implements ILayerProvider
 {
   private LayerType m_lt;
 
@@ -80,32 +94,39 @@ public class TupleResultLayerProvider implements ILayerProvider
     final ParameterHelper ph = new ParameterHelper();
     ph.addParameters( m_lt.getParameters(), configLayerId );
 
-    final boolean showPoints = Boolean.valueOf( ph.getParameterValue( "showPoints", "true" ) );
-    final Boolean showLines = Boolean.valueOf( ph.getParameterValue( "showLines", "true" ) );
+    final String domainId = ph.getParameterValue( "domainId", null );
+    final boolean showPoints = Boolean.parseBoolean( ph.getParameterValue( "showPoints", "false" ) );
+    final int pixelsPerTick = Integer.parseInt( ph.getParameterValue( "pixelsPerTick", "5" ) );
 
-    // TODO: More generel concept to retrieve data for the layer
     final String featureKey = ph.getParameterValue( "featureKey", null );
+    final String propertyNameStr = ph.getParameterValue( "propertyName", null );
+    final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
+    
     final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );
-
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-    final TupleResult result = obs.getResult();
 
     final String domainAxisId = ((AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
     final String valueAxisId = ((AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
 
     final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
-
-    final String domainComponentId = ph.getParameterValue( "domainComponentId", "" );
-    final String valueComponentId = ph.getParameterValue( "valueComponentId", "" );
-
     final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
 
-    final TupleResultLineChartLayer icl = new TupleResultLineChartLayer( result, domainComponentId, valueComponentId, domAxis, valAxis );
-    icl.setName( m_lt.getTitle() );
-    icl.setVisibility( m_lt.isVisible() );
-    icl.setShowPoints( showPoints );
-    icl.setShowLines( showLines );
+    final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
 
-    return icl;
+    /* Filter polynomes by their domainId */
+    final List<IPolynomial1D> polys = new ArrayList<IPolynomial1D>();
+    for( final Object object : polygones )
+    {
+      final Feature polyFeature = (Feature) object;
+      final IPolynomial1D poly1d = (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class );
+      if( domainId == null || domainId.equals( poly1d.getDomainPhenomenon() ) )
+        polys.add( poly1d );
+    }
+
+    final IPolynomial1D[] polyArray = polys.toArray( new IPolynomial1D[polys.size()] );
+    final PolynomeChartLayer layer = new PolynomeChartLayer( polyArray, domAxis, valAxis, pixelsPerTick, showPoints );
+    layer.setName( m_lt.getTitle() );
+    layer.setVisibility( m_lt.isVisible() );
+
+    return layer;
   }
 }
