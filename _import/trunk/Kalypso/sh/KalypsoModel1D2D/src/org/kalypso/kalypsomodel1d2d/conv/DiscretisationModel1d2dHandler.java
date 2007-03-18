@@ -149,7 +149,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
     else
     {
-       edge=model.findEdge( node1, node2 );
+      // TODO: this is a major performance bug!
+      // searching AND adding many new nodes causes the SplitSort of the edge-list to resort for every new egde
+      
+      // TODO: commented it otu for the moment, because never an edge was found for
+      // existing valid .2d files
+      // check what to do
+//       edge=model.findEdge( node1, node2 );
     }
     
     boolean isNew=false;
@@ -165,6 +171,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       node2.addContainer( edgeID );
       isNew=true;
     }
+//    else
+//      // this never happens for existing (valid) .2d files
+//      // se coomend on find edges above
+//      System.out.println( "Edge already there: " + edge );
+
     //TODO set elements
     if(elementLeftID==elementRightID)
     {
