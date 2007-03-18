@@ -130,6 +130,11 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     if( m_p1 != null )
       m_p2 = point;
     updateInfoText();
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**
@@ -155,6 +160,11 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
       // nothing
     }
     updateInfoText();
+    
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
   }
 
   /**

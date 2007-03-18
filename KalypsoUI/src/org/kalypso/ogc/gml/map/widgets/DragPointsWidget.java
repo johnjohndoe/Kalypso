@@ -219,6 +219,11 @@ public class DragPointsWidget extends AbstractWidget
           handle.setActive( false );
 
       }
+      //TODO: check if this repaint is really necessary
+      MapPanel panel = getMapPanel();
+      if (panel != null)
+        panel.repaint();
+
     }
 
     /* Store the current mouse position. */

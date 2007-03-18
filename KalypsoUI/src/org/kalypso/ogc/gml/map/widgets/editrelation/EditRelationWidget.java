@@ -218,6 +218,11 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public void dragged( Point p )
   {
     moved( p );
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**
@@ -238,7 +243,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
     if( m_srcFE == feature )
-      m_fitProblems.append( "gleiches Element geht nicht" );
+      m_fitProblems.append( "diese Funktion ist mit dem gleichen Element nicht möglich" );
     else
     {
       if( !getFitList( m_srcFE, feature ).isEmpty() )
@@ -246,6 +251,11 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
     updateInfoText();
     updateProblemsText();
+    
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
   }
 
   @Override

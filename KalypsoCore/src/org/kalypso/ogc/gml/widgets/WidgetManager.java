@@ -146,7 +146,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
         m_lastMoved = e.getPoint();
         getActualWidget().moved( m_lastMoved );
 
-        m_mapPanel.repaint();
+        //m_mapPanel.repaint();
       }
   }
 
@@ -159,7 +159,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       {
         m_lastDragged = e.getPoint();
         getActualWidget().dragged( m_lastDragged );
-        m_mapPanel.repaint();
+        //m_mapPanel.repaint();  
       }
 
   }

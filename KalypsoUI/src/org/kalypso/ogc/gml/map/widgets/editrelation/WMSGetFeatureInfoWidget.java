@@ -122,6 +122,11 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   public void dragged( Point p )
   {
     m_movePoint = p;
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**
@@ -131,6 +136,10 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   public void moved( Point p )
   {
     m_movePoint = null;
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
   }
 
   /**

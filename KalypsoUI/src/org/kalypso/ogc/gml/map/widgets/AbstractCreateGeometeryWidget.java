@@ -163,6 +163,12 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   {
     if( m_points.isEmpty() || m_points.get( m_points.size() - 1 ).distance( p ) > MIN_DRAG_DISTANCE_PIXEL )
       leftClicked( p );
+    
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**
@@ -172,7 +178,14 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   public void moved( Point p )
   {
     if( !m_points.isEmpty() )
+      {
       m_currentPoint = p;
+
+//    TODO: check if this repaint is necessary for the widget
+      MapPanel panel = getMapPanel();
+      if ( panel != null)
+        panel.repaint();
+      }
   }
 
   /**
