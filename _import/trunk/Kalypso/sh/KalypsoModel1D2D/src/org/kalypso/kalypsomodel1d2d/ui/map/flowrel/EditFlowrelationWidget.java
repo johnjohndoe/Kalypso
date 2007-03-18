@@ -59,19 +59,19 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
 {
   public EditFlowrelationWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten" );
+    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.element1d.AbstractSelectFlowrelationWidget#flowRelationGrabbed()
    */
   @Override
-  protected void flowRelationGrabbed( final IKalypsoFeatureTheme flowTheme, final IFlowRelationship flowRelation )
+  protected void flowRelationGrabbed( final IKalypsoFeatureTheme flowTheme, final IFlowRelationship[] flowRelation )
   {
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     
-    final Feature featureToSelect = flowRelation.getWrappedFeature();
+    final Feature featureToSelect = flowRelation[0].getWrappedFeature();
     final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
     
     final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );

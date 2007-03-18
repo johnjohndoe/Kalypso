@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="wb1d2d:TeschkeFlowRelation" style="SWT.NONE"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
+		grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+	<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER">
+		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description" tooltip="Beschreibung"
+		style="SWT.MULTI | SWT.BORDER">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2"
+			horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<gft:label text="Station [km]" visible="true" tooltip="Optionale Angabe der Station. Falls gesetzt, wird die Länge des&#x10;FE-Elements als Differenz der anliegenden Stationierung&#x10;ermittelt." style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="wb1d2d:station" tooltip="Stationierung"
+		style="SWT.BORDER">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2"
+			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:validatorlabel property="wb1d2d:station" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<gft:label text="Profil-Referenz" visible="true" tooltip="Referenz auf Profil"
+		style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:composite tooltip="Referenz auf Profil" style="SWT.NONE">
+		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="2" marginWidth="1" makeColumnsEqualWidth="false" />
+		<gft:combo property="wb1d2d:profileMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+			<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		</gft:combo>
+		<gft:button property="wb1d2d:profileMember" style="SWT.PUSH">
+			<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+		</gft:button>
+	</gft:composite>
+	<gft:validatorlabel property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<!-- Anzeige des Profils? -->
+	
+	<!--  TODO Anzeige der Punkte und Polynome -->
+	<gft:extensioncontrol property="wb1d2d:pointsMember" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+		<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
+		<gft:param name="featureKeyName" value="theResultFeatureKey" />
+	</gft:extensioncontrol>
+	
+</gft:featureview>
+
