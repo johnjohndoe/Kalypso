@@ -199,6 +199,7 @@ public class ImportElevationWizard extends Wizard
           }
           catch( Exception e )
           {
+            e.printStackTrace();
             throw new InvocationTargetException(e);
           }          
            

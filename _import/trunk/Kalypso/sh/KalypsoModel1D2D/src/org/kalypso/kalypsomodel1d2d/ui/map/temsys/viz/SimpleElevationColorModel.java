@@ -42,6 +42,11 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Color;
 
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
+
+import sun.awt.image.PixelConverter.Rgba;
+
 //import org.eclipse.swt.graphics.Color;
 //import org.eclipse.swt.graphics.Device;
 //import org.eclipse.swt.graphics.RGB;
@@ -62,6 +67,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
   private double maxBrightness;
   private Color noElevationColor;
   private Color baseColor;
+  private float alfa = 0.5f;
+  
   //private RGB rgb;
   private float[] hsb;
   private float[] noElevationColorHSB;
@@ -137,8 +144,16 @@ public class SimpleElevationColorModel implements IElevationColorModel
 //      System.out.println("This Color + brightness :"+this.hsb[0]+","+this.hsb[1]+","+brightness);
 //      System.out.println("This Color :"+hsb[0]+","+hsb[1]+","+hsb[2]);
      // Color.HSBtoRGB( hue, saturation, brightness )
-      return Color.getHSBColor( this.hsb[0], this.hsb[1], (float) brightness );
-      //new Color( Color.HSBtoRGB( hsb1[0], hsb1[1], hsb1[2] )
+      
+//      RGB rgb= new RGB(hsb[0],hsb[1],(float)brightness);
+//      return new Color(rgb.red, rgb.green, rgb.red, alfa);
+
+      
+      Color color = Color.getHSBColor( this.hsb[0], this.hsb[1], (float) brightness );
+      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 100);
+      return color;
+      
+      
       
     }
     else

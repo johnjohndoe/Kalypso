@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -73,8 +74,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -496,7 +500,15 @@ public class AssignNodeElevationFaceComponent
     {
       public void widgetSelected( SelectionEvent event )
       {
-        System.out.println( "List of Elements Selected " + selectionNodeList.size() );
+        try
+        {
+          applyElevation();
+          nodeElevationViewer.refresh();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
 
     } );
@@ -513,5 +525,64 @@ public class AssignNodeElevationFaceComponent
     nodeElevationViewer.setCellModifier( modifier );
     
     
+  }
+  
+  private final void applyElevation() throws Exception
+  {
+//    System.out.println( "List of Elements Selected " + selectionNodeList.size() );
+    IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+    if(model1d2d==null)
+    {
+      System.out.println("model  is null");
+    }
+    
+    IKalypsoFeatureTheme elevationTheme = dataModel.getElevationTheme();
+    if(elevationTheme==null)
+    {
+      return;
+    }
+    CommandableWorkspace workspace = elevationTheme.getWorkspace();
+    if(workspace==null)
+    {
+      return;
+    }
+    
+    IElevationProvider elevationProvider = 
+          dataModel.getElevationModel();
+    if(elevationProvider==null)
+    {
+      elevationProvider = dataModel.getElevationModelSystem();
+      if(elevationProvider == null)
+      {
+        return;
+      }
+    }
+    
+    ChangeTerrainElevationSystemCommand compositeCommand = 
+        new ChangeTerrainElevationSystemCommand(workspace,model1d2d);
+    ChangeNodePositionCommand changePosCmd;
+    double elevation;
+    
+    ISelection selection = nodeElevationViewer.getSelection();
+    if(!(selection instanceof IStructuredSelection) )
+    {
+      return;
+    }
+    IFE1D2DNode node;
+    for(Object selected:((IStructuredSelection)selection).toList())
+    {
+      if(selected instanceof IFE1D2DNode)
+      {
+        node = (IFE1D2DNode) selected;
+        elevation = elevationProvider.getElevation( node.getPoint() );
+        changePosCmd = new ChangeNodePositionCommand(
+            model1d2d,node,elevation);
+        changePosCmd.process();
+        compositeCommand.addCommand( changePosCmd );        
+      }
+    }
+    
+    //just reveal the command to the undo framework
+    elevationTheme.postCommand( compositeCommand, null );
   }
 }

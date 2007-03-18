@@ -228,7 +228,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
                 throw new IllegalArgumentException(
                     "Could not create adapter for:"+
                       "\n\t featue="+feature+
-                      "\n\t adaptaer type="+cls,
+                      "\n\t adapter type="+cls,
                     th);
               }
               

@@ -124,33 +124,8 @@ public class ElevationModelSystemEditorComponent
     {
       
       System.out.println("MoveUp:"+elevationListTableViewer.getSelection());
-      ITerrainModel terrainModel = dataModel.getTerrainModel();
-      if(terrainModel==null)
-      {
-        return;
-      }
-      ITerrainElevationModelSystem terrainElevationModelSystem = 
-                        terrainModel.getTerrainElevationModelSystem();
-      if(terrainElevationModelSystem==null)
-      {
-        return;
-      }
-      IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = 
-                                  terrainElevationModelSystem.getTerrainElevationModels();
-      Object firstElement = ((IStructuredSelection)elevationListTableViewer.getSelection()).getFirstElement();
-      //TODO Patrice check change
-      String selectedString = 
-            (String)firstElement;////stringRemoveBraces( elevationListTableViewer.getSelection().toString() );
-      int selectedStringIndex = terrainElevationModels.indexOf( selectedString );
-
-      if( terrainElevationModels.indexOf( selectedString ) != 0 )
-      {
-        ITerrainElevationModel destString = terrainElevationModels.get( (terrainElevationModels.indexOf( selectedString ) - 1) );
-        terrainElevationModels.remove( destString );
-        terrainElevationModels.add( selectedStringIndex, (ITerrainElevationModel) destString );
-        System.out.println( selectedString + " ," + destString );
-        System.out.println( (terrainElevationModels.indexOf( selectedString )) - 1 + " ," + terrainElevationModels.indexOf( selectedString ) );
-      }
+//      moveUpSelectionUp();
+      moveSelection( -1 );
       elevationListTableViewer.refresh();
     }
 
@@ -161,24 +136,8 @@ public class ElevationModelSystemEditorComponent
   {
     public void widgetSelected( SelectionEvent event )
     {
-      //TODO patrice check this also
-     String selectedString = 
-       (String)((IStructuredSelection)elevationListTableViewer.getSelection()).getFirstElement();//stringRemoveBraces( elevationListTableViewer.getSelection().toString() );
-     IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = 
-                                                  dataModel.getTerrainElevationModels();
-     if(terrainElevationModels==null)
-     {
-       return;
-     }
-      int selectedStringIndex = terrainElevationModels.indexOf( selectedString );
-      if( terrainElevationModels.indexOf( selectedString ) != terrainElevationModels.size() - 1 )
-      {
-        ITerrainElevationModel destString = terrainElevationModels.get( (terrainElevationModels.indexOf( selectedString ) + 1) );
-        terrainElevationModels.remove( destString );
-        terrainElevationModels.add( selectedStringIndex, destString );
-      }
+      moveSelection( 1 );
       elevationListTableViewer.refresh();
-//
     }
   };
   
@@ -264,7 +223,7 @@ public class ElevationModelSystemEditorComponent
       else
       {
         System.out.println( "SIZE : " + terrainElevationModels.size() );
-        elevationListTableViewer.setInput( terrainElevationModels.toArray() );
+        elevationListTableViewer.setInput( terrainElevationModels/*.toArray()*/ );
       }
     }
     elevationListTableViewer.addSelectionChangedListener( this.elevationModelSelectListener);
@@ -333,7 +292,7 @@ public class ElevationModelSystemEditorComponent
       {
         IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = 
                                                 dataModel.getTerrainElevationModels();
-        int i = elevationModels.indexOf( elevationModels );
+        int i = elevationModels.indexOf( firstElement);
         if(i==-1)
         {
           //not found
@@ -347,26 +306,40 @@ public class ElevationModelSystemEditorComponent
         {
           int targetPos=i-1;
           ITerrainElevationModel modelToReplace = elevationModels.get( targetPos );
-          elevationModels.set( i, (ITerrainElevationModel) firstElement );
-          elevationModels.set( i, (ITerrainElevationModel) firstElement );
+          elevationModels.set( targetPos, (ITerrainElevationModel) firstElement );
+          elevationModels.set( i, modelToReplace);
         }
       }
     }
   }
   
-//  private ListViewer areaViewer;
-//  
-//  public void setInput( Object input )
-//  {
-//    Object oldInput = areaViewer.getInput();
-//    if( oldInput == input )
-//    {
-//      areaViewer.refresh();
-//    }
-//    else
-//    {
-//      areaViewer.setInput( input );
-//
-//    }
-//  }
+  private void moveSelection(int delta)
+  {
+    ISelection selection = elevationListTableViewer.getSelection();
+    if(selection instanceof IStructuredSelection)
+    {
+      Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+      if(firstElement instanceof ITerrainElevationModel)
+      {
+        IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = 
+                                                dataModel.getTerrainElevationModels();
+        int i = elevationModels.indexOf( firstElement);
+        int targetPos = i+delta;
+        int SIZE=elevationModels.size();
+        
+        if(i<0 || targetPos<0 || targetPos>=SIZE)
+        {
+          //not found
+          return;
+        }
+        else
+        {
+          ITerrainElevationModel modelToReplace = elevationModels.get( targetPos );
+          elevationModels.set( targetPos, (ITerrainElevationModel) firstElement );
+          elevationModels.set( i, modelToReplace);
+        }
+      }
+    }
+  }
+
 }

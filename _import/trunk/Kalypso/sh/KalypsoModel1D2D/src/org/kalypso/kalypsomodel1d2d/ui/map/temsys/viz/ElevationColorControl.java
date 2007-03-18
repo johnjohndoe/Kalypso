@@ -48,9 +48,11 @@ import java.awt.Color;
  */
 public class ElevationColorControl
 {
+  private static final Color DEFAULT_BASE_COLOR = Color.GRAY;
+  private static final Color DEFAULT_NO_ELEVATION_COLOR = Color.YELLOW;
   
-  private static Color baseColor = Color.WHITE;
-  private static Color noElevationColor = Color.WHITE;
+  private static Color baseColor = DEFAULT_BASE_COLOR;
+  private static Color noElevationColor = DEFAULT_NO_ELEVATION_COLOR;
   
   public static final IElevationColorModel getColorModel(double minElevation, double maxElevation)
   {
@@ -58,14 +60,15 @@ public class ElevationColorControl
     
     if(curBaseColor==null)
     {
-      curBaseColor = Color.WHITE;//GREEN.darker();
+      curBaseColor = DEFAULT_BASE_COLOR;      
     }
     
     Color curNoElevatonColor = getNoElevationColor();
     if(curNoElevatonColor==null)
     {
-      curNoElevatonColor = Color.WHITE;
+      curNoElevatonColor = DEFAULT_NO_ELEVATION_COLOR;
     }
+    
     return new SimpleElevationColorModel(
                           minElevation, 
                           maxElevation, 

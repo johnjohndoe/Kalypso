@@ -78,7 +78,7 @@ public class TerrainElevationShapeGeometry extends FeaturePropertyFunction
         return null;
       }
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
       //final IStatus status = StatusUtilities.statusFromThrowable( e );
       //KalypsoModelSimulationBaseConsts.getDefault().getLog().log( status );
