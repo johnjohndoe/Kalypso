@@ -72,7 +72,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
     mapPanel.setMessage( "Klicken Sie in die Karte um 1D-Elemente hinzuzufügen." );
 
     final IMapModell mapModell = mapPanel.getMapModell();
-    m_theme = UtilMap.findEditableThem( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+    m_theme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
     m_model1d2d = UtilMap.findFEModelTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
     m_lineBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
   }
@@ -80,12 +80,17 @@ public class CreateFEElement1DWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
+//    System.out.println( "Moved called on widget: " + getName() );
+    
     m_currentPos = MapUtilities.transform( getMapPanel(), p );
 
     /* find node */
     m_node = null;
 
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), m_currentPos, m_grabRadius * 2 );
+    if( m_model1d2d == null )
+      return;
+    
     m_node = m_model1d2d.findNode( m_currentPos, grabDistance );
 //  TODO: check if this repaint is necessary for the widget
     MapPanel panel = getMapPanel();

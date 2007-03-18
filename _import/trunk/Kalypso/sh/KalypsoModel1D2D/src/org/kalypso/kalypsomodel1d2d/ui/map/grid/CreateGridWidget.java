@@ -572,7 +572,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     MapPanel mapPanel = getMapPanel();
     IMapModell mapModel = getMapPanel().getMapModell();
     IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    IKalypsoFeatureTheme theme = UtilMap.findEditableThem( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
     CommandableWorkspace workspace = theme.getWorkspace();
     try

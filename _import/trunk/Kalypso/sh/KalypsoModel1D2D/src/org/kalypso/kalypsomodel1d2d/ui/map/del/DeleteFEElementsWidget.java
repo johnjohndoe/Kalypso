@@ -4,9 +4,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -20,7 +17,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -28,18 +24,15 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Patrice Congo
  */
-public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetWithOptions,*/ WidgetStrategyContext
+public abstract class DeleteFEElementsWidget extends AbstractWidget implements WidgetStrategyContext
 {
+  private IWidget m_widgetStrategy;
 
-//  private DeleteFEElementsWidgetFace widgetFace=
-//                      new DeleteFEElementsWidgetFace(this);
-
-  private IWidget widgetStrategy = new FeElementPointSelectionWidget();
-  
-  
-  public DeleteFEElementsWidget( )
+  public DeleteFEElementsWidget( final IWidget widgetStrategy )
   {
     super( "Delete Finite element", "Delete finite element" );
+    
+    m_widgetStrategy = widgetStrategy;
   }
 
   /**
@@ -51,9 +44,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     super.activate( commandPoster, mapPanel );
     reinit();
-    if(widgetStrategy!=null)
+    if(m_widgetStrategy!=null)
     {
-      widgetStrategy.activate( commandPoster, mapPanel );
+      m_widgetStrategy.activate( commandPoster, mapPanel );
     }
   }
 
@@ -67,9 +60,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.moved( p );
+        m_widgetStrategy.moved( p );
       }
     }
     catch( final Exception e )
@@ -91,9 +84,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.leftClicked( p );
+        m_widgetStrategy.leftClicked( p );
       }
     }
     catch( final Exception e )
@@ -111,9 +104,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.leftPressed( p );
+        m_widgetStrategy.leftPressed( p );
       }
     }
     catch( final Exception e )
@@ -131,9 +124,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.leftReleased( p );
+        m_widgetStrategy.leftReleased( p );
       }
     }
     catch( final Exception e )
@@ -153,9 +146,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.doubleClickedLeft( p );
+        m_widgetStrategy.doubleClickedLeft( p );
       }
     }
     catch( final Exception e )
@@ -186,9 +179,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.paint( g );
+        m_widgetStrategy.paint( g );
       }
     }
     catch( final Exception e )
@@ -231,7 +224,7 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
     
     try
     {
-      IKalypsoFeatureTheme featureTheme = UtilMap.findEditableThem( 
+      IKalypsoFeatureTheme featureTheme = UtilMap.findEditableTheme( 
           mapPanel.getMapModell(), 
           Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
       CommandableWorkspace workspace = featureTheme.getWorkspace();
@@ -279,9 +272,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
     
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.keyPressed( e );
+        m_widgetStrategy.keyPressed( e );
       }
     }
     catch( final Exception ex )
@@ -297,9 +290,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.keyReleased( e );
+        m_widgetStrategy.keyReleased( e );
       }
     }
     catch( final Exception ex )
@@ -317,9 +310,9 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   {
     try
     {
-      if(widgetStrategy!=null)
+      if(m_widgetStrategy!=null)
       {
-        widgetStrategy.dragged( p );
+        m_widgetStrategy.dragged( p );
       }
     }
     catch( final Exception ex )
@@ -336,15 +329,6 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   
   
   /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
-   */
-  public Control createControl( final Composite parent, final FormToolkit toolkit )
-  {
-//    return widgetFace.createControl( parent );
-    return null;
-  }
-  
-  /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
   public void disposeControl( )
@@ -354,19 +338,18 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
   
   public void setStrategy(IWidget widgetStrategy)
   {
-    if(this.widgetStrategy==widgetStrategy)
+    if(this.m_widgetStrategy==widgetStrategy)
     {
       return;
     }
     
-    if(this.widgetStrategy!=null)
+    if(this.m_widgetStrategy!=null)
     {
-      this.widgetStrategy.finish();
+      this.m_widgetStrategy.finish();
     }
     
-    this.widgetStrategy = widgetStrategy;    
+    this.m_widgetStrategy = widgetStrategy;    
     widgetStrategy.activate( getCommandTarget(), getMapPanel() );
-    
   }
   
 }

@@ -134,7 +134,7 @@ public class ApplyElevationWidget
     dataModel.setMapPanel( mapPanel );
     
     //find and set Elevation model system
-    IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableThem( 
+    IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( 
           mapModell, 
           KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL
           );
@@ -144,7 +144,7 @@ public class ApplyElevationWidget
       (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( 
                                       ITerrainElevationModelSystem.class );
     
-    IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableThem( 
+    IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( 
         mapModell, 
         KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL
         );

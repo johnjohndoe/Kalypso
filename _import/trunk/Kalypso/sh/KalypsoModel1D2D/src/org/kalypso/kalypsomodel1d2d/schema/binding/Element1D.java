@@ -117,7 +117,8 @@ public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D
           wrappedList.add( gmlID );
         }
      }
-    
+    // Setting the edge causes the envelope to become invalid
+    getWrappedFeature().invalidEnvelope();
   }
 
   /**

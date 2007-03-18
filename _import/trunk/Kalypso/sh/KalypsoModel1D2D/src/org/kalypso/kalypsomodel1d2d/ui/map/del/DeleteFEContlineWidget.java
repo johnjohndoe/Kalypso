@@ -42,24 +42,15 @@ package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
-import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
- * Implements a Strategy for selection an fe element
- * 
- * @author Patrice Congo
+ * @author Gernot Belger
  */
-public class FeElementPointSelectionWidget 
-                    extends FENetConceptSelectionWidget 
-                    implements IWidget
+public class DeleteFEContlineWidget extends DeleteFEElementsWidget
 {
-  
-  public FeElementPointSelectionWidget()
+  public DeleteFEContlineWidget( )
   {
-    super(
-        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, 
-        "Selectiere ein fe element",
-        "Selectiere ein fe element");
+    super( new FENetConceptSelectionWidget( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, "Kontinuitätslinie löschen", "Kontinuitätslinie löschen" ) );
   }
-  
+
 }

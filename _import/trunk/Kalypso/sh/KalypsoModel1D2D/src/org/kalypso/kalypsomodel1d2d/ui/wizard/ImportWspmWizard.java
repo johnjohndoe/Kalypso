@@ -390,7 +390,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final IElement1D element1d = (IElement1D) elementFeature.getAdapter( IElement1D.class );
 
         element1d.setEdge( edge );
-        edge.addContainer( element1d.getGmlID() );
+        // adding element to 1d containers is not necessary since setting the edge to the element already does
+        // edge.addContainer( element1d.getGmlID() );
 
         riverChannel.getElements().add( element1d );
       }

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -60,18 +63,13 @@ import org.kalypsodeegree.model.feature.Feature;
 public class UtilMap
 {
   /**
-   * Get First Theme which is showin element substituable to
-   * element of the specified QName
-   *  
+   * Get First Theme which is showing elements substituable to the specified QName (i.e. substituting it).
+   * 
    */
-  static public IKalypsoFeatureTheme findEditableThem(
-                              IMapModell mapModel,
-                              QName editElementQName)
+  static public IKalypsoFeatureTheme findEditableTheme( IMapModell mapModel, QName editElementQName )
   {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" );
-    Assert.throwIAEOnNullParam( 
-                        editElementQName, 
-                        "editElementQName" );
+    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
@@ -79,27 +77,43 @@ public class UtilMap
       {
         final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = ftheme.getFeatureType();
-        if( GMLSchemaUtilities.substitutes( 
-                    featureType, 
-                    editElementQName/*Kalypso1D2DSchemaConstants.WB1D2D_F_NODE*/) )
+        if( GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
         {
           return ftheme;
-          //m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
+          // m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
         }
       }
-    }    
-    return null;    
+    }
+    return null;
   }
-  
-  
-  static public  IFEDiscretisationModel1d2d findFEModelTheme(
-                                IMapModell mapModel,
-                                QName editElementQName)
+
+  /**
+   * Get all Themes which are showing elements substituable to the specified QName (i.e. substituting it).
+   */
+  static public IKalypsoFeatureTheme[] findEditableThemes( final IMapModell mapModel, final QName editElementQName )
   {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" );
-    Assert.throwIAEOnNullParam( 
-    editElementQName, 
-    "editElementQName" );
+    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
+    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
+    final List<IKalypsoFeatureTheme> foundThemes = new ArrayList<IKalypsoFeatureTheme>( allThemes.length );
+    for( final IKalypsoTheme theme : allThemes )
+    {
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
+        final IFeatureType featureType = ftheme.getFeatureType();
+        if( GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
+          foundThemes.add( ftheme );
+      }
+    }
+
+    return foundThemes.toArray( new IKalypsoFeatureTheme[foundThemes.size()] );
+  }
+
+  static public IFEDiscretisationModel1d2d findFEModelTheme( IMapModell mapModel, QName editElementQName )
+  {
+    Assert.throwIAEOnNullParam( mapModel, "mapModel" );
+    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
@@ -107,47 +121,38 @@ public class UtilMap
       {
         final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = ftheme.getFeatureType();
-        if(featureType==null)
+        if( featureType == null )
         {
           continue;
         }
-        if( GMLSchemaUtilities.substitutes( 
-        featureType, 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) )
+        if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) )
         {
-          Feature modelFeature= ftheme.getFeatureList().getParentFeature();
-          IFEDiscretisationModel1d2d model=
-              (IFEDiscretisationModel1d2d)modelFeature.getAdapter( 
-                                        IFEDiscretisationModel1d2d.class );
+          Feature modelFeature = ftheme.getFeatureList().getParentFeature();
+          IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );
           return model;
-        //m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
+          // m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
         }
       }
-    }    
-    return null;    
+    }
+    return null;
   }
-  
+
   /**
-   * Answer whether the theme is showing feature of the 
-   * given type. This  check is made based on substitution 
+   * Answer whether the theme is showing feature of the given type. This check is made based on substitution
    * 
-   * @param featureTheme the theme to check, must not be null
-   * @param featureTypeQName the type of feature to check whether
-   *            they can be part of the theme  
+   * @param featureTheme
+   *          the theme to check, must not be null
+   * @param featureTypeQName
+   *          the type of feature to check whether they can be part of the theme
    */
-  static public final boolean  isShowingFeatureType(
-                                  IKalypsoFeatureTheme featureTheme,
-                                  QName featureTypeQName)
+  static public final boolean isShowingFeatureType( IKalypsoFeatureTheme featureTheme, QName featureTypeQName )
   {
-    Assert.throwIAEOnNullParam( 
-                featureTheme, "featureTheme" );
+    Assert.throwIAEOnNullParam( featureTheme, "featureTheme" );
     Assert.throwIAEOnNullParam( featureTypeQName, "featureTypeQName" );
-    IFeatureType featureType=featureTheme.getFeatureType();
-    if( GMLSchemaUtilities.substitutes( 
-        featureType, 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) )
+    IFeatureType featureType = featureTheme.getFeatureType();
+    if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) )
     {
-      return true;    
+      return true;
     }
     else
     {

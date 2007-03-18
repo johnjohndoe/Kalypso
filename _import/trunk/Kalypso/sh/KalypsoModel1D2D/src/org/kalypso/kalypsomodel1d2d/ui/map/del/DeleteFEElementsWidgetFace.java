@@ -129,17 +129,17 @@ class DeleteFEElementsWidgetFace
 
     final Action action = new Action( "dadadad" )
     {
-      final private FeElementPointSelectionWidget pointSelectionWidget = new FeElementPointSelectionWidget();
-
-      /**
-       * @see org.eclipse.jface.action.Action#run()
-       */
-      @Override
-      public void run( )
-      {
-        book.showPage( "_POINT_CLICK_SEL_" );
-        strategyContext.setStrategy( pointSelectionWidget );
-      }
+//      final private FeElementPointSelectionWidget pointSelectionWidget = new FeElementPointSelectionWidget();
+//
+//      /**
+//       * @see org.eclipse.jface.action.Action#run()
+//       */
+//      @Override
+//      public void run( )
+//      {
+//        book.showPage( "_POINT_CLICK_SEL_" );
+//        strategyContext.setStrategy( pointSelectionWidget );
+//      }
     };
 
     final Action actionSelNode = new Action( "SelNode" )

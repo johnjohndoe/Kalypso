@@ -335,6 +335,9 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public void addNode( String nodeID )
   {
     m_nodes.getWrappedList().add( nodeID );
+    
+    // changeing the nodes invalidates my geometry
+    getWrappedFeature().invalidEnvelope();
   }
   
   /**

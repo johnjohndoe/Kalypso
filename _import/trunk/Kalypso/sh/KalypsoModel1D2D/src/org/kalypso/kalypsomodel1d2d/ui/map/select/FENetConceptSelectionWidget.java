@@ -82,34 +82,31 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class FENetConceptSelectionWidget implements IWidget
 {
-
-  class QNameBasedSelectionContext
+  private class QNameBasedSelectionContext
   {
-    final private QName themeElementsQName;
-    private IKalypsoFeatureTheme featureTheme;
-    private IFEDiscretisationModel1d2d model1d2d;
-    private CommandableWorkspace cmdWorkspace;
+    final private QName m_themeElementsQName;
+    private IKalypsoFeatureTheme m_featureTheme;
+    private IFEDiscretisationModel1d2d m_model1d2d;
+    private CommandableWorkspace m_cmdWorkspace;
     
     
-    public QNameBasedSelectionContext( 
-                            QName themeElementsQName)
+    public QNameBasedSelectionContext( final QName themeElementsQName )
     {
-      super();
-      this.themeElementsQName = themeElementsQName;
+      m_themeElementsQName = themeElementsQName;
     }
     
-    public void init(IMapModell mapModell) throws IllegalArgumentException
+    public void init( final IMapModell mapModell ) throws IllegalArgumentException
     {
-      model1d2d = 
+      m_model1d2d = 
         UtilMap.findFEModelTheme( 
           mapModell, 
-          themeElementsQName );
-      Assert.throwIAEOnNull( this.model1d2d, "Could not found model" );
-      featureTheme = 
-        UtilMap.findEditableThem( 
+          m_themeElementsQName );
+      Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
+      m_featureTheme = 
+        UtilMap.findEditableTheme( 
             mapModell, 
-            themeElementsQName );
-      cmdWorkspace = this.featureTheme.getWorkspace();
+            m_themeElementsQName );
+      m_cmdWorkspace = this.m_featureTheme.getWorkspace();
     }
     
     public List getSelectedByPolygon(GM_Object polygon,ISelectionFilter selectionFilter)
@@ -118,9 +115,9 @@ public class FENetConceptSelectionWidget implements IWidget
 //        polygonGeometryBuilder.finish();
       GM_Envelope env = polygon.getEnvelope();
       List selected = 
-              selector.select( 
+              m_selector.select( 
                       env, 
-                      featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
+                      m_featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
                       false );
       for(int i=selected.size()-1;i>=0;i--)
       {
@@ -133,9 +130,9 @@ public class FENetConceptSelectionWidget implements IWidget
     public List<EasyFeatureWrapper> getSelectedByEnvelope(GM_Envelope env, ISelectionFilter selectionFilter)
     {
       List selected = 
-        selector.select( 
+        m_selector.select( 
             env,
-            featureTheme.getFeatureList(),
+            m_featureTheme.getFeatureList(),
             false);
       return filterSelected( selected, selectionFilter );
       
@@ -146,11 +143,11 @@ public class FENetConceptSelectionWidget implements IWidget
         
         final int SIZE = selected.size();
         List<EasyFeatureWrapper> featuresToAdd = new ArrayList<EasyFeatureWrapper>(SIZE);
-        Feature parentFeature=model1d2d.getWrappedFeature();
+        Feature parentFeature=m_model1d2d.getWrappedFeature();
         IFeatureType featureType = parentFeature.getFeatureType();
         IRelationType parentFeatureProperty=
           (IRelationType)featureType.getProperty( 
-                                    themeElementsQName);
+                                    m_themeElementsQName);
         
         if(selectionFilter==null)
         {
@@ -159,7 +156,7 @@ public class FENetConceptSelectionWidget implements IWidget
             Feature curFeature=(Feature)selected.get( i );
             featuresToAdd.add( 
               new EasyFeatureWrapper(
-                cmdWorkspace,
+                m_cmdWorkspace,
                 curFeature,
                 parentFeature,
                 parentFeatureProperty));
@@ -174,7 +171,7 @@ public class FENetConceptSelectionWidget implements IWidget
             {
               
                 EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
-                  cmdWorkspace,
+                  m_cmdWorkspace,
                   curFeature,
                   parentFeature,
                   parentFeatureProperty);
@@ -201,16 +198,15 @@ public class FENetConceptSelectionWidget implements IWidget
 //  private IKalypsoFeatureTheme featureTheme;
 
   
-  private PolygonGeometryBuilder polygonGeometryBuilder; 
+  private PolygonGeometryBuilder m_polygonGeometryBuilder; 
   
-  private JMSelector selector= new JMSelector();
+  private JMSelector m_selector= new JMSelector();
 
-  private IMapModell mapModell;
+  private IMapModell m_mapModell;
   
-  private QNameBasedSelectionContext selectionContexts[];
-//  private QName themeElementsQName;
+  private QNameBasedSelectionContext m_selectionContexts[];
   
-  private ISelectionFilter selectionFilter;
+  private ISelectionFilter m_selectionFilter;
   
   public FENetConceptSelectionWidget(
                       QName themeElementsQName,
@@ -227,10 +223,10 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     this.name=name;
     this.toolTip=toolTip;
-    this.selectionContexts= new QNameBasedSelectionContext[themeElementsQNames.length];
+    this.m_selectionContexts= new QNameBasedSelectionContext[themeElementsQNames.length];
     for(int i=0;i<themeElementsQNames.length;i++)
     {
-      selectionContexts[i] = 
+      m_selectionContexts[i] = 
         new QNameBasedSelectionContext(themeElementsQNames[i]);
     }
   }
@@ -243,13 +239,13 @@ public class FENetConceptSelectionWidget implements IWidget
   {
    this.commandPoster=commandPoster;
    this.mapPanel=mapPanel;
-   mapModell = mapPanel.getMapModell();
+   m_mapModell = mapPanel.getMapModell();
    //QName name = Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT;
-   for(QNameBasedSelectionContext selectionContext:selectionContexts)
+   for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
    {
-    selectionContext.init( mapModell );
+    selectionContext.init( m_mapModell );
    }
-   crs = mapModell.getCoordinatesSystem();
+   crs = m_mapModell.getCoordinatesSystem();
    
   }
 
@@ -276,12 +272,12 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     if(polygonSelectModus)
     {
-      if(polygonGeometryBuilder!=null)
+      if(m_polygonGeometryBuilder!=null)
       {
         try
         {
           GM_Object object = 
-              polygonGeometryBuilder.finish();
+              m_polygonGeometryBuilder.finish();
 //          GM_Envelope env = object.getEnvelope();
 //          List selected = 
 //                  selector.select( 
@@ -293,9 +289,9 @@ public class FENetConceptSelectionWidget implements IWidget
 //            ((Feature)selected.get( i )).getDefaultGeometryProperty();
 //          }
 //          addSelection( selected );
-          for(QNameBasedSelectionContext selectionContext:selectionContexts)
+          for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
           {
-            List selectedByPolygon = selectionContext.getSelectedByPolygon( object,selectionFilter );
+            List selectedByPolygon = selectionContext.getSelectedByPolygon( object,m_selectionFilter );
             addSelection(selectedByPolygon); 
           }
           
@@ -309,7 +305,7 @@ public class FENetConceptSelectionWidget implements IWidget
         }
         finally
         {
-          polygonGeometryBuilder= new PolygonGeometryBuilder(0,crs);
+          m_polygonGeometryBuilder= new PolygonGeometryBuilder(0,crs);
         }
       }
     }
@@ -406,9 +402,9 @@ public class FENetConceptSelectionWidget implements IWidget
     else if(e.isShiftDown())
     {
       this.polygonSelectModus=true;
-      if(polygonGeometryBuilder==null)
+      if(m_polygonGeometryBuilder==null)
       {
-        polygonGeometryBuilder= 
+        m_polygonGeometryBuilder= 
           new PolygonGeometryBuilder(0,crs);
         System.out.println("DDCDCD="+crs);
       }
@@ -428,7 +424,7 @@ public class FENetConceptSelectionWidget implements IWidget
     else if(e.VK_SHIFT == keyCode )
     {
       this.polygonSelectModus=false;
-      polygonGeometryBuilder=null;
+      m_polygonGeometryBuilder=null;
     }
     
   }
@@ -452,7 +448,7 @@ public class FENetConceptSelectionWidget implements IWidget
     {
       try
       {
-        polygonGeometryBuilder.addPoint( point );
+        m_polygonGeometryBuilder.addPoint( point );
         mapPanel.getMapModell().fireModellEvent( null );
       }
       catch (Exception e) 
@@ -485,9 +481,9 @@ public class FENetConceptSelectionWidget implements IWidget
 //            false);
 //     addSelection( selected );
      
-     for(QNameBasedSelectionContext selectionContext:selectionContexts)
+     for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
      {
-       List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,selectionFilter );
+       List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,m_selectionFilter );
        addSelection( selectedByEnvelope );
      }
     }
@@ -559,7 +555,7 @@ public class FENetConceptSelectionWidget implements IWidget
    */
   public void leftPressed( Point p )
   {
-    System.out.println("Left pressed");
+//    System.out.println("Left pressed");
   }
 
   /**
@@ -570,7 +566,7 @@ public class FENetConceptSelectionWidget implements IWidget
     if(draggedPoint0!=null && draggedPoint1!=null)
     {
       
-      GM_Point point0=MapUtilities.transform( mapPanel, draggedPoint0 );
+     GM_Point point0=MapUtilities.transform( mapPanel, draggedPoint0 );
       GM_Point point1=MapUtilities.transform( mapPanel, draggedPoint1 );
       GM_Envelope env= 
         GeometryFactory.createGM_Envelope( 
@@ -582,9 +578,9 @@ public class FENetConceptSelectionWidget implements IWidget
 //            featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
 //            false );
 //      addSelection( selected );
-      for(QNameBasedSelectionContext selectionContext:selectionContexts)
+      for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
       {
-        List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,selectionFilter );
+        List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,m_selectionFilter );
         addSelection( selectedByEnvelope );
       }
     }
@@ -646,10 +642,10 @@ public class FENetConceptSelectionWidget implements IWidget
       g.drawRect( (int)x, (int)y, (int)width, (int)height );
     }
     
-    if(polygonGeometryBuilder!=null)
+    if(m_polygonGeometryBuilder!=null)
     {
       GeoTransform projection = mapPanel.getProjection();
-      polygonGeometryBuilder.paint( g, projection, currentPoint );
+      m_polygonGeometryBuilder.paint( g, projection, currentPoint );
     }
   }
 
@@ -687,12 +683,12 @@ public class FENetConceptSelectionWidget implements IWidget
 
   public void setSelectionFilter( ISelectionFilter selectionFilter )
   {
-    this.selectionFilter = selectionFilter;
+    this.m_selectionFilter = selectionFilter;
   }
   
   public ISelectionFilter getSelectionFilter( )
   {
-    return selectionFilter;
+    return m_selectionFilter;
   }
   
   public Feature[] getSelectedFeature()
@@ -714,11 +710,11 @@ public class FENetConceptSelectionWidget implements IWidget
       return null;
     }
     
-    for(QNameBasedSelectionContext selectionContext:selectionContexts)
+    for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
     {
-      if(themeQName.equals( selectionContext.themeElementsQName))
+      if(themeQName.equals( selectionContext.m_themeElementsQName))
       {
-        return selectionContext.model1d2d;
+        return selectionContext.m_model1d2d;
       }
     }
     return null;
@@ -735,11 +731,11 @@ public class FENetConceptSelectionWidget implements IWidget
     {
       return null;
     }
-    for(QNameBasedSelectionContext selectionContext:selectionContexts)
+    for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
     {
-      if(themeQName.equals( selectionContext.themeElementsQName))
+      if(themeQName.equals( selectionContext.m_themeElementsQName))
       {
-        return selectionContext.featureTheme;
+        return selectionContext.m_featureTheme;
       }
     }
     
