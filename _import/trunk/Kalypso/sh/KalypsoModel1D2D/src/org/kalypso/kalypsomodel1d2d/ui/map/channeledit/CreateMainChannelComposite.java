@@ -1046,5 +1046,8 @@ public class CreateMainChannelComposite extends Composite
     };
     final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
     ErrorDialog.openError( getShell(), "Flussschlauchgenerator", "Konvertierung fehlgeschlagen", status );
+    if( status.isOK() == true )
+      m_data.resetSelectedProfiles();
+
   }
 }

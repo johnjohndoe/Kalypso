@@ -264,6 +264,12 @@ public class CreateChannelData
     initSegments();
   }
 
+  public void resetSelectedProfiles( )
+  {
+    m_selectedProfiles.clear();
+    initSegments();
+  }
+  
   public void initSegments( )
   {
     final Job job = new Job( "Init segments" )
@@ -349,7 +355,10 @@ public class CreateChannelData
   {
     if( m_selectedProfiles.size() <= 1 )
       return new ProfilEventManager( null, null );
-
+    
+    if (getSelectedSegment() == 0)
+      return  new ProfilEventManager( null, null );
+    
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
 
     final IProfil profil;
@@ -1055,15 +1064,4 @@ public class CreateChannelData
     return neighbours;
   }
 
-  // /**
-  // * updates the intersected banklines of the specified segment
-  // * called after re-setting the intersection points and intersected profiles
-  // */
-  // public void setIntersectedBanklines( final int segmentNum, PROF prof )
-  // {
-  // final SegmentData segment = m_segmentList.get( segmentNum - 1 );
-  // segment.setNewBankIntersection( prof );
-  // completationCheck();
-  // }
-  //
 }

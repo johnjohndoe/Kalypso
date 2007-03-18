@@ -145,7 +145,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
       try
       {
-        final LineSymbolizer symb = getProfilLineSymbolizer();
+        final LineSymbolizer symb = getProfilLineSymbolizer( new Color ( 255, 255, 0));
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
         de.paint( g, getMapPanel().getProjection() );
       }
@@ -239,11 +239,12 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     }
   }
 
-  private LineSymbolizer getProfilLineSymbolizer( )
+  private LineSymbolizer getProfilLineSymbolizer( Color color )
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
-    stroke.setWidth( 1 );
+    stroke.setWidth( 3 );
+    stroke.setStroke( color );
     symb.setStroke( stroke );
     return symb;
   }
@@ -317,6 +318,11 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   {
     if( m_delegateWidget != null )
       m_delegateWidget.dragged( p );
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
 
   /**

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
@@ -181,7 +182,14 @@ public class DragBankLineWidget extends AbstractWidget
   public void dragged( Point p )
   {
     if( m_handles == null )
+    {
+      //TODO: check if this repaint is really necessary
+      MapPanel panel = getMapPanel();
+      if (panel != null)
+        panel.repaint();
       return;
+      
+    }
 
     if( m_startPoint == null )
     {
@@ -201,6 +209,11 @@ public class DragBankLineWidget extends AbstractWidget
 
     /* Store the current mouse position. */
     m_currentPoint = p;
+
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
   }
 
   /**
@@ -229,10 +242,16 @@ public class DragBankLineWidget extends AbstractWidget
     for( IHandle handle : m_handles )
       handle.setActive( false );
 
-    if( m_newCurve == null ) {
+    if( m_newCurve == null )
+    {
       /* Reset. */
       m_currentPoint = null;
       m_startPoint = null;
+
+      MapPanel panel = getMapPanel();
+      if( panel != null )
+        panel.repaint();
+
       return;
     }
 
@@ -243,6 +262,7 @@ public class DragBankLineWidget extends AbstractWidget
       {
         m_currentSegment.setBankLeftInters( (LineString) JTSAdapter.export( m_newCurve ) );
         m_data.updateSegments( true );
+
       }
       else
       {
@@ -264,6 +284,10 @@ public class DragBankLineWidget extends AbstractWidget
     /* Reset. */
     m_currentPoint = null;
     m_startPoint = null;
+
+    MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
   }
 
   /**
@@ -274,6 +298,8 @@ public class DragBankLineWidget extends AbstractWidget
   {
     if( m_handles == null || m_bankline == null )
       return;
+
+    // TODO: maybe it would be nice if the user is shown an arrow from the old point to the new dragged point.
 
     // final GM_Point[] linepoints = new GM_Point[m_handles.size() + 2]; //number of handles plus start and end point
     final GM_Position[] positions = new GM_Position[m_handles.size() + 2]; // number of handles plus start and end
@@ -353,7 +379,7 @@ public class DragBankLineWidget extends AbstractWidget
    */
   public void reset( )
   {
-    //m_bankline = null;
+    // m_bankline = null;
     m_newCurve = null;
 
     /* Reset the start & current points. */
