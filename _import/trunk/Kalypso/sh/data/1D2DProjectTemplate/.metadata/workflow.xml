@@ -48,7 +48,7 @@
 						<Help>FE-1D-Netz aus stationärem Modell (WSPM) erzeugen</Help>
 						<Name>WSPM Modell</Name>
 					</Task>
-					<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfImpLoad" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
+					<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap">
 						<Help>Zeigt Profile als Thema in der Karte an</Help>
 						<Name>Profile in Karte anzeigen</Name>
 					</Task>
@@ -73,11 +73,15 @@
 				<Name>2D-Netz</Name>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport">
 					<Help>Importiert ein 2D-Netz (KALYPSO2D)</Help>
-					<Name>FE-2D-Netz laden</Name>
+					<Name>BCE-2D-Netz importieren</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DRivGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup">
 					<Help>Bearbeitung von 2D-Elementen</Help>
 					<Name>Netz bearbeiten</Name>
+				</Task>
+				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ContilineGen">
+					<Help>Bearbeitung von Kontinuitätslinien</Help>
+					<Name>Kontinuitätslinien</Name>
 				</Task>
 				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
 					<Help>Generiert Flussschlauchelemente aus Profilendaten. &#xa;Vorraussetzung hierfür ist ein in der Karte vorhandenes Profillinienthema, &#xa;sowie ein Thema, welches die Uferbereiche definiert.</Help>
@@ -126,18 +130,10 @@
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond">
 			<Help>Anfangswerte und Randbedingungen festlegen</Help>
 			<Name>Anfangswerte/Randbedingungen</Name>
-			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup">
+			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
 				<Help>Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.</Help>
 				<Name>Randbedingungen</Name>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodalBCDef">
-					<Help>Definition von Randbedingungen, die auf einen Knoten angewendet werden.</Help>
-					<Name>Knotenrandbedingungen spezifizieren</Name>
-				</Task>
-				<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDefGroup" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LineBCDef">
-					<Help>Definition von Randbedingungen, die auf eine Linie angewendet werden.</Help>
-					<Name>Linienrandbedingungen definieren</Name>
-				</Task>
-			</TaskGroup>
+			</Task>
 			<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StSolGroup">
 				<Help>Für das erstmalige Anrechnen eines Modells benötigt man eine sog. Anfangslösung, &#xa;die den Modellzustand vor Beginn der Berechnung beschreibt. </Help>
 				<Name>Anfangslösung</Name>
