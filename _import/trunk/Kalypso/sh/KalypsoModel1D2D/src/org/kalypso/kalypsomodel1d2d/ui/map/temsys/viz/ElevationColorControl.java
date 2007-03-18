@@ -50,9 +50,13 @@ public class ElevationColorControl
 {
   private static final Color DEFAULT_BASE_COLOR = Color.GRAY;
   private static final Color DEFAULT_NO_ELEVATION_COLOR = Color.YELLOW;
+  private static final int DEFAULT_COLOR_INDEX = 0;
+  
   
   private static Color baseColor = DEFAULT_BASE_COLOR;
   private static Color noElevationColor = DEFAULT_NO_ELEVATION_COLOR;
+  
+  private static int colorIndex = DEFAULT_COLOR_INDEX;
   
   public static final IElevationColorModel getColorModel(double minElevation, double maxElevation)
   {
@@ -95,6 +99,16 @@ public class ElevationColorControl
   public static void setNoElevationColor( Color noElevationColor1 )
   {
     ElevationColorControl.noElevationColor = noElevationColor1;
+  }
+
+  public static int getColorIndex( )
+  {
+    return colorIndex;
+  }
+
+  public static void setColorIndex( int colorIndex1 )
+  {
+    ElevationColorControl.colorIndex = colorIndex1;
   }
   
   

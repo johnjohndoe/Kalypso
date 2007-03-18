@@ -104,8 +104,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.noElevationColor=noElevationColor;
     this.baseColor=baseColor;
     this.hsb = Color.RGBtoHSB( baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(),null);
-    this.minBrightness = this.hsb[2];
-    this.maxBrightness = 0.99;
+    this.minBrightness = this.hsb[0];//2
+    this.maxBrightness = 1.00;
     this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
         noElevationColor.getGreen(),
         noElevationColor.getBlue(),null);
@@ -140,6 +140,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     else if(elevation>=minElevation && elevation<=maxElevation)
     {
       double brightness = minBrightness+elevation*(maxBrightness-minBrightness)/(maxElevation-minElevation);
+      //System.out.println("brightness :"+brightness);
       
 //      System.out.println("This Color + brightness :"+this.hsb[0]+","+this.hsb[1]+","+brightness);
 //      System.out.println("This Color :"+hsb[0]+","+hsb[1]+","+hsb[2]);
@@ -149,8 +150,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
 //      return new Color(rgb.red, rgb.green, rgb.red, alfa);
 
       
-      Color color = Color.getHSBColor( this.hsb[0], this.hsb[1], (float) brightness );
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 100);
+      Color color = Color.getHSBColor( (float) brightness, this.hsb[1], this.hsb[2] );//
+      color = new Color(color.getRed(), color.getGreen(), color.getBlue()/*, 100*/);
       return color;
       
       
