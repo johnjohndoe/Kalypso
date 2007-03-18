@@ -124,7 +124,10 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
       // REMARK: unzipping files with non UTF-8 filename encoding is really awesome in java.
       // We do use the apache tools, which let us at least set the encoding.
       // Try and error led to use the encoding: "IBM850" for WinZippes .zip's.
-      ZipUtilities.unzipApache( zipInputStream, containerDir, false, "IBM850" );
+//      ZipUtilities.unzipApache( zipInputStream, containerDir, false, "IBM850" );
+      // BUGFIX again: after deploy, it only work without encoding and complains if we use CP850?!
+      // ???
+      ZipUtilities.unzip( zipInputStream, containerDir, false );
       monitor.worked( 500 );
       wspmContainer.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
 
