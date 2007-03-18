@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.lang.reflect.InvocationTargetException;
@@ -80,7 +81,10 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * 
@@ -410,6 +414,158 @@ public class ApplyElevationWidget
     super.doubleClickedRight(p);
     assignElevationToSelectedNodes( p );
   }
+  
+  @Override
+  public void keyPressed( KeyEvent e )
+  {
+    int code = e.getKeyCode();
+    MapPanel mapPanel = dataModel.getMapPanel();
+
+    // TODO:
+    // zoom in "-"
+
+    if( e.isActionKey() )
+    {
+      System.out.println( "e:" + e );
+    }
+    /* zoom in */
+    if( code == KeyEvent.VK_PLUS )
+    {
+//      if( e.isShiftDown() )
+//      {
+        final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+        GM_Envelope wishBBox = null;
+
+        final GM_Position currentMax = currentBBox.getMax();
+        final GM_Position currentMin = currentBBox.getMin();
+
+        final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+        final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+        final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+        final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+
+        final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+        final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+        wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+        mapPanel.setBoundingBox( wishBBox );
+//      }
+//      else
+//      {
+//        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+//      }
+
+    }
+    /* zoom out */
+    else if( code == KeyEvent.VK_MINUS )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+
+    // pan "arrows
+    else if( code == KeyEvent.VK_RIGHT )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    else if( code == KeyEvent.VK_LEFT )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    else if( code == KeyEvent.VK_UP )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+    else if( code == KeyEvent.VK_DOWN )
+    {
+      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+
+      GM_Envelope wishBBox = null;
+
+      final GM_Position currentMax = currentBBox.getMax();
+      final GM_Position currentMin = currentBBox.getMin();
+
+      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+      
+
+      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+
+      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+      mapPanel.setBoundingBox( wishBBox );
+    }
+
+  }
+
+  
   
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#leftClicked(java.awt.Point)
