@@ -89,6 +89,9 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
     @Override
     public void run( )
     {
+      // TODO: it sometimes happens thatz the old context is not deactivated, howmay this happen?
+      // concurrent access problems?
+      
       if( m_oldContext != null )
       {
         logger.info( "Deactivating context: " + m_oldContext.getContextId() );
