@@ -110,6 +110,10 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
           panel.repaint();
       }
     }
+    // TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
   }
 
   /**
