@@ -52,4 +52,12 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   {
     super( featureToBind, IBoundaryCondition.QNAME );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getTimeserie1DFeature()
+   */
+  public Feature getTimeserieFeature( )
+  {
+    return (Feature) getWrappedFeature().getProperty( QNAME_P_TIMESERIE );
+  }
 }

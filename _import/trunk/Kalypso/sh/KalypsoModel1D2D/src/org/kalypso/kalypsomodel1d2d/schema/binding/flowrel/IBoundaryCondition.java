@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -51,4 +52,8 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 public interface IBoundaryCondition extends IFlowRelationship
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
+
+  public static final QName QNAME_P_TIMESERIE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "timeserie" );
+
+  public Feature getTimeserieFeature( );
 }

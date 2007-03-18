@@ -6,11 +6,11 @@
 
 <xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
-	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om" elementFormDefault="qualified"
-	attributeFormDefault="unqualified">
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:math="org.kalypso.gml.common.math" xmlns:wspmprof="org.kalypso.model.wspmprofile"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -23,7 +23,7 @@
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<xs:import namespace="org.kalypso.model.wspmprofile" />
 	<xs:import namespace="org.kalypso.gml.common.math" />
-	
+
 
 	<!-- ================================================
 		King Flow Relation		
@@ -69,7 +69,8 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="polynomialMember" type="math:Polynomial1DPropertyType" maxOccurs="unbounded">
+					<xs:element name="polynomialMember" type="math:Polynomial1DPropertyType"
+						maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Polygon</xs:label>
@@ -79,7 +80,28 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
+					<xs:element name="station" type="xs:decimal" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Station [km]</xs:label>
+								<xs:tooltip>
+									Optionale Angabe der Station. Falls gesetzt, wird die Länge des
+									FE-Elements als Differenz der anliegenden Stationierung
+									ermittelt.
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Station [km]</xs:label>
+								<xs:tooltip>
+									TODO: I18N: Optional Angabe der Station. Falls gesetzt wird die
+									Länge des FE-Elements als Differenz der anliegenden
+									Stationierung ermittelt.
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType"
+						minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								Link to any profile. Just for documentation reason.
@@ -106,7 +128,7 @@
 		<xs:sequence>
 			<xs:element ref="wspmprof:Profile" minOccurs="0" maxOccurs="0" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
 	<xs:complexType name="HPointsPropertyType">
@@ -118,6 +140,7 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="HPointsObservation" type="om:ObservationType" substitutionGroup="om:Observation" />
+	<xs:element name="HPointsObservation" type="om:ObservationType"
+		substitutionGroup="om:Observation" />
 
 </xs:schema>
