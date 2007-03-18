@@ -736,6 +736,78 @@ public class FeatureHelper
     return newFeature;
   }
 
+  /**
+   * Only works for non list feature property
+   * @param feature feature which list property receive the new feature
+   * @param listProperty the {@link QName} of the list property
+   * @param featureProperties the property of the feature to be set before adding the
+   *        feature to the list
+   * @param featurePropQNames the {@link QName} of the feature property to be set
+   *        before adding it the the 
+   * @param throws {@link IllegalArgumentException} if featureProperties and 
+   *        featurePropQNames are not all null or are not all non null with 
+   *        differen lengths 
+   */
+  public static Feature addFeature( 
+                            final Feature feature, 
+                            final QName listProperty, 
+                            final QName newFeatureName,
+                            final Object[] featureProperties,
+                            final QName[]  featurePropQNames) 
+                            throws GMLSchemaException, IllegalArgumentException
+  {
+    if( (featureProperties == null & featurePropQNames==null))
+    {
+      //okay
+    }
+    else if(featureProperties !=null && featurePropQNames!=null)
+    {
+      if(featureProperties.length!=featurePropQNames.length)
+      {
+        throw new IllegalArgumentException(
+            "featurePropQName and featureProperties must have the same length");
+      }
+      
+    }
+    else
+    {
+      throw new IllegalArgumentException(
+          "featureProperties and FeaturePropQnames must be all null or all non null with"+
+          "the same length");
+    }
+    final FeatureList list = (FeatureList) feature.getProperty( listProperty );
+    //TODO Patrice to check can the feature(param) be different from the list property parent
+    final Feature parentFeature = list.getParentFeature();
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+
+    final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
+    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
+
+    final IFeatureType newFeatureType;
+    if( newFeatureName == null )
+    {
+      newFeatureType = targetFeatureType;
+    }
+    else
+    {
+      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
+    }
+
+    if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
+      throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
+
+    final Feature newFeature = 
+        workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
+    for(int i = featureProperties.length-1;i>=0;i--)
+    {
+      newFeature.setProperty( featurePropQNames[i], featureProperties[i] );
+    }
+
+    list.add( newFeature );
+    
+    return newFeature;
+  }
+  
   public static void setProperties( final Feature result, final Map<IPropertyType, Object> props )
   {
     for( final Map.Entry<IPropertyType, Object> entry : props.entrySet() )
