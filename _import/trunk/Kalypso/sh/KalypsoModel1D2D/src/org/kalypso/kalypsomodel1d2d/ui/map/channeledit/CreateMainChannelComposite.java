@@ -1056,7 +1056,6 @@ public class CreateMainChannelComposite extends Composite
       public IStatus execute( final IProgressMonitor monitor )
       {
         m_widget.setDelegate( null );
-        resetButtonGuard();
         m_data.convertToModel();
         return Status.OK_STATUS;
       }
@@ -1064,7 +1063,10 @@ public class CreateMainChannelComposite extends Composite
     final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
     ErrorDialog.openError( getShell(), "Flussschlauchgenerator", "Konvertierung fehlgeschlagen", status );
     if( status.isOK() == true )
+    {
       m_data.resetSelectedProfiles();
+      resetButtonGuard();     
+    }
 
   }
 }
