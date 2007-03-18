@@ -76,6 +76,11 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
     {
       e.printStackTrace();
     }
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
+    
   }
 
   /**
@@ -321,6 +326,12 @@ public class DeleteFEElementsWidget extends AbstractWidget implements /*IWidgetW
     {
       ex.printStackTrace();
     }
+    
+    //TODO: check if this repaint is really necessary
+    MapPanel panel = getMapPanel();
+    if (panel != null)
+      panel.repaint();
+
   }
   
   

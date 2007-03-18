@@ -87,6 +87,10 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), m_currentPos, m_grabRadius * 2 );
     m_node = m_model1d2d.findNode( m_currentPos, grabDistance );
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
   }
 
   /**

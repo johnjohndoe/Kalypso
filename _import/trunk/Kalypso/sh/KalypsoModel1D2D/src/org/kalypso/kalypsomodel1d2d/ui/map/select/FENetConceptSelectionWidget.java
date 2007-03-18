@@ -350,6 +350,11 @@ public class FENetConceptSelectionWidget implements IWidget
       draggedPoint1=p;
       mapPanel.getMapModell().fireModellEvent( null );
     }
+    //TODO: check if this repaint is really necessary
+    if (mapPanel != null)
+      mapPanel.repaint();
+
+    
   }
 
   /**
@@ -619,6 +624,10 @@ public class FENetConceptSelectionWidget implements IWidget
   {
 //    currentPoint = MapUtilities.transform( mapPanel, p );
     currentPoint=p;
+    
+//  TODO: check if this repaint is necessary for the widget
+    if ( mapPanel != null)
+      mapPanel.repaint();
   }
 
   /**

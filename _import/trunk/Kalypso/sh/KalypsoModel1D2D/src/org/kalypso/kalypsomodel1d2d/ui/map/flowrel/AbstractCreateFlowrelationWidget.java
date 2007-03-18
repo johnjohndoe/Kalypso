@@ -152,6 +152,10 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_nodeTheme == null )
     {
       m_node = null;
+//    TODO: check if this repaint is necessary for the widget
+      MapPanel panel = getMapPanel();
+      if( panel != null )
+        panel.repaint();
       return;
     }
 
@@ -163,9 +167,15 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     /* Node has already a flow relation? */
     m_existingFlowRelation = null;
     if( m_flowRelCollection == null || m_node == null )
+    {
       return;
-
+    }
     m_existingFlowRelation = m_flowRelCollection.findFlowrelationship( m_node.getPoint(), 0.0 );
+
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
   }
 
   /**
@@ -258,10 +268,10 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     {
       /* Just select the existing element */
       final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-      
+
       final Feature featureToSelect = m_existingFlowRelation.getWrappedFeature();
       final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-      
+
       final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
       selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
     }

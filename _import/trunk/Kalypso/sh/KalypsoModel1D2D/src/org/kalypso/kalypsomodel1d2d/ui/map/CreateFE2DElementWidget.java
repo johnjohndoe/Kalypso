@@ -95,7 +95,11 @@ public class CreateFE2DElementWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_currentPoint = p;
-  }
+//  TODO: check if this repaint is necessary for the widget
+    MapPanel panel = getMapPanel();
+    if ( panel != null)
+      panel.repaint();
+}
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)

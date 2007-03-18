@@ -306,9 +306,12 @@ class GridPointCollector /*implements IGeometryBuilder*/
     LinePointCollector builder=null;
     if(actualSideKey<SIDE_MAX_NUM)
     {
+      if ( sides[actualSideKey] == null )
+        return;
+     
       builder=sides[actualSideKey];
       Assert.throwIAEOnNull( 
-          builder, "builder null, therfore not available for drawing" );
+      builder, "builder null, therfore not available for drawing" );
     }
     
 //    logger.info( "Curves="+Arrays.asList( sides ) );
