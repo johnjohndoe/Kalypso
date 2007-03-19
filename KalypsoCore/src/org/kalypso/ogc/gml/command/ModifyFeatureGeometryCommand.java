@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
@@ -64,6 +65,12 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
+  /**
+   * Holds the list of translated features,
+   * can be null. is only initialyse {@link #process()}
+   */
+  private List<Feature> translatedFeatures;
+  
   /**
    * @param workspace
    * @param targetFeatures
@@ -117,7 +124,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
       if( !feList.contains( feature ) )
         feList.add( feature );
     }
-
+    translatedFeatures = feList;
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, feList.toArray( new Feature[feList.size()] ) ) );
   }
 
@@ -143,5 +150,22 @@ public class ModifyFeatureGeometryCommand implements ICommand
   public String getDescription( )
   {
     return "Geometrie ändern";
+  }
+  
+  /**
+   * To get the list of feature which geometry have being translated
+   * This method never return null.
+   * @return the list of translated features
+   */
+  public List<Feature> getTranslatedFeatures( )
+  {
+    if(translatedFeatures!=null)
+    {
+      return translatedFeatures;
+    }
+    else
+    {
+      return Collections.emptyList();
+    }
   }
 }
