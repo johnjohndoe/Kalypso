@@ -406,7 +406,7 @@ public class FENetConceptSelectionWidget implements IWidget
       {
         m_polygonGeometryBuilder= 
           new PolygonGeometryBuilder(0,crs);
-        System.out.println("DDCDCD="+crs);
+//        System.out.println("DDCDCD="+crs);
       }
     }
   }

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map;
+package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  * 
  * @author Patrice Congo
  */
+@SuppressWarnings("unchecked")
 public class ListPropertyChangeCommand implements ICommand
 {
   private final FeatureChange[] m_newChanges;
@@ -185,9 +186,10 @@ public class ListPropertyChangeCommand implements ICommand
     }
   }
   
+  
   private final void undoChanges()
   {
-    IPropertyType proType;
+//    IPropertyType proType;
     List propToRetain;
     List curProp;
     for(FeatureChange change:m_oldChanges)

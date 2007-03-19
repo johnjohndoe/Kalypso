@@ -258,16 +258,14 @@
 			</action -->
 			<action
 	           icon="icons/elcl16/geom_edit.gif"
-	           id="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate_view"               
+	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"               
 	           label="FE-Knoten bewegen"
 	           style="radio"
 	           toolbarPath="karte/edit"
 	           tooltip="FE-Knote bewegen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.MoveNodeWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 

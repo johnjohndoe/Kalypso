@@ -193,9 +193,10 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void keyTyped( KeyEvent e )
   {
-    if(KeyEvent.VK_ESCAPE==e.getKeyCode())
+    if(KeyEvent.VK_ESCAPE==e.getKeyChar()/*Code()*/)
     {
       this.reinit();
+      getMapPanel().repaint();
     }
 //    super.keyTyped(e);
   }
