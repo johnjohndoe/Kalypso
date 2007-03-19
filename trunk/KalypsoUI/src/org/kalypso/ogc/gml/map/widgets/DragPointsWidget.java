@@ -217,17 +217,17 @@ public class DragPointsWidget extends AbstractWidget
         }
         else
           handle.setActive( false );
-
       }
-      //TODO: check if this repaint is really necessary
-      MapPanel panel = getMapPanel();
-      if (panel != null)
-        panel.repaint();
-
     }
 
     /* Store the current mouse position. */
     m_currentPoint = p;
+
+    // TODO: check if this repaint is really necessary
+    // Answer: It is necessary, but it was at the wrong scope. Moved it out of the upper if-block.
+    MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
   }
 
   /**
