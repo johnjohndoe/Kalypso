@@ -315,7 +315,7 @@ public class ElevationModelSystemEditorComponent
      image_goToTerrain = new Image( 
                       elevationComposite.getDisplay(), 
                       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                      "icons/elcl16/cut.png" ).getImageData() );
+                      "icons/elcl16/remove.gif" ).getImageData() );
   deleteTerrain.setImage( image_goToTerrain );
   deleteTerrain.setLayoutData( elevFormData );
   deleteTerrain.addSelectionListener( new SelectionAdapter()
