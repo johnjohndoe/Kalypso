@@ -49,14 +49,26 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author congo
+ * This class provides mechanism for getting feature that are affected by
+ * the modification of the geometrie of another feature.
+ * This mechnanism are only provided in the context of 1D/2d finit
+ * element model, where only the node has got a geomtrie and 
+ * the other concepts like edge element complex element have computed geomtrie
+ * that change the position. These concepts do share 
+ * {@link org.kalypsodeegree.model.geometry.GM_Position}. 
+ * 
+ * @author Patrice Congo
  *
  */
+@SuppressWarnings("unchecked")
 public class OpsGeoEditAffected
 {
 
-  @SuppressWarnings("unchecked")
-  public static final void addAffectedFeaturesByPolyElementGeomChange( Feature feature, List<Feature> affectedFeature )
+  /**
+   * Implements the algorithm to get the fe concept features affected
+   * by a modification of a PolyElement geometry 
+   */
+  private static final void addAffectedFeaturesByPolyElementGeomChange( Feature feature, List<Feature> affectedFeature )
   {
     IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement= 
           (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
@@ -81,9 +93,40 @@ public class OpsGeoEditAffected
     }
   }
 
-  public static final void addAffectedFeaturesByNodeGeomChange( Feature feature, List<Feature> targetFeature )
+  private static final void addAffectedFeaturesByNodeGeomChange( Feature feature, List<Feature> targetFeature )
   {
-    
-  }
+    throw new UnsupportedOperationException("not supported yet");
+  } 
 
+  /**
+   * To get the features which are affected by a modification
+   * of the given feature geometry.
+   * Note that this method also invalidate the envvelope of the 
+   * affected features.
+   * 
+   * @param changedFeature the feature which geometry has been modified
+   * @param affectedFeatures a list to added the feature affected by the 
+   *            the geometrie modification 
+   */
+  public static final  void addAffectedsByFEFeatureGeomChange(
+                                              Feature changedFeature, 
+                                              List<Feature> affectedFeatures )
+  {
+    if(TypeInfo.isNode( changedFeature ))
+    {
+      OpsGeoEditAffected.addAffectedFeaturesByNodeGeomChange(
+                                  changedFeature, affectedFeatures);
+    }
+    else if(TypeInfo.isPolyElementFeature( changedFeature ))
+    {
+      OpsGeoEditAffected.addAffectedFeaturesByPolyElementGeomChange(
+                                         changedFeature, affectedFeatures);
+    }
+    else
+    {
+      throw new RuntimeException(
+          "Moving this type of node is not supported:"+changedFeature);
+    }
+  }
+  
 }

@@ -402,8 +402,31 @@ public class ApplyElevationWidget
     dataModel.setIgnoreMapSelection( false );
     super.doubleClickedLeft(p);
     assignElevationToSelectedNodes(p);
+    //used to propagate the selection again to the listener
+    //necessary to get the map the  node info refreshed
+    reselectSelected();
   }
   
+  private void reselectSelected( )
+  {
+    MapPanel mapPanel = dataModel.getMapPanel();
+    if(mapPanel==null)
+    {
+      System.out.println("Cannot reselect Map panel is null");
+      return;
+    }
+    IFeatureSelectionManager selectionManager = 
+                        mapPanel.getSelectionManager();
+    EasyFeatureWrapper[] allFeatures = selectionManager.getAllFeatures();
+    if(allFeatures!=null)
+    {
+      if(allFeatures.length!=0)
+      {
+        selectionManager.setSelection( allFeatures );
+      }
+    }
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedRight(java.awt.Point)
    */
@@ -418,6 +441,7 @@ public class ApplyElevationWidget
   @Override
   public void keyPressed( KeyEvent e )
   {
+    super.keyPressed( e );
     int code = e.getKeyCode();
     MapPanel mapPanel = dataModel.getMapPanel();
 

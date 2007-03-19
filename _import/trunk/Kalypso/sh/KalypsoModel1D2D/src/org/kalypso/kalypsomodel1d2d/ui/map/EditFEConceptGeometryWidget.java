@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.OpsGeoEditAffected;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -112,29 +111,13 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
     
     System.out.println("List:"+list);
     
-    //find the first parent which is an IFEDiscretisationModel1d2d 
-    //and invalidate node list
-    for(Feature feature:list)
+    for(Feature changedFeature:list)
     {
-      if(TypeInfo.isNode( feature ))
-      {
-//        System.out.println("Nodefound:"+feature);
-        OpsGeoEditAffected.addAffectedFeaturesByNodeGeomChange(feature, affectedFeatures);
-      }
-      else if(TypeInfo.isPolyElementFeature( feature ))
-      {
-        OpsGeoEditAffected.addAffectedFeaturesByPolyElementGeomChange(feature, affectedFeatures);
-      }
-      else
-      {
-        throw new RuntimeException(
-            "Moving this type of node is not supported:"+feature);
-      }
+      OpsGeoEditAffected.addAffectedsByFEFeatureGeomChange( 
+                                  changedFeature, affectedFeatures );
     }
     
     fireModelChangedEvent( workspace, affectedFeatures );
-    
-    
     
     return list;
   }
