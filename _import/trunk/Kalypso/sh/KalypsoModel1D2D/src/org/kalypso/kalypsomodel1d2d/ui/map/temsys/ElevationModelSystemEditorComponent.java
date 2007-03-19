@@ -259,6 +259,7 @@ public class ElevationModelSystemEditorComponent
                         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
                         "icons/elcl16/list_up.gif" ).getImageData() );
     moveUpBtn.setImage( image_Up );
+    
     moveUpBtn.setLayoutData( elevFormData );
     moveUpBtn.addSelectionListener( this.moveUpListener  );
     elevFormData = new FormData();

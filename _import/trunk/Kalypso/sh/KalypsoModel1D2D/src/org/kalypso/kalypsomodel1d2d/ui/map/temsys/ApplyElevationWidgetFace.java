@@ -202,11 +202,7 @@ class ApplyElevationWidgetFace
   private ColorModelChangeComponent colorModelChangeComponent;
   private ElevationModelSystemEditorComponent eleSystemEditorComponent;
 
-  private Image image_goToTerrain;
 
-  private Image image_Down;
-
-  private Image image_Up;
 
   private IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
 

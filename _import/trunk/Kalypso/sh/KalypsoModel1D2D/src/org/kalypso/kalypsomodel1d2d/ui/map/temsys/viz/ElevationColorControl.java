@@ -58,6 +58,8 @@ public class ElevationColorControl
   
   private static int colorIndex = DEFAULT_COLOR_INDEX;
   
+  private static boolean minMaxStatus= false;
+  
   public static final IElevationColorModel getColorModel(double minElevation, double maxElevation)
   {
     Color curBaseColor = getBaseColor();
@@ -110,6 +112,19 @@ public class ElevationColorControl
   {
     ElevationColorControl.colorIndex = colorIndex1;
   }
+
+  public static boolean getMinMaxStatus( )
+  {
+    return minMaxStatus;
+  }
+
+  public static void setMinMaxStatus( boolean minMaxStatus1 )
+  {
+    ElevationColorControl.minMaxStatus = minMaxStatus1;
+  }
+  
+  
+  
   
   
 }

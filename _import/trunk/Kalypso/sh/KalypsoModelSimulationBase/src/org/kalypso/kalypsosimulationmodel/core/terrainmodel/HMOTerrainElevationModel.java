@@ -182,7 +182,7 @@ public class HMOTerrainElevationModel
       }
       else
       {
-        System.out.println("Selected triange liste size="+list.size());
+       // System.out.println("Selected triange liste size="+list.size());
         for(TriangleData data:list)
         {
           if(data.contains( jtsPoint ))
@@ -190,7 +190,7 @@ public class HMOTerrainElevationModel
             return data.computeZOfTrianglePlanePoint( x, y );//getCenterElevation();
           }
         }
-        System.out.println("trinagle location not in list");
+        //System.out.println("trinagle location not in list");
         return Double.NaN;//((TriangleData)list.get( 0 )).getCenterElevation(); 
       }
     }
