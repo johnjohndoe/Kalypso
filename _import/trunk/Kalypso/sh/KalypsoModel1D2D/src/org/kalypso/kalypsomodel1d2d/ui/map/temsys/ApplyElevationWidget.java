@@ -401,7 +401,10 @@ public class ApplyElevationWidget
   {
     dataModel.setIgnoreMapSelection( false );
     super.doubleClickedLeft(p);
-    assignElevationToSelectedNodes(p);
+    if(!isPolygonSelectModus())
+    {
+      assignElevationToSelectedNodes(p);
+    }
     //used to propagate the selection again to the listener
     //necessary to get the map the  node info refreshed
     reselectSelected();

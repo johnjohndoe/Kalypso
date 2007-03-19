@@ -265,6 +265,7 @@ public class FENetConceptSelectionWidget implements IWidget
     
   }
 
+  
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
@@ -740,5 +741,10 @@ public class FENetConceptSelectionWidget implements IWidget
     }
     
     return null;
+  }
+
+  public boolean isPolygonSelectModus( )
+  {
+    return polygonSelectModus;
   }
 }
