@@ -48,14 +48,12 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-// import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -68,9 +66,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SimpleElevationColorModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -85,7 +81,7 @@ public class ColorModelChangeComponent
   private Section elevationColorSection;
   private PaintListener drawListener;
   private Canvas windowCanvas;
-  private int selectedRects = 1;
+  private int selectedRects = 0;
   private GC gc;
   private Label minLabel;
   private Color colorAWTChoice;
@@ -155,20 +151,27 @@ public class ColorModelChangeComponent
     formData.top = new FormAttachment( 0, 5 );
     maxLabel.setLayoutData( formData );
     this.disp = minMaxGroup.getDisplay();
+    
     PaintListener paintLis = new PaintListener()
     {
     public void paintControl( PaintEvent e )
     {
       gc = new GC( windowCanvas );
-      paintElevationColorSelection( gc );
-      
+      paintElevationColorSelection( gc );      
     }
     };
     
     windowCanvas = createCanvas( minMaxGroup, paintLis);
+//    
+    if(ElevationColorControl.getBaseColor()!= null)
+      windowCanvas.setBackground(
+          getSWTColor( minMaxGroup.getDisplay(),
+          ElevationColorControl.getBaseColor() ));
+    else    
+      windowCanvas.setBackground( 
+          minMaxGroup.getDisplay().
+          getSystemColor( SWT.COLOR_GRAY ) );
     
-    
-    windowCanvas.setBackground( minMaxGroup.getDisplay().getSystemColor( SWT.COLOR_GRAY ) );
     windowCanvas.redraw();
     
     formData = new FormData();
@@ -189,7 +192,7 @@ public class ColorModelChangeComponent
 
   private void paintElevationColorSelection( GC graphicCanvas )
   {
-    
+    selectedRects = ElevationColorControl.getColorIndex();
     int coord = (((int) (Math.ceil( 100D / selectedRects ))));
     colorAWTChoice = ElevationColorControl.getBaseColor();
     MAXI_ELEVATION = dataModel.getElevationModel().getMaxElevation();
@@ -257,7 +260,7 @@ public class ColorModelChangeComponent
     optionsColorFormData.top = new FormAttachment( 0, 5 );
     maximumColor.setLayoutData( optionsColorFormData );
     final ColorSelector colorSelector = new ColorSelector( optionsColorGroup );
-    Button maxColorBtn = colorSelector.getButton();// new Button(optionsColorGroup,SWT.None);
+    Button maxColorBtn = colorSelector.getButton();
     maxColorBtn.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent e)
@@ -313,11 +316,12 @@ public class ColorModelChangeComponent
     stepper.setMinimum( 0 );
     stepper.setIncrement( 10 );
     stepper.setMaximum( 50 );
-
+    stepper.setSelection( ElevationColorControl.getColorIndex());
     stepper.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent e )
       {
+        
         selectedRects = stepper.getSelection();
         if( selectedRects == 0 )
           selectedRects = 1;
@@ -329,7 +333,7 @@ public class ColorModelChangeComponent
     } );  
     
     
-    stepper.setSelection( ElevationColorControl.getColorIndex());
+    
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( colorNumberCells, 5 );
     optionsColorFormData.top = new FormAttachment( noElevationColorBtn, 8 );
@@ -419,5 +423,13 @@ public class ColorModelChangeComponent
     
     return val;
     }
+  
+  public org.eclipse.swt.graphics.Color getSWTColor(Display dis,Color color){
+    org.eclipse.swt.graphics.Color swtColor = new org.eclipse.swt.graphics.Color(dis,
+                                                                      color.getRed(),
+                                                                      color.getGreen(),
+                                                                      color.getBlue());
+    return swtColor;
+  }
 
 }

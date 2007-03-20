@@ -48,9 +48,9 @@ import java.awt.Color;
  */
 public class ElevationColorControl
 {
-  private static final Color DEFAULT_BASE_COLOR = Color.GRAY;
+  private static final Color DEFAULT_BASE_COLOR = Color.GREEN.darker();
   private static final Color DEFAULT_NO_ELEVATION_COLOR = Color.YELLOW;
-  private static final int DEFAULT_COLOR_INDEX = 0;
+  private static final int DEFAULT_COLOR_INDEX = 10;
   
   
   private static Color baseColor = DEFAULT_BASE_COLOR;
