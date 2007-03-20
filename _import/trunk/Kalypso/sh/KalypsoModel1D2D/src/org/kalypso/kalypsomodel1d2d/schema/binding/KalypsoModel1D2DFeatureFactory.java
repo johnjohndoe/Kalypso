@@ -154,18 +154,18 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         cMap.put(IFE1D2DEdge.class, cTor);
         cMap.put(IEdgeInv.class, cTor);
         
-        // Element1D  
-        cTor = new AdapterConstructor()
-        {
-            public Object constructAdapter(
-                                        Feature feature, 
-                                        Class cls) 
-                                        throws IllegalArgumentException
-            {
-                  return new Element1D( feature );     
-            }
-        };
-        cMap.put(IFEDiscretisationModel1d2d.class, cTor);
+//        // Element1D  
+//        cTor = new AdapterConstructor()
+//        {
+//            public Object constructAdapter(
+//                                        Feature feature, 
+//                                        Class cls) 
+//                                        throws IllegalArgumentException
+//            {
+//                  return new FE1D2DDiscretisationModel( feature );     
+//            }
+//        };
+//        cMap.put(IFEDiscretisationModel1d2d.class, cTor);
 
         //1d2d element
         cTor = new AdapterConstructor()
@@ -208,9 +208,14 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 // TODO: probably the idea here is to fix the substitution-problem. But this solution
                 // is no good, because we do not know in advance which substitutions may occur.
                 // Even if we did we would have to add all possibilities here as if/elses...
-                else
+                else if(featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ))
                 {
                   return new FE1D2D_2DElement(feature);
+                }
+                else
+                {
+                  System.out.println("cannot set ");
+                  return null;
                 }
             }
         };
@@ -294,7 +299,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 }
                 else
                 {
-                  return new FE1D2D_2DElement(feature);
+                  return null;
                 }
             }
         };
