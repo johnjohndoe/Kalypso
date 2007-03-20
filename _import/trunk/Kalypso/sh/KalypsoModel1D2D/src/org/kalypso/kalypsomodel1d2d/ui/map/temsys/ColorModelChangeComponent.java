@@ -207,56 +207,75 @@ public class ColorModelChangeComponent
     selectedRects = ElevationColorControl.getColorIndex();
     int coord = (((int) (Math.ceil( 140D / selectedRects ))));//140
     colorAWTChoice = ElevationColorControl.getBaseColor();
-    MAXI_ELEVATION = dataModel.getElevationModel().getMaxElevation();
-    MINI_ELEVATION = dataModel.getElevationModel().getMinElevation();
+    MAXI_ELEVATION = 100;//dataModel.getElevationModel().getMaxElevation();
+    MINI_ELEVATION = 0;//dataModel.getElevationModel().getMinElevation();
     
     double selectElevation = MINI_ELEVATION;
     double part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
     
-    if( !ElevationColorControl.getMinMaxStatus() )
+    colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
+    part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
+    selectElevation = MINI_ELEVATION; 
+    for( int i = 0; i < selectedRects; i++ )
     {
-      colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
-      part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
-      selectElevation = MINI_ELEVATION; 
-      for( int i = 0; i < selectedRects; i++ )
+      if( colorAWTChoice != null )
       {
-        if( colorAWTChoice != null )
-        {
-          gotColor = colorModel.getColor( selectElevation );
-          graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue())) ) );
-          graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
-        }
-        else
-        {
-          System.out.println( "Out of Range" );
-        }
-          selectElevation = selectElevation + part1;
-      }  
-      
-    }
-    else
-    {
-      colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
-      part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
-      selectElevation = (float) MINI_ELEVATION;
-      
-      for( int i = 0 ; i < selectedRects; i++ )
-      {
-        
-        if( colorAWTChoice != null )
-        {
-          gotColor = colorModel.getColor( selectElevation );
-         
-          graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
-          graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
-        }
-        else
-        {
-          System.out.println( "Out Of Range" );
-        }
-        selectElevation = selectElevation + part1;
+        gotColor = colorModel.getColor( selectElevation );
+        graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue())) ) );
+        graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
       }
-     }}
+      else
+      {
+        System.out.println( "Out of Range" );
+      }
+      selectElevation = selectElevation + part1;
+    }
+    
+//    if( !ElevationColorControl.getMinMaxStatus() )
+//    {
+//      colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
+//      part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
+//      selectElevation = MINI_ELEVATION; 
+//      for( int i = 0; i < selectedRects; i++ )
+//      {
+//        if( colorAWTChoice != null )
+//        {
+//          gotColor = colorModel.getColor( selectElevation );
+//          graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue())) ) );
+//          graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
+//        }
+//        else
+//        {
+//          System.out.println( "Out of Range" );
+//        }
+//          selectElevation = selectElevation + part1;
+//      }  
+//      
+//    }
+//    else
+//    {
+//      colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
+//      part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
+//      selectElevation = (float) MINI_ELEVATION;
+//      
+//      for( int i = 0 ; i < selectedRects; i++ )
+//      {
+//        
+//        if( colorAWTChoice != null )
+//        {
+//          gotColor = colorModel.getColor( selectElevation );
+//         
+//          graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
+//          graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
+//        }
+//        else
+//        {
+//          System.out.println( "Out Of Range" );
+//        }
+//        selectElevation = selectElevation + part1;
+//      }
+//     }
+   }
 
   private void secondGroup( Group optionsColorGroup )
   {

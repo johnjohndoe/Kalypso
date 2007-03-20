@@ -72,14 +72,21 @@ public class SimpleElevationColorModel implements IElevationColorModel
   //private RGB rgb;
   private float[] hsb;
   private float[] noElevationColorHSB;
+  private int transparency;
+  private boolean goDarkerFromMinToMax;
   
+  /**
+   * @param transparency double from 0 to 1 
+   */
   public SimpleElevationColorModel(
             double minElevation,
             double maxElevation,
             Color baseColor,
             double minHue,
             double maxHue,
-            Color noElevationColor)
+            Color noElevationColor,
+            double transparentcy,
+            boolean goDarkerFromMinToMax)
   {
     this.minElevation=minElevation;
     this.maxElevation = maxElevation;
@@ -91,13 +98,17 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
                                                noElevationColor.getGreen(),
                                                noElevationColor.getBlue(),null);
+    this.transparency = (int)(transparency*255.0/100.0);
+    this.goDarkerFromMinToMax= goDarkerFromMinToMax;
   }
   
   public SimpleElevationColorModel(
     double minElevation1,
     double maxElevation1,
     Color baseColor,
-    Color noElevationColor)
+    Color noElevationColor,
+    double transparency,
+    boolean goDarkerFromMinToMax)
   {
     this.minElevation=minElevation1;
     this.maxElevation = maxElevation1;
@@ -111,6 +122,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
         noElevationColor.getGreen(),
         noElevationColor.getBlue(),null);
+    this.transparency = (int)(transparency*255.0/100.0);
+    this.goDarkerFromMinToMax = goDarkerFromMinToMax;
   }
   
   public SimpleElevationColorModel( )
@@ -144,12 +157,18 @@ public class SimpleElevationColorModel implements IElevationColorModel
      // System.out.println("In Range");      
       double _hue = minHue+(elevation*(maxHue-minHue)/(maxElevation-minElevation));      //System.out.println("brightness :"+brightness);
     //  System.out.println("HUE"+_hue);
-      if (ElevationColorControl.getMinMaxStatus())
+      if (goDarkerFromMinToMax)
       {
         _hue = 1.0 - _hue;
       }           
       Color color = Color.getHSBColor((float) _hue, this.hsb[1], this.hsb[2] );//
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue(),ElevationColorControl.getTransparencyIndex()*255/100);
+//      int i = ElevationColorControl.getTransparencyIndex()*255/100;
+      color = 
+          new Color(
+                color.getRed(), 
+                color.getGreen(), 
+                color.getBlue(),
+                transparency);
       return color;  
     }
     else
