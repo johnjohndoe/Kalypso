@@ -360,7 +360,10 @@ public class CreateChannelData
       return  new ProfilEventManager( null, null );
     
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
-
+    
+    if (segment == null)
+      return  new ProfilEventManager( null, null );
+    
     final IProfil profil;
     if( m_selectedProfile == PROF.UP )
     {

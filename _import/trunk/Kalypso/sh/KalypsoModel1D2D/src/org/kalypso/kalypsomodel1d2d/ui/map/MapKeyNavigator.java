@@ -129,7 +129,7 @@ public class MapKeyNavigator
 
       mapPanel.setBoundingBox( wishBBox );
     }
-    else if( code == KeyEvent.VK_LEFT/*KeyEvent.VK_RIGHT*/ )
+    else if( code == KeyEvent.VK_RIGHT/*KeyEvent.VK_RIGHT*/ )
     {
       //pan "arrows
       final GM_Envelope currentBBox = mapPanel.getBoundingBox();
@@ -149,7 +149,7 @@ public class MapKeyNavigator
 
       mapPanel.setBoundingBox( wishBBox );
     }
-    else if( code == KeyEvent.VK_RIGHT /*KeyEvent.VK_LEFT*/ )
+    else if( code == KeyEvent.VK_LEFT /*KeyEvent.VK_LEFT*/ )
     {
       final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 
@@ -168,7 +168,7 @@ public class MapKeyNavigator
 
       mapPanel.setBoundingBox( wishBBox );
     }
-    else if( code == KeyEvent.VK_DOWN/*KeyEvent.VK_UP*/ )
+    else if( code == KeyEvent.VK_UP/*KeyEvent.VK_UP*/ )
     {
       final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 
@@ -187,7 +187,7 @@ public class MapKeyNavigator
 
       mapPanel.setBoundingBox( wishBBox );
     }
-    else if( code == KeyEvent.VK_UP/*KeyEvent.VK_DOWN*/ )
+    else if( code == KeyEvent.VK_DOWN/*KeyEvent.VK_DOWN*/ )
     {
       final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 

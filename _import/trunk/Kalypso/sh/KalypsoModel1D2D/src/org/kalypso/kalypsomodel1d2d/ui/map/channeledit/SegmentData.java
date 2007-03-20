@@ -366,8 +366,21 @@ public class SegmentData
     final int numProfPoints = profile.getPoints().size();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
-    tmpProfil.setStation( profile.getStation() );
+    IProfil tmpProfile2 = null;
 
+    tmpProfil.setStation( profile.getStation() );
+    if ( m_downCroppedProfile != null & m_upCroppedProfile != null)
+    {
+      if( profile.getStation() == m_downCroppedProfile.getStation()  )
+      tmpProfile2 = m_downCroppedProfile;
+    else
+      tmpProfile2 = m_upCroppedProfile;
+    } 
+    else if ( m_downCroppedProfile == null)
+      tmpProfile2 = m_upCroppedProfile;
+    else
+      tmpProfile2 = m_downCroppedProfile;
+    
     final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
 
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -389,7 +402,7 @@ public class SegmentData
 
     wi = 0.5 * (startSegmentWidth + endSegmentWidth);
     // add the width of the segments inbetween
-    for( int i = 1; i < numProfPoints-2; i++ )
+    for( int i = 1; i < numProfPoints - 2; i++ )
     {
       wi = wi + profile.getPoints().get( i + 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     }
@@ -407,7 +420,15 @@ public class SegmentData
       IProfilPoint point = tmpProfil.createProfilPoint();
 
       final double width = profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      final double heigth = profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - dZ;
+      double heigth = 0;
+      try
+      {
+        heigth = WspmProfileHelper.getHeigthPositionByWidth( width, tmpProfile2 ) - dZ;
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
       final double x = profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
       final double y = profile.getPoints().get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
@@ -1215,7 +1236,8 @@ public class SegmentData
         // final IProfil tempPreviousIntersProfile = createIntersectedIProfile( m_previousCroppedProfile );
         // LineString
         // m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
-        final double areaUpIntersProfile = ProfilUtil.calcArea( m_upIntersProfile );
+        final IProfil tmpupIntersProfile = adaptProfileElevations( m_upIntersProfile, m_upCroppedProfile );
+        final double areaUpIntersProfile = ProfilUtil.calcArea( tmpupIntersProfile );
 
         // Flächenausgleich!!
         m_upIntersProfile = adjustProfileArea( m_upIntersProfile, areaUpCroppedProfile, areaUpIntersProfile );
@@ -1246,7 +1268,8 @@ public class SegmentData
         // handeled by the user.
         // LineString
         // final IProfil tempNextIntersProfile = createIntersectedIProfile( m_nextCroppedProfile );
-        final double areaDownIntersProfile = ProfilUtil.calcArea( m_downIntersProfile );
+        final IProfil tmpdownIntersProfile = adaptProfileElevations( m_downIntersProfile, m_downCroppedProfile );
+        final double areaDownIntersProfile = ProfilUtil.calcArea( tmpdownIntersProfile );
 
         // Flächenausgleich!!
         m_downIntersProfile = adjustProfileArea( m_downIntersProfile, areaDownCroppedProfile, areaDownIntersProfile );
@@ -1260,6 +1283,47 @@ public class SegmentData
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * For the area adjustment it is necessary first to get the original heigths of the cropped profile to the intersected
+   * profile
+   */
+  private IProfil adaptProfileElevations( IProfil intersProfile, IProfil croppedProfile )
+  {
+    final LinkedList<IProfilPoint> profilPointList = intersProfile.getPoints();
+    final IProfil tmpProfil = ProfilFactory.createProfil( intersProfile.getType() );
+
+    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+
+    for( IProfilPoint point : profilPointList )
+    {
+      double currentWidth = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+
+      final IProfilPoint pt = tmpProfil.createProfilPoint();
+
+      final IProfilPointProperty[] properties = intersProfile.getPointProperties();
+      for( final IProfilPointProperty property : properties )
+      {
+        final String propertyId = property.toString();
+        final double value = point.getValueFor( propertyId );
+        pt.setValueFor( propertyId, value );
+      }
+      try
+      {
+        pt.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, WspmProfileHelper.getHeigthPositionByWidth( currentWidth, croppedProfile ) );
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      tmpProfil.addPoint( pt );
+    }
+    return tmpProfil;
   }
 
   /**
@@ -1525,7 +1589,7 @@ public class SegmentData
   {
     m_bankRightOrg = bankRightInters;
   }
-  
+
   public void paintProfile( CreateChannelData.PROF currentProfile, MapPanel panel, Graphics g, Color color )
   {
     LineString line = null;
