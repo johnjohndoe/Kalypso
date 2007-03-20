@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 
 /**
  * @author kimwerner
@@ -533,5 +534,35 @@ public class ProfilUtil
       }
       profile.removePoint( toDelete_2[i] );
     }
+  }
+
+  public static IProfil cloneProfile( final IProfil profile )
+  {
+    final int numProfPoints = profile.getPoints().size();
+    final IProfil clonedProfil = ProfilFactory.createProfil( profile.getType() );
+    final IProfilPointProperty[] properties = profile.getPointProperties();
+
+    for( final IProfilPointProperty property : properties )
+    {
+      final String propertyId = property.toString();
+      clonedProfil.addPointProperty( propertyId );
+    }
+
+    IProfilPoint point = clonedProfil.createProfilPoint();
+
+    for( int i = 0; i < numProfPoints; i++ )
+    {
+      for( final IProfilPointProperty property : properties )
+      {
+        final String propertyId = property.toString();
+        point.setValueFor( propertyId, profile.getPoints().get( i ).getValueFor( propertyId ) );
+      }
+      clonedProfil.addPoint( point );
+    }
+
+    clonedProfil.setStation( profile.getStation() );
+
+    return clonedProfil;
+
   }
 }
