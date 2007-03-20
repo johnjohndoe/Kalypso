@@ -51,12 +51,14 @@ public class ElevationColorControl
   private static final Color DEFAULT_BASE_COLOR = Color.GREEN.darker();
   private static final Color DEFAULT_NO_ELEVATION_COLOR = Color.YELLOW;
   private static final int DEFAULT_COLOR_INDEX = 10;
+  private static final int DEFAULT_TRANSPARENCY_INDEX = 100;
   
   
   private static Color baseColor = DEFAULT_BASE_COLOR;
   private static Color noElevationColor = DEFAULT_NO_ELEVATION_COLOR;
   
   private static int colorIndex = DEFAULT_COLOR_INDEX;
+  private static int transparencyIndex = DEFAULT_TRANSPARENCY_INDEX;
   
   private static boolean minMaxStatus= false;
   
@@ -121,6 +123,16 @@ public class ElevationColorControl
   public static void setMinMaxStatus( boolean minMaxStatus1 )
   {
     ElevationColorControl.minMaxStatus = minMaxStatus1;
+  }
+
+  public static int getTransparencyIndex( )
+  {
+    return transparencyIndex;
+  }
+
+  public static void setTransparencyIndex( int transparencyIndex1 )
+  {
+    ElevationColorControl.transparencyIndex = transparencyIndex1;
   }
   
   

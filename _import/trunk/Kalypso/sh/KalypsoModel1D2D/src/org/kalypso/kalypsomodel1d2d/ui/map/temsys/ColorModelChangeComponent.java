@@ -73,7 +73,8 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
- * @author congo
+ * @author Patrice Congo
+ * @author Madanagopal
  */
 public class ColorModelChangeComponent
 {
@@ -99,6 +100,8 @@ public class ColorModelChangeComponent
   private Label noElevationColorLabel;
   private Image image_Apply;
   private Spinner stepper;
+  private Spinner transparencyStepper;
+  private Label settLabel;
 
   public void createControl( ApplyElevationWidgetDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -176,11 +179,18 @@ public class ColorModelChangeComponent
     
     formData = new FormData();
     formData.width = 20;
-    formData.height = 100;
+    //formData.height = 200;
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, -5 );
     formData.left = new FormAttachment( maxLabel, 5 );
     windowCanvas.setLayoutData( formData );
+
+//    settLabel = new Label( minMaxGroup, SWT.BOTTOM );
+//    settLabel.setText( "Settles" );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( 0, 5 );
+//    formData.bottom = new FormAttachment( 100, -5 );
+//    settLabel.setLayoutData( formData );
 
     minLabel = new Label( minMaxGroup, SWT.BOTTOM );
     minLabel.setText( "Min" );
@@ -188,12 +198,14 @@ public class ColorModelChangeComponent
     formData.left = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, -5 );
     minLabel.setLayoutData( formData );
+    
+    
   }
 
   private void paintElevationColorSelection( GC graphicCanvas )
   {
     selectedRects = ElevationColorControl.getColorIndex();
-    int coord = (((int) (Math.ceil( 100D / selectedRects ))));
+    int coord = (((int) (Math.ceil( 140D / selectedRects ))));//140
     colorAWTChoice = ElevationColorControl.getBaseColor();
     MAXI_ELEVATION = dataModel.getElevationModel().getMaxElevation();
     MINI_ELEVATION = dataModel.getElevationModel().getMinElevation();
@@ -330,26 +342,51 @@ public class ColorModelChangeComponent
         System.out.println( "Auswahl" + selectedRects );
         windowCanvas.redraw();
       }
-    } );  
-    
-    
+    } );      
     
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( colorNumberCells, 5 );
     optionsColorFormData.top = new FormAttachment( noElevationColorBtn, 8 );
     stepper.setLayoutData( optionsColorFormData );
+/**Transparency */
+    
+    Label transparencyLabel = new Label( optionsColorGroup, SWT.NONE );
+    transparencyLabel.setText( "Transparency" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( 0, 5 );
+    optionsColorFormData.top = new FormAttachment( stepper, 8 );
+    transparencyLabel.setLayoutData( optionsColorFormData );
 
+    transparencyStepper = new Spinner( optionsColorGroup, SWT.BORDER );
+    transparencyStepper.setMinimum( 0 );
+    transparencyStepper.setIncrement( 10 );
+    transparencyStepper.setMaximum( 100 );
+    transparencyStepper.setSelection( ElevationColorControl.getTransparencyIndex());
+    transparencyStepper.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        ElevationColorControl.setTransparencyIndex( transparencyStepper.getSelection() );
+        windowCanvas.redraw();
+      }
+    } );  
+    
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( colorNumberCells, 5 );
+    optionsColorFormData.top = new FormAttachment( stepper, 8 );
+    transparencyStepper.setLayoutData( optionsColorFormData );    
+    
     Label optionMinMax = new Label( optionsColorGroup, SWT.NONE );
     optionMinMax.setText( "Farbskala umdrehen" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
-    optionsColorFormData.top = new FormAttachment( stepper, 8 );
+    optionsColorFormData.top = new FormAttachment( transparencyStepper, 8 );
     optionMinMax.setLayoutData( optionsColorFormData );
 
     checkBtnOptionMinMax = new Button( optionsColorGroup, SWT.CHECK );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( optionMinMax, 5 );
-    optionsColorFormData.top = new FormAttachment( stepper, 8 );
+    optionsColorFormData.top = new FormAttachment( transparencyStepper, 8 );
     checkBtnOptionMinMax.setLayoutData( optionsColorFormData );
     checkBtnOptionMinMax.addSelectionListener( new SelectionAdapter()
     {

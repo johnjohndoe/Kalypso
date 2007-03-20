@@ -149,7 +149,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
         _hue = 1.0 - _hue;
       }           
       Color color = Color.getHSBColor((float) _hue, this.hsb[1], this.hsb[2] );//
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue()/*, 100*/);
+      color = new Color(color.getRed(), color.getGreen(), color.getBlue(),ElevationColorControl.getTransparencyIndex()*255/100);
       return color;  
     }
     else
