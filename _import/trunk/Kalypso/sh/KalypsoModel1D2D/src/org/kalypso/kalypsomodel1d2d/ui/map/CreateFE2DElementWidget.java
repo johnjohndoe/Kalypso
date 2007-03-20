@@ -199,6 +199,24 @@ public class CreateFE2DElementWidget extends AbstractWidget
       getMapPanel().repaint();
     }
 //    super.keyTyped(e);
+    
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( KeyEvent e )
+  {
+    super.keyPressed(e);
+    try
+    {
+      MapKeyNavigator.navigateOnKeyEvent( getMapPanel(), e, true );
+    }
+    catch(Throwable th)
+    {
+      th.printStackTrace();
+    }
   }
 
 }

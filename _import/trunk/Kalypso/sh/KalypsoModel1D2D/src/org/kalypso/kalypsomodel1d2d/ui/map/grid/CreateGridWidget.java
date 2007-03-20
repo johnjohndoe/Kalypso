@@ -310,6 +310,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public void keyPressed( KeyEvent e )
   {
     int code = e.getKeyCode();
+   
     MapPanel mapPanel = getMapPanel();
 
     // TODO:

@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -260,6 +261,8 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
   }
   
   /**
+   * Does also navigation through {@link MapKeyNavigator}
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
@@ -281,6 +284,15 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     {
       ex.printStackTrace();
     }
+    
+    try
+    {
+      MapKeyNavigator.navigateOnKeyEvent( getMapPanel(), e, true );
+    }
+    catch(Throwable th)
+    {
+      th.printStackTrace();
+    }    
   }
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)

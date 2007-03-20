@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,22 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
     workspace = theme.getWorkspace();
   }
   
-  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( KeyEvent e )
+  {
+    super.keyPressed(e);
+    try
+    {
+      MapKeyNavigator.navigateOnKeyEvent( getMapPanel(), e, true );
+    }
+    catch (Throwable th) 
+    {
+      th.printStackTrace();
+    }
+  }
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#perform()
    */

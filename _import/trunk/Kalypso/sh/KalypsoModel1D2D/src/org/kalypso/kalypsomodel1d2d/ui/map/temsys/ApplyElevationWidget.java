@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
@@ -94,7 +95,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ApplyElevationWidget 
                     extends FENetConceptSelectionWidget//AbstractWidget 
-                    implements IWidgetWithOptions, IEvaluationContextConsumer
+                    implements IWidgetWithOptions/*, IEvaluationContextConsumer*/
 {
   
   
@@ -199,57 +200,57 @@ public class ApplyElevationWidget
     dataModel.setElevationModel( terrainModel );
     
   }
-   /**
-   * @see org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
-   */
-  public void setEvaluationContext( IEvaluationContext evaluationContext )
-  {
-    Assert.throwIAEOnNullParam( evaluationContext, "evaluationContext" );
-//    final ISzenarioDataProvider szenarioDataProvider = 
-//      (ISzenarioDataProvider) context.getVariable( 
-//            SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-//    final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );    
-    try
-    {
-      ITerrainModel terrainModel= refelectTerrainModel( evaluationContext );
-      dataModel.setTerrainModel( terrainModel );
-    }
-    catch( Throwable e )
-    {
-      e.printStackTrace();
-    }
-   
-  }
+//   /**
+//   * @see org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
+//   */
+//  public void setEvaluationContext( IEvaluationContext evaluationContext )
+//  {
+////    Assert.throwIAEOnNullParam( evaluationContext, "evaluationContext" );
+//////    final ISzenarioDataProvider szenarioDataProvider = 
+//////      (ISzenarioDataProvider) context.getVariable( 
+//////            SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+//////    final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );    
+////    try
+////    {
+////      ITerrainModel terrainModel= refelectTerrainModel( evaluationContext );
+////      dataModel.setTerrainModel( terrainModel );
+////    }
+////    catch( Throwable e )
+////    {
+////      e.printStackTrace();
+////    }
+//   
+//  }
   
-  private final ITerrainModel refelectTerrainModel(IEvaluationContext evaluationContext) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
-  {
-    Object dataProvider=evaluationContext.getVariable( "activeSzenarioDataProvider" );
-    
-    if(dataProvider==null)
-    {
-      throw new IllegalArgumentException(
-          "evaluation context does not contain an active szenarion data provider");
-    }
-    Method getModelMethod=
-      dataProvider.getClass().getMethod( "getModel", new Class[]{Class.class});
-    if(getModelMethod==null)
-    {
-      throw new IllegalArgumentException(
-          "Data provider in "+evaluationContext+" does not have getModel method"); 
-    }
-    try
-    {
-      ITerrainModel terrainModel=
-        (ITerrainModel) getModelMethod.invoke( 
-            dataProvider, new Object[]{ITerrainModel.class});
-      return terrainModel;
-    }
-    catch (Exception e) 
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
+//  private final ITerrainModel refelectTerrainModel(IEvaluationContext evaluationContext) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+//  {
+//    Object dataProvider=evaluationContext.getVariable( "activeSzenarioDataProvider" );
+//    
+//    if(dataProvider==null)
+//    {
+//      throw new IllegalArgumentException(
+//          "evaluation context does not contain an active szenarion data provider");
+//    }
+//    Method getModelMethod=
+//      dataProvider.getClass().getMethod( "getModel", new Class[]{Class.class});
+//    if(getModelMethod==null)
+//    {
+//      throw new IllegalArgumentException(
+//          "Data provider in "+evaluationContext+" does not have getModel method"); 
+//    }
+//    try
+//    {
+//      ITerrainModel terrainModel=
+//        (ITerrainModel) getModelMethod.invoke( 
+//            dataProvider, new Object[]{ITerrainModel.class});
+//      return terrainModel;
+//    }
+//    catch (Exception e) 
+//    {
+//      e.printStackTrace();
+//      return null;
+//    }
+//  }
   
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#moved(java.awt.Point)
@@ -455,140 +456,142 @@ public class ApplyElevationWidget
     {
       System.out.println( "e:" + e );
     }
-    /* zoom in */
-    if( code == KeyEvent.VK_PLUS )
-    {
-//      if( e.isShiftDown() )
-//      {
-        final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-        GM_Envelope wishBBox = null;
-
-        final GM_Position currentMax = currentBBox.getMax();
-        final GM_Position currentMin = currentBBox.getMin();
-
-        final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-        final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-        final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-        final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-
-        final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-        final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-        wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-        mapPanel.setBoundingBox( wishBBox );
-//      }
-//      else
-//      {
-//        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
-//      }
-
-    }
-    /* zoom out */
-    else if( code == KeyEvent.VK_MINUS )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-
-    // pan "arrows
-    else if( code == KeyEvent.VK_RIGHT )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-      
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-    else if( code == KeyEvent.VK_LEFT )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-      
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-    else if( code == KeyEvent.VK_UP )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-      
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-    else if( code == KeyEvent.VK_DOWN )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-      
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
+    
+    MapKeyNavigator.navigateOnKeyEvent( mapPanel, e, true );
+//    /* zoom in */
+//    if( code == KeyEvent.VK_PLUS )
+//    {
+////      if( e.isShiftDown() )
+////      {
+//        final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+//
+//        GM_Envelope wishBBox = null;
+//
+//        final GM_Position currentMax = currentBBox.getMax();
+//        final GM_Position currentMin = currentBBox.getMin();
+//
+//        final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+//        final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+//        final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+//        final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+//
+//        final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+//        final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+//
+//        wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+//
+//        mapPanel.setBoundingBox( wishBBox );
+////      }
+////      else
+////      {
+////        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+////      }
+//
+//    }
+//    /* zoom out */
+//    else if( code == KeyEvent.VK_MINUS )
+//    {
+//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+//
+//      GM_Envelope wishBBox = null;
+//
+//      final GM_Position currentMax = currentBBox.getMax();
+//      final GM_Position currentMin = currentBBox.getMin();
+//
+//      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+//      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+//      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+//      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+//
+//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+//
+//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+//
+//      mapPanel.setBoundingBox( wishBBox );
+//    }
+//
+//    // pan "arrows
+//    else if( code == KeyEvent.VK_RIGHT )
+//    {
+//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+//
+//      GM_Envelope wishBBox = null;
+//
+//      final GM_Position currentMax = currentBBox.getMax();
+//      final GM_Position currentMin = currentBBox.getMin();
+//
+//      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+//      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+//      
+//
+//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+//
+//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+//
+//      mapPanel.setBoundingBox( wishBBox );
+//    }
+//    else if( code == KeyEvent.VK_LEFT )
+//    {
+//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+//
+//      GM_Envelope wishBBox = null;
+//
+//      final GM_Position currentMax = currentBBox.getMax();
+//      final GM_Position currentMin = currentBBox.getMin();
+//
+//      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+//      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+//      
+//
+//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+//
+//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+//
+//      mapPanel.setBoundingBox( wishBBox );
+//    }
+//    else if( code == KeyEvent.VK_UP )
+//    {
+//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+//
+//      GM_Envelope wishBBox = null;
+//
+//      final GM_Position currentMax = currentBBox.getMax();
+//      final GM_Position currentMin = currentBBox.getMin();
+//
+//      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+//      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+//      
+//
+//      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+//      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+//
+//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+//
+//      mapPanel.setBoundingBox( wishBBox );
+//    }
+//    else if( code == KeyEvent.VK_DOWN )
+//    {
+//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+//
+//      GM_Envelope wishBBox = null;
+//
+//      final GM_Position currentMax = currentBBox.getMax();
+//      final GM_Position currentMin = currentBBox.getMin();
+//
+//      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+//      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+//      
+//
+//      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+//      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+//
+//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+//
+//      mapPanel.setBoundingBox( wishBBox );
+//    }
 
   }
 
