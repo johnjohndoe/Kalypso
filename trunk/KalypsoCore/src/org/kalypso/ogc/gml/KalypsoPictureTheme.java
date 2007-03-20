@@ -136,6 +136,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     URL imageFileURL = null;
     try
     {
+//      new UrlResolver().resolveURL( imageFileURL, baseName );
       imageFileURL = new URL( source );
     }
     catch( final MalformedURLException e1 )
@@ -145,6 +146,10 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     String imagePath = imageFileURL.getPath().substring( 1, imageFileURL.getPath().length() );
     RenderedOp image = JAI.create( "fileload", imagePath );
     m_image = new TiledImage( image, true );
+    // TODO: the image keeps does not release the stream onto the tiff
+    // maybe we must call image.dispose in order to do this?
+    // can we do that here??
+    
     // BufferedImage image = m_image.getAsBufferedImage();
     // m_image = image.getAsBufferedImage();
     int height = m_image.getHeight();
