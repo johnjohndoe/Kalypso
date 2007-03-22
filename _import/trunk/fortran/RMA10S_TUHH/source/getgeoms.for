@@ -1,3 +1,4 @@
+C     Last change:  K    15 Feb 2007    6:48 pm
 cipk  last update june 27 2005 allow for control structures
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
 CIPK  LAST UPDATE AUG 4 2003  ADD BLK11
@@ -28,7 +29,7 @@ CIPK  LAST UPDATE OCT 1 1996
       USE PARAMMOD
       SAVE
 !NiS,jul06: Consistent data types for passing parameters
-      INTEGER :: n, m, a, lt
+      INTEGER :: n, m, a, lt, fffms
 !-
 C-
 cipk aug05	INCLUDE 'BLK10.COM'
@@ -332,7 +333,10 @@ CIPK JUN03
 
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
-         call rdkalyps(n,m,a,lt,0)
+         !nis,feb07: Allow for numbered FFF midsides
+         !call rdkalyps(n,m,a,lt,0)
+         call rdkalyps(n,m,a,lt,fffms,0)
+         !-
   !NiS,apr06: adding this transoformation like it is called after RDRM1 (see above)
          NCLL = NCL
   !-

@@ -1,4 +1,4 @@
-C     Last change:  K    15 Dec 2006    4:00 pm
+C     Last change:  K    15 Feb 2007    5:15 pm
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -14,6 +14,9 @@ cipk aug05      INCLUDE 'BLK10.COM'
 !NiS,mar06: adding declaration of hand-over-parameters between subroutines
       INTEGER :: n,m,a,LT
 !-
+!nis,feb07: Adding counter of midside nodes of Flow1DFE elements
+      INTEGER :: FFFMS
+!-
       MAXP=0
       MAXE = 0
 !NiS,may06: Initialize MaxA and MaxT for Kalypso-2D format input file
@@ -23,6 +26,9 @@ cipk aug05      INCLUDE 'BLK10.COM'
 
 !nis,nov06: Initialize MaxLT, the dimensioner for the number of Line transitions
       MaxLT = 0
+!-
+!nis,feb07: Initialize MaxFFFMS, the dimensioner of the number of midside nodes of Flow1DFE elements
+      MaxFFFMS = 0
 !-
 
       NCLL=0
@@ -52,10 +58,13 @@ cipk jun03 add RM1 input capabilities
 !NiS,mar06: adding the option of reading KALYPSO-2D input files for determination of allocatable array size
         if (iGEO == 2) then
           !NiS,mar06: Additional parameter 'A' in comparison to other read-subroutines; the parameter gives back the number of arcs
-          call RDKALYPS(N,M,A,LT,1)
+          !nis,feb07: Add the counter of midside nodes of Flow1DFE elements
+          !call RDKALYPS(N,M,A,LT,1)
+          call RDKALYPS(N,M,A,LT,FFFMS,1)
+          !-
           REWIND IFILE
           WRITE(*,*)' back from rdkalypso'
-          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT
+          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT, ', ', FFFMS
           GO TO 100
         end if
 !-
@@ -115,10 +124,16 @@ CIPK JUN05 SET LOWER LIMIT                             	!provides the oportunity
           !nis,dec06: Adding 1D-2D-Transitionline-array counter
           MaxLT=LT
           !-
+          !nis,feb07: Adding counter of midside nodes of Flow1DFE elements
+          MaxFFFMS = FFFMS
+          !-
         else
           MAXA=0
           !nis,dec06: Adding 1D-2D-Transitionline-array counter
           MaxLT=0
+          !-
+          !nis,feb07: Adding counter of midside nodes of Flow1DFE elements; dummy value zero
+          MaxFFFMS = 0
           !-
         end if
 !-
