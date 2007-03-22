@@ -63,7 +63,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 
 @SuppressWarnings("unchecked")
-class GridPointCollector /*implements IGeometryBuilder*/
+public class GridPointCollector /*implements IGeometryBuilder*/
 {
   private static final Logger logger=
         Logger.getLogger( GridPointCollector.class.getName() );
