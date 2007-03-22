@@ -1,4 +1,4 @@
-C     Last change:  ST   22 Jan 2007   10:50 am
+C     Last change:  EF    5 Mar 2007    9:50 am
       MODULE PARAFlow1dFE
 
 
@@ -76,10 +76,15 @@ C     Last change:  ST   22 Jan 2007   10:50 am
       REAL,ALLOCATABLE       :: vflowint(:,:)                !EFa Dec06, Fließgeschwindigkeit
       REAL,ALLOCATABLE       :: dvintdx(:,:)                 !EFa Dec06, Ableitung der Fließgeschwindigkeit nach dx
       REAL,ALLOCATABLE       :: teschke(:)                   !EFa Dec06, gibt anhand der Flächenpolynomdaten an, ob mit 1d-Teschke-Elementen gerechnet wird
-      REAL,ALLOCATABLE       :: qhalt(:,:)                   !EFa Dec06, Durchfluss des vorherigen Zeitschrittes
+      !REAL,ALLOCATABLE       :: qhalt(:,:)                   !EFa Dec06, Durchfluss des vorherigen Zeitschrittes
+      REAL,ALLOCATABLE       :: qhalt(:)                     !EFa Dec06, Durchfluss des vorherigen Zeitschrittes
       REAL,ALLOCATABLE       :: dhdtaltzs(:,:)               !EFa Dec06, speichern der Zeitableitung der Höhe für den nächsten Zeitschritt
       REAL,ALLOCATABLE       :: hhalt(:,:)                   !EFa Dec06, Höhe des vorherigen Zeitschrittes
       REAL,ALLOCATABLE       :: hht(:)                       !EFa Dec06
       REAL,allocatable       :: kennung(:)                   !EFa Jan07, wird in coef1dFE mit 1 belegt; Kennung für Konten eines Teschke-Elementes
+
+      !nis,feb07,testing
+      REAL (KIND = 8), allocatable   :: matrix(:,:), vector(:)
+      !-
 
       END MODULE 
