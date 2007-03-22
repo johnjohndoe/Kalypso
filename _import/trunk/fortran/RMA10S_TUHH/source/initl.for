@@ -1,3 +1,4 @@
+C     Last change:  EF    5 Mar 2007    2:34 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -30,6 +31,9 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       !EFa Nov06, neues Modul für Teschke-1D-Elemente
       USE PARAFlow1dFE
 !-
+      !nis,feb07: Add minimum number for some allocations coming from the midside node numbers of FFF elements
+      INTEGER :: minNoNu
+      !-
       
 C	INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
@@ -142,6 +146,14 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
 
+      !nis,feb07: Calculate minimum node number for particular calculations with Flow1DFE elements
+      if (MaxFFFMS /= 0) then
+        minNoNumber = (-1) * (1000 + MaxFFFMS)
+      else
+        minNoNu = 1
+      end if
+      !-
+
       ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,7),ITAB(MAXP),
      1              ALFA(MAXP),VOLD(7,MAXP),
      2              VDOT(7,MAXP),VDOTO(7,MAXP),
@@ -149,9 +161,16 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
      4             NSURF(MAXP),NBTN(MAXP),IBN(MAXP),NFIX1(MAXP)
      5             ,FCTV(MAXP),FCTS(MAXP),NREF(MAXP),NTHREE(MAXP)
      6             ,VVEL(MAXP),FC(MAXP,3)
-     7             ,ADIF(MAXP),XSLP(MAXP),YSLP(MAXP),NFIXK(MAXP)
+!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
+!     7             ,ADIF(MAXP),XSLP(MAXP),YSLP(MAXP),NFIXK(MAXP)
+     7             ,ADIF(MAXP), XSLP(minNoNu:MAXP)
+     +             ,YSLP(minNoNu:MAXP),NFIXK(minNoNu:MAXP)
+!-
      8             ,WIDTH(MAXP),SS1(MAXP),SS2(MAXP),NFIXP(MAXP)
-     +             ,ALFAK(MAXP),VOUTN(MAXP),WIDS(MAXP)
+!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
+!     +             ,ALFAK(MAXP),VOUTN(MAXP),WIDS(MAXP)
+     +             ,ALFAK(MAXP),VOUTN(minNoNu:MAXP),WIDS(MAXP)
+!-
      +             ,DIR(MAXP)
      +             ,PRESS(MAXP),DEN(MAXP),NODC(MAXP),NSTRT(MAXP,2)
      +           ,NDROP(MAXP,4),ICPON(MAXP),NSPL(MAXP)
@@ -847,7 +866,8 @@ CIPK MAR01
       ALLOCATE(vflowint(maxp,4))
       ALLOCATE(dvintdx(maxp,4))
       ALLOCATE(teschke(maxp))
-      ALLOCATE(qhalt(maxe,2))
+      !ALLOCATE(qhalt(maxe,2))
+      ALLOCATE(qhalt(maxe))
       ALLOCATE(dhdtaltzs(maxe,2))
       ALLOCATE(hhalt(maxe,2))
       ALLOCATE(hht(maxp))
@@ -899,6 +919,7 @@ CIPK MAR01
         ENDDO inner4
       ENDDO outer4
       outer5: DO i = 1,MaxP
+              qhalt(i)=0
         inner5: DO j = 1, 4
               pdif(i,j) = 0
               hhint(i,j) = 0
@@ -943,10 +964,17 @@ CIPK MAR01
           hhalt(i,j)=0
           dhdtaltzs(i,j)=0
           dqqt(i,j)=0
-          qhalt(i,j)=0
+          !qhalt(i,j)=0
           dqdtaltzs(i,j)=0
         end do
       end do
+
+      !nis,feb07: Adding midside nodes storage of Flow1DFE elements
+      ALLOCATE (FFFmidsidenodes(1:MaxFFFMS))
+      do i = 1, MaxFFFMS
+        FFFmidsidenodes(i) = 0
+      end do
+      !-
 
 
 !-      
