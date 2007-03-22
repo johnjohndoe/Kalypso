@@ -1,3 +1,4 @@
+C     Last change:  EF    2 Mar 2007    4:28 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -210,13 +211,21 @@ CIPK OCT98 CONVERT TO F90
         IF(NCN .EQ. 15) ILK=2
         IF(NCN .EQ. 13) ILK=3
         IF(NCN .EQ. 10) ILK=2
+
         !NiS,may06: process every node of element
-        DO 198 K=1,NCN
+        !nis,feb07: Rename loop for f90
+        !do 198 k = 1, NCN
+        NBCrelation: DO K=1,NCN
+        !-
           !NiS,may06: local copy of processed node number
           N=NCON(K)
+          !nis,feb07: Cycle, if nod is negative. It's only possible for midside nodes, which shouldn't be processed here
+          if (n < 0) CYCLE NBCrelation
+          !-
 C-
 C........ Setup for special case inflow quality conditions
 C-
+
           !NiS,may06: no velocities, so no direction is applied
           IF (VEL(2,N) .EQ. 0. .AND. VEL(1,N) .EQ. 0) THEN
             VDIR = 0.
@@ -226,6 +235,7 @@ C-
           ENDIF
 CIPK OCT98 CONVERT TO F90
           N1=ABS(NSURF(N))
+
           DIF=VDIR-VOUTN(N1)
           IF(DIF .GT. 2.*PI2) DIF=DIF-4.*PI2
           IF(DIF .LT. -2.*PI2) DIF=DIF+4.*PI2
@@ -290,13 +300,16 @@ cipk sep96            ENDIF
           NBC(N,6)=0
 CIPK JUN02
           NBC(N,7)=0
-  198   CONTINUE
+!nis,feb07: rename loop to f90
+!  198   CONTINUE
+         ENDDO NBCrelation
+!-
   199 CONTINUE
 
       !NiS,may06:testing
       !CLOSE(9998)
       !-
-        
+
  1991 CONTINUE
 C
 C                                       FORM DEGREE OF FREEDOM ARRAY
@@ -337,6 +350,7 @@ CIPK DEC00       test for gate structure
             IF(NDUPJ(NGT) .GT. 0  .AND. NDDNJ(NGT) .GT. 0) THEN
               IF(WSLL(NDUPJ(NGT)) .LT.  WSLL(NDDNJ(NGT))   .AND.
      +          WSLL(NDUPJ(NGT)) .GT. BJ(NGT)) THEN
+
 	          CALL SETGT(N)
    	          igtcl(n)=1
               ELSE
@@ -360,6 +374,7 @@ CC               QFL=ACR*SQRT(VEL(1,NDFLJ(NGT))**2+VEL(2,NDFLJ(NGT))**2)
                   ENDIF
 	          ELSE
 			    IF(QFL .GT. AJ(NGT)) THEN
+
 	              CALL SETGT(N)
                     igtcl(n)=1
                   ELSE
@@ -378,6 +393,7 @@ CC               QFL=ACR*SQRT(VEL(1,NDFLJ(NGT))**2+VEL(2,NDFLJ(NGT))**2)
      +		  qfl,aj(ngt)
 	          write(75,*) 'vels',VEL(1,NDFLJ(NGT)),Vold(1,NDFLJ(NGT))
 	          IF(WSLL(NDUPJ(NGT)) .LT. BJ(NGT)) THEN
+
 	            CALL SETGT(N)
                   igtcl(n)=1
 	          ELSEIF(AJ(NGT) .GT. 0) THEN
@@ -538,7 +554,6 @@ cipk jun05      vels+sed
  2282   CONTINUE
       ENDIF
 
-
       do n=1,npm
 	  if(icesw .gt. 0) then
 	    if(icethk(n) .gt. 0  .or. 
@@ -554,27 +569,36 @@ cipk jun05      vels+sed
 	  endif
 	enddo
 
-
-
 C-
 C...... Install special values for one-two dimension intersections
 C-
       !EFa Nov06, Modifikation für 1D-Teschke-Elemente
       do nn=1,ne
+      !nis,feb07: Allow for numbered FFF midsides
         if ((ncorn(nn).eq.5.or.ncorn(nn).eq.3).and.
-     +       nop(nn,2).EQ.-9999) then
+      !+       nop(nn,2).EQ.-9999) then
+     +       nop(nn,2) < -1000) then
+      !-
+
           nbc(nop(nn,1),2)=0 !EFa Dec06
           nbc(nop(nn,3),2)=0 !EFa Dec06
-          if (icyc.le.0) then
-            nbc(nop(nn,1),1)=0
-            nbc(nop(nn,3),1)=0
-          end if
-          do i=1,4
-            nbc(nop(nn,2),i)=0
-          end do
+          !EFa Mar07, estifm changed in coef1dfe, continuity equation is activated for steady state solution
+          !if (icyc.le.0) then
+          !  nbc(nop(nn,1),1)=0
+          !  nbc(nop(nn,3),1)=0
+          !end if
+          !nis,feb07: nbc of negative node numbers is not defined, so the program overrides other space. In this case overrides the velocities and depths of several nodes
+          !do i=1,4
+          !  nbc(nop(nn,2),i)=0
+          !end do
           !WRITE(*,*)'nbc',nn,nbc(nop(nn,1),1),nbc(nop(nn,1),3)!EFa Dec06, Test
+          !-
         end if
+      !EFa Mar07, testing
+      !WRITE(lout,*)nn,'nbc1',nbc(nop(nn,3),1),'nbc2',nbc(nop(nn,3),3)
+      !-
       end do
+
 
       DO 260 NN=1,NE
         IF(IMAT(NN) .EQ. 0) GO TO 260
@@ -787,7 +811,10 @@ c       now do 1-d structures
             !NiS,may06,com: get midside node
             N1=NOP(NN,2)
             !EFa Nov06, die folgende nbc-Zuweisung nicht für 1D-Teschke-Elemente
-            if (n1.ne.-9999) then
+            !nis,feb07: Allow for numbered FFF midsides
+            !if (n1.ne.-9999) then
+            if (n1 > -1000) THEN
+            !-
             IF(ISUBMEL(nn) .EQ. 1) THEN
                 NBC(N1,1)=1
                 NBC(N1,2)=0
@@ -906,7 +933,6 @@ cipk oct98 update to f90
       !-
 
   260 CONTINUE
-
 
 
 C
@@ -1081,7 +1107,10 @@ C-
           IF(NDEP(N1) .GT. 1  .OR.  N .GT. NEM) THEN
             N2=NOP(N,2)
             !EFa Nov06, die folgenden nbc-Zuweisungen nicht für1D-Teschke-Elemente
-            if (n2.NE.-9999) then
+            !nis,feb07: Allow for numbered FFF midsides
+            !if (n2.NE.-9999) then
+            if (n2 > -1000) then
+            !-
 cipk may02 switch  to 7
             DO 282 K=1,7
 cipk may02            DO 282 K=1,6
@@ -1100,7 +1129,10 @@ cipk may02
 C
 C
             !EFa Nov06, folgende Berechnungen nicht für 1D-Teschke-ELemente
-            if (n2.NE.-9999) then
+            !nis,feb07: Allow for numbered FFF midsides
+            !if (n2.NE.-9999) then
+            if (n2 > -1000) then
+            !-
             WZ = WIDTH(N3) + (SS1(N3)+SS2(N3))*(CORD(N3,3)-AO(N3))
      &                    * (VEL(3,N3)/(ELEV-AO(N3)) ) 
 C
@@ -1120,7 +1152,6 @@ cu            ENDIF
           ENDIF
         ENDIF
   285 CONTINUE
-
 
 CIPK JAN99 END FOR JUNCTIONS
 
@@ -1232,6 +1263,7 @@ cipk dec98 reverse 5 and 6 to corect bug
       ELSE
         CALL DISFCT
       ENDIF
+
 C
 C...... Dropout equations if possible
 C
@@ -1361,11 +1393,9 @@ CIPK MAY02 SWITCH NDF TO 7
  3111     continue
 ccycw added for full 3D optimisation 19/06/96 currently testing
       !NiS,may06:if reordering within RMA10S should be done, then ioptim.eq.2
+      !nis,feb07,testing
       if(ioptim .LT. 2) then
 C         write(76,*) 'load ivrsid1',ivrsid
-         !NiS,may06: testing
-         !WRITE(*,*)'go to optim'
-         !-
          call optim
          ioptim=1+IOPTIM
 C         write(76,*) 'load ivrsid2',ivrsid
@@ -1408,6 +1438,7 @@ cipk jun05
      +    LPS(MR1),rkeep(0:mR1),ekeep(mR1),rkeepeq(mR1))
 	  ENDIF
 	ENDIF
+
 
 C      DO N=1,NP
 C        WRITE(75,'(8I5)') N,(NBC(N,M),M=1,7)
