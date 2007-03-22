@@ -1,3 +1,4 @@
+!     Last change:  K    27 Feb 2007    4:21 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -135,17 +136,28 @@ END DO
           !midside node
           k = nop (nelem, 2)
           !no midside node assigned to arcmid yet:
-          IF (arcmid (k, 3) .eq. 0.and.k.NE.-9999) THEN
+
+          !nis,feb07: Allow for numbered FFF midsides
+          !IF (arcmid (k, 3) .eq. 0.and.k.NE.-9999) THEN
+          IF (arcmid (k, 3) .eq. 0 .and. k > -1000) THEN
+          !-
             arcmid (k, 1) = nop (nelem, 1)
             arcmid (k, 2) = nop (nelem, 3)
             arcmid (k, 3) = nelem
             arcmid (k, 4) = nelem
-          ELSEIF (arcmid (nelem, 3) .eq. 0.and.k.eq.-9999) then  !EFa Dec06, Test der Fallunterscheidung
+          !EFa Dec06, Test der Fallunterscheidung
+          !nis,feb07: Allow for numbered FFF midsides
+          !ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k.eq.-9999) then
+          ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k < -1000) then
+          !-
             arcmid (nelem, 1) = nop (nelem, 1)
             arcmid (nelem, 2) = nop (nelem, 3)
             arcmid (nelem, 3) = nelem
             arcmid (nelem, 4) = nelem
-            arcmid (nelem, 5) = -9999
+            !nis,feb07: Enter the negative midside number
+            !arcmid (nelem, 5) = -9999
+            arcmid (nelem, 5) = k
+            !-
           ENDIF
           !Save informations for 1D-2D-TRANSITION ELEMENTS
           IF (nnum .eq. 5) THEN
@@ -227,7 +239,10 @@ DO i = 1, np
     !Save midside node to ARC array
     !NiS,apr06: Changed arc to arc_tmp because of global conflict!
     !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-    if (arcmid(i,5).NE.-9999) then
+    !nis,feb07: Allow for numbered FFF midsides
+    !if (arcmid(i,5).NE.-9999) then
+    if (arcmid(i,5) > -1000) then
+    !-
       arc_tmp (arccnt, 5) = i
     end if
   ENDIF
@@ -358,7 +373,7 @@ write_nodes: DO i = 1, np
   else
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
   endif
-  WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3), rausv (3, i)
+  WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , rausv (3, i)
   !NiS,may06: All degrees of freedom have to be written and read for restart
   WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
   !-

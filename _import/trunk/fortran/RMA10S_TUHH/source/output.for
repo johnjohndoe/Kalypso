@@ -1,3 +1,4 @@
+C     Last change:  EF   12 Mar 2007    3:32 pm
 CIPK  LAST UPDATE OCT 4 2002 ADD ICE THICKNESS TO OUTPUT
 CIPK  LAST UPDATE JAN 12 20010 CHANGE AME TO AME1
 CIPK  LAST UPDATE MAR 22 2000 ADD WSLL
@@ -45,7 +46,10 @@ cipk apr96
 ccc      WRITE(LOUT,6003) ICYC,TET,MAXN
       WRITE(LOUT,6015)
       !EFa Dec06, niedrigste Knotennummer für 1d-Teschke-Elemente ersetzten
-      IF(lp.EQ.-9999)then
+      !nis,feb07: Allow for numbered FFF midsides
+      !IF(lp.EQ.-9999)then
+      IF(lp < -1000)then
+      !-
         lp=1
       endif
       INT=(NP-LP)/2+1
@@ -113,15 +117,15 @@ CIPK OCT02
 !           with proper arrays
       ! Knotenwerte (2D-Knoten) zur Ausgabe vorbereiten:
       DO i = 1, np
-	! velocity in x-direction
-        rausv (1, i) = xvel (1, i) 
-	! velocity in y-direction
-        rausv (2, i) = xvel (2, i) 
-	! watersurface elevation
+      	! velocity in x-direction
+        rausv (1, i) = xvel (1, i)
+      	! velocity in y-direction
+        rausv (2, i) = xvel (2, i)
+      	! watersurface elevation
         !rausv (3, i) = xvel (3, i)
         rausv (3, i) = WSLL(i)
-	! real flow depth
-        rausv (4, i) = vel (3, i) 
+      	! real flow depth
+        rausv (4, i) = vel (3, i)
       END DO
 !-
 
