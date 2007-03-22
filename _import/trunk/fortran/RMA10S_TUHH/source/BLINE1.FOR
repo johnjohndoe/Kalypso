@@ -1,3 +1,4 @@
+C     Last change:  EF   12 Mar 2007    5:11 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -147,13 +148,16 @@ CIPK JUN05
         IF(NCN .EQ. 5) NCN=3
         DO 590 M=2,NCN,2
           N2=NOPS(N,M)   !NiS,may06: midsidenode
-          N1=NOPS(N,M-1) !NiS,may06: first node
-          N3=NOPS(N,1)   !NiS,may06: second node; midside of 2D-part, if transition element
-          IF(M .LT. NCN) N3=NOPS(N,M+1)
+          N1=NOPS(N,M-1) !NiS,may06: node before midside node
+          N3=NOPS(N,1)   !NiS,may06: node after midside node
+          IF(M .LT. NCN) N3=NOPS(N,M+1) !NiS,may06: node after midside node
 C-
 C...... Skip slope calculation for sides that have fixed flow or elevation
 C-
-          IF(IBN(N2) .EQ. 1) THEN
+          !nis,feb07: Add for direction of FFF-elements
+          !IF(IBN(N2) .EQ. 1) THEN
+          if (ibn(n2) == 1 .or. n2 < -1000) then
+          !-
 C-
 C...... Get direction of outward normal for 2-d plan elements
 C-
@@ -162,16 +166,46 @@ C-
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,1)
         !NiS,may06,com: 1D-part
-            ELSE
+            !nis,feb07: Add for direction of FFF-elements
+            !else
+            ELSEIF (n2 > -1000) then
+            !-
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,2)
+            !nis,feb07: Add for FFF-elements (at this place)
+            else
+              !nis,feb07,testing
+              if (n == 8) then
+                WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
+                WRITE(*,*) 'SRT: ', SRT
+              end if
+              !-
+              call outnrm   (cord(n1,1), cord(n1,2),
+     +                    0.5*(cord(n1,1)+cord(n3,1)),
+     +                    0.5*(cord(n1,2)+cord(n3,2)),
+     +                      cord(n3,1), cord(n3,2), SRT, 2)
+            !-
+!nis,feb07,baustelle!!!
+              !nis,feb07,testing
+              !if (n == 8) then
+              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
+              !  WRITE(*,*) 'SRT: ', SRT
+              !  pause
+              !end if
+              !-
+
             ENDIF
             VOUTN(N1)=SRT(1)
             VOUTN(N2)=SRT(2)
             VOUTN(N3)=SRT(3)
             NFK=NFIXK(N2)/100
-            !NiS,may06: following is related to the first three digits for boundary condition of nodal input-line
-            IF(NFK .LT. 113  .AND.  NFK .NE. 2) THEN
+
+            !nis,feb07: For Flow1DFE Elements the midside node has a negative number. So nfixk is not properly defined. But because the loop has to
+            !           be cycled for every of those elements, add this control:
+             !NiS,may06,com: following is related to the first three digits for boundary condition of nodal input-line
+             !IF(NFK .LT. 113  .AND.  NFK .NE. 2) THEN
+             IF((NFK .LT. 113  .AND.  NFK .NE. 2)
+     +           .or. n2 < -1000) THEN
 
 CIPK JUN05
               N1=NOP(N,M-1)
@@ -185,44 +219,44 @@ CIPK JUN05
                 if(ibn(n3) .eq. 10) ibn(n3)=15
               endif
 
-          H1=VEL(3,N1)
-          H3=VEL(3,N3)
-          DL(2,2)=CORD(N3,1)-CORD(N1,1)
-          DL(2,1)=CORD(N3,2)-CORD(N1,2)
-          IF(CORD(N2,1) .GT. VOIDP  .AND.  NCN .NE. 3) THEN
-            DL(1,2)=CORD(N2,1)-CORD(N1,1)
-            DL(1,1)=CORD(N2,2)-CORD(N1,2)
-          ELSE
-            DL(1,2)=DL(2,2)/2.
-            DL(1,1)=DL(2,1)/2.
+              H1=VEL(3,N1)
+              H3=VEL(3,N3)
+              DL(2,2)=CORD(N3,1)-CORD(N1,1)
+              DL(2,1)=CORD(N3,2)-CORD(N1,2)
+              IF(CORD(N2,1) .GT. VOIDP  .AND.  NCN .NE. 3) THEN
+                DL(1,2)=CORD(N2,1)-CORD(N1,1)
+                DL(1,1)=CORD(N2,2)-CORD(N1,2)
+              ELSE
+                DL(1,2)=DL(2,2)/2.
+                DL(1,1)=DL(2,1)/2.
+              ENDIF
+              IF(IFORM(N1) .EQ. 1) THEN
+                FMT(1)=-1.0
+              ELSE
+                FMT(1)=1.0
+              ENDIF
+              IF(IFORM(N3) .EQ. 3) THEN
+                FMT(2)=-1.0
+              ELSE
+                FMT(2)=1.0
+              ENDIF
+              IFORM(N1)=1
+              IFORM(N3)=3
+              DO 580 NG=1,4
+                TEMP1=(DNAL(2,NG)*DL(1,1)+DNAL(3,NG)*DL(2,1))/2.
+                TEMP2=(DNAL(2,NG)*DL(1,2)+DNAL(3,NG)*DL(2,2))/2.
+                H=(H1+AFACT(NG)*(H3-H1))*HFACT(NG)
+                IF(NCN .EQ. 3) H=1.0
+                YSLP(N1)=YSLP(N1)+TEMP1*H*XNAL(1,NG)*FMT(1)
+                YSLP(N2)=YSLP(N2)+TEMP1*H*XNAL(2,NG)
+                YSLP(N3)=YSLP(N3)+TEMP1*H*XNAL(3,NG)*FMT(2)
+                XSLP(N1)=XSLP(N1)+TEMP2*H*XNAL(1,NG)*FMT(1)
+                XSLP(N2)=XSLP(N2)+TEMP2*H*XNAL(2,NG)
+                XSLP(N3)=XSLP(N3)+TEMP2*H*XNAL(3,NG)*FMT(2)
+  580         CONTINUE
+            ENDIF
           ENDIF
-          IF(IFORM(N1) .EQ. 1) THEN
-            FMT(1)=-1.0
-          ELSE
-            FMT(1)=1.0
-          ENDIF
-          IF(IFORM(N3) .EQ. 3) THEN
-            FMT(2)=-1.0
-          ELSE
-            FMT(2)=1.0
-          ENDIF
-          IFORM(N1)=1
-          IFORM(N3)=3
-          DO 580 NG=1,4
-            TEMP1=(DNAL(2,NG)*DL(1,1)+DNAL(3,NG)*DL(2,1))/2.
-            TEMP2=(DNAL(2,NG)*DL(1,2)+DNAL(3,NG)*DL(2,2))/2.
-            H=(H1+AFACT(NG)*(H3-H1))*HFACT(NG)
-            IF(NCN .EQ. 3) H=1.0
-            YSLP(N1)=YSLP(N1)+TEMP1*H*XNAL(1,NG)*FMT(1)
-            YSLP(N2)=YSLP(N2)+TEMP1*H*XNAL(2,NG)
-            YSLP(N3)=YSLP(N3)+TEMP1*H*XNAL(3,NG)*FMT(2)
-            XSLP(N1)=XSLP(N1)+TEMP2*H*XNAL(1,NG)*FMT(1)
-            XSLP(N2)=XSLP(N2)+TEMP2*H*XNAL(2,NG)
-            XSLP(N3)=XSLP(N3)+TEMP2*H*XNAL(3,NG)*FMT(2)
-  580     CONTINUE
-        ENDIF
-      ENDIF
-  590 CONTINUE
+  590   CONTINUE
   600 CONTINUE
 
 CIPK JUN05  SETUP FOR SUBMERGENGE
@@ -235,183 +269,188 @@ C-
 
       DO 701 N=1,NPM
 
-      NFIX(N)=NFIXK(N)
-      IF (ITEQV(MAXN) .EQ. 2)  GOTO 701
+        NFIX(N)=NFIXK(N)
+        IF (ITEQV(MAXN) .EQ. 2)  GOTO 701
 
 CIPK OCT98  CONVERT TO F90
-      NFTYP=NFIXK(N)
-      NQB=MOD(NFTYP,100)
-      NLFT=NFTYP/100
+        NFTYP=NFIXK(N)
+        NQB=MOD(NFTYP,100)
+        NLFT=NFTYP/100
 
-      IF(NLFT .EQ. 0) ALFA(N)=0.
+        IF(NLFT .EQ. 0) ALFA(N)=0.
 
-      IF(MOD(NLFT,10) .EQ. 2) THEN
+        IF(MOD(NLFT,10) .EQ. 2) THEN
 C-
 C......   THESE ARE ONE-D ELEMENTS TYPE 102 012 OR 002
 C......   GET     ALFA   AND SET FORM FOR NFIX
 C-
-        IF(NLFT .EQ. 102) THEN
+          IF(NLFT .EQ. 102) THEN
 C-
 C......   SPECIAL CASE OF VERTICAL LINE RESET 102 TO 012 AND CHANGE ALFA
 C-
-          ALFA(N)=PI2
-          NFIX(N)=01200+NQB
-        ELSE
-C-
-          IF(XSLP(N) .NE. 0.) THEN
-            ALFA(N)=ATAN(YSLP(N)/XSLP(N))
+            ALFA(N)=PI2
             NFIX(N)=01200+NQB
           ELSE
-            IF(YSLP(N) .NE. 0.) THEN
-              ALFA(N)=PI2
+C-
+            IF(XSLP(N) .NE. 0.) THEN
+              ALFA(N)=ATAN(YSLP(N)/XSLP(N))
               NFIX(N)=01200+NQB
+            ELSE
+              IF(YSLP(N) .NE. 0.) THEN
+                ALFA(N)=PI2
+                NFIX(N)=01200+NQB
+              ENDIF
             ENDIF
           ENDIF
-        ENDIF
 cycw aug96 refine test to permit 012 case to be testes
 c        IF(IOD(N) .EQ. 1  .AND.  NTR .GT. 0) THEN
-        IF((IOD(N).EQ.1.OR.NFIX(N)/100.EQ.12).AND.NTR.GT.0) THEN
+          IF((IOD(N).EQ.1.OR.NFIX(N)/100.EQ.12).AND.NTR.GT.0) THEN
 C-
 C.......   ADJUST VELOCITY COMPONENTS FOR NEW ANGLE
 C-
-          IF(VEL(1,N) .EQ. 0.) ALOLD=PI2
-          IF(VEL(1,N) .NE. 0.) ALOLD=ATAN(VEL(2,N)/VEL(1,N))
-          IF(ABS(ALFA(N)-ALOLD) .GT. PI2  .AND.
-     +       ABS(ALFA(N)-ALOLD) .LT. 3.*PI2) ALOLD=ALOLD+2.*PI2
-          CSX=COS(ALOLD)
-          SSX=SIN(ALOLD)
-          CSN=COS(ALFA(N))
-          SSN=SIN(ALFA(N))
-          VT=VEL(1,N)*CSX+VEL(2,N)*SSX
-          VEL(1,N)=VT*CSN
-          VEL(2,N)=VT*SSN
-          VT=VOLD(1,N)*CSX+VOLD(2,N)*SSX
-          VOLD(1,N)=VT*CSN
-          VOLD(2,N)=VT*SSN
-          VT=VDOT(1,N)*CSX+VDOT(2,N)*SSX
-          VDOT(1,N)=VT*CSN
-          VDOT(2,N)=VT*SSN
-          VT=VDOTO(1,N)*CSX+VDOTO(2,N)*SSX
-          VDOTO(1,N)=VT*CSN
-          VDOTO(2,N)=VT*SSN
+            IF(VEL(1,N) .EQ. 0.) ALOLD=PI2
+            IF(VEL(1,N) .NE. 0.) ALOLD=ATAN(VEL(2,N)/VEL(1,N))
+            IF(ABS(ALFA(N)-ALOLD) .GT. PI2  .AND.
+     +         ABS(ALFA(N)-ALOLD) .LT. 3.*PI2) ALOLD=ALOLD+2.*PI2
+            CSX=COS(ALOLD)
+            SSX=SIN(ALOLD)
+            CSN=COS(ALFA(N))
+            SSN=SIN(ALFA(N))
+            VT=VEL(1,N)*CSX+VEL(2,N)*SSX
+            VEL(1,N)=VT*CSN
+            VEL(2,N)=VT*SSN
+            VT=VOLD(1,N)*CSX+VOLD(2,N)*SSX
+            VOLD(1,N)=VT*CSN
+            VOLD(2,N)=VT*SSN
+            VT=VDOT(1,N)*CSX+VDOT(2,N)*SSX
+            VDOT(1,N)=VT*CSN
+            VDOT(2,N)=VT*SSN
+            VT=VDOTO(1,N)*CSX+VDOTO(2,N)*SSX
+            VDOTO(1,N)=VT*CSN
+            VDOTO(2,N)=VT*SSN
 cycw aug96 add logic to 
 C Correct velocities along boundary for subsurface nodes
 
-          K = NREF(N) + 1
-          IF (K .GT. 1  .AND.  NDEP(N) .GT. 0) THEN
+            K = NREF(N) + 1
+            IF (K .GT. 1  .AND.  NDEP(N) .GT. 0) THEN
 
-            L = K + NDEP(N)-2
-            DO M=K,L
-              IF(NFIX(M)/1000 .EQ. 0  .OR. NFIX(M)/1000 .EQ. 11) THEN
-                ALFA(M)=0.
-                GO TO 609
-              ENDIF
-              ALFA(M) = ALFA(N)
-              IF (VEL(1,m) .EQ. 0.) ALOLD = PI2
-              IF (VEL(1,m) .NE. 0.) 
+              L = K + NDEP(N)-2
+              DO M=K,L
+                IF(NFIX(M)/1000 .EQ. 0  .OR. NFIX(M)/1000 .EQ. 11) THEN
+                  ALFA(M)=0.
+                  GO TO 609
+                ENDIF
+                ALFA(M) = ALFA(N)
+                IF (VEL(1,m) .EQ. 0.) ALOLD = PI2
+                IF (VEL(1,m) .NE. 0.)
      &                        ALOLD = ATAN(VEL(2,m)/VEL(1,m))
-              IF (ABS(ALFA(m)-ALOLD) .GT. PI2  .AND.
+                IF (ABS(ALFA(m)-ALOLD) .GT. PI2  .AND.
      +                 ABS(ALFA(m)-ALOLD) .LT. 3.*PI2)
      &                        ALOLD = ALOLD + 2.*PI2
-              CSX = COS(ALOLD)
-              SSX = SIN(ALOLD)
-              CSN = COS(ALFA(m))
-              SSN = SIN(ALFA(m))
-              VT = VEL(1,m)*CSX + VEL(2,m)*SSX
-              VEL(1,m) = VT*CSN
-              VEL(2,m) = VT*SSN
-              VT = VOLD(1,m)*CSX + VOLD(2,m)*SSX
-              VOLD(1,m) = VT*CSN
-              VOLD(2,m) = VT*SSN
-              VT = VDOT(1,m)*CSX + VDOT(2,m)*SSX
-              VDOT(1,m) = VT*CSN
-              VDOT(2,m) = VT*SSN
-              VT = VDOTO(1,m)*CSX + VDOTO(2,m)*SSX
-              VDOTO(1,m) = VT*CSN
-              VDOTO(2,m) = VT*SSN
-  609         CONTINUE
-            ENDDO
-          ENDIF
+                CSX = COS(ALOLD)
+                SSX = SIN(ALOLD)
+                CSN = COS(ALFA(m))
+                SSN = SIN(ALFA(m))
+                VT = VEL(1,m)*CSX + VEL(2,m)*SSX
+                VEL(1,m) = VT*CSN
+                VEL(2,m) = VT*SSN
+                VT = VOLD(1,m)*CSX + VOLD(2,m)*SSX
+                VOLD(1,m) = VT*CSN
+                VOLD(2,m) = VT*SSN
+                VT = VDOT(1,m)*CSX + VDOT(2,m)*SSX
+                VDOT(1,m) = VT*CSN
+                VDOT(2,m) = VT*SSN
+                VT = VDOTO(1,m)*CSX + VDOTO(2,m)*SSX
+                VDOTO(1,m) = VT*CSN
+                VDOTO(2,m) = VT*SSN
+  609           CONTINUE
+              ENDDO
+            ENDIF
 cycw aug96 end additions
-        ENDIF
+          ENDIF
 ***
-      ELSE
+        ELSE
 
-        IF(NFIX(N) .LE. 10010) GO TO 610
-        IF(IOD(N) .EQ. 0) GO TO 700
+          IF(NFIX(N) .LE. 10010) GO TO 610
+          IF(IOD(N) .EQ. 0) GO TO 700
 C-
 C..... ONLY ONE-D LEFT  NFIX = 11 OR 31
 C-
-        IF(NFIX(N) .GT. 11000) THEN
-          GO TO 630
-        ELSE
-          ALFA(N)=0.
-          GO TO 700
-        ENDIF
-  610   CONTINUE
+          IF(NFIX(N) .GT. 11000) THEN
+            GO TO 630
+          ELSE
+            ALFA(N)=0.
+            GO TO 700
+          ENDIF
+  610     CONTINUE
 
 CIPK JUN05
-        !nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!
-        IF(ALFAK(N) .NE. 0.  .AND. IBN(N) .NE. 15) THEN
-          ALFA(N)=ALFAK(N)
-        ELSEIF(XSLP(N) .NE. 0.) THEN
-          ALFA(N)=ATAN(YSLP(N)/XSLP(N))
-        ELSE
-          IF(YSLP(N) .EQ. 0.) GO TO 700
-          ALFA(N)=PI2
-        ENDIF
-        NFIX(N)=01000+NQB
+        !nis,feb07,testing
+        !WRITE(*,*) 'Test bei Winkel:'
+        !WRITE(*,*) n, xslp(n), yslp(n), alfa(n), ibn(n)
+        !pause
+        !-
+          !nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!
+          IF(ALFAK(N) .gt.ABS(1.0e-10)  .AND. IBN(N) .NE. 15) THEN
+            ALFA(N)=ALFAK(N)
+          ELSEIF(XSLP(N) .NE. 0.) THEN
+            ALFA(N)=ATAN(YSLP(N)/XSLP(N))
+          ELSE
+            IF(YSLP(N) .EQ. 0.) GO TO 700
+            ALFA(N)=PI2
+          ENDIF
+          NFIX(N)=01000+NQB
 cipk juN05
-        IF(IBN(N) .EQ. 15  .OR.  IBN(N) .EQ. 10) THEN
-          DO 620 M=1,NE
-            IF(IMAT(M) .EQ. 999) GO TO 620
-            IF(IMAT(M) .GT. 903) THEN
-              NCN=NCORN(M)
-              IF(NCN .EQ. 8) THEN
-                DO 615 K=1,8
-                  IF(NOP(M,K) .EQ. N) THEN
-                    IMT=IMAT(M)-900
-	            IF(NJT(IMT).NE. 10) THEN
-                      IF(QD(IMT) .GE. 0.) THEN
-                        IF(QD(IMT)-ALFA(N) .LT. 1.5708) GO TO 630
-                        ALFA(N)=ALFA(N)+3.14159
-                      ELSE
-                        IF(ALFA(N)-QD(IMT) .LT. 1.5708) GO TO 630
-                        ALFA(N)=ALFA(N)-3.14159
-                      ENDIF
-	            ELSE
-	                
-                      AG1=ATAN2(CORD(NOP(M,6),2)-CORD(NOP(M,2),2),
-     +                    CORD(NOP(M,6),1)-CORD(NOP(M,2),1))
-                      AZ=AG1-ALFA(N)
-                      IF(AG1 .GE. 0.) THEN
-                        IF(AG1-ALFA(N) .LT. 1.570795  .OR.
-     +                    AG1-ALFA(N) .GT. 4.712385) GO TO 630
+          IF(IBN(N) .EQ. 15  .OR.  IBN(N) .EQ. 10) THEN
+            DO 620 M=1,NE
+              IF(IMAT(M) .EQ. 999) GO TO 620
+              IF(IMAT(M) .GT. 903) THEN
+                NCN=NCORN(M)
+                IF(NCN .EQ. 8) THEN
+                  DO 615 K=1,8
+                    IF(NOP(M,K) .EQ. N) THEN
+                      IMT=IMAT(M)-900
+                      IF(NJT(IMT).NE. 10) THEN
+                        IF(QD(IMT) .GE. 0.) THEN
+                          IF(QD(IMT)-ALFA(N) .LT. 1.5708) GO TO 630
+                          ALFA(N)=ALFA(N)+3.14159
+                        ELSE
+                          IF(ALFA(N)-QD(IMT) .LT. 1.5708) GO TO 630
+                          ALFA(N)=ALFA(N)-3.14159
+                        ENDIF
+	              ELSE
 
-	                if(icyc .lt. 2 .and .maxn .eq. 1) then
-	                 write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
+                        AG1=ATAN2(CORD(NOP(M,6),2)-CORD(NOP(M,2),2),
+     +                      CORD(NOP(M,6),1)-CORD(NOP(M,2),1))
+                        AZ=AG1-ALFA(N)
+                        IF(AG1 .GE. 0.) THEN
+                          IF(AG1-ALFA(N) .LT. 1.570795  .OR.
+     +                       AG1-ALFA(N) .GT. 4.712385) GO TO 630
+
+                          if(icyc .lt. 2 .and .maxn .eq. 1) then
+                         write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
                          write(75,*) AZ,nfix(n),wsll(n),whgt(n),ISUBM(N)
      +                                ,VEL(1,N),VEL(2,N)
-	                endif
-                        ALFA(N)=ALFA(N)+3.14159
-                      ELSE
-                        IF(ALFA(N)-AG1 .LT. 1.570795 .OR.
-     +                     ALFA(N)-AG1 .GT. 4.712385) GO TO 630
-	                if(icyc .lt. 2  .and. maxn .eq. 1) then
-	                 write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
+                          endif
+                          ALFA(N)=ALFA(N)+3.14159
+                        ELSE
+                          IF(ALFA(N)-AG1 .LT. 1.570795 .OR.
+     +                       ALFA(N)-AG1 .GT. 4.712385) GO TO 630
+	                  if(icyc .lt. 2  .and. maxn .eq. 1) then
+                         write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
                          write(75,*) AZ,nfix(n),wsll(n),whgt(n),ISUBM(N)
      +                               ,VEL(1,N),VEL(2,N)
-     	                endif
-                        ALFA(N)=ALFA(N)-3.14159
-                      ENDIF
+     	                  endif
+                          ALFA(N)=ALFA(N)-3.14159
+                        ENDIF
 
-	            ENDIF
-                    GO TO 630
-                  ENDIF
-  615           CONTINUE
+                      ENDIF
+                      GO TO 630
+                    ENDIF
+  615             CONTINUE
+                ENDIF
               ENDIF
-            ENDIF
-  620     CONTINUE
+  620       CONTINUE
 
 
 cipk mar00
@@ -495,6 +534,12 @@ cycw aug96 end additions
   700   CONTINUE
       ENDIF
   701 CONTINUE
+      !nis,feb07,testing
+      !do i = 1, np
+      !  WRITE(*,*) alfak(i), alfa(i), 'test Winkel'
+      !enddo
+      !pause
+      !-
 
   720 CONTINUE
       do 725 n=1,nem
@@ -551,7 +596,7 @@ C-
       DO 730 N=1,NP
         ADIF(N)=0.
 CIPK JUN05
-        IF(ALFAK(N) .NE. 0.  .AND.  
+        IF(ALFAK(N) .gt. ABS(1.0e-10)  .AND.
      +     (IBN(N) .NE. 15  .AND.  IBN(N) .NE. 10)) ALFA(N)=ALFAK(N)
   730 CONTINUE
 C-
