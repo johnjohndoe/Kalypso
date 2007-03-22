@@ -1,3 +1,4 @@
+C     Last change:  K    15 Feb 2007    5:50 pm
 cipk  last update sep 04 2004 add error message
 CIPK  LAST UPDATE DEC 10 2002 rearrange boundaries near the inflow level, reset magnitude
 cipk  last update feb 09 2001 allow for zero length cc lines
@@ -87,7 +88,10 @@ c
          ENDIF
 C
            !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-           if (nm.EQ.-9999) then
+           !nis,feb07: Allow for numbered FFF midsides
+           !if (nm.EQ.-9999) then
+           if (nm < -1000) then
+           !-
              dx=cord(nc,1)-cord(na,1)
              dy=cord(nc,2)-cord(na,2)
            else
@@ -148,7 +152,10 @@ cipk oct98 update to f90
             DO 104 M=1,NCN
 cipk oct98 update to f90
               !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-              if (nop(n,2).NE.-9999) then
+              !nis,feb07: Allow for numbered FFF midsides
+              !if (nop(n,2).NE.-9999) then
+              if (nop(n,2) > -1000) then
+              !-
                 K=ABS(NOP(N,M))
                 IBN(K)=IBN(K)+1
               end if

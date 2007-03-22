@@ -1,3 +1,4 @@
+C     Last change:  EF    7 Mar 2007   10:39 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -105,7 +106,10 @@ C-
   120   CONTINUE
   127   NM=NOP(K,2)
         !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-        if (nm.EQ.-9999) then
+        !nis,feb07: Allow for numbered FFF midsides
+        !if (nm.EQ.-9999) then
+        if (nm < -1000) then
+        !-
           dx=cord(nc,1)-cord(na,1)
           dy=cord(nc,2)-cord(na,2)
         else
@@ -219,15 +223,19 @@ cipk oct98 update to f90
           DO 104 M=1,NCN
 cipk oct98 update to f90
             !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-            if (nop(n,2).NE.-9999) then
+            !nis,feb07: Allow for numbered FFF midsides
+            !if (nop(n,2).NE.-9999) then
+            if (nop(n,2) > -1000) then
               K=ABS(NOP(N,M))
               IBN(K)=IBN(K)+1
             else
-              if (nop(n,m).NE.-9999) then
+              !if (nop(n,m).NE.-9999) then
+              if (nop(n,m) > -1000) then
                 K=ABS(NOP(N,M))
                 IBN(K)=IBN(K)+1
               end if
             end if
+            !-
   104     CONTINUE
   105   CONTINUE
 
@@ -440,10 +448,10 @@ C-
         !
         !Getting the initial solution for first iteration, if restarting
         do i = 1, lmt(j)
-          REWIND(nb)
           iostaterror = 0
           !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
           if (nb.ne.0 .and. igeo.eq.2) then
+            REWIND(nb)
             reading: do WHILE (iostaterror.eq.0)
               read (nb,'(a2)') LineID
               if (LineID.eq.'VA') then
@@ -458,9 +466,9 @@ C-
                 endif
               endif
             enddo reading
+            REWIND(nb)
           endif
         enddo
-        REWIND(nb)
         !-
 
         !nis,jan07,com: starting node, ending node, chord length from starting to ending node
@@ -805,6 +813,10 @@ C-
           !(question remark: Due to the formula of the Conveyance factor vest is the slope??? Q=sqrt(I)*K; K=Conveyance factor)
           vest = qreq / suma
 
+          !nis,feb07: Writing root of slope into output file
+          WRITE(999,*) 'Gefaelle ist: ', vest, vest**2
+          !-
+
 !...... insert values into spec  and  nfix arrays                       
 !-        Randbedingung wird als spezifischer Durchfluss
 !         angegeben in BFORM in Betrag und Richtung umgewandelt
@@ -949,9 +961,10 @@ C-
           !nis,sep06,com: Thet defines the inflow angle of the discharge, 0 means it is perpendicular to the chord of the line-segment
           !nis,jan07: machineaccuracy is less than a value 1e-4; value can not be equal zero
           !IF (thet.eq.0.0) then
-          IF (ABS(thet).lt.1e-4) then
+          IF (ABS(thet).lt.1.0e-4) then
           !-
 !             Stroemungsrichtung senkrecht zum jeweiligen Liniensegment
+
 
 
               !nis,sep06,com: Checking the angle between the segment(part)s at the actual node. The question comes from the relation:
@@ -967,18 +980,13 @@ C-
 
               !nis,sep06,com: Not clear yet (25092006)
               IF ( (dx1**2 + dy1**2) .gt.0.9) then
-                !nis,testing
-                !WRITE(*,*) 'Punkt 1 1 1 1 1 1'
-                !-
                 spec (na,1) = vest * (teilline (k) / dxl (k) ) * (-dy1)
                 spec (na,2) = vest * (teilline (k) / dxl (k) ) * (dx1)
               ELSEIF ( (dx2**2 + dy2**2) .gt.0.9) then
-                !nis,testing
-                !WRITE(*,*) 'Punkt 2 2 2 2 2 2'
-                !-
                 spec (na,1) = vest * (teilline (k) / dxl (k) ) * (-dy2)
                 spec (na,2) = vest * (teilline (k) / dxl (k) ) * (dx2)
               ENDIF
+
 
               !nis,sep06,com: If the angle is not the same, the discharge direction is specified with the direction of the bisector
             ELSE
@@ -1000,6 +1008,7 @@ C-
      +            ((dx2 - dx1) / (dx1 * dy2 - dx2 * dy1) )
                 spec (na, 2) = vest * (teilline (k) / dxl (k) ) *
      +            ((dy2 - dy1) / (dx1 * dy2 - dx2 * dy1) )
+
             ENDIF
           ELSE
                                                                         
@@ -1026,6 +1035,7 @@ C-
               !               and then evaluate the specific inflow at the node, vest seems to be the averaged slope
               sin_in_grad = (sin (thet) * 180) / 3.141592654
               spec (na,2) = vest * (teilline(k) / dxl(k)) * sin_in_grad
+
                                                                         
             ENDIF
 
@@ -1246,10 +1256,10 @@ C-
           !nis,sep06,com: Calculate the discharge-part of the absolute CCL-discharge at the actual segment,
           !               using the Simpson-rule
 !         Simpsonformel integriert Parabeln exakt
-          sumx = sumx + dy * (spec (na, 1) + 4.0 *
-     +           spec (nbb, 1) + spec (nc, 1))
-          sumy = sumy + dx * (spec (na, 2) + 4.0 *
-     +           spec (nbb, 2) + spec (nc, 2))
+          sumx = sumx + dy * (spec (na, 1) + 4.0 * spec (nbb, 1)
+     +                        + spec (nc, 1))
+          sumy = sumy + dx * (spec (na, 2) + 4.0 * spec (nbb, 2)
+     +                        + spec (nc, 2))
 
 !         Bestimmung der Durchfluszkomponenten bei linearer Verteilung
 !         der Fliesztiefe, geradem Elementrand und mittigem
@@ -1262,30 +1272,32 @@ C-
 !       korrekte Summation der Durchflusskomponenten auch fuer
 !       nicht gerade (polygon) Raender:
         total = sumx - sumy
+        !nis,feb07,testing
 !       Korrektur:
         total = abs (qreq) / abs (total)
       !nis,nov06,testfileoutput------------------------------------------------
       write(999,*)
      +  ' gesetzter Durchfluss an Linie',j,' = ',qreq,
      +  'Korrektur:', total
+      WRITE(999,*) 'Teilabfluesse: ', sumx, sumy
       !------------------------------------------------------------------------
 
         !nis,sep06,com: Correct the discharge at the nodes by scaling with correction-factor
-        DO 561 k = 1, max
+        DO k = 1, max
           na = line (j, k)
           IF (na.gt.0) then
             spec (na, 1) = spec (na, 1) * total
             spec (na, 2) = spec (na, 2) * total
           ENDIF
-  561   END DO
+        END DO
                                                                         
         !nis,sep06,testfileoutput-----------------------------------------------
-        DO 563 k = 1, max
+        DO k = 1, max
           na = line (j, k)
           WRITE (999,9898)  j, na, spec(na,1), spec (na, 2),
      +                      SQRT((spec(na,2))**2+(spec(na,1))**2)
-  563   END DO
-                                                                        
+        END DO
+
         WRITE (Lout,*) ' gesetzter Durchfluss an Linie', j, ' ist: ',
      +                    qreq, ' Durchflussverhaeltnis  ist: ', total
  9898  format (1x,'Q-Linie',i6.6,' Knoten: ',i6.6,' Geschw.-X= ',f10.5,
