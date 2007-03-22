@@ -62,11 +62,7 @@ public class AbstractFeatureBinder implements IFeatureWrapper
     return GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname );
   }
 
-  /**
-   * TODO: make this field private again; protected members are BAD style (use {@link #getFeature()} instead and trust
-   * your vm on optimizing that call away!)
-   */
-  protected final Feature m_featureToBind;
+  private final Feature m_featureToBind;
 
   private final QName m_qnameToBind;
 

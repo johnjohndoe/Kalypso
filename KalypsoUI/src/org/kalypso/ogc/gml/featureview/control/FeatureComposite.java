@@ -395,9 +395,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof TupleResult )
     {
       final TupleResult editorType = (TupleResult) controlType;
-
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, vpt );
+      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, vpt/*, editorType.getComponentFormat() */);
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
 
