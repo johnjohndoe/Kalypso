@@ -1,3 +1,4 @@
+C     Last change:  EF   12 Mar 2007    5:09 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -19,6 +20,9 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 !NiS,jul06: Consistent data types for passing paramters
       REAL(KIND=8) H, H1, VT, HS
+!-
+!nis,feb07: Cross section of Flow1dFE elements
+      REAL (KIND=8) :: NodalArea
 !-
 cipk apr05
       common /epor/ efpor
@@ -198,7 +202,20 @@ c
           URFCC=VSCALE(J)
         ENDIF
       ENDIF
+      !nis,feb07,testing
+      if (i == 2) then
+        WRITE(*,*) 'updating water depth'
+        WRITE(*,*) r1(2), ex
+      endif
+      !-
       EX=R1(I)*URFC*urfcc
+      !nis,feb07,testing
+      if (i == 2) then
+        WRITE(*,*) 'updating water depth'
+        WRITE(*,*) r1(2), ex
+        !pause
+      endif
+      !-
 cik dec97 end changes
       AEX = ABS( EX )
       EAVG(K) = EAVG(K) + AEX
@@ -226,6 +243,7 @@ cipk jun05
       EX=EX*FCA
       IF( K .GT. 2 ) GO TO 140
       IF(ADIF(J) .NE. 0.) EX=EX/COS(ADIF(J))
+
       IF( ALFA(J)  ) 130, 140,130
 cipk jan00  130 VEL(K,J) = VEL(K,J) + EX*COS(ALFA(J) )
 cipk jan00      VEL(K+1,J) = VEL(K+1,J) + EX*SIN(ALFA(J) )
@@ -251,12 +269,15 @@ CIPK NOV97
   140 IF(K .NE. 3) GO TO 149
 CIPK APR05
 
+      !nis,feb07: Move to below, after water depth recalculation
       !EFa Jan07, Aufteilung der Flieﬂgeschwindigkeit auf die Richtungen
-      if (kennung(j).eq.1) then
-        vel(1,j)=vel(1,j)*COS(alfa(j))
-        vel(2,j)=vel(1,j)*SIN(alfa(j))
-      end if
-       
+      !if (kennung(j).eq.1) then
+      !  vel(1,j)=vel(1,j)*COS(alfa(j))
+      !  vel(2,j)=vel(1,j)*SIN(alfa(j))
+      !end if
+      !-
+      !-
+
       H1=VEL(3,J)
       CALL AMF(H,H1,AKP(J),ADT(J),ADB(J),AAT,D1,0)
       if(inotr .eq. 1) then
@@ -292,6 +313,28 @@ c
           ENDIF
         ENDIF
       ENDIF
+
+      !nis,feb07: Recalculate the velocities of the nodes at Flow1DFE elements, when steady state
+      !EFa Jan07, Aufteilung der Flieﬂgeschwindigkeit auf die Richtungen
+      !test
+      !WRITE(*,*) 'kennung(',j,'): ', kennung(j)
+      !pause
+      !-
+      !if (kennung(j).eq.1 .and. icyc <= 0) then
+      !  NodalArea = 0.0
+      !  do i = 1, 13
+      !    NodalArea = NodalArea + apoly(j,i) * vel(3,j)**(i-1)
+      !  end do
+      !  vel(1,j) = qrandb/ NodalArea * COS(alfa(j))
+      !  vel(2,j) = qrandb/ NodalArea * SIN(alfa(j))
+      !end if
+      !nis,feb07,testing
+      !WRITE(*,*) 'Knoten(',j,'): ', vel(1,j), vel(2,j), qrandb/nodalarea
+      !WRITE(*,*) 'Knoten(',j,'): ', alfa(j)
+      !pause
+      !-
+      !-
+
 
 cipk jun05
       horg=hel(j)
@@ -448,7 +491,10 @@ C......UPDATE MIDSIDE VALUES
 C-
       DO 240 N=1,NE
       !EFa Dec06, Fallunterscheidung f¸r 1d-Teschke-Elemente
-      if (nop(n,2).EQ.-9999) GOTO 240 !EFa Dec06
+      !nis,feb07: Allow for numbered FFF midsides
+      !if (nop(n,2).EQ.-9999) GOTO 240 !EFa Dec06
+      if (nop(n,2) < -1000) GOTO 240 !EFa Dec06
+      !-
       IF(IMAT(N) .GT. 5000) GO TO 236
 
 CIPK DEC00 ALLOW FOR GATE STRUCTURE
