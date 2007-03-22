@@ -1,6 +1,5 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -12,13 +11,4 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  								ET extends IFEEdge> 
  					extends IFeatureWrapper2
 {
-   // TODO: This binding class correspondg to the gml-type: 'simBase:_FEElement'
-   // But '_FEElement' does not contains container or edges
-   // why does the interface do?
-   // TODO: move getContainers and getEdges to the binding classes where
-   // they are first definged in their corresponding gml-types
-
-   public IFeatureWrapperCollection<CT> getContainers();
-	 
-   public IFeatureWrapperCollection<ET> getEdges();
 }

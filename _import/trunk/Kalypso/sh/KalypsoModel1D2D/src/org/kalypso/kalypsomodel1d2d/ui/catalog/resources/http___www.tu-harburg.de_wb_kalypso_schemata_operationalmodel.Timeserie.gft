@@ -22,6 +22,11 @@
         style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:gml="http://www.opengis.net/gml">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4"
             horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+        <gft:componentFormat id="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" format="dd.MM.yyyy HH:mm" alignment="SWT.BEGINNING"/>
+        <gft:componentFormat id="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" format="%.2f" alignment="SWT.END"/>
+        <gft:componentFormat id="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" format="%.3f" alignment="SWT.END"/>
+        <gft:componentFormat id="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" format="%.3f" alignment="SWT.END"/>
+        <gft:componentFormat id="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D" format="%.3f" alignment="SWT.END"/>
     </gft:tupleResult>
 </gft:featureview>
 

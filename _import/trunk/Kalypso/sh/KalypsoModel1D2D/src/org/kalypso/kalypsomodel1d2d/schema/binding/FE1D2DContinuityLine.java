@@ -45,12 +45,17 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 @SuppressWarnings("unchecked")
 /**
@@ -60,10 +65,11 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @author Patrice Congo
  */
 public class FE1D2DContinuityLine 
-                  extends FE1D2D_2DElement 
-                  implements IFE1D2DContinuityLine<
-                                    IFE1D2DComplexElement, IFE1D2DEdge>
+                  extends Element2D 
+                  implements IFE1D2DContinuityLine
 {
+  private static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
+
   /**
    * Create a new continuity line binding the provided feature.
    * @param featureToBind the feature to bind. null values are illegal
@@ -141,18 +147,10 @@ public class FE1D2DContinuityLine
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#recalculateGeometry()
-   */
-  @Override
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
-  {
-    return ModelGeometryBuilder.computeContiniutyLineGeometry( this );
-  }
-  
-  /**
+   * TODO: comment: why is not the super implementation used?
+   * 
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement#getNodes()
    */
-  
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
@@ -187,6 +185,50 @@ public class FE1D2DContinuityLine
       lastAddedNode=node1;
     }
     return nodes;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#recalculateGeometry()
+   */
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  {
+      List<IFE1D2DNode> nodes=getNodes();
+      
+      final int SIZE=nodes.size();
+      
+      final GM_Position[] poses = new GM_Position[SIZE];
+
+      if( SIZE <= 1 )
+      {
+        return null;
+      }
+
+      final CS_CoordinateSystem crs = 
+        nodes.get(0).getPoint().getCoordinateSystem();
+
+      for( int i = 0; i < poses.length; i++ )
+      {
+        final GM_Point point = nodes.get( i ).getPoint();
+        poses[i] = point.getPosition();
+      }
+      
+      return GeometryFactory.createGM_Curve( poses, crs );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#getLine()
+   */
+  public GM_Curve getGeometry( )
+  {
+    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROP_GEOMETRY );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void setGeometry( final GM_Curve curve )
+  {
+    getWrappedFeature().setProperty( QNAME_PROP_GEOMETRY, curve );
   }
   
 }

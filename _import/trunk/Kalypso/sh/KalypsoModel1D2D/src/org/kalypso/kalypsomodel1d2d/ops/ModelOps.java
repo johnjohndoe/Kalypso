@@ -42,8 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -54,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
@@ -62,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -224,72 +224,6 @@ public class ModelOps
 
   }
   
-  public static final void sortElementEdgesOLD(IFE1D2DElement element)
-  {
-    List<IFE1D2DEdge> edges= 
-                   new ArrayList<IFE1D2DEdge>(
-                       element.getEdges()/*Arrays.asList( 
-                           ((FE1D2D_2DElement)element).getEdgesAsArray())*/);
-    Comparator<IFE1D2DEdge> c=new Comparator<IFE1D2DEdge>()
-    {
-
-      /**
-       * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-       */
-      
-      public int compare( IFE1D2DEdge edge1, IFE1D2DEdge edge2 )
-      {
-//        System.out.println("EDge1="+edge1+" edge2"+edge2);
-//        if((edge1 instanceof IEdgeInv) && !(edge2 instanceof IEdgeInv))
-//        {
-//          System.out.println("EEEEDge1="+edge1+" edge2"+edge2);
-//          return -1;
-//        }
-//        else if(!(edge1 instanceof IEdgeInv) && (edge2 instanceof IEdgeInv))
-//        {
-//          System.out.println("EDge1="+edge1+" edge2"+edge2);
-//          return +1;
-//        } 
-        
-        IFE1D2DNode<IFE1D2DEdge> node0_1=edge1.getNode( 0 ); 
-        IFE1D2DNode<IFE1D2DEdge> node0_2=edge2.getNode( 0 );
-        
-        if(node0_1.getPoint().getX()<node0_2.getPoint().getX())
-        {
-          return -1;
-        }
-        else if(node0_1.getPoint().getX()>node0_2.getPoint().getX())
-        {
-          return 1;
-        }
-        else
-        {
-          //same x location consider y location
-          if(node0_1.getPoint().getY()<node0_2.getPoint().getY())
-          {
-            return -1;
-          }
-          else if(node0_1.getPoint().getY()>node0_2.getPoint().getY())
-          {
-            return 1;
-          }
-          else
-          {
-            return 0;
-          }
-        }        
-      }
-      
-    };
-    element.getEdges().clear();
-    Collections.sort( edges, c );
-    for(IFE1D2DEdge edge:edges)
-    {
-      element.addEdge( edge.getWrappedFeature().getId() );
-    }
-    
-  }
-  
   public static final IFEEdgeToEdgeJunction1D2D createEdgeToEdgeJunction(
                                 IFEDiscretisationModel1d2d model1d2d,
                                 IFE1D2DEdge edge1D,
@@ -298,8 +232,8 @@ public class ModelOps
     IFeatureWrapperCollection<IFE1D2DElement> elements = 
                       model1d2d.getElements();
     IFEEdgeToEdgeJunction1D2D junction1D2D = 
-    (IFEEdgeToEdgeJunction1D2D) elements.addNew( 
-    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE );
+    elements.addNew( 
+    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE,IFEEdgeToEdgeJunction1D2D.class );
     
     junction1D2D.set1DEdge( edge1D );
     junction1D2D.set2DEdge( edge2D );
@@ -314,8 +248,8 @@ public class ModelOps
     IFeatureWrapperCollection<IFE1D2DElement> elements = 
                       model1d2d.getElements();
     IFEEdgeToCLineJunction1D2D junction1D2D = 
-    (IFEEdgeToCLineJunction1D2D) elements.addNew( 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE );
+    elements.addNew( 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE, IFEEdgeToCLineJunction1D2D.class );
     
     junction1D2D.setEdge( edge );
     edge.addContainer( junction1D2D.getGmlID() );
@@ -330,8 +264,8 @@ public class ModelOps
     IFeatureWrapperCollection<IFE1D2DElement> elements = 
                                         model1d2d.getElements();
     IFEJunction1D2D junction1D2D = 
-      (IFEJunction1D2D) elements.addNew( 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
+      elements.addNew( 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D, IFEJunction1D2D.class );
     
     junction1D2D.addEdge( edge.getGmlID() );
     edge.addContainer( junction1D2D.getGmlID() );
@@ -343,15 +277,16 @@ public class ModelOps
                                 IFEDiscretisationModel1d2d model1d2d,
                                 IFE1D2DEdge edge)
   {
-      IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
-      IElement1D element = 
-          (IElement1D) elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+      final IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
+      final IElement1D element = 
+          elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, IElement1D.class );
+      
       element.setEdge( edge );
       
       return element;
   }
   
-  public static final IFE1D2DElement createElement2d(
+  public static final IPolyElement createElement2d(
                               IFEDiscretisationModel1d2d model1d2d,
                               List<IFE1D2DEdge> edges)
   {
@@ -367,24 +302,17 @@ public class ModelOps
     
     IFeatureWrapperCollection<IFE1D2DElement> elements = 
                                         model1d2d.getElements();
-    IFE1D2DElement element = elements.addNew( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
+    final IPolyElement polyElement = elements.addNew( 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, IPolyElement.class );
     
-//    for(IFE1D2DEdge edge:edges)
-//    {
-//      element.addEdge( edge.getGmlID() );
-//    }
-    
-//    sortElementEdgesOld( element );
-//    sortEdgesAddToElement( element, edges );
-    sortElementEdges( element, edges );
-    String elementID = element.getGmlID();
+    sortElementEdges( polyElement, edges );
+    String elementID = polyElement.getGmlID();
     for(IFE1D2DEdge edge:edges)
     {
       edge.addContainer( elementID );
     }
     
-    return element;
+    return polyElement;
     
   }
   
@@ -445,18 +373,17 @@ public class ModelOps
 
   public static final void sortElementEdges(IFE1D2DElement element)
   {
-    // BUGFIX: Element1D do not support getEdges
-    if( element instanceof IElement1D)
-      return;
-    
-    IFeatureWrapperCollection edges = element.getEdges();
-    List<IFE1D2DEdge> toSort= new ArrayList<IFE1D2DEdge>(edges);
-    edges.clear();
-    sortElementEdges( element, toSort);
+    if( element instanceof IElement2D )
+    {
+      final IFeatureWrapperCollection edges = ((IElement2D)element).getEdges();
+      final List<IFE1D2DEdge> toSort= new ArrayList<IFE1D2DEdge>(edges);
+      edges.clear();
+      sortElementEdges( (IElement2D)element, toSort);
+    }
   }
   
   public static final void sortElementEdges(
-                          IFE1D2DElement element,
+                          IElement2D element,
                           List<IFE1D2DEdge> toSortAndAddEdges)
   {
 //    sortElementEdgesOld( element );

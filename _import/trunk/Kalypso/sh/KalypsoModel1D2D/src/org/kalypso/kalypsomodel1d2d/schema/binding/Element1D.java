@@ -42,31 +42,23 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger
  */
-public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D2DComplexElement, IFE1D2DEdge>
+public class Element1D extends FE1D2DElement implements IElement1D<IFE1D2DComplexElement, IFE1D2DEdge>
 {
-  private static final QName QNAME_PROPS_DIRECTED_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedEdge" );
-
-  private FeatureWrapperCollection<IFE1D2DComplexElement> m_containers;
-
-  public Element1D( Feature featureToBind )
+  public Element1D( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
-
-    m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
   }
 
   /**
@@ -98,7 +90,7 @@ public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D
       }
     }
     
-    final Feature feature = getFeature();
+    final Feature feature = getWrappedFeature();
     if( edge == null )
     {
       feature.setProperty( QNAME_PROPS_DIRECTED_EDGE, null );
@@ -112,26 +104,15 @@ public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D
       FeatureList wrappedList = containers.getWrappedList();
       // TODO: only add if not already present. 
       // May the containers contain me twice?
+      
+      // TODO: this is a potential performance problem, because this is a linear list search
         if( !wrappedList.contains( gmlID ) )
         {
           wrappedList.add( gmlID );
         }
      }
     // Setting the edge causes the envelope to become invalid
-    getWrappedFeature().invalidEnvelope();
-  }
-
-  /**
-   * Not supported. Use {@link #setEdge(IFE1D2DEdge)} instead.
-   * <p>
-   * TODO: this method is only here, because it is needed by IFE1D2DElement and above. The corresponding gml-type does
-   * not contain this property.
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
-   */
-  public void addEdge( final String edgeID )
-  {
-    throw new UnsupportedOperationException( "Add edges not supported. Use setEdge instead." );
+    feature.invalidEnvelope();
   }
 
   /**
@@ -148,23 +129,26 @@ public class Element1D extends AbstractFeatureBinder implements IElement1D<IFE1D
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getContainers()
+   * Recalculates the geometry of this element. Used by the corresponding property function.
    */
-  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    return m_containers;
+      return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#getGeometry()
+   */
+  public GM_Curve getGeometry( )
+  {
+    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROPS_GEOMETRY );
   }
 
   /**
-   * Do not use. Use {@link #getEdge()} instead.
-   * <p>
-   * TODO: this method is only here, because it is needed by IFE1D2DElement and above. The corresponding gml-type does
-   * not contina this property.
-   * 
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getEdges()
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
+  public void setGeometry( final GM_Curve curve )
   {
-    throw new UnsupportedOperationException();
+    getWrappedFeature().setProperty( QNAME_PROPS_GEOMETRY, curve );
   }
 }

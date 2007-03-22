@@ -162,8 +162,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 		return featureList.add(f);
 	}
 
+    public FWCls addNew( final QName newChildType ) {
+      return addNew( newChildType, fwClass );
+    }
+    
 	@SuppressWarnings("unchecked")
-	public FWCls addNew(QName newChildType) {
+  public <T extends FWCls> T addNew( final QName newChildType, final Class<T> classToAdapt ) {
 		Assert.throwIAEOnNull(newChildType, "newChildType must not null");
         Feature feature=null;
         try {
@@ -171,21 +175,8 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
                                        featureList,
 			                           featureMemberProp, 
                                        newChildType);
-			 // TODO (see also below): how about instead of giving the child-qname the caller must provide the
-			 // child-class, and we can easily adapt to that. The qname may then be obtained from the generated feature.
-             // we can also check by reflection if the given class inhertis from fwClass
-			FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
-            
-            /* TODO: substitution is a bit trickky here:
-            /* what to do if we create a substituted feature which has its own
-            /* wrapper-class (which of course inherits from fwClass)
-            /* should'nt we return that class? 
-            /* But how to obtain it??
-            /* true, the feature factory for the adaptable framework
-            /* can care about that, or even the factory framework already 
-             * selects the most specific type for adaptation 
-             *
-             */ 
+
+             final T wrapper = (T) feature.getAdapter(classToAdapt);
 			if (wrapper == null) 
             {
 				throw new IllegalArgumentException("Feature not adaptable:"
@@ -202,14 +193,17 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 		}
 	}
     
-    @SuppressWarnings("unchecked")
-    public FWCls addNew(QName newChildType, String newFeatureId) 
+    public FWCls addNew( final QName newChildType, final String newFeatureId )
     {
-      
-      /**
-       * TODO programm me
-       */
+      return addNew( newChildType, newFeatureId, fwClass );
+    }
+
+    
+    @SuppressWarnings("unchecked")
+    public <T extends FWCls> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt ) 
+    {
         Assert.throwIAEOnNull(newChildType, "newChildType must not null");
+        
         Feature feature=null;
         try {
           
@@ -220,25 +214,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
                           newFeatureId//gmlID 
                           );
             
-            FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
-            
-            /* TODO: substitution is a bit trickky here:
-            /* what to do if we create a substituted feature which has its own
-            /* wrapper-class (which of course inherits from fwClass)
-            /* should'nt we return that class? 
-            /* But how to obtain it??
-            /* true, the feature factory for the adaptable framework
-            /* can care about that, or even the factory framework already 
-             * selects the most specific type for adaptation 
-             *
-             */ 
+            final T wrapper = (T) feature.getAdapter(classToAdapt);
             if (wrapper == null) 
             {
                 throw new IllegalArgumentException("Feature not adaptable:"
                         + "\n\tfeatureType=" + newChildType
                         + "\n\tadapatble type=" + fwClass);
             }
-//            featureList.add(feature);
             return wrapper;
         } catch (Exception e) {
             throw new IllegalArgumentException(
@@ -246,13 +228,18 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
         }
     }
 
+    public FWCls addNew( final int index, final QName newChildType )
+    {
+      return addNew( index, newChildType, fwClass );
+    }
+    
 	@SuppressWarnings("unchecked")
-	public FWCls addNew(int index, QName newChildType) {
+  public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt ) {
 		Assert.throwIAEOnNull(newChildType, "newChildType must not null");
 		try {
-			Feature feature = Util.createFeatureForListProp(featureList,
+			final Feature feature = Util.createFeatureForListProp(featureList,
 					featureMemberProp, newChildType);
-			FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
+			final T wrapper = (T) feature.getAdapter(classToAdapt);
 			if (wrapper == null) {
 				throw new IllegalArgumentException("Feature not adaptable:"
 						+ "\n\tfeatureType=" + newChildType

@@ -44,12 +44,10 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -80,9 +78,10 @@ public class NodeOps
     final FeatureList elementList = 
           (FeatureList) model.getFeature().getProperty( 
               Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
-    final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement.getLocalPart(), true );
+    final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
 
     // 1. Try: look, if the position is within an element
+    // TODO: comment: why is this better than just searching within the node list?
     final List foundElements = 
     	      element2DList.query( point.getPosition(), null );
     final IFE1D2DNode nearestNode = 
@@ -105,7 +104,7 @@ public class NodeOps
 	    final FeatureList element2DList = 
 	    	        new FilteredFeatureList( 
 	    	        		elementList, 
-	    	        		Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement.getLocalPart(), true );
+	    	        		Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
 	
 	    // 1. Try: look, if the position is within an element
 	    final List foundElements = 
@@ -127,8 +126,10 @@ public class NodeOps
     IFE1D2DNode nearestNode = null;
     for( final Object object : foundElements )
     {
-      final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele = new FE1D2D_2DElement( (Feature) object );
-      List<IFE1D2DEdge> edges=ele.getEdges();
+      final IPolyElement ele = (IPolyElement) ((Feature)object).getAdapter( IPolyElement.class );
+      if( ele == null )
+        continue;
+      final List<IFE1D2DEdge> edges = ele.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
     	final List<IFE1D2DNode<IFE1D2DEdge>> nodes = 

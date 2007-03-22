@@ -46,10 +46,10 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.PolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -174,16 +174,17 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
               }
             }
             
+            // TODO: is this really necessary? Probably really an invalidate problem
             for(IFE1D2DElement ele:eleList)
             {
-              if(ele instanceof FE1D2D_2DElement)
+              if(ele instanceof PolyElement)
               {
-                ((FE1D2D_2DElement)ele).resetGeometry();
+                ((PolyElement)ele).resetGeometry();
               }
               else
               {
                 System.out.println(
-                    "reset only possible for FE1d2d_2delement impl:"+
+                    "reset only possible for PolyElement impl:"+
                     ele.getClass());
               }
               

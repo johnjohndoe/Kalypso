@@ -46,11 +46,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * TODO: rename this class, its not nodal any more.
+ * 
  * @author Gernot Belger
  */
 public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
@@ -60,12 +68,12 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   {
     private final String m_name;
 
-    private final String m_componentUrn;
+    private final String[] m_componentUrns;
 
-    public TimeserieTypeDescription( final String name, final String componentUrn )
+    public TimeserieTypeDescription( final String name, final String... componentUrns )
     {
       m_name = name;
-      m_componentUrn = componentUrn;
+      m_componentUrns = componentUrns;
     }
 
     public String getName( )
@@ -73,12 +81,11 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
       return m_name;
     }
 
-    public String getComponentUrn( )
+    public String[] getComponentUrns( )
     {
-      return m_componentUrn;
+      return m_componentUrns;
     }
   }
-
 
   public CreateNodalBCFlowrelationWidget( )
   {
@@ -126,11 +133,37 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
 
   protected TimeserieTypeDescription[] getTimeserieDescriptions( )
   {
-    return new TimeserieTypeDescription[] { 
-        new TimeserieTypeDescription( "Wasserstand - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ) ,
-        new TimeserieTypeDescription( "Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ), 
-        new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" ) ,
-        new TimeserieTypeDescription( "W/Q - Beziehung", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ) 
-    };
+    return new TimeserieTypeDescription[] { new TimeserieTypeDescription( "Wasserstand - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ),
+        new TimeserieTypeDescription( "Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
+        new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" ),
+        new TimeserieTypeDescription( "W/Q - Beziehung", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ) };
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#isConsidered(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  @Override
+  protected boolean isConsidered( final IFeatureWrapper2 modelElement )
+  {
+    return modelElement instanceof IFE1D2DNode || modelElement instanceof IFE1D2DContinuityLine || modelElement instanceof IPolyElement;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
+   *      org.kalypsodeegree.model.geometry.GM_Point, double)
+   */
+  @Override
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  {
+    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
+    if( node != null )
+      return node;
+
+    final IFE1D2DContinuityLine contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
+    if( contiLine != null )
+      return contiLine;
+
+    final IPolyElement element2d = discModel.find2DElement( currentPos, grabDistance );
+    return element2d;
   }
 }

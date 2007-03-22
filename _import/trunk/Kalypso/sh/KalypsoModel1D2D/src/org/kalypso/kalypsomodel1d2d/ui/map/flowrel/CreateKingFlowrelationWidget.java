@@ -42,9 +42,15 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
@@ -68,4 +74,34 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
     return (IKingFlowRelation) newFeature.getAdapter( IKingFlowRelation.class );
   }
+
+  /**
+   * Return the element if it is a node connected to at least one 1D-Element.
+   * 
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
+   *      org.kalypsodeegree.model.geometry.GM_Point, double)
+   */
+  @Override
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  {
+    return findModelElementFromPosition( discModel, currentPos, grabDistance );
+  }
+
+  /** Made static in order to be reused by teschke-widget. */
+  public static IFeatureWrapper2 findModelElementFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  {
+    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
+    if( node != null )
+    {
+      final IFE1D2DElement[] elements = node.getElements();
+      for( final IFE1D2DElement element : elements )
+      {
+        if( element instanceof IElement1D )
+          return node;
+      }
+    }
+
+    return null;
+  }
+
 }

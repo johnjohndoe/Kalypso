@@ -149,7 +149,7 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
       return;
 
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
-    m_flowRelation = m_flowRelCollection.findFlowrelationship( currentPos, grabDistance );
+    m_flowRelation = m_flowRelCollection.findFlowrelationship( currentPos.getPosition(), grabDistance );
 
     final MapPanel panel = getMapPanel();
     if( panel != null )

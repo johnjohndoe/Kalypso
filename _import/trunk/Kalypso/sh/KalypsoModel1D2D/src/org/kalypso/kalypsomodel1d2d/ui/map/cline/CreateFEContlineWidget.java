@@ -17,9 +17,7 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -144,7 +142,7 @@ public class CreateFEContlineWidget extends AbstractWidget
         }
       }
 
-      final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = ContinuityLineOps.contilineFromCurve( curve, model );
+      final IFE1D2DContinuityLine continuityLine = ContinuityLineOps.contilineFromCurve( curve, model );
       continuityLine.getWrappedFeature().invalidEnvelope();
       
       final Feature parentFeature = model.getFeature();

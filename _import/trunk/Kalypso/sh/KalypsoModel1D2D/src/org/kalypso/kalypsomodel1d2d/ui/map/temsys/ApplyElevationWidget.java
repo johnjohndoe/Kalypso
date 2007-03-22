@@ -133,8 +133,7 @@ public class ApplyElevationWidget
     IMapModell mapModell = mapPanel.getMapModell();
     IFEDiscretisationModel1d2d model1d2d = 
       UtilMap.findFEModelTheme( 
-          mapModell, 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
+          mapModell );
     dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
     dataModel.setMapPanel( mapPanel );

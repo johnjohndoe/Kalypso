@@ -47,8 +47,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -60,10 +62,12 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @author Patrice Congo
  */
 public class FEJunction1D2D 
-                  extends FE1D2D_2DElement 
+                  extends FE1D2DElement 
                   implements IFEJunction1D2D<
                                     IFE1D2DComplexElement, IFE1D2DEdge>
 {
+  private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
+
   /**
    * Create a new continuity line binding the provided feature.
    * @param featureToBind the feature to bind. null values are illegal
@@ -75,6 +79,44 @@ public class FEJunction1D2D
                 throws IllegalArgumentException
   {
     super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
+    
+    edges = initEdges( featureToBind );
+  }
+
+  private FeatureWrapperCollection<IFE1D2DEdge> initEdges( final Feature featureToBind ) throws IllegalArgumentException
+  {
+    // edges
+    Object prop =null;
+    try
+    {
+      prop = featureToBind.getProperty( 
+                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    }
+    catch (Throwable th) 
+    {
+      th.printStackTrace();
+      prop=null;
+    }
+
+    if( prop == null )
+    {
+      // create the property that is still missing
+      return new FeatureWrapperCollection<IFE1D2DEdge>( 
+                          featureToBind, 
+                          // TODO: problem here?
+                          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, 
+                          Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, 
+                          IFE1D2DEdge.class );
+    }
+    else
+    {
+      // just wrapped the existing one
+      return 
+        new FeatureWrapperCollection<IFE1D2DEdge>( 
+                  featureToBind, 
+                  IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    }
   }
 
   /**
@@ -96,6 +138,8 @@ public class FEJunction1D2D
         parentFeature, 
         propQName, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
+    
+    edges = initEdges( getWrappedFeature() );
   }
 
   /**
@@ -117,6 +161,8 @@ public class FEJunction1D2D
                 throws IllegalArgumentException
   {
     super( parentFeature, propQName, newFeatureQName );
+    
+    edges = initEdges( getWrappedFeature() );
   }
   
   /**
@@ -141,22 +187,11 @@ public class FEJunction1D2D
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#recalculateGeometry()
-   */
-  @Override
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
-  {
-    return ModelGeometryBuilder.computeJunction1D2DGeometry( this );
-  }
-  
-  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement#getNodes()
    */
-  
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
-    IFeatureWrapperCollection<IFE1D2DEdge> edges = super.getEdges();
     List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
     IFE1D2DNode lastAddedNode=null;
     
@@ -188,5 +223,52 @@ public class FEJunction1D2D
     }
     return nodes;
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D#getEdges()
+   */
+  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
+  {
+    return edges;
+  }
   
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
+   */
+  public void addEdge( final String edgeID )
+  {
+    if(edgeID==null)
+    {
+      throw new IllegalArgumentException("edge ID must not be null");
+    }
+    FeatureList edgeFeatureList=edges.getWrappedList();
+    if(edgeFeatureList.contains( edgeID ))
+    {
+      return;
+    }
+    edgeFeatureList.add( edgeID );
+    
+    getWrappedFeature().invalidEnvelope();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#recalculateElementGeometry()
+   */
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  {
+    int size = edges.size();
+    if(size==0)
+    {
+      return null;
+    }
+    else if(size==1)
+    {
+      return ModelGeometryBuilder.computeEgdeGeometry( edges.get( 0 ));
+    }
+    else
+    {
+      throw new RuntimeException("Support geo compute for one edge:"+edges);
+      
+    }
+  }
 }

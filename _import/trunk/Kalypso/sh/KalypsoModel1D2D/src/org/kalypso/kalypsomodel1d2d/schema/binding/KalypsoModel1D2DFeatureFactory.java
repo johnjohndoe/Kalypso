@@ -129,8 +129,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 		};
 		cMap.put(IFE1D2DNode.class, cTor);
         cMap.put(IFEMiddleNode.class, cTor);
-		
-		//IFE1D2DEdge
+		        
+        //IFE1D2DEdge
         cTor = new AdapterConstructor()
         {
             public Object constructAdapter(
@@ -154,20 +154,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         cMap.put(IFE1D2DEdge.class, cTor);
         cMap.put(IEdgeInv.class, cTor);
         
-//        // Element1D  
-//        cTor = new AdapterConstructor()
-//        {
-//            public Object constructAdapter(
-//                                        Feature feature, 
-//                                        Class cls) 
-//                                        throws IllegalArgumentException
-//            {
-//                  return new FE1D2DDiscretisationModel( feature );     
-//            }
-//        };
-//        cMap.put(IFEDiscretisationModel1d2d.class, cTor);
-
         //1d2d element
+        // registered for IFE1D2DElement.class but generates the most specific type
         cTor = new AdapterConstructor()
         {
             public Object constructAdapter(
@@ -177,56 +165,36 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             {
               QName featureQName=feature.getFeatureType().getQName();
               
-                if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine) )
-                {
-                  return new FE1D2DContinuityLine(feature);     
-                }
-                else if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D) )
-                {
-                  return new Element1D(feature);     
-                }
-                else if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D) )
-                {
-                  return new FEJunction1D2D(feature);     
-                }
-                else if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE) )
-                {
-                  return new FEEdgeToEdgeJunction1D2D(feature);     
-                }
-                else if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE) )
-                {
-                  return new FEEdgeToCLineJunction1D2D(feature);     
-                }
-                // TODO: what is the purpose of these (similar below) strange else's
-                // Why not register FE1D2D_2DElement? Please comment!
-                
-                // TODO: probably the idea here is to fix the substitution-problem. But this solution
-                // is no good, because we do not know in advance which substitutions may occur.
-                // Even if we did we would have to add all possibilities here as if/elses...
-                else if(featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ))
-                {
-                  return new FE1D2D_2DElement(feature);
-                }
-                else
-                {
-                  System.out.println("cannot set ");
-                  return null;
-                }
+               if(featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ))
+                  return new PolyElement(feature);
+
+               if(featureQName.equals( 
+                   Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D) )
+                 return new Element1D(feature);     
+
+               if(featureQName.equals( 
+                   Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D) )
+                 return new FEJunction1D2D(feature);     
+
+               if(featureQName.equals( 
+                   Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE) )
+                 return new FEEdgeToEdgeJunction1D2D(feature);     
+
+               if(featureQName.equals( 
+                   Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine) )
+                 return new FE1D2DContinuityLine(feature);     
+               
+               return null;
             }
         };
+        // REMARK: do NOT register for the other classes as well
+        // it is better to register them separate in order to make sure
+        // that only the specific types are generated and null is returned if the types
+        // does not fit (this is according to the adapter-contract)
         cMap.put(IFE1D2DElement.class, cTor);
-        cMap.put(IElement1D.class, cTor);
-        cMap.put(IFE1D2DContinuityLine.class, cTor);
-        cMap.put(IFEJunction1D2D.class, cTor);
-        cMap.put(IFEEdgeToEdgeJunction1D2D.class,cTor);
-        cMap.put(IFEEdgeToCLineJunction1D2D.class,cTor);
+
         
-        //element1d
+        // PolyElement
         cTor = new AdapterConstructor()
         {
             public Object constructAdapter(
@@ -234,10 +202,134 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                                         Class cls) 
                                         throws IllegalArgumentException
             {
-                  return new Element1D( feature );     
+              QName featureQName=feature.getFeatureType().getQName();
+              
+               if(featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ))
+                {
+                  return new PolyElement(feature);
+                }
+                else
+                {
+                  return null;
+                }
             }
         };
+        cMap.put(IPolyElement.class, cTor);
+        
+        //1d2d 1d-element
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D) )
+            {
+              return new Element1D(feature);     
+            }
+            else
+            {
+              return null;
+            }
+          }
+        };
         cMap.put(IElement1D.class, cTor);
+        
+        //1d2d conti-line-element
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine) )
+            {
+              return new FE1D2DContinuityLine(feature);     
+            }
+            else
+            {
+              return null;
+            }
+          }
+        };
+        cMap.put(IFE1D2DContinuityLine.class, cTor);
+        
+        //1d2d IFEJunction1D2D-element
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D) )
+            {
+              return new FEJunction1D2D(feature);     
+            }
+            else
+            {
+              return null;
+            }
+          }
+        };
+        cMap.put(IFEJunction1D2D.class, cTor);
+        
+        //1d2d IFEEdgeToEdgeJunction1D2D
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE) )
+            {
+              return new FEEdgeToEdgeJunction1D2D(feature);     
+            }
+            else
+            {
+              return null;
+            }
+          }
+        };
+        cMap.put(IFEEdgeToEdgeJunction1D2D.class,cTor);
+        
+        //1d2d IFEEdgeToCLineJunction1D2D
+        cTor = new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            QName featureQName=feature.getFeatureType().getQName();
+            
+            if(featureQName.equals( 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE) )
+            {
+              return new FEEdgeToCLineJunction1D2D(feature);     
+            }
+            else
+            {
+              return null;
+            }
+          }
+        };
+        cMap.put(IFEEdgeToCLineJunction1D2D.class,cTor);
         
         //1d2d complex element
         cTor = new AdapterConstructor()
@@ -262,7 +354,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 }
                 else
                 {
-                  return new FE1D2D_2DElement(feature);
+                  return null;
                 }
             }
         };

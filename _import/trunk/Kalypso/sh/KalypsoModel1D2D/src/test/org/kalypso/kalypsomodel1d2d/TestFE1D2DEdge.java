@@ -9,6 +9,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -47,12 +48,14 @@ public class TestFE1D2DEdge extends TestCase
         assertEquals( 3, container.size());
         
         IFE1D2DElement element=container.get( 0 );
+        final IPolyElement quadriElement = (IPolyElement) element.getWrappedFeature().getAdapter( IPolyElement.class );
         assertEquals( "QuadriElement", element.getWrappedFeature().getId() );
-        assertEquals( 4, element.getEdges().size() );
+        assertEquals( 4, quadriElement.getEdges().size() );
         
         element=container.get( 1 );
+        final IPolyElement triElement = (IPolyElement) element.getWrappedFeature().getAdapter( IPolyElement.class );
         assertEquals( "FE1D2DTriElement", element.getWrappedFeature().getId() );
-        assertEquals( 3, element.getEdges().size() );
+        assertEquals( 3, triElement.getEdges().size() );
         
         element=container.get( 2 );
         assertEquals( "ContinuityLine", element.getWrappedFeature().getId() );       

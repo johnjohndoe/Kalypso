@@ -99,8 +99,7 @@ public class FENetConceptSelectionWidget implements IWidget
     {
       m_model1d2d = 
         UtilMap.findFEModelTheme( 
-          mapModell, 
-          m_themeElementsQName );
+          mapModell );
       Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
       m_featureTheme = 
         UtilMap.findEditableTheme( 

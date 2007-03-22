@@ -118,7 +118,7 @@
 		    <activeWhen>   
 		       <with variable="activeContexts">
 		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
 		          </iterate>
 		       </with>
 		     </activeWhen>
@@ -274,7 +274,7 @@
 	                 value="maps/fenet.gmt"/>
 	           <parameter
 	                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
-	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
+	                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
 	        </class>
 	     </handler>
 	     <handler

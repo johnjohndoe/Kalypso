@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import org.kalypsodeegree.model.geometry.GM_Curve;
+
 
 /**
  * @author Patrice Congo
  */
-public interface IFE1D2DContinuityLine<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
+public interface IFE1D2DContinuityLine extends IElement2D
 {
+  public GM_Curve getGeometry();
+  
+  public void setGeometry( final GM_Curve curve );
 }

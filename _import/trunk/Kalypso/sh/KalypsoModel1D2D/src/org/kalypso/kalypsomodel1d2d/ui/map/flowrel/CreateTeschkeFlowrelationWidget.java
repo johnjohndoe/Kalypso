@@ -42,9 +42,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
@@ -67,5 +70,14 @@ public class CreateTeschkeFlowrelationWidget extends AbstractCreateFlowrelationW
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
     return (ITeschkeFlowRelation) newFeature.getAdapter( ITeschkeFlowRelation.class );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d, org.kalypsodeegree.model.geometry.GM_Point, double)
+   */
+  @Override
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( IFEDiscretisationModel1d2d discModel, GM_Point currentPos, double grabDistance )
+  {
+    return CreateKingFlowrelationWidget.findModelElementFromPosition( discModel, currentPos, grabDistance );
   }
 }

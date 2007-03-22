@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -179,7 +180,7 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
             modelElementIDProvider.rma10sToGmlID( 
                                   ERma10sModelElementKey.FE, 
                                   elementLeftID);
-          IFE1D2DElement eleLeft=getElement2D(gmlID);
+          IPolyElement eleLeft=getElement2D(gmlID);
           int size=eleLeft.getEdges().size();
           eleLeft.addEdge( edgeID );
           if(eleLeft.getEdges().size()-size!=1)
@@ -206,7 +207,7 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
           String gmlID=
             modelElementIDProvider.rma10sToGmlID( 
                         ERma10sModelElementKey.FE, elementRightID);
-          IFE1D2DElement eleRight=getElement2D(gmlID);
+          IPolyElement eleRight=getElement2D(gmlID);
           //TODO remove dependencies to the inv edge use find node instead
           //change the api to get the whether is was newly created or not
           IEdgeInv inv= new EdgeInv(edge,model);
@@ -243,18 +244,18 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
   }
   
   
-  private final IFE1D2DElement getElement2D(String gmlID)
+  private final IPolyElement getElement2D(String gmlID)
   {
     Feature eleFeature=workspace.getFeature( gmlID );
     if(eleFeature==null)
     {
      return modelElements.addNew( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
-          gmlID);
+                Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
+                gmlID, IPolyElement.class);
     }
     else
     {
-      return (IFE1D2DElement)eleFeature.getAdapter( IFE1D2DElement.class );
+      return (IPolyElement)eleFeature.getAdapter( IFE1D2DElement.class );
     }
   }
   

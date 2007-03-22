@@ -130,4 +130,9 @@ public interface IFEDiscretisationModel1d2d extends IFeatureWrapper2
                       double searchSquareWidth,
                       boolean[] alreadyExists);
 
+
+  public IFE1D2DContinuityLine findContinuityLine( final GM_Point position, double grabDistance );
+
+
+  public IPolyElement find2DElement( final GM_Point position, final double grabDistance );
 }

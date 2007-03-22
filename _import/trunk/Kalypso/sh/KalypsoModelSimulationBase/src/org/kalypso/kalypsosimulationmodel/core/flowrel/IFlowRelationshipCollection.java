@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author Gernot Belger
@@ -54,5 +54,5 @@ public interface IFlowRelationshipCollection extends IFeatureWrapperCollection<I
 {
   public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
 
-  public IFlowRelationship findFlowrelationship( final GM_Point position, final double searchRectWidth );
+  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
 }

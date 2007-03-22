@@ -42,15 +42,17 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
-
 /**
- * Interface for classes that represents a wb1d2d:Junction1D2D element
+ * Interface corresponding to the wb1d2d:Element2DType in the sim_1d2d_discretisation.xsd
  * 
- * @author Patrice Congo
+ * @author Gernot Belger
  */
-public interface IFEJunction1D2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
+// TODO: is templatisation needed?
+public interface IElement2D extends IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
 {
   public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
 
-  public void addEdge( final String gmlID );
+  public void addEdge( final String edgeID );
+  
+  public void setEdges( final IFE1D2DEdge[] edges );
 }

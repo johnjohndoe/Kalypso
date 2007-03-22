@@ -1,7 +1,5 @@
 package org.kalypso.kalypsomodel1d2d.schema;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;

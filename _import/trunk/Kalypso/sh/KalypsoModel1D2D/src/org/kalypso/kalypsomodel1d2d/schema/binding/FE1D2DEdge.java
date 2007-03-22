@@ -107,7 +107,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     curEdge.addNode( node1.getGmlID() );
     node1.addContainer( edgeGmlID );
     
-//    edges.add( curEdge );
     curEdge.getWrappedFeature().invalidEnvelope();
     
     return curEdge;
@@ -346,7 +345,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public void setInvEdge( String invEdgeID )
   {
     invEdgeID=Assert.throwIAEOnNullOrEmpty( invEdgeID );
-    m_featureToBind.setProperty( 
+    getWrappedFeature().setProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, invEdgeID );
   }
   
@@ -355,7 +354,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
    */
   public void resetInvEdge( )
   {
-    m_featureToBind.setProperty( 
+    getWrappedFeature().setProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, null );
   }
   
@@ -364,11 +363,12 @@ public class FE1D2DEdge extends AbstractFeatureBinder
    */
   public IEdgeInv getEdgeInv( )
   {
-    Object prop= m_featureToBind.getProperty( 
+    final Feature wrappedFeature = getWrappedFeature();
+    Object prop= wrappedFeature.getProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV );
     
     Feature edgeInvFeature=FeatureHelper.getFeature(
-        m_featureToBind.getWorkspace(),
+        wrappedFeature.getWorkspace(),
         prop);         
 
     if(edgeInvFeature==null)
@@ -389,7 +389,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public String toString( )
   {
     StringBuffer buf= new StringBuffer(256);
-    buf.append( m_featureToBind );
+    buf.append( getWrappedFeature() );
     buf.append( '[' );
     for(IFE1D2DNode node:m_nodes)
     {

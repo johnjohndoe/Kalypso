@@ -96,7 +96,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
    */
   public NodalBCSelectionWizard( final TimeserieTypeDescription[] descriptions, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
-    super();
     m_descriptions = descriptions;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -113,7 +112,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#canFinish()
    */
@@ -122,7 +121,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   {
     return m_page2.isPageComplete();
   }
-  
+
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
@@ -146,48 +145,44 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     /* Initialize observation with components */
     final Feature obsFeature = bc.getTimeserieFeature();
 
-    final IComponent domainComponent = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" );
-    final IComponent valueComponent = ObservationFeatureFactory.createDictionaryComponent( obsFeature, choosenDesc.getComponentUrn() );
+    final String[] componentUrns = choosenDesc.getComponentUrns();
+    final IComponent[] components = new IComponent[componentUrns.length];
+
+    for( int i = 0; i < components.length; i++ )
+      components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-    obs.setName( valueComponent.getName() );
-    obs.setDescription( valueComponent.getName() );
+    obs.setName( choosenDesc.getName() );
     obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
 
     final TupleResult result = obs.getResult();
-    result.addComponent( domainComponent );
-    result.addComponent( valueComponent );
-
-    // TODO: fill timeserie according to from/to/step/default-value
+    for( final IComponent component : components )
+      result.addComponent( component );
 
     final BigDecimal value = new BigDecimal( m_page2.getDefaultValue() );
 
     GregorianCalendar calendarCurrent = new GregorianCalendar();
     calendarCurrent.setTime( m_page2.getFromDate() );
 
-//    GregorianCalendar calendarStep = new GregorianCalendar();
-//    calendarStep.setTime( m_page2.getStep() );
-    
     GregorianCalendar calendarTo = new GregorianCalendar();
     calendarTo.setTime( m_page2.getToDate() );
-    
+
+    // TODO: Refaktor in order to let different types of observations to be created
+    final IComponent domainComponent = components[0];
+    final IComponent valueComponent = components[1];
+
     do
     {
       final IRecord record = result.createRecord();
-      
-      record.setValue( domainComponent, new XMLGregorianCalendarImpl(calendarCurrent) ); // either Date or XMLGregorianCalendar
-      record.setValue( valueComponent, value ); // BigDecimal or Double
-      
+
+      record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarCurrent ) );
+      record.setValue( valueComponent, value );
+
       result.add( record );
-      
-//      calendarCurrent.add( Calendar.YEAR, calendarStep.get( Calendar.YEAR ) );
-//      calendarCurrent.add( Calendar.MONTH, calendarStep.get( Calendar.MONTH ) );
-//      calendarCurrent.add( Calendar.DAY_OF_MONTH, calendarStep.get( Calendar.DAY_OF_MONTH ) );
-//      calendarCurrent.add( Calendar.HOUR, calendarStep.get( Calendar.HOUR ) );
+
       calendarCurrent.add( Calendar.MINUTE, m_page2.getStep() );
     }
     while( !calendarCurrent.after( calendarTo ) );
-
 
     ObservationFeatureFactory.toFeature( obs, obsFeature );
 

@@ -431,7 +431,7 @@ public class CreateChannelData
 
     final MapPanel mapPanel = m_widget.getPanel();
     final IMapModell mapModel = mapPanel.getMapModell();
-    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel );
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
 

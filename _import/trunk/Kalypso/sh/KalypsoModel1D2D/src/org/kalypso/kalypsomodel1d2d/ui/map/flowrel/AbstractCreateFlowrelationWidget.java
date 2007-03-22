@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 
@@ -55,10 +57,12 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
@@ -71,10 +75,30 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.cs.CS_CoordinateSystem;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Gernot Belger
@@ -87,9 +111,10 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
   private IKalypsoFeatureTheme m_flowTheme = null;
 
-  private IKalypsoFeatureTheme m_nodeTheme = null;
+  private IFEDiscretisationModel1d2d m_discModel = null;
 
-  private IFE1D2DNode m_node = null;
+  /* The current element (node, contiline, 1delement, ...) of the disc-model under the cursor. */
+  private IFeatureWrapper2 m_modelElement = null;
 
   private IFlowRelationship m_existingFlowRelation;
 
@@ -127,8 +152,8 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_flowTheme == null )
       m_flowTheme = UtilMap.findEditableTheme( mapModell, IFlowRelationship.QNAME );
 
-    m_nodeTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    if( m_flowTheme == null || m_nodeTheme == null )
+    m_discModel = UtilMap.findFEModelTheme( mapModell );
+    if( m_flowTheme == null || m_discModel == null )
       return;
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
@@ -142,39 +167,82 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
     /* Grab next node */
-    if( m_nodeTheme == null )
+    if( m_discModel == null )
     {
-      m_node = null;
+      if( m_modelElement != null )
+      {
+        m_modelElement = null;
 
-      final MapPanel panel = getMapPanel();
-      if( panel != null )
-        panel.repaint();
+        mapPanel.repaint();
+      }
       return;
     }
 
-    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) m_nodeTheme.getFeatureList().getParentFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-
-    final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
-    m_node = model.findNode( currentPos, grabDistance );
+    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius * 2 );
+    m_modelElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
 
     /* Node has already a flow relation? */
     m_existingFlowRelation = null;
-    if( m_flowRelCollection == null || m_node == null )
+    if( m_flowRelCollection == null || m_modelElement == null )
     {
-      final MapPanel panel = getMapPanel();
-      if( panel != null )
-        panel.repaint();
+      mapPanel.repaint();
 
       return;
     }
-    m_existingFlowRelation = m_flowRelCollection.findFlowrelationship( m_node.getPoint(), 0.0 );
 
-    final MapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaint();
+    if( isConsidered( m_modelElement ) )
+    {
+      final GM_Position flowPosition = getFlowPositionFromElement( m_modelElement );
+      if( flowPosition != null )
+        m_existingFlowRelation = m_flowRelCollection.findFlowrelationship( flowPosition, 0.0 );
+    }
+
+    mapPanel.repaint();
+  }
+
+  private GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement )
+  {
+    try
+    {
+      /* Node: return its position */
+      if( modelElement instanceof IFE1D2DNode )
+      {
+        final GM_Point point = ((IFE1D2DNode) modelElement).getPoint();
+        if( point != null )
+          return point.getPosition();
+      }
+      /* ContinuityLine: return middle of line */
+      else if( modelElement instanceof IFE1D2DContinuityLine )
+      {
+        final IFE1D2DContinuityLine contiLine = (IFE1D2DContinuityLine) modelElement;
+        final GM_Curve line = contiLine.getGeometry();
+        if( line != null )
+        {
+          final LineString jtsLine = (LineString) JTSAdapter.export( line );
+          final com.vividsolutions.jts.geom.Point point = JTSUtilities.pointOnLinePercent( jtsLine, 50 );
+          return JTSAdapter.wrap( point.getCoordinate() );
+        }
+      }
+      else if( modelElement instanceof IPolyElement )
+      {
+        final IPolyElement polyElement = (IPolyElement) modelElement;
+        final GM_Surface surface = polyElement.getGeometry();
+        return surface.getCentroid().getPosition();
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   /**
@@ -183,14 +251,56 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    if( m_node == null )
+    if( !isConsidered( m_modelElement ) )
       return;
 
-    final int smallRect = 10;
-    final Point nodePoint = MapUtilities.retransform( getMapPanel(), m_node.getPoint() );
-    g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
-    if( m_existingFlowRelation != null )
-      g.fillRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+    try
+    {
+      final int smallRect = 10;
+      /* Node: return its position */
+      if( m_modelElement instanceof IFE1D2DNode )
+      {
+        final GM_Point point = ((IFE1D2DNode) m_modelElement).getPoint();
+        final Point nodePoint = MapUtilities.retransform( getMapPanel(), point );
+        g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+        if( m_existingFlowRelation != null )
+          g.fillRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+      }
+      /* ContinuityLine: return middle of line */
+      else if( m_modelElement instanceof IFE1D2DContinuityLine )
+      {
+        final IFE1D2DContinuityLine contiLine = (IFE1D2DContinuityLine) m_modelElement;
+        final GM_Curve line = contiLine.getGeometry();
+
+        final LineSymbolizer symb = new LineSymbolizer_Impl();
+        final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+        stroke.setWidth( 3 );
+        stroke.setStroke( new Color( 255, 0, 0 ) );
+        symb.setStroke( stroke );
+
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getWrappedFeature(), line, symb );
+        de.paint( g, getMapPanel().getProjection() );
+      }
+      else if( m_modelElement instanceof IPolyElement )
+      {
+        final IPolyElement polyElement = (IPolyElement) m_modelElement;
+        final GM_Surface surface = polyElement.getGeometry();
+
+        final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
+        final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+        stroke.setWidth( 3 );
+        stroke.setStroke( new Color( 255, 0, 0 ) );
+        symb.setStroke( stroke );
+
+        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement.getWrappedFeature(), surface, symb );
+        de.paint( g, getMapPanel().getProjection() );
+      }
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      // should never happen
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -202,10 +312,14 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
     final String problemMessage;
-    if( m_node == null )
-      problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
+    if( m_modelElement == null )
+      // problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
+      // TODO: provider nice common error message
+      return;
     else if( m_existingFlowRelation != null )
-      problemMessage = "Dieser Knoten besitzt bereits Parameter.";
+      // problemMessage = "Hier ist bereits Dieser Knoten besitzt bereits Parameter.";
+      // TODO do we need a nice message?
+      problemMessage = null;
     else
       problemMessage = null;
 
@@ -222,7 +336,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     }
 
     /* Check preconditions */
-    if( m_node == null )
+    if( m_modelElement == null )
       return;
     if( m_flowRelCollection == null )
       return;
@@ -241,7 +355,9 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         return;
       }
 
-      flowRel.setPosition( m_node.getPoint() );
+      final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
+      final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
 
       /* Post it as an command */
       final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
@@ -294,10 +410,22 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     } );
   }
 
+  /** Overwrite to let this widget consider other 1d2d-element than nodes. */
+  protected boolean isConsidered( final IFeatureWrapper2 modelElement )
+  {
+    return modelElement instanceof IFE1D2DNode;
+  }
+
   /**
    * Really create the new object.
    * 
    * @return The new object, if null, nothing happens..
    */
   protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation );
+
+  /**
+   * @param grabDistance
+   *          The grab distance in world (=geo) coordinates.
+   */
+  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
 }

@@ -42,19 +42,25 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * @author congo
+ * @author Patrice Congo
  *
  */
 public interface IFE1D2DElement 
           <CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
                   extends IFEElement<CT, ET>
 {
+  public IFeatureWrapperCollection<CT> getContainers();
+     
   /**
    * returns a list of element nodes
    */
-  List<IFE1D2DNode> getNodes();
-  void addEdge(String edgeID);
+  public List<IFE1D2DNode> getNodes();
+  
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
 }

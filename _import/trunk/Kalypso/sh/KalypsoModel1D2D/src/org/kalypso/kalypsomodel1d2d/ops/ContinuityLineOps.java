@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
@@ -77,7 +76,7 @@ public class ContinuityLineOps
     // do not instantiate
   }
 
-  public static IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contilineFromCurve( final GM_Curve curve, final FE1D2DDiscretisationModel model ) throws CoreException
+  public static IFE1D2DContinuityLine contilineFromCurve( final GM_Curve curve, final FE1D2DDiscretisationModel model ) throws CoreException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
     // foreach segment of curve:
@@ -133,7 +132,7 @@ public class ContinuityLineOps
       }
       else
       {
-        final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = model.createContinuityLine();
+        final IFE1D2DContinuityLine contiLine = model.createContinuityLine();
         final FeatureList edgesList = (FeatureList) contiLine.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
         final String cLineGmlID=contiLine.getGmlID();
         for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edgeList )

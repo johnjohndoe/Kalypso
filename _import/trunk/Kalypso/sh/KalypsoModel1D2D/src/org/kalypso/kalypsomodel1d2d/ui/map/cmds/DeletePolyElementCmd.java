@@ -42,16 +42,13 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import java.util.List;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -66,7 +63,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
 {
   
   private IFEDiscretisationModel1d2d model1d2d;
-  private IFE1D2DElement element2D;
+  private IPolyElement element2D;
   private GM_Point[] elementPoints;
   
   private IFE1D2DComplexElement[] complexElements;
@@ -78,7 +75,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   {
     this.model1d2d = model1d2d;
     this.element2D = 
-        (IFE1D2DElement)element2DFeature.getAdapter( IFE1D2DElement.class );
+        (IPolyElement)element2DFeature.getAdapter( IPolyElement.class );
   }
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()

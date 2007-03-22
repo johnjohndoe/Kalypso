@@ -5,9 +5,10 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.PolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -36,7 +37,7 @@ public class TestFE1D2DPolyElement extends TestCase
       fail( TestUtils.getStackTraceAsString( th ) );
     }
     Feature rFeature = workspace.getRootFeature();
-    FE1D2D_2DElement quad = new FE1D2D_2DElement( rFeature );
+    IPolyElement quad = (IPolyElement) rFeature.getAdapter( IPolyElement.class );
 
     IFeatureWrapperCollection<IFE1D2DEdge> edges = quad.getEdges();
 
@@ -83,7 +84,7 @@ public class TestFE1D2DPolyElement extends TestCase
       Feature root = workspace.getRootFeature();
       // gml:FeatureCollection
 
-      FE1D2D_2DElement ele = new FE1D2D_2DElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+      final IPolyElement ele = new PolyElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
 
       IFeatureWrapperCollection<IFE1D2DEdge> edges = ele.getEdges();
       assertEquals( 0, ele.getEdges().size() );
@@ -113,7 +114,7 @@ public class TestFE1D2DPolyElement extends TestCase
       Feature root = workspace.getRootFeature();
       // gml:FeatureCollection
 
-      FE1D2D_2DElement ele = new FE1D2D_2DElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+      final IPolyElement ele = new PolyElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
 
       IFeatureWrapperCollection<IFE1D2DEdge> edges = ele.getEdges();
       assertEquals( 0, ele.getEdges().size() );

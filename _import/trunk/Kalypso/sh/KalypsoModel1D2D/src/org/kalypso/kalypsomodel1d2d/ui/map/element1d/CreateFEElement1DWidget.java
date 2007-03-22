@@ -73,7 +73,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     final IMapModell mapModell = mapPanel.getMapModell();
     m_theme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
-    m_model1d2d = UtilMap.findFEModelTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+    m_model1d2d = UtilMap.findFEModelTheme( mapModell );
     m_lineBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
   }
 

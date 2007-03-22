@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * Profide Utility methodes for classes
@@ -106,10 +107,13 @@ public class UtilMap
     return foundThemes.toArray( new IKalypsoFeatureTheme[foundThemes.size()] );
   }
 
-  static public IFEDiscretisationModel1d2d findFEModelTheme( IMapModell mapModel, QName editElementQName )
+  /**
+   * Find a discretisation model within the mapModel themes.
+   * @return The first discretisation model encountered in the list of themes.
+   */
+  static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel )
   {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" );
-    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
@@ -121,12 +125,14 @@ public class UtilMap
         {
           continue;
         }
-        if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) )
+
+        final FeatureList featureList = ftheme.getFeatureList();
+        final Feature modelFeature = featureList == null ? null : featureList.getParentFeature();
+        if( modelFeature != null )
         {
-          Feature modelFeature = ftheme.getFeatureList().getParentFeature();
-          IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );
-          return model;
-          // m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
+          final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+          if( model != null )
+            return model;
         }
       }
     }

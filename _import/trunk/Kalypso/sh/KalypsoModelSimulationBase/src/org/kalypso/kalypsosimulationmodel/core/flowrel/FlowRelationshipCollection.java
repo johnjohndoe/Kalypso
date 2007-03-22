@@ -46,7 +46,6 @@ import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -65,7 +64,7 @@ public class FlowRelationshipCollection extends FeatureWrapperCollection<IFlowRe
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
    */
-  public IFlowRelationship findFlowrelationship( final GM_Point position, final double searchRectWidth )
+  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth )
   {
     final FeatureList nodeList = getWrappedList();
     final double posX = position.getX();
@@ -87,7 +86,7 @@ public class FlowRelationshipCollection extends FeatureWrapperCollection<IFlowRe
       final IFlowRelationship curNode = new FlowRelationship( feature, IFlowRelationship.QNAME )
       {
       };
-      final double curDist = position.distance( curNode.getPosition() );
+      final double curDist = position.getDistance( curNode.getPosition().getPosition() );
       if( min > curDist )
       {
         nearest = curNode;

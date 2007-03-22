@@ -44,7 +44,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
+import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -52,7 +52,10 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 @SuppressWarnings("unchecked")
 /**
@@ -110,14 +113,6 @@ public class FEEdgeToEdgeJunction1D2D
           propQName, 
           gmlID ));
   }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#recalculateGeometry()
-   */
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
-  {
-    return ModelGeometryBuilder.computeEdgeToEdgeJunction1D2DGeometry( this ); 
-  }
   
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement#getNodes()
@@ -146,7 +141,8 @@ public class FEEdgeToEdgeJunction1D2D
   
   private final IFE1D2DEdge getEdge(QName propToEdgeQName )
   {
-    Object property = m_featureToBind.getProperty( propToEdgeQName);
+    final Feature wrappedFeature = getWrappedFeature();
+    Object property = wrappedFeature.getProperty( propToEdgeQName);
     Feature edge1Dfeature;
     if(property==null)
     {
@@ -154,7 +150,7 @@ public class FEEdgeToEdgeJunction1D2D
     }
     else if(property instanceof String)
     {
-     edge1Dfeature=m_featureToBind.getWorkspace().getFeature( (String)property); 
+     edge1Dfeature=wrappedFeature.getWorkspace().getFeature( (String)property); 
     }else if(property instanceof Feature)
     {
       edge1Dfeature = (Feature)property;
@@ -195,9 +191,10 @@ public class FEEdgeToEdgeJunction1D2D
 
   private final void setEdge(IFE1D2DEdge edge,QName propToEdgeQName )
   {
-    m_featureToBind.setProperty(propToEdgeQName, edge.getGmlID());
+    final Feature wrappedFeature = getWrappedFeature();
+    wrappedFeature.setProperty(propToEdgeQName, edge.getGmlID());
     edge.getContainers().getWrappedList().add( getGmlID() );
-//    m_featureToBind.invalidEnvelope();
+    wrappedFeature.invalidEnvelope();
   }
   
   /**
@@ -214,22 +211,8 @@ public class FEEdgeToEdgeJunction1D2D
     setEdge( 
         new2DEdge, 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_JUNCTION_2DEDGE );
-  }
-
-
-
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
-   */
-  public void addEdge( String edgeID )
-  {
-    throw new UnsupportedOperationException();
     
   }
-
-
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getContainers()
@@ -239,17 +222,36 @@ public class FEEdgeToEdgeJunction1D2D
     return containers;
   }
 
-
-
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getEdges()
-   */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    throw new UnsupportedOperationException();
+    IFE1D2DEdge edge1D = get1DEdge();
+    IFE1D2DEdge edge2D = get2DEdge();
+    if(edge1D==null || edge2D==null)
+    {
+      return null;
+    }
+    IFE1D2DNode<IFE1D2DEdge>  borderNode = 
+                  EdgeOps.find1DEdgeEndNode( edge1D );
+    if(borderNode==null)
+    {
+      throw new IllegalStateException(
+          "The edge 1d does not have a border node");
+    }
+    
+    IFE1D2DNode<IFE1D2DEdge> startNode = 
+                  EdgeOps.find1DEdgeEndNode( edge1D );
+    GM_Point startPoint = startNode.getPoint();
+    GM_Point targetPoint = EdgeOps.computeEdgeMiddle( edge2D);
+    
+    GM_Position positions[]= new GM_Position[2];
+    
+    
+    positions[0] = startPoint.getPosition();
+    positions[1] = targetPoint.getPosition();
+    
+    return GeometryFactory.createGM_Curve( positions, targetPoint.getCoordinateSystem() );
   }
-  
+
   
   
 }

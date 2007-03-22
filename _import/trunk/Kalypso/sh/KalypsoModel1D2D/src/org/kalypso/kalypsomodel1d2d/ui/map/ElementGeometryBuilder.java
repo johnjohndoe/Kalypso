@@ -56,10 +56,11 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.PolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -225,8 +226,8 @@ public class ElementGeometryBuilder
     }
    
     /* Build new element */
-    final FE1D2D_2DElement element = 
-          FE1D2D_2DElement.createPolyElement( discModel );
+    final IPolyElement element = 
+          PolyElement.createPolyElement( discModel );
 
     element.setEdges( edges );
 
@@ -236,7 +237,7 @@ public class ElementGeometryBuilder
                     parentFeature, 
                     parentElementProperty, 
                     -1, 
-                    element.getFeature(), 
+                    element.getWrappedFeature(), 
                     null, 
                     true );
     command.addCommand( addElementCommand );

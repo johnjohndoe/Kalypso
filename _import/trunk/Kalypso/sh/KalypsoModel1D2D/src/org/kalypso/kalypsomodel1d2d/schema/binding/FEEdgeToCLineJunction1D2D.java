@@ -46,7 +46,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -114,10 +113,13 @@ public class FEEdgeToCLineJunction1D2D
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    return ModelGeometryBuilder.computeEdgeToCLineJunction1D2DGeometry( this ); 
+    final IFE1D2DEdge edge = getEdge();
+    if(edge==null)
+    {
+      return null;
+    }
+    return ModelGeometryBuilder.computeEgdeGeometry( edge );
   }
-  
-
 
   public IFE1D2DEdge getEdge( )
   {
@@ -127,7 +129,8 @@ public class FEEdgeToCLineJunction1D2D
 
   private final IFE1D2DEdge getEdge(QName propToEdgeQName )
   {
-    Object property = m_featureToBind.getProperty( propToEdgeQName);
+    final Feature wrappedFeature = getWrappedFeature();
+    Object property = wrappedFeature.getProperty( propToEdgeQName);
     Feature edge1Dfeature;
     if(property==null)
     {
@@ -135,7 +138,7 @@ public class FEEdgeToCLineJunction1D2D
     }
     else if(property instanceof String)
     {
-     edge1Dfeature=m_featureToBind.getWorkspace().getFeature( (String)property); 
+     edge1Dfeature=wrappedFeature.getWorkspace().getFeature( (String)property); 
     }else if(property instanceof Feature)
     {
       edge1Dfeature = (Feature)property;
@@ -175,15 +178,12 @@ public class FEEdgeToCLineJunction1D2D
 
   private final void setEdge(IFE1D2DEdge edge,QName propToEdgeQName )
   {
-    m_featureToBind.setProperty(propToEdgeQName, edge.getGmlID());
+    final Feature wrappedFeature = getWrappedFeature();
+    wrappedFeature.setProperty(propToEdgeQName, edge.getGmlID());
     edge.getContainers().getWrappedList().add( getGmlID() );
+    wrappedFeature.invalidEnvelope();
   }
   
-
-
-
-
-
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getContainers()
    */
@@ -191,9 +191,6 @@ public class FEEdgeToCLineJunction1D2D
   {
     return containers;
   }
-
-
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getEdges()

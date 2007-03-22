@@ -124,7 +124,6 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
   {
     if(addedElement==null)
     {
-      List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
       IFE1D2DEdge curEdge;
      
       IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[0].getAddedNode();
@@ -147,7 +146,6 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
       {
           final int size1 = model.getEdges().size();
           curEdge=FE1D2DEdge.createFromModel( model, node0, node1 );
-          edges.add( curEdge );
           final int size2 = model.getEdges().size();
           if(size2-size1!=1)
           {

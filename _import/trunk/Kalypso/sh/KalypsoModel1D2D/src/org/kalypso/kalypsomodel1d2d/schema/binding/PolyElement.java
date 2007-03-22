@@ -7,7 +7,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -18,10 +17,18 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * TODO: also make interface for this element
+ * 
  * Provide the default implementation for 
  * {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
  * Those classes kann be used as java abtract for the subtituable of 
@@ -35,19 +42,19 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @see FE1D2DContinuityLine
  */
 @SuppressWarnings("hiding")
-public class FE1D2D_2DElement extends AbstractFeatureBinder 
-                              implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
+public class PolyElement extends AbstractFeatureBinder 
+                              implements IPolyElement
 {
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
 
   private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
 
-  public FE1D2D_2DElement( final Feature featureToBind )
+  public PolyElement( final Feature featureToBind )
   {
     this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
   }
   
-  public FE1D2D_2DElement( final Feature featureToBind, QName featureQName )
+  public PolyElement( final Feature featureToBind, QName featureQName )
   {
     super( featureToBind, featureQName );
     //
@@ -131,7 +138,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
    * @throws IllegalArgumentException if workspace is null
    *  or the roughness collection is not part of the workspace
    */
-  public FE1D2D_2DElement(
+  public PolyElement(
         Feature parentFeature,
         QName propQName,
         QName newFeatureQName
@@ -144,7 +151,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
                 newFeatureQName));   
   }
   
-  public FE1D2D_2DElement(
+  public PolyElement(
       Feature parentFeature,
       QName propQName,
       String gmlID)
@@ -183,9 +190,6 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     }
 
     return edges;
-    
-//    return edges.toArray( new FE1D2DEdge[edges.size()] );
-    
   }
 
   @SuppressWarnings("unchecked")
@@ -236,11 +240,34 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    return ModelGeometryBuilder.computeElementGeometry( this );
-     
+      List<IFE1D2DNode> nodes=getNodes();
+      final int SIZE=nodes.size();
+      /* Positions from nodes */
+      final GM_Position[] poses = new GM_Position[SIZE];
+
+      if( SIZE <= 3 )
+      {
+        return null;
+      }
+
+      final CS_CoordinateSystem crs = 
+        nodes.get(0).getPoint().getCoordinateSystem();
+
+      for( int i = 0; i < poses.length; i++ )
+      {
+        final GM_Point point = nodes.get( i ).getPoint();
+        poses[i] = point.getPosition();
+      }
+      
+      return GeometryFactory.createGM_Surface( 
+                      poses, 
+                      new GM_Position[0][], 
+                      new GM_SurfaceInterpolation_Impl( 
+                                    GM_SurfaceInterpolation.PLANAR ), 
+                      crs );
   }
 
-  public static FE1D2D_2DElement createPolyElement( 
+  public static IPolyElement createPolyElement( 
                           final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
@@ -257,23 +284,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
           parentFeature.getWorkspace().createFeature( 
                   parentFeature, parentElementProperty, polyType );
     
-    return new FE1D2D_2DElement( eleFeature );
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
-   */
-  public Feature getWrappedFeature( )
-  {
-    return getFeature();
-  }
-  
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
-   */
-  public String getGmlID( )
-  {
-    return getFeature().getId();
+    return new PolyElement( eleFeature );
   }
 
   /**
@@ -292,17 +303,11 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     return edges;
   }
 
-  public void setSurface(GM_Surface surface)
-  {
-    getFeature().setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM, 
-            surface);
-  }
   public void resetGeometry()
   {
     try
     {
-      setSurface( (GM_Surface)recalculateElementGeometry() );
+      setGeometry( (GM_Surface)recalculateElementGeometry() );
     }
     catch( GM_Exception e )
     {
@@ -399,5 +404,30 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     }
     buf.append( ']' );
     return buf.toString();
+  }
+
+  public GM_Surface getSurface( )
+  {
+    return (GM_Surface) getFeature().getProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement#getGeometry()
+   */
+  public GM_Surface getGeometry( )
+  {
+    return (GM_Surface) getFeature().getProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement#setGeometry(org.kalypsodeegree.model.geometry.GM_Surface)
+   */
+  public void setGeometry( final GM_Surface surface )
+  {
+      getFeature().setProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM, 
+              surface);
   }
 }
