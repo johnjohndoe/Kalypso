@@ -1,3 +1,4 @@
+C     Last change:  K    15 Feb 2007    5:28 pm
 cipk  last update dec 2003   add iedsw dependence
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 cipk  last update Jan 12 2001 add test for IMAT
@@ -17,9 +18,11 @@ CIPK AUG05      INCLUDE 'BLK4.COM'
 C
       DO 90 LL=1,NE
       !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-      if (nop(ll,2).eq.-9999) then
-        GOTO 90
-      end if
+      !nis,feb07: Allow for numbered midsides of FFF
+      !if (nop(ll,2).eq.-9999) then
+      if (nop(ll,2) < -1000) GOTO 90
+      !-
+      !-
       IF (IMAT(LL) .EQ. 0) GO TO 90
 
 cipk dec03 add iedsw depedence
@@ -219,7 +222,11 @@ CIPK NOV97     open(75,file='elemdir.dat')
          open(76,file='elemxycoef.dat')
          do 11  j=1,ne
            !EFa Dec06, Fallunterscheidung für 1d-Teschke-ELemente
-           if (nop(j,2).NE.-9999) then
+           !nis,feb07: Allow for numbered FFF midsides
+           !if (nop(j,2).NE.-9999) then
+           if (nop(j,2) > -1000) then
+           !-
+           !-
 cipk jan01 put in test
 	     if(imat(j) .gt. 0) then
                angx = th(j)
