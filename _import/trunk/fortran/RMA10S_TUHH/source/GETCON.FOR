@@ -1,3 +1,4 @@
+C     Last change:  K    15 Feb 2007    6:37 pm
       SUBROUTINE GETCON
       USE BLK10MOD
       USE BLKSANMOD
@@ -9,8 +10,11 @@ CIPK AUG95      INCLUDE 'BLKSAND.COM'
 
       !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (wegen Mittseitenknoten -9999)
       DO N=1,NE
+      !nis,feb07: Allow for
 	  IF((IMAT(N) .LT. 900  .OR. IMAT(N) .GT. 999).and.
-     +      (nop(n,2).NE.-9999)) THEN
+      !+      (nop(n,2).NE.-9999)) THEN
+     +       (nop(n,2) > -1000)) then
+      !-
           NCN=NCORN(N)
 	    DO M=1,NCN
             DO I=1,12
@@ -30,8 +34,11 @@ CIPK AUG95      INCLUDE 'BLKSAND.COM'
 	      STOP
   250       CONTINUE
           ENDDO
+      !nis,feb07: Allow for numbered midside nodes of Flow1DFE elements
           ELSEIF((imat(N) .LT. 900  .OR. IMAT(N) .GT. 999).and.
-     +         (nop(n,2).eq.-9999)) then
+      !+         (nop(n,2).eq.-9999)) then
+     +         (nop(n,2) < -1000)) then
+      !-
           NCN=NCORN(N)
 	    DO M=1,NCN,2
             DO I=1,12
