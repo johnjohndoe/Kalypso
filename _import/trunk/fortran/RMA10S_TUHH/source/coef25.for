@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    29 Jan 2007    6:03 pm
+C     Last change:  K     2 Mar 2007   10:08 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -972,19 +972,22 @@ CIPK SEP04  ADD MAH AND MAT OPTION
         ENDIF
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
       !nis,jan07: This statement can not work
-      !ELSEIF (ORT(NR,5) == -1) THEN
-      ELSEIF (ORT(NR,5) .lt. 0) THEN
+      ELSEIF (ORT(NR,5) == -1) THEN
+      !ELSEIF (ORT(NR,5) .lt. 0) THEN
       !-
         !nis,jan07,testing
         !WRITE(*,*) 'in coef25: ', ort(imat(nn),15)
         !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
-        !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-        call darcy(lambda, vecq, h, ort(imat(nn),15),
-     +             abst(nn), durchbaum(nn),
+        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+      !  call darcy(lambda, vecq, h, ort(imat(nn),15),
+      !+             abst(nn), durchbaum(nn),
         !-
      +             nn, morph, gl_bedform, mel, c_wr(nn))
         FFACT = lambda/8.0
+        !nis,feb07,testing
+        !WRITE(*,*) lambda, vecq, durchbaum(nn), abst(nn), cniku(nn)
+        !-
 !-
 
 
