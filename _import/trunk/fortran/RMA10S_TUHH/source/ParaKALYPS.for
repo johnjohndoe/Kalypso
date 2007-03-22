@@ -1,4 +1,4 @@
-C     Last change:  K    25 Jan 2007    6:05 pm
+C     Last change:  K    15 Feb 2007    5:09 pm
       MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
 !               Kalypso-2D into RMA10S.
@@ -40,7 +40,11 @@ C     Last change:  K    25 Jan 2007    6:05 pm
 !NiS,jul06: At the moment as a dummy argument, the bedform-array in a global version. It is passed to the subroutine
 !           formrauheit in the file roughness.f90
       real (KIND=4),allocatable:: gl_bedform(:,:)
-!-      
+!-
+
+!nis,feb07: Add array for midside nodes of Flow1DFE elements
+      INTEGER, ALLOCATABLE     :: FFFmidsidenodes(:)
+!-
 
 
 !FEM            switch for the control of CVFEM; switch is parat but the CVFEM-code is not yet translated to RMA10S
