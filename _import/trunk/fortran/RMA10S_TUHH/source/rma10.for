@@ -1,3 +1,4 @@
+C     Last change:  EF   13 Mar 2007   10:27 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -12,6 +13,9 @@ cipk  LAST UPDATE MAR 14 2003 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTAR
 CIPK  LAST UPDATE JAN 22 2002 SET SIDFF = 0
 CIPK  NEW ROUTINE jULY 9 2001
       SUBROUTINE RMA10SUB
+      !nis,feb07,testing purposes
+      USE blk10
+      !-
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
@@ -22,6 +26,9 @@ CIPK  NEW ROUTINE jULY 9 2001
 !NiS,apr06: add module for new Kalypso-2D-specific calculations
       USE PARAKalyps
 !-
+      !nis,feb07,testing: Writing whole matrix
+      USE ParaFlow1DFE
+      !-
 
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
@@ -37,6 +44,9 @@ cipk aug98 add character statement
       CHARACTER*6  INUM
       DIMENSION CURRENT(5),TARGT(5),IREC(40),FREC(40)
       CHARACTER*4 IPACKB(1200),IPACKT(77)
+      !nis,feb07,testing: Writing matrix
+      CHARACTER (LEN = 25) :: matrixname
+      !-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: VTM, HTP, VH, H, HS
 !-
@@ -329,6 +339,7 @@ cipk aug00 experimental
 
 
       write(*,*) 'entering load'
+
       CALL LOAD
 
 !nis,jan07: testoutput because of solution at the line transition
@@ -363,7 +374,43 @@ c       DFCT(N)=1.
 c  250 CONTINUE
       IF (ITEQV(MAXN) .NE. 5  .AND.  IOPTZD .GT. 0
      +    .AND. IOPTZD .LT. 3) CALL MELLII
+
+      !nis,feb07,testing
+      if (maxn == 1) then
+        ALLOCATE (matrix(2*maxp-2, 2*maxp-2), vector(2*maxp-2))
+      endif
+      do i = 1, 2*maxp-2
+        do j = 1, 2*maxp-2
+          matrix(i,j) = 0.0
+        end do
+        vector(i) = 0.0
+      end do
+      !-
+
       CALL FRONT(1)
+
+      !nis,feb07,testing
+      !WRITE(*,*) 'Writing updates as control'
+      !do i = 1, maxp
+      !  WRITE(*,*) r1(i)
+      !enddo
+      !-
+      !nis,feb07,testing: Write whole matrix
+      write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+      teststat = 0
+      open (9919, matrixname, iostat = teststat)
+      if (teststat /= 0) STOP 'Fehler bei Matrixdatei'
+      do i = 1, 2*maxp-2
+        WRITE(9919, '(60(f7.2),2(3x,f7.2))')
+     *       (matrix(i,j), j = 1, 2*maxp-2), vector (i), r1(i)
+      ENDDO
+      close (9919, status = 'keep')
+      !-
+
+      !nis,feb07,testing in coefs, stop after calc job
+        !pause
+      !-
+
 CIPK JAN97
       IF(MAXN .GE. 2) THEN
         IUTUB=1
