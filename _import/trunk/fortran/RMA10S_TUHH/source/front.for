@@ -1,3 +1,4 @@
+C     Last change:  K     2 Mar 2007   10:02 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -13,6 +14,9 @@ cipk  last update Jan 21 97  add option for Smagorinksy in 2-D
       USE BLK10
       USE BLK10MOD
       USE BLKSANMOD
+      !nis,feb07,testing
+      USE ParaKalyps
+      !-
       SAVE
 C
 C
@@ -242,13 +246,20 @@ CIPK NOV99     Either process surface integrals or collapse to 2-d
             IF(NETYP(N)/10 .LT. 1) THEN
 CIPK MAR05
               !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (notwendig?)
-              IF(nop(n,2).NE.-9999)then
+              !nis,feb07: Allow for numbered FFF midsides
+              !IF(nop(n,2).NE.-9999)then
+              IF(nop(n,2) > -1000)then
+              !-
+              !-
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
 	        endif
-              ELSEif(nop(n,2).EQ.-9999)then
+              !nis,feb07: Allow for numbered FFF midside nodes
+              !ELSEif(nop(n,2).EQ.-9999)then
+              ELSEif(nop(n,2) < -1000) then
+              !-
                 call coef1dFE(n,nrx)
               endif
 
@@ -369,7 +380,10 @@ CIPK MAR05
               !-
               !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
               IF(INOTR .EQ. 0) THEN
-                if (nop(n,2).eq.-9999) then
+                !nis,feb07: Allow for numbered FFF midsides
+                !if (nop(n,2).eq.-9999) then
+                if (nop(n,2) < -1000) then
+                !-
                   CALL COEF1dFE(N,NRX)
                 else
                   CALL COEF1(N,NRX)
@@ -456,6 +470,9 @@ cipk jan99
 	  KC=KC+1     !NiS,may06: count loop
 CIPK JAN99
           if(i .eq. 0) go to 22 !NiS,may06: loop cycle, if node is zero
+          !nis,feb07: negative nodes are midside nodes of Flow1DFE elements, so cycle that loop
+          if (i < -1000) GO TO 22
+          !-
 
 !Nis,mun06:testing
 !          if(i.eq.12816 .or. i.eq.12790 .or. i.eq.12791)
@@ -465,6 +482,10 @@ CIPK JAN99
 	  LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
 	  NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
 	  IF(LL .NE. 0) THEN
+            !nis,feb07,testing
+            !WRITE(*,*) nk(kc), kc, ll, i, l, MaxFFFMS
+            !pause
+            !-
 	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !NiS,may06: if the current element is the last one of the equation (NLSTEL), then make
                                              !           NK(KC) negative as pointer, that degree of freedom can be taken out
 	  ENDIF
@@ -510,14 +531,14 @@ C
    52 CONTINUE
 CIPK FEB04
       !nis,dec06: if LHED(L).eq.0, the loop should be cycled because of assignment problems
-      !DO L=1,LCOL
-      columnassigning: DO L=1,LCOL
+      DO L=1,LCOL
+      !columnassigning: DO L=1,LCOL
 	  LEQ=ABS(LHED(L))
           !nis,dec06: see above
-          if (LEQ.eq.0) CYCLE columnassigning
+          !if (LEQ.eq.0) CYCLE columnassigning
           !-
 	  IF(NLSTEL(LEQ) .EQ. N) LHED(L)=-ABS(LHED(L))
-      ENDDO columnassigning
+      ENDDO !columnassigning
 
       IF(LCOL .GT. LCMAX) LCMAX=LCOL
       IF(MOD(NELL,1000) .EQ. 0) THEN
@@ -599,16 +620,32 @@ CIPK FEB04
 !           that this relation is the end-relation. The result of the line-scaling is, that the variable in all local equation systems, that are
 !           connected to one coupling point can be collapsed to one point with two degrees of freedom. The local equations at the coupling can then
 !           all come together.
-!           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
+           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
             !nis,nov06,testing:
 !            WRITE(*,*) 'Fac(L)=', fac(l)
             !-
-            EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)*Fac(L)
+            !nis,feb07,testing:
+            !WRITE(*,*) 'Spalte', LL, 'Zeile', KK, 'Wert: ', EQ(ll,KK)
+            !-
+            !IF(n == 1910) then
+            !EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)*Fac(L)
+            !!nis,feb07,testing:
+            !WRITE(*,*) 'Spalte', LL, 'Zeile', KK, 'Wert: ', EQ(ll,KK)
+            !IF(fac(l) /= 1.0) then
+            !  WRITE(*,*) fac(l), l, n
+            !  pause
+            !endif
+            !
+            !endif
+            !-
 !-
 	  ENDIF
    56     CONTINUE
 	ENDIF
    57 CONTINUE
+      !nis,feb07,testing (stop for eq-output)
+      !pause
+      !-
 C
 C     FIND OUT WHICH MATRIX ELEMENTS ARE FULLY SUMMED
 C
@@ -805,7 +842,20 @@ C     CALL RED(ND1,-1)
 	GASH=GASH-QQ(L)*R1(ITMM)
       ENDIF
   580 CONTINUE
+      !nis,feb07,testing
+      !if (lco == 2) then
+      !  WRITE(*,*) 'Gelange zur Veraenderung von r1'
+      !  WRITE(*,*) 'Zeile 2: ', r1(2)
+      !endif
+      !-
       R1(LCO)=R1(LCO)+GASH
+      !nis,feb07,testing
+      !if (lco == 2) then
+      !  WRITE(*,*) 'Gelange zur Veraenderung von r1'
+      !  WRITE(*,*) 'Zeile 2: ', r1(2)
+      !  pause
+      !endif
+      !-
   600 CONTINUE
       CALL SECOND(TAA)
       ADT=TAA-TA
