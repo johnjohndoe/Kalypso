@@ -1,3 +1,4 @@
+C     Last change:  K    27 Feb 2007    2:43 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1080,8 +1081,8 @@ C-.....READ GENERATED GEOMETRY DATA
 C-
 
       write(*,*) 'going to getgeo'
-   
       CALL GETGEO
+
       write(*,*) 'back from getgeo'
       !nis,feb07,testing
       WRITE(*,*) 'number of surface nodes: ', nem
@@ -1417,15 +1418,16 @@ C-
       write(*,*) 'going to getbc', ibin
       CALL GETBC(IBIN)
 
-
-
 cipk jan99 set directions
        do n=1,ne
          if(imat(n) .gt. 900) then
            n1=nop(n,1)
            if(ndep(n1) .gt. 1) then
              !EFa Nov06, gesonderte Richtungsberechnung für 1D-Techke-Elemente
-             if (nop(n,2).EQ.-9999) then
+             !nis,feb07: Allow for numbered FFF midsides, although this code is not correct!!!
+             !if (nop(n,2).EQ.-9999) then
+             if (nop(n,2) < -1000) then
+             !-
                n2=nop(n,3)
              else
                n2=nop(n,2)
@@ -1631,7 +1633,10 @@ C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
         ENDIF
 
         !EFa Nov06, keine Berechnung fü 1D-Teschke-Elemente
-        if (nop(j,2).NE.-9999) then
+        !nis,feb07: Allow for numbered FFF midsides
+        !if (nop(j,2).NE.-9999) then
+        if (nop(j,2) > -1000) then
+        !-
         DO 101 K=1,NCN
           KL=IL(K,ILK)
 CIPK SEP05
@@ -1689,7 +1694,10 @@ CIPK OCT98 CONVERT TO F90
 CIPK SEP04  ENSURE VALUES AT ALL NODES
       DO N=1,NPM
         !EFa Nov06, keine Sicherung der Werte für 1D-Teschke-Elemente
-        if (nop(n,2).NE.-9999) then
+        !nis,feb07: Allow for numbered FFF midsides
+        !if (nop(n,2).NE.-9999) then
+        if (nop(n,2) > -1000) then
+        !-
           IF(NDEP(N) .GT. 1) THEN
             N1=NREF(N)+1
             NV=NDEP(N)+N1-2
@@ -1879,18 +1887,26 @@ CIPKNOV97
 cipk dec00 allow for gate option
 
           ELSEIF((IMAT(N) .LT. 900  .or.
-     +    IGTP(N) .NE. 0).and.nop(n,2).NE.-9999) THEN
+      !nis,feb07: Allow for numbered FFF midsides and documentation, it wasn't documented before. This code is also questionable!
+      !+    IGTP(N) .NE. 0).and.nop(n,2).NE.-9999) THEN
+     +    IGTP(N) .NE. 0) .and. nop(n,2) > -1000) THEN
+      !-
             CALL COEF1(N,0)
 CIPK NOV97
             CALL COEF1(N,3)
           !EFa Nov06, Aufruf der coef1dFE-Subroutine für 1D-Teschke-Elemente
           ELSEIF((IMAT(N) .LT. 900  .or.
-     +    IGTP(N) .NE. 0).and.nop(n,2).eq.-9999) THEN
+      !nis,feb07: Allow for numbered FFF midsides
+      !+    IGTP(N) .NE. 0).and.nop(n,2).eq.-9999) THEN
+     +    IGTP(N) .NE. 0) .and. nop(n,2) < -1000) THEN
+      !-
+
             CALL COEF1dFE(N,0)
             CALL COEF1dFE(N,3)
           ENDIF
         ENDIF
       ENDDO
+
 C
 Cipk nov97  Determine vertical lines for element numbers and number of
 c           elements below each node
@@ -2000,6 +2016,7 @@ CIPK NOV97 END CHANGES
  1333   CONTINUE
  1331 CONTINUE
       WRITE(LOUT,6195) NP,NE
+
 C
 CIPK NOV97 ADD CALL
       CALL ELFLOWS(IBIN)
@@ -2013,6 +2030,7 @@ C
 C       
       CALL HGENSPCL(1,0,0, 0.,QDM)
 C-
+
 
 C
       IF( IPRT .NE. 1 ) GO TO 156
@@ -2102,6 +2120,7 @@ cipk may06
 
 CIPK JUL01
       CALL FILE(2,ANAME)
+
 
       RETURN
 C-
