@@ -49,12 +49,19 @@ import java.awt.Color;
 public class ElevationColorControl
 {
   private static final Color DEFAULT_BASE_COLOR = Color.GREEN.darker();
+  
+  private static final Color DEFAULT_MIN_COLOR = Color.RED;
+  private static final Color DEFAULT_MAX_COLOR = Color.GREEN;
+  
   private static final Color DEFAULT_NO_ELEVATION_COLOR = Color.YELLOW;
   private static final int DEFAULT_COLOR_INDEX = 10;
   private static final int DEFAULT_TRANSPARENCY_INDEX = 50;
   
   
-  private static Color baseColor = DEFAULT_BASE_COLOR;
+  private static Color m_baseColor = DEFAULT_BASE_COLOR;
+  private static Color m_minColor = DEFAULT_MIN_COLOR;
+  private static Color m_maxColor = DEFAULT_MAX_COLOR;
+  
   private static Color noElevationColor = DEFAULT_NO_ELEVATION_COLOR;
   
   private static int colorIndex = DEFAULT_COLOR_INDEX;
@@ -66,11 +73,17 @@ public class ElevationColorControl
                                               double minElevation, 
                                               double maxElevation)
   {
-    Color curBaseColor = getBaseColor();
+    Color curminColor = getMinColor();
     
-    if(curBaseColor==null)
+    if(curminColor==null)
     {
-      curBaseColor = DEFAULT_BASE_COLOR;      
+      curminColor = DEFAULT_MIN_COLOR;      
+    }
+    Color curmaxColor = getMaxColor();
+    
+    if(curmaxColor==null)
+    {
+      curmaxColor = DEFAULT_MAX_COLOR;      
     }
     
     Color curNoElevatonColor = getNoElevationColor();
@@ -82,20 +95,41 @@ public class ElevationColorControl
     return new SimpleElevationColorModel(
                           minElevation, 
                           maxElevation, 
-                          curBaseColor,
+                          curminColor,
+                          curmaxColor,
                           curNoElevatonColor,
                           getTransparencyIndex(),
+                          colorIndex,
                           getMinMaxStatus() );
   }
-  
+
   public static void setBaseColor( Color baseColor1 )
   {
-    ElevationColorControl.baseColor = baseColor1;
+    ElevationColorControl.m_baseColor = baseColor1;
   }
-  
+  public static void setMinColor( Color minColor )
+  {
+    m_minColor = minColor;
+  }
+
+  public static void setMaxColor( Color maxColor )
+  {
+    m_maxColor = maxColor;
+  }
+
   public static Color getBaseColor( )
   {
-    return baseColor;
+    return m_baseColor;
+  }
+
+  public static Color getMaxColor( )
+  {
+    return m_maxColor;
+  }
+
+  public static Color getMinColor( )
+  {
+    return m_minColor;
   }
 
   public static Color getNoElevationColor( )
@@ -136,10 +170,5 @@ public class ElevationColorControl
   public static void setTransparencyIndex( int transparencyIndex1 )
   {
     ElevationColorControl.transparencyIndex = transparencyIndex1;
-  }
-  
-  
-  
-  
-  
+  } 
 }

@@ -58,8 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class ElevationTheme extends AbstractKalypsoTheme
 {
   private ITerrainElevationModel terrainElevationModel;
-  private IElevationColorModel colorModel=
-        new SimpleElevationColorModel();
+
   
   public ElevationTheme( String name, IMapModell mapModel )
   {

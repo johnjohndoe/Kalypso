@@ -81,11 +81,11 @@ public class ColorModelChangeComponent
   private PainterElevationColorModel paintModel = new PainterElevationColorModel();
   private Section elevationColorSection;
   private PaintListener drawListener;
-  private Canvas windowCanvas;
+  Canvas windowCanvas;
   private int selectedRects = 0;
-  private GC gc;
+  GC gc;
   private Label minLabel;
-  private Color colorAWTChoice;
+  Color colorAWTChoice;
   private FormToolkit toolkit;
   private Button checkBtnOptionMinMax;
   private Display disp;
@@ -202,7 +202,7 @@ public class ColorModelChangeComponent
     
   }
 
-  private void paintElevationColorSelection( GC graphicCanvas )
+  void paintElevationColorSelection( GC graphicCanvas )
   {
     selectedRects = ElevationColorControl.getColorIndex();
     int coord = (((int) (Math.ceil( 140D / selectedRects ))));//140
@@ -284,31 +284,67 @@ public class ColorModelChangeComponent
     optionsColorGroup.setText( "Optionen" );
     optionsColorGroup.setLayout( optionsColorGrpLayout );
 
-    Label maximumColor = new Label( optionsColorGroup, SWT.FLAT );
-    maximumColor.setText( "Grundfarbe" );
+    final Label maxColor = new Label( optionsColorGroup, SWT.FLAT );
+    maxColor.setText( "Farbe 1" );
     optionsColorFormData = new FormData();
     optionsColorFormData.left = new FormAttachment( 0, 5 );
     optionsColorFormData.top = new FormAttachment( 0, 5 );
-    maximumColor.setLayoutData( optionsColorFormData );
-    final ColorSelector colorSelector = new ColorSelector( optionsColorGroup );
-    Button maxColorBtn = colorSelector.getButton();
+    maxColor.setLayoutData( optionsColorFormData );
+    final ColorSelector maxColorSelector = new ColorSelector( optionsColorGroup );
+    
+    final Button maxColorBtn = maxColorSelector.getButton();
     maxColorBtn.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e)
       {
-        colorAWTChoice = new Color( colorSelector.getColorValue().red, colorSelector.getColorValue().green, colorSelector.getColorValue().blue );
-        ElevationColorControl.setBaseColor( colorAWTChoice );
+        colorAWTChoice = new Color( maxColorSelector.getColorValue().red, maxColorSelector.getColorValue().green, maxColorSelector.getColorValue().blue );
+        ElevationColorControl.setMaxColor( colorAWTChoice );
         windowCanvas.redraw();
       }
     } );
-     colorSelector.setColorValue( new RGB(ElevationColorControl.getBaseColor().getRed(),
+     maxColorSelector.setColorValue( new RGB(ElevationColorControl.getBaseColor().getRed(),
         ElevationColorControl.getBaseColor().getGreen(),
         ElevationColorControl.getBaseColor().getBlue()));     
     maxColorBtn.setText( "Auswahl" );
     optionsColorFormData = new FormData();
-    optionsColorFormData.left = new FormAttachment(maximumColor, 28 );
-    optionsColorFormData.top = new FormAttachment( 0, 5 );
+    optionsColorFormData.left = new FormAttachment(maxColor, 18 );
+//    optionsColorFormData.top = new FormAttachment( 0, 5 );
     maxColorBtn.setLayoutData( optionsColorFormData );
+    
+
+    final Label minColor = new Label( optionsColorGroup, SWT.FLAT );
+    minColor.setText( "Farbe 2" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment( 0, 105 );
+    optionsColorFormData.top = new FormAttachment( 0, 5 );
+    minColor.setLayoutData( optionsColorFormData );
+    final ColorSelector minColorSelector = new ColorSelector( optionsColorGroup );
+    
+    
+    final Button minColorBtn = minColorSelector.getButton();
+    minColorBtn.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( SelectionEvent e)
+      {
+        colorAWTChoice = new Color( minColorSelector.getColorValue().red, minColorSelector.getColorValue().green, minColorSelector.getColorValue().blue );
+        ElevationColorControl.setMinColor( colorAWTChoice );
+        windowCanvas.redraw();
+      }
+    } );
+     minColorSelector.setColorValue( new RGB(ElevationColorControl.getMinColor().getRed(),
+        ElevationColorControl.getMinColor().getGreen(),
+        ElevationColorControl.getMinColor().getBlue()));     
+     minColorBtn.setText( "Auswahl" );
+    optionsColorFormData = new FormData();
+    optionsColorFormData.left = new FormAttachment(minColor, 18 );
+//    optionsColorFormData.top = new FormAttachment( 0, 5 );
+    minColorBtn.setLayoutData( optionsColorFormData );
+    
+    //final TEXT txtMinElevation =toolkit.createText(, SWT.FLAT);
+    
     
     noElevationColorLabel = new Label( optionsColorGroup, SWT.NONE );
     noElevationColorLabel.setText( "Fehlfarbe" );
@@ -321,6 +357,8 @@ public class ColorModelChangeComponent
     Button noElevationColorBtn = noColorSelector.getButton();
     noElevationColorBtn.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         noColorAWTChoice = new Color( noColorSelector.getColorValue().red, noColorSelector.getColorValue().green, noColorSelector.getColorValue().blue );
@@ -332,7 +370,7 @@ public class ColorModelChangeComponent
         ElevationColorControl.getNoElevationColor().getBlue()));
     optionsColorFormData = new FormData();
     noElevationColorBtn.setText( "Auswahl" );
-    optionsColorFormData.left = new FormAttachment( maximumColor, 28 );
+    optionsColorFormData.left = new FormAttachment( maxColor, 18 );
     optionsColorFormData.top = new FormAttachment( maxColorBtn, 8 );
     noElevationColorBtn.setLayoutData( optionsColorFormData );
 
@@ -350,6 +388,8 @@ public class ColorModelChangeComponent
     stepper.setSelection( ElevationColorControl.getColorIndex());
     stepper.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         
@@ -383,6 +423,8 @@ public class ColorModelChangeComponent
     transparencyStepper.setSelection( ElevationColorControl.getTransparencyIndex());
     transparencyStepper.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         ElevationColorControl.setTransparencyIndex( transparencyStepper.getSelection() );
@@ -409,6 +451,8 @@ public class ColorModelChangeComponent
     checkBtnOptionMinMax.setLayoutData( optionsColorFormData );
     checkBtnOptionMinMax.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         System.out.println( "Val :" + checkBtnOptionMinMax.getSelection() );
@@ -421,6 +465,8 @@ public class ColorModelChangeComponent
     Button applyColors = new Button( optionsColorGroup, SWT.NONE );
     applyColors.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         redrawElevationLayer();

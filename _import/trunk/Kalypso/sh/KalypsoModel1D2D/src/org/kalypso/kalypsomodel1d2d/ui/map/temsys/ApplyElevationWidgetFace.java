@@ -269,7 +269,7 @@ class ApplyElevationWidgetFace
     tableWrapData.heightHint = 208;//168
     tableWrapData.align = TableWrapData.FILL_GRAB;
     elevationColorSection.setLayoutData( tableWrapData );
-
+    
     elevationColorSection.setExpanded( false );
     elevationColorSection.setEnabled( true );
 
