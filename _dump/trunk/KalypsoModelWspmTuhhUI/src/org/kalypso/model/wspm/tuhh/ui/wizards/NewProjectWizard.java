@@ -177,6 +177,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     if( status.matches( IStatus.ERROR ) )
     {
       ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
       deleteProject( project );
     }
     else if( status.matches( IStatus.CANCEL ) )
