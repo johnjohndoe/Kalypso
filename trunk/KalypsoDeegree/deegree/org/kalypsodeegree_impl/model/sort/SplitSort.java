@@ -471,10 +471,8 @@ public class SplitSort implements FeatureList
    */
   public void accept( final FeatureVisitor visitor )
   {
-    for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+    for( final Object object : m_objects )
     {
-      // TODO: we got a concurrent modification exception here once
-      final Object object = iter.next();
       if( object instanceof Feature )
         visitor.visit( (Feature) object );
     }

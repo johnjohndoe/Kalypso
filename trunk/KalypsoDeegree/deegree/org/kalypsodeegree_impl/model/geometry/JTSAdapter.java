@@ -163,6 +163,8 @@ public class JTSAdapter
     return geometry;
   }
 
+  
+  
   /**
    * Converts a JTS- <tt>Geometry</tt> object to a corresponding <tt>GM_Object</tt>.
    * <p>
@@ -250,6 +252,15 @@ public class JTSAdapter
       return new Coordinate( asArray[0], asArray[1], asArray[2] );
     return new Coordinate( asArray[0], asArray[1] );
   }
+  
+  public static GM_Position wrap( final Coordinate coord )
+  {
+    if( Double.isNaN( coord.z ) )
+      return new GM_Position_Impl( coord.x, coord.y );
+
+    return new GM_Position_Impl( coord.x, coord.y, coord.z );
+  }
+
 
   /**
    * Converts a <tt>GM_MultiPoint</tt> to a <tt>MultiPoint</tt>.
@@ -416,14 +427,15 @@ public class JTSAdapter
    *          a <tt>Point</tt> object
    * @return the corresponding <tt>GM_Point</tt>
    */
-private static GM_Point wrap( Point point )
+  private static GM_Point wrap( final Point point )
   {
     final Coordinate coord = point.getCoordinate();
     if( Double.isNaN( coord.z ) )
-        return new GM_Point_Impl( coord.x, coord.y, null );
-    
+      return new GM_Point_Impl( coord.x, coord.y, null );
+
     return new GM_Point_Impl( coord.x, coord.y, coord.z, null );
   }
+
   /**
    * Converts a <tt>MultiPoint</tt> to a <tt>GM_MultiPoint</tt>.
    * <p>

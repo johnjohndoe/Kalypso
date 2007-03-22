@@ -221,7 +221,17 @@
 	<xs:element name="tupleResult" substitutionGroup="fv:control">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType"/>
+				<xs:extension base="fv:PropertyControlType">
+					<xs:sequence>
+						<xs:element name="componentFormat">
+							<xs:complexType>
+								<xs:attribute name="id" type="xs:string"/>
+								<xs:attribute name="format" type="xs:string"/>
+								<xs:attribute name="alignment" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
