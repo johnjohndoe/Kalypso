@@ -1,3 +1,4 @@
+C     Last change:  EF    7 Mar 2007   12:02 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 ADD FOR POWER STATION RECYCLING
 CIPK  LAST UPDATE APR 18 2001 MAKE THE HSPEC CONSISTENTLY "LN"
@@ -172,7 +173,7 @@ cipk APR96 save data to a scratch file
           qrandb=qf!EFa Dec06
           !nis,feb07,testing
           WRITE(*,*) 'Randbedingung ist: ', qrandb
-          pause
+          !pause
           !-
 
           !nis,sep06,com: Power Station control, not for standard inflow

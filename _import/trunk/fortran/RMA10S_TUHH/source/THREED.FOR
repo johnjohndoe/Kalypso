@@ -3,7 +3,7 @@ cipk  last update August 1 2001 correct bug that occurs when IMAT=0 in elements
 CIPK  LAST UPDATE APR 21 2001  ADD NRELSF FOR SIDE ELEMENTS
 cipk  last update Nov 8 1999 reset values for eddy coefficients for potential collapse
 cipk  last update Jan 3 1999
-C     Last change:  K     2 Feb 2007    4:44 pm
+C     Last change:  K    22 Feb 2007    6:55 pm
 CIPK  LATEST UPDATE NOV 17 1997
       SUBROUTINE THREED
       USE BLK10MOD
@@ -55,8 +55,8 @@ C-
   225 NREF(N)=0
 
 !nis,jan07,testing
-      WRITE(*,*) 'In threed.for'
-      pause
+!      WRITE(*,*) 'In threed.for'
+!      pause
 !-
 
 C-
