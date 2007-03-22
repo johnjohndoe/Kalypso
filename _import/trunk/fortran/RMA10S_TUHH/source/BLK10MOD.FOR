@@ -1,4 +1,4 @@
-C     Last change:  K    26 Jan 2007    2:12 pm
+C     Last change:  K    15 Feb 2007    6:32 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -30,6 +30,9 @@ C-
 cipk aug06  add input options    
 !NiS,mar06      add MAXA as dimensioner for arc-array, MaxT for number of 1D-2D-TRANSITION ELEMENTS
      +          ,MaxA, MaxT
+!-
+!nis,feb07: Add MaxFFFMS as counter for midside nodes of Flow1DFE elements
+     +          ,MaxFFFMS
 !-
 !nis,nov06      add MaxLT as dimensioner for line-transitions
      +          ,MaxLT
