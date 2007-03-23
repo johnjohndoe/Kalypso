@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 
 /**
@@ -56,13 +57,14 @@ import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 public class FeatureAssociationQNameActionFilter implements IActionFilterEx
 {
   public final static String ATTR_QNAME = "featureAssociationQname"; //$NON-NLS-1$
+  public final static String ATTR_LIST = "featureAssociationList"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()
    */
   public String[] getNames( )
   {
-    return new String[] { ATTR_QNAME };
+    return new String[] { ATTR_QNAME, ATTR_LIST };
   }
 
   /**
@@ -70,10 +72,15 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
    */
   public boolean testAttribute( final Object target, final String name, final String value )
   {
+    final String msg = String.format( "target: %s\tname: %s\tvalue: %s", target, name, value );
+    System.out.println( msg );
+    
     if( !(target instanceof FeatureAssociationTypeElement) )
       return false;
     
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) target;
+    final IRelationType fateRT = fate.getAssociationTypeProperty();
+    final IFeatureType featureType = fateRT.getTargetFeatureType();
 
     if( ATTR_QNAME.equals( name ) )
     {
@@ -82,10 +89,14 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
       {
         final QName qName = QNameUtilities.createQName( string );
 
-        final IFeatureType featureType = fate.getAssociationTypeProperty().getTargetFeatureType();
         if( GMLSchemaUtilities.substitutes( featureType, qName ) )
           return true;
       }
+    }
+    else if( ATTR_LIST.equals( name ))
+    {
+      final boolean isTrue = Boolean.parseBoolean( value );
+      return fateRT.isList() == isTrue; 
     }
 
     return false;
