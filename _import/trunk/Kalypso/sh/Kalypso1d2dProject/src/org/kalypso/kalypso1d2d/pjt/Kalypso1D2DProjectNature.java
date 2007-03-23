@@ -59,6 +59,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.workflow.IWorkflowSystem;
 import org.kalypso.afgui.workflow.WorkflowSystem;
@@ -146,7 +149,9 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     }
     catch( final CoreException e )
     {
-      // this exception has already been logged
+      // this exception has already been logged, only open error dialog
+      final Display display = PlatformUI.getWorkbench().getDisplay();
+      ErrorDialog.openError( display.getActiveShell(), "Fehler", "Konnte Workflow-Beschreibung nicht lesen.", StatusUtilities.statusFromThrowable( e ) );
       m_scenarioManager = null;
       m_workflowSystem = null;
     }
@@ -219,8 +224,8 @@ public class Kalypso1D2DProjectNature implements IProjectNature
       // We do use the apache tools, which let us at least set the encoding.
       // Try and error led to use the encoding: "IBM850" for WinZippes .zip's.
       // REMARK: This doesn´t work in the deploy (I don´t know why???) -use simple unzip instead works!!!
-//      ZipUtilities.unzipApache( zipStream, targetContainer.getLocation().toFile(), true, "IBM850" );
-      ZipUtilities.unzip( zipStream, targetContainer.getLocation().toFile());
+      // ZipUtilities.unzipApache( zipStream, targetContainer.getLocation().toFile(), true, "IBM850" );
+      ZipUtilities.unzip( zipStream, targetContainer.getLocation().toFile() );
       zipStream.close();
       monitor.worked( 1 );
 
