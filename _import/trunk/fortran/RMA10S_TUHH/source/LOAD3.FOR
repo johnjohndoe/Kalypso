@@ -1,10 +1,13 @@
-C     Last change:  EF    2 Mar 2007    4:28 pm
+cipk  last update feb 26 2006 corect logic for 1-d structures and limit reordering to 1
+cipk  last update dec 13 2006 seup for type QI (experimental)
+cipk  last update nov 28 2006 allow for 1-d control structures
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
+C     Last change:  IPK   5 Oct 98    3:39 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -17,6 +20,9 @@ cipk  last update Sep 4 1996  change logic for type 2 spec's of constits
       USE BLK10
       USE BLKSUBMOD
       USE BLKSANMOD
+CIPK DEC06      
+      USE PARAMMOD
+      USE BLKSBG
       SAVE
 !NiS,may06:testing for non defined variables
 !      implicit none
@@ -74,36 +80,12 @@ CZZZ
       !EXTLDEL=0
       !-
 
-      !NiS,may06: testing
-      !testing IHGNN and JLIN
-      !WRITE(*,*)IHGNN, 'ihgnn'
-      !WRITE(*,*)JLIN(ihgnn), 'JLIN(',ihgnn,')'
-      !testing ICK
-      !WRITE(*,*) ICK, 'ICK'
-      !testing MR
-      !WRITE(*,*)Mr1,'MR1'
-      !-
-
-      !NiS,may06: back substitution of point and element saver
       NP=NPSAV
       NE=NESAV
 
       !NiS,may06: do for every node
 
-!NiS,may06: test
-!      OPEN(9999,'testfile.txt')
-!-
       do n=1,np
-
-!NiS,may06: test
-!      testing variable iactvbc
-!      IF(iactvbc(n).gt.0 .and. maxn.eq.1)
-!    +   WRITE(9999,*) 'iactvbc(',N,') =', iactvbc(N)
-!      testing node assignment at surface
-!      IF(N.ne.nsurf(n)) WRITE(9999,*) 'NSURF(',N,') = ', NSURF(N)
-!      testing the nodes below
-!      if (nref(n).ne.0) WRITE(9999,*) 'NREF(',N,') = ', NREF(N)
-!-
 
           IF(MOD(NFIX(N),100)/10 .EQ. 2) THEN
             ibc=iactvbc(n)
@@ -126,10 +108,6 @@ CZZZ
             endif
 	    endif
       enddo
-
-!NiS,may06: test
-!      CLOSE(9999)
-!-
 
 c      write(75,*) 'load-76 nfix(93),nfix(634)',nfix(93),nfix(634),
 c     +    maxn,iteqv(maxn)
@@ -167,9 +145,6 @@ C-
 
       !NiS,may06: for every element
       DO 199 J=1,NE
-!NiS,may06: testing
-!      if (maxn.eq.1) WRITE(9998,*) 'IMAT(',J,') = ', IMAT(J)
-!-
 
 CIPK DEC00 REVISE TO ALLOW FOR GATE STRUCTURE
 
@@ -235,7 +210,6 @@ C-
           ENDIF
 CIPK OCT98 CONVERT TO F90
           N1=ABS(NSURF(N))
-
           DIF=VDIR-VOUTN(N1)
           IF(DIF .GT. 2.*PI2) DIF=DIF-4.*PI2
           IF(DIF .LT. -2.*PI2) DIF=DIF+4.*PI2
@@ -350,7 +324,6 @@ CIPK DEC00       test for gate structure
             IF(NDUPJ(NGT) .GT. 0  .AND. NDDNJ(NGT) .GT. 0) THEN
               IF(WSLL(NDUPJ(NGT)) .LT.  WSLL(NDDNJ(NGT))   .AND.
      +          WSLL(NDUPJ(NGT)) .GT. BJ(NGT)) THEN
-
 	          CALL SETGT(N)
    	          igtcl(n)=1
               ELSE
@@ -374,7 +347,6 @@ CC               QFL=ACR*SQRT(VEL(1,NDFLJ(NGT))**2+VEL(2,NDFLJ(NGT))**2)
                   ENDIF
 	          ELSE
 			    IF(QFL .GT. AJ(NGT)) THEN
-
 	              CALL SETGT(N)
                     igtcl(n)=1
                   ELSE
@@ -393,7 +365,6 @@ CC               QFL=ACR*SQRT(VEL(1,NDFLJ(NGT))**2+VEL(2,NDFLJ(NGT))**2)
      +		  qfl,aj(ngt)
 	          write(75,*) 'vels',VEL(1,NDFLJ(NGT)),Vold(1,NDFLJ(NGT))
 	          IF(WSLL(NDUPJ(NGT)) .LT. BJ(NGT)) THEN
-
 	            CALL SETGT(N)
                   igtcl(n)=1
 	          ELSEIF(AJ(NGT) .GT. 0) THEN
@@ -459,7 +430,7 @@ cipk jun05      vel+ dep + sal
           NBC(N,6)=0
  2205   CONTINUE
       ELSEIF(ITEQV(MAXN) .EQ. 1) THEN
-cipk jun05      vel+ dep
+cipk jun05      vel+ dep	  
         DO 221 N=1,NP
           NBC(N,4)=0
           NBC(N,5)=0
@@ -554,6 +525,7 @@ cipk jun05      vels+sed
  2282   CONTINUE
       ENDIF
 
+
       do n=1,npm
 	  if(icesw .gt. 0) then
 	    if(icethk(n) .gt. 0  .or. 
@@ -568,6 +540,8 @@ cipk jun05      vels+sed
 	    endif
 	  endif
 	enddo
+
+
 
 C-
 C...... Install special values for one-two dimension intersections
@@ -631,9 +605,6 @@ cipk may02 switch ndf to 7
             IF(NLN .EQ. NOP(NN,K)) GO TO 250
             ND=NOP(NN,K)
             IF(ND .EQ. 0) GO TO 250
-!NiS,may06:testing transition
-!            WRITE(*,*) 'Element: ', NN
-!-
             NBC(ND,1)= -NLN
             NBC(ND,2)= -NLN
             NBC(ND,3)=-NLN
@@ -650,21 +621,23 @@ C
         ELSEIF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 
 cipk JUN05 first analyse 2-d structures
-          SIDL1=DIST(NOP(NN,1),NOP(NN,3))
-          SIDL2=DIST(NOP(NN,7),NOP(NN,5))
-          NMID1=NOP(NN,2)
-          NMID2=NOP(NN,6)
-          IF(ELTON(NMID1,1) .NE. 0) THEN
-            NAD1=ELTON(NMID1,1)
-          ELSE
-            NAD1=ELTON(NMID1,2)
-          ENDIF            
-          IF(ELTON(NMID2,1) .NE. 0) THEN
-            NAD2=ELTON(NMID2,1)
-          ELSE
-            NAD2=ELTON(NMID2,2)
-          ENDIF            
+CIPK NOV06 MOVE UP
           IF(NCORN(NN) .EQ. 8) THEN
+            SIDL1=DIST(NOP(NN,1),NOP(NN,3))
+            SIDL2=DIST(NOP(NN,7),NOP(NN,5))
+            NMID1=NOP(NN,2)
+            NMID2=NOP(NN,6)
+            IF(ELTON(NMID1,1) .NE. 0) THEN
+              NAD1=ELTON(NMID1,1)
+            ELSE
+              NAD1=ELTON(NMID1,2)
+            ENDIF            
+            IF(ELTON(NMID2,1) .NE. 0) THEN
+              NAD2=ELTON(NMID2,1)
+            ELSE
+              NAD2=ELTON(NMID2,2)
+            ENDIF            
+CIPK NOV06          IF(NCORN(NN) .EQ. 8) THEN
 
             DO K=1,3
               N1=NOP(NN,K)
@@ -675,7 +648,12 @@ cipk JUN05 first analyse 2-d structures
               IF(N1 .GT. 0) THEN
                 IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
                   IWTYP=N1
-                  CALL WFORM(Q1,VEL(3,N1),WSLL(N1),WV1,VEL(3,N2)
+                  widem=sqrt((cord(n2,2)-cord(n1,2))**2+
+     +            (cord(n2,1)-cord(n1,1))**2)
+CIPK FEB07
+                  HL1=VEL(3,N1)
+                  HL2=VEL(3,N2)
+                  CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
                 ELSE
 	            CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
@@ -712,7 +690,7 @@ CIPK  TEST
                       NBC(N2,1)=1
                       NBC(N2,2)=1
 	              endif
-	              if(inovel .gt. 0) then
+	              if(inovel .gt. 0) then 
                       IF(ABS(Q1) .GT. 0) then
 	                  NBC(N2,INOVEL+3)=-N1
 	                ENDIF
@@ -729,17 +707,17 @@ CIPK  TEST
               ENDIF
             ENDDO
 
-         QFLUX=SIDL1*(Q1C(1)+Q1C(2)*4.+Q1C(3))/6.
-         IF(QFLUX .GT. 0) THEN
-         FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,2))-VEL(3+INOVEL,NOP(NN,6)))
-         ELSE
-         FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,6))-VEL(3+INOVEL,NOP(NN,2)))
-         ENDIF
-         IF(QFLUX .GT. 0.) THEN
-           EXTLDEL(NAD2)=EXTLDEL(NAD2)+FLUX/AREA(NAD1)
-         ELSE
-           EXTLDEL(NAD1)=EXTLDEL(NAD1)-FLUX/AREA(NAD1)
-         ENDIF
+            QFLUX=SIDL1*(Q1C(1)+Q1C(2)*4.+Q1C(3))/6.
+            IF(QFLUX .GT. 0) THEN
+            FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,2))-VEL(3+INOVEL,NOP(NN,6)))
+            ELSE
+            FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,6))-VEL(3+INOVEL,NOP(NN,2)))
+            ENDIF
+            IF(QFLUX .GT. 0.) THEN
+              EXTLDEL(NAD2)=EXTLDEL(NAD2)+FLUX/AREA(NAD1)
+            ELSE
+              EXTLDEL(NAD1)=EXTLDEL(NAD1)-FLUX/AREA(NAD1)
+            ENDIF
 
 C         WRITE(203,'(3I6,6F15.6)') MAXN,NN,3+INOVEL,
 C     +    QFLUX,FLUX,EXTLDEL(NAD1) 
@@ -794,12 +772,32 @@ c       now do 1-d structures
       !NiS,may06,com: get corner nodes
             N1=NOP(NN,1)
             N2=NOP(NN,3)
-!NiS,may06: testing 1D-elements
-!WRITE(*,*) 'Element: ', NN
-!WRITE(*,*) 'ISUBMEL: ', ISUBMEL(NN)
-!-
-
+            NAD1=ELTON(N1,1)
+            NAD2=ELTON(N2,1)
             IF(N1 .GT. 0) THEN
+
+              IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+                IWTYP=N1
+CIPK FEB07
+                  HL1=VEL(3,N1)
+                  HL2=VEL(3,N2)
+                CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
+     +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
+              ELSE
+	          CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+	        ENDIF
+              IF(NTMREF(IMAT(NN)) .NE. 0) THEN
+                CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
+     +             ,QFACT)
+CIPK DEC05 ADD QFACT
+                Q1=Q1*QFACT
+                IF(ISWTOF .EQ. 1) THEN
+                  Q1=0.0
+   	          ENDIF
+	        ENDIF
+              Q1=Q1*(WIDTH(N1)*VEL(3,N1)
+     +           +(SS1(N1)+SS2(N1))*VEL(3,N1)*VEL(3,N1)/2.)
+
               IF(ISUBMEL(nn) .EQ. 1) THEN
                 N2=NOP(NN,3)
                 NBC(N1,1)=1
@@ -822,6 +820,21 @@ c       now do 1-d structures
               NBC(N1,1)=1
             ENDIF          
             end if
+
+            IF(INOVEL .GT. 0.) THEN
+             N3=NOP(NN,2)
+             NBC(N3,INOVEL+3)=0
+             IF(Q1 .GT. 0) THEN
+              FLUX=Q1*(VEL(3+INOVEL,NOP(NN,1))-VEL(3+INOVEL,NOP(NN,3)))
+             ELSE
+              FLUX=Q1*(VEL(3+INOVEL,NOP(NN,3))-VEL(3+INOVEL,NOP(NN,1)))
+             ENDIF
+             IF(Q1 .GT. 0.) THEN
+              EXTLDEL(NAD2)=EXTLDEL(NAD2)+FLUX/AREA(NAD2)
+             ELSE
+              EXTLDEL(NAD1)=EXTLDEL(NAD1)-FLUX/AREA(NAD1)
+             ENDIF
+            ENDIF
 
           ENDIF
 CIPK JUN05 FINISHED CHANGES
@@ -866,6 +879,7 @@ cipk oct98 update to f90
           ENDIF
   255   CONTINUE
       ENDIF
+  260 CONTINUE
 
       !nis,jan07: Add control for 1D-2D-line-transitions
       if (maxLT.ne.0) then
@@ -936,7 +950,7 @@ cipk oct98 update to f90
 
 
 C
-C    Insert velocity distribution for line types with negative pointer
+C    Insert velocity distribution for line types with negative pointer 
 C
 CIPK JAN98 EXPAND TEST            8 AND 9
       IF(ITEQV(MAXN) .NE. 2  .AND.  ITEQV(MAXN) .NE. 8  
@@ -1153,6 +1167,7 @@ cu            ENDIF
         ENDIF
   285 CONTINUE
 
+
 CIPK JAN99 END FOR JUNCTIONS
 
 C-
@@ -1263,7 +1278,6 @@ cipk dec98 reverse 5 and 6 to corect bug
       ELSE
         CALL DISFCT
       ENDIF
-
 C
 C...... Dropout equations if possible
 C
@@ -1336,7 +1350,29 @@ CIPK MAY02 Eliminate mid-sides
 	  enddo
 	ENDIF
 
-!NiS,jun06,comment: At this point the equation numbers will be assigned to the NBC-array
+CIPK DEC06  ALLOW FOR EQUAL FLOW AND DEPTH BC'S
+    
+      DO N=1,NQLDS
+        IF(IQID(N) .EQ. 1) THEN
+          J=NHYDQ(N)
+          NMID=(LMT(J)+1)/2
+          NODMID=LINE(J,NMID)
+          DO K=1,LMT(J)
+            IF(LINE(J,K) .NE. NODMID) THEN
+              NBC(LINE(J,K),1)=-NODMID
+                VEL(1,LINE(J,K))=VEL(1,NODMID)
+                VEL(2,LINE(J,K))=VEL(2,NODMID)
+                VOLD(1,LINE(J,K))=VOLD(1,NODMID)
+                VOLD(2,LINE(J,K))=VOLD(2,NODMID)
+              IF(MOD(K,2) .EQ. 1) THEN
+                NBC(LINE(J,K),3)=-NODMID
+                VEL(3,LINE(J,K))=VEL(3,NODMID)
+                VOLD(3,LINE(J,K))=VOLD(3,NODMID)
+              ENDIF
+            ENDIF
+          ENDDO
+        ENDIF
+      ENDDO
 C
 C...... Rearrange array
 C
@@ -1372,29 +1408,17 @@ C-
 CIPK MAY02 SWITCH NDF TO 7
         DO 305 M=1,7
           IF(NBC(N,M) .LT. 0) THEN
-
-!NiS,may06:testing the transitions
-!      IF(n.eq.12816.or.n.eq.12790.or.n.eq.12791) WRITE(*,*) N,M,nbc(n,m)
-!-
-
             NRF=-NBC(N,M)
               itmp = nbc(nrf,m)
               if (nrf .gt. n  .and. itmp .lt. 0)  goto 305
             NBC(N,M)=NBC(NRF,M)
-
-!NiS,may06:testing the transitions
-!      IF(n.eq.12816.or.n.eq.12790.or.n.eq.12791) WRITE(*,*) N,M,nbc(n,m)
-!-
-
-
           ENDIF
   305   CONTINUE
   310 CONTINUE
  3111     continue
 ccycw added for full 3D optimisation 19/06/96 currently testing
-      !NiS,may06:if reordering within RMA10S should be done, then ioptim.eq.2
-      !nis,feb07,testing
-      if(ioptim .LT. 2) then
+cipk feb07 reduce test to make it entered only once
+      if(ioptim .LT. 1) then
 C         write(76,*) 'load ivrsid1',ivrsid
          call optim
          ioptim=1+IOPTIM
@@ -1438,7 +1462,6 @@ cipk jun05
      +    LPS(MR1),rkeep(0:mR1),ekeep(mR1),rkeepeq(mR1))
 	  ENDIF
 	ENDIF
-
 
 C      DO N=1,NP
 C        WRITE(75,'(8I5)') N,(NBC(N,M),M=1,7)
