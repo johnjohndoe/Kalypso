@@ -1,3 +1,4 @@
+cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
 CIPK LAST UPDATE may 30 2006 add mass output and refine compuatation of mass laid down
@@ -21,7 +22,7 @@ C
       USE BLKDRMOD
       USE BLKSEDMOD
       USE BLKSANMOD
-
+ 
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKSED.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
@@ -248,27 +249,31 @@ cipk may06 skip of morphology off
       DO M=1,NEM
 
        IF(IMAT(M) .GT. 0) THEN
-        DO K=1,NCORN(M),2
-	    N=NOP(M,K) 
+         DO K=1,ncorn(m),2
+	     N=NOP(M,K) 
+cipk jan07	     
+           if(ncorn(m) .eq. 5 .and. k .eq. 3) then
+             n=nop(m,k+1)	     
+           endif
 CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
-	    IF(IPASST(N) .EQ. 0) THEN
-	      IPASST(N)=1
-      	      DEP=VEL(3,N)
-	      AO(N)=AO(N)+DEPINCR(N)
-              ADO(N)=ADO(N)+DEPINCR(N)
-              ADB(N)=ADB(N)+DEPINCR(N)
-              ADT(N)=ADT(N)+DEPINCR(N)
-              HEL(N)=WSLL(N)-ADO(N)
-              CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-              VEL(3,N)=HTP
-	      RATIO=vel(3,n)/DEP
-	      VEL(1,N)=VEL(1,N)/RATIO
-	      VEL(2,N)=VEL(2,N)/RATIO
-	      VDOT(1,N)=VDOT(1,N)/RATIO
-	      VDOT(2,N)=VDOT(2,N)/RATIO
+	     IF(IPASST(N) .EQ. 0) THEN
+	       IPASST(N)=1
+      	     DEP=VEL(3,N)
+	       AO(N)=AO(N)+DEPINCR(N)
+             ADO(N)=ADO(N)+DEPINCR(N)
+             ADB(N)=ADB(N)+DEPINCR(N)
+             ADT(N)=ADT(N)+DEPINCR(N)
+             HEL(N)=WSLL(N)-ADO(N)
+             CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
+             VEL(3,N)=HTP
+	       RATIO=vel(3,n)/DEP
+	       VEL(1,N)=VEL(1,N)/RATIO
+	       VEL(2,N)=VEL(2,N)/RATIO
+	       VDOT(1,N)=VDOT(1,N)/RATIO
+	       VDOT(2,N)=VDOT(2,N)/RATIO
 cipk update suspended sed
-	      VEL(6,N)=VEL(6,N)/RATIO
-	      VDOT(6,N)=VDOT(6,N)/RATIO
+	       VEL(6,N)=VEL(6,N)/RATIO
+	       VDOT(6,N)=VDOT(6,N)/RATIO
               BEDEL(N)=DELBED(N)
               BEDELO(N)=BEDEL(N)
               DEPINCR(N)=0.
@@ -280,14 +285,36 @@ cipk may06 separate loops to assure correct updating
       DO M=1,NEM
 
        IF(IMAT(M) .GT. 0) THEN
-        DO K=2,NCORN(M),2
+cipk jan07
+        ncn=ncorn(m)       
+        nlg=2
+        nhg=ncn
+        ninc=2
+        if(ncn .eq. 5) then
+        nlg=4
+        nhg=2
+        ninc=-2
+        endif
+        DO K=nlg,nhg,ninc
             N1=NOP(M,K-1)
-	    N=NOP(M,K)
+	      N=NOP(M,K)
             IF(K .LT. NCORN(M)) THEN
-	      N2=NOP(M,K+1)
-	    ELSE
+	        N2=NOP(M,K+1)
+	      ELSE
               N2=NOP(M,1)
-	    ENDIF
+	      ENDIF
+cipk jan07
+            if(ncn .eq. 5) then
+              if(k  .eq. 4) then
+                n=nop(k,3)
+                n1=nop(k,5)
+                n2=nop(k,4)
+              else
+                n=nop(k,2)
+                n1=nop(k,1)
+                n2=nop(k,3)
+              endif	 
+            endif     
 CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
 	    IF(IPASST(N) .EQ. 0) THEN
 	      IPASST(N)=1
@@ -549,3 +576,4 @@ crrr aug97   87 FORMAT(1X,I7,25X,' NEW DEPOSIT')
    89 FORMAT(10X,I5,1P2E15.3)
       RETURN
       END
+
