@@ -1,4 +1,4 @@
-C     Last change:  EF    7 Mar 2007   12:02 pm
+cipk  last update dec 13 2006 setup for type QI input (experimental)
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 ADD FOR POWER STATION RECYCLING
 CIPK  LAST UPDATE APR 18 2001 MAKE THE HSPEC CONSISTENTLY "LN"
@@ -8,6 +8,7 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
+C     Last change:  IPK  30 Apr 96    
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
@@ -28,14 +29,15 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
       DIMENSION QQAL(3)
 CIPKFEB94 V4.5
 CIPK DEC97 CHANGE TO PERMIT PARAMETER DEFINITION
-      ALLOCATABLE NHYDQ(:),QDIRS(:),NHYDH(:),NHYDG(:)
-     +         ,NLAYH(:),NLAYQ(:),IINTERP(:)
+
+C      ALLOCATABLE NHYDQ(:),QDIRS(:),NHYDH(:),NHYDG(:)
+C     +         ,NLAYH(:),NLAYQ(:),IINTERP(:),IQID(:)
 CIPK AUG03 MOVE TO BLK11.COM     +         ,WNDSP(MNP),WNDDR(MNP)
 
       DATA ISTDY/0/,ITIMEH/0/
       IF(ITIMEH .EQ. 0) THEN
       ALLOCATE (NHYDQ(NQLDS),QDIRS(NQLDS),NHYDH(NHDS),NHYDG(NHDS)
-     +         ,NLAYH(NHDS),NLAYQ(NQLDS),IINTERP(NHDS))
+     +         ,NLAYH(NHDS),NLAYQ(NQLDS),IINTERP(NHDS),IQID(NQLDS))
         ITIMEH=1
       ENDIF
 C
@@ -44,6 +46,8 @@ CIPKFEB94 V4.5
         DO N=1,NQLDS
           NHYDQ(N)=0
           NLAYQ(N)=0
+CIPK DEC06
+          IQID(N)=0          
         ENDDO
 CIPK DEC97 CHANGE INITIAL DEF LOOP LIMIT
 	  DO N=1,NHDS
@@ -104,11 +108,8 @@ C
         ENDIF
       ENDDO
   204 CONTINUE
-
-!nis,sep06,com: discharge-boundary condition for a continuity line
-      IF(ID(1:2) .EQ. 'QC') THEN
-
-
+cipk dec06
+      IF(ID(1:2) .EQ. 'QC' .OR. ID(1:2) .EQ. 'QM') THEN
         !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
         !find out the ID-number
         READ(DLIN,'(i8)') J
@@ -124,10 +125,13 @@ C
           end if
         enddo
         !-
-
         IQGEN=IQGEN+1
-
-        !nis,sep06,com: just an number of inflows test
+        IF(ID(1:2) .EQ. 'QM') THEN
+          IQID(IQGEN)=1
+        ELSE
+          IQID(IQGEN)=0
+        ENDIF
+     !nis,sep06,com: just an number of inflows test
 CIPK DEC97 REFINE TEST FOR TOO MANY FLOWS
         IF(IQGEN .GT. NQLDS) THEN
 cipk sep04
