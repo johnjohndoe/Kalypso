@@ -1,3 +1,5 @@
+cipk  last update FEB 26 2007 REFINE TEST FOR SUBMERGENCE
+cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update JUNE 22 2005 ADD TO rma10
 cipk  last update JULY 30 2004 fix bug in 2-d/1-d test
 CIPK  LAST UPDATE JUL 7 2004 ALLOW FOR 1-d ELEMENTS RESTORE TRANSELV 
@@ -41,9 +43,21 @@ CIPK JUL04 Use TRC to allow for units
           !NiS,Com: only for control structure elements (this if-clause nearly the whole subroutine)
           IF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 CIPK JUN05
-           IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+cipk outnov06           IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
 cipk dec00
-	        if(njt(imat(nn)-900) .eq. 10) then
+	      if(njt(imat(nn)-900) .eq. 10) then
+cipk outnov06              if(maxn .ne. 1) go to 332
+cipk outnov06              ISUBMEL(nn)=0
+cipk jul04
+              ncn=ncorn(nn)
+      	      DO K=1,NCN,2
+	          IF(TRANSEL(NOP(NN,K)) .LT. -9000.) THEN
+	            TRANSEL(NOP(NN,K))=10000.
+	            WHGT(NOP(NN,K))=10000.
+	          ENDIF
+	        ENDDO
+CIPK nov06
+              IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
                 if(maxn .ne. 1) go to 332
                 ISUBMEL(nn)=0
 cipk jul04
@@ -144,6 +158,7 @@ cipk oct00
                     endif
                   ENDDO
                   ISUBMEL(nn)=1
+CIPK NOV06 ISUBMEL =1 MEANS SUBMERGED
                   GO TO 332
 	          ELSE
 
@@ -201,6 +216,7 @@ cipk oct00
                     endif
                   ENDDO
                   ISUBMEL(nn)=1
+CIPK NOV06 ISUBMEL =1 MEANS SUBMERGED
                   GO TO 332
                 ENDIF
 
@@ -229,6 +245,12 @@ c             WRITE(75,*) 'SUBSET2',NN,ISUBMEL(NN),ISUBM(24)
      +            WSLL(NOP(NN,5)) .GT. WHGT(NOP(NN,5))  .OR.
      +            WSLL(NOP(NN,7)) .GT. WHGT(NOP(NN,7)))  THEN
 	            write(75,*) 'At step',icyc,' element ',nn,' flowing'
+                  WRITE(75,6001) 
+     +            NN,N,NOP(NN,1),WSLL(NOP(NN,1)),WSLL(NOP(NN,3)),
+     +            WHGT(NOP(NN,1)),WHGT(NOP(NN,3)),TRANSEL(NOP(NN,1))
+                  WRITE(75,6001) 
+     +            NN,N,NOP(NN,5),WSLL(NOP(NN,5)),WSLL(NOP(NN,7)),
+     +            WHGT(NOP(NN,5)),WHGT(NOP(NN,7)),TRANSEL(NOP(NN,5))
 		      endif
 
 	        else
