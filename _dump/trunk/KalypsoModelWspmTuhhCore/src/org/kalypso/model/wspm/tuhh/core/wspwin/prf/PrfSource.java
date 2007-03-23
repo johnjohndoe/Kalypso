@@ -92,7 +92,7 @@ public class PrfSource implements IProfilSource
         readBordVoll( p, pr );
         readRauhheit( p, pr );
         readBewuchs( p, pr );
-        readComment( p, pr );
+        readComment( pr );
         readGeoCoord( p, pr );
         if( !(readWehr( p, pr ) || readBridge( p, pr )) )
           readBuilding( p, pr );
@@ -105,18 +105,21 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private void readComment( IProfil p, PrfReader pr )
+  private void readComment( final PrfReader pr )
   {
-
     final IDataBlock db = pr.getDataBlock( "KOM" );
     if( db == null )
       return;
-    //ArrayList<String> sl = new ArrayList<String>();
-    for( String line : db.getText() )
+    final StringBuffer sb = new StringBuffer();
+
+    final String[] text = db.getText();
+    for( int i = 0; i < text.length; i++ )
     {
-      p.addComment( line.substring( 3 ) );
+      final String line = text[i];
+      sb.append( line.substring( 3 ) );
+      if( i != text.length - 1 )
+        sb.append( '\n' );
     }
-    //p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_KOMMENTAR, sl );
   }
 
   private void readBewuchs( IProfil p, PrfReader pr )

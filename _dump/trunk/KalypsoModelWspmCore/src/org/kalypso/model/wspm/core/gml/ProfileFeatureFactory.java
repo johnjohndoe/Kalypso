@@ -143,7 +143,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     final List<String> namelist = new ArrayList<String>( 1 );
     namelist.add( name );
     changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
-    final String description = profile.getComment().toString();
+    final String description = profile.getComment();
     changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_DESCRIPTION ), description ) );
 
     //
@@ -327,7 +327,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     
     profil.setName(observation.getName());
-    profil.addComment( observation.getDescription() );
+    profil.setComment( observation.getDescription() );
     final BigDecimal station = getProfileStation( profileFeature );
     profil.setStation( station == null ? Double.NaN : station.doubleValue() );
 

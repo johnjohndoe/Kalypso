@@ -42,10 +42,8 @@ package org.kalypso.model.wspm.ui.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -95,7 +93,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
   private static final String SETTINGS_FILTER_PATH = "fileDialogPath";
 
-  private static final DateFormat DF = DateFormat.getDateInstance( DateFormat.LONG );
+//  private static final DateFormat DF = DateFormat.getDateInstance( DateFormat.LONG );
 
   /**
    * @see org.eclipse.ui.actions.ActionDelegate#init(org.eclipse.jface.action.IAction)
@@ -179,8 +177,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
   private MultiStatus readProfiles( final IAction action, final Shell shell, final File[] files, final List<IProfil> profiles )
   {
     final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, "Eine oder mehrere der .rpf Dateien konnten nicht gelesen werden.", null );
-    final Date today = new Date();
-    final String todayString = DF.format( today );
+//    final Date today = new Date();
+//    final String todayString = DF.format( today );
     for( final File file : files )
     {
       try
@@ -190,8 +188,10 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
         profil.setName( "Import" );
 
-        final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
-        profil.addComment(  description );
+        // do not overwrite original comment from wspwin profile
+        // TODO: put this information into metadata strings
+//        final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
+//        profil.setComment(  description );
 
         profiles.add( profil );
       }

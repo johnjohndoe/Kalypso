@@ -174,11 +174,6 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
       final IStatus status = ProgressUtilitites.busyCursorWhile( op, "Konnte Datei nicht schreiben" );
       ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
     }
-//    catch( final IllegalProfileOperationException e )
-//    {
-//      final IStatus status = StatusUtilities.statusFromThrowable( e );
-//      ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status );
-//    }
     catch( final CoreException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
@@ -214,14 +209,25 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
       if( feature != null )
       {
         final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+        final String filename = convertToWspwinFilename( label ) + ".prf";
 
         final IProfil profile = ProfileFeatureFactory.toProfile( feature );
 
-        profiles.put( profile, label + ".prf" );
+        profiles.put( profile, filename );
       }
     }
 
     return profiles;
+  }
+
+  private String convertToWspwinFilename( final String label )
+  {
+    String result = label;
+    result = label.replace( '#', '_' );
+    result = label.replace( ':', '_' );
+    result = label.replace( ' ', '_' );
+    result = label.replace( ' ', '_' );
+    return result;
   }
 
   private File askForDir( final Shell shell )

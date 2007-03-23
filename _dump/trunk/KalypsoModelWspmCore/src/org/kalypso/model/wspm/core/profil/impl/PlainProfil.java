@@ -91,7 +91,7 @@ public class PlainProfil implements IProfil
 
   private String m_name = "";
 
-  private final List<String> m_comment = new ArrayList<String>();
+  private String m_comment;
 
   public PlainProfil( final String type )
   {
@@ -493,24 +493,14 @@ public class PlainProfil implements IProfil
     m_station = station;
   }
 
-  public String[] getComment( )
+  public String getComment( )
   {
-    return m_comment.toArray( new String[0] );
+    return m_comment;
   }
 
-  public void removeComment( final int lineNumber )
+  public void setComment( final String comment )
   {
-    m_comment.remove( lineNumber );
-  }
-
-  public void addComment( final int lineNumber, final String comment )
-  {
-    m_comment.add( lineNumber, comment );
-  }
-
-  public void addComment( final String comment )
-  {
-    m_comment.add( comment );
+    m_comment = comment;
   }
 
   public String getName( )

@@ -50,14 +50,9 @@ public interface IProfil
   /**
    * @return something stored in the profile as Strings
    */
-  public String[] getComment( );
+  public String getComment( );
 
-  // TODO KIM: talk to me about comment stuff
-  public void addComment( final int lineNumber, final String comment );
-
-  public void addComment( final String comment );
-
-  public void removeComment( final int lineNumber );
+  public void setComment( final String comment );
 
   /**
    * @return the friendly name for this profile
