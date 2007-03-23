@@ -1,6 +1,5 @@
+cipk  last update feb 26 2006 add logic for loads from 1-d structures
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT
-CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
-cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -18,6 +17,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
+C     Last change:  IPK   5 Oct 98    2:21 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -134,7 +134,7 @@ CIPK OCT02  add logic to make ice cover functions linear
         QWLI(1)=QICE(NOP(NN,1))
         QWLI(3)=QICE(NOP(NN,3))
       ELSE
-CIPK MAR06 fix undefined
+CIPK MAR06 fix undefined     
         THKI(1)=0.
         QWLI(1)=0.
         THKI(3)=0.
@@ -145,9 +145,6 @@ C-
 C- INITIALIZE MATRICES AND VARIABLES
 C-
       NEF=NCN*NDF
-      !NiS,jul06:testing
-      !  if (nn.eq.4465) WRITE(*,*) nef, 'nef ist gleich'
-      !-
       DO 77 I=1,NEF
       F(I) = 0.0
       DO 77 J=1,NEF
@@ -296,10 +293,7 @@ CIPK MAY04 RESET ELEMENT INFLOW
 
       !nis,oct06,com: Loop over Gauss nodes
       DO 500 I = 1, NGP
-
-
-      TEMP= (DNAL(2,I)*XL(2) + DNAL(3,I)*XL(3))
-
+      TEMP=(DNAL(2,I)*XL(2)+DNAL(3,I)*XL(3))
 C-
 C......DEFINE SHAPE FUNCTIONS
 C-
@@ -317,7 +311,6 @@ C-
       DNX(1)=(4.*AFACT(I)-3.)/TEMP
       DNX(2)=(4.-8.*AFACT(I))/TEMP
       DNX(3)=(4.*AFACT(I)-1.)/TEMP
-
       IF(NTX .EQ. 0) THEN
         DYDX=YL(2)*DNX(2)+YL(3)*DNX(3)
         ALF=ATAN(DYDX)
@@ -341,7 +334,6 @@ C-
       !nis,oct06,com: TEMP is not yet clear
       DMX(1)=-1./TEMP
       DMX(2)=1./TEMP
-
       IF(NSTRT(NCON(2),1) .EQ. 0) THEN
         DO 242 J=1,3
           XO(J)=XN(J)
@@ -366,6 +358,8 @@ C-
 CIPK OCT02 GET GAUSS POINT ICE VALUES
       GSICE=GSICE+THKI(1)*XM(1)+THKI(3)*XM(2)
       GSQLW=GSQLW+QWLI(1)*XM(1)+QWLI(3)*XM(2)
+CIPK FEB07
+      EXTL=EXTLDEL(NN)
 	IF(NTX .NE. 0) THEN
         H=VEL(3,N1)*XM(1)+VEL(3,N2)*XM(2)
       ELSE
@@ -397,27 +391,23 @@ C-
 
       !nis,oct06,com: Calculate the nodal velocities and their derivatives
       DO 250 M=1,NCN
-        MR=NCON(M)
+      MR=NCON(M)
 
         !nis,oct06,com: calculate vx and vy; for 1D, udst and vdst are .eq. 1
         VX(M)=VEL(1,MR)/UDST(MR)
-        VY(M)=VEL(2,MR)/VDST(MR)
-
-        ST(M)=VEL(ICK,MR)/SDST(MR)
+      VY(M)=VEL(2,MR)/VDST(MR)
+      ST(M)=VEL(ICK,MR)/SDST(MR)
 
         !nis,oct06,com: calculate the derivatives of vx and vy
         VDX(M)=VDOT(1,MR)/UDST(MR)
-        VDY(M)=VDOT(2,MR)/VDST(MR)
-
-        SDT(M)=VDOT(ICK,MR)/SDST(MR)
-
-        IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
-          NBOT=NREF(MR)+NDEP(MR)-1
-          UBFC(M)=UDST(NBOT)
-        ELSE
-          UBFC(M)=1.0
-        ENDIF
-
+      VDY(M)=VDOT(2,MR)/VDST(MR)
+      SDT(M)=VDOT(ICK,MR)/SDST(MR)
+      IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
+        NBOT=NREF(MR)+NDEP(MR)-1
+        UBFC(M)=UDST(NBOT)
+      ELSE
+        UBFC(M)=1.0
+      ENDIF
   250 CONTINUE
 
 
@@ -432,10 +422,6 @@ C-
         CX=COS(ALFA(MR))
         SA=SIN(ALFA(MR))
 
-        !nis,oct06,testing:
-        !WRITE(*,*) (vx(m)*cx+vy(m)*sa),SQRT(vx(m)**2+vy(m)**2)
-        !-
-
         !nis,oct06,com: addition of nodal velocities with weighting
         R    = R + XN(M)* (VX(M)*CX + VY(M)*SA) * QFACT(M)
         !nis,oct06,com: addition of nodal derivative, derivative is in approximation function
@@ -447,7 +433,10 @@ C-
           DSALDT=DSALDT+XO(M)*SDT(M)
           DSALDX=DSALDX+DOX(M)*ST(M)
 CIPK MAY02
-          GAIN=GAIN+XO(M)*GAN(MR)
+        GAIN=GAIN+XO(M)*GAN(MR)
+CIPK FEB07
+        IF(ICK .EQ. 6) THEN
+          EXTL=EXTL+XO(M)*EXTLD(MR)
         ENDIF
 
         IF(ICYC.LT.1) GO TO 270
@@ -455,8 +444,6 @@ CIPK MAY02
         !nis,oct06,com: addition of nodal derivative, derivative is in velocity
         BETA1 = BETA1 + XN(M) * (VDX(M)*CX + VDY(M)*SA) * QFACT(M)
   270 CONTINUE
-
-
 C-
 C...... AKE is the momentum correction coefficient
 C       UBF and VBF are corrections to bottom velocity
@@ -477,33 +464,32 @@ cipk APR99 add for more flexible width term
       wssg=0.
 
       DO 275 M=1,NCNX
-        MC = 2*M - 1
-        MR=NCON(MC)
-        AKE=AKE+XM(M)*UUDST(MR)
-        UBF=UBF+XM(M)*UBFC(MC)
-        BETA3=BETA3+XM(M)*VDOT(3,MR)
-        DHDX = DHDX + DMX(M)*VEL(3,MR)
+      MC = 2*M - 1
+      MR=NCON(MC)
+      AKE=AKE+XM(M)*UUDST(MR)
+      UBF=UBF+XM(M)*UBFC(MC)
+      BETA3=BETA3+XM(M)*VDOT(3,MR)
+      DHDX = DHDX + DMX(M)*VEL(3,MR)
 cipk nov97      DAODX = DAODX + DMX(M)*AO(MR)
-        IF (IDNOPT.GE.0) THEN
-          DAODX = DAODX + DMX(M)*AO(MR)
-          abed=abed+xm(m)*ao(mr)
-        ELSE
-          DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
+      IF (IDNOPT.GE.0) THEN
+        DAODX = DAODX + DMX(M)*AO(MR)
+        abed=abed+xm(m)*ao(mr)
+      ELSE
+        DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
 cipk mar01 fix ao to ado
-          abed=abed+xm(m)*(ado(mr)+ame(m))
-        ENDIF
+        abed=abed+xm(m)*(ado(mr)+ame(m))
+      ENDIF
 cipk apr99 add line for storage sideslope
-        bsel=bsel+xm(m)*widbs(mr)
-        wssg=wssg+xm(m)*wss(mr)
-        RHO=RHO+XM(M)*DEN(MR)
-        DRODX=DRODX+DMX(M)*DEN(MR)
+      bsel=bsel+xm(m)*widbs(mr)
+      wssg=wssg+xm(m)*wss(mr)
+      RHO=RHO+XM(M)*DEN(MR)
+      DRODX=DRODX+DMX(M)*DEN(MR)
 c      IF(ICYC .LT.1) GO TO 275
 cipk feb05      SIGMAX=SIGMAX+XM(M)*(SIGMA(MR,1)*CXX+SIGMA(MR,2)*SAA)
 CIPK MAY02  ADD STRESS TERM
-        SIGMAX = SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
-     +           +(SIGMA(MR,2)+STRESS(MR,2))*SAA)
+      SIGMAX=SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
+     +                      +(SIGMA(MR,2)+STRESS(MR,2))*SAA)
   275 CONTINUE
-
 CIPK NOV97
   276 CONTINUE
       AZER=AO(N1)*XM(1)+AO(N2)*XM(2)
@@ -659,8 +645,7 @@ CIPK SEP04  ADD MAH OPTION
 !
 !           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 
-Cipk may06 replace NR with MAT
-C            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
+CIPK MAY06  MOVE NR TO MAT
             FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 !
 !**************************************************************
@@ -769,7 +754,6 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
         !             IA becomes: 3, 3+2NDF
         F(IA) = F(IA) - AMW*XM(M)*FRNC
   290 CONTINUE
-
 C-
 C......THE SALINITY EQUATION
 C-
@@ -782,7 +766,8 @@ ccc        WRITE(110,'(I8,6F15.6)')NN,DSALDX,DSALDT,GAIN,SALT,DIFX,R
         FRNX=AMU*DIFX*DSALDX*ACR
 
         FRN=AMU*(AST*(-GAIN)+ACR*R*DSALDX
-     +              -SIDFT*(SIDQ(NN,ICK-4)-SALT))
+     +              -SIDFT*(SIDQ(NN,ICK-4)-SALT)-EXTL)
+CIPK FEB07 ADD EXTL      
         IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*AST
 
         IA=-4
@@ -801,7 +786,7 @@ CAUG95     +    -AMU*AST*(SRCSNK+GRATE*SALT)
 CIPK NOV97 ADJUST EQUATION FOR NEW UNITS
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT THEN SIDFQQ IN MAY04
       FRN=AMU*(AST*(-SRCSNK-GRATE*SALT)+ACR*R*DSALDX
-     +              -SIDFQQ*(SIDQ(NN,ICK-3)-SALT))
+     +              -SIDFQQ*(SIDQ(NN,ICK-3)-SALT)-EXTL)
 cipk nov97      FRN=AMU*(AST*(-SRCSNK-GRATE*SALT)+ACR*(R*DSALDX
 cipk nov97     +              -SIDF(NN)*(SIDQ(NN,ICK-3)-SALT)))
 cipk jan97     +    -AMW*DIFX*DSALDX*ACR*DAODX
@@ -849,9 +834,6 @@ C-
       IA=1-NDF
       DO 305 M = 1, NCN
       IA=IA+NDF
-      !NiS,jul06:testing
-      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   305 CONTINUE
   310 CONTINUE
@@ -899,9 +881,6 @@ C-
       IA=1-NDF
       DO 320 M = 1, NCN
       IA=IA+NDF
-      !NiS,jul06:testing
-      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   320 CONTINUE
   325 CONTINUE
@@ -921,9 +900,6 @@ C-
           IA=1-NDF
           DO 329 M=1,NCN
             IA=IA+NDF
-            !NiS,jul06:testing
-            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+(DNX(M)*FEEAN+XN(M)*FEEBN)*
      +                    QFACT(M)
   329     CONTINUE
@@ -946,9 +922,6 @@ C
       EB=XM(M)*TX
       DO 360 N = 1, NCN
       IB=IB+NDF
-      !NiS,jul06:testing
-      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+(EA*DNX(N)+EB*XN(N))*QFACT(N)
   360 CONTINUE
       EA=XM(M)*TB
@@ -956,9 +929,6 @@ C
       IB=3-2*NDF
       DO 363 N=1,NCNX
       IB=IB+2*NDF
-      !NiS,jul06:testing
-      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*EA+DMX(N)*EB
   363 CONTINUE
   365 CONTINUE
@@ -986,18 +956,12 @@ CMAY93          FEECN=XO(M)*T3
           IB=1-NDF
           DO 385 N=1,NCN
             IB=IB+NDF
-            !NiS,jul06:testing
-            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XN(N)*FEEAN*QFACT(N)
   385     CONTINUE
           IB=3-2*NDF
           DO 390 N=1,NCNX
             IB=IB+2*NDF
 CMAY93           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DMX(N)*FEECN+XM(N)*FEEEN
-            !NiS,jul06:testing
-            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*FEEEN
   390     CONTINUE
         ENDIF
@@ -1015,9 +979,6 @@ CIPK MAY02
           IB=-4
           DO N=1,NCNX
             IB=IB+8
-            !NiS,jul06:testing
-            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XM(N)+FEEBN*DMX(N)
           ENDDO
   	  ENDDO
@@ -1045,9 +1006,6 @@ cipk aug98
         DO 410 N=1,NCN
           IB=IB+4
           IF(NSTRT(NCON(N),1) .EQ. 0) THEN
-            !NiS,jul06:testing
-            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XO(N)+FEEBN*DOX(N)
           ENDIF
   410   CONTINUE
@@ -1079,18 +1037,12 @@ C-
      +      *QFACT(L)
         IF(L .EQ. 1) PPL=-PPL
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
-        !NiS,jul06:testing
-        !if (na.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12; na'
-        !-
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
       ELSEIF(IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3) THEN
         IF(NREF(N1) .EQ. 0) THEN
           NA=(L-1)*NDF+1
 c         WRITE(*,*) 'IBN=',IBN(N1),NN,NA
           DO 6667 KK=1,NEF
-            !NiS,jul06:testing
-            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(NA,KK)=0.
  6667     CONTINUE
           F(NA)=0.
@@ -1159,10 +1111,6 @@ c lcr eq por
           !nis,Oct06,com: Get the global equation number of node-degree-of-freedom
           JA=NBC(J,K)
 
-          !nis,oct06,testing,deactivated
-          !WRITE(*,*)'ndf in loop: ', ndf
-          !WRITE(*,*)'local residuum: ', f(ia), ia
-          !-
 
           !nis,Oct06,com: Jump over deactivated node-degree-of-freedom
           IF(JA.EQ.0) GO TO 1050

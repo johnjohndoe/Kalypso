@@ -1,6 +1,7 @@
+cipk  last update feb 26 2006 add logic for loads from 1-d structures
+cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update jul 05 2006 use perim for hydraulic radius in friction	      
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT AND H DEFINITION
-CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE mar 23 2006 correct ice initial values 
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -18,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  K    26 Jan 2007    5:01 pm
+C     Last change:  IPK   5 Oct 98    2:21 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -29,6 +30,7 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKDRMOD
       USE BLKSSTMOD
       USE BLKSANMOD
+      USE BLKSUBMOD
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
 !-
@@ -381,6 +383,8 @@ c           DAHDH2 = rate of change of (cross-sec area)*H/2 wrt H
 CIPK OCT02 GET GAUSS POINT ICE VALUES
       GSICE=GSICE+THKI(1)*XM(1)+THKI(3)*XM(2)
       GSQLW=GSQLW+QWLI(1)*XM(1)+QWLI(3)*XM(2)
+CIPK FEB07
+      EXTL=EXTLDEL(NN)
 	IF(NTX .NE. 0) THEN
         H=VEL(3,N1)*XM(1)+VEL(3,N2)*XM(2)
       ELSE
@@ -437,6 +441,10 @@ C-
         DSALDX=DSALDX+DOX(M)*ST(M)
 CIPK MAY02
         GAIN=GAIN+XO(M)*GAN(MR)
+CIPK FEB07
+        IF(ICK .EQ. 6) THEN
+          EXTL=EXTL+XO(M)*EXTLD(MR)
+        ENDIF
       ENDIF
       IF(ICYC.LT.1) GO TO 270
       BETA1=BETA1+XN(M)*(VDX(M)*CX+VDY(M)*SA)*QFACT(M)
@@ -761,7 +769,8 @@ ccc        WRITE(110,'(I8,6F15.6)')NN,DSALDX,DSALDT,GAIN,SALT,DIFX,R
         FRNX=AMU*DIFX*DSALDX*ACR
 
         FRN=AMU*(AST*(-GAIN)+ACR*R*DSALDX
-     +              -SIDFT*(SIDQ(NN,ICK-4)-SALT))
+     +              -SIDFT*(SIDQ(NN,ICK-4)-SALT)-EXTL)
+CIPK FEB07 ADD EXTL      
         IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*AST
 
         IA=-4
@@ -780,7 +789,7 @@ CAUG95     +    -AMU*AST*(SRCSNK+GRATE*SALT)
 CIPK NOV97 ADJUST EQUATION FOR NEW UNITS
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT THEN SIDFQQ IN MAY04
       FRN=AMU*(AST*(-SRCSNK-GRATE*SALT)+ACR*R*DSALDX
-     +              -SIDFQQ*(SIDQ(NN,ICK-3)-SALT))
+     +              -SIDFQQ*(SIDQ(NN,ICK-3)-SALT)-EXTL)
 cipk nov97      FRN=AMU*(AST*(-SRCSNK-GRATE*SALT)+ACR*(R*DSALDX
 cipk nov97     +              -SIDF(NN)*(SIDQ(NN,ICK-3)-SALT)))
 cipk jan97     +    -AMW*DIFX*DSALDX*ACR*DAODX
@@ -1031,7 +1040,9 @@ C-
         IF(L .EQ. 1) PPL=-PPL
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
-      ELSEIF(IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3) THEN
+      ELSEIF((IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3)
+     +    .AND. ISUBM(N1) .EQ. 0) THEN
+
         IF(NREF(N1) .EQ. 0) THEN
           NA=(L-1)*NDF+1
 c         WRITE(*,*) 'IBN=',IBN(N1),NN,NA

@@ -1,5 +1,4 @@
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
-CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
 cipk  last update june 27 2005 add control structure option
@@ -27,7 +26,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    26 Jan 2007    5:01 pm
+C     Last change:  IPK   5 Oct 98    2:53 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -106,7 +105,7 @@ C-
       DATA FCOEF/14.47/,THRESH/1.0E-3/,PI/3.14159/
 C
 CIPK MAR05
-cWP      data  pi/3.14159/
+      data  pi/3.14159/
 
       IF (GRAV .LT. 32.)  THEN
         FCOEF = GRAV
@@ -186,7 +185,7 @@ CIPK JUN05 MOVE LOOP
 cipk jun05
       inovel=0
       if(iteqv(maxn) .eq. 2) inovel=1
-      if(iteqv(maxn) .eq. 8) inovel=2
+      if(iteqv(maxn) .eq. 8)  inovel=2
       if(iteqv(maxn) .eq. 9) inovel=3
 
 cipk oct98 update to f90
@@ -261,8 +260,8 @@ cipk jan97          IF(IEDSW .EQ. 4)
           CX=COS(THNN)
           SA=SIN(THNN)
         ENDIF
-      ELSE
-        IF(IDIFSW .EQ. 9  .OR. IDIFSW .EQ. 1) THEN
+	ELSE
+	  IF(IDIFSW .EQ. 9  .OR. IDIFSW .EQ. 1) THEN
           CX=COS(THNN)
           SA=SIN(THNN)
         ELSEIF(IDIFSW .GT. 1  .AND. IDIFSW .LT. 6) THEN
@@ -288,7 +287,7 @@ c     Normalize velocity vector length
             SA=SIN(THNN)
           ENDIF
         ENDIF
-      ENDIF
+	ENDIF
 
 cipk mar03 end changes
 cipk sep96 move up this computation
@@ -1010,10 +1009,11 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
       endif
 
 	  peclet=vecq*abs((xl(3)+xl(5)))/2/difx
-C        IF((NN .EQ. 1284  .OR.  NN .EQ. 479)  .AND.  I .EQ. 5) THEN
-        if(i .eq. 1  .and.  idebug .eq. 2) then
-	    WRite(129,'(3i5,6g15.6)') nn,i,MAXN,shearvel,h,difx,dify,thnn
-     +            ,peclet
+	  
+        IF(NN .EQ. 15  .AND.  I .EQ. 5) THEN
+c        if(i .eq. 1  .and.  idebug .eq. 2) then
+	    WRite(129,'(3i5,8g15.6)') nn,i,MAXN,shearvel,h,difx,dify,thnn
+     +            ,peclet,h*difx*dsaldx,h*dify*dsaldy
 	  ENDIF
 
 CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
@@ -1901,6 +1901,13 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           ENDIF
  1400   CONTINUE
  1450 CONTINUE
+
+      WRITE(196,*) 'ELEMENT',NN,' F'
+      WRITE(196,1996) (F(I),I=1,32)
+      WRITE(196,*) 'ESTIFM'
+      WRITE(196,1996) (ESTIFM(I,I),I=1,32)
+ 1996 FORMAT(1P4E15.6)      
+
       RETURN
       
 CIPK JUN05

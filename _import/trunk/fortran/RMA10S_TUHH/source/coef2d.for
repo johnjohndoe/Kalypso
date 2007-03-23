@@ -1,5 +1,5 @@
+cipk  last update feb 26 2006 correst logic for loads from 2-d structures
 CIPK  LAST UPDATE SEP 05 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
-CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
 cipk  last update june 27 2005 add control structure option
@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    26 Jan 2007    5:01 pm
+C     Last change:  IPK   5 Oct 98    3:17 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -566,6 +566,8 @@ CIPK SEP02 GET GAUSS POINT ICE VALUES
         GSICE=GSICE+XM(M)*THKI(MC)
         GSQLW=GSQLW+XM(M)*QWLI(MC)
       ENDDO
+CIPK DEC05
+      EXTL=EXTL+EXTLDEL(NN)
 CIPK NOV97  275 CONTINUE
 
 CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
