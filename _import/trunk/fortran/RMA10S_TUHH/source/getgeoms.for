@@ -1,4 +1,3 @@
-C     Last change:  K    15 Feb 2007    6:48 pm
 cipk  last update june 27 2005 allow for control structures
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
 CIPK  LAST UPDATE AUG 4 2003  ADD BLK11
@@ -18,6 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
+C     Last change:  IPK   5 Oct 98    3:29 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -32,13 +32,13 @@ CIPK  LAST UPDATE OCT 1 1996
       INTEGER :: n, m, a, lt, fffms
 !-
 C-
-cipk aug05	INCLUDE 'BLK10.COM'
+cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG03 ADD
-CIPK AUG05	INCLUDE 'BLK11.COM'
+CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK NOV97 REACTIVATE BLKDR
-CIPK AUG05	INCLUDE 'BLKDR.COM'
+CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK JUN05
-CIPK AUG05	INCLUDE 'BLKSUB.COM'
+CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
 cipk apr99 add line below
       character*8 id8
@@ -57,11 +57,8 @@ CIPK MAY02 ADD CHARACTER VARIABLES
 C-
 C-    Set limits for testing
 C-
-
-cWP Feb 2006, not used in this subroutine
-cWP      MMM1=MNP
-cWP      MMM2=MEL
-
+      MMM1=MNP
+      MMM2=MEL
 cipk feb01
       NCLL=0
 
@@ -99,9 +96,6 @@ CIPK JUN03
            ILONG=1
            REWIND IFILE
            READ(IFILE) HEADING
-
-          write(*,*) 'In GETGEO. ILONG = ',ILONG, ' HEADING = ',HEADING
-
          ELSE
            ILONG=0
            REWIND IFILE
@@ -197,10 +191,6 @@ cWP Feb 2006 Now detailled check for READ statement!
      1     n,m,((cord(j,k),K=1,2), ALFA(j),wss(j),J=1,N),
      2     ((NOP(J,K),K=1,8),IMAT(J),TH(J),NFIXH(J),J=1,M)
      +    ,(WIDTH(J),SS1(J),SS2(J),WIDS(J),J=1,N)
-
-           WRITE(*,1011)
- 1011      FORMAT(/1X, '...finished first part!')
-
            write(75,*) 'REAL*8 format',n,m
          ELSE
 !NiS,may06: Lahey version
@@ -237,11 +227,6 @@ CIPK JUL00 NEED TO REMOVE END= FOR LAHEY
 !NiS,may06: Lahey version
 !          read(ifile,err=24, end=24) id8
           read(ifile,err=24) id8
-!-          
-
-!NiS,mar06	Hinzugefügt!, wird denn richtig weiter gelesen?
-          WRITE(*,*)' ID8:  *>',id8,'<* Ende'
-
           if(id8(1:6) .eq. 'part-2') then
             write(75,*) 'reading part 2'
             iwdbs=1
@@ -491,6 +476,8 @@ C-
 cipk oct98 update to f90
             IMMT=IMAT(I)
             J=MOD(IMMT,100)
+CIPK FEB07  
+            IF(IMMT .GT. 903) J=IMMT            
             IF(NOP(I,6) .EQ. 0) J=IMAT(I)
             IF(ORT(J,5) .GT. 1.) THEN
               CHEZ(I)=ORT(J,5)
@@ -665,24 +652,23 @@ C-
             IF(IGEO .NE. 2) THEN
 
               DO K=2,NCN,2
-                N1=NOP(J,K-1)
-                N2=NOP(J,K)
-                N3=MOD(K+1,NCN)
-                IF(N3 .EQ. 0) N3=NCN
-                N3=NOP(J,N3)
-                AO(N2)=0.5*(AO(N1)+AO(N3))
-                IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
-                  WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
-                  WIDS(N2)=0.5*(WIDS(N1)+WIDS(N3))
-                  SS1(N2)=0.5*(SS1(N1)+SS2(N3))
-                  SS2(N2)=0.5*(SS1(N1)+SS2(N3))
-                ENDIF
-                IF(CORD(N2,1) .LE. VOID) THEN
-                  CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
-                  CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
-                ENDIF
-              ENDDO
-            ENDIF
+              N1=NOP(J,K-1)
+              N2=NOP(J,K)
+              N3=MOD(K+1,NCN)
+              IF(N3 .EQ. 0) N3=NCN
+              N3=NOP(J,N3)
+              AO(N2)=0.5*(AO(N1)+AO(N3))
+              IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
+                WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
+                WIDS(N2)=0.5*(WIDS(N1)+WIDS(N3))
+                SS1(N2)=0.5*(SS1(N1)+SS2(N3))
+                SS2(N2)=0.5*(SS1(N1)+SS2(N3))
+              ENDIF
+              IF(CORD(N2,1) .LE. VOID) THEN
+                CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
+                CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
+              ENDIF
+            ENDDO
 !-
 
           ENDIF
