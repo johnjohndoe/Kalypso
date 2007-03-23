@@ -228,7 +228,6 @@
 			</arg>
 		</arg>
 		<!-- Längsschnitte  -->
-<!-- auskommentiert, da per Nachtragsangebot
 		<arg name="exporter5">
 			<arg name="id" value="simpleTemplateExporter"/>
 			<arg name="name" value="Längsschnitte"/>
@@ -245,7 +244,6 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittIlseW.odt"/>
 			</arg>
 		</arg>
--->
 		<!-- Scheitelwert-Tabelle -->
 		<arg name="exporter3">
 			<arg name="id" value="multiExporter"/>

@@ -10,31 +10,17 @@
    	red;green;blue[;alpha]
    	jeweils in [0-255]
    	
-   	Blau-Töne (Richtung grün)
-   	0;0;255
-   	0;153;255
-   	0;204;255
-   	0;153;102
-   	0;204;153
-   	153;153;0
-   	Rot-Töne (Richtung orange)
-   	255;0;0
-   	255;153;0
-   	255;204;0
-   	255;0;153
-   	204;102;255
-   	204;102;0
    	-->
 	<!-- gemessen -->
    	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Silberhütte.zml">
-		<curve id="C1" name="%obsname% - Beobachtung" color="0;0;255" > 
+		<curve id="C1" name="Silberhütte - Beobachtung" color="255;0;0" > 
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
 	</observation>
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Silberhütte.zml">
-		<curve id="C2" name="%obsname%  - Vorhersage" color="255;0;0" >
+		<curve id="C2" name="Silberhütte - Vorhersage" color="255;0;0" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -42,14 +28,14 @@
 
 	<!-- gemessen -->
    	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Meisdorf.zml">
-		<curve id="C3" name="%obsname% - Beobachtung" color="0;153;255" > 
+		<curve id="C3" name="Meisdorf - Beobachtung" color="0;0;255" > 
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
 	</observation>
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Meisdorf.zml">
-		<curve id="C4" name="%obsname%  - Vorhersage" color="255;153;0" >
+		<curve id="C4" name="Meisdorf - Vorhersage" color="0;0;255" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -57,14 +43,14 @@
 
 	<!-- gemessen -->
    	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Hausneindorf.zml">
-		<curve id="C5" name="%obsname% - Beobachtung" color="0;204;255" > 
+		<curve id="C5" name="Hausneindorf - Beobachtung" color="255;0;255" > 
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
 	</observation>
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml">
-		<curve id="C6" name="%obsname%  - Vorhersage" color="255;204;0" >
+		<curve id="C6" name="Hausneindorf - Vorhersage" color="255;0;255" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
