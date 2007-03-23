@@ -43,12 +43,13 @@ package org.kalypso.ui.wizards.imports.observation;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -69,6 +70,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
@@ -90,7 +92,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
     super();
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
-    setWindowTitle( Messages.getString("ImportObservationWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportObservationWizard.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -106,18 +108,18 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       m_selection = new StructuredSelection( selectedResources );
     }
 
-    setWindowTitle( Messages.getString("ImportObservationWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportObservationWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
   /**
    * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
    */
-  public void initModelProperties( HashMap<String, Object> map )
+  public void initModelProperties( IEvaluationContext context )
   {
-    m_project = (IProject) map.get( "Project" ); //$NON-NLS-1$
+    m_project = ((IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME )).getProject();
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
@@ -242,7 +244,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       final Observation type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...
 
-      final Marshaller marshaller =  JaxbUtilities.createMarshaller(zmlJC);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( zmlJC );
       // use IResource
       final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
       OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$

@@ -14,6 +14,7 @@ import org.kalypso.afgui.views.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.actions.KalypsoContextHandlerFactory;
 
 /**
  * @author Patrice Congo
@@ -88,8 +89,8 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_workflowControl = new WorkflowControl();
-    m_workflowControl.restoreState( memento );    
+    m_workflowControl = new WorkflowControl( KalypsoContextHandlerFactory.getInstance() );
+    m_workflowControl.restoreState( memento );
   }
 
   /**

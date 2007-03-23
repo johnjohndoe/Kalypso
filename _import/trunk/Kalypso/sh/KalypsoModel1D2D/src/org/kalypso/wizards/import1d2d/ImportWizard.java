@@ -3,9 +3,9 @@
  */
 package org.kalypso.wizards.import1d2d;
 
-import java.util.HashMap;
-
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -13,8 +13,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
 /**
@@ -55,11 +57,24 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   /**
    * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
    */
-  public void initModelProperties( HashMap<String, Object> map )
+  public void initModelProperties( IEvaluationContext context )
   {
-    FE1D2DDiscretisationModel feature = (FE1D2DDiscretisationModel) map.get( "IFEDiscretisationModel1d2d" );
-    m_data.setFE1D2DDiscretisationModel( feature );
-    m_data.setProjectBaseFolder( (String) map.get( "ProjectBaseFolder" ) );
+    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    IFEDiscretisationModel1d2d model;
+    try
+    {
+      model = (IFEDiscretisationModel1d2d) szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
+      m_data.setFE1D2DDiscretisationModel( model );
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // FE1D2DDiscretisationModel feature = (FE1D2DDiscretisationModel) context.get( "IFEDiscretisationModel1d2d" );
+    // final IFolder currentFolder = (IFolder) context.getVariable(
+    // ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME);
+    // m_data.setProjectBaseFolder( currentFolder );
   }
 
   @Override

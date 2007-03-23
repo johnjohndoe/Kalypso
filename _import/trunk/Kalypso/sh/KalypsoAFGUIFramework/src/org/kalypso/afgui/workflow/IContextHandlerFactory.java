@@ -38,28 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.views;
+package org.kalypso.afgui.workflow;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.eclipse.core.commands.IHandler;
 
 /**
- * @author Gernot Belger
+ * An instance of {@link IContextHandlerFactory} can create context handlers for certain subclasses of
+ * {@link ContextType}. These handlers do something to enable the context in the workbench.
+ * 
+ * @author Stefan Kurzbach
  */
-public interface ISzenarioDataProvider
+public interface IContextHandlerFactory
 {
   /**
-   * Returns the feature wrapper corresponding to the given key. The class must be one of the known classes by this data
-   * provider.
-   * <p>
-   * This method block until the gml is loaded, which may take some time
-   * </p>.
+   * Returns the handler for the given context or <code>null</code> if the context is not known to this handler.
    */
-  public IFeatureWrapper2 getModel( final Class wrapperClass ) throws CoreException;
-
-  public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception;
-  
-  public CommandableWorkspace getCommandableWorkspace(final Class wrapperClass ) throws IllegalArgumentException, CoreException; 
+  public IHandler getHandler( final ContextType context );
 }

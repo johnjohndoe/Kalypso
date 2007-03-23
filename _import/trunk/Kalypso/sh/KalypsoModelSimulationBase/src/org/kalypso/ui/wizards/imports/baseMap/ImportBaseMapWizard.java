@@ -48,11 +48,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -68,6 +68,7 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
 /**
@@ -77,7 +78,7 @@ import org.kalypso.ui.wizards.imports.Messages;
 public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport
 {
   private IStructuredSelection initialSelection;
-  
+
   private IPath m_sourceLocation = null;
 
   BaseMapMainPage mPage;
@@ -87,7 +88,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   // private IProject m_project;
 
   IFolder m_scenarioFolder;
-  
+
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
@@ -112,9 +113,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   /**
    * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
    */
-  public void initModelProperties( HashMap<String, Object> map )
+  public void initModelProperties( IEvaluationContext context )
   {
-    m_scenarioFolder = (IFolder) map.get( "ScenarioFolder" );
+    // m_scenarioFolder = (IFolder) context.get( "ScenarioFolder" );
+    m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
     // m_project = (IProject) map.get( "Project" );
     // m_projectFolder = (String) map.get( "ProjectFolder" );
   }
@@ -177,8 +179,8 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
             final StyledLayerType layer = new StyledLayerType();
 
             layer.setName( getSourceLocation().removeFileExtension().lastSegment() );
-//            layer.setName( "BaseMap" ); //$NON-NLS-1$
-            
+            // layer.setName( "BaseMap" ); //$NON-NLS-1$
+
             layer.setVisible( true );
             layer.setFeaturePath( "" ); //$NON-NLS-1$
             layer.setHref( "file:/" + dstFileImage.getLocation().toOSString() + "#" + coordinateSystem ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -263,7 +265,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
    */
   public IPath getSourceLocation( )
   {
-    if(m_sourceLocation == null)
+    if( m_sourceLocation == null )
       m_sourceLocation = mPage.getSourceLocation();
     return m_sourceLocation;
   }

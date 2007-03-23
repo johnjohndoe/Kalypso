@@ -226,7 +226,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     if( part instanceof AbstractMapPart )
     {
       // register contextSwitcher on map panel
-      final IContextService contextService = (IContextService) part.getSite().getWorkbenchWindow().getWorkbench().getService( IContextService.class );
+      final IContextService contextService = (IContextService) part.getSite().getService( IContextService.class );
       final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
       mapPanel.addModellListener( m_mapModellContextSwitcher );
       m_mapModellContextSwitcher.addContextService( contextService );

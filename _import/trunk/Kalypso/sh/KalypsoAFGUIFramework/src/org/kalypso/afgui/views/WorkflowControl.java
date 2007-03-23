@@ -12,6 +12,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
@@ -48,6 +49,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.workflow.Activity;
+import org.kalypso.afgui.workflow.ContextType;
+import org.kalypso.afgui.workflow.IContextHandlerFactory;
 import org.kalypso.afgui.workflow.Phase;
 import org.kalypso.afgui.workflow.Task;
 import org.kalypso.afgui.workflow.TaskGroup;
@@ -60,6 +63,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class WorkflowControl
 {
+  protected IContextHandlerFactory m_contextHandlerFactory;
+
   /**
    * @author Stefan Kurzbach
    */
@@ -89,24 +94,29 @@ public class WorkflowControl
 
     public void preExecute( final String commandId, final ExecutionEvent event )
     {
-      final TaskGroup contextTaskGroup = m_task.getContext();
-      if( contextTaskGroup != null )
+      final ContextType context = m_task.getContext();
+      if( context != null )
       {
-        try
-        {
-          doTask( contextTaskGroup );
-        }
-        catch( final NotHandledException nhe )
-        {
-          // ignore: just a parent task with no handler
-        }
-        catch( final Exception e )
-        {
-          logger.log( Level.INFO, e.getLocalizedMessage() );
-          logger.info( "Context task could not be executed: " + contextTaskGroup.getName() );
-          // TODO: error dialog?!
-          logger.log( Level.SEVERE, "Error handling task", e );
-        }
+        activateContext( event, context );
+      }
+    }
+
+    private void activateContext( final ExecutionEvent event, final ContextType context )
+    {
+      final ContextType parentContext = context.getParent();
+      if( parentContext != null )
+      {
+        activateContext( event, parentContext );
+      }
+      try
+      {
+        final IHandler handler = m_contextHandlerFactory.getHandler( context );
+        handler.execute( event );
+      }
+      catch( final Exception e )
+      {
+        logger.severe( "Context could not be activated: " + context.getId() );
+        logger.log( Level.SEVERE, "Error activating context", e );
       }
     }
   }
@@ -130,6 +140,11 @@ public class WorkflowControl
   TreePath m_lastTreePath;
 
   private String m_selectionFromMemento;
+
+  public WorkflowControl( final IContextHandlerFactory contextHandlerFactory )
+  {
+    m_contextHandlerFactory = contextHandlerFactory;
+  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)

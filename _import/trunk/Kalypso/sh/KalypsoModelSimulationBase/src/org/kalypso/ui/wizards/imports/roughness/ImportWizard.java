@@ -3,11 +3,11 @@
  */
 package org.kalypso.ui.wizards.imports.roughness;
 
-import java.util.HashMap;
-
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -15,8 +15,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
+import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
 /**
@@ -56,24 +59,38 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
    */
   public void init( IWorkbench iWorkbench, IStructuredSelection iSelection )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ));//$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ) );//$NON-NLS-1$
     selection = iSelection;
   }
 
   /**
    * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
    */
-  public void initModelProperties( HashMap<String, Object> map )
+  public void initModelProperties( IEvaluationContext context )
   {
-    RoughnessPolygonCollection feature = (RoughnessPolygonCollection) map.get( "IRoughnessPolygonCollection" );
+    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    ITerrainModel model;
+    try
+    {
+      model = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
+      final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
+      m_data.setRoughnessPolygonCollection( roughnessPolygonCollection );
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // RoughnessPolygonCollection feature = (RoughnessPolygonCollection) context.get( "IRoughnessPolygonCollection" );
     // if( feature.getRoughnessPolygons().size() > 0 )
     // throw new ExceptionInInitializerError("Roughness data allready loaded!");
     // else
-    m_project = (IProject) map.get( "Project" );
-    m_szenarioFolder = (IFolder) map.get( "SzenarioPath" );   
-    m_data.setRoughnessPolygonCollection( feature );
-    m_data.setRoughnessDatabaseLocation( (String) map.get( "RoughnessDatabaseLocation" ) );
-    m_data.setProjectBaseFolder( (String) map.get( "ProjectBaseFolder" ) );
+    m_szenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    m_project = m_szenarioFolder.getProject();
+    // m_project = (IProject) context.get( "Project" );
+    // m_szenarioFolder = (IFolder) context.get( "SzenarioPath" );
+    m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
+    m_data.setProjectBaseFolder( m_szenarioFolder.getFullPath().segment( 0 ) );
   }
 
   @Override
@@ -125,37 +142,38 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
       m_pageMain.saveDataToModel();
       m_pageSecond.saveDataToModel();
       status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-//      m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+      // m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
       ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
       m_data.getRoughnessPolygonCollection().clear();
       m_data.getRoughnessShapeStaticRelationMap().clear();
       m_data.getRoughnessStaticCollectionMap().clear();
       // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
-//      IFile ifile = m_szenarioFolder.getFile( "maps/roughness.gmt" );
-//      Gismapview gismapview = GisTemplateHelper.loadGisMapView( ifile );
-//      Layers layers = gismapview.getLayers();
-//      StyledLayerType layer = new StyledLayerType();
-//      final Style style = new Style();
-//
-//      layer.setName( "Roughness" ); //$NON-NLS-1$
-//      layer.setVisible( true );
-//      layer.setFeaturePath( "#fid#RoughnessLayerPolygonCollection11709431308431/roughnessLayerMember[RoughnessPolygon]" ); //$NON-NLS-1$
-//      layer.setHref( "project:/szenario/models/terrain.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-//      layer.setType( "simple" ); //$NON-NLS-1$
-//      layer.setLinktype( "gml" ); //$NON-NLS-1$
-//      layer.setActuate( "onRequest" ); //$NON-NLS-1$
-//      layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
-//
-//      style.setLinktype( "sld" ); //$NON-NLS-1$
-//      style.setStyle( "Roughness style" ); //$NON-NLS-1$
-//      style.setActuate( "onRequest" ); //$NON-NLS-1$
-//      style.setHref( "project:/.metadata/roughness.sld" ); //$NON-NLS-1$
-//      style.setType( "simple" ); //$NON-NLS-1$
-//      layer.getStyle().add( style );
-//      layers.getLayer().add( 0, layer );
-//      gismapview.setLayers( layers );
-//      GisTemplateHelper.saveGisMapView( gismapview, new FileWriter( new File( ifile.getLocationURI() ) ), "UTF-8" );
-//      m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
+      // IFile ifile = m_szenarioFolder.getFile( "maps/roughness.gmt" );
+      // Gismapview gismapview = GisTemplateHelper.loadGisMapView( ifile );
+      // Layers layers = gismapview.getLayers();
+      // StyledLayerType layer = new StyledLayerType();
+      // final Style style = new Style();
+      //
+      // layer.setName( "Roughness" ); //$NON-NLS-1$
+      // layer.setVisible( true );
+      // layer.setFeaturePath(
+      // "#fid#RoughnessLayerPolygonCollection11709431308431/roughnessLayerMember[RoughnessPolygon]" ); //$NON-NLS-1$
+      // layer.setHref( "project:/szenario/models/terrain.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+      // layer.setType( "simple" ); //$NON-NLS-1$
+      // layer.setLinktype( "gml" ); //$NON-NLS-1$
+      // layer.setActuate( "onRequest" ); //$NON-NLS-1$
+      // layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
+      //
+      // style.setLinktype( "sld" ); //$NON-NLS-1$
+      // style.setStyle( "Roughness style" ); //$NON-NLS-1$
+      // style.setActuate( "onRequest" ); //$NON-NLS-1$
+      // style.setHref( "project:/.metadata/roughness.sld" ); //$NON-NLS-1$
+      // style.setType( "simple" ); //$NON-NLS-1$
+      // layer.getStyle().add( style );
+      // layers.getLayer().add( 0, layer );
+      // gismapview.setLayers( layers );
+      // GisTemplateHelper.saveGisMapView( gismapview, new FileWriter( new File( ifile.getLocationURI() ) ), "UTF-8" );
+      // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
       m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( Exception e )

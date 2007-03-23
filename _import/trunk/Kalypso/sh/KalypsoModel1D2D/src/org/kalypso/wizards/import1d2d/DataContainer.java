@@ -3,8 +3,7 @@ package org.kalypso.wizards.import1d2d;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -19,12 +18,12 @@ public class DataContainer
   private String m_inputFile = ""; // absolute path
 
   private CS_CoordinateSystem m_coordinateSystem;
-  
-  private FE1D2DDiscretisationModel m_feature;
-  
-  private String m_ProjectBaseFolder;
-  
-  private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+
+  private IFEDiscretisationModel1d2d m_feature;
+
+  // TODO remove, unused
+  // private IFolder m_ProjectBaseFolder;
+  // private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
   private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
 
@@ -69,23 +68,24 @@ public class DataContainer
       return m_coordinateSystem;
   }
 
-  public final FE1D2DDiscretisationModel getFE1D2DDiscretisationModel( )
+  public final IFEDiscretisationModel1d2d getFE1D2DDiscretisationModel( )
   {
     return m_feature;
   }
 
-  public final void setFE1D2DDiscretisationModel( FE1D2DDiscretisationModel feature )
+  public final void setFE1D2DDiscretisationModel( IFEDiscretisationModel1d2d model )
   {
-    m_feature = feature;
+    m_feature = model;
   }
 
-  public final String getProjectBaseFolder( )
-  {
-    return m_ProjectBaseFolder;
-  }
+  // TODO remove, unused
+  // public final IFolder getProjectBaseFolder( )
+  // {
+  // return m_ProjectBaseFolder;
+  // }
 
-  public final void setProjectBaseFolder( String projectBaseFolder )
-  {
-    m_ProjectBaseFolder = projectBaseFolder;
-  }
+  // public final void setProjectBaseFolder( IFolder currentFolder )
+  // {
+  // m_ProjectBaseFolder = currentFolder;
+  // }
 }

@@ -21,6 +21,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollecti
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
