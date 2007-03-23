@@ -1,4 +1,4 @@
-!     Last change:  EF    6 Mar 2007    4:35 pm
+!     Last change:  L    28 Nov 2006    1:41 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -256,7 +256,7 @@ END SUBROUTINE check_Kalypso
       USE BLK10MOD
       !-
 
-      PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000)
+      PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
                                                                         
 !NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
       !array kntimel must be allocatable, because the size is vacant while calling the reordering sequence
@@ -310,10 +310,7 @@ END SUBROUTINE check_Kalypso
       ne = elem 
       np = knot 
 
-!nis,feb07,testing
-WRITE(*,*) 'Reordering started'
-pause
-!-
+
 
 !get the node numbers into temporary memory
 DO i = 1, ne
@@ -366,10 +363,7 @@ else
   ncn  = 4
 end if
 
-!nis,feb07,testing
-WRITE(*,*) ncn, 'maximale Elementgroesse'
-pause
-!-
+
 
 ierr = 0
 
@@ -492,12 +486,6 @@ IF (ierr.eq.1) stop 5
   785 END DO 
 !                                                                       
       IF (idxx.lt.99999) goto 790 
-
-      !nis,feb07,testing
-      WRITE(*,*) mpp, mpq
-      WRITE(*,*) 'vor Fehler'
-      pause
-      !-
       IF (mpp.le.mpq) stop 6 
       DO 810 n = 1, nepem 
         iel (n) = msn (n) 
@@ -693,10 +681,7 @@ IF (ierr.eq.1) stop 5
  1070 CONTINUE 
 !     add to column adjacent point of eliminated point                  
 !                                                                       
-      DO 270 j = 1, maxc
-        !nis,feb07,testing
-        !WRITE(*,*) j, ii, icon(n,j)
-        !-
+      DO 270 j = 1, maxc 
         ii = icon (n, j) 
         IF (ii.le.0) goto 270 
         mp = mp + 1 
@@ -847,6 +832,7 @@ SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,FFFcnt,KSWIT)
       USE BLK10MOD    	!cord(i,1), cord(i,2), ao(i), tett, MaxE, MaxP, irk, rk_zeile
       USE BLKDRMOD
       USE ParaKalyps    !new module for KALYPSO-specific globals and neighbourhood relations
+      USE BLKSUBMOD     !for weir structures
       USE ParaFlow1dFE  !Modul für Teschke-1D-Elemente
 !-
 
@@ -924,11 +910,10 @@ INTEGER                :: KSWIT                        !Switch for Run-option of
 
 INTEGER                :: unit_nr                      !internal unit number, because this subroutine works as modell and restart data reader
 
+INTEGER                :: weircnt                      !LF Nov06 to count the weir elements
 !nis,jan07: temporary variables for connection handling
 INTEGER                :: ConnNumber
 !-
-
-
 !NiS,mar06: the following common block has been replaced by global module called ParaKalyps
 
 
@@ -958,7 +943,7 @@ ENDIF                     !NiS,mar06
 arcs_without_midside = 0
 midsidenode_max = 0
 
-!Nis,may06,com: initializing the I/O error space
+!Nis,may06: initializing the I/O error space
 istat =0
 
 nodecnt = 0
@@ -983,6 +968,9 @@ cvgo = 0
 cvzu = 0
 cvfe = 0
 !WP Ende
+
+!LF nov06: initialize the number of weir elements
+    weircnt=0
 
 !NiS,mar06: temparc is an array for reading arc informations in the dimensioning run (KSWIT.eq.1)
 DO i=1,5
@@ -1319,6 +1307,19 @@ reading: do
         cvfe = 1
         !NiS,mar06: changed id to id_local; global conflict
         READ (linie, '(a2,4i10)') id_local, i, imat (i), imato (i), nfixh (i)
+
+!LF nov06: read again the FE line for the starting node of a weir element
+        if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
+          weircnt = weircnt + 1
+          read (linie, '(a2,5i10)') id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
+!          write (*,*) id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
+          if (reweir(weircnt,1) .le. 0) then
+            write (*,*) 'starting node for the weir element ',i, ' is needed'
+            stop
+          endif
+          reweir(weircnt,2) = i
+        end if
+
         IF (i.gt.elcnt) elcnt = i
         !NiS,mar06: Net dimension was checked before; there's no Restriction concerning maximum array size; ERROR test deactivated
         !  IF (elcnt.gt.mel) then
@@ -1866,6 +1867,14 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
   ENDIF dimensionif
 END DO all_elem
 
+!LF nov06 renumbering the nodes around weir elements
+if (weircnt .gt. 0) then
+  do i = 1, weircnt
+    if (nop(reweir(i,2),1) .ne. reweir(i,1)) call reweir2dKALYPSO(i)
+  end do
+end if
+
+
 ! CONTROLOUTPUT -------------------------------------------------------------------------------------------
 
 !NiS,mar06: Controloutput changed
@@ -2035,7 +2044,6 @@ all_arcs: DO i=1,arccnt
     ENDIF
   !NiS,may06: IF clause for coordinate test
   ENDIF
-
 !NiS,may06: 1402 jump mark has no more use
 !1402 CONTINUE
 !NiS,may: changed do LOOP to cycle it clearly
@@ -2222,6 +2230,7 @@ WRITE (Lout,105)
 WRITE ( * , 105)
 105 format (1X, 'Reordering has to be done.')
 
+CALL start_node (qlist, k, np)
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
 CALL start_node (qlist, k, np)
 !CALL reord (np, ne, qlist)
@@ -2404,6 +2413,7 @@ neighbours: do i=1,elcnt
 
 end do neighbours
 
+
 ! Ausduennung des urspruenglich mehrfach bestimmten Feldes
 ! (Jedem Knoten wurde ein anderer Knoten mehrfach als Nachbar zugewiesen)
 
@@ -2448,6 +2458,7 @@ do i=1,nodecnt
 end do
 
 
+
 !NiS,mar06: unit name changed; changed iout to Lout
 WRITE (Lout, 111 )
 WRITE ( *  , 111 )
@@ -2456,6 +2467,10 @@ WRITE ( *  , 111 )
 
 !NiS,mar06: deallocate temporary array
 DEALLOCATE(arc)
+
+!LF nov06: deallocate weir renumbering array
+DEALLOCATE (reweir)
+
 
 !NiS,may06: Rewind for possible RESTART
 REWIND(IFILE)
