@@ -91,37 +91,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
   private double m_classMinElevation;
   private double m_classMaxElevation;
   
-  
-//  /**
-//   * @param transparency double from 0 to 1 
-//   */
-//  public SimpleElevationColorModel(
-//            double minElevation,
-//            double maxElevation,
-//            Color minColor,
-//            Color maxColor,
-//            double minHue,
-//            double maxHue,
-//            Color noElevationColor,
-//            double transparentcy,
-//            boolean goDarkerFromMinToMax)
-//  {
-//    m_minElevation=minElevation;
-//    m_maxElevation = maxElevation;
-//    m_minHue=minHue;
-//    m_maxHue=maxHue;
-//    this.noElevationColor=noElevationColor;
-//    m_minColor=minColor;
-//    m_maxColor=maxColor;
-//    m_hsb = Color.RGBtoHSB( baseColor.getRed(),baseColor.getGreen(),baseColor.getBlue(),null);
-//
-//    this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
-//                                               noElevationColor.getGreen(),
-//                                               noElevationColor.getBlue(),null);
-//    m_transparency = (int)(m_transparency*255.0/100.0);
-//    m_goDarkerFromMinToMax= goDarkerFromMinToMax;
-//  }
-  
   public SimpleElevationColorModel(
     double minElevation,
     double maxElevation,
@@ -159,7 +128,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
         noElevationColor.getGreen(),
         noElevationColor.getBlue(),null);
-    m_transparency = (int)(transparency*255.0/100.0);
+    m_transparency = (255 -(int)(transparency*255.0/100.0));
     m_goDarkerFromMinToMax = goDarkerFromMinToMax;
   }
  
@@ -190,13 +159,16 @@ public class SimpleElevationColorModel implements IElevationColorModel
       {
         interpolHue = m_minHue+(elevation*(m_maxHue-m_minHue)/(m_classMaxElevation - m_classMinElevation));
         interpolSat = m_minSat+(elevation*(m_maxSat-m_minSat)/(m_classMaxElevation - m_classMinElevation));      
-        interpolBri = m_minBri+(elevation*(m_maxBri-m_minBri)/(m_classMaxElevation - m_classMinElevation));      
+        interpolBri = m_minBri+(elevation*(m_maxBri-m_minBri)/(m_classMaxElevation - m_classMinElevation));
       }
       else
       {
         interpolHue = m_maxHue-(elevation*(m_maxHue-m_minHue)/(m_maxElevation-m_minElevation));      //System.out.println("brightness :"+brightness);
         interpolSat = m_maxSat-(elevation*(m_maxSat-m_minSat)/(m_maxElevation-m_minElevation));      
-        interpolBri = m_maxBri-(elevation*(m_maxBri-m_minBri)/(m_maxElevation-m_minElevation));       
+        interpolBri = m_maxBri-(elevation*(m_maxBri-m_minBri)/(m_maxElevation-m_minElevation));  
+        
+         
+    
       }
             
       final Color hsbColor = Color.getHSBColor((float) interpolHue, (float)interpolSat, (float)interpolBri );//

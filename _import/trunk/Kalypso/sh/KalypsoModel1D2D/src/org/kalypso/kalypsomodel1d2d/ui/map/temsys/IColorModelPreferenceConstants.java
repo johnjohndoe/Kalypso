@@ -40,16 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import org.eclipse.swt.graphics.Color;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
-
-
-
 /**
  * @author madanago
  *
  */
-public interface IElevationColorModel2 extends IElevationColorModel
+public interface IColorModelPreferenceConstants
 {
-  public Color getSWTColor(double elevation);
+  public String LINE_MIN_COLOR = "LINE_MIN_COLOR";
+  public String LINE_MAX_COLOR = "LINE_MAX_COLOR";
+  public String LINE_NO_COLOR = "LINE_NO_COLOR";
+  public String LINE_COLOR_INDEX = "LINE_NO_CLASSES";
+  public String LINE_TRANSPARENCY = "LINE_TRANSPARENCY";
+  public String LINE_MIN_MAX = "LINE_MIN_MAX";
 }

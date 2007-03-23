@@ -83,7 +83,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  * @author Patrice Congo
  * @author Madanagopal
  */
-public class ColorModelChangeComponent
+public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 {
 
   static private IPreferenceStore preferenceStore_ = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
@@ -91,7 +91,7 @@ public class ColorModelChangeComponent
   private IPropertyChangeListener storePropertyChangeListener_ = createPropertyChangeLis();
 
   // private GridPointCollector gridPointCollector_;
-  private PainterElevationColorModel paintModel = new PainterElevationColorModel();
+  // private PainterElevationColorModel paintModel = new PainterElevationColorModel();
 
   private Section elevationColorSection;
 
@@ -139,18 +139,6 @@ public class ColorModelChangeComponent
 
   private Label settLabel;
 
-  private String LINE_MAX_COLOR = "LINE_MAX_COLOR";
-
-  private String LINE_MIN_COLOR = "LINE_MIN_COLOR";
-
-  private String LINE_NO_COLOR = "LINE_NO_COLOR";
-
-  private String LINE_COLOR_INDEX = "LINE_NO_CLASSES";
-
-  private String LINE_TRANSPARENCY = "LINE_TRANSPARENCY";
-
-  private String LINE_MIN_MAX = "LINE_MIN_MAX";
-
   public void createControl( ApplyElevationWidgetDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
     preferenceStore_.addPropertyChangeListener( storePropertyChangeListener_ );
@@ -172,66 +160,77 @@ public class ColorModelChangeComponent
     System.out.println( "LINE_MAX_COLOR :" + preferenceStore_.contains( LINE_MAX_COLOR ) );
     System.out.println( "LINE_MAX_COLOR :" + preferenceStore_.contains( LINE_MIN_COLOR ) );
     System.out.println( "LINE_NO_COLOR :" + preferenceStore_.contains( LINE_NO_COLOR ) );
-    if( !preferenceStore_.contains( LINE_MAX_COLOR ) )
-    {
-      PreferenceConverter.setDefault( preferenceStore_, LINE_MAX_COLOR, makeRGB( ElevationColorControl.getMaxColor() ) );
 
-      PreferenceConverter.setValue( preferenceStore_, LINE_MAX_COLOR, makeRGB( ElevationColorControl.getMaxColor() ) );
-    }
-    else
+    try
     {
+      if( !preferenceStore_.contains( LINE_MAX_COLOR ) )
+      {
+        // PreferenceConverter.setDefault( preferenceStore_, LINE_MAX_COLOR, makeRGB(
+        // ElevationColorControl.getDEFAULT_MAX_COLOR() ) );
+        PreferenceConverter.setValue( preferenceStore_, LINE_MAX_COLOR, makeRGB( ElevationColorControl.getMaxColor() ) );
+      }
+      else
+      {
+        ElevationColorControl.setMaxColor( getThisColor( LINE_MAX_COLOR ) );
+      }
 
-      ElevationColorControl.setMaxColor( getThisColor( LINE_MAX_COLOR ) );
-    }
+      if( !preferenceStore_.contains( LINE_MIN_COLOR ) )
+      {
+        // PreferenceConverter.setDefault( preferenceStore_, LINE_MIN_COLOR, makeRGB(
+        // ElevationColorControl.getDEFAULT_MIN_COLOR() ) );
+        PreferenceConverter.setValue( preferenceStore_, LINE_MIN_COLOR, makeRGB( ElevationColorControl.getMinColor() ) );
+      }
+      else
+      {
+        ElevationColorControl.setMinColor( getThisColor( LINE_MIN_COLOR ) );
+      }
 
-    if( !preferenceStore_.contains( LINE_MIN_COLOR ) )
-    {
-      PreferenceConverter.setDefault( preferenceStore_, LINE_MIN_COLOR, makeRGB( ElevationColorControl.getMinColor() ) );
-      PreferenceConverter.setValue( preferenceStore_, LINE_MIN_COLOR, makeRGB( ElevationColorControl.getMinColor() ) );
-    }
-    else
-    {
-      ElevationColorControl.setMinColor( getThisColor( LINE_MIN_COLOR ) );
-    }
+      if( !preferenceStore_.contains( LINE_NO_COLOR ) )
+      {
+        // PreferenceConverter.setDefault( preferenceStore_, LINE_NO_COLOR, makeRGB(
+        // ElevationColorControl.getDEFAULT_NO_ELEVATION_COLOR() ) );
+        PreferenceConverter.setValue( preferenceStore_, LINE_NO_COLOR, makeRGB( ElevationColorControl.getNoElevationColor() ) );
+      }
+      else
+      {
+        ElevationColorControl.setNoElevationColor( getThisColor( LINE_NO_COLOR ) );
+      }
 
-    if( !preferenceStore_.contains( LINE_NO_COLOR ) )
-    {
-      PreferenceConverter.setDefault( preferenceStore_, LINE_NO_COLOR, makeRGB( ElevationColorControl.getNoElevationColor() ) );
-      PreferenceConverter.setValue( preferenceStore_, LINE_NO_COLOR, makeRGB( ElevationColorControl.getNoElevationColor() ) );
-    }
-    else
-    {
-      ElevationColorControl.setNoElevationColor( getThisColor( LINE_NO_COLOR ) );
-    }
+      if( !preferenceStore_.contains( LINE_COLOR_INDEX ) )
+      {
+        // preferenceStore_.setDefault( LINE_COLOR_INDEX, ElevationColorControl.getDEFAULT_COLOR_INDEX() );
+        preferenceStore_.setValue( LINE_COLOR_INDEX, ElevationColorControl.getColorIndex() );
+      }
+      else
+      {
+        ElevationColorControl.setColorIndex( preferenceStore_.getInt( LINE_COLOR_INDEX ) );
+      }
 
-    if( !preferenceStore_.contains( LINE_COLOR_INDEX ) )
-    {
-      preferenceStore_.setDefault( LINE_COLOR_INDEX, ElevationColorControl.getColorIndex() );
-      preferenceStore_.setValue( LINE_COLOR_INDEX, ElevationColorControl.getColorIndex() );
-    }
-    else
-    {
-      ElevationColorControl.setColorIndex( preferenceStore_.getInt( LINE_COLOR_INDEX ) );
-    }
+      if( !preferenceStore_.contains( LINE_TRANSPARENCY ) )
+      {
+        // preferenceStore_.setDefault( LINE_TRANSPARENCY, ElevationColorControl.getDEFAULT_TRANSPARENCY_INDEX() );
+        preferenceStore_.setValue( LINE_TRANSPARENCY, ElevationColorControl.getTransparencyIndex() );
+      }
+      else
+      {
+        ElevationColorControl.setTransparencyIndex( preferenceStore_.getInt( LINE_TRANSPARENCY ) );
+      }
 
-    if( !preferenceStore_.contains( LINE_TRANSPARENCY ) )
-    {
-      preferenceStore_.setDefault( LINE_TRANSPARENCY, ElevationColorControl.getTransparencyIndex() );
-      preferenceStore_.setValue( LINE_TRANSPARENCY, ElevationColorControl.getTransparencyIndex() );
+      if( !preferenceStore_.contains( LINE_MIN_MAX ) )
+      {
+        preferenceStore_.setDefault( LINE_MIN_MAX, ElevationColorControl.getMinMaxStatus() );
+        preferenceStore_.setValue( LINE_MIN_MAX, ElevationColorControl.getMinMaxStatus() );
+      }
+      else
+      {
+        ElevationColorControl.setMinMaxStatus( preferenceStore_.getBoolean( LINE_MIN_MAX ) );
+      }
     }
-    else
+    catch( Throwable th )
     {
-      ElevationColorControl.setTransparencyIndex( preferenceStore_.getInt( LINE_TRANSPARENCY ) );
-    }
+      th.printStackTrace();
+      throw new RuntimeException( th );
 
-    if( !preferenceStore_.contains( LINE_MIN_MAX ) )
-    {
-      preferenceStore_.setDefault( LINE_MIN_MAX, ElevationColorControl.getMinMaxStatus() );
-      preferenceStore_.setValue( LINE_MIN_MAX, ElevationColorControl.getMinMaxStatus() );
-    }
-    else
-    {
-      ElevationColorControl.setMinMaxStatus( preferenceStore_.getBoolean( LINE_MIN_MAX ) );
     }
 
   }
@@ -260,10 +259,12 @@ public class ColorModelChangeComponent
           else if( LINE_MAX_COLOR.equals( property ) )
           {
             ElevationColorControl.setMaxColor( makeAWTColor( (RGB) event.getNewValue() ) );
+            // windowCanvas.redraw();
           }
           else if( LINE_MIN_COLOR.equals( property ) )
           {
             ElevationColorControl.setMinColor( makeAWTColor( (RGB) event.getNewValue() ) );
+            // windowCanvas.redraw();
           }
           else if( LINE_NO_COLOR.equals( property ) )
           {
@@ -273,13 +274,15 @@ public class ColorModelChangeComponent
           {
             System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() );
           }
-          windowCanvas.redraw();
+          if( windowCanvas != null )
+            windowCanvas.redraw();
         }
         catch( Throwable th )
         {
           th.printStackTrace();
           throw new RuntimeException( th );
         }
+        //
       }
 
     };
@@ -354,30 +357,21 @@ public class ColorModelChangeComponent
   void paintElevationColorSelection( GC graphicCanvas )
   {
     selectedRects = ElevationColorControl.getColorIndex();
-    int coord = (((int) (Math.ceil( 140D / selectedRects ))));// 140
-    colorAWTChoice = ElevationColorControl.getBaseColor();
-    MAXI_ELEVATION = 100;// dataModel.getElevationModel().getMaxElevation();
-    MINI_ELEVATION = 0;// dataModel.getElevationModel().getMinElevation();
+    int coord = (((int) (Math.ceil( 140D / selectedRects ))));
+    MAXI_ELEVATION = 100;
+    MINI_ELEVATION = 0;
 
-    double selectElevation = MINI_ELEVATION;
+    double selectElevation = MAXI_ELEVATION;
     double part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
 
     colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
     part1 = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / selectedRects;
-    selectElevation = MINI_ELEVATION;
     for( int i = 0; i < selectedRects; i++ )
     {
-      if( colorAWTChoice != null )
-      {
-        gotColor = colorModel.getColor( selectElevation );
-        graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
-        graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
-      }
-      else
-      {
-        System.out.println( "Out of Range" );
-      }
-      selectElevation = selectElevation + part1;
+      gotColor = colorModel.getColor( selectElevation );
+      graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
+      graphicCanvas.fillRectangle( 0, (coord) * i, 20, coord );
+      selectElevation = selectElevation - part1;
     }
   }
 
@@ -385,22 +379,17 @@ public class ColorModelChangeComponent
   {
     FormData optionsColorFormData;
     FormLayout optionsColorGrpLayout = new FormLayout();
-    // GridLayout optionsColorGridLayout = new GridLayout(1,false);
     optionsColorGroup.setText( "Optionen" );
-    // optionsColorGroup.setLayout( new GridLayout(1,false) );
     optionsColorGroup.setLayout( optionsColorGrpLayout );
     Composite smallComposite_1 = new Composite( optionsColorGroup, SWT.FLAT );
     smallComposite_1.setLayout( new GridLayout( 1, false ) );
 
     final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, "Max Color", smallComposite_1 );
-    final Button maxColorBtn = maxColorSelector.getColorSelector().getButton();
-
+    final Button minColorBtn = maxColorSelector.getColorSelector().getButton();
     maxColorSelector.setPreferenceStore( preferenceStore_ );
     maxColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     maxColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
     maxColorSelector.load();
-    maxColorSelector.getColorSelector().setColorValue( makeRGB( ElevationColorControl.getMaxColor() ) );
-
     optionsColorFormData = new FormData();
     optionsColorFormData.top = new FormAttachment( 0, 5 );
     optionsColorFormData.left = new FormAttachment( 0, 5 );
@@ -410,16 +399,14 @@ public class ColorModelChangeComponent
     Composite smallComposite_2 = new Composite( optionsColorGroup, SWT.FLAT );
     smallComposite_2.setLayout( new GridLayout( 1, false ) );
     final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, "Min Color", smallComposite_2 );
-    final Button minColorBtn = minColorSelector.getColorSelector().getButton();
+    final Button maxColorBtn = minColorSelector.getColorSelector().getButton();
     minColorSelector.setPreferenceStore( preferenceStore_ );
     minColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     minColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
     minColorSelector.load();
-    minColorSelector.getColorSelector().setColorValue( makeRGB( ElevationColorControl.getMinColor() ) );
     optionsColorFormData = new FormData();
     optionsColorFormData.top = new FormAttachment( 0, 5 );
     optionsColorFormData.left = new FormAttachment( smallComposite_1, 5 );
-    // optionsColorFormData.right = new FormAttachment(100,-5);
     smallComposite_2.setLayoutData( optionsColorFormData );
     smallComposite_2.pack();
 
@@ -431,7 +418,6 @@ public class ColorModelChangeComponent
     noColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     noColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
     noColorSelector.load();
-    noColorSelector.getColorSelector().setColorValue( makeRGB( ElevationColorControl.getNoElevationColor() ) );
     optionsColorFormData = new FormData();
     optionsColorFormData.top = new FormAttachment( smallComposite_1, 5 );
     optionsColorFormData.left = new FormAttachment( 0, 5 );
@@ -601,13 +587,13 @@ public class ColorModelChangeComponent
     return new java.awt.Color( rgb.red, rgb.green, rgb.blue );
   }
 
-  static private final RGB makeRGB( java.awt.Color color )
+  static public final RGB makeRGB( java.awt.Color color )
   {
     RGB rgb_ = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
     return rgb_;
   }
 
-  public static java.awt.Color getThisColor( String key )
+  static public final java.awt.Color getThisColor( String key )
   {
     if( !preferenceStore_.contains( key ) )
     {
