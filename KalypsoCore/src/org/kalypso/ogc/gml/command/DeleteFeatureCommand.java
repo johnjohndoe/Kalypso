@@ -208,49 +208,61 @@ public class DeleteFeatureCommand implements ICommand
 
     for( final GMLWorkspace workspace : touchedWorkspaces )
     {
-      final FeatureVisitor visitor = new FeatureVisitor()
-      {
-        // checks all properties for broken links
-        /**
-         * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-         */
-        public boolean visit( Feature f )
-        {
-          final IFeatureType ft = f.getFeatureType();
-          final IPropertyType[] ftps = ft.getProperties();
-          for( int j = 0; j < ftps.length; j++ )
-          {
-            if( ftps[j] instanceof IRelationType )
-            {
-              IRelationType linkftp = (IRelationType) ftps[j];
-              if( linkftp.isList() )
-              {
-                final List propList = (List) f.getProperty( linkftp );
-                // important: count down not up
-                for( int k = propList.size() - 1; k >= 0; k-- )
-                {
-                  if( workspace.isBrokenLink( f, linkftp, k ) )
-                    m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( workspace, f, linkftp, (String) propList.get( k ), k ) );
-                }
-              }
-              else
-              {
-                if( workspace.isBrokenLink( f, linkftp, 1 ) )
-                {
-                  String childID = (String) f.getProperty( linkftp );
-                  m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( workspace, f, linkftp, childID, 1 ) );
-                }
-              }
-            }
-          }
-          return true;
-        }
-      };
+      final FeatureVisitor visitor = new FindLinksFeatureVisitor( workspace );
       workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     }
 
     for( final ICommand command : m_removeBrokenLinksCommands )
       command.process();
+  }
+
+  /**
+   * @author Gernot Belger
+   */
+  private final class FindLinksFeatureVisitor implements FeatureVisitor
+  {
+    private final GMLWorkspace m_workspace;
+    
+    public FindLinksFeatureVisitor( final GMLWorkspace workspace )
+    {
+      m_workspace = workspace;
+    }
+
+    // checks all properties for broken links
+    /**
+     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+     */
+    public boolean visit( final Feature f )
+    {
+      final IFeatureType ft = f.getFeatureType();
+      final IPropertyType[] ftps = ft.getProperties();
+      for( int j = 0; j < ftps.length; j++ )
+      {
+        if( ftps[j] instanceof IRelationType )
+        {
+          final IRelationType linkftp = (IRelationType) ftps[j];
+          if( linkftp.isList() )
+          {
+            final List propList = (List) f.getProperty( linkftp );
+            // important: count down not up
+            for( int k = propList.size() - 1; k >= 0; k-- )
+            {
+              if( m_workspace.isBrokenLink( f, linkftp, k ) )
+                m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, (String) propList.get( k ), k ) );
+            }
+          }
+          else
+          {
+            if( m_workspace.isBrokenLink( f, linkftp, 1 ) )
+            {
+              final String childID = (String) f.getProperty( linkftp );
+              m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, childID, 1 ) );
+            }
+          }
+        }
+      }
+      return true;
+    }
   }
 
   private static class RemoveBrokenLinksCommand implements ICommand

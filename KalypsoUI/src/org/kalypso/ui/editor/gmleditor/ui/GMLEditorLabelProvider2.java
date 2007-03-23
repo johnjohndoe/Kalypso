@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * @author kuepfer
+ * @author Christoph Kuepferle
  */
 public class GMLEditorLabelProvider2 extends LabelProvider
 {

@@ -1,7 +1,7 @@
 package org.kalypsodeegree.model.feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface FeatureVisitor
 {

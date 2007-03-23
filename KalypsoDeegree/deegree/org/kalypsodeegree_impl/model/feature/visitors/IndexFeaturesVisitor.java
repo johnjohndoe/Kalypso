@@ -5,12 +5,10 @@ import java.util.Map;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Indiziert alle besuchten Features anhand einer ihrer Properties. Die Features werden in eine HashMap id -> feature
  * gesteckt.
- * 
  * <p>
  * Es kann aber auch nach der Feature-ID gehacht werden.
  * </p>
@@ -21,7 +19,7 @@ public class IndexFeaturesVisitor implements FeatureVisitor
 {
   private final String m_indexProperty;
 
-  private final Map m_index = new HashMap();
+  private final Map<Object, Feature> m_index = new HashMap<Object, Feature>();
 
   public IndexFeaturesVisitor( final String indexProperty )
   {
@@ -38,14 +36,14 @@ public class IndexFeaturesVisitor implements FeatureVisitor
     if( m_indexProperty == null )
       property = f.getId();
     else
-      property = f.getProperty(  m_indexProperty);
+      property = f.getProperty( m_indexProperty );
 
     m_index.put( property, f );
 
     return true;
   }
 
-  public Map getIndex()
+  public Map getIndex( )
   {
     return m_index;
   }
