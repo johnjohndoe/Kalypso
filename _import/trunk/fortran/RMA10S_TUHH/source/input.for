@@ -1,4 +1,4 @@
-C     Last change:  K    27 Feb 2007    2:43 pm
+CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -44,6 +44,7 @@ CIPK  LAST UPDATE NOV 20 1997 ADD ELEMENT COUNTING
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE JAN22 1997 ADD SMAGORINSKY OPTION
 CIPK  LAST UPDATE OCT 1 1996
+C     Last change:  IPK   3 Oct 98    4:30 pm
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
       SUBROUTINE INPUT(IBIN)
@@ -373,7 +374,7 @@ cipk sep04
       ENDIF
 !-
       READ(DLINEXTRA,5011) NBSFRQ
-CIPK AUG02 ADD NBSFRQ ABOVE
+CIPK AUG02 ADD NBSFRQ ABOVE 
       write(*,*) 'read c5'
 C
       WRITE(LOUT,6025)NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
@@ -400,7 +401,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 
       IF(ID(1:2) .EQ. 'C6') THEN
-cipk mar06 allow for output file rewind
+cipk mar06 allow for output file rewind      
         READ(DLIN,'(3I8)') IOUTFREQ,IOUTRST,IOUTRWD
         call ginpt(lin,id,dlin)
 	  WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD
@@ -736,22 +737,19 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec03 add element dependence IEDSW
-  	  IF(ID(1:3) .EQ. 'ED3') THEN
+  	    IF(ID(1:3) .EQ. 'ED3') THEN
             READ(DLIN,5032) IT1,TT1,TT2
-!NiS,apr06: commenat added
-            write(*,*) 'read ed3'
-!-
             call ginpt(lin,id,dlin)
             IF(IEDSW .LT. 0) THEN
                IEDSW1(J)=IT1
             ENDIF
 	      IF(TT1 .GT. 0.) THEN
-                TBFACT1(J)=TT1
+              TBFACT1(J)=TT1
 	      ENDIF
 	      IF(TT2 .GT. 0.) THEN
 	        TBMIN1(J)=TT2
-              ENDIF
-          ELSEIF(IEDSW .LT. 0) THEN
+            ENDIF
+          ELSEIF(IEDSW .LT. 0) THEN	      
 cipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
@@ -1079,15 +1077,10 @@ CIPK OCT96 END ADDITION
 C-
 C-.....READ GENERATED GEOMETRY DATA
 C-
-
       write(*,*) 'going to getgeo'
+   
       CALL GETGEO
-
       write(*,*) 'back from getgeo'
-      !nis,feb07,testing
-      WRITE(*,*) 'number of surface nodes: ', nem
-      WRITE(*,*) 'number of nodes: ', ne
-      !-
 
 !NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
 !           At this point the IMAT-array is not modified by additions for element
@@ -1218,8 +1211,6 @@ C
         NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         IF(ID(1:3) .EQ. 'SA1') THEN
           WRITE(LOUT,6036) SALBC
           READ(DLIN,5010) (IFXSAL(K),K=1,9)
@@ -1298,7 +1289,7 @@ C
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
-            N = IMIDD(K)
+            N = IMIDD(K) 
             IF(N .GT. 0) NSTRT(N,2)=1
           ENDDO
           GO TO 116
@@ -1356,7 +1347,7 @@ cipk sep04
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
-            N = IMIDD(K)
+            N = IMIDD(K) 
             IF(N .GT. 0) ICPON(N)=J
           ENDDO
           GO TO 193
@@ -1399,6 +1390,8 @@ cipk sep04
         STOP
       ENDIF
 
+
+
       CALL INITSED(IBIN)
 
 
@@ -1417,6 +1410,8 @@ C-.....INPUT BOUNDARY AND WIND DATA.....
 C-
       write(*,*) 'going to getbc', ibin
       CALL GETBC(IBIN)
+
+
 
 cipk jan99 set directions
        do n=1,ne
@@ -1577,6 +1572,7 @@ C
       CALL ANGLEN
 CZZZ
       CALL GETCON
+
 C-
 C-
 C......FORM THREE DIMENSIONAL ELEMENTS FROM INPUT
@@ -1702,12 +1698,12 @@ CIPK SEP04  ENSURE VALUES AT ALL NODES
             N1=NREF(N)+1
             NV=NDEP(N)+N1-2
 	    DO M=N1,NV
-              AO(M)=AO(N)
-              ADO(M)=ADO(N)
-              ADT(M)=ADT(N)
-              ADB(M)=ADB(N)
-              akp(M)=akp(n)
-            ENDDO
+            AO(M)=AO(N)
+            ADO(M)=ADO(N)
+            ADT(M)=ADT(N)
+            ADB(M)=ADB(N)
+            akp(M)=akp(n)
+          ENDDO
 	  ENDIF
         endif
       ENDDO
@@ -1870,13 +1866,14 @@ CIPK DEC03 ADD IEDSW DEPENDENCE
   	    IEDSW=IEDSW1(NMATYP)
 	    TBFACT=TBFACT1(NMATYP)
 	    TBMIN=TBMIN1(NMATYP)
-            	    
           IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
             CALL SURCOF(N,0)
           ELSEIF(NETYP(N)/10 .EQ. 2) THEN
             CALL COEF3(N,0)
           ELSEIF(NETYP(N)/10 .EQ. 1) THEN
-            IF(IMAT(N) .LT. 900) THEN
+            IF(IMAT(N) .LT. 900  .OR. 
+     +    (IMAT(N) .GT. 903  .AND. IMAT(N) .LT. 1000) ) THEN
+CIPK FEB07  ADD TO TEST
               CALL COEF2(N,0)
             ELSE
               CALL COEFV(N,0)
@@ -1906,14 +1903,12 @@ CIPK NOV97
           ENDIF
         ENDIF
       ENDDO
-
 C
 Cipk nov97  Determine vertical lines for element numbers and number of
 c           elements below each node
       NN=1
  1301 CONTINUE
       N=NFIXH(NN)
-
       IF(N .LE. NEM) THEN
 cipk feb98 update to skip zero
         IF(N .EQ. 0) THEN
@@ -2001,6 +1996,8 @@ CIPK FEB98 ADD TEST TO SKIP ZERO ELEMENT
         ENDIF
       ENDDO
 CIPK NOV97 END CHANGES
+
+
       DO 133 N=1,NE
         IF(IMAT(N)/1000 .NE. 2) GO TO 133
         CALL BSLOP(N)
@@ -2016,7 +2013,6 @@ CIPK NOV97 END CHANGES
  1333   CONTINUE
  1331 CONTINUE
       WRITE(LOUT,6195) NP,NE
-
 C
 CIPK NOV97 ADD CALL
       CALL ELFLOWS(IBIN)
@@ -2030,8 +2026,6 @@ C
 C       
       CALL HGENSPCL(1,0,0, 0.,QDM)
 C-
-
-
 C
       IF( IPRT .NE. 1 ) GO TO 156
 C-
@@ -2113,14 +2107,14 @@ C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
 *     CALL BFORM(0)
 C-
+CIPK JUL01
+
 cipk may06
       IF(LSS .GT. 0) THEN
         CALL GETMAS
       ENDIF
-
-CIPK JUL01
+      
       CALL FILE(2,ANAME)
-
 
       RETURN
 C-
@@ -2364,9 +2358,7 @@ c6190 FORMAT(/15X,'TIME IN VOLUME GENERATION',I6)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk feb97 new subroutine to process input files
       SUBROUTINE GINPT(IIN,ID,DLIN)
-
       CHARACTER ID*8,DLIN*72
-
 cipk jan03  ADD AN EXTRA 8 CHARACTERS
       CHARACTER*8 DLINEXTRA
       COMMON /DLINF/ DLINEXTRA
@@ -2374,6 +2366,7 @@ cipk jan03  ADD AN EXTRA 8 CHARACTERS
 CIPK JAN03
       READ(IIN,7000) ID,DLIN,DLINEXTRA
       write(75,7000) id,dlin,DLINEXTRA
+
  7000 FORMAT(A8,A72,a8)
 CIPK JAN03 END CHANGES
       do i=1,8
