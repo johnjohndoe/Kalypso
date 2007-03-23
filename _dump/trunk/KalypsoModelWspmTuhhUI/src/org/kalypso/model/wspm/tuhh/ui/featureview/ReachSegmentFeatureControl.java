@@ -131,8 +131,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final Table table = new Table( parent, style | SWT.CHECK | SWT.MULTI );
-    m_viewer = new CheckboxTableViewer( table );
+    m_viewer = CheckboxTableViewer.newCheckList( parent, style | SWT.CHECK | SWT.MULTI );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new GMLEditorLabelProvider2() );
 
@@ -150,6 +149,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     manager.add( new ChangeCheckstateAction( "&Check selected", true ) );
     manager.add( new ChangeCheckstateAction( "&Uncheck selected", false ) );
 
+    final Table table = m_viewer.getTable();
     table.setMenu( manager.createContextMenu( table ) );
 
     updateControl();
@@ -196,7 +196,8 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
       for( final TuhhReachProfileSegment segment : reachProfileSegments )
       {
         final WspmProfile profileMember = segment.getProfileMember();
-        m_viewer.setChecked( profileMember.getFeature(), true );
+        if( profileMember != null )
+          m_viewer.setChecked( profileMember.getFeature(), true );
       }
     }
   }
@@ -224,7 +225,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
       {
         final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( (Feature) segmentFeature );
         final WspmProfile profileMember = segment.getProfileMember();
-        if( profileMember.equals( changedProfile ) )
+        if( profileMember != null && profileMember.equals( changedProfile ) )
         {
           // TODO: post via command
           segments.remove( segmentFeature );
