@@ -1,6 +1,12 @@
 Changelog of Kalypso-WSPM
 =========================
 
+since XXXXXXXXX
+---------------
+- Bugfix [#84] Strange linear water-boundary: No sorting is any more needed for reach-segments. Sorting is done automatically before calculation.
+- Subelements of reaches are not displayed any more in tree-view.
+- Bugfix [#85] Dangling references in reaches: The reach view does not crash any more if the segments contain empty references to profiles.
+
 since 15.02.2007
 ----------------
 - non-uniform bankfull calculation: Results are now retrieved as functions (singular points) over h and may be displayed as diagramms. Furthermore, polynomials (as input for the instationary calculation) are calulated automatically from the points and displayed as well.
