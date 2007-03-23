@@ -85,6 +85,8 @@ public class WiskiDump implements IActionDelegate
 
     final Counter counter = new Counter();
 
+    final WiskiRepository wiskiRep = m_wiskiRep;
+
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
@@ -98,7 +100,7 @@ public class WiskiDump implements IActionDelegate
           final File dumpFile = File.createTempFile( "wiskiDump", ".txt" );
           writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream( dumpFile ) ) );
 
-          final IRepositoryItem[] supergroups = m_wiskiRep.getChildren();
+          final IRepositoryItem[] supergroups = wiskiRep.getChildren();
           for( int i = 0; i < supergroups.length; i++ )
           {
             final SuperGroupItem sgi = (SuperGroupItem)supergroups[i];

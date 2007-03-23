@@ -80,9 +80,16 @@ public class SuperGroupItem implements IRepositoryItem
         final GetGroupList call = new GetGroupList( m_name );
         m_rep.executeWiskiCall( call );
 
-        m_children = new GroupItem[call.getResultList().size()];
+        final List resultList = call.getResultList();
+        if( resultList == null )
+        {
+          // TODO: error handling?
+          m_children = new GroupItem[0];
+          return m_children;
+        }
+        m_children = new GroupItem[resultList.size()];
         int i = 0;
-        for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
+        for( final Iterator it = resultList.iterator(); it.hasNext(); )
         {
           final HashMap map = (HashMap)it.next();
           m_children[i++] = new GroupItem( this, (String)map.get( "group_id" ), (String)map.get( "group_name" ) );

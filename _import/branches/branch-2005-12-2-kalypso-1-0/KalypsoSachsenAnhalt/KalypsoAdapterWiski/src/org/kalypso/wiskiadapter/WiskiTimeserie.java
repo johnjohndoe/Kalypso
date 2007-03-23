@@ -230,7 +230,16 @@ public class WiskiTimeserie implements IObservation
             WiskiUtils.getProperty( WiskiUtils.PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
       }
       else
-        dr = req.getDateRange();
+      {
+        final DateRange dateRange = req.getDateRange();
+        final WiskiTimeConverter timeConverter = new WiskiTimeConverter( TimeZone.getDefault(), m_tsinfo );
+
+        final Date from = timeConverter.kalypsoToWiski( dateRange.getFrom() );
+        final Date to = timeConverter.kalypsoToWiski( dateRange.getTo() );
+
+        final DateRange wiskiDr = new DateRange( from, to );
+        dr = wiskiDr;
+      }
 
       if( dr.equals( m_cachedDr ) )
         return m_cachedValues;
@@ -238,7 +247,7 @@ public class WiskiTimeserie implements IObservation
       m_cachedDr = dr;
 
       // TODO: also apply wiski-offset to request!
-      
+
       try
       {
         final String useType;
@@ -264,7 +273,10 @@ public class WiskiTimeserie implements IObservation
       if( data == null )
         m_cachedValues = new SimpleTuppleModel( getAxisList() );
       else
-        m_cachedValues = new WiskiTuppleModel( getAxisList(), data, m_cv, call.getTimeZone(), m_tsinfo );
+      {
+        final WiskiTimeConverter timeConverter = new WiskiTimeConverter( call.getTimeZone(), m_tsinfo );
+        m_cachedValues = new WiskiTuppleModel( getAxisList(), data, m_cv, timeConverter );
+      }
 
       if( bDump )
       {
@@ -591,6 +603,9 @@ public class WiskiTimeserie implements IObservation
     //        + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= " + tsinfo.getWiskiIdAsString() );
     //
     //    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiParameterId(), to, type );
+
+    // TODO: suche über station ist schlecht, weil diese mehrere Schlüsselkurven unterschliedlicher typen haben kann
+    // Also besser den parameter auch berücksichtigen!
     final String type = KiWWDataProviderInterface.OBJECT_STATION;
 
     LOG.info( "Calling getRatingTables() with param-id= " + tsinfo.getWiskiParameterId() + " validity= " + to
