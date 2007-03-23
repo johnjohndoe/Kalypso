@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:swe="http://www.opengis.net/swe"
+	xmlns:sweExt="org.kalypso.swe.ext"
+	targetNamespace="org.kalypso.swe.ext" elementFormDefault="qualified"
+	version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+		<documentation>
+			Extensions of Kalypso for the http://www.opengis.net/swe
+			namespace.
+		</documentation>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" />
+	<import namespace="http://www.opengis.net/swe" />
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<element name="SortedRecordDefinition"
+		type="sweExt:SortedRecordDefinitionType"
+		substitutionGroup="swe:RecordDefinition" />
+
+	<complexType name="SortedRecordDefinitionType">
+		<annotation>
+			<documentation>
+				Extension of RecordDefinitionType which adds an
+				additional list of components, by which the result
+				should be sorted.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="swe:RecordDefinitionType">
+				<sequence>
+					<element name="sortedComponent"
+						type=" swe:SWE_RecordSchemaPropertyType " maxOccurs="unbounded" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

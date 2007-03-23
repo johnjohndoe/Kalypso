@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="functionProperty" name="functionProperty" schema="schema/functionProperty.exsd"/>
+   <extension-point id="gmlWorkspaceListener" name="gmlWorkspaceListener" schema="schema/gmlWorkspaceListener.exsd"/>
+   <extension-point id="featureRule" name="featureRule" schema="schema/featureRule.exsd"/>
+
+     <extension
+         id="org.kalypso.deegree.catalog"
+         name="UrlCatalog"
+         point="org.kalypso.contribs.java.urlCatalog">
+        <catalog
+              class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC"
+              id="org.kalypso.deegree.catalog.URLCatalogOGC"/>
+      <catalog
+            class="org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog"
+            id="org.kalypso.deegree.catalog.deegreeUrlCatalog"/>
+      <catalog
+            class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping"
+            id="org.kalypso.deegree.catalog.urlCatalogUpdateOpservatsionMapping"/>
+   </extension>
+     <extension
+           point="org.kalypso.deegree.functionProperty">
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.ConstantFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.const"
+              name="Constant"/>
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.CopyFeaturePropertyFunction"
+              id="org.kalypso.gml.functionProperty.copyProperty"
+              name="Copy Feature Property Function"/>
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.DontInvalidGeomFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.dontinvalidgeo"
+              name="Do not invalidate Geometry"/>
+         <function
+              class="org.kalypsodeegree_impl.model.feature.function.ValuesEqualsFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.valueEquals"
+              name="Value Equals"/>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureRule">
+        <rule
+              class="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
+              description="This rule validates, if the feature fullfils the restrictions of its gml application schema."
+              id="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
+              name="Schema restrictions Rule"/>
+     </extension>
+
+   <extension
+         id="org.kalypso.deegree.featureCommonsAdapterFactory"
+         name="Kalypso Deegree Commons Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypsodeegree_impl.gml.binding.FeatureCommonsAdapterFactory">
+         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D"/>
+         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D"/>
+      </factory>
+      
+   </extension>
+
+</plugin>
