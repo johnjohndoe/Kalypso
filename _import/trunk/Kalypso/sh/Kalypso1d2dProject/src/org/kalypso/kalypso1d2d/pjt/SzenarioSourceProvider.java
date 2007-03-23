@@ -11,15 +11,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 
-public class SzenarioSourceProvider extends AbstractSourceProvider
+public class SzenarioSourceProvider extends AbstractSourceProvider implements ISzenarioSourceProvider
 {
-  public static final String ACTIVE_SZENARIO_DATA_PROVIDER_NAME = "activeSzenarioDataProvider";
-
-  public static final String ACTIVE_SZENARIO_FOLDER_NAME = "activeSimulationModelBaseFolder";
-
   private static final Logger LOGGER = Logger.getLogger( SzenarioSourceProvider.class.getName() );
 
   static
