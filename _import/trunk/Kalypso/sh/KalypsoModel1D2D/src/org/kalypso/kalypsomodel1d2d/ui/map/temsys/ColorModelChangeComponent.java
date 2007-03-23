@@ -155,18 +155,15 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     preferenceStore_.removePropertyChangeListener( storePropertyChangeListener_ );
   }
 
+  /**
+   * Initializes The Preference Store from the Elevation Color Model
+   */
   private void initStoreDefaults( )
   {
-    System.out.println( "LINE_MAX_COLOR :" + preferenceStore_.contains( LINE_MAX_COLOR ) );
-    System.out.println( "LINE_MAX_COLOR :" + preferenceStore_.contains( LINE_MIN_COLOR ) );
-    System.out.println( "LINE_NO_COLOR :" + preferenceStore_.contains( LINE_NO_COLOR ) );
-
     try
     {
       if( !preferenceStore_.contains( LINE_MAX_COLOR ) )
       {
-        // PreferenceConverter.setDefault( preferenceStore_, LINE_MAX_COLOR, makeRGB(
-        // ElevationColorControl.getDEFAULT_MAX_COLOR() ) );
         PreferenceConverter.setValue( preferenceStore_, LINE_MAX_COLOR, makeRGB( ElevationColorControl.getMaxColor() ) );
       }
       else
@@ -176,8 +173,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
       if( !preferenceStore_.contains( LINE_MIN_COLOR ) )
       {
-        // PreferenceConverter.setDefault( preferenceStore_, LINE_MIN_COLOR, makeRGB(
-        // ElevationColorControl.getDEFAULT_MIN_COLOR() ) );
         PreferenceConverter.setValue( preferenceStore_, LINE_MIN_COLOR, makeRGB( ElevationColorControl.getMinColor() ) );
       }
       else
@@ -187,8 +182,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
       if( !preferenceStore_.contains( LINE_NO_COLOR ) )
       {
-        // PreferenceConverter.setDefault( preferenceStore_, LINE_NO_COLOR, makeRGB(
-        // ElevationColorControl.getDEFAULT_NO_ELEVATION_COLOR() ) );
         PreferenceConverter.setValue( preferenceStore_, LINE_NO_COLOR, makeRGB( ElevationColorControl.getNoElevationColor() ) );
       }
       else
@@ -198,7 +191,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
       if( !preferenceStore_.contains( LINE_COLOR_INDEX ) )
       {
-        // preferenceStore_.setDefault( LINE_COLOR_INDEX, ElevationColorControl.getDEFAULT_COLOR_INDEX() );
         preferenceStore_.setValue( LINE_COLOR_INDEX, ElevationColorControl.getColorIndex() );
       }
       else
@@ -208,7 +200,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
       if( !preferenceStore_.contains( LINE_TRANSPARENCY ) )
       {
-        // preferenceStore_.setDefault( LINE_TRANSPARENCY, ElevationColorControl.getDEFAULT_TRANSPARENCY_INDEX() );
         preferenceStore_.setValue( LINE_TRANSPARENCY, ElevationColorControl.getTransparencyIndex() );
       }
       else
@@ -234,7 +225,11 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     }
 
   }
-
+  
+  /** 
+   * IPropertyChangeListener for Preference Store
+   *  
+   */
   private IPropertyChangeListener createPropertyChangeLis( )
   {
     return new IPropertyChangeListener()
@@ -259,12 +254,10 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
           else if( LINE_MAX_COLOR.equals( property ) )
           {
             ElevationColorControl.setMaxColor( makeAWTColor( (RGB) event.getNewValue() ) );
-            // windowCanvas.redraw();
           }
           else if( LINE_MIN_COLOR.equals( property ) )
           {
             ElevationColorControl.setMinColor( makeAWTColor( (RGB) event.getNewValue() ) );
-            // windowCanvas.redraw();
           }
           else if( LINE_NO_COLOR.equals( property ) )
           {
@@ -282,7 +275,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
           th.printStackTrace();
           throw new RuntimeException( th );
         }
-        //
       }
 
     };
@@ -339,7 +331,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
     formData = new FormData();
     formData.width = 20;
-    // formData.height = 200;
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, -5 );
     formData.left = new FormAttachment( maxLabel, 5 );
@@ -354,6 +345,12 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
   }
 
+  /**    
+   * Creates the preview of the number of classes selected along
+   * with selected MAX Color and
+   *      selected MIN Color.
+   * @param GraphicCanvas  
+   */
   void paintElevationColorSelection( GC graphicCanvas )
   {
     selectedRects = ElevationColorControl.getColorIndex();
@@ -375,6 +372,10 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     }
   }
 
+  /**
+   * GUI Part of Second Grouping
+   * @param Group, acts a container to draw req. components 
+   */
   private void secondGroup( Group optionsColorGroup )
   {
     FormData optionsColorFormData;
@@ -385,7 +386,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     smallComposite_1.setLayout( new GridLayout( 1, false ) );
 
     final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, "Max Color", smallComposite_1 );
-    final Button minColorBtn = maxColorSelector.getColorSelector().getButton();
     maxColorSelector.setPreferenceStore( preferenceStore_ );
     maxColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     maxColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -399,7 +399,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     Composite smallComposite_2 = new Composite( optionsColorGroup, SWT.FLAT );
     smallComposite_2.setLayout( new GridLayout( 1, false ) );
     final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, "Min Color", smallComposite_2 );
-    final Button maxColorBtn = minColorSelector.getColorSelector().getButton();
     minColorSelector.setPreferenceStore( preferenceStore_ );
     minColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     minColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -413,7 +412,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     Composite smallComposite_3 = new Composite( optionsColorGroup, SWT.FLAT );
     smallComposite_3.setLayout( new GridLayout( 1, false ) );
     noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, "Aushwahl", smallComposite_3 );
-    Button noElevationColorBtn = noColorSelector.getColorSelector().getButton();
     noColorSelector.setPreferenceStore( preferenceStore_ );
     noColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     noColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -581,27 +579,39 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     return swtColor;
   }
 
+  /**
+   * Returns java.awt Color for RGB
+   * @param RGB
+   * @return java.awt.Color
+   */
   static private final java.awt.Color makeAWTColor( RGB rgb )
   {
-
     return new java.awt.Color( rgb.red, rgb.green, rgb.blue );
   }
-
+  
+  /**
+   * Returns RGB for java.awt Color
+   * @param java.awt.Color
+   * @return RGB  
+   */
   static public final RGB makeRGB( java.awt.Color color )
   {
     RGB rgb_ = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
     return rgb_;
   }
 
+  /**
+   * Returns Color from Preference Store of this Plugin with Key.
+   * @param RGB
+   * @return java.awt.Color  
+   */
   static public final java.awt.Color getThisColor( String key )
   {
     if( !preferenceStore_.contains( key ) )
     {
       PreferenceConverter.setDefault( preferenceStore_, key, makeRGB( ElevationColorControl.getMaxColor() ) );
-
       PreferenceConverter.setValue( preferenceStore_, key, makeRGB( ElevationColorControl.getMaxColor() ) );
     }
-
     return makeAWTColor( (PreferenceConverter.getColor( preferenceStore_, key )) );
   }
 

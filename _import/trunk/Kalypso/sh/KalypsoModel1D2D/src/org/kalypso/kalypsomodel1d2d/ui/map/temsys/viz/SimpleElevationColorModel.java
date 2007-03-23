@@ -42,11 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Color;
 
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
-
-import sun.awt.image.PixelConverter.Rgba;
-
 //import org.eclipse.swt.graphics.Color;
 //import org.eclipse.swt.graphics.Device;
 //import org.eclipse.swt.graphics.RGB;
