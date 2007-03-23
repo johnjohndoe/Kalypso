@@ -66,6 +66,8 @@ public class CalendarFeatureDialog implements IFeatureDialog
 
   private final FeatureTypeProperty m_ftp;
 
+  private static final String STR_NOT_SET = "<nicht gesetzt>";
+
   public CalendarFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
     m_feature = feature;
@@ -77,7 +79,9 @@ public class CalendarFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, getDate() );
+    final Date date = getDate();
+    final Date dialogDate = date == null ?  new Date() : date;
+    final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, dialogDate );
 
     final int open = dialog.open();
     if( open == Window.OK )
@@ -115,6 +119,8 @@ public class CalendarFeatureDialog implements IFeatureDialog
   public String getLabel()
   {
     final Date date = getDate();
+    if( date == null )
+      return STR_NOT_SET;
 
     return m_dateFormat.format( date );
   }
