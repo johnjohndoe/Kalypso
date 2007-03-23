@@ -19,5 +19,9 @@
 *.doc
 *.xls
 *.zip
+*.map
+*.MAP
 deaktivierteSubroutinen
 Sicherungen
+unusableSubroutines
+Neuer Ordner
