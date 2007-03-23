@@ -20,6 +20,7 @@ Require-Bundle:
  org.kalypso.gml.processes
 Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.flowrel,
+ org.kalypso.kalypsosimulationmodel.core.discr,
  org.kalypso.kalypsosimulationmodel.core.roughness,
  org.kalypso.kalypsosimulationmodel.core.terrainmodel,
  org.kalypso.kalypsosimulationmodel.schema,

@@ -60,7 +60,7 @@ class TriangleData implements SurfacePatchVisitable
   
   private double centerElevation;
   
-  public TriangleData( LinearRing ring )
+  public TriangleData( LinearRing ring ) 
   {
     this.ring=ring;
     polygon = new Polygon(ring,null, ring.getFactory());

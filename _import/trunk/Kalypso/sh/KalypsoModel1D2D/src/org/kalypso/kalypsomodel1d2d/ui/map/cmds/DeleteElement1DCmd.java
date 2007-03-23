@@ -51,7 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;

@@ -1,4 +1,4 @@
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.kalypsosimulationmodel.core.discr;
 
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 

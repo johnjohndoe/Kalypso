@@ -46,7 +46,10 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author congo
+ * Interface for classes that provide elevation information.
+ * The elevation can be get using {@link #getElevation(GM_Point)}. 
+ * 
+ * @author Patrice Congo
  *
  */
 public interface IElevationProvider
@@ -58,7 +61,7 @@ public interface IElevationProvider
 
   /**
    * Get the elevation provides by this model
-   * for the specified location
+   * for the specified location [(x,y) position]. 
    * @param location the location for which an elevation is
    *        to be computed
    * @return the elevation if the model covered this position or
@@ -66,9 +69,28 @@ public interface IElevationProvider
    */
   public double getElevation( GM_Point location );
 
+  /**
+   * To get the bounding box of this elevation provider
+   * @return the bounding box as {@link GM_Envelope}
+   */
   public GM_Envelope getBoundingBox( );
+  
+  /**
+   * To get the coordinate system of this elevation provider
+   * @return return the coordinate system as {@link CS_CoordinateSystem}
+   */
   public CS_CoordinateSystem getCoordinateSystem();
+  
+  /**
+   * To get the minimal elavation in this elevation provider
+   * @return the minimal elevation of this provider as double 
+   */
   public double getMinElevation();
+  
+  /**
+   * To get the maximal elavation in this elevation provider
+   * @return the maximal elevation of this provider as double 
+   */
   public double getMaxElevation();
 
 }

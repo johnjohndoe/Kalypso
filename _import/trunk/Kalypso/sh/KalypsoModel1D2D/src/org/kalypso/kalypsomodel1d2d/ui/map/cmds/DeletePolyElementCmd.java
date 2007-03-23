@@ -147,7 +147,8 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     {
       IFeatureWrapperCollection containers = edge.getContainers();
       boolean isRemoved = containers.remove( elementID );
-      if(!isRemoved)
+      //TODO Patrice find a better way to do this, may be try delete again
+      if(!isRemoved && containers.contains( elementID ))
       {
         throw new RuntimeException("Could not remove element as edge container");
       }

@@ -1,4 +1,4 @@
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.kalypsosimulationmodel.core.discr;
 
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -12,6 +12,5 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IFENode <CT extends IFEEdge> extends IFeatureWrapper2
 {
-	//empty
-	public  IFeatureWrapperCollection<CT> getContainers();
+	//yes empty	
 }

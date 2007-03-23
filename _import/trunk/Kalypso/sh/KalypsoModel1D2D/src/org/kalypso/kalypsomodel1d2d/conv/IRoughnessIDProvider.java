@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
 
 /**
  * Provides a resversible id mapping between a native id system

@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
 
 /**
  * Interface to be implemented by classes to provide a java 
@@ -53,5 +54,14 @@ public interface IFE1D2DComplexElement <
                                   ET extends IFE1D2DElement>
                   extends IFEComplexElement<CT,ET>
 {
-  //yes empty
+  public IFeatureWrapperCollection<CT> getContainers( );
+
+  /**
+   * To get the element this complex element is made of
+   * 
+   * @return a {@link IFeatureWrapperCollection} of element 
+   *            composing this complex elements
+   */
+  public IFeatureWrapperCollection<ET> getElements( );
+
 }
