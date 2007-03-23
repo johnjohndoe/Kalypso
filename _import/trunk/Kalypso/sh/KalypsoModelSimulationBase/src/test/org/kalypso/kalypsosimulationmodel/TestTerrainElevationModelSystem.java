@@ -77,7 +77,7 @@ public class TestTerrainElevationModelSystem extends TestCase
           ITerrainElevationModelSystem temSystem=
             new TerrainElevationModelSystem(rcFeature);
           assertNotNull( 
-              "Could not adapt to "+ITerrainElevationModelSystem.class,
+              "Could not adapt to  "+ITerrainElevationModelSystem.class,
               temSystem );
           
           
@@ -85,8 +85,9 @@ public class TestTerrainElevationModelSystem extends TestCase
           {
             for(int j=0;j<10;j++)
             {
+              double jFlip=9-j;
               double x=5*i+1+13;
-              double y=5*j+1+154;
+              double y=5*jFlip+1+154;
               if(i==j)
               {
                 GM_Point curPoint = 

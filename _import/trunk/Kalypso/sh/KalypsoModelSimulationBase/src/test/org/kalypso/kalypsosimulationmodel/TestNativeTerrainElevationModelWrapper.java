@@ -76,7 +76,7 @@ public class TestNativeTerrainElevationModelWrapper extends TestCase
               for(int j=0;j<10;j++)
               {
                 double x=5*i+1+13;
-                double y=5*j+1+154;
+                double y=5*(9-j)+1+154;
                 if(i==j)
                 {
                   GM_Point curPoint = 

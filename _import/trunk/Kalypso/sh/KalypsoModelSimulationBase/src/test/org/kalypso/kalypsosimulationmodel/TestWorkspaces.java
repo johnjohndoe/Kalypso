@@ -137,10 +137,16 @@ public class TestWorkspaces
     public static final URL URL_NATIVE_TEM_WRAPPER;
     public static final String REL_RES_NATIVE_TEM_WRAPPER=
                                 "data/native_terrain_elevation_model_wrapper.xml";
+    
     public static final URL URL_TEM_SYSREM;
     public static final String REL_RES_TEM_SYSTEM=
                                 "data/native_terrain_elevation_model_system.xml";
    
+    public static final URL URL_TEST_HMO_3_TRI;
+    public static final String REL_RES_TEST_HMO_3_TRI=
+                                "data/test_hmo_3_tri.xml";
+   
+    
     public static final URL URL_TEM_EMPTY_TER_MODEL;
     public static final String REL_RES_TEM_EMPTY_TER_MODEL=
                                 "data/test_terrain_model_without_tem_system.xml";
@@ -228,6 +234,9 @@ public class TestWorkspaces
                 REL_RES_SIMPLE_OPERATIONAL_MODEL,
                 TestWorkspaces.class.getResource(
                     REL_RES_SIMPLE_OPERATIONAL_MODEL));
+            urlMap.put(
+                REL_RES_TEST_HMO_3_TRI,
+                TestWorkspaces.class.getResource(REL_RES_TEST_HMO_3_TRI));
 		}
 		catch(Throwable th)
 		{
@@ -277,6 +286,8 @@ public class TestWorkspaces
               urlMap.get(REL_RES_TEM_EMPTY_TER_MODEL);
             URL_SIMPLE_OPERATIONAL_MODEL=
               urlMap.get(REL_RES_SIMPLE_OPERATIONAL_MODEL);
+            URL_TEST_HMO_3_TRI=
+               urlMap.get( REL_RES_TEST_HMO_3_TRI );
         }
 	}
 	

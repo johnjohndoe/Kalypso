@@ -72,7 +72,7 @@ class TriangleData implements SurfacePatchVisitable
   
   private double calculateCenterElevation( Coordinate[] coords )
   {
-    double xCenter = (coords[0].x+coords[1].x+coords[2].x)/3;// TODO Auto-generated method stub
+    double xCenter = (coords[0].x+coords[1].x+coords[2].x)/3;
     double yCenter = (coords[0].y+coords[1].y+coords[2].y)/3;
     return computeZOfTrianglePlanePoint( xCenter, yCenter );
     
@@ -86,7 +86,17 @@ class TriangleData implements SurfacePatchVisitable
     }
     else
     {
-      return polygon.contains( point );
+      if(polygon.contains( point ))
+      {
+        return true;
+      }
+      else
+      {
+       //also look on the exterior ring since polygon.contains() 
+       //seems not to return true 
+//        System.out.println("point:"+point+ " "+ring.contains( point ));
+        return  ring.contains( point );
+      }
     }
   }
   

@@ -67,20 +67,16 @@ public class TestASCTerrainElevationProvider extends TestCase
     try
     {
       
-   //  File ascFile= new File(TestWorkspaces.URL_SMALL_ASC.toURI().normalize().getPath());
-   File ascFile= new File("files\\test_file_small_asc.asc");
-   File locatedFile= 
-     new File(
-       FileLocator.resolve( TestWorkspaces.URL_SMALL_ASC).getFile() );  
-    
-      ASCTerrainElevationModel ascModel=new ASCTerrainElevationModel(TestWorkspaces.URL_SMALL_ASC, null);
+     ASCTerrainElevationModel ascModel = 
+               new ASCTerrainElevationModel(TestWorkspaces.URL_SMALL_ASC, null);
       
       for(int i=0;i<10;i++)
       {
         for(int j=0;j<10;j++)
         {
+          double jFlip=9-j;
           double x=5*i+1+13;
-          double y=5*j+1+154;
+          double y=5*jFlip+1+154;
           if(i==j)
           {
             GM_Point curPoint = 
@@ -88,7 +84,7 @@ public class TestASCTerrainElevationProvider extends TestCase
                 x, y, TestWorkspaces.getGaussKrueger() );
             double ele=ascModel.getElevation( curPoint  );
             assertEquals(
-                "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);
+                "i="+i+" j="+j+"jFlip"+jFlip+" ele="+ele,i*j*1.000,ele);
             
           }
           else
@@ -98,7 +94,8 @@ public class TestASCTerrainElevationProvider extends TestCase
                 x,y, TestWorkspaces.getGaussKrueger() );
             double ele=ascModel.getElevation( curPoint  );
             assertEquals(
-                "i="+i+" j="+j+" ele="+ele,Double.NaN,ele);
+                "i="+i+" j="+j+"jFlip"+(9-j)+" ele="+ele,
+                Double.NaN,ele);
           }
         }
       }
