@@ -329,7 +329,11 @@ class ApplyElevationWidgetFace
     {
       mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
     }
-
+    
+    if(colorModelChangeComponent!=null)
+    {
+      colorModelChangeComponent.dispose();
+    }
   }
 
 

@@ -188,6 +188,7 @@ class GridWidgetFace
         // awtColor.getRed(),
         // awtColor.getGreen(),
         // awtColor.getBlue() );
+        
         return null;
       }
       else
