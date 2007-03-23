@@ -113,7 +113,7 @@ class GridWidgetFace
 
     private String getColumnText( LinePointCollectorConfig elementConfig, int columnIndex )
     {
-//      System.out.println( "Getting label:" + elementConfig );
+      // System.out.println( "Getting label:" + elementConfig );
       switch( columnIndex )
       {
         case 0:
@@ -188,7 +188,7 @@ class GridWidgetFace
         // awtColor.getRed(),
         // awtColor.getGreen(),
         // awtColor.getBlue() );
-        
+
         return null;
       }
       else
@@ -207,7 +207,11 @@ class GridWidgetFace
         java.awt.Color awtColor = ((LinePointCollectorConfig) element).getColor();
         awtColor = awtColor.darker();
 
-        Color swtColor = toolkit.getColors().createColor( ((LinePointCollectorConfig) element).getName(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+        Color swtColor = toolkit.getColors().createColor( ((
+            LinePointCollectorConfig) element).getName(),
+            awtColor.getRed(),
+            awtColor.getGreen(),
+            awtColor.getBlue() );
         return swtColor;
       }
       else
@@ -259,7 +263,7 @@ class GridWidgetFace
 
   public GridWidgetFace( CreateGridWidget widget )
   {
-     m_widget = widget;
+    m_widget = widget;
   }
 
   public Control createControl( Composite parent, final FormToolkit toolkit, final CreateGridWidget widget )
@@ -515,7 +519,7 @@ class GridWidgetFace
     lineColorFieldEditor[1] = new ColorFieldEditor( LINE_COLOR_1, "Farbe für Linie 2", clientComposite );
     lineColorFieldEditor[2] = new ColorFieldEditor( LINE_COLOR_2, "Farbe für Linie 3", clientComposite );
     lineColorFieldEditor[3] = new ColorFieldEditor( LINE_COLOR_3, "Farbe für Linie 4", clientComposite );
-    
+
     for( ColorFieldEditor colorFieldEditor : lineColorFieldEditor )
     {
       colorFieldEditor.setPreferenceStore( preferenceStore );
@@ -537,17 +541,16 @@ class GridWidgetFace
     // table.setLayoutData(gridData);
   }
 
-  
   private void createHelp( Section helpSection )
   {
     helpSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( helpSection,  SWT.FILL );
+    Composite clientComposite = toolkit.createComposite( helpSection, SWT.FILL );
     helpSection.setClient( clientComposite );
     clientComposite.setLayout( new FillLayout() );
     helpSection.setSize( 350, 350 );
     Browser browser = new Browser( clientComposite, SWT.FILL );
-    //browser.setSize( browser.computeSize( clientComposite.getSize().x, 300, false ) );
+    // browser.setSize( browser.computeSize( clientComposite.getSize().x, 300, false ) );
     toolkit.adapt( browser );
 
     try
@@ -557,7 +560,7 @@ class GridWidgetFace
       // GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
       browser.setUrl( FileLocator.toFileURL( htmlURL ).toExternalForm() );
 
-      //System.out.println( "URI=" + htmlURL.toURI().toASCIIString() );
+      // System.out.println( "URI=" + htmlURL.toURI().toASCIIString() );
     }
     catch( Exception e )
     {
