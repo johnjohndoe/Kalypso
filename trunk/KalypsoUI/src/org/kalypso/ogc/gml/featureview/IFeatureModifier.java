@@ -48,7 +48,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface IFeatureModifier extends ICellEditorValidator
 {

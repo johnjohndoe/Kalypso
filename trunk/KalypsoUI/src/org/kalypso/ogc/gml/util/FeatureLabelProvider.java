@@ -46,7 +46,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
 public class FeatureLabelProvider extends LabelProvider
 {

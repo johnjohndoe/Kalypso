@@ -15,7 +15,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class CollectorVisitor implements FeatureVisitor
 {
-  private final Collection m_results = new ArrayList();
+  private final Collection<Feature> m_results = new ArrayList<Feature>();
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
@@ -38,7 +38,7 @@ public class CollectorVisitor implements FeatureVisitor
    */
   public synchronized Feature[] getResults( final boolean reset )
   {
-    final Feature[] features = (Feature[])m_results.toArray( new Feature[0] );
+    final Feature[] features = m_results.toArray( new Feature[0] );
     if( reset )
       m_results.clear();
     return features;
