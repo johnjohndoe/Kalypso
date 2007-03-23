@@ -1,17 +1,20 @@
 Changelog of Kalypso-WSPM
 =========================
 
-since XXXXXXXXX
+since XX.XX.XXXX
+----------------
+
+
+since 15.02.2007
 ---------------
 - Bugfix [#84] Strange linear water-boundary: No sorting is any more needed for reach-segments. Sorting is done automatically before calculation.
 - Subelements of reaches are not displayed any more in tree-view.
 - Bugfix [#85] Dangling references in reaches: The reach view does not crash any more if the segments contain empty references to profiles.
-
-since 15.02.2007
-----------------
+- Fixed comment bug (name, comment disapeared after change to profile in profileditor, strange commment after import from wspwin)
+- Sorting is now possible for all lists of features (instead of only profiles); TODO: reverse sort; sort by name; ...
+- [#83] filenames for prf.-export: Most of the strange characters are now replaced by '_', so importing should work better.
 - non-uniform bankfull calculation: Results are now retrieved as functions (singular points) over h and may be displayed as diagramms. Furthermore, polynomials (as input for the instationary calculation) are calulated automatically from the points and displayed as well.
-- Rougness-Intersection now supports multi-surface polygones.
-- Bugfix: TODO# creation of water-boundary works now with not-sorted reach-segments.
+- Feature request [#92]: Rougness-Intersection now supports multi-surface polygones.
 
 since 30.01.2007
 ----------------

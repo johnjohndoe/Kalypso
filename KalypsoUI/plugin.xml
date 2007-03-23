@@ -708,6 +708,25 @@
 				label="%org.kalypso.ogc.gml.om.ShowObservationAction.label"
 				tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
 		</objectContribution>
+		
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
+            objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+         <filter
+               name="featureAssociationQname"
+               value="http://www.opengis.net/gml#_Feature"/>
+         <filter
+               name="featureAssociationList"
+               value="true"/>
+         <action
+               class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate"
+               id="org.kalypso.model.wspm.ui.action.SortProfileActionDelegate"
+               label="Features sortieren"
+               menubarPath="featureListMenu"
+               style="push"
+               tooltip="Sortiert die Features der Liste anhand ausgeählter Eigenschaften"/>
+      </objectContribution>		
   <objectContribution
         adaptable="false"
         id="org.kalypso.objectclass.feature.listElements"
@@ -885,13 +904,13 @@
         id="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter"
         targetType="org.kalypsodeegree.model.feature.Feature"/>
   <actionFilter
-        class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
-        id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
-        targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
-  <actionFilter
         class="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter"
         id="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter"
         targetType="org.kalypsodeegree.model.feature.Feature"/>
+  <actionFilter
+        class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
+        id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
+        targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="Kalypso" />
