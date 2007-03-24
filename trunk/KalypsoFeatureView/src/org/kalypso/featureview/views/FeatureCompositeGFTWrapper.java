@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -95,6 +95,11 @@ public class FeatureCompositeGFTWrapper
   private FeatureComposite m_compFeature;
 
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
+  public void show( final IFile file, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
+  {
+    show( file, new CommandableWorkspace( feature.getWorkspace() ), feature, composite, toolkit );
+  }
 
   public void show( final IFile file, final CommandableWorkspace workspace, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
   {
