@@ -43,8 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 import java.awt.Color;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.IColorModelPreferenceConstants;

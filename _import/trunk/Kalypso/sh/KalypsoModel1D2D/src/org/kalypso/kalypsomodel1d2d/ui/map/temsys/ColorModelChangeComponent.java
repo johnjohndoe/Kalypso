@@ -276,7 +276,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
           throw new RuntimeException( th );
         }
       }
-
     };
   }
 

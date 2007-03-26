@@ -148,6 +148,8 @@ public class ImportElevationWizard extends Wizard
   public boolean performFinish( )
   {
     final IPath sourcePath = mPage.getSourceLocation();//.toOSString();
+    final String setFileName = mPage.getNameForFile();
+    final String setFileDescription = mPage.getDescriptionForFileArea();
     try {
       getContainer().run(true, true, new IRunnableWithProgress() {
          public void run(IProgressMonitor monitor)
@@ -165,7 +167,7 @@ public class ImportElevationWizard extends Wizard
 //             File modelFolderFile = 
 //               new File(FileLocator.toFileURL( 
 //                   modelFolder.getLocationURI().toURL()).getFile());
-             
+           
              GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
             File modelFolderFile=
                new File(FileLocator.toFileURL(workspace.getContext()).getFile()).getParentFile();
@@ -195,7 +197,22 @@ public class ImportElevationWizard extends Wizard
               //name from there
               
               String name=dstFileTif.getName();
-              tem.setName( name );
+              tem.setName(setFileName);
+//              if (setFileName!= null){
+//                tem.setName(setFileName);
+//              }
+//              else 
+//              { 
+//                tem.setName(name);              
+//              }
+              
+              tem.setDescription(setFileDescription);
+//              if (setFileDescription != Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.8" ))
+//                tem.setDescription(setFileDescription);
+//              else
+//              {
+//                tem.setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.10" ) );
+//              }
 //              System.out.println("Workspace:"+workspace.getClass());
               cmdWorkspace.fireModellEvent( 
                   new FeatureStructureChangeModellEvent( 

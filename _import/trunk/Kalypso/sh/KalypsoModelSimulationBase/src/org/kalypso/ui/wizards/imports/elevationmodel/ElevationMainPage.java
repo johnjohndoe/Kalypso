@@ -19,11 +19,15 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.ui.wizards.imports.roughness.DataContainer;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Madanagopal
@@ -36,11 +40,17 @@ public class ElevationMainPage extends WizardPage
 
   List<String> fileExtensions = new LinkedList<String>();
 
+  private Combo coordinateSystem_Combo;
+
+  public Text nameForFileText;
+
+  public Text descriptionForFileArea;
+
   public ElevationMainPage( )
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.4" ) );
-    setDescription(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ));
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
   }
 
   /**
@@ -58,11 +68,11 @@ public class ElevationMainPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-//    final Label label = new Label( container, SWT.NONE );
-//    final GridData gridData = new GridData();
-//    gridData.horizontalSpan = 3;
-//    label.setLayoutData( gridData );
-//    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
+    // final Label label = new Label( container, SWT.NONE );
+    // final GridData gridData = new GridData();
+    // gridData.horizontalSpan = 3;
+    // label.setLayoutData( gridData );
+    // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
@@ -89,7 +99,50 @@ public class ElevationMainPage extends WizardPage
     } );
     button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse" ) );
 
-    initContents();
+    // Coordinate system combo box
+    Label coordinateLabel = new Label( container, SWT.NONE );
+    coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
+    coordinateLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
+
+    coordinateSystem_Combo = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
+    coordinateSystem_Combo.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    final int index_GausKrueger = coordinateSystem_Combo.indexOf( DataContainer.GAUS_KRUEGER );
+    coordinateSystem_Combo.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
+
+    GridData gd = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
+    gd.horizontalSpan = 2;
+    coordinateSystem_Combo.setEnabled( true );
+    coordinateSystem_Combo.setLayoutData( gd );
+
+    final Label nameForFile = new Label( container, SWT.NONE );
+    nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
+    nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.7" ) ); //$NON-NLS-1$
+
+    nameForFileText = new Text( container, SWT.BORDER );
+    nameForFileText.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        updatePageComplete();
+      }
+    } );
+   
+    GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING);
+    gridData.horizontalSpan = 2;
+    nameForFileText.setLayoutData( gridData );
+
+    final Label descriptionForFile = new Label( container, SWT.NONE );
+    descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_BEGINNING ) );
+    descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.8" ) ); //$NON-NLS-1$
+    
+    descriptionForFileArea = new Text( container, SWT.BORDER | SWT.MULTI );
+    //descriptionForFileArea = new Group(container,SWT.BORDER|SWT.Multi);
+    GridData gridData2 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
+    gridData2.horizontalSpan = 2;
+    gridData2.heightHint = 100;
+    descriptionForFileArea.setLayoutData( gridData2 );
+    descriptionForFileArea.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.9" ) );
+    initContents();    
   }
 
   /**
@@ -103,8 +156,8 @@ public class ElevationMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( "asc");
-    fileExtensions.add( "hmo"  );
+    fileExtensions.add( "asc" );
+    fileExtensions.add( "hmo" );
     // fileExtensions.add( new String ("tif") );
 
     // Find the first plugin.xml file.
@@ -174,24 +227,19 @@ public class ElevationMainPage extends WizardPage
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
     sourceFileField.setText( path.toString() );
-    
-// Multiple Elevation Model Select.. Still under development
-/*      IPath[] ar = null;
-    IPath[] path = browse( getSourceLocation(), false );
-    if( path == null )
-      return;
-    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-    for (int i = 0; i<path.length;i++){
-    if( rootLoc.isPrefixOf( path[i] ) )
-      ar[i] = path[i].setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
-    sourceFileField.setText(ar.toString());
-    }*/
-  
+
+    // Multiple Elevation Model Select.. Still under development
+    /*
+     * IPath[] ar = null; IPath[] path = browse( getSourceLocation(), false ); if( path == null ) return; IPath rootLoc =
+     * ResourcesPlugin.getWorkspace().getRoot().getLocation(); for (int i = 0; i<path.length;i++){ if(
+     * rootLoc.isPrefixOf( path[i] ) ) ar[i] = path[i].setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
+     * sourceFileField.setText(ar.toString()); }
+     */
+
   }
 
   /**
-   * Multiple Elevation Model Select.. Still under development 
-   * Open a file dialog for selecting a file
+   * Multiple Elevation Model Select.. Still under development Open a file dialog for selecting a file
    * 
    * @param path
    *          the initially selected file
@@ -200,37 +248,35 @@ public class ElevationMainPage extends WizardPage
    * @return the newly selected file or <code>null</code>
    */
 
-  
-//  private IPath[] browse( IPath path, boolean mustExist )
-//  {
-//    String fileFilterPath;
-//    String[] selectedFiles;
-//    Path[] arrPaths = null;
-//    FileDialog dialog = new FileDialog( getShell(), SWT.OPEN|SWT.MULTI );
-//    dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
-//    if( path != null )
-//    {
-//      if( path.segmentCount() > 1 )
-//        dialog.setFilterPath( path.removeLastSegments( 1 ).toOSString() );
-//      if( path.segmentCount() > 0 )
-//        dialog.setFileName( path.lastSegment() );
-//    }
-//    String result = dialog.open();
-//    if( result == null )
-//      return null;
-//    else {
-//      fileFilterPath = dialog.getFilterPath();
-//      selectedFiles = dialog.getFileNames();
-//      for(int i=0; i<selectedFiles.length; i++) {
-//        selectedFiles[i]= dialog.getFilterPath()+"\\"+selectedFiles[i];
-//        arrPaths[i]= new Path(selectedFiles[i]); 
-//      }
-//    return arrPaths;
-//    }
-//
-//  }
-  
-    private IPath browse( IPath path, boolean mustExist )
+  // private IPath[] browse( IPath path, boolean mustExist )
+  // {
+  // String fileFilterPath;
+  // String[] selectedFiles;
+  // Path[] arrPaths = null;
+  // FileDialog dialog = new FileDialog( getShell(), SWT.OPEN|SWT.MULTI );
+  // dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
+  // if( path != null )
+  // {
+  // if( path.segmentCount() > 1 )
+  // dialog.setFilterPath( path.removeLastSegments( 1 ).toOSString() );
+  // if( path.segmentCount() > 0 )
+  // dialog.setFileName( path.lastSegment() );
+  // }
+  // String result = dialog.open();
+  // if( result == null )
+  // return null;
+  // else {
+  // fileFilterPath = dialog.getFilterPath();
+  // selectedFiles = dialog.getFileNames();
+  // for(int i=0; i<selectedFiles.length; i++) {
+  // selectedFiles[i]= dialog.getFilterPath()+"\\"+selectedFiles[i];
+  // arrPaths[i]= new Path(selectedFiles[i]);
+  // }
+  // return arrPaths;
+  // }
+  //
+  // }
+  private IPath browse( IPath path, boolean mustExist )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
     dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
@@ -259,5 +305,15 @@ public class ElevationMainPage extends WizardPage
     if( !path.isAbsolute() )
       path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( path );
     return path;
+  }
+
+  public String getDescriptionForFileArea( )
+  {
+    return descriptionForFileArea.getText();
+  }
+
+  public String getNameForFile( )
+  {
+    return nameForFileText.getText();
   }
 }

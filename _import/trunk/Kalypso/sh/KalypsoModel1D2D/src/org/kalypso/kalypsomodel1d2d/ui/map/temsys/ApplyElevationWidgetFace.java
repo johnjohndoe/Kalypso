@@ -307,7 +307,6 @@ class ApplyElevationWidgetFace
     eleSystemEditorComponent= new ElevationModelSystemEditorComponent();
     eleSystemEditorComponent.createControl( dataModel, toolkit, clientComposite );
 
-
   }
 
 
@@ -335,10 +334,7 @@ class ApplyElevationWidgetFace
       colorModelChangeComponent.dispose();
     }
   }
-
-
-
-
+  
   private IntegerFieldEditor handleWidth;
 
   public static final String HANDLE_WIDTH_NAME = "x.handleWidth";
@@ -443,11 +439,6 @@ class ApplyElevationWidgetFace
     // job.setRule( mapPanel.getSchedulingRule().getActivateLayerSchedulingRule() );
     // job.setUser( true );
     // job.schedule();
-
-  }
-    protected String stringRemoveBraces( String string )
-  {
-    return string.substring( 1, string.length() - 1 );
 
   }
 }

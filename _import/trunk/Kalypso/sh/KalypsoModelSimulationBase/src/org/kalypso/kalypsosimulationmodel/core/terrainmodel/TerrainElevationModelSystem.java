@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -55,73 +54,55 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Default {@link AbstractFeatureBinder} based implementation
- * of {@link ITerrainElevationModelSystem} 
+ * Default {@link AbstractFeatureBinder} based implementation of {@link ITerrainElevationModelSystem}
  * 
  * @author Patrice Congo
  * @author Madanagopal
- *
  */
-public class TerrainElevationModelSystem 
-                            extends AbstractFeatureBinder
-                            implements ITerrainElevationModelSystem
+public class TerrainElevationModelSystem extends AbstractFeatureBinder implements ITerrainElevationModelSystem
 {
-  
+
   private final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
-  
+
   /**
-   * Creates a {@link TerrainElevationModelSystem} object binding the given feature.
-   * the given feature must be substitutable to simBase:TerrainelevationModel
-   * @throws IllegalArgumentException if featureToBind is null or not substitutable to
-   *        simBase:TerrainElevationModel
+   * Creates a {@link TerrainElevationModelSystem} object binding the given feature. the given feature must be
+   * substitutable to simBase:TerrainelevationModel
+   * 
+   * @throws IllegalArgumentException
+   *           if featureToBind is null or not substitutable to simBase:TerrainElevationModel
    */
-  public TerrainElevationModelSystem(
-                        Feature featureToBind )
-                        throws IllegalArgumentException
+  public TerrainElevationModelSystem( Feature featureToBind ) throws IllegalArgumentException
   {
-    super( 
-        featureToBind, 
-        KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS);
-    terrainElevationModels= 
-      new FeatureWrapperCollection<ITerrainElevationModel>(
-            featureToBind, 
-            ITerrainElevationModel.class, 
-            KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL);
-    
+    super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS );
+    terrainElevationModels = new FeatureWrapperCollection<ITerrainElevationModel>( featureToBind, ITerrainElevationModel.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL );
+
   }
-  
-  
-  public TerrainElevationModelSystem(
-                          ITerrainModel terrainModel)
-                          throws IllegalArgumentException
+
+  public TerrainElevationModelSystem( ITerrainModel terrainModel ) throws IllegalArgumentException
   {
-    this(createTEMSysForTerrainModel(terrainModel));
+    this( createTEMSysForTerrainModel( terrainModel ) );
   }
 
   /**
    * Creates or return a new feature for the give n terrian model
    */
-  private static final Feature createTEMSysForTerrainModel(ITerrainModel terrainModel)
+  private static final Feature createTEMSysForTerrainModel( ITerrainModel terrainModel )
   {
     Assert.throwIAEOnNullParam( terrainModel, "terrainModel" );
-     ITerrainElevationModelSystem temSys=terrainModel.getTerrainElevationModelSystem();
-     if(temSys!=null)
-     {
-       return temSys.getWrappedFeature();
-     }
-     else
-     {
+    ITerrainElevationModelSystem temSys = terrainModel.getTerrainElevationModelSystem();
+    if( temSys != null )
+    {
+      return temSys.getWrappedFeature();
+    }
+    else
+    {
       Feature parentFeature = terrainModel.getWrappedFeature();
-      Feature newFeature=
-        Util.createFeatureAsProperty( 
-                          parentFeature, 
-                          KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS, 
-                          KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS);
-     
+      Feature newFeature = Util.createFeatureAsProperty( parentFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS );
+
       return newFeature;
-     }
+    }
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem#getTerrainElevationModels()
    */
@@ -135,109 +116,105 @@ public class TerrainElevationModelSystem
    */
   public double getElevation( GM_Point location )
   {
-    for(ITerrainElevationModel terrainElevationModel:terrainElevationModels)
+    for( ITerrainElevationModel terrainElevationModel : terrainElevationModels )
     {
-      double elevation=terrainElevationModel.getElevation( location );
-      if(elevation!=Double.NaN)
+      double elevation = terrainElevationModel.getElevation( location );
+      if( elevation != Double.NaN )
       {
-       return elevation; 
+        return elevation;
       }
     }
     return Double.NaN;
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
   public GM_Envelope getBoundingBox( )
   {
-    GM_Envelope env=null;
-    int i =  terrainElevationModels.size()-1;
+    GM_Envelope env = null;
+    int i = terrainElevationModels.size() - 1;
 
-    //find the first non null envelop and init the merged env
-    firstNonNullEnv:for(;i>=0;i--)
+    // find the first non null envelop and init the merged env
+    firstNonNullEnv: for( ; i >= 0; i-- )
     {
-      GM_Envelope boundingBox = 
-          terrainElevationModels.get( i ).getBoundingBox();
-      if(boundingBox!=null)
+      GM_Envelope boundingBox = terrainElevationModels.get( i ).getBoundingBox();
+      if( boundingBox != null )
       {
         GM_Position min = boundingBox.getMin();
         GM_Position max = boundingBox.getMax();
-        env = GeometryFactory.createGM_Envelope(min.getX(), min.getY(), max.getX(), max.getY());
+        env = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY() );
         break firstNonNullEnv;
       }
     }
-    
-    //merge other env
-    for(;i>=0;i--)
+
+    // merge other env
+    for( ; i >= 0; i-- )
     {
-      GM_Envelope boundingBox = 
-        terrainElevationModels.get( i ).getBoundingBox();
-      if(boundingBox!=null)
+      GM_Envelope boundingBox = terrainElevationModels.get( i ).getBoundingBox();
+      if( boundingBox != null )
       {
-        env = env.getMerged( boundingBox );      
+        env = env.getMerged( boundingBox );
       }
     }
-    
+
     return env;
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
   public CS_CoordinateSystem getCoordinateSystem( )
   {
-    //TODO Patrice check whether the elevation do have the same system and return it
+    // TODO Patrice check whether the elevation do have the same system and return it
     return null;
   }
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
    */
   public double getMaxElevation( )
   {
-    if(terrainElevationModels.isEmpty())
+    if( terrainElevationModels.isEmpty() )
     {
       return Double.NaN;
     }
-    
-    double maxEle= Double.MIN_VALUE;
+
+    double maxEle = Double.MIN_VALUE;
     double curMaxEle;
-    for(ITerrainElevationModel eleModel:terrainElevationModels)
+    for( ITerrainElevationModel eleModel : terrainElevationModels )
     {
       curMaxEle = eleModel.getMinElevation();
-      if(maxEle<curMaxEle)
+      if( maxEle < curMaxEle )
       {
-        maxEle=curMaxEle;
+        maxEle = curMaxEle;
       }
     }
-    
+
     return maxEle;
   }
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
    */
   public double getMinElevation( )
   {
-    if(terrainElevationModels.isEmpty())
+    if( terrainElevationModels.isEmpty() )
     {
       return Double.NaN;
     }
-    
-    double minEle= Double.MAX_VALUE;
+
+    double minEle = Double.MAX_VALUE;
     double curMinEle;
-    for(ITerrainElevationModel eleModel:terrainElevationModels)
+    for( ITerrainElevationModel eleModel : terrainElevationModels )
     {
       curMinEle = eleModel.getMinElevation();
-      if(minEle>curMinEle)
+      if( minEle > curMinEle )
       {
-        minEle=curMinEle;
+        minEle = curMinEle;
       }
     }
-    
+
     return minEle;
   }
 }

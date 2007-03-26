@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import org.apache.commons.vfs.tasks.DeleteTask;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -56,25 +55,24 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.ISharedImages;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.DeleteNativeTerrainElevationWrapper;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -166,7 +164,6 @@ public class ElevationModelSystemEditorComponent
           System.out.println("Selection is null");
           return ;
         }
-        // nameSel = (String) selection.getFirstElement();
         if( selection.getFirstElement() == null )
           throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
         else
@@ -175,7 +172,8 @@ public class ElevationModelSystemEditorComponent
           {
             ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
             dataModel.setElevationModel( firstElement );
-//          inputText.setText( firstElement.getName() );
+            descriptionText.setText( firstElement.getDescription());
+            descriptionText.redraw();
           }
         }
       }
@@ -186,7 +184,9 @@ public class ElevationModelSystemEditorComponent
 
     }
   } ;
-  
+  private Label descriptionLabel;
+  private Group descriptionGroupText;
+  private Text descriptionText;  
   
   public ElevationModelSystemEditorComponent()
   {
@@ -228,6 +228,7 @@ public class ElevationModelSystemEditorComponent
     elevationListTableViewer.setLabelProvider( new ElevationListLabelProvider() );
     elevationList.setLinesVisible( true );
     elevationList.setLayoutData( elevFormData );
+    
     
     ITerrainElevationModelSystem elevationModelSystem = dataModel.getElevationModelSystem();
     if( elevationModelSystem == null )
@@ -333,14 +334,32 @@ public class ElevationModelSystemEditorComponent
         th.printStackTrace();
       }
     }
+  } ); 
 
-  } );
+  descriptionGroupText = new Group(elevationComposite,SWT.NONE);
+  descriptionGroupText.setText( "Description" );
+  elevFormData = new FormData();
+  elevFormData.left = new FormAttachment(moveUpBtn,5);
+  elevFormData.top = new FormAttachment(terrainModelLabel,10);
+  elevFormData.bottom = new FormAttachment(100,0);
+  elevFormData.right = new FormAttachment(100,0);
+  descriptionGroupText.setLayoutData(elevFormData);
+  
+  FormLayout formDescription = new FormLayout();
+  descriptionGroupText.setLayout( formDescription);
+  descriptionText = new Text(descriptionGroupText,SWT.MULTI|SWT.WRAP);
+  descriptionText.setText( "Select the Elevation Model to view its description. This Continues");
+  FormData formDescripData = new FormData();
+  formDescripData.left = new FormAttachment(0,0);
+  formDescripData.right = new FormAttachment(100,0);formDescripData.top = new FormAttachment(0,0);
+  formDescripData.bottom = new FormAttachment(100,0);
+  descriptionText.setLayoutData( formDescripData );
+  
 
   }
 
   private final void deleteElevationModel() throws Exception
   {
-//    new DeleteNativeTerrainElevationWrapper();
     IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
     if(model1d2d==null)
     {
