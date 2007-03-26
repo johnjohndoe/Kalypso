@@ -1,4 +1,4 @@
-C     Last change:  EF   19 Mar 2007    4:19 pm
+C     Last change:  K    23 Mar 2007    6:49 pm
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -996,7 +996,7 @@ cipk nov97
                   !Term G
      +            - grav * xm(c) * sbot(nn) * dareaintdh(nn,i))
 
-      if (nn == 100) then
+      if (nn < -3) then
       WRITE(*,*) '*****************************'
       WRITE(*,*) '*****************************'
       WRITE(*,*) 'dF/dh'
@@ -1018,7 +1018,7 @@ cipk nov97
      +               + beiint(nn,i) * d2aidhdx(nn,i))
       !Term D
       WRITE(*,*) 'Term D', i,
-     +            - xm(c) * 2 * vflowint(nn,i) * dvintdx(nn,i) *
+     +            + xm(c) * 2 * vflowint(nn,i) * dvintdx(nn,i) *
      +              (beiint(nn,i) * dareaintdh(nn,i)
      +               + areaint(nn,i) * dbeiintdh(nn,i))
       !Term E
@@ -1090,7 +1090,7 @@ cipk nov97
       WRITE(*,*) 'Term C', i, xm(c) * 2 * vflowint(nn,i) *
      +           beiint(nn,i) * daintdx(nn,i)
       !Term D
-      WRITE(*,*) 'Term D', i, - 2 * beiint(nn,i) * areaint(nn,i)
+      WRITE(*,*) 'Term D', i, + 2 * beiint(nn,i) * areaint(nn,i)
      +           * (xm(c) * dvintdx(nn,i) + vflowint(nn,i) * dmx(c))
       !Term F
       WRITE(*,*) 'Term F', i,
@@ -1176,12 +1176,9 @@ C-
       N1=NCON(L)
 
       IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
-!
-!       XHT=ELEV-AO(N1)
+
 !       NA=(L-1)*NDF+1
-!       RHO=DEN(N1)
 !
-!       !EFa Mar07, deactivated
 !       ah(n1)=0.0
 !       do k=1,13
 !         ah(n1) = ah(n1) + apoly(n1,k) * spec(n1,3)**(k-1)
@@ -1190,15 +1187,11 @@ C-
 !       bnode(n1) = ah(n1) / spec(n1,3)
 !
 !       !EFa Mar07, Boundary condition
-!       !ppl = RHO * grav * bnode(n1) * qfact(L)
-!       ppl = grav * bnode(n1) * qfact(L)
-!       !ppl = 1.0 *bnode(n1) * qfact(1)
+!       ppl = grav * bnode(n1) !* qfact(L)
 !       IF(L .EQ. 1) PPL = -PPL
 !
 !       F(NA) = F(NA) - PPL * (SPEC(N1,3) - VEL(3,N1) / 2.) * SPEC(N1,3)
 !       ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) - PPL * SPEC(N1,3) / 2.
-!       !testing
-!       WRITE(*,*) 'RB: ', spec(n1,3), vel(3,n1), l
 
         NA=(L-1)*NDF+1
         do iii=1, nef
@@ -1392,7 +1385,7 @@ C-
       !-
 
       !nis,mar07,testing
-      if (nn == 100) then
+      if (nn < 100) then
       write (*,*) 'Element: ', nn
       WRITE(*,9898) estifm(1,1), estifm(1,3),
      + estifm(1,9),estifm(1,11), f(1)
