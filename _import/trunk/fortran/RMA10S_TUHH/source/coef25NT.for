@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    15 Mar 2007    5:24 pm
+C     Last change:  EF   26 Mar 2007   10:43 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1020,7 +1020,7 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 !c        if(i .eq. 1  .and.  idebug .eq. 2) then
 !	    WRite(129,'(3i5,8g15.6)') nn,i,MAXN,shearvel,h,difx,dify,thnn
 !     +            ,peclet,h*difx*dsaldx,h*dify*dsaldy
-	  ENDIF
+!	  ENDIF
 
 CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
 

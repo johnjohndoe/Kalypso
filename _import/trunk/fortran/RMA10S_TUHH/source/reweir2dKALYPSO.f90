@@ -1,4 +1,4 @@
-!     Last change:  EF   22 Mar 2007    2:25 pm
+!     Last change:  EF   26 Mar 2007   11:00 am
 subroutine reweir2dKALYPSO(weir_no)
 !LF nov06 this subroutine redefines the order of nodes around the weir elements
 !         first node is read from 2D file, other nodes are rotated accordingly
@@ -13,12 +13,10 @@ INTEGER, DIMENSION(8) :: nop_temp
 !EFa Mar07, weirs in 1d-elements
 if (nop(reweir(weir_no,2),5) .eq.0) then
 
-  if (nop(reweir(weir_no,2),1) .eq. reweir(weir_no,1)) then
-    exit
-  else
-    refnode=nop(reweir(weir_no,2),1
-    nop(reweir(weir_no,2),1=nop(reweir(weir_no,2),3
-    nop(reweir(weir_no,2),3=refnode
+  if (nop(reweir(weir_no,2),1) .ne. reweir(weir_no,1)) then
+    refnode=nop(reweir(weir_no,2),1)
+    nop(reweir(weir_no,2),1)=nop(reweir(weir_no,2),3)
+    nop(reweir(weir_no,2),3)=refnode
   end if
 
 else

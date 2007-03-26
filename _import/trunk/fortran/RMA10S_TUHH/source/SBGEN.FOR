@@ -8,7 +8,7 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
-C     Last change:  IPK  30 Apr 96    
+C     Last change:  EF   26 Mar 2007   11:09 am
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
@@ -30,8 +30,8 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPKFEB94 V4.5
 CIPK DEC97 CHANGE TO PERMIT PARAMETER DEFINITION
 
-C      ALLOCATABLE NHYDQ(:),QDIRS(:),NHYDH(:),NHYDG(:)
-C     +         ,NLAYH(:),NLAYQ(:),IINTERP(:),IQID(:)
+      ALLOCATABLE NHYDQ(:),QDIRS(:),NHYDH(:),NHYDG(:)
+     +         ,NLAYH(:),NLAYQ(:),IINTERP(:),IQID(:)
 CIPK AUG03 MOVE TO BLK11.COM     +         ,WNDSP(MNP),WNDDR(MNP)
 
       DATA ISTDY/0/,ITIMEH/0/
@@ -130,8 +130,8 @@ cipk dec06
           IQID(IQGEN)=1
         ELSE
           IQID(IQGEN)=0
-        ENDIF
-     !nis,sep06,com: just an number of inflows test
+        endif
+      !nis,sep06,com: just an number of inflows test
 CIPK DEC97 REFINE TEST FOR TOO MANY FLOWS
         IF(IQGEN .GT. NQLDS) THEN
 cipk sep04

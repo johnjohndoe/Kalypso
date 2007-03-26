@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  IPK   5 Oct 98    3:39 pm
+C     Last change:  EF   26 Mar 2007   10:21 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -896,7 +896,6 @@ cipk oct98 update to f90
           ENDIF
   255   CONTINUE
       ENDIF
-  260 CONTINUE
 
       !nis,jan07: Add control for 1D-2D-line-transitions
       if (maxLT.ne.0) then

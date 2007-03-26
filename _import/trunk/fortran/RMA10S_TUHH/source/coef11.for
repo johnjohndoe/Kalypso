@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  IPK   5 Oct 98    2:21 pm
+C     Last change:  EF   26 Mar 2007   10:40 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -436,6 +436,7 @@ C-
           DSALDX=DSALDX+DOX(M)*ST(M)
 CIPK MAY02
         GAIN=GAIN+XO(M)*GAN(MR)
+        endif
 CIPK FEB07
         IF(ICK .EQ. 6) THEN
           EXTL=EXTL+XO(M)*EXTLD(MR)

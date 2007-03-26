@@ -1,4 +1,4 @@
-C     Last change:  K    15 Feb 2007    6:32 pm
+C     Last change:  EF   26 Mar 2007   10:37 am
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -40,6 +40,10 @@ cipk aug06  add input options
 
 !NiS,apr06      add IKALYPSOFM and KALYPRST as unit specifier for output file and restart-in file in KALYPSO-2D-format in global use
      +          ,IKALYPSOFM, KALYPRST
+
+!EFa, mar07     add MFWW for gloabl use (used in numbopt)
+     +          ,MFWW
+
 !-
 !NiS,may06: Adding the character-variable ct. This is used for generation of output file names; the FNAM38 is deactivated again, because
 !           the output file name will be generated automatically with the scheme of Kalyps-2D.
