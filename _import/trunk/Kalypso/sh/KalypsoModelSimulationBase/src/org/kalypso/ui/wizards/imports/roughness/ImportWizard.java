@@ -91,6 +91,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     // m_szenarioFolder = (IFolder) context.get( "SzenarioPath" );
     m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
     m_data.setProjectBaseFolder( m_szenarioFolder.getFullPath().segment( 0 ) );
+    m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" );
   }
 
   @Override
@@ -118,6 +119,8 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   @Override
   public boolean performCancel( )
   {
+    ((Transformer)m_operation).unprepare();
+    
     // m_data.getRoughnessPolygonCollection().clear(); THIS MAKES PROBLEM IN GUI!
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
@@ -144,7 +147,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
       status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
       // m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
       ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
-      m_data.getRoughnessPolygonCollection().clear();
+      //m_data.getRoughnessPolygonCollection().clear();
       m_data.getRoughnessShapeStaticRelationMap().clear();
       m_data.getRoughnessStaticCollectionMap().clear();
       // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
@@ -174,6 +177,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
       // gismapview.setLayers( layers );
       // GisTemplateHelper.saveGisMapView( gismapview, new FileWriter( new File( ifile.getLocationURI() ) ), "UTF-8" );
       // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
+      m_data.saveUserSelection();
       m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( Exception e )

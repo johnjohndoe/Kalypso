@@ -269,6 +269,7 @@ public class PageMain extends WizardPage implements Listener
 //      m_data.getRoughnessStaticCollectionMap().clear();
       try
       {
+        ((Transformer)((ImportWizard)getWizard()).m_operation).unprepare();
         ((Transformer)((ImportWizard)getWizard()).m_operation).prepare(true);
         ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
       }

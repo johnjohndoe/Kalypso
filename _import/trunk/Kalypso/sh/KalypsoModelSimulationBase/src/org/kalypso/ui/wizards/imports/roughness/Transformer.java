@@ -40,6 +40,8 @@ public class Transformer implements ICoreRunnableWithProgress
   private static final QName m_GeometryFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON;
 
   private boolean isDataPrepared = false;
+  
+  private int noOfEntriesAdded = -1;
 
   public Transformer( DataContainer data )
   {
@@ -89,7 +91,7 @@ public class Transformer implements ICoreRunnableWithProgress
     if( resetMap )
     {
       m_data.getRoughnessShapeStaticRelationMap().clear();
-      m_data.getRoughnessPolygonCollection().clear();
+      //m_data.getRoughnessPolygonCollection().clear();
     }
     QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
     QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -98,10 +100,12 @@ public class Transformer implements ICoreRunnableWithProgress
     Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
     List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
     IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
-
+    
+    noOfEntriesAdded = 0;
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
       final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
+      noOfEntriesAdded++;
       final Feature shapeFeature = (Feature) shapeFeatureList.get( i );
       final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
       final Object gm_Whatever = shapeFeature.getProperty( shpGeomPropertyName );
@@ -113,6 +117,17 @@ public class Transformer implements ICoreRunnableWithProgress
     }
 
     isDataPrepared = true;
+  }
+
+  public void unprepare( )
+  {
+    if(isDataPrepared)
+    {
+      for(int i=0; i< noOfEntriesAdded; i++)
+        m_data.getRoughnessPolygonCollection().remove( m_data.getRoughnessPolygonCollection().size() - 1 );
+    }
+    isDataPrepared = false;
+    noOfEntriesAdded = 0;
   }
 
   private void setSelectedRoughnessChoice( ) throws Exception

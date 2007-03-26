@@ -85,15 +85,26 @@ public class PageSecond extends WizardPage
         m_comboRoughnessIDs[nextEntryNr] = new Combo( composite, SWT.READ_ONLY );
         m_comboRoughnessIDs[nextEntryNr].setLayoutData( gridDataID );
         m_comboRoughnessIDs[nextEntryNr].setItems( names );
+        m_comboRoughnessIDs[nextEntryNr].select( getSelectionIndex(names, map.get( key )) );
       }
     }
-    Point pt = composite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    composite.setSize( pt );
     composite.layout();
+    composite.pack();
+    Point pt = composite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    composite.getShell().setSize( pt.x + 30, composite.getShell().getSize().y );
+    composite.getShell().setMinimumSize( pt.x + 30, composite.getShell().getSize().y );
     // composite.getParent().layout();
     setPageComplete( true );
   }
-
+  
+  private int getSelectionIndex(final String[] array, final String key) {
+    final String userSelected = m_data.getUserSelectionMap().get( key );
+    for(int i=0; i<array.length; i++)
+      if(array[i].equals( userSelected ))
+        return i;
+    return -1;
+  }
+  
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
@@ -118,6 +129,13 @@ public class PageSecond extends WizardPage
         shpName = map.get( shpID );
         dbName = m_comboRoughnessIDs[m_shpNamesList.indexOf( shpName )].getText();
         map.put( shpID, m_data.getRoughnessStaticCollectionMap().get( dbName ) );
+      }
+      LinkedHashMap<String,String> userSelectionMap = m_data.getUserSelectionMap();
+      for(int i=0; i<m_shpNamesList.size(); i++)
+      {
+        final String text = m_comboRoughnessIDs[i].getText();
+        if(text != null && text.trim() != "")
+          userSelectionMap.put( m_shpNamesList.get( i ), text );
       }
     }
   }

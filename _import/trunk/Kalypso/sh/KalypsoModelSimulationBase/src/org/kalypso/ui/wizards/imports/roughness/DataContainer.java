@@ -1,5 +1,10 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -36,6 +41,10 @@ public class DataContainer
   private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
   private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
+
+  private LinkedHashMap<String, String> m_userSelectionMap;
+
+  private String m_userSelectionFile;
 
   public DataContainer( )
   {
@@ -133,5 +142,52 @@ public class DataContainer
   public final void setProjectBaseFolder( String projectBaseFolder )
   {
     m_ProjectBaseFolder = projectBaseFolder;
+  }
+  
+  public final LinkedHashMap<String, String> getUserSelectionMap( )
+  {
+    return m_userSelectionMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void loadUserSelection( String userSelectionFile )
+  {
+    try
+    {
+      m_userSelectionFile = m_AbsolutePath + "/" + m_ProjectBaseFolder + "/" + userSelectionFile;
+      File file = new File( m_userSelectionFile );
+      if( file.exists() && file.isFile() )
+      {
+        FileInputStream fileStream = new FileInputStream( file );
+        ObjectInputStream objectStream = new ObjectInputStream( fileStream );
+        Object object = objectStream.readObject();
+        if( object instanceof LinkedHashMap )
+          m_userSelectionMap = (LinkedHashMap<String, String>) object;
+      }
+      else
+      {
+        file.createNewFile();
+        m_userSelectionMap = new LinkedHashMap<String, String>();
+      }
+    }
+    catch( Exception e )
+    {
+      m_userSelectionMap = new LinkedHashMap<String, String>();
+      e.printStackTrace();
+    }
+  }
+
+  public void saveUserSelection( )
+  {
+    try
+    {
+      FileOutputStream fileStream = new FileOutputStream( m_userSelectionFile );
+      ObjectOutputStream objectStream = new ObjectOutputStream( fileStream );
+      objectStream.writeObject( m_userSelectionMap );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

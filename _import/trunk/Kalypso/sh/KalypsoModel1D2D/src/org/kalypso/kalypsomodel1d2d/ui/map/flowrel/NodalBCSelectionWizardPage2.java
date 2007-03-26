@@ -209,7 +209,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     {
       final Date fromDate = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
       final Date toDate = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
-      final Date stepDate = DATETIMEFORMAT.parse( m_dateTimeStep.getText() );
+      final int stepValues = Integer.parseInt( m_dateTimeStep.getText() );
       final double value = Double.parseDouble( m_defaultValue.getText() );
 
       if( fromDate.after( toDate ) )
