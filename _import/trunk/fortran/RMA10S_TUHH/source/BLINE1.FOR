@@ -1,4 +1,4 @@
-C     Last change:  EF   12 Mar 2007    5:11 pm
+C     Last change:  K    12 Mar 2007    5:46 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -175,10 +175,10 @@ C-
             !nis,feb07: Add for FFF-elements (at this place)
             else
               !nis,feb07,testing
-              if (n == 8) then
-                WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
-                WRITE(*,*) 'SRT: ', SRT
-              end if
+              !if (n == 8) then
+              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
+              !  WRITE(*,*) 'SRT: ', SRT
+              !end if
               !-
               call outnrm   (cord(n1,1), cord(n1,2),
      +                    0.5*(cord(n1,1)+cord(n3,1)),
@@ -266,6 +266,12 @@ CIPK JUN05  SETUP FOR SUBMERGENGE
       ENDIF
 
 C-
+      !nis,feb07,testing
+      !do i = 1, np
+      !  WRITE(*,*) nfix(i), alfa(i), 'test Winkel'
+      !enddo
+      !pause
+      !-
 
       DO 701 N=1,NPM
 
@@ -387,11 +393,14 @@ C-
 CIPK JUN05
         !nis,feb07,testing
         !WRITE(*,*) 'Test bei Winkel:'
-        !WRITE(*,*) n, xslp(n), yslp(n), alfa(n), ibn(n)
+        !WRITE(*,*) n, xslp(n), yslp(n), alfa(n), ibn(n), alfak(n)
         !pause
         !-
           !nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!
-          IF(ALFAK(N) .gt.ABS(1.0e-10)  .AND. IBN(N) .NE. 15) THEN
+          !nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range
+          !IF(ALFAK(N) .NE. 0.  .AND. IBN(N) .NE. 15) THEN
+          IF(ABS(ALFAK(N)) > 0.00001  .AND. IBN(N) .NE. 15) THEN
+          !-
             ALFA(N)=ALFAK(N)
           ELSEIF(XSLP(N) .NE. 0.) THEN
             ALFA(N)=ATAN(YSLP(N)/XSLP(N))
@@ -465,6 +474,12 @@ CIPK JUL00 REVISE TEST
  
  
   630   CONTINUE
+        !nis,feb07,testing
+        !WRITE(*,*) 'Test bei Winkel:'
+        !WRITE(*,*) n, xslp(n), yslp(n), alfa(n), ibn(n), alfak(n)
+        !pause
+        !-
+
         IF(NTR .GT. 0) THEN
           IF(VEL(1,N) .EQ. 0.) ALOLD=PI2
           IF(VEL(1,N) .NE. 0.) ALOLD=ATAN(VEL(2,N)/VEL(1,N))
@@ -596,7 +611,10 @@ C-
       DO 730 N=1,NP
         ADIF(N)=0.
 CIPK JUN05
-        IF(ALFAK(N) .gt. ABS(1.0e-10)  .AND.
+        !nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range
+        !IF(ALFAK(N) .NE. 0.  .AND.
+        IF(ABS(ALFAK(N)) > 0.00001  .AND.
+        !-
      +     (IBN(N) .NE. 15  .AND.  IBN(N) .NE. 10)) ALFA(N)=ALFAK(N)
   730 CONTINUE
 C-
