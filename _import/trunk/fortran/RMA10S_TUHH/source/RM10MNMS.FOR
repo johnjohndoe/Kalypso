@@ -1,3 +1,4 @@
+C     Last change:  K     2 Mar 2007    6:02 pm
 c           RMA-10
 c           COPYRIGHT  
 c           RESOURCE MODELLING ASSOCIATES PTY LTD 
@@ -294,10 +295,13 @@ cWP        if(status .eq. -1  .or. fnam0(1:5) .eq. 'dummy') then
           WRITE(*,6000)
  6000     FORMAT(/' Enter RMA-10 input file name: ',/)
 CIPK JUN05
-cWP          call fileopen(fnam0)
-          READ(*,*) FNAM0
-CIPK JUN05 5000     FORMAT(A48)
-cWP        endif
+!nis,feb07: fixed input file name
+!!cWP          call fileopen(fnam0)
+!          READ(*,*) FNAM0
+          fnam0 = 'control.r10'
+!CIPK JUN05 5000     FORMAT(A48)
+!cWP        endif
+!-
         WRITE(*,'(A)') FNAM0
 CCC      FNAMEX='D:\Rmalf95\Rmagen\RMAGEN70\rmagen70\Release\rmagen70-3M.EX
 CCC     +E'
