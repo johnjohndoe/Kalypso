@@ -431,6 +431,10 @@ end do write_arcs
 ! Elements:
 write_elements: DO i = 1, ne
   WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
+    if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
+      BACKSPACE(IKALYPSOFM)
+      WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
+    end if
 END do write_elements
 
 !NiS,may06: Write informations of
@@ -509,6 +513,10 @@ END do write_roughness
 !               fomat descriptor must change (see above)
 ! 7002 FORMAT ('FE', 4i10,f15.7) 
  7002 FORMAT ('FE', 4i10)
+
+ !LF nov06: adding starting node for weir structure
+ 7016 FORMAT ('FE', 5i10)
+
 
 !NiS,may06: new identification line for cross sectional informations:
 !                              node, width, ss1, ss2, wids, widbs, wss

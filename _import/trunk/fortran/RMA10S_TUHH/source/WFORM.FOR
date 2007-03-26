@@ -104,7 +104,8 @@ c
              ENDIF
 
              cscf=1.9*hol**0.22-0.28
-	       cf=1.69
+cLF nov06 the following command is cancelled, otherwise cf is always 1.69
+c	       cf=1.69
            ELSE
 c
 c     gravel
