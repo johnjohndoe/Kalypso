@@ -1,4 +1,4 @@
-!     Last change:  L    28 Nov 2006    1:41 am
+!     Last change:  K     2 Mar 2007    6:27 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -310,6 +310,10 @@ END SUBROUTINE check_Kalypso
       ne = elem 
       np = knot 
 
+!nis,feb07,testing
+!WRITE(*,*) 'Reordering started'
+!pause
+!-
 
 
 !get the node numbers into temporary memory
@@ -363,6 +367,10 @@ else
   ncn  = 4
 end if
 
+!nis,feb07,testing
+!WRITE(*,*) ncn, 'maximale Elementgroesse'
+!pause
+!-
 
 
 ierr = 0
@@ -486,6 +494,12 @@ IF (ierr.eq.1) stop 5
   785 END DO 
 !                                                                       
       IF (idxx.lt.99999) goto 790 
+
+      !nis,feb07,testing
+      !WRITE(*,*) mpp, mpq
+      !WRITE(*,*) 'vor Fehler'
+      !pause
+      !-
       IF (mpp.le.mpq) stop 6 
       DO 810 n = 1, nepem 
         iel (n) = msn (n) 
@@ -681,7 +695,10 @@ IF (ierr.eq.1) stop 5
  1070 CONTINUE 
 !     add to column adjacent point of eliminated point                  
 !                                                                       
-      DO 270 j = 1, maxc 
+      DO 270 j = 1, maxc
+        !nis,feb07,testing
+        !WRITE(*,*) j, ii, icon(n,j)
+        !-
         ii = icon (n, j) 
         IF (ii.le.0) goto 270 
         mp = mp + 1 
@@ -943,7 +960,7 @@ ENDIF                     !NiS,mar06
 arcs_without_midside = 0
 midsidenode_max = 0
 
-!Nis,may06: initializing the I/O error space
+!Nis,may06,com: initializing the I/O error space
 istat =0
 
 nodecnt = 0
@@ -1319,7 +1336,7 @@ reading: do
           endif
           reweir(weircnt,2) = i
         end if
-
+!-
         IF (i.gt.elcnt) elcnt = i
         !NiS,mar06: Net dimension was checked before; there's no Restriction concerning maximum array size; ERROR test deactivated
         !  IF (elcnt.gt.mel) then
@@ -1873,7 +1890,7 @@ if (weircnt .gt. 0) then
     if (nop(reweir(i,2),1) .ne. reweir(i,1)) call reweir2dKALYPSO(i)
   end do
 end if
-
+!-
 
 ! CONTROLOUTPUT -------------------------------------------------------------------------------------------
 
@@ -2230,7 +2247,6 @@ WRITE (Lout,105)
 WRITE ( * , 105)
 105 format (1X, 'Reordering has to be done.')
 
-CALL start_node (qlist, k, np)
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
 CALL start_node (qlist, k, np)
 !CALL reord (np, ne, qlist)
@@ -2413,7 +2429,6 @@ neighbours: do i=1,elcnt
 
 end do neighbours
 
-
 ! Ausduennung des urspruenglich mehrfach bestimmten Feldes
 ! (Jedem Knoten wurde ein anderer Knoten mehrfach als Nachbar zugewiesen)
 
@@ -2458,7 +2473,6 @@ do i=1,nodecnt
 end do
 
 
-
 !NiS,mar06: unit name changed; changed iout to Lout
 WRITE (Lout, 111 )
 WRITE ( *  , 111 )
@@ -2470,7 +2484,7 @@ DEALLOCATE(arc)
 
 !LF nov06: deallocate weir renumbering array
 DEALLOCATE (reweir)
-
+!-
 
 !NiS,may06: Rewind for possible RESTART
 REWIND(IFILE)

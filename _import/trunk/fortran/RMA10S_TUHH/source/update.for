@@ -1,10 +1,9 @@
-CIPK  LAST UPDATE feb 26 2007  reduce permissible sal level
+C     Last change:  K    16 Mar 2007    1:26 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Jan 16 2000 fix bug from SL condition
-C     Last change:  IPK   5 Oct 98    2:15 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE APR 30 1996
       SUBROUTINE UPDATE
@@ -59,17 +58,13 @@ C-
       end if
 !-
 !nis,jan07,testing
-!        do i = 17, 20
-!          write (*,*) 'Knoten: ', i
-!          WRITE (*,*) 'Richtungsbedingung:', Alfa(i)
-!        end do
-!        !pause
-!-
-
-!nis,jan07,testing
-      WRITE(*,*) 'Aenderungen:  ', R1(nbc(17,1)), r1(nbc(17,3))
-!      WRITE(*,*) 'Verknuepfung: ', (nbc(i,1),i=17,20)
-!      pause
+!      do i = 1, 30
+!        write(*,*) 'Knoten: ', i
+!        WRITE(*,*) 'Richtungsbed.:', Alfa(i)
+!        WRITE(*,*) 'Aend.: ', R1(nbc(i,1)), r1(nbc(i,2)), r1(nbc(i,3))
+!        WRITE(*,*) 'Verknuepfung: ', nbc(i,1)
+!      end do
+      !pause
 !-
 
 C-
@@ -108,19 +103,19 @@ CIPK MAY02 EXPAND TO 7
 	      NCNV(1)=1
 	      NCNV(2)=1
 	      NCNV(3)=1        
-            NCNV(5)=1
+          NCNV(5)=1
 	    ELSEIF(ITEQV(I) .EQ. 7) THEN
 	      NCNV(1)=1
 	      NCNV(2)=1
 	      NCNV(3)=1        
-            NCNV(6)=1
+          NCNV(6)=1
 	    ELSEIF(ITEQV(I) .EQ. 8) THEN
 	      NCNV(5)=1
 	    ELSEIF(ITEQV(I) .EQ. 9) THEN
 	      NCNV(6)=1
 CIPK MAY02
 	    ELSEIF(ITEQV(I) .EQ. 10) THEN
-            NCNV(7)=1
+          NCNV(7)=1
 CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 10) THEN
 	    ELSEIF(ITEQV(I) .EQ. 11) THEN
 	      NCNV(1)=1
@@ -135,9 +130,9 @@ CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 11) THEN
         ENDDO
 
       !nis,jan07: If the network is just 1D, the second degree of freedom must not be calculated. Reactivating it:
-      if (ONLY1d .eq. 1) then
-        NCNV(2) = 9999
-      end if
+      !if (ONLY1d .eq. 1) then
+      !  NCNV(2) = 9999
+      !end if
       !-
 
       WRITE(75,*) 'NCNV',MAXN,(NCNV(I),I=1,7)
@@ -231,13 +226,14 @@ cipk jun05
       EX=EX*FCA
       IF( K .GT. 2 ) GO TO 140
       IF(ADIF(J) .NE. 0.) EX=EX/COS(ADIF(J))
-      IF( ALFA(J)  ) 130, 140,130
+
+      IF( ALFA(J)  ) 130, 140, 130
 cipk jan00  130 VEL(K,J) = VEL(K,J) + EX*COS(ALFA(J) )
 cipk jan00      VEL(K+1,J) = VEL(K+1,J) + EX*SIN(ALFA(J) )
 cipk jan00      GO TO 150
   130 CONTINUE
       IF(K .EQ. 1) THEN
-        VEL(K,J) = VEL(K,J) + EX*COS( ALFA(J) )
+        VEL(K,J)   = VEL(K,J)   + EX*COS( ALFA(J) )
         VEL(K+1,J) = VEL(K+1,J) + EX*SIN( ALFA(J) )
       ELSE
         VEL(K-1,J) = VEL(K-1,J) - EX*SIN( ALFA(J) )
@@ -246,7 +242,7 @@ cipk jan00      GO TO 150
       GO TO 150
 CIPK NOV97
   140 IF(K .NE. 3) GO TO 149
-CIPK APR05      
+CIPK APR05
       H1=VEL(3,J)
       CALL AMF(H,H1,AKP(J),ADT(J),ADB(J),AAT,D1,0)
       if(inotr .eq. 1) then

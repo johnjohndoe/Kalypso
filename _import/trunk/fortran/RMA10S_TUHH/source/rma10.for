@@ -1,4 +1,4 @@
-C     Last change:  EF   13 Mar 2007   10:27 am
+C     Last change:  K    19 Mar 2007    2:33 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -401,14 +401,15 @@ c  250 CONTINUE
       open (9919, matrixname, iostat = teststat)
       if (teststat /= 0) STOP 'Fehler bei Matrixdatei'
       do i = 1, 2*maxp-2
-        WRITE(9919, '(60(f7.2),2(3x,f7.2))')
+        WRITE(9919, '(6(f7.2),2(1x,f9.4))')
      *       (matrix(i,j), j = 1, 2*maxp-2), vector (i), r1(i)
       ENDDO
       close (9919, status = 'keep')
+      !pause
       !-
 
       !nis,feb07,testing in coefs, stop after calc job
-        !pause
+      !pause
       !-
 
 CIPK JAN97
