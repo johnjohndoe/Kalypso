@@ -202,7 +202,7 @@ CIPK APR06
 
       ALLOCATE   (IWFLOW(MAXP),WFLOW(MAXP),WHGT(MAXP),WLEN(MAXP)
      +             ,wflolw(MAXP),TRANSEL(MAXP),ISUBM(MAXP),ISUBMEL(MAXE)
-     +             ,NFCTP(MAXE))
+     +             ,NFCTP(MAXE),REWEIR(MAXE,2))
 
       ALLOCATE   (STRESS(MAXP,2),SPWP(MAXP),AWL(MAXP),SWH(MAXP)
      +                ,WVDR(MAXP),STR1(MAXP,6),STR2(MAXP,6)
