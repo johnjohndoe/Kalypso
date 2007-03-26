@@ -1,5 +1,7 @@
 cipk  last update feb 26 2006 add logic for loads from 1-d structures
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT
+CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
+cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -391,23 +393,23 @@ C-
 
       !nis,oct06,com: Calculate the nodal velocities and their derivatives
       DO 250 M=1,NCN
-      MR=NCON(M)
+        MR=NCON(M)
 
         !nis,oct06,com: calculate vx and vy; for 1D, udst and vdst are .eq. 1
         VX(M)=VEL(1,MR)/UDST(MR)
-      VY(M)=VEL(2,MR)/VDST(MR)
-      ST(M)=VEL(ICK,MR)/SDST(MR)
+        VY(M)=VEL(2,MR)/VDST(MR)
+        ST(M)=VEL(ICK,MR)/SDST(MR)
 
         !nis,oct06,com: calculate the derivatives of vx and vy
         VDX(M)=VDOT(1,MR)/UDST(MR)
-      VDY(M)=VDOT(2,MR)/VDST(MR)
-      SDT(M)=VDOT(ICK,MR)/SDST(MR)
-      IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
-        NBOT=NREF(MR)+NDEP(MR)-1
-        UBFC(M)=UDST(NBOT)
-      ELSE
-        UBFC(M)=1.0
-      ENDIF
+        VDY(M)=VDOT(2,MR)/VDST(MR)
+        SDT(M)=VDOT(ICK,MR)/SDST(MR)
+        IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
+          NBOT=NREF(MR)+NDEP(MR)-1
+          UBFC(M)=UDST(NBOT)
+        ELSE
+          UBFC(M)=1.0
+        ENDIF
   250 CONTINUE
 
 
@@ -464,31 +466,31 @@ cipk APR99 add for more flexible width term
       wssg=0.
 
       DO 275 M=1,NCNX
-      MC = 2*M - 1
-      MR=NCON(MC)
-      AKE=AKE+XM(M)*UUDST(MR)
-      UBF=UBF+XM(M)*UBFC(MC)
-      BETA3=BETA3+XM(M)*VDOT(3,MR)
-      DHDX = DHDX + DMX(M)*VEL(3,MR)
+        MC = 2*M - 1
+        MR=NCON(MC)
+        AKE=AKE+XM(M)*UUDST(MR)
+        UBF=UBF+XM(M)*UBFC(MC)
+        BETA3=BETA3+XM(M)*VDOT(3,MR)
+        DHDX = DHDX + DMX(M)*VEL(3,MR)
 cipk nov97      DAODX = DAODX + DMX(M)*AO(MR)
-      IF (IDNOPT.GE.0) THEN
-        DAODX = DAODX + DMX(M)*AO(MR)
-        abed=abed+xm(m)*ao(mr)
-      ELSE
-        DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
+        IF (IDNOPT.GE.0) THEN
+          DAODX = DAODX + DMX(M)*AO(MR)
+          abed=abed+xm(m)*ao(mr)
+        ELSE
+          DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
 cipk mar01 fix ao to ado
-        abed=abed+xm(m)*(ado(mr)+ame(m))
-      ENDIF
+          abed=abed+xm(m)*(ado(mr)+ame(m))
+        ENDIF
 cipk apr99 add line for storage sideslope
-      bsel=bsel+xm(m)*widbs(mr)
-      wssg=wssg+xm(m)*wss(mr)
-      RHO=RHO+XM(M)*DEN(MR)
-      DRODX=DRODX+DMX(M)*DEN(MR)
+        bsel=bsel+xm(m)*widbs(mr)
+        wssg=wssg+xm(m)*wss(mr)
+        RHO=RHO+XM(M)*DEN(MR)
+        DRODX=DRODX+DMX(M)*DEN(MR)
 c      IF(ICYC .LT.1) GO TO 275
 cipk feb05      SIGMAX=SIGMAX+XM(M)*(SIGMA(MR,1)*CXX+SIGMA(MR,2)*SAA)
 CIPK MAY02  ADD STRESS TERM
-      SIGMAX=SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
-     +                      +(SIGMA(MR,2)+STRESS(MR,2))*SAA)
+        SIGMAX = SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
+     +           +(SIGMA(MR,2)+STRESS(MR,2))*SAA)
   275 CONTINUE
 CIPK NOV97
   276 CONTINUE
@@ -595,8 +597,8 @@ cipk nov98 adjust for surface friction
 CIPK APR99 ADJUST NR TO MAT
   !NiS,apr06: changing test:
   !    IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
-      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
-     +   ORT(NR,5) /= -1)) THEN
+      IF(ORT(MAT,5) .GT. 0.  .OR.  (ORT(MAT,13) .GT. 0. .and.
+     +   ORT(MAT,5) /= -1.0)) THEN
   !-
         IF(ORT(MAT,5) .LT. 1.0  .AND.  ORT(MAT,13) .LT. 1.0) then
 
@@ -658,12 +660,9 @@ CIPK MAY06  MOVE NR TO MAT
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
 
       !nis,jan07: This statement can not work
-      !ELSEIF (ORT(NR,5) == -1) THEN
-      ELSEIF (ORT(NR,5) .lt. 0) THEN
+      ELSEIF (ORT(MAT,5) == -1.0) THEN
+      !ELSEIF (ORT(MAT,5) .lt. 0) THEN
       !-
-        !nis,jan07,testing
-        !WRITE(*,*) 'in coef11: ', ort(imat(nn),15)
-        !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
         !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
         call darcy(lambda, vecq, h, ort(imat(nn),15),
@@ -1121,6 +1120,24 @@ C     WRITE(*,7777) NN,((ESTIFM(I,J),J=1,12),I=1,12)
 C     WRITE(*,7777) NN,(F(I),I=1,12)
 C     WRITE(*,7778) (R1(N),N=1,NSZF)
 C7778 FORMAT(1P5E12.4)
+
+      !nis,mar07,testing
+      if (nn < 100) then
+      write (*,*) 'Element: ', nn
+      WRITE(*,9898) estifm(1,1), estifm(1,3),
+     + estifm(1,9),estifm(1,11), f(1)
+      WRITE(*,9898) estifm(3,1), estifm(3,3),
+     + estifm(3,9),estifm(3,11), f(3)
+      WRITE(*,9898) estifm(9,1), estifm(9,3),
+     + estifm(9,9),estifm(9,11), f(9)
+      WRITE(*,9898) estifm(11,1), estifm(11,3),
+     + estifm(11,9), estifm(11,11), f(11)
+ 9898 format (5(1x,f14.2))
+      WRITE(*,*) qfact
+      pause
+      end if
+      !-
+
       RETURN
 *-
 *...... Special case for junction element

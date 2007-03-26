@@ -1,4 +1,4 @@
-C     Last change:  K    22 Feb 2007    6:46 pm
+C     Last change:  K    16 Mar 2007    4:00 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -56,7 +56,7 @@ C-
       DO 125 J = 1, NCL
         M = LMT(J)
         !nis,jan07,testing
-        WRITE(*,*) 'Erreiche Check.subroutine', J, M, MaxLT
+        !WRITE(*,*) 'Erreiche Check.subroutine', J, M, MaxLT
         !pause
         !-
 cipk feb01  skip out for zero lines
@@ -178,7 +178,7 @@ CIPK SEP04
             if (J.eq.TransLines(i,2)) then
 
               !nis,jan07,testing
-              WRITE(*,*) 'Erreiche line transition Winkelübergabe'
+              !WRITE(*,*) 'Erreiche line transition Winkelübergabe'
               !pause
               !-
 
@@ -197,7 +197,7 @@ CIPK SEP04
                 alfak(LINE(J,nodeno)) = alfak(LINE(J,3))
 
                 !nis,jan07,testing
-                WRITE(*,*) alfak(line(j,3)), line(j,3), lmt(j), nodeno
+                !WRITE(*,*) alfak(line(j,3)), line(j,3), lmt(j), nodeno
                 !pause
                 !-
 

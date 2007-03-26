@@ -2,6 +2,7 @@ cipk  last update feb 26 2006 add logic for loads from 1-d structures
 cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update jul 05 2006 use perim for hydraulic radius in friction	      
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT AND H DEFINITION
+CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE mar 23 2006 correct ice initial values 
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -33,6 +34,7 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKSUBMOD
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
+      USE PARAFlow1DFE
 !-
       SAVE
 
@@ -600,8 +602,8 @@ cipk nov98 adjust for surface friction
 CIPK APR99 ADJUST NR TO MAT
   !NiS,apr06: changing test:
   !    IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
-      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
-     +   ORT(NR,5) /= -1)) THEN
+      IF(ORT(MAT,5) .GT. 0.  .OR.  (ORT(MAT,13) .GT. 0. .and.
+     +   ORT(MAT,5) /= -1.0)) THEN
   !-
         IF(ORT(MAT,5) .LT. 1.0  .AND.  ORT(MAT,13) .LT. 1.0) then
 
@@ -668,12 +670,9 @@ cipk jul06 use perim
 
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
       !nis,jan07: This statement can not work
-      !ELSEIF (ORT(NR,5) == -1) THEN
-      ELSEIF (ORT(NR,5) .lt. 0) THEN
+      ELSEIF (ORT(NR,5) == -1.0) THEN
+      !ELSEIF (ORT(MAT,5) .lt. 0) THEN
       !-
-        !nis,jan07,testing
-        !WRITE(*,*) 'in coef11nt: ', ort(imat(nn),15)
-        !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
         !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
         call darcy(lambda, vecq, h, ort(imat(nn),15),
@@ -1128,6 +1127,47 @@ C 7779       FORMAT(3I8,1PE15.6)
 C          ENDIF
 C        ENDDO
 C      ENDDO
+
+      !nis,mar07,testing: Writing whole matrix (just steady case for 1D element)
+      matrix (2*nn-1,2*nn-1) = matrix (2*nn-1, 2*nn-1) + estifm(1,1)
+      matrix (2*nn-1,2*nn) = matrix (2*nn-1, nn+1) + estifm(1,3)
+      matrix (2*nn-1,2*nn+1) = matrix (2*nn-1, nn+2) + estifm(1,9)
+      matrix (2*nn-1,2*nn+2) = matrix (2*nn-1, nn+3) + estifm(1,11)
+      matrix (2*nn,2*nn-1) = matrix (2*nn, 2*nn-1) + estifm(3,1)
+      matrix (2*nn,2*nn) = matrix (2*nn, 2*nn) + estifm(3,3)
+      matrix (2*nn,2*nn+1) = matrix (2*nn, 2*nn+1) + estifm(3,9)
+      matrix (2*nn,2*nn+2) = matrix (2*nn, 2*nn+2) + estifm(3,11)
+      matrix (2*nn+1,2*nn-1) = matrix (2*nn+1, nn) + estifm(9,1)
+      matrix (2*nn+1,2*nn) = matrix (2*nn+1, nn+1) + estifm(9,3)
+      matrix (2*nn+1,2*nn+1) = matrix (2*nn+1, nn+2) + estifm(9,9)
+      matrix (2*nn+1,2*nn+2) = matrix (2*nn+1, nn+3) + estifm(9,11)
+      matrix (2*nn+2,2*nn-1) = matrix (2*nn+2, 2*nn-1) + estifm(11,1)
+      matrix (2*nn+2,2*nn) = matrix (2*nn+2, 2*nn) + estifm(11,3)
+      matrix (2*nn+2,2*nn+1) = matrix (2*nn+2, 2*nn+1) + estifm(11,9)
+      matrix (2*nn+2,2*nn+2) = matrix (2*nn+2, 2*nn+2) + estifm(11,11)
+
+      vector (2*nn-1) = vector (2*nn-1) + f(1)
+      vector (2*nn) = vector (2*nn) + f(3)
+      vector (2*nn+1) = vector (2*nn+1) + f(9)
+      vector (2*nn+2) = vector (2*nn+2) + f(11)
+      !-
+
+      !nis,mar07,testing
+      if (nn < 100) then
+      write (*,*) 'Element: ', nn
+      WRITE(*,9898) estifm(1,1), estifm(1,3),
+     + estifm(1,9),estifm(1,11), f(1)
+      WRITE(*,9898) estifm(3,1), estifm(3,3),
+     + estifm(3,9),estifm(3,11), f(3)
+      WRITE(*,9898) estifm(9,1), estifm(9,3),
+     + estifm(9,9),estifm(9,11), f(9)
+      WRITE(*,9898) estifm(11,1), estifm(11,3),
+     + estifm(11,9), estifm(11,11), f(11)
+
+ 9898 format (10(1x,f14.2))
+      pause
+      end if
+      !-
 
       RETURN
     
