@@ -462,6 +462,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     // inform to paint new image
     fireModellEvent( null );
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
+   */
+  @Override
+  public boolean isLoaded( )
+  {
+    return m_buffer != null;
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
