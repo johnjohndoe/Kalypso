@@ -1,4 +1,4 @@
-C     Last change:  EF    7 Mar 2007   10:39 am
+C     Last change:  K     2 Mar 2007    7:00 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -154,6 +154,12 @@ CIPK OCT01
           NFIX1(NA)=2
           SPEC(NA,6)=-QQAL(3)
         ENDIF
+
+        !nis,feb07,testing
+        !WRITE(*,*) 'Vergebe Randbedingung'
+        !WRITE(*,*) spec(na,1), spec(na,2)
+        !pause
+        !-
 
 !nis,sep06: In the 2D-part an additional if control was entered, so
 !           that the following if control could not be reached by
@@ -677,7 +683,7 @@ C-
               !CALL darcy (lambda, vecq, d1, cniku (lineimat(j, k + 1)),
 
                 !nis,jan07,testing
-                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                !WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
                 !-
               CALL darcy (lambda, vecq, d1, ort(lineimat(j, k + 1), 15),
               !-
@@ -718,7 +724,7 @@ C-
               !nis,jan07: Some problems with cniku, so origin ort(nn,15) is used
               !CALL darcy(lambda, vecq, d2_kind8, cniku(lineimat(j,k+1)),
                 !nis,jan07,testing
-                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                !WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
                 !-
               CALL darcy(lambda, vecq,d2_kind8, ort(lineimat(j,k+1),15),
               !-
@@ -750,7 +756,7 @@ C-
               !nis,jan07: Some Problems with cniku, so origin ort(nn,15) is used
               !CALL darcy (lambda, vecq, d3, cniku(lineimat (j, k+1)),
                 !nis,jan07,testing
-                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                !WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
                 !-
               CALL darcy (lambda, vecq, d3, ort(lineimat (j, k+1),15),
               !-
@@ -1321,7 +1327,7 @@ C-
   555     END DO
         ENDIF
 
-      write(*,*)'qgen gelaufen mit Linie ',j
+      !write(*,*)'qgen gelaufen mit Linie ',j
 
 
         !NiS,sep06: Ending BSWIT

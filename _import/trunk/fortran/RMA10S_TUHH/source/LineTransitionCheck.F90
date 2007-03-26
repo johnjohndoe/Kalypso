@@ -1,4 +1,4 @@
-!     Last change:  K     7 Feb 2007    2:31 pm
+!     Last change:  K     2 Mar 2007    6:03 pm
 !nis,nov06: This subroutine checks all the 1D-2D-line-Transitions on consistency
 !           That is:
 !           - well definition
@@ -35,8 +35,8 @@ REAL (KIND=4)  :: smDi, SeSmDi, deltax, deltay, deltal, deltal_min
 REAL (KIND=4)  :: alphaSm, alphaSeSm, DeltaAlpha
 
 !testing
-WRITE(*,*) 'bin hier in line transition check'
-pause
+!WRITE(*,*) 'bin hier in line transition check'
+!pause
 !-
 
 !Initializations-------------------------

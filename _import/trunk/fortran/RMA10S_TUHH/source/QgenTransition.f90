@@ -1,4 +1,4 @@
-!     Last change:  K    29 Jan 2007   12:04 pm
+!     Last change:  K     2 Mar 2007    6:26 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -44,8 +44,8 @@
       CHARACTER (LEN=27)  :: filename
 
 !nis,jan07,testing
-  WRITE(*,*) 'Erreiche QGENtrans'
-  WRITE(*,*) 'Linie:',TLine,'qreq:',qreq,'thet:',thet
+!  WRITE(*,*) 'Erreiche QGENtrans'
+!  WRITE(*,*) 'Linie:',TLine,'qreq:',qreq,'thet:',thet
 !-
 
 !nis,jan07,test output file handling
