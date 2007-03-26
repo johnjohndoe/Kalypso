@@ -1,4 +1,4 @@
-!     Last change:  K    27 Feb 2007    4:21 pm
+!     Last change:  K     2 Mar 2007    6:28 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -162,7 +162,7 @@ END DO
           !Save informations for 1D-2D-TRANSITION ELEMENTS
           IF (nnum .eq. 5) THEN
             !NiS,may06: testing transition elements
-            WRITE(*,*) ' Element ', nelem
+            !WRITE(*,*) ' Element ', nelem
             !-
             trans_els = trans_els + 1
             IF (trans_els .gt. maxp) THEN

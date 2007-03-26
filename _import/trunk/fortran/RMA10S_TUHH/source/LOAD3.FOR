@@ -85,7 +85,20 @@ CZZZ
 
       !NiS,may06: do for every node
 
+!NiS,may06: test
+!      OPEN(9999,'testfile.txt')
+!-
       do n=1,np
+
+!NiS,may06: test
+!      testing variable iactvbc
+!      IF(iactvbc(n).gt.0 .and. maxn.eq.1)
+!    +   WRITE(9999,*) 'iactvbc(',N,') =', iactvbc(N)
+!      testing node assignment at surface
+!      IF(N.ne.nsurf(n)) WRITE(9999,*) 'NSURF(',N,') = ', NSURF(N)
+!      testing the nodes below
+!      if (nref(n).ne.0) WRITE(9999,*) 'NREF(',N,') = ', NREF(N)
+!-
 
           IF(MOD(NFIX(N),100)/10 .EQ. 2) THEN
             ibc=iactvbc(n)
@@ -108,6 +121,10 @@ CZZZ
             endif
 	    endif
       enddo
+
+!NiS,may06: test
+!      CLOSE(9999)
+!-
 
 c      write(75,*) 'load-76 nfix(93),nfix(634)',nfix(93),nfix(634),
 c     +    maxn,iteqv(maxn)
@@ -707,17 +724,17 @@ CIPK  TEST
               ENDIF
             ENDDO
 
-            QFLUX=SIDL1*(Q1C(1)+Q1C(2)*4.+Q1C(3))/6.
-            IF(QFLUX .GT. 0) THEN
-            FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,2))-VEL(3+INOVEL,NOP(NN,6)))
-            ELSE
-            FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,6))-VEL(3+INOVEL,NOP(NN,2)))
-            ENDIF
-            IF(QFLUX .GT. 0.) THEN
-              EXTLDEL(NAD2)=EXTLDEL(NAD2)+FLUX/AREA(NAD1)
-            ELSE
-              EXTLDEL(NAD1)=EXTLDEL(NAD1)-FLUX/AREA(NAD1)
-            ENDIF
+         QFLUX=SIDL1*(Q1C(1)+Q1C(2)*4.+Q1C(3))/6.
+         IF(QFLUX .GT. 0) THEN
+         FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,2))-VEL(3+INOVEL,NOP(NN,6)))
+         ELSE
+         FLUX=QFLUX*(VEL(3+INOVEL,NOP(NN,6))-VEL(3+INOVEL,NOP(NN,2)))
+         ENDIF
+         IF(QFLUX .GT. 0.) THEN
+           EXTLDEL(NAD2)=EXTLDEL(NAD2)+FLUX/AREA(NAD1)
+         ELSE
+           EXTLDEL(NAD1)=EXTLDEL(NAD1)-FLUX/AREA(NAD1)
+         ENDIF
 
 C         WRITE(203,'(3I6,6F15.6)') MAXN,NN,3+INOVEL,
 C     +    QFLUX,FLUX,EXTLDEL(NAD1) 
@@ -1350,6 +1367,7 @@ CIPK MAY02 Eliminate mid-sides
 	  enddo
 	ENDIF
 
+!NiS,jun06,comment: At this point the equation numbers will be assigned to the NBC-array
 CIPK DEC06  ALLOW FOR EQUAL FLOW AND DEPTH BC'S
     
       DO N=1,NQLDS
