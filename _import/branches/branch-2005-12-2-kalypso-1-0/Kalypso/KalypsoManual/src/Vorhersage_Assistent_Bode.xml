@@ -852,6 +852,13 @@
         </listitem>
 
         <listitem>
+          <para><guilabel>Längsschnitte</guilabel> ermöglichen einen Überblick
+          über die Wasserstands- <abbrev>bzw.</abbrev> Abfluss-Entwicklung
+          entlang eines Gewässers. Es werden Längsschnitte (Wasserstand und
+          Abfluss) angeboten für die Bode, Holtemme und Selke.</para>
+        </listitem>
+
+        <listitem>
           <para>Die <guilabel>Speicherübersichten (Scheitelwerte)</guilabel>
           für Volumen, Wasserstand bzw. Speicherabgabe sind tabellarische
           Zusammenfassungen, die neben den Speichernamen, den Gewässernamen,
