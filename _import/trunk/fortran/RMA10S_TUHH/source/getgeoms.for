@@ -57,8 +57,11 @@ CIPK MAY02 ADD CHARACTER VARIABLES
 C-
 C-    Set limits for testing
 C-
-      MMM1=MNP
-      MMM2=MEL
+
+cWP Feb 2006, not used in this subroutine
+cWP      MMM1=MNP
+cWP      MMM2=MEL
+
 cipk feb01
       NCLL=0
 
@@ -191,6 +194,10 @@ cWP Feb 2006 Now detailled check for READ statement!
      1     n,m,((cord(j,k),K=1,2), ALFA(j),wss(j),J=1,N),
      2     ((NOP(J,K),K=1,8),IMAT(J),TH(J),NFIXH(J),J=1,M)
      +    ,(WIDTH(J),SS1(J),SS2(J),WIDS(J),J=1,N)
+
+           WRITE(*,1011)
+ 1011      FORMAT(/1X, '...finished first part!')
+
            write(75,*) 'REAL*8 format',n,m
          ELSE
 !NiS,may06: Lahey version
@@ -652,23 +659,24 @@ C-
             IF(IGEO .NE. 2) THEN
 
               DO K=2,NCN,2
-              N1=NOP(J,K-1)
-              N2=NOP(J,K)
-              N3=MOD(K+1,NCN)
-              IF(N3 .EQ. 0) N3=NCN
-              N3=NOP(J,N3)
-              AO(N2)=0.5*(AO(N1)+AO(N3))
-              IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
-                WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
-                WIDS(N2)=0.5*(WIDS(N1)+WIDS(N3))
-                SS1(N2)=0.5*(SS1(N1)+SS2(N3))
-                SS2(N2)=0.5*(SS1(N1)+SS2(N3))
-              ENDIF
-              IF(CORD(N2,1) .LE. VOID) THEN
-                CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
-                CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
-              ENDIF
-            ENDDO
+                N1=NOP(J,K-1)
+                N2=NOP(J,K)
+                N3=MOD(K+1,NCN)
+                IF(N3 .EQ. 0) N3=NCN
+                N3=NOP(J,N3)
+                AO(N2)=0.5*(AO(N1)+AO(N3))
+                IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
+                  WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
+                  WIDS(N2)=0.5*(WIDS(N1)+WIDS(N3))
+                  SS1(N2)=0.5*(SS1(N1)+SS2(N3))
+                  SS2(N2)=0.5*(SS1(N1)+SS2(N3))
+                ENDIF
+                IF(CORD(N2,1) .LE. VOID) THEN
+                  CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
+                  CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
+                ENDIF
+              ENDDO
+            ENDIF
 !-
 
           ENDIF
@@ -1212,8 +1220,8 @@ cipk aug97 end changes
               DX = cord(n1,1) - cord(n2,1)
               DY = cord(n1,2) - cord(n2,2)
               !nis,jan07,testing
-              WRITE(*,*) DX, cord(n1,1), cord(n2,1)
-              WRITE(*,*) DY, cord(n1,2), cord(n2,2)
+              !WRITE(*,*) DX, cord(n1,1), cord(n2,1)
+              !WRITE(*,*) DY, cord(n1,2), cord(n2,2)
               !-
 
 

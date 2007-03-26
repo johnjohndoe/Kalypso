@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K     2 Mar 2007   10:08 am
+C     Last change:  K    15 Mar 2007    5:24 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -902,7 +902,7 @@ cipk nov98 adjust for surface friction
   !NiS,apr06: changing test:
   !    IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
       IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
-     +   ORT(NR,5) /= -1)) THEN
+     +   ORT(NR,5) /= -1.0)) THEN
   !-
 CIPK SEP02
 	  EFMAN=0.
@@ -972,7 +972,7 @@ CIPK SEP04  ADD MAH AND MAT OPTION
         ENDIF
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
       !nis,jan07: This statement can not work
-      ELSEIF (ORT(NR,5) == -1) THEN
+      ELSEIF (ORT(NR,5) == -1.0) THEN
       !ELSEIF (ORT(NR,5) .lt. 0) THEN
       !-
         !nis,jan07,testing
@@ -987,6 +987,7 @@ CIPK SEP04  ADD MAH AND MAT OPTION
         FFACT = lambda/8.0
         !nis,feb07,testing
         !WRITE(*,*) lambda, vecq, durchbaum(nn), abst(nn), cniku(nn)
+        !pause
         !-
 !-
 

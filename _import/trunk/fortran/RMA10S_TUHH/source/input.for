@@ -1,4 +1,4 @@
-CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
+C     Last change:  K     2 Mar 2007    7:28 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -44,7 +44,6 @@ CIPK  LAST UPDATE NOV 20 1997 ADD ELEMENT COUNTING
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE JAN22 1997 ADD SMAGORINSKY OPTION
 CIPK  LAST UPDATE OCT 1 1996
-C     Last change:  IPK   3 Oct 98    4:30 pm
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
       SUBROUTINE INPUT(IBIN)
@@ -737,25 +736,28 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec03 add element dependence IEDSW
-  	    IF(ID(1:3) .EQ. 'ED3') THEN
-            READ(DLIN,5032) IT1,TT1,TT2
-            call ginpt(lin,id,dlin)
-            IF(IEDSW .LT. 0) THEN
-               IEDSW1(J)=IT1
-            ENDIF
-	      IF(TT1 .GT. 0.) THEN
-              TBFACT1(J)=TT1
-	      ENDIF
-	      IF(TT2 .GT. 0.) THEN
-	        TBMIN1(J)=TT2
-            ENDIF
-          ELSEIF(IEDSW .LT. 0) THEN	      
+  	  IF(ID(1:3) .EQ. 'ED3') THEN
+        READ(DLIN,5032) IT1,TT1,TT2
+!NiS,apr06: comment added
+        write(*,*) 'read ed3'
+!-
+        call ginpt(lin,id,dlin)
+        IF(IEDSW .LT. 0) THEN
+          IEDSW1(J)=IT1
+        ENDIF
+	    IF(TT1 .GT. 0.) THEN
+          TBFACT1(J)=TT1
+	    ENDIF
+	    IF(TT2 .GT. 0.) THEN
+	      TBMIN1(J)=TT2
+        ENDIF
+      ELSEIF(IEDSW .LT. 0) THEN
 cipk sep04
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            WRITE(75,*) 'ERROR -- EXPECTED ED3 DATA LINE'
-            WRITE(*,*) 'ERROR -- EXPECTED ED3 DATA LINE'
-            STOP
+        CLOSE(75)
+        OPEN(75,FILE='ERROR.OUT')
+        WRITE(75,*) 'ERROR -- EXPECTED ED3 DATA LINE'
+        WRITE(*,*) 'ERROR -- EXPECTED ED3 DATA LINE'
+        STOP
 	  ENDIF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,apr06: add element type specifications for equivalent sand roughness and vegetation calculation
@@ -1077,10 +1079,8 @@ CIPK OCT96 END ADDITION
 C-
 C-.....READ GENERATED GEOMETRY DATA
 C-
-      write(*,*) 'going to getgeo'
    
       CALL GETGEO
-      write(*,*) 'back from getgeo'
 
 !NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
 !           At this point the IMAT-array is not modified by additions for element
@@ -1698,12 +1698,12 @@ CIPK SEP04  ENSURE VALUES AT ALL NODES
             N1=NREF(N)+1
             NV=NDEP(N)+N1-2
 	    DO M=N1,NV
-            AO(M)=AO(N)
-            ADO(M)=ADO(N)
-            ADT(M)=ADT(N)
-            ADB(M)=ADB(N)
-            akp(M)=akp(n)
-          ENDDO
+          AO(M)=AO(N)
+          ADO(M)=ADO(N)
+          ADT(M)=ADT(N)
+          ADB(M)=ADB(N)
+          akp(M)=akp(n)
+        ENDDO
 	  ENDIF
         endif
       ENDDO
@@ -2107,13 +2107,12 @@ C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
 *     CALL BFORM(0)
 C-
-CIPK JUL01
-
 cipk may06
       IF(LSS .GT. 0) THEN
         CALL GETMAS
       ENDIF
-      
+
+CIPK JUL01
       CALL FILE(2,ANAME)
 
       RETURN

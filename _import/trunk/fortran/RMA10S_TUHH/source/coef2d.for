@@ -1,5 +1,6 @@
 cipk  last update feb 26 2006 correst logic for loads from 2-d structures
 CIPK  LAST UPDATE SEP 05 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
+CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
 cipk  last update june 27 2005 add control structure option

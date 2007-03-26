@@ -1,4 +1,4 @@
-cipk  last update nov 28 2006 allow for 1-d control structures
+C     Last change:  K    16 Mar 2007   12:30 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -35,7 +35,7 @@ CIPK APR06
       DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
       CHARACTER(LEN=20)    :: inquiretest
-      INTEGER              :: dummy(5)
+      INTEGER              :: dummy(5), j
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
       REAL(KIND=8)         :: VAAA, HTP, H, HS
@@ -74,71 +74,71 @@ C-
 CIPK APR06   READ FOR SUS SED DATA ONLY
       IF(ITIMESINIT .EQ. 1) GO TO 120
 
-      REWIND NB
-      READ(NB) TETT,NPX,NDX,IYRR
-      REWIND NB
-      WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
-      IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
-        READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npx)
-
-      ELSEIF(LSAND .GT. 0) THEN
+        REWIND NB
+        READ(NB) TETT,NPX,NDX,IYRR
+        REWIND NB
+        WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
+        IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
           READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npx)
-     +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
+     +      ,VVELDUM,J=1,NPX)
+     +      ,(helDUM,hdetDUM,j=1,npx)
+
+        ELSEIF(LSAND .GT. 0) THEN
+          READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
+     +      ,VVELDUM,J=1,NPX)
+     +      ,(helDUM,hdetDUM,j=1,npx)
+     +      ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
 	ELSE
 	  IF(INEWBED .EQ. 0) THEN
-          READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npX)
-     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
-     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
-     &     ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
+     +        ,VVELDUM,J=1,NPX)
+     +        ,(helDUM,hdetDUM,j=1,npX)
+     +        ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
+     +        ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
+     &        ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
 	  ELSE
 	    READ(NB) TETT,NPX,NDX,IYRR
 	    REWIND (NB)
-          READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
+     +        ,VVELDUM,J=1,NPX)
+     +        ,(helDUM,hdetDUM,j=1,npX)
+          ENDIF
         ENDIF
-      ENDIF
-      RETURN
+        RETURN
       
 CIPK APR06 READ FOR MAIN DATA BUT DO NOT READ SS VALUES
-  120 CONTINUE            
-      IF(NB .GE. 100 ) GO TO 165
-      REWIND NB
-      READ(NB) TETT,NPX,NDX,IYRR
-      REWIND NB
-      WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
-      IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
-        READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npx)
-
-      ELSEIF(LSAND .GT. 0) THEN
+  120   CONTINUE
+        IF(NB .GE. 100 ) GO TO 165
+        REWIND NB
+        READ(NB) TETT,NPX,NDX,IYRR
+        REWIND NB
+        WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
+        IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
           READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npx)
-     +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
+     +      ,VVEL(J),J=1,NPX)
+     +      ,(hel(j),hdet(j),j=1,npx)
+
+        ELSEIF(LSAND .GT. 0) THEN
+          READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
+     +      ,VVEL(J),J=1,NPX)
+     +      ,(hel(j),hdet(j),j=1,npx)
+     +      ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
 	ELSE
 	  IF(INEWBED .EQ. 0) THEN
-          READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
+     +        ,VVEL(J),J=1,NPX)
+     +        ,(hel(j),hdet(j),j=1,npX)
 CIPK APR06     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
 CIPK APR06     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
 CIPK APR06     &     ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
 	  ELSE
 	    READ(NB) TETT,NPX,NDX,IYRR
 	    REWIND (NB)
-          READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
+     +        ,VVEL(J),J=1,NPX)
+     +        ,(hel(j),hdet(j),j=1,npX)
      	  ENDIF
-      ENDIF	    
+        ENDIF
 
 
 
@@ -146,9 +146,9 @@ CIPK SEP02 ADD RESTART DATA FOR BED
 CIPK SEP02 ADD ICE THICKNESS READ IF NEEDED
 cipk aug98 add line above for consistent restart
 
-      IF(ICESW .GT. 0) THEN
-        READ(NB) (ICETHK(J) ,J=1,NPM)
-	ENDIF
+        IF(ICESW .GT. 0) THEN
+          READ(NB) (ICETHK(J) ,J=1,NPM)
+        ENDIF
       ENDIF RESTARTTEST
 !-
 
