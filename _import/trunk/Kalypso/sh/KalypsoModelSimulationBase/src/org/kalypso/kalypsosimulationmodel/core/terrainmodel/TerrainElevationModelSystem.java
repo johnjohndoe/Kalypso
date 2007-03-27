@@ -184,7 +184,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
     double curMaxEle;
     for( ITerrainElevationModel eleModel : terrainElevationModels )
     {
-      curMaxEle = eleModel.getMinElevation();
+      curMaxEle = eleModel.getMaxElevation();
       if( maxEle < curMaxEle )
       {
         maxEle = curMaxEle;
