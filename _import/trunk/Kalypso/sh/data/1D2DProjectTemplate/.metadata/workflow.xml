@@ -226,33 +226,37 @@
 			</Task>
 		</TaskGroup>
 	</Phase>
-	<ContextList>
+	<MultiContext id="root">
 		<PerspectiveContext id="1d2dModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
 			<ViewContext id="FeatureView" viewId="org.kalypso.ui.views.featuretemplateview" parent="1d2dModelling">
 				<FeatureViewInputContext id="RoughnessDatabase" input="templates/roughness.gft" parent="FeatureView" />
 				<FeatureViewInputContext id="CalcParams" input="templates/control.gft" parent="FeatureView" />
 			</ViewContext>
-			<ViewContext id="MapView" viewId="org.kalypso.ui.views.mapView" parent="1d2dModelling">
-				<MapViewInputContext id="BaseMap" input="maps/base.gmt" parent="MapView">
-					<WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-					<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-					<!-- <WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />					-->
-					<WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-					<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-				</MapViewInputContext>
-				<MapViewInputContext id="FenetMap" input="maps/fenet.gmt" parent="MapView">
-					<ThemeContext id="1dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" parent="FenetMap">
-						<!-- <WizardContext id="ImportWSPM" wizardId="???" wizardType="NEW_WIZARD" parent="1dElementTheme"/> -->
-					</ThemeContext>
-					<ThemeContext id="FlowRelationshipTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelationship" parent="FenetMap" />
-					<ThemeContext id="2dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" parent="FenetMap">
-						<WizardContext id="Import2dNet" wizardId="org.kalypso.wizards.import1d2d.ImportWizard" wizardType="NEW_WIZARD" parent="2dElementTheme" />
-					</ThemeContext>
-					<ThemeContext id="ContLineTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine" parent="FenetMap" />
-					<ThemeContext id="RoughnessTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}RoughnessPolygon" parent="FenetMap" />
-					<ThemeContext id="BoundaryConditionTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" parent="FenetMap" />
-				</MapViewInputContext>
-			</ViewContext>
+			<MultiContext id="MapContext" parent="1d2dModelling">
+				<ViewContext id="MapView" viewId="org.kalypso.ui.views.mapView" parent="MapContext">
+					<MapViewInputContext id="BaseMap" input="maps/base.gmt" parent="MapContext">
+						<WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						<!-- <WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />					-->
+						<WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+					</MapViewInputContext>
+					<MapViewInputContext id="FenetMap" input="maps/fenet.gmt" parent="MapContext">
+						<ThemeContext id="1dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" parent="FenetMap">
+							<!-- <WizardContext id="ImportWSPM" wizardId="???" wizardType="NEW_WIZARD" parent="1dElementTheme"/> -->
+						</ThemeContext>
+						<ThemeContext id="FlowRelationshipTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelationship" parent="FenetMap" />
+						<ThemeContext id="2dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" parent="FenetMap">
+							<WizardContext id="Import2dNet" wizardId="org.kalypso.wizards.import1d2d.ImportWizard" wizardType="NEW_WIZARD" parent="2dElementTheme" />
+						</ThemeContext>
+						<ThemeContext id="ContLineTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine" parent="FenetMap" />
+						<ThemeContext id="RoughnessTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}RoughnessPolygon" parent="FenetMap" />
+						<ThemeContext id="BoundaryConditionTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" parent="FenetMap" />
+					</MapViewInputContext>
+				</ViewContext>
+				<ViewContext id="MapOutlineView" viewId="org.kalypso.ui.views.outline" parent="MapContext" />
+			</MultiContext>
+			<ViewContext id="FeatureSelectionView" viewId="org.kalypso.featureview.views.FeatureView" parent="1d2dModelling" />
 		</PerspectiveContext>
-	</ContextList>
+	</MultiContext>
 </Workflow>

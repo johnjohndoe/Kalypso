@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -53,8 +52,7 @@ public class ViewContextHandler extends WorkflowCommandHandler implements IHandl
     if( activeWorkbenchWindow != null && m_viewId != null )
     {
       final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-      final IViewPart view = workbenchPage.showView( m_viewId );
-      context.addVariable( CONTEXT_VIEW_ID, view );
+      workbenchPage.showView( m_viewId );
       return Status.OK_STATUS;
     }
     else

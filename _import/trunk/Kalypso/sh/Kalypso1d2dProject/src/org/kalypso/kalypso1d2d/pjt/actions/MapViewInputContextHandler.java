@@ -14,7 +14,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.workflow.ViewContextHandler;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -57,7 +59,8 @@ public class MapViewInputContextHandler extends WorkflowCommandHandler implement
     if( folder != null && m_mapViewInput != null )
       file = folder.getFile( m_mapViewInput );
 
-    final Object view = context.getVariable( ViewContextHandler.CONTEXT_VIEW_ID );
+    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IViewPart view = window.getActivePage().findView( MapView.ID );
 
     if( file != null && file.exists() && view != null && view instanceof MapView )
     {

@@ -14,7 +14,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.workflow.ViewContextHandler;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
@@ -55,7 +57,8 @@ public class FeatureViewInputContextHandler extends WorkflowCommandHandler imple
     if( folder != null && m_featureViewInput != null )
       file = folder.getFile( m_featureViewInput );
 
-    final Object view = context.getVariable( ViewContextHandler.CONTEXT_VIEW_ID );
+    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IViewPart view = window.getActivePage().findView( FeatureTemplateView.ID );
 
     if( file != null && file.exists() && view != null && view instanceof FeatureTemplateView )
     {

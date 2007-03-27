@@ -89,7 +89,7 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_workflowControl = new WorkflowControl( KalypsoContextHandlerFactory.getInstance() );
+    m_workflowControl = new WorkflowControl( new KalypsoContextHandlerFactory());
     m_workflowControl.restoreState( memento );
   }
 

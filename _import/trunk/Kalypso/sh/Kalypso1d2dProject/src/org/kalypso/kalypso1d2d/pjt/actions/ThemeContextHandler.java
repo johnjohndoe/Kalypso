@@ -14,7 +14,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.afgui.workflow.ViewContextHandler;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
@@ -54,11 +56,12 @@ public class ThemeContextHandler extends WorkflowCommandHandler implements IHand
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final Object mapViewInputContext = context.getVariable( ViewContextHandler.CONTEXT_VIEW_ID );
+    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IViewPart view = window.getActivePage().findView( MapView.ID );
 
-    if( m_featureType != null && mapViewInputContext != null && mapViewInputContext instanceof MapView )
+    if( m_featureType != null && view != null && view instanceof MapView )
     {
-      final MapView mapView = (MapView) mapViewInputContext;
+      final MapView mapView = (MapView) view;
       final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
       final String layerContext = m_featureType;
       final Job job = new Job( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.3" ) ) //$NON-NLS-1$

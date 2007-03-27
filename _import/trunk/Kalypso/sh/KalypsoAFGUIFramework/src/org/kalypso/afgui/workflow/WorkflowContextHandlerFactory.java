@@ -50,9 +50,6 @@ import org.eclipse.core.commands.IHandler;
  */
 public class WorkflowContextHandlerFactory implements IContextHandlerFactory
 {
-
-  private static IContextHandlerFactory m_instance;
-
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
    */
@@ -87,20 +84,13 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
       final EWizardType wizardType = wizardContext.getWizardType();
       return new WizardContextHandler( wizardId, wizardType );
     }
+    else if( context instanceof MultiContext )
+    {
+      final MultiContext multiContext = (MultiContext) context;
+      final MultiContextHandler contextHandler = new MultiContextHandler( multiContext, this );
+      return contextHandler;
+    }
     else
       return null;
   }
-
-  /**
-   * Returns the singleton instance.
-   */
-  public static IContextHandlerFactory getInstance( )
-  {
-    if( m_instance == null )
-    {
-      m_instance = new WorkflowContextHandlerFactory();
-    }
-    return m_instance;
-  }
-
 }

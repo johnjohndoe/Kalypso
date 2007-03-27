@@ -222,11 +222,11 @@
 		</complexContent>
 	</complexType>
 
-	<element name="ContextList">
+	<element name="MultiContext" substitutionGroup="kwf:_Context">
 		<complexType>
-			<sequence>
-				<element ref="kwf:_Context" minOccurs="0" maxOccurs="unbounded" />
-			</sequence>
+			<complexContent>
+				<extension base="kwf:ContextType" />
+			</complexContent>
 		</complexType>
 	</element>
 
@@ -242,7 +242,7 @@
 								</appinfo>
 							</annotation>
 						</element>
-						<element ref="kwf:ContextList" minOccurs="0" maxOccurs="1" />
+						<element ref="kwf:MultiContext" minOccurs="0" maxOccurs="1" />
 					</sequence>
 				</extension>
 			</complexContent>

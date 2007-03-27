@@ -43,7 +43,6 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import org.eclipse.core.commands.IHandler;
 import org.kalypso.afgui.workflow.ContextType;
 import org.kalypso.afgui.workflow.FeatureViewInputContext;
-import org.kalypso.afgui.workflow.IContextHandlerFactory;
 import org.kalypso.afgui.workflow.MapViewInputContext;
 import org.kalypso.afgui.workflow.ThemeContext;
 import org.kalypso.afgui.workflow.WorkflowContextHandlerFactory;
@@ -55,16 +54,12 @@ import org.kalypso.afgui.workflow.WorkflowContextHandlerFactory;
  * 
  * @author Stefan Kurzbach
  */
-public class KalypsoContextHandlerFactory implements IContextHandlerFactory
+public class KalypsoContextHandlerFactory extends WorkflowContextHandlerFactory
 {
-
-  private static IContextHandlerFactory m_instance;
-
-  private IContextHandlerFactory m_contextHandlerFactory = WorkflowContextHandlerFactory.getInstance();
-
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
    */
+  @Override
   public IHandler getHandler( final ContextType context )
   {
     if( context instanceof MapViewInputContext )
@@ -89,19 +84,6 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
       return contextHandler;
     }
     else
-      return m_contextHandlerFactory.getHandler( context );
+      return super.getHandler( context );
   }
-
-  /**
-   * Returns the singleton instance.
-   */
-  public static IContextHandlerFactory getInstance( )
-  {
-    if( m_instance == null )
-    {
-      m_instance = new KalypsoContextHandlerFactory();
-    }
-    return m_instance;
-  }
-
 }
