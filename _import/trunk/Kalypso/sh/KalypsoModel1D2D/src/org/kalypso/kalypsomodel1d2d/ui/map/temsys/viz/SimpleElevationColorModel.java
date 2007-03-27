@@ -41,93 +41,116 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
-//import org.eclipse.swt.graphics.Color;
-//import org.eclipse.swt.graphics.Device;
-//import org.eclipse.swt.graphics.RGB;
+// import org.eclipse.swt.graphics.Color;
+// import org.eclipse.swt.graphics.Device;
+// import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author Patrice Congo
- *
  */
 public class SimpleElevationColorModel implements IElevationColorModel
 {
-  
-  public static final double DEEPEST_POINT_ON_EARTH=-10924;
-  public static final double HIGHEST_POINT_ON_EARTH=8850;
-  
+
+  public static final double DEEPEST_POINT_ON_EARTH = -10924;
+
+  public static final double HIGHEST_POINT_ON_EARTH = 8850;
+
   private double m_minElevation;
+
   private double m_maxElevation;
+
   private double m_minHue;
+
   private double m_maxHue;
-  
+
   private double m_minSat;
+
   private double m_maxSat;
-  
-  private double minBri;
-  private double maxBri;
-  
-  private Color noElevationColor;
-  private Color baseColor;
-  private float alfa = 0.5f;
-  
-  //private RGB rgb;
-  private float[] m_hsb;
+
   private float[] noElevationColorHSB;
+
   private int m_transparency;
+
   private boolean m_goDarkerFromMinToMax;
+
   private Color m_minColor;
+
   private Color m_maxColor;
+
   private float[] m_minhsb;
+
   private float[] m_maxhsb;
+
   private double m_minBri;
+
   private double m_maxBri;
-  private double m_elevationClassRange;
-  private double m_classMinElevation;
-  private double m_classMaxElevation;
-  
-  public SimpleElevationColorModel(
-    double minElevation,
-    double maxElevation,
-    Color minColor,
-    Color maxColor,
-    Color noElevationColor,
-    double transparency,
-    int numOfClasses,
-    boolean goDarkerFromMinToMax)
+
+  private List<Color> m_colorList = new ArrayList<Color>();
+
+  private int m_numOfClasses;
+
+  private Color m_noElevationColor;
+
+
+  public SimpleElevationColorModel( double minElevation, double maxElevation, Color minColor, Color maxColor, Color noElevationColor, double transparency, int numOfClasses, boolean goDarkerFromMinToMax )
   {
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
-    this.noElevationColor=noElevationColor;
-    m_minColor=minColor;
-    m_maxColor=maxColor;
-    m_minhsb = Color.RGBtoHSB( m_minColor.getRed(),m_minColor.getGreen(),m_minColor.getBlue(),null);
-    m_maxhsb = Color.RGBtoHSB( m_maxColor.getRed(),m_maxColor.getGreen(),m_maxColor.getBlue(),null);
-  /*  this.minBrightness = this.hsb[0];//2
-    this.maxBrightness = 1.00;*/
-    
-    m_elevationClassRange = (m_maxElevation - m_minElevation) / numOfClasses;
-    
-    m_classMinElevation = m_minElevation + m_elevationClassRange / 2;
-    m_classMaxElevation = m_maxElevation - m_elevationClassRange / 2;
-    
+
+    m_noElevationColor = noElevationColor;
+
+    m_minColor = minColor;
+    m_maxColor = maxColor;
+
+    m_minhsb = Color.RGBtoHSB( m_minColor.getRed(), m_minColor.getGreen(), m_minColor.getBlue(), null );
+    m_maxhsb = Color.RGBtoHSB( m_maxColor.getRed(), m_maxColor.getGreen(), m_maxColor.getBlue(), null );
+
     m_minHue = m_minhsb[0];
     m_maxHue = m_maxhsb[0];
-    
+
     m_minSat = m_minhsb[1];
     m_maxSat = m_maxhsb[1];
-    
+
     m_minBri = m_minhsb[2];
     m_maxBri = m_maxhsb[2];
-    
-    this.noElevationColorHSB = Color.RGBtoHSB( noElevationColor.getRed(),
-        noElevationColor.getGreen(),
-        noElevationColor.getBlue(),null);
-    m_transparency = (255 -(int)(transparency*255.0/100.0));
+
+    m_numOfClasses = numOfClasses;
+    m_transparency = (255 - (int) (transparency * 255.0 / 100.0));
     m_goDarkerFromMinToMax = goDarkerFromMinToMax;
+
+    fillColorList();
   }
- 
-  
+
+  /**
+   * fills the color list with colors for each class
+   */
+  private void fillColorList( )
+  {
+    /* min Color */
+    Color hsbColor = Color.getHSBColor( (float) m_minHue, (float) m_minSat, (float) m_minBri );
+    Color rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
+    m_colorList.add( rgbColor );
+
+    for( int i = 1; i < m_numOfClasses - 1; i++ )
+    {
+      final double Hue = m_minHue + (i * (m_maxHue - m_minHue) / (m_numOfClasses - 1));
+      final double Sat = m_minSat + (i * (m_maxSat - m_minSat) / (m_numOfClasses - 1));
+      final double Bri = m_minBri + (i * (m_maxBri - m_minBri) / (m_numOfClasses - 1));
+
+      hsbColor = Color.getHSBColor( (float) Hue, (float) Sat, (float) Bri );
+      rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
+      m_colorList.add( rgbColor );
+    }
+
+    /* max Color */
+    hsbColor = Color.getHSBColor( (float) m_maxHue, (float) m_maxSat, (float) m_maxBri );
+    rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), m_transparency );
+    m_colorList.add( rgbColor );
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorModel#getColor(double)
    */
@@ -135,62 +158,85 @@ public class SimpleElevationColorModel implements IElevationColorModel
   {
     return interpolateColor( elevation );
   }
-  
-  
-  private final Color interpolateColor(double elevation)
+/**
+ * gets the corresponding color class for the given elevation
+ */
+  private final Color interpolateColor( double elevation )
   {
-    if(Double.isNaN( elevation ))
+    final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+
+    if( Double.isNaN( elevation ) )
     {
-      return noElevationColor;
+      return m_noElevationColor;
     }
-    else if(elevation>=m_minElevation && elevation<=m_maxElevation)
-    {      
-      double interpolSat;
-      double interpolHue;
-      double interpolBri;
-      
-      
-      if (!m_goDarkerFromMinToMax)
+    else if( elevation > m_minElevation && elevation < m_maxElevation )
+    {
+      if( !m_goDarkerFromMinToMax )
       {
-        interpolHue = m_minHue+(elevation*(m_maxHue-m_minHue)/(m_classMaxElevation - m_classMinElevation));
-        interpolSat = m_minSat+(elevation*(m_maxSat-m_minSat)/(m_classMaxElevation - m_classMinElevation));      
-        interpolBri = m_minBri+(elevation*(m_maxBri-m_minBri)/(m_classMaxElevation - m_classMinElevation));
+        red = m_colorList.get( colorClass ).getRed();
+        green = m_colorList.get( colorClass ).getGreen();
+        blue = m_colorList.get( colorClass ).getBlue();
       }
       else
       {
-        interpolHue = m_maxHue-(elevation*(m_maxHue-m_minHue)/(m_maxElevation-m_minElevation));      //System.out.println("brightness :"+brightness);
-        interpolSat = m_maxSat-(elevation*(m_maxSat-m_minSat)/(m_maxElevation-m_minElevation));      
-        interpolBri = m_maxBri-(elevation*(m_maxBri-m_minBri)/(m_maxElevation-m_minElevation));  
-        
-         
-    
+        red = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getRed();
+        green = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getGreen();
+        blue = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getBlue();
       }
-            
-      final Color hsbColor = Color.getHSBColor((float) interpolHue, (float)interpolSat, (float)interpolBri );//
-      final Color rgbColor = 
-          new Color(
-                hsbColor.getRed(), 
-                hsbColor.getGreen(), 
-                hsbColor.getBlue(),
-                m_transparency);
-      return rgbColor;  
     }
     else
     {
-      throw new IllegalArgumentException(
-          "Elevation is out of range:"+
-          "\n\tminElevation="+m_minElevation+
-          "\n\tmaxElevation="+m_maxElevation+
-          "\n\tcurrentElevation="+elevation);
+      /*
+       * elevation lies outside the specific range => this can be caused by rounding errors. check, if the elevation is
+       * greater than the specified maximum
+       */
+      if( elevation >= m_maxElevation )
+      {
+        elevation = m_maxElevation;
+        if( !m_goDarkerFromMinToMax )
+        {
+          red = m_colorList.get( (m_numOfClasses - 1) ).getRed();
+          green = m_colorList.get( (m_numOfClasses - 1) ).getGreen();
+          blue = m_colorList.get( (m_numOfClasses - 1) ).getBlue();
+        }
+        else
+        {
+          red = m_colorList.get( 0 ).getRed();
+          green = m_colorList.get( 0 ).getGreen();
+          blue = m_colorList.get( 0 ).getBlue();
+        }
+      }
+
+      /* check, if the elevation is less than the specified minimum */
+      if( elevation <= m_minElevation )
+      {
+        elevation = m_minElevation;
+        if( !m_goDarkerFromMinToMax )
+        {
+          red = m_colorList.get( 0 ).getRed();
+          green = m_colorList.get( 0 ).getGreen();
+          blue = m_colorList.get( 0 ).getBlue();
+        }
+        else
+        {
+          red = m_colorList.get( (m_numOfClasses - 1) ).getRed();
+          green = m_colorList.get( (m_numOfClasses - 1) ).getGreen();
+          blue = m_colorList.get( (m_numOfClasses - 1) ).getBlue();
+        }
+      }
     }
+    final Color rgbColor = new Color( red, green, blue, m_transparency );
+
+    return rgbColor;
   }
-  
-  public void setElevationMinMax(
-                      double minElevation, 
-                      double maxElevation)
+
+  public void setElevationMinMax( double minElevation, double maxElevation )
   {
-    m_minElevation=minElevation;
-    m_maxElevation=maxElevation;
+    m_minElevation = minElevation;
+    m_maxElevation = maxElevation;
   }
 
   /**
@@ -198,40 +244,29 @@ public class SimpleElevationColorModel implements IElevationColorModel
    */
   public float[] getHSB( double elevation )
   {
-    if(Double.isNaN( elevation ))
+    if( Double.isNaN( elevation ) )
     {
-      return new float[]{noElevationColorHSB[0],
-                          noElevationColorHSB[1],
-                          noElevationColorHSB[2]};
+      return new float[] { noElevationColorHSB[0], noElevationColorHSB[1], noElevationColorHSB[2] };
     }
-    else if(elevation>=m_minElevation && elevation<=m_maxElevation)
+    else if( elevation >= m_minElevation && elevation <= m_maxElevation )
     {
-      double hue = m_minHue+elevation*(m_maxHue-m_minHue)/(m_maxElevation-m_minElevation);
-      double sat = m_minSat+elevation*(m_maxSat-m_minSat)/(m_maxElevation-m_minElevation);
-      double bri = m_minBri+elevation*(m_maxBri-m_minBri)/(m_maxElevation-m_minElevation);
-      return new float[]{ (float)hue, (float)sat, (float)bri};
+      double hue = m_minHue + elevation * (m_maxHue - m_minHue) / (m_maxElevation - m_minElevation);
+      double sat = m_minSat + elevation * (m_maxSat - m_minSat) / (m_maxElevation - m_minElevation);
+      double bri = m_minBri + elevation * (m_maxBri - m_minBri) / (m_maxElevation - m_minElevation);
+      return new float[] { (float) hue, (float) sat, (float) bri };
     }
     else
     {
-      //or return a translucent color
-      throw new IllegalArgumentException(
-          "Elevation is out of range:"+
-          "\n\tminElevation="+m_minElevation+
-          "\n\tmaxElevation="+m_maxElevation+
-          "\n\tcurrentElevation="+elevation);
-    }   
-   
-  }
-  
+      // or return a translucent color
+      throw new IllegalArgumentException( "Elevation is out of range:" + "\n\tminElevation=" + m_minElevation + "\n\tmaxElevation=" + m_maxElevation + "\n\tcurrentElevation=" + elevation );
+    }
 
-public float[] getRealRGB(double elevation){
-  float[] val = getHSB(elevation);
-  return new float[]{
-        Color.getHSBColor(  val[0], val[1], val[2] ).getRed(),
-        Color.getHSBColor(  val[0], val[1], val[2] ).getGreen(),
-        Color.getHSBColor(  val[0], val[1], val[2] ).getBlue()      
-  };
   }
-  
-  
+
+  public float[] getRealRGB( double elevation )
+  {
+    float[] val = getHSB( elevation );
+    return new float[] { Color.getHSBColor( val[0], val[1], val[2] ).getRed(), Color.getHSBColor( val[0], val[1], val[2] ).getGreen(), Color.getHSBColor( val[0], val[1], val[2] ).getBlue() };
+  }
+
 }

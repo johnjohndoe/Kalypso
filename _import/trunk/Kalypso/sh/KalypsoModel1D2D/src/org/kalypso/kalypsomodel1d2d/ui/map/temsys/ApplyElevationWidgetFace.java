@@ -106,8 +106,8 @@ class ApplyElevationWidgetFace
 
   private ApplyElevationWidgetDataModel dataModel;
 
-  private Section elevationColorSection;
   
+  private Section elevationColorSection;
  // private SimpleElevationColorModel colorModel;
 
   
@@ -266,7 +266,7 @@ class ApplyElevationWidgetFace
     tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.heightHint = 208;//168
+    tableWrapData.heightHint = 248;//168
     tableWrapData.align = TableWrapData.FILL_GRAB;
     elevationColorSection.setLayoutData( tableWrapData );
     
@@ -274,8 +274,8 @@ class ApplyElevationWidgetFace
     elevationColorSection.setEnabled( true );
 
     createSelectElevationModel( elevationSelectStatus );
-    createSelectColor( elevationColorSection );
     createSelectRegion( areaSelectSection );
+    createSelectColor( elevationColorSection );
     return rootPanel;
   }
 
