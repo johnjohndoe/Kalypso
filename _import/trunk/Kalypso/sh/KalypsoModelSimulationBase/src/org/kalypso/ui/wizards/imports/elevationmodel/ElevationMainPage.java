@@ -8,14 +8,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -28,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.ui.wizards.imports.roughness.DataContainer;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+//import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 
 /**
  * @author Madanagopal
@@ -46,12 +52,19 @@ public class ElevationMainPage extends WizardPage
 
   public Text descriptionForFileArea;
 
+  private Label statusText;
+//  static private IPreferenceStore preferenceStore =  
+    //KalypsoModelSimulationBase.getDefault().getPreferenceStore();
+
+  //private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
+
   public ElevationMainPage( )
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.4" ) );
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
   }
+ 
 
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
@@ -116,27 +129,23 @@ public class ElevationMainPage extends WizardPage
 
     final Label nameForFile = new Label( container, SWT.NONE );
     nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
-    nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.7" ) ); //$NON-NLS-1$
+    nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.7" ) );
+    nameForFileText = new Text( container, SWT.BORDER );  
 
-    nameForFileText = new Text( container, SWT.BORDER );
-    nameForFileText.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        updatePageComplete();
-      }
-    } );
    
     GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING);
-    gridData.horizontalSpan = 2;
+    gridData.horizontalSpan = 1;
     nameForFileText.setLayoutData( gridData );
+    
+    statusText = new Label( container, SWT.NONE );
+    statusText.setText("Give in a Name else file name will be set as default name");
+    
 
     final Label descriptionForFile = new Label( container, SWT.NONE );
     descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_BEGINNING ) );
     descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.8" ) ); //$NON-NLS-1$
     
     descriptionForFileArea = new Text( container, SWT.BORDER | SWT.MULTI );
-    //descriptionForFileArea = new Group(container,SWT.BORDER|SWT.Multi);
     GridData gridData2 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     gridData2.horizontalSpan = 2;
     gridData2.heightHint = 100;
@@ -158,8 +167,6 @@ public class ElevationMainPage extends WizardPage
 
     fileExtensions.add( "asc" );
     fileExtensions.add( "hmo" );
-    // fileExtensions.add( new String ("tif") );
-
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
@@ -191,12 +198,12 @@ public class ElevationMainPage extends WizardPage
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
     sourceFileField.setText( path.toString() );
-    updatePageComplete();
+    updatePageComplete();    
     setMessage( null );
     setErrorMessage( null );
   }
 
-  /**
+   /**
    * Update the current page complete state based on the field content.
    */
   private void updatePageComplete( )
@@ -214,6 +221,7 @@ public class ElevationMainPage extends WizardPage
     setMessage( null );
     setErrorMessage( null );
   }
+  
 
   /**
    * Open a file browser dialog to locate a source file

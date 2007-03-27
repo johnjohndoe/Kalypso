@@ -46,7 +46,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
@@ -68,7 +67,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.util.pool.IPoolListener;
@@ -77,216 +75,233 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-
 /**
  * @author Madanagopal
  * @author Patrice Congo
- *
  */
-public class ImportElevationWizard extends Wizard
-      implements INewWizard/*INewWizardKalypsoImport*/
+public class ImportElevationWizard extends Wizard implements INewWizard/* INewWizardKalypsoImport */
 {
-   private IStructuredSelection initialSelection;
+  private IStructuredSelection initialSelection;
 
-   private ElevationMainPage mPage;
-   
-   /**
-    * Folder containing the terrain model
-    */
-   private IFolder modelFolder;
-   
-   
-   private ITerrainModel terrainModel;
-   
-//  private String m_scenarioFolder;
+  private ElevationMainPage mPage;
+
+  private static int FILENUMBER = 1;
 
   /**
-   * destination folders for the native terrain elevation model 
+   * Folder containing the terrain model
+   */
+  private IFolder modelFolder;
+
+  private ITerrainModel terrainModel;
+
+  // private String m_scenarioFolder;
+  /**
+   * destination folders for the native terrain elevation model
    */
   private IFolder temFolder;
 
   private CommandableWorkspace cmdWorkspace;
-   
-   /**
-    * Construct a new instance and initialize the dialog settings
-    * for this instance.
-    */
-   public ImportElevationWizard() {
-   }
-   
-   /**
-    * The required selection structure is:
-    * <ul>
-    *   <li/>Length=2
-    *   <li/>First element an instance of {@link ITerrainModel}
-    *   <li/>Second element an instance of {@link IFolder}
-    *   <li/>third element an instance of {@link CommandableWorkspace}
-    * </ul> 
-    * 
-    * @param workbench the current workbench
-    * @param selection the current object selection
-    */
-   public void init(IWorkbench workbench, IStructuredSelection selection)
-   {
-      initialSelection = selection;
-      Iterator selIterator=selection.iterator();
-      terrainModel = (ITerrainModel) selIterator.next();
-      modelFolder = (IFolder)selIterator.next();   
-      temFolder = (IFolder)selIterator.next();
-      cmdWorkspace=(CommandableWorkspace)selIterator.next();
-   }
-   
-   @Override
-  public void addPages() {
-      setWindowTitle(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ));
-      mPage = new ElevationMainPage();
-      addPage(mPage);
-      mPage.init(initialSelection);
-   }
+
+  /**
+   * Construct a new instance and initialize the dialog settings for this instance.
+   */
+  public ImportElevationWizard( )
+  {
+  }
+
+  /**
+   * The required selection structure is:
+   * <ul>
+   * <li/>Length=2 <li/>First element an instance of {@link ITerrainModel} <li/>Second element an instance of
+   * {@link IFolder} <li/>third element an instance of {@link CommandableWorkspace}
+   * </ul>
+   * 
+   * @param workbench
+   *          the current workbench
+   * @param selection
+   *          the current object selection
+   */
+  public void init( IWorkbench workbench, IStructuredSelection selection )
+  {
+    initialSelection = selection;
+    Iterator selIterator = selection.iterator();
+    terrainModel = (ITerrainModel) selIterator.next();
+    modelFolder = (IFolder) selIterator.next();
+    temFolder = (IFolder) selIterator.next();
+    cmdWorkspace = (CommandableWorkspace) selIterator.next();
+  }
+
+  @Override
+  public void addPages( )
+  {
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
+    mPage = new ElevationMainPage();
+    addPage( mPage );
+    mPage.init( initialSelection );
+  }
 
   @Override
   public boolean performFinish( )
   {
-    final IPath sourcePath = mPage.getSourceLocation();//.toOSString();
-    final String setFileName = mPage.getNameForFile();
-    final String setFileDescription = mPage.getDescriptionForFileArea();
-    try {
-      getContainer().run(true, true, new IRunnableWithProgress() {
-         public void run(IProgressMonitor monitor)
-            throws InvocationTargetException, InterruptedException, IllegalArgumentException
-         {
-           try
-           {
-             ITerrainElevationModelSystem temSys=
-               ImportElevationWizard.this.terrainModel.getTerrainElevationModelSystem();
-             if(temSys==null)
-             {
-               temSys= new TerrainElevationModelSystem(ImportElevationWizard.this.terrainModel);
-             }
-             
-//             File modelFolderFile = 
-//               new File(FileLocator.toFileURL( 
-//                   modelFolder.getLocationURI().toURL()).getFile());
-           
-             GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
-            File modelFolderFile=
-               new File(FileLocator.toFileURL(workspace.getContext()).getFile()).getParentFile();
-             File temFolderFile = 
-               new File(FileLocator.toFileURL( temFolder.getLocationURI().toURL()).getFile());
-             
-             final File srcFileTif = sourcePath.toFile();
-             final File dstFileTif = 
-               new File(temFolderFile, sourcePath.lastSegment() );//new File( dstFilePath + mPage.getSourceLocation().lastSegment() );
-             copy(srcFileTif, dstFileTif, monitor);
-             modelFolder.getProject().refreshLocal( 
-                 IResource.DEPTH_INFINITE, null/*new NullProgressMonitor()*/ );
-             
-             String nativeTEMRelPath = 
-                   modelFolderFile.toURI().relativize( dstFileTif.toURI() ).toString();
-             if(nativeTEMRelPath==null)
-             {
-               nativeTEMRelPath = dstFileTif.toURL().toString();
-             }
-              
-             ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-//             pool.addPoolListener( getPoolListener(), key );
-             ITerrainElevationModel tem =
-                     new NativeTerrainElevationModelWrapper(temSys,nativeTEMRelPath);
-              
-              //TODO introduce in the first page a name imput field and gets the
-              //name from there
-              
-              String name=dstFileTif.getName();
-              tem.setName(setFileName);
-//              if (setFileName!= null){
-//                tem.setName(setFileName);
-//              }
-//              else 
-//              { 
-//                tem.setName(name);              
-//              }
-              
-              tem.setDescription(setFileDescription);
-//              if (setFileDescription != Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.8" ))
-//                tem.setDescription(setFileDescription);
-//              else
-//              {
-//                tem.setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.10" ) );
-//              }
-//              System.out.println("Workspace:"+workspace.getClass());
-              cmdWorkspace.fireModellEvent( 
-                  new FeatureStructureChangeModellEvent( 
-                        cmdWorkspace, 
-                        temSys.getWrappedFeature(),
-                        tem.getWrappedFeature(), 
-                        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-              
-              //TODO check why saving thow pool does not work
-              
-              pool.saveObject(
-                              cmdWorkspace, 
-                              new SubProgressMonitor(monitor,1) );
-              //save the workspace old method
-//              File workspaceContextFile = 
-//                new File(FileLocator.toFileURL( workspace.getContext()).getFile());
-//              
-//              OutputStreamWriter outputStreamWriter= 
-//                    new OutputStreamWriter(
-//                        new FileOutputStream(workspaceContextFile));
-//              GmlSerializer.serializeWorkspace( outputStreamWriter, workspace );
-              
-              
+    try
+    {
+      final IPath sourcePath = mPage.getSourceLocation();// .toOSString();
+      final String setFileName = mPage.getNameForFile();
+      final String setFileDescription = mPage.getDescriptionForFileArea();
+      final String defaultText = Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.9" );
+      final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.10" );
+
+      getContainer().run( true, true, new IRunnableWithProgress()
+      {
+        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException, IllegalArgumentException
+        {
+          try
+          {
+            ITerrainElevationModelSystem temSys = ImportElevationWizard.this.terrainModel.getTerrainElevationModelSystem();
+            if( temSys == null )
+            {
+              temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.terrainModel );
+            }
+
+            GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
+
+            File modelFolderFile = new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile();
+
+            File temFolderFile = new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() );
+
+            final File srcFileTif = sourcePath.toFile();
+            File dstFileTif = null;
+            if( (new File( temFolderFile, srcFileTif.getName() )).exists() )
+              dstFileTif = new File( temFolderFile, getFileNameNoExtension( srcFileTif ) + "_" + FILENUMBER + "." + getExtension( srcFileTif ) );
+            else
+              dstFileTif = new File( temFolderFile, srcFileTif.getName() ); // mPage.getSourceLocation().lastSegment()
+            copy( srcFileTif, dstFileTif, monitor );
+            modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
+            String nativeTEMRelPath = modelFolderFile.toURI().relativize( dstFileTif.toURI() ).toString();
+            if( nativeTEMRelPath == null )
+            {
+              nativeTEMRelPath = dstFileTif.toURL().toString();
+            }
+
+            ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+            ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
+
+            // TODO introduce in the first page a name imput field and gets the
+            // name from there
+
+            String name = dstFileTif.getName();
+
+            if( setFileName.compareTo( "" ) != 0 )
+            {
+              tem.setName( setFileName );
+            }
+            else
+            {
+              tem.setName( name );
+            }
+
+            System.out.println( "Stats :" + setFileDescription != defaultText );
+            if( setFileDescription.compareTo( defaultText ) != 0 )
+            {
+              tem.setDescription( setFileDescription );
+            }
+            else
+            {
+              tem.setDescription( replaceText );
+            }
+            System.out.println( "Workspace:" + workspace.getClass() );
+            cmdWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( cmdWorkspace, temSys.getWrappedFeature(), tem.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+            // TODO check why saving thow pool does not work
+
+            pool.saveObject( cmdWorkspace, new SubProgressMonitor( monitor, 1 ) );
+            // save the workspace old method
+            // File workspaceContextFile =
+            // new File(FileLocator.toFileURL( workspace.getContext()).getFile());
+            //              
+            // OutputStreamWriter outputStreamWriter=
+            // new OutputStreamWriter(
+            // new FileOutputStream(workspaceContextFile));
+            // GmlSerializer.serializeWorkspace( outputStreamWriter, workspace );
+
           }
           catch( Exception e )
           {
             e.printStackTrace();
-            throw new InvocationTargetException(e);
-          }          
-           
-         }
-      });
-   }
-   catch (Throwable th) 
-   {
-     th.printStackTrace(); 
-     return false;
-   }
-    
+            throw new InvocationTargetException( e );
+          }
+
+        }
+      } );
+      FILENUMBER++;
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+      return false;
+    }
+
     return true;
   }
-  
-  boolean copy(File src, File dst, IProgressMonitor monitor2)
+
+  public static String getExtension( File f )
+  {
+    String ext = null;
+    String s = f.getName();
+    int i = s.lastIndexOf( '.' );
+
+    if( i > 0 && i < s.length() - 1 )
+    {
+      ext = s.substring( i + 1 ).toLowerCase();
+    }
+    return ext;
+  }
+
+  public static String getFileNameNoExtension( File f )
+  {
+    String ext = null;
+    String s = f.getName();
+    int i = s.lastIndexOf( '.' );
+
+    if( i > 0 && i < s.length() - 1 )
+    {
+      ext = s.substring( 0, i - 1 );
+    }
+    return ext;
+  }
+
+  boolean copy( File src, File dst, IProgressMonitor monitor2 )
   {
     InputStream in;
     OutputStream out;
     try
     {
       in = new FileInputStream( src );
-      if(!dst.exists())
+      if( !dst.exists() )
       {
-        if(dst.createNewFile())
+        if( dst.createNewFile() )
         {
-          //ok
+          // ok
         }
         else
         {
-          throw new IOException("Could not create file:"+dst);
+          throw new IOException( "Could not create file:" + dst );
         }
       }
       else
       {
-        //may be shows some message to the user
+        // may be shows some message to the user
       }
       out = new FileOutputStream( dst );
 
       byte[] buf = new byte[1024];
       int len;
-      int lens = ((int)src.length()/1024+1);
+      int lens = ((int) src.length() / 1024 + 1);
       monitor2.beginTask( "Copying..", lens );
       while( (len = in.read( buf )) > 0 )
       {
-        monitor2.worked(1);
-       // monitor2.wait( 1000 );
+        monitor2.worked( 1 );
+        // monitor2.wait( 1000 );
         out.write( buf, 0, len );
       }
       monitor2.done();
@@ -301,22 +316,33 @@ public class ImportElevationWizard extends Wizard
     }
   }
 
-   /**
-    * Answer the selected source location
-    */
-   public IPath getSourceLocationsss() {
-      return mPage.getSourceLocation();
-   }
-   
-   private final IPoolListener getPoolListener()
-   {
-     return new IPoolListener()
-     {
+  /**
+   * Answer the selected source location
+   */
+  public IPath getSourceLocationsss( )
+  {
+    return mPage.getSourceLocation();
+  }
+
+  public String getFileDescription( )
+  {
+    return mPage.getDescriptionForFileArea();
+  }
+
+  public String getFileUserName( )
+  {
+    return mPage.getNameForFile();
+  }
+
+  private final IPoolListener getPoolListener( )
+  {
+    return new IPoolListener()
+    {
 
       public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
       {
         // TODO Auto-generated method stub
-        
+
       }
 
       public boolean isDisposed( )
@@ -328,24 +354,24 @@ public class ImportElevationWizard extends Wizard
       public void objectInvalid( IPoolableObjectType key, Object oldValue )
       {
         // TODO Auto-generated method stub
-        
+
       }
 
       public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
       {
         // TODO Auto-generated method stub
-        
-      }
-       
-     };
-   }
 
-//  /**
-//   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-//   */
-//  public void initModelProperties( HashMap<String, Object> map )
-//  {    
-//    m_scenarioFolder = (String) map.get( "ScenarioFolder" );    
-//  }
+      }
+
+    };
+  }
+
+  // /**
+  // * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
+  // */
+  // public void initModelProperties( HashMap<String, Object> map )
+  // {
+  // m_scenarioFolder = (String) map.get( "ScenarioFolder" );
+  // }
 
 }
