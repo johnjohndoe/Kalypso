@@ -153,7 +153,7 @@ public class ModelOps
             else
             {
               //TODO cope with direction here by finding the right edge
-              System.out.println();
+//              System.out.println();
               oppositeNode = nodes.get( 0 );
               edge=model.findEdge( lastFoundNode, oppositeNode );
             }

@@ -1,7 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.discr;
 
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**

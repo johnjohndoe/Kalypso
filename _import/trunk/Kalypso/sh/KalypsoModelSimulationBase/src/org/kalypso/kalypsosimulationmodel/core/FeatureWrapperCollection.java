@@ -33,10 +33,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	private final Feature featureCol;
 
 	/**
-	 * the list of features in the range set
+	 * the list of the feature properties
 	 */
 	private final FeatureList featureList;
 
+    /**
+     * The {@link QName} of the list property of the feature(-collection) 
+     */
 	private final QName featureMemberProp;
 
 	/**
@@ -49,7 +52,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	 * feature
 	 * 
 	 * @param featureCol
-	 *            the range set feature to wrapp
+	 *            the feature or feature collection with a list property to wrapp
+     * @param fwClass the base class representing the property feature in the list
+     * @param featureMemberProp the list property linking the feature and its properties 
 	 */
 	public FeatureWrapperCollection(Feature featureCol, Class<FWCls> fwClass,
 			QName featureMemberProp) {
@@ -78,7 +83,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	}
 
 	@SuppressWarnings("unchecked")
-	public FeatureWrapperCollection(
+	public FeatureWrapperCollection( 
 					Feature parentFeature, 
 					QName childQName,
 					QName featureMemberProp, 

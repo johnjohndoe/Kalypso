@@ -9,12 +9,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -44,17 +41,18 @@ public class TerrainElevationShapeGeometry extends FeaturePropertyFunction
                   final IPropertyType pt, 
                   final Object currentValue )
   {
-    System.out.println("getting shape:"+feature);
+//    System.out.println("getting shape:"+feature);
     try
     {
       final IFeatureType featureType = feature.getFeatureType();
       QName featureQName = featureType.getQName();
       if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( featureQName) )
       {
+        //transform the bounding box into a curve and return it
         ITerrainElevationModel terrainElevationModel=
           (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
         GM_Envelope bBox = terrainElevationModel.getBoundingBox();
-        GM_Position[] positions = new GM_Position[4];
+//        GM_Position[] positions = new GM_Position[4];
         GM_Position min = bBox.getMin();
         GM_Position max = bBox.getMax();
         double minx=min.getX();

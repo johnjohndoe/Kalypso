@@ -38,14 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -99,14 +96,6 @@ public abstract class TerrainElevationModel
 
   }
 
-//  /**
-//   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getGmlID()
-//   */
-//  public String getGmlID( )
-//  {
-//    
-//    return super.getGmlID();
-//  }
 
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
