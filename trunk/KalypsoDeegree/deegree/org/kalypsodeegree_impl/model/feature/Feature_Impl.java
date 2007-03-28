@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -100,6 +102,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
     final int pos = m_featureType.getPropertyPosition( pt );
     if( pos == -1 )
     {
+      if(m_featureType.isVirtualProperty( pt ))
+      {
+        final IFeaturePropertyHandler fsh = getPropertyHandler();
+        return fsh.getValue( this, pt, null );
+      }
       final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
       throw new IllegalArgumentException( msg );
     }
@@ -131,6 +138,27 @@ public class Feature_Impl extends AbstractFeature implements Feature
           result.add( (GM_Object) o );
       }
     }
+    
+    //add virtual function properties
+    IVirtualFunctionPropertyType[] virtualFuncGeo = 
+              m_featureType.getVirtualGeometryProperties();
+    for(IVirtualFunctionPropertyType pt:virtualFuncGeo)
+    {
+      final Object virGeoProp = getProperty( pt );
+      if( virGeoProp == null )
+      {
+        continue;
+      }
+      else if( virGeoProp instanceof List )
+      {
+        result.addAll( (List) virGeoProp );
+      }
+      else
+      {
+        result.add( (GM_Object) virGeoProp );
+      }
+    }
+   
     // TODO allways use virtual ftp to calculate bbox ??
     final VirtualFeatureTypeProperty[] vftp = VirtualPropertyUtilities.getVirtualProperties( m_featureType );
     for( int p = 0; p < vftp.length; p++ )
@@ -157,7 +185,22 @@ public class Feature_Impl extends AbstractFeature implements Feature
   {
     int pos = m_featureType.getDefaultGeometryPropertyPosition();
     if( pos < 0 )
-      return null;
+    {
+      IVirtualFunctionPropertyType[] virtualGeometryProperties = 
+                        m_featureType.getVirtualGeometryProperties();
+      if(virtualGeometryProperties == null )
+      {
+        return null;
+      }
+      else if(virtualGeometryProperties.length>0)
+      {
+        return (GM_Object)getProperty( virtualGeometryProperties[0] );
+      }
+      else
+      {
+        return null;
+      }
+    }
 
     final IPropertyType property = m_featureType.getProperties( pos );
     final Object prop = getProperty( property );
@@ -244,12 +287,35 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public void setProperty( final IPropertyType pt, final Object value )
   {
     final int pos = m_featureType.getPropertyPosition( pt );
-
-    final IFeaturePropertyHandler fsh = getPropertyHandler();
-    m_properties[pos] = fsh.setValue( this, pt, value );
-
-    if( fsh.invalidateEnvelope( pt ) )
-      invalidEnvelope();
+    if(pos==-1)
+    {
+      if(m_featureType.isVirtualProperty( pt ))
+      {
+        final IFeaturePropertyHandler fsh = getPropertyHandler();
+        fsh.setValue( this, pt, null );
+        if( fsh.invalidateEnvelope( pt ) )
+        {
+          invalidEnvelope();
+        }
+      } 
+      else
+      {
+        String message = String.format( 
+              "Feature[%s] does not know this property %s", 
+              toString(),
+              pt.getQName().toString() );
+        throw new RuntimeException(
+            new GMLSchemaException(message));
+      }
+    }
+    else
+    {
+      final IFeaturePropertyHandler fsh = getPropertyHandler();
+      m_properties[pos] = fsh.setValue( this, pt, value );
+  
+      if( fsh.invalidateEnvelope( pt ) )
+        invalidEnvelope();
+    }
   }
 
   /**
@@ -274,9 +340,15 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public Object getProperty( final QName propQName )
   {
-    final IPropertyType pt = m_featureType.getProperty( propQName );
+    /*final */IPropertyType pt = m_featureType.getProperty( propQName );
     if( pt == null )
-      throw new IllegalArgumentException( "Unknown property: " + propQName );
+    {
+      pt = m_featureType.getVirtualProperty(propQName);
+      if(pt==null)
+      {
+        throw new IllegalArgumentException( "Unknown property: " + propQName );
+      }
+    }
     return getProperty( pt );
   }
 

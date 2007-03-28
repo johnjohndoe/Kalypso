@@ -58,13 +58,21 @@ public class FilterElementLabelProvider
   public static String toString( Object o )
   {
     if( o == null )
+    {
       return "empty value";
+    }
     else if( o instanceof TimeseriesLinkType )
     {
       return ((TimeseriesLinkType) o).getHref();
     }
     else if( o instanceof String )
+    {
       return (String)o;
+    }
+    else if(o instanceof Boolean)
+    {
+      return o.toString();
+    }
     return "unknown type";
   }
 

@@ -186,11 +186,16 @@ public class PropertyName extends Expression_Impl
     // }
     // Object object = feature.getProperty (value);
     if( object == null )
+    {
       return null;
-
-    if( object instanceof Number )
+    }
+    else if( object instanceof Number )
     {
       return object;
+    }
+    else if( object instanceof Boolean)
+    {
+      return object.toString();
     }
     return FilterElementLabelProvider.toString( object );
   }
