@@ -43,6 +43,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.shiftone.cache.Cache;
@@ -54,70 +55,68 @@ import com.vividsolutions.jts.io.ParseException;
 
 public class NativeTerrainElevationModelFactory
 {
-  private static final Cache cache = 
-        new FifoCacheFactory(  ).newInstance( 
-            "NativeTerrainElevationModelFactory_CACHE", 60*60*1000,8);
-  
+  private static final Cache cache = new FifoCacheFactory().newInstance( "NativeTerrainElevationModelFactory_CACHE", 60 * 60 * 1000, 8 );
+
   CacheMap chCacheMap;
-  
-  private NativeTerrainElevationModelFactory()
+
+  private NativeTerrainElevationModelFactory( )
   {
-    //yes empty
+    // yes empty
   }
-  
-  public static final IElevationProvider getTerrainElevationModel(
-                                        File nativeTerrainModelFile)
-                                        throws IllegalArgumentException, IOException
+
+  public static final IElevationProvider getTerrainElevationModel( File nativeTerrainModelFile_ ) throws IllegalArgumentException, IOException
   {
-    Assert.throwIAEOnNullParam( nativeTerrainModelFile, "nativeTerrainModelFile" );
-    if(nativeTerrainModelFile.isDirectory())
+    Assert.throwIAEOnNullParam( nativeTerrainModelFile_, "nativeTerrainModelFile_" );
+    // Decoding the White Spaces present in the File Paths. Sometimes requires to decode twice.
+    // One particular case is having %2520 instead of a single white space.
+    File nativeTerrainModelFile__ = new File( URLDecoder.decode( nativeTerrainModelFile_.toString(), "UTF-8" ) );
+    File nativeTerrainModelFile = new File( URLDecoder.decode( nativeTerrainModelFile__.toString(), "UTF-8" ) );
+    if( nativeTerrainModelFile.isDirectory() )
     {
-      throw new IllegalArgumentException("File must not be a directory:"+nativeTerrainModelFile);      
-    }    
-    if(!nativeTerrainModelFile.exists())
+      throw new IllegalArgumentException( "File must not be a directory:" + nativeTerrainModelFile );
+    }
+    if( !nativeTerrainModelFile.exists() )
     {
-      throw new IllegalArgumentException("file must exist:"+nativeTerrainModelFile);
-    }    
-    return resolveTerrainElevationModel( nativeTerrainModelFile);    
+      throw new IllegalArgumentException( "file must exist:" + nativeTerrainModelFile );
+    }
+    return resolveTerrainElevationModel( nativeTerrainModelFile );
   }
-  
-  private static final IElevationProvider resolveTerrainElevationModel(
-                                                      File ascFile) throws IllegalArgumentException, IOException
+
+  private static final IElevationProvider resolveTerrainElevationModel( File ascFile ) throws IllegalArgumentException, IOException
   {
-    String filePath=ascFile.getAbsolutePath();
+    String filePath = ascFile.getAbsolutePath();
     Object cachedEleModel = cache.getObject( filePath );
-    if(cachedEleModel!=null)
+    if( cachedEleModel != null )
     {
       return (IElevationProvider) cachedEleModel;
     }
-    if(filePath.endsWith( ".asc" ))
+    if( filePath.endsWith( ".asc" ) )
     {
-      ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel(ascFile.toURL(),null);
+      ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL(), null );
       cache.addObject( filePath, terrainElevationModel );
       return terrainElevationModel;
     }
-    else if(filePath.endsWith( ".hmo" ))
+    else if( filePath.endsWith( ".hmo" ) )
     {
       try
       {
-        HMOTerrainElevationModel terrainElevationModel = new HMOTerrainElevationModel(ascFile.toURL(),null);
+        HMOTerrainElevationModel terrainElevationModel = new HMOTerrainElevationModel( ascFile.toURL(), null );
         cache.addObject( filePath, terrainElevationModel );
         return terrainElevationModel;
       }
       catch( ParseException e )
       {
         e.printStackTrace();
-        throw new IllegalArgumentException(
-            "File has bad format could not parse it",e);
+        throw new IllegalArgumentException( "File has bad format could not parse it", e );
       }
     }
     else
     {
-      throw new RuntimeException("Cannot handle this type of:"+filePath);
+      throw new RuntimeException( "Cannot handle this type of:" + filePath );
     }
   }
-  
-  public static final void removeFromCache(File ascFile)
+
+  public static final void removeFromCache( File ascFile )
   {
     String filePath;
     try
@@ -131,5 +130,5 @@ public class NativeTerrainElevationModelFactory
       e.printStackTrace();
     }
   }
-  
+
 }
