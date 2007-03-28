@@ -46,8 +46,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.net.*;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -164,23 +166,32 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             }
 
             GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
-
-            File modelFolderFile = new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile();
-
-            File temFolderFile = new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() );
-
-            final File srcFileTif = sourcePath.toFile();
+            
+            // Decoding the White Spaces present in the File Paths.
+            File modelFolderFile_ = new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile();
+            File modelFolderFile = new File(URLDecoder.decode(modelFolderFile_.toString(),"UTF-8"));
+            
+            File temFolderFile_ = new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() );
+            File temFolderFile = new File(URLDecoder.decode(temFolderFile_.toString(),"UTF-8"));
+            final File srcFileTif_ = sourcePath.toFile();
+            File srcFileTif = new File(URLDecoder.decode(srcFileTif_.toString(),"UTF-8"));
+            
             File dstFileTif = null;
-            if( (new File( temFolderFile, srcFileTif.getName() )).exists() )
+            
+            if( (new File( temFolderFile, srcFileTif.getName())).exists() )
               dstFileTif = new File( temFolderFile, getFileNameNoExtension( srcFileTif ) + "_" + FILENUMBER + "." + getExtension( srcFileTif ) );
             else
               dstFileTif = new File( temFolderFile, srcFileTif.getName() ); // mPage.getSourceLocation().lastSegment()
+            
             copy( srcFileTif, dstFileTif, monitor );
             modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
-            String nativeTEMRelPath = modelFolderFile.toURI().relativize( dstFileTif.toURI() ).toString();
+          // String nativeTEMRelPath = modelFolderFile.toURI().relativize( dstFileTif.toURI() ).toString();
+            String nativeTEMRelPath = modelFolderFile.toURI().relativize( new File(URLDecoder.decode(dstFileTif.toString(),"UTF-8")).toURI() ).toString();
             if( nativeTEMRelPath == null )
             {
-              nativeTEMRelPath = dstFileTif.toURL().toString();
+           //   nativeTEMRelPath = dstFileTif.toURL().toString();
+            nativeTEMRelPath = new File(URLDecoder.decode(dstFileTif.toString(),"UTF-8")).toString();
+              
             }
 
             ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -213,16 +224,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             cmdWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( cmdWorkspace, temSys.getWrappedFeature(), tem.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
             // TODO check why saving thow pool does not work
-
             pool.saveObject( cmdWorkspace, new SubProgressMonitor( monitor, 1 ) );
-            // save the workspace old method
-            // File workspaceContextFile =
-            // new File(FileLocator.toFileURL( workspace.getContext()).getFile());
-            //              
-            // OutputStreamWriter outputStreamWriter=
-            // new OutputStreamWriter(
-            // new FileOutputStream(workspaceContextFile));
-            // GmlSerializer.serializeWorkspace( outputStreamWriter, workspace );
 
           }
           catch( Exception e )
@@ -265,7 +267,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
     if( i > 0 && i < s.length() - 1 )
     {
-      ext = s.substring( 0, i - 1 );
+      ext = s.substring( 0, i );
     }
     return ext;
   }
@@ -274,29 +276,53 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   {
     InputStream in;
     OutputStream out;
+
+    
+    File dst_ = dst;
+    File src_ = src;
+//    try
+//    {
+//      src_ = new File(URLDecoder.decode(src.toString(),"UTF-8"));
+//    }
+//    catch( UnsupportedEncodingException e2 )
+//    {
+//      // TODO Auto-generated catch block
+//      e2.printStackTrace();
+//    }
+//    try
+//    {
+//      dst_ = new File(URLDecoder.decode( dst.toString(), "UTF-8" ));
+//    }
+//    catch( UnsupportedEncodingException e1 )
+//    {
+//      // TODO Auto-generated catch block
+//      e1.printStackTrace();
+//    }
+    
+    
     try
     {
-      in = new FileInputStream( src );
-      if( !dst.exists() )
+      in = new FileInputStream( src_ );
+      if( !dst_.exists() )
       {
-        if( dst.createNewFile() )
+        if( dst_.createNewFile() )
         {
           // ok
         }
         else
         {
-          throw new IOException( "Could not create file:" + dst );
+          throw new IOException( "Could not create file:" + dst_ );
         }
       }
       else
       {
         // may be shows some message to the user
       }
-      out = new FileOutputStream( dst );
+      out = new FileOutputStream( dst_ );
 
       byte[] buf = new byte[1024];
       int len;
-      int lens = ((int) src.length() / 1024 + 1);
+      int lens = ((int) src_.length() / 1024 + 1);
       monitor2.beginTask( "Copying..", lens );
       while( (len = in.read( buf )) > 0 )
       {
