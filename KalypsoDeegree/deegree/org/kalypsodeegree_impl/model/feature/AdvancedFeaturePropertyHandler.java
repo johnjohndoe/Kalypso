@@ -109,8 +109,12 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
 
           final QName propertyQName = new QName( propertyNamespace, propertyLocalPart );
 
-          final IPropertyType pt = featureType.getProperty( propertyQName );
-
+          /*final */IPropertyType pt = featureType.getProperty( propertyQName );
+          //introducing virtual property
+          if(pt==null)
+          {
+            pt = featureType.getVirtualProperty( propertyQName );
+          }
           final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" );
           final Map<String, String> properties = parseParameters( parameters );
 
