@@ -75,7 +75,7 @@ public interface IElement1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2D
    */
   public void setEdge( final ET edge );
   
-  public GM_Curve getGeometry();
-  
-  public void setGeometry( final GM_Curve curve );
+//  public GM_Curve getGeometry();
+//  
+//  public void setGeometry( final GM_Curve curve );
 }

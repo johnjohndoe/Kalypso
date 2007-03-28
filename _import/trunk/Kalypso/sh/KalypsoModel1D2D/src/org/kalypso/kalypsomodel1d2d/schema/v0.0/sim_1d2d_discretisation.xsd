@@ -96,6 +96,7 @@
 			<xs:documentation xml:lang="en">
 				Represents a node in a 1d 2d finite element network.
 			</xs:documentation>
+			
 		</xs:annotation>
 	</xs:element>
 	
@@ -107,6 +108,13 @@
 				network. Such a node as a pointProperty and a links to node 
 				conatiner which are edges.  
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"
+					kapp:property="wb1d2d:hasElevation"
+					kapp:isVirtual="true"
+					kapp:valueType="xs:boolean"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="simBase:FEAbstractNodeType">
@@ -252,16 +260,18 @@
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:functionProperty
 				kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
-				kapp:property="wb1d2d:geometry"/>
+				kapp:property="wb1d2d:geometry"
+				kapp:isVirtual="true"
+				kapp:valueType="gml:LineStringPropertyType"/>
 		</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
 				base="simBase:FEAbstractEdgeType">
 				<xs:sequence>	
-					<xs:element 
+					<!--xs:element 
 						name="geometry" 
-						type="gml:LineStringPropertyType"/>
+						type="gml:LineStringPropertyType"/ -->
 					<xs:element
 						ref="wb1d2d:edgeInv"
 						minOccurs="0" maxOccurs="1"/>
@@ -499,11 +509,7 @@
 			<xs:documentation>
 				Base type for all 1d 2d elements.
 			</xs:documentation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
-					kapp:property="wb1d2d:geometry"/>
-			</xs:appinfo>
+			
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
@@ -512,6 +518,7 @@
 					<xs:element 
 						ref="wb1d2d:elementContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
+					
 				</xs:sequence>
 			</xs:extension>			
 		</xs:complexContent>	
@@ -549,6 +556,13 @@
 				Basic 1D elements in a finite element network.
 				It just wraps an edge.
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
+					kapp:property="wb1d2d:geometry"
+					kapp:valueType="gml:LineStringPropertyType"
+					kapp:isVirtual="true"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
@@ -557,9 +571,9 @@
 						<xs:element 
 							ref="wb1d2d:directedEdge"
 							minOccurs="1" maxOccurs="1"/>
-						<xs:element 
+						<!--xs:element 
 						name="geometry" 
-						type="gml:LineStringPropertyType"/>
+						type="gml:LineStringPropertyType"/-->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	
@@ -646,9 +660,9 @@
 			<xs:extension 
 				base="wb1d2d:Element2DType">
 					<xs:sequence>
-					<xs:element 
+					<!--xs:element 
 						name="geometry" 
-						type="gml:PolygonPropertyType"/>
+						type="gml:PolygonPropertyType"/-->
 					<xs:element
 						ref="wb1d2d:directedEdge"
 						minOccurs="3" maxOccurs="4"/>
@@ -672,6 +686,13 @@
 				singular edges cannot be used.
 				the edges must build a close kurve.				
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"
+					kapp:valueType="gml:PolygonPropertyType"
+					kapp:isVirtual="true"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
@@ -708,14 +729,21 @@
 				An 2D fe continuity line element 
 				is defined by succession of edges.				
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"
+					kapp:valueType="gml:LineStringPropertyType"
+					kapp:isVirtual="true"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
 				base="wb1d2d:Element2DType">
 					<xs:sequence>
-					<xs:element 
+					<!--xs:element 
 						name="geometry" 
-						type="gml:LineStringPropertyType"/>
+						type="gml:LineStringPropertyType"/-->
 					<xs:element
 						ref="wb1d2d:directedEdge"
 						minOccurs="0" maxOccurs="unbounded"/>
@@ -853,9 +881,9 @@
 			<xs:extension 
 				base="wb1d2d:ElementType">
 					<xs:sequence>
-						<xs:element 
+						<!--xs:element 
 							name="geometry" 
-							type="gml:LineStringPropertyType"/>
+							type="gml:LineStringPropertyType"/-->
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

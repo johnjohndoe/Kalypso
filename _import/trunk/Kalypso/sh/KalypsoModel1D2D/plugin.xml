@@ -32,6 +32,15 @@
               class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
               name="FE1D2D_2DElementTypeGeometry"/>
+        <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"
+              name="NodeElevationAvailabilityInfoFunction"/>
+        <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
+              name="Element1DTypeGeometry"/>
+              
      </extension>     
      <extension
            id="editorActions"

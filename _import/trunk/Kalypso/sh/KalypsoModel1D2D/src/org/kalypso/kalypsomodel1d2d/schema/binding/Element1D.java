@@ -136,19 +136,19 @@ public class Element1D extends FE1D2DElement implements IElement1D<IFE1D2DComple
       return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
   }
   
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#getGeometry()
-   */
-  public GM_Curve getGeometry( )
-  {
-    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROPS_GEOMETRY );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
-   */
-  public void setGeometry( final GM_Curve curve )
-  {
-    getWrappedFeature().setProperty( QNAME_PROPS_GEOMETRY, curve );
-  }
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#getGeometry()
+//   */
+//  public GM_Curve getGeometry( )
+//  {
+//    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROPS_GEOMETRY );
+//  }
+//
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
+//   */
+//  public void setGeometry( final GM_Curve curve )
+//  {
+//    getWrappedFeature().setProperty( QNAME_PROPS_GEOMETRY, curve );
+//  }
 }

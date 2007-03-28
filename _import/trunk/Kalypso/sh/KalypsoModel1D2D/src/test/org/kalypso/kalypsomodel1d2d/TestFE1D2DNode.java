@@ -3,9 +3,12 @@
  */
 package test.org.kalypso.kalypsomodel1d2d;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.TestCase;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -53,7 +56,8 @@ public class TestFE1D2DNode extends TestCase
         assertEquals( 0.0010, node.getPoint().getY());
         assertEquals( 0.0020, node.getPoint().getX());
         
-        
+        QName propQName = new QName(UrlCatalog1D2D.MODEL_1D2D_NS,"hasElevation");
+        System.out.println("hasElevation="+rFeature.getProperty( propQName  ));
 	}
 	
 	public void testCreation()

@@ -14,9 +14,9 @@
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<PolygonSymbolizer>
-			<!-- Geometry>
-				<ogc:PropertyName>elementGeometry</ogc:PropertyName>
-			</Geometry -->
+			<Geometry>
+				<ogc:PropertyName>geometry</ogc:PropertyName>
+			</Geometry>
 			<Fill>
 				<CssParameter name="fill-opacity">0.5</CssParameter>
 				<CssParameter name="fill">#ff8000</CssParameter>

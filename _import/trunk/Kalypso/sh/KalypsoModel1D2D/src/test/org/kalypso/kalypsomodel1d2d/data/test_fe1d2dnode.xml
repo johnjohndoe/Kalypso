@@ -18,7 +18,7 @@
 	<wb1d2d:nodeContainer>
 		<wb1d2d:Edge gml:id="edge1">
 			<gml:name>edge1</gml:name>
-			<wb1d2d:geometry/>
+			<!--wb1d2d:geometry/-->
 			<wb1d2d:directedNode xlink:href="#node00"/>
 			<wb1d2d:directedNode>
 				<wb1d2d:Node>
@@ -37,7 +37,7 @@
 	<wb1d2d:nodeContainer>
 		<wb1d2d:Edge gml:id="edge2">
 			<gml:name>edge2</gml:name>
-			<wb1d2d:geometry/>
+			<!--wb1d2d:geometry/-->
 			<wb1d2d:directedNode xlink:href="#node0"/>
 			<wb1d2d:directedNode>
 				<wb1d2d:Node>

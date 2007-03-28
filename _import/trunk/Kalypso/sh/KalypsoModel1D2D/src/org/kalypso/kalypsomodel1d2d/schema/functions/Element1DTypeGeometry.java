@@ -3,15 +3,16 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * @author Gernot Belger
+ * @author Patrice Congo
  */
-public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
+public class Element1DTypeGeometry extends FeaturePropertyFunction
 {
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -28,10 +29,8 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    if( !GeometryCalcControl.doCalcElement )
-      return null;
-
-    final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+    final IElement1D element = 
+            (IElement1D) feature.getAdapter( IElement1D.class );
     if( element != null )
     {
       try
@@ -61,7 +60,6 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    // TODO: change underlying node geometry?
     return valueToSet;
   }
 
