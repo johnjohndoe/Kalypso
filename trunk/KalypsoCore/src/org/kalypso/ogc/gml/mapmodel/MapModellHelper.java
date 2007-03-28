@@ -71,8 +71,7 @@ public class MapModellHelper
    * 
    * @return scale of the map
    */
-  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth,
-      final int mapHeight )
+  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, final int mapHeight )
   {
     try
     {
@@ -98,12 +97,8 @@ public class MapModellHelper
       final double dy = box.getHeight() / mapHeight;
 
       // create a box on the central map pixel to determine its size in meters
-      final GM_Position min = GeometryFactory.createGM_Position( box.getMin().getX() + dx * ( mapWidth / 2d - 1 ), box
-          .getMin().getY()
-          + dy * ( mapHeight / 2d - 1 ) );
-      final GM_Position max = GeometryFactory.createGM_Position( box.getMin().getX() + dx * ( mapWidth / 2d ), box
-          .getMin().getY()
-          + dy * ( mapHeight / 2d ) );
+      final GM_Position min = GeometryFactory.createGM_Position( box.getMin().getX() + dx * (mapWidth / 2d - 1), box.getMin().getY() + dy * (mapHeight / 2d - 1) );
+      final GM_Position max = GeometryFactory.createGM_Position( box.getMin().getX() + dx * (mapWidth / 2d), box.getMin().getY() + dy * (mapHeight / 2d) );
       final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
 
       // default pixel size defined in SLD specs is 28mm
@@ -118,8 +113,86 @@ public class MapModellHelper
     return 0.0;
   }
 
-  public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox,
-      final Rectangle bounds, final int width, final int height, final IMapModell model )
+  /**
+   * Creates an image of the map modell. Does wait, until all themes are loaded. That means it can take some time, until
+   * this method returns. If a timeout is reached, the function will return also only a half finished image.<br>
+   * ATTENTION: For GUI purposes I recommend using the other function.
+   * 
+   * @author Holger Albert
+   */
+  public static BufferedImage createCompleteImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
+  {
+    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    final Graphics gr = image.getGraphics();
+    try
+    {
+      gr.setColor( Color.white );
+      gr.fillRect( 0, 0, width, height );
+      gr.setColor( Color.black );
+      gr.setClip( 0, 0, width, height );
+      int x = bounds.x;
+      int y = bounds.y;
+      int w = bounds.width;
+      int h = bounds.height;
+
+      p.setDestRect( x - 2, y - 2, w + x, h + y );
+
+      final double scale = calcScale( model, bbox, bounds.width, bounds.height );
+      try
+      {
+        // TODO How to initialize the themes without painting?
+        model.paint( gr, p, bbox, scale, false );
+
+        IKalypsoTheme[] allThemes = model.getAllThemes();
+        int timeout = 0;
+        boolean isLoading = true;
+        while( isLoading )
+        {
+          isLoading = false;
+          for( int i = 0; i < allThemes.length; i++ )
+          {
+            IKalypsoTheme theme = allThemes[i];
+            if( theme.isLoaded() == false )
+              isLoading = true;
+          }
+
+          /* If the timeout was reached the last run, stop waiting. */
+          if( timeout >= 15000 )
+            break;
+
+          /* Wait for one second, if it is still loading. */
+          if( isLoading )
+          {
+            Thread.sleep( 1000 );
+            timeout = timeout + 1000;
+          }
+        }
+
+        model.paint( gr, p, bbox, scale, false );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        System.out.println( e.getMessage() );
+      }
+
+      final HighlightGraphics highlightGraphics = new HighlightGraphics( (Graphics2D) gr );
+      model.paint( highlightGraphics, p, bbox, scale, true );
+    }
+    finally
+    {
+      gr.dispose();
+    }
+
+    return image;
+  }
+
+  /**
+   * Is used to create an image of a map modell. Does not wait until all themes are loaded. Is used from the map panel
+   * as well, where the drawing is done every refresh of the map. So it does not matter, when some themes finish, if
+   * they finish at last.
+   */
+  public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
   {
     final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     final Graphics gr = image.getGraphics();
@@ -141,13 +214,13 @@ public class MapModellHelper
       {
         model.paint( gr, p, bbox, scale, false );
       }
-      catch(Exception e)
+      catch( Exception e )
       {
         e.printStackTrace();
-        System.out.println(e.getMessage());
+        System.out.println( e.getMessage() );
       }
 
-      final HighlightGraphics highlightGraphics = new HighlightGraphics((Graphics2D)gr); 
+      final HighlightGraphics highlightGraphics = new HighlightGraphics( (Graphics2D) gr );
       model.paint( highlightGraphics, p, bbox, scale, true );
     }
     finally
@@ -167,14 +240,12 @@ public class MapModellHelper
     double rad = Math.PI / 180d;
     double cose = 0;
 
-    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 ) * Math.cos( rad * lon2 )
-        * Math.cos( rad * ( lat1 - lat2 ) );
+    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 ) * Math.cos( rad * lon2 ) * Math.cos( rad * (lat1 - lat2) );
     double dist = r * Math.acos( cose );
 
     return dist * 1000;
   }
 
-  
   public static IKalypsoTheme[] filterThemes( final IMapModell modell, final IKalypsoThemeFilter filter )
   {
     final IKalypsoTheme[] allThemes = modell.getAllThemes();
