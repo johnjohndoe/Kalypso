@@ -44,7 +44,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 public class ProfileObjectSet implements IProfilChange
 {
@@ -81,14 +80,16 @@ public class ProfileObjectSet implements IProfilChange
       hint.setPointPropertiesChanged();
 
     final IProfileObject oldObject = m_profil.getProfileObject();
-    if( m_object != null || m_objectId == "null" )
+    if( m_object != null  )
       m_profil.setProfileObject( m_object );
+    else if ( m_objectId == "null")
+      m_profil.removeProfileObject();
     else
     {
       final IProfileObjectProvider pop = m_profil.getObjectProviderFor( m_objectId );
       final IProfileObject object = pop == null ? null : pop.createProfileObject( m_objectId );
       if( object == null )
-        return new IllegalChange( m_objectId + " wird nicht unterstützt." );
+        return new IllegalChange( m_objectId + " wird nicht unterstützt.",this );
       m_profil.setProfileObject( object );
     }
     return new ProfileObjectSet( m_profil, oldObject );

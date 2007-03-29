@@ -63,7 +63,7 @@ public class WehrRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (profil.getProfileObject() == null) || (IWspmTuhhConstants.BUILDING_TYP_WEHR.compareTo( profil.getProfileObject().getId() ) != 0) )
+    if( (profil == null) || (profil.getProfileObject() == null) || (!IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( profil.getProfileObject().getId() )) )
       return;
     try
     {
@@ -140,7 +140,7 @@ public class WehrRule extends AbstractValidatorRule
       final double wk = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
       if( wk < h )
       {
-        collector.createProfilMarker( true, "Wehrkante[" + String.format( IWspmTuhhConstants.FMT_STATION, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "] unterhalb Geländeniveau", "", points.indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, null );
+        collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "] unterhalb Geländeniveau", "", points.indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, null );
       }
     }
   }
@@ -166,7 +166,7 @@ public class WehrRule extends AbstractValidatorRule
     if( point != null )
     {
       final int index = profil.getPoints().indexOf( point );
-      collector.createProfilMarker( true, "ungültige Randbedingung [" + String.format( IWspmTuhhConstants.FMT_STATION, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new EditPointResolution( index, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) } );
+      collector.createProfilMarker( true, "ungültige Randbedingung [" + String.format( FMT_BREITE, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new EditPointResolution( index, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) } );
     }
     return firstPoint;
   }

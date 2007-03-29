@@ -66,10 +66,7 @@ public interface IWspmConstants
   public static String NS_WSPM_BREAKLINE = "org.kalypso.model.wspmbreakline";
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary";
-
-  // TODO Kim: get number of fractions digits from gml-schema
-  public static final String FMT_STATION = "%.4f";
-
+  
   public static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
 
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";

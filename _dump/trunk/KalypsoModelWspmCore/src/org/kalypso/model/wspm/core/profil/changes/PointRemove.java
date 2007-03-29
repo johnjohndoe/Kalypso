@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -80,8 +79,7 @@ public class PointRemove implements IProfilChange
     }
     else
     {
-      final double b = m_point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      return new IllegalChange( "Punkt bei [" + String.format( IWspmConstants.FMT_STATION, b ) + "] kann nicht gelöscht werden" );
+      return new IllegalChange( "Punkt kann nicht gelöscht werden",this );
     }
   }
 

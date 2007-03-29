@@ -49,6 +49,8 @@ public abstract class AbstractValidatorRule implements IValidatorRule
   private String m_description;
 
   private String m_type;
+  
+  protected final String FMT_BREITE = "%.4f";
 
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {

@@ -111,12 +111,10 @@ public class PlainProfil implements IProfil
     return true;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#addDevider(org.kalypso.model.wspm.core.profil.IProfilPoint,
-   *      org.kalypso.model.wspm.core.profil.IProfil.DEVIDER_TYP)
-   */
   public IProfilPointMarker addPointMarker( final IProfilPoint point, final String markerId )
   {
+    if( !m_points.contains( point ) )
+      return null;
     final IProfilPointMarkerProvider pmp = getMarkerProviderFor( markerId );
     if( pmp == null )
       return null;
@@ -136,7 +134,7 @@ public class PlainProfil implements IProfil
 
   public IProfilPointMarker[] addPointMarker( final IProfilPointMarker marker )
   {
-    if( marker == null )
+    if( (marker == null) || (!m_points.contains( marker.getPoint() )) )
       return new IProfilPointMarker[0];
     final String markerId = marker.getMarkerId();
     List<IProfilPointMarker> markers = m_pointMarker.get( markerId );
@@ -285,9 +283,6 @@ public class PlainProfil implements IProfil
     return m_pointMarker.keySet().toArray( new String[0] );
   }
 
-  // /**
-  // * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getTableDataKeys()
-  // */
   public IProfilPointProperty[] getPointProperties( )
   {
     final List<IProfilPointProperty> props = new ArrayList<IProfilPointProperty>();
@@ -304,13 +299,8 @@ public class PlainProfil implements IProfil
       }
     }
     return props.toArray( new IProfilPointProperty[0] );
-
-    // return m_pointProperties.values().toArray( new IProfilPointProperty[0] );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointPropertiy(java.lang.String)
-   */
   public IProfilPointProperty getPointProperty( String pointPrioperty )
 
   {
@@ -431,7 +421,7 @@ public class PlainProfil implements IProfil
     {
       removePointProperty( property );
     }
-
+    m_building = null;
     return oldBuilding;
   }
 

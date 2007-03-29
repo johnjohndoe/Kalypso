@@ -296,14 +296,12 @@ public class ProfilSWTTableView extends AbstractProfilView
       {
         final TableItem row = cursor.getRow();
         final int col = cursor.getColumn();
-        
-              
-        
+
         // change the active point and pointproperty, but dont put it into the undo queue
         final IProfilPoint point = (IProfilPoint) row.getData();
-        final IProfilPointProperty ppp = (IProfilPointProperty) m_viewer.getTable().getColumn( col).getData("columnKey");
-        
-        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), point, ppp.getId() ), true );
+        final IProfilPointProperty ppp = (IProfilPointProperty) m_viewer.getTable().getColumn( col ).getData( "columnKey" );
+
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), point, ppp == null ? "null" : ppp.getId() ), true );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -486,14 +484,14 @@ public class ProfilSWTTableView extends AbstractProfilView
 
         @SuppressWarnings("unchecked")
         final IProfilPoint[] pointsToDelete = (IProfilPoint[]) selection.toList().toArray( new IProfilPoint[selection.size()] );
-        final IProfilChange[] changes = new IProfilChange[pointsToDelete.length +1 ];
+        final IProfilChange[] changes = new IProfilChange[pointsToDelete.length + 1];
         final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( getProfil(), pointsToDelete[0] );
         for( int i = 0; i < pointsToDelete.length; i++ )
         {
           final IProfilPoint point = pointsToDelete[i];
           changes[i] = new PointRemove( getProfil(), point );
         }
-        changes[pointsToDelete.length] = new ActiveObjectEdit(getProfil(),thePointBefore,IWspmConstants.POINT_PROPERTY_BREITE);
+        changes[pointsToDelete.length] = new ActiveObjectEdit( getProfil(), thePointBefore, IWspmConstants.POINT_PROPERTY_BREITE );
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, false );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -511,14 +509,14 @@ public class ProfilSWTTableView extends AbstractProfilView
         }
 
         final TableItem row = getCursor().getRow();
-        
+
         final IProfil profile = getProfil();
         final IProfilPoint thePointBefore = (row == null) ? null : (IProfilPoint) row.getData();
         final IProfilPoint thePointAfter = thePointBefore == null ? null : ProfilUtil.getPointAfter( profile, thePointBefore );
         IProfilPoint thePoint = thePointAfter == null ? thePointBefore.clonePoint() : ProfilUtil.splitSegment( profile, thePointBefore, thePointAfter );
         final IProfilChange[] changes = new IProfilChange[2];
         changes[0] = new PointAdd( profile, thePointBefore, thePoint );
-        changes[1] = new ActiveObjectEdit(profile,thePoint,IWspmConstants.POINT_PROPERTY_BREITE);
+        changes[1] = new ActiveObjectEdit( profile, thePoint, IWspmConstants.POINT_PROPERTY_BREITE );
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, true );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -664,7 +662,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )
     {
-      if( (IProfilPoint)item.getData() == activePoint )
+      if( (IProfilPoint) item.getData() == activePoint )
       {
         final Object[] columnProperties = m_viewer.getColumnProperties();
 

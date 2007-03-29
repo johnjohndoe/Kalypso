@@ -80,9 +80,9 @@ public class RuecksprungRule extends AbstractValidatorRule
           final double deltaX = ppB == null ? 0.0001 : ppB.getPrecision();
           final double deltaY = ppB == null ? 0.0001 : ppH.getPrecision();
           if( (x1 - x2  )> deltaX )
-            collector.createProfilMarker( true, "Gauss-Rücksprung bei Breite = " + String.format( IWspmTuhhConstants.FMT_STATION, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
+            collector.createProfilMarker( true, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
           else if( (Math.abs( x2 - x1 ) < deltaX) && (Math.abs( y2 - y1 ) > deltaY) )
-            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( IWspmTuhhConstants.FMT_STATION, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
+            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
         }
 
         prevPoint = point;

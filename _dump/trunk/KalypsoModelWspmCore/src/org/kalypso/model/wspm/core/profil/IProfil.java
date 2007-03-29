@@ -62,17 +62,20 @@ public interface IProfil
   public void setName( final String name );
 
   /**
-   * @return false if the point does not match all the properties in this profile
+   * @return false if the point does not match all the properties in this profile, otherwise true and adds the given
+   *         point at the end of the pointlist
    */
   public boolean addPoint( final IProfilPoint point );
 
   /**
    * @return the new pointmarker represented by markerId created on the given point
+   * @note may return null if the point is not a member of this profile
    */
   public IProfilPointMarker addPointMarker( final IProfilPoint point, final String markerId );
 
   /**
    * @return all pointmarker in this profile with the same markerId given by marker
+   * @return an empty array if the marker is not added
    */
   public IProfilPointMarker[] addPointMarker( final IProfilPointMarker marker );
 
@@ -84,17 +87,17 @@ public interface IProfil
 
   /**
    * @return a valid profilPoint, addable to this profile
-   * @see addPoint(IProfilpoint point)
+   * @see #addPoint(IProfilPoint)
    */
   public IProfilPoint createProfilPoint( );
 
   /**
-   * @return Returns the active Point.
+   * @return the active Point.
    */
   public IProfilPoint getActivePoint( );
 
   /**
-   * @return Returns the active Pointproperty.
+   * @return the active Pointproperty.
    */
   public IProfilPointProperty getActiveProperty( );
 
@@ -133,13 +136,16 @@ public interface IProfil
    */
   public String[] getPointMarkerTypes( );
 
+  /**
+   * @return all PointProperties used by this profile
+   */
   public IProfilPointProperty[] getPointProperties( );
 
   public IProfilPointProperty getPointProperty( final String pointPrioperty );
 
   /**
-   * @return the nested PointList of this profile, changes will be reflected in the profile. May cause
-   *         ConcurrentModificationException
+   * @return the nested PointList of this profile, changes will be reflected in the profile.
+   * @note May cause ConcurrentModificationException
    */
   public LinkedList<IProfilPoint> getPoints( );
 

@@ -80,7 +80,7 @@ public class PointAdd implements IProfilChange
     else if( m_pointBefore != null )
       pointToAdd = m_pointBefore.clonePoint();
     if( pointToAdd == null )
-      return new IllegalChange( "Profilpunkt existiert nicht." );
+      return new IllegalChange( "Profilpunkt existiert nicht.",this );
     final LinkedList<IProfilPoint> points = m_profil.getPoints();
     if( m_pointBefore == null )
     {
@@ -90,7 +90,7 @@ public class PointAdd implements IProfilChange
     {
       final int i = points.indexOf( m_pointBefore );
       if( i < 0 )
-        return new IllegalChange( "Profilpunkt existiert nicht." );
+        return new IllegalChange( "Profilpunkt existiert nicht.",this );
       points.add( i + 1, pointToAdd );
     }
     return new PointRemove( m_profil, pointToAdd );

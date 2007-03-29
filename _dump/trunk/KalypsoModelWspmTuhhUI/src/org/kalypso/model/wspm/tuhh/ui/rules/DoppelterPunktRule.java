@@ -74,7 +74,7 @@ public class DoppelterPunktRule extends AbstractValidatorRule
           if( ProfilUtil.comparePoints( new IProfilPointProperty[] { profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE ),
               profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
           {
-            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IWspmTuhhConstants.FMT_STATION, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
+            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
           }
         }
         prevPoint = point;

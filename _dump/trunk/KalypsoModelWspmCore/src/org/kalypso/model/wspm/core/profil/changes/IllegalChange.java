@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 /**
  * @author kimwerner
@@ -50,10 +49,12 @@ public class IllegalChange implements IProfilChange
 {
 
   private final String m_message;
+  private final IProfilChange m_change;
 
-  public IllegalChange(  final String msg )
+  public IllegalChange(  final String msg,final IProfilChange change )
   {
     m_message = msg;
+    m_change = change;
   }
 
   /**
@@ -73,7 +74,7 @@ public class IllegalChange implements IProfilChange
    */
   public Object getObject( )
   {
-        return m_message;
+        return m_change;
   }
 
   /**
@@ -81,7 +82,7 @@ public class IllegalChange implements IProfilChange
    */
   public String getInfo( )
   {
-       return null;
+       return m_message;
   }
 
   /**

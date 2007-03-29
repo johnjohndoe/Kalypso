@@ -55,30 +55,27 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 /**
  * @author kimwerner
  */
-/**
- * @author kimwerner
- */
 public class ProfilUtil
 {
-  public static final IProfilPoint getProfilPoint( final IProfil profil, final IProfilPoint pointBefore, final IProfilPoint pointAfter )
-  {
-    if( profil == null )
-      return null;
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilPoint leftP = ((pointBefore == null) && (!points.isEmpty())) ? points.getFirst() : pointBefore;
-
-    final IProfilPoint rightP = (pointAfter == null) ? getPointAfter( profil, leftP ) : pointAfter;
-    return splitSegment( profil, leftP, rightP );
-
-  }
+//  public static final IProfilPoint getProfilPoint( final IProfil profil, final IProfilPoint pointBefore, final IProfilPoint pointAfter )
+//  {
+//    if( profil == null )
+//      return null;
+//    final LinkedList<IProfilPoint> points = profil.getPoints();
+//    final IProfilPoint leftP = ((pointBefore == null) && (!points.isEmpty())) ? points.getFirst() : pointBefore;
+//
+//    final IProfilPoint rightP = (pointAfter == null) ? getPointAfter( profil, leftP ) : pointAfter;
+//    return splitSegment( profil, leftP, rightP );
+//
+//  }
 
   /**
-   * @return a subList include both Deviderpoints, maybe null
+   * @return a subList include both MarkerPoints, maybe null
    */
 
-  public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final String deviderTyp )
+  public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final String markerTyp )
   {
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( deviderTyp );
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( markerTyp );
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final int leftPos = (markers.length > 0) ? points.indexOf( markers[0].getPoint() ) : 0;
     final int rightPos = (markers.length > 1) ? points.indexOf( markers[markers.length - 1].getPoint() ) + 1 : 0;
@@ -86,8 +83,7 @@ public class ProfilUtil
   }
 
   /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getValuesFor(org.kalypso.model.wspm.core.profildata.tabledata.ColumnKey)
+   * @return the DoubleValues of each point for this pointProperty in the correct order
    */
   public static Double[] getValuesFor( final IProfil profil, final String pointProperty )
   {
@@ -101,13 +97,15 @@ public class ProfilUtil
     }
     return values;
   }
-
-  public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final IProfilPointMarker leftDevider, final IProfilPointMarker rightDevider )
+  /**
+   * @return a subList include both MarkerPoints, maybe null
+   */
+  public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final IProfilPointMarker leftMarker, final IProfilPointMarker rightMarker )
   {
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final int leftPos = (leftDevider != null) ? points.indexOf( leftDevider.getPoint() ) : 0;
-    final int rightPos = (rightDevider != null) ? points.indexOf( rightDevider.getPoint() ) : 0;
+    final int leftPos = (leftMarker != null) ? points.indexOf( leftMarker.getPoint() ) : 0;
+    final int rightPos = (rightMarker != null) ? points.indexOf( rightMarker.getPoint() )+1 : 0;
     return (leftPos < rightPos) ? points.subList( leftPos, rightPos ) : null;
 
   }
