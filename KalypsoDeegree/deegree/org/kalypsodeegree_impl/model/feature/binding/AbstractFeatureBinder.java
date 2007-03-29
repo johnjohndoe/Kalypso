@@ -114,6 +114,7 @@ public class AbstractFeatureBinder implements IFeatureWrapper
     NamedFeatureHelper.setName( m_featureToBind, name );
   }
 
+  
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_featureToBind );
