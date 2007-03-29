@@ -54,5 +54,6 @@ public interface IFeatureWrapper2 extends IFeatureWrapper
   
   public String getDescription( );
   
-  public void setDescription( final String desc );
+  public void setDescription( final String desc );  
+  
 }
