@@ -56,6 +56,19 @@ public interface IElevationColorModel
    * @return an {@link Color} for the given elevation
    */
   public Color getColor(double elevation);
+  
+  
+  /**
+   * To set a new min and max elevation for the color model
+   * @return an {@link Color} for the given elevation
+   */
+  public void setElevationMinMax(double min, double max);
+  
+  /**
+   * To get the min and max elevation for the color model
+   * @return an {@link Color} for the given elevation
+   */
+  public double[] getElevationMinMax();
  // public float[] getHSB(double elevation);
   
 }

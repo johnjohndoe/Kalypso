@@ -60,9 +60,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -266,7 +268,7 @@ class ApplyElevationWidgetFace
     tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.heightHint = 248;//168
+    tableWrapData.heightHint = 282;//168
     tableWrapData.align = TableWrapData.FILL_GRAB;
     elevationColorSection.setLayoutData( tableWrapData );
     
@@ -285,6 +287,7 @@ class ApplyElevationWidgetFace
 
     final Composite clientComposite = toolkit.createComposite( elevationColorConfig, SWT.FLAT );
     elevationColorConfig.setClient( clientComposite );
+
     colorModelChangeComponent = new ColorModelChangeComponent();
     colorModelChangeComponent.createControl( dataModel, toolkit, clientComposite );
   }

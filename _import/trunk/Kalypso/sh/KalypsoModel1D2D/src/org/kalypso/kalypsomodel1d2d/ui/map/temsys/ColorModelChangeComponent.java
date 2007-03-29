@@ -41,6 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.awt.Color;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
@@ -50,6 +52,15 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -60,14 +71,18 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -107,17 +122,11 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
   private FormToolkit toolkit;
 
-  private Button checkBtnOptionMinMax;
-
   private Display disp;
 
   private Composite parent;
 
-  private IElevationColorModel colorModel;
-  
-  public Label minTextLabel;
-  
-  public Label maxTextLabel;
+  private IElevationColorModel m_colorModel;
 
   private double MINI_ELEVATION = 0;
 
@@ -128,6 +137,16 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
   private ColorFieldEditor noColorSelector;
 
   private Image image_Apply;
+  
+  private Button m_applyColors;
+
+  double m_maxElevationBorder;
+
+  double m_minElevationBorder;
+
+  private Label m_minTextLabel;
+
+  private Label m_maxTextLabel;
 
   public void createControl( ApplyElevationWidgetDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -137,6 +156,30 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     this.toolkit = toolkit;
     this.parent = parent;
     this.dataModel = dataModel;
+
+    /* check, if there is an user defined border */
+    m_maxElevationBorder = ElevationColorControl.getMaxElevation();
+    m_minElevationBorder = ElevationColorControl.getMinElevation();
+    /* if not, take the min max values from the elevation model */
+    if( m_maxElevationBorder == 0 && m_minElevationBorder == 0 )
+    {
+      m_maxElevationBorder = dataModel.getElevationModelSystem().getMaxElevation();
+      m_minElevationBorder = dataModel.getElevationModelSystem().getMinElevation();
+    }
+    if( m_maxElevationBorder > dataModel.getElevationModelSystem().getMaxElevation() )
+    {
+      m_maxElevationBorder = dataModel.getElevationModelSystem().getMaxElevation();
+      ElevationColorControl.setMaxElevation( m_maxElevationBorder );
+    }
+    if( m_minElevationBorder < dataModel.getElevationModelSystem().getMinElevation() )
+    {
+      m_minElevationBorder = dataModel.getElevationModelSystem().getMinElevation();
+      ElevationColorControl.setMinElevation( m_minElevationBorder );
+    }
+
+    m_colorModel = ElevationColorControl.getColorModel();
+    m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
+
     createSelectColor( parent );
   }
 
@@ -206,6 +249,25 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       {
         ElevationColorControl.setMinMaxStatus( preferenceStore_.getBoolean( LINE_MIN_MAX ) );
       }
+
+      if( !preferenceStore_.contains( ELEV_MAX ) )
+      {
+        preferenceStore_.setValue( ELEV_MAX, m_maxElevationBorder );
+      }
+      else
+      {
+        ElevationColorControl.setMaxElevation( preferenceStore_.getDouble( ELEV_MAX ) );
+      }
+
+      if( !preferenceStore_.contains( ELEV_MIN ) )
+      {
+        preferenceStore_.setValue( ELEV_MIN, m_minElevationBorder );
+      }
+      else
+      {
+        ElevationColorControl.setMinElevation( preferenceStore_.getDouble( ELEV_MIN ) );
+      }
+
     }
     catch( Throwable th )
     {
@@ -215,15 +277,15 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     }
 
   }
-  
-  /** 
+
+  /**
    * IPropertyChangeListener for Preference Store
-   *  
    */
   private IPropertyChangeListener createPropertyChangeLis( )
   {
     return new IPropertyChangeListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void propertyChange( PropertyChangeEvent event )
       {
         try
@@ -253,6 +315,14 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
           {
             ElevationColorControl.setNoElevationColor( makeAWTColor( (RGB) event.getNewValue() ) );
           }
+          else if( ELEV_MAX.equals( property ) )
+          {
+            ElevationColorControl.setMaxElevation( m_maxElevationBorder );
+          }
+          else if( ELEV_MIN.equals( property ) )
+          {
+            ElevationColorControl.setMinElevation( m_minElevationBorder );
+          }
           else
           {
             System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() );
@@ -272,54 +342,37 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
   private void createSelectColor( Composite clientComposite )
   {
-    FormLayout elevationColorGrid = new FormLayout();
-    clientComposite.setLayout( elevationColorGrid );
-    FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    clientComposite.setLayoutData( formData );
-    // Min Max Grouping
-   
-    final Group minMaxGroup = new Group( clientComposite, SWT.NULL );
-    minMaxGroup.setLayoutData( formData );
-    
-    final Group optionsColorGroup = new Group( clientComposite, SWT.NULL );
-    formData = new FormData();
-    formData.left = new FormAttachment( minMaxGroup, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    formData.right = new FormAttachment( 100, 0 );
-    optionsColorGroup.setLayoutData( formData );
-    
+    clientComposite.setLayout( new GridLayout( 2, false ) );
+
+    final Group minMaxGroup = new Group( clientComposite, SWT.NONE );
+    GridData gridDataminMaxGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
+    minMaxGroup.setLayoutData( gridDataminMaxGroup );
+    minMaxGroup.setText( "Farbbereich" );
+
+    final Group optionsColorGroup = new Group( clientComposite, SWT.NONE );
+    GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
+    optionsColorGroup.setLayoutData( gridDataoptionsColorGroup );
+
     firstGroup( minMaxGroup );
     secondGroup( optionsColorGroup );
   }
 
+ 
   private void firstGroup( Group minMaxGroup )
   {
-    FormLayout minMaxLayout = new FormLayout();
-    minMaxGroup.setText( "Farbbereich" );
-    minMaxGroup.setLayout( minMaxLayout );
-    FormData formData;
-    
-    final Label maxLabel = new Label( minMaxGroup, SWT.NONE );
+    minMaxGroup.setLayout( new GridLayout( 1, false ) );
+
+    final Composite compositeMinMax = new Composite( minMaxGroup, SWT.NONE );
+    compositeMinMax.setLayout( new GridLayout( 3, false ) );
+
+    GridData gridDataCompositeMinMax = new GridData( SWT.CENTER, SWT.UP, true, true );
+    compositeMinMax.setLayoutData( gridDataCompositeMinMax );
+    // compositeMinMax.setBackground( compositeMinMax.getDisplay().getSystemColor( SWT.COLOR_GREEN ) );
+
+    final Label maxLabel = new Label( compositeMinMax, SWT.NONE );
     maxLabel.setText( "Max" );
-    formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    maxLabel.setLayoutData( formData );
-    
-    maxTextLabel = new Label( minMaxGroup, SWT.NONE );
-    double maxElevation = 0;
-    if (dataModel.getElevationModelSystem() != null)
-      maxElevation = dataModel.getElevationModelSystem().getMaxElevation();
-    final String stringMax = String.format("%.3f", maxElevation);
-    maxTextLabel.setText( stringMax );
-    formData = new FormData();
-    formData.left = new FormAttachment( 55, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    maxTextLabel.setLayoutData( formData );
+    GridData gridDataMaxLabel = new GridData( SWT.CENTER, SWT.UP, false, false );
+    maxLabel.setLayoutData( gridDataMaxLabel );
 
     this.disp = minMaxGroup.getDisplay();
 
@@ -332,192 +385,312 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       }
     };
 
-    windowCanvas = createCanvas( minMaxGroup, paintLis );
+    windowCanvas = createCanvas( compositeMinMax, SWT.NONE, paintLis );
+
+    GridData gridDataCanvas = new GridData( SWT.CENTER, SWT.CENTER, false, false );
+
+    gridDataCanvas.heightHint = 170;
+    gridDataCanvas.widthHint = 24;
+
+    gridDataCanvas.verticalSpan = 2;
+
+    windowCanvas.setLayoutData( gridDataCanvas );
     windowCanvas.redraw();
 
-    formData = new FormData();
-    formData.width = 20;
-    formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 80, -5 );
-    formData.left = new FormAttachment( maxLabel, 5 );
-    windowCanvas.setLayoutData( formData );
+    m_maxTextLabel = new Label( compositeMinMax, SWT.NONE );
+    
+    final String stringMax = String.format( "%.3f", m_maxElevationBorder );
+    m_maxTextLabel.setText( stringMax );
+    GridData gridDataMaxText = new GridData( SWT.CENTER, SWT.UP, false, false );
+    m_maxTextLabel.setLayoutData( gridDataMaxText );
 
-
-    final Label minLabel = new Label( minMaxGroup, SWT.NONE );
+    final Label minLabel = new Label( compositeMinMax, SWT.NONE );
     minLabel.setText( "Min" );
-    formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 80, -5 );
-    minLabel.setLayoutData( formData );
-    
-    minTextLabel = new Label( minMaxGroup, SWT.NONE );
-    double minElevation = 0;
-    if (dataModel.getElevationModelSystem() != null)
-      minElevation = dataModel.getElevationModelSystem().getMinElevation();
-    final String stringMin = String.format("%.3f", minElevation);
-    minTextLabel.setText( stringMin );
-    formData = new FormData();
-    formData.left = new FormAttachment( 55, 5 );
-    formData.bottom = new FormAttachment( 80, -5 );
-    minTextLabel.setLayoutData( formData );
-    
-    
-    checkBtnOptionMinMax = new Button( minMaxGroup, SWT.CHECK );
-    final FormData  optionsColorFormData3 = new FormData();
-    optionsColorFormData3.left = new FormAttachment( 0, 5 );
-    optionsColorFormData3.top = new FormAttachment( 85, 5 );
-    checkBtnOptionMinMax.setLayoutData( optionsColorFormData3 );
-    checkBtnOptionMinMax.setText( "Farbskala umdrehen" );
-    checkBtnOptionMinMax.addSelectionListener( new SelectionAdapter()
+
+    GridData gridDataMinLabel = new GridData( SWT.CENTER, SWT.DOWN, false, false );
+    minLabel.setLayoutData( gridDataMinLabel );
+
+    m_minTextLabel = new Label( compositeMinMax, SWT.NONE );
+
+    final String stringMin = String.format( "%.3f", m_minElevationBorder );
+    m_minTextLabel.setText( stringMin );
+
+    GridData gridDataMinText = new GridData( SWT.LEFT, SWT.DOWN, true, true );
+    m_minTextLabel.setLayoutData( gridDataMinText );
+
+    final Composite compositeSwitchSchema = new Composite( minMaxGroup, SWT.NONE );
+    compositeSwitchSchema.setLayout( new GridLayout( 1, false ) );
+
+    GridData gridDataCompositeSwitchSchema = new GridData( SWT.LEFT, SWT.CENTER, false, false );
+    gridDataCompositeSwitchSchema.horizontalSpan = 2;
+    compositeSwitchSchema.setLayoutData( gridDataCompositeSwitchSchema );
+
+    final Button checkBtnOptionMinMax1 = new Button( compositeSwitchSchema, SWT.CHECK );
+    checkBtnOptionMinMax1.setText( "Farbskala umdrehen" );
+    checkBtnOptionMinMax1.setSelection( false );
+    checkBtnOptionMinMax1.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        System.out.println( "Val :" + checkBtnOptionMinMax.getSelection() );
-        ElevationColorControl.setMinMaxStatus( checkBtnOptionMinMax.getSelection() );
-        preferenceStore_.setValue( LINE_MIN_MAX, checkBtnOptionMinMax.getSelection() );
+        System.out.println( "Val :" + checkBtnOptionMinMax1.getSelection() );
+        ElevationColorControl.setMinMaxStatus( checkBtnOptionMinMax1.getSelection() );
+        preferenceStore_.setValue( LINE_MIN_MAX, checkBtnOptionMinMax1.getSelection() );
         windowCanvas.redraw();
       }
     } );
-    checkBtnOptionMinMax.setSelection( ElevationColorControl.getMinMaxStatus() );
-
+    checkBtnOptionMinMax1.setSelection( ElevationColorControl.getMinMaxStatus() );
 
   }
 
-  /**    
-   * Creates the preview of the number of classes selected along
-   * with selected MAX Color and
-   *      selected MIN Color.
-   * @param GraphicCanvas  
+  /**
+   * Creates the preview of the number of classes selected along with selected MAX Color and selected MIN Color.
+   * 
+   * @param GraphicCanvas
    */
   void paintElevationColorSelection( GC graphicCanvas )
   {
-    final int legendHeight = 140;
+    final int legendHeight = 168;
     numOfClasses = ElevationColorControl.getColorIndex();
-    int coord = (int) (Math.ceil( 140D / numOfClasses ));
+//    int coord = (int) (Math.ceil( 140D / numOfClasses ));
+    int coord = (int) (170 / numOfClasses );
     MAXI_ELEVATION = 100;
     MINI_ELEVATION = 0;
 
     double selectElevation = MAXI_ELEVATION;
-   
-    colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
-    final double step = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / (numOfClasses-1);
+
+    m_colorModel = ElevationColorControl.getColorModel( MINI_ELEVATION, MAXI_ELEVATION );
+    // colorModel.setElevationMinMax( coord, selectElevation );
+    final double step = (Math.abs( MAXI_ELEVATION - MINI_ELEVATION )) / (numOfClasses - 1);
 
     int restHeigth = legendHeight;
-    
-    /* first class */   
+
+    /* first class */
     int coordStart = 0;
     int coordEnd = coord;
-    int classHeigth = coordEnd -coordStart;
-    
-    //fill
-    Color gotColor = colorModel.getColor( MAXI_ELEVATION );
+    int classHeigth = coordEnd - coordStart;
+
+    // fill
+    Color gotColor = m_colorModel.getColor( MAXI_ELEVATION );
     graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
     graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth );
-    
-    //border
-    graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color  ( disp, new RGB(0,0,0)));
+
+    // border
+    graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) ) );
     graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
-    
-    restHeigth = restHeigth - 2*classHeigth;  //substract the heigth for the first and last class
-    
-    for( int i = 1; i < numOfClasses-1; i++ )
+
+    restHeigth = restHeigth - 2 * classHeigth; // substract the heigth for the first and last class
+
+    for( int i = 1; i < numOfClasses - 1; i++ )
     {
-      selectElevation = MAXI_ELEVATION - i*step;
-      
+      selectElevation = MAXI_ELEVATION - i * step;
+
       coordStart = coordEnd;
-      coordEnd = coordStart + (int) (Math.ceil( restHeigth / (numOfClasses-(i+1)) ));
+      coordEnd = coordStart + (int) (Math.ceil( restHeigth / (numOfClasses - (i + 1)) ));
       classHeigth = coordEnd - coordStart;
       restHeigth = restHeigth - classHeigth;
-      
-      gotColor = colorModel.getColor( selectElevation );
+
+      gotColor = m_colorModel.getColor( selectElevation );
       graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
-      graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth  );
-      graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color  ( disp, new RGB(0,0,0)));
-      graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth  );
+      graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth );
+      graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) ) );
+      graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
     }
-    
+
     coordStart = coordEnd;
-    coordEnd = 140;
+    coordEnd = legendHeight;
     classHeigth = coordEnd - coordStart;
 
-    gotColor = colorModel.getColor( MINI_ELEVATION );
+    gotColor = m_colorModel.getColor( MINI_ELEVATION );
     graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
     graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth );
-    graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color  ( disp, new RGB(0,0,0)));
+    graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) ) );
     graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
-    
   }
 
   /**
    * GUI Part of Second Grouping
-   * @param Group, acts a container to draw req. components 
+   * 
+   * @param Group,
+   *          acts a container to draw req. components
    */
   private void secondGroup( Group optionsColorGroup )
   {
-    
-    
-    final FormLayout optionsColorGrpLayout = new FormLayout();
     optionsColorGroup.setText( "Optionen" );
-    optionsColorGroup.setLayout( optionsColorGrpLayout );
+    optionsColorGroup.setLayout( new GridLayout( 2, false ) );
+
+    GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
+    optionsColorGroup.setLayoutData( gridDataoptionsColorGroup );
     
-    final Composite smallComposite_1 = new Composite( optionsColorGroup, SWT.NONE );
-    //smallComposite_1.setLayout( new GridLayout( 1, false ) );
+
+    final Composite elevationChooseComposite = toolkit.createComposite( optionsColorGroup, SWT.NONE );
+    elevationChooseComposite.setLayout( new GridLayout( 2, false ) );
+    final Label maxElevationLabel = toolkit.createLabel( elevationChooseComposite, "obere Grenze",  SWT.NONE );
+    final Label minElevationLabel = toolkit.createLabel( elevationChooseComposite, "untere Grenze",  SWT.NONE );
+
+    final Text maxText = new Text( elevationChooseComposite, SWT.BORDER );
+    double maxElevation = ElevationColorControl.getMaxElevation();
     
-    smallComposite_1.setLayout( new GridLayout( 4, false ) );
+    String stringMax = String.valueOf( maxElevation );
+    maxText.setText( stringMax );
+
+    maxText.addKeyListener( new KeyAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void keyPressed( KeyEvent event )
+      {
+        switch( event.keyCode )
+        {
+          case SWT.CR:
+            System.out.println( "Enter" );
+
+            checkMaxTextValue( elevationChooseComposite, maxText );
+        }
+      }
+    } );
+
+
+    maxText.addFocusListener( new FocusListener ()
+    {
+
+      public void focusGained( FocusEvent e )
+      {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @SuppressWarnings("synthetic-access")
+      public void focusLost( FocusEvent e )
+      {
+        checkMaxTextValue( elevationChooseComposite, maxText );      
+      }
+  } );
     
+    maxText.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        String tempText = maxText.getText();
+
+        Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" );
+        Matcher m = p.matcher( tempText );
+
+        if( !m.matches() )
+        {
+          maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        }
+        else
+        {
+          maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          tempText.replaceAll( ",", "." );
+        }
+      }
+    } );
+ 
+    final Text minText = new Text( elevationChooseComposite, SWT.BORDER );
+    double minElevation = ElevationColorControl.getMinElevation();
+    String stringMin = String.valueOf( minElevation );
+    minText.setText( stringMin );
+
+    minText.addKeyListener( new KeyAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void keyPressed( KeyEvent event )
+      {
+        switch( event.keyCode )
+        {
+          case SWT.CR:
+            checkMinTextValue( elevationChooseComposite, minText );
+        }
+      }  
+    } );
     
+    minText.addFocusListener( new FocusListener ()
+    {
+
+      public void focusGained( FocusEvent e )
+      {
+        // TODO Auto-generated method stub       
+      }
+
+      @SuppressWarnings("synthetic-access")
+      public void focusLost( FocusEvent e )
+      {
+        checkMinTextValue( elevationChooseComposite, minText );      
+      }  
+  } );
+
+    minText.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        String tempText = minText.getText();
+
+        Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" );
+        Matcher m = p.matcher( tempText );
+
+        if( !m.matches() )
+        {
+          minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        }
+        else
+        {
+          minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          tempText.replaceAll( ",", "." );
+        }
+      }
+    } );
     
-    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, "Max Farbe", smallComposite_1 );
+    final Composite colorChooseComposite = new Composite( optionsColorGroup, SWT.NONE );
+    colorChooseComposite.setLayout( new GridLayout( 1, false ) );
+
+    GridData gridDataColorChooseComposite = new GridData( SWT.FILL, SWT.UP, false, false );
+    gridDataColorChooseComposite.horizontalSpan = 2;
+    colorChooseComposite.setLayoutData( gridDataColorChooseComposite );
+
+    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, "Max Farbe", colorChooseComposite );
     maxColorSelector.setPreferenceStore( preferenceStore_ );
     maxColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     maxColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
     maxColorSelector.load();
-    
-    final FormData optionsColorFormDataMax = new FormData();
-    optionsColorFormDataMax.top = new FormAttachment( 0, 5 );
-    optionsColorFormDataMax.left = new FormAttachment( 0, 5 );
-    smallComposite_1.setLayoutData( optionsColorFormDataMax );
-    smallComposite_1.pack();
+    Button buttonMax = maxColorSelector.getColorSelector().getButton();
+    buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
 
-    final Composite smallComposite_2 = new Composite( optionsColorGroup, SWT.FLAT );
-    smallComposite_2.setLayout( new GridLayout( 1, false ) );
-    final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, "Min Farbe", smallComposite_2 );
+    final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, "Min Farbe", colorChooseComposite );
     minColorSelector.setPreferenceStore( preferenceStore_ );
     minColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     minColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
     minColorSelector.load();
-    final FormData optionsColorFormDataMiss = new FormData();
-    optionsColorFormDataMiss.top = new FormAttachment( 0, 5 );
-    optionsColorFormDataMiss.left = new FormAttachment( smallComposite_1, 5 );
-    smallComposite_2.setLayoutData( optionsColorFormDataMiss );
-    smallComposite_2.pack();
+    Button buttonMin = minColorSelector.getColorSelector().getButton();
+    buttonMin.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
 
-    final Composite smallComposite_3 = new Composite( optionsColorGroup, SWT.FLAT );
-    smallComposite_3.setLayout( new GridLayout( 1, false ) );
-    noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, "Fehlfarbe", smallComposite_3 );
+    noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, "Fehlfarbe", colorChooseComposite );
     noColorSelector.setPreferenceStore( preferenceStore_ );
     noColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     noColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
     noColorSelector.load();
-    final FormData optionsColorFormData = new FormData();
-    optionsColorFormData.top = new FormAttachment( smallComposite_1, 5 );
-    optionsColorFormData.left = new FormAttachment( 0, 5 );
-    smallComposite_3.setLayoutData( optionsColorFormData );
-    smallComposite_3.pack();
-
-    Label colorNumberCells = new Label( optionsColorGroup, SWT.NONE );
-    colorNumberCells.setText( "Anzahl Farbklassen" );
-    final FormData optionsColorFormDataNumClasses = new FormData();
-    optionsColorFormDataNumClasses.left = new FormAttachment( 0, 5 );
-    optionsColorFormDataNumClasses.top = new FormAttachment( smallComposite_3, 8 );
-    colorNumberCells.setLayoutData( optionsColorFormDataNumClasses );
+    Button buttonNo = noColorSelector.getColorSelector().getButton();
+    buttonNo.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
     
-    final Spinner spinNumColorClasses = new Spinner( optionsColorGroup, SWT.BORDER );
+
+    final Composite spinnerComposite = new Composite( optionsColorGroup, SWT.NONE );
+    spinnerComposite.setLayout( new GridLayout( 2, false ) );
+
+    GridData gridDataSpinnerComposite = new GridData( SWT.FILL, SWT.UP, false, false );
+    gridDataSpinnerComposite.horizontalSpan = 2;
+    spinnerComposite.setLayoutData( gridDataSpinnerComposite );
+    
+    final Label colorNumberCells = new Label( spinnerComposite, SWT.NONE );
+    colorNumberCells.setText( "Anzahl Farbklassen" );
+    
+    final Spinner spinNumColorClasses = new Spinner( spinnerComposite, SWT.NONE );
+    toolkit.adapt( spinNumColorClasses );
     spinNumColorClasses.setMinimum( 0 );
     spinNumColorClasses.setIncrement( 1 );
-    spinNumColorClasses.setMaximum( 50 );
+    spinNumColorClasses.setMaximum( 20 );
     spinNumColorClasses.setSelection( ElevationColorControl.getColorIndex() );
     spinNumColorClasses.addSelectionListener( new SelectionAdapter()
     {
@@ -530,28 +703,19 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
           numOfClasses = 1;
         ElevationColorControl.setColorIndex( numOfClasses );
         preferenceStore_.setValue( LINE_COLOR_INDEX, ElevationColorControl.getColorIndex() );
-        System.out.println( "Auswahl" + numOfClasses );
+        // System.out.println( "Auswahl" + numOfClasses );
         windowCanvas.redraw();
       }
     } );
-
-    final FormData optionsColorFormDataSpinNumColorClasses = new FormData();
-    optionsColorFormDataSpinNumColorClasses.left = new FormAttachment( colorNumberCells, 5 );
-    optionsColorFormDataSpinNumColorClasses.top = new FormAttachment( smallComposite_3, 8 );
-    spinNumColorClasses.setLayoutData( optionsColorFormDataSpinNumColorClasses );
-
-    final Label transparencyLabel = new Label( optionsColorGroup, SWT.NONE );
+    
+    final Label transparencyLabel = new Label( spinnerComposite, SWT.NONE );
     transparencyLabel.setText( "Transparenz" );
-    final FormData optionsColorFormDataTransparency = new FormData();
-    optionsColorFormDataTransparency.left = new FormAttachment( 0, 5 );
-    optionsColorFormDataTransparency.top = new FormAttachment( spinNumColorClasses, 8 );
-    transparencyLabel.setLayoutData( optionsColorFormDataTransparency );
-
-    final Spinner spinTransparency = new Spinner( optionsColorGroup, SWT.BORDER );
+    
+    final Spinner spinTransparency = new Spinner( spinnerComposite, SWT.NONE );
     toolkit.adapt( spinTransparency );
     spinTransparency.setMinimum( 0 );
     spinTransparency.setIncrement( 10 );
-    spinTransparency.setMaximum( 100 );
+    spinTransparency.setMaximum( 99 );
     spinTransparency.setSelection( ElevationColorControl.getTransparencyIndex() );
     spinTransparency.addSelectionListener( new SelectionAdapter()
     {
@@ -565,33 +729,21 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       }
     } );
 
-    final FormData optionsColorFormData1 = new FormData();
-    optionsColorFormData1.left = new FormAttachment( colorNumberCells, 5 );
-    optionsColorFormData1.top = new FormAttachment( spinNumColorClasses, 8 );
-    spinTransparency.setLayoutData( optionsColorFormData1 );
-
-    Button applyColors = new Button( optionsColorGroup, SWT.NONE );
-    applyColors.addSelectionListener( new SelectionAdapter()
+    m_applyColors = toolkit.createButton( spinnerComposite, "", SWT.NONE );
+    m_applyColors.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
-      {
+      {      
         redrawElevationLayer();
         windowCanvas.redraw();
       }
     } );
-
-    final FormData optionsColorFormData4 = new FormData();
-    applyColors.setToolTipText( "Farben übernehmen" );
+    m_applyColors.setToolTipText( "Farben übernehmen" );
     image_Apply = new Image( optionsColorGroup.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/ok.gif" ).getImageData() );
-    applyColors.setImage( image_Apply );
-    optionsColorFormData4.left = new FormAttachment( 0, 5 );
-    optionsColorFormData4.bottom = new FormAttachment( 85, 5 );
-
-    applyColors.setLayoutData( optionsColorFormData4 );
+    m_applyColors.setImage( image_Apply );
     windowCanvas.redraw();
-
   }
 
   private Canvas createCanvas( Composite parent, int style, PaintListener pl )
@@ -604,11 +756,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     return c;
   }
 
-  private Canvas createCanvas( Composite parent, PaintListener pl )
-  {
-    return createCanvas( parent, SWT.NONE, pl );
-  }
-
+  
   private final void redrawElevationLayer( )
   {
     IKalypsoFeatureTheme elevationTheme = dataModel.getElevationTheme();
@@ -641,6 +789,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
   /**
    * Returns java.awt Color for RGB
+   * 
    * @param RGB
    * @return java.awt.Color
    */
@@ -648,11 +797,12 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
   {
     return new java.awt.Color( rgb.red, rgb.green, rgb.blue );
   }
-  
+
   /**
    * Returns RGB for java.awt Color
+   * 
    * @param java.awt.Color
-   * @return RGB  
+   * @return RGB
    */
   static public final RGB makeRGB( java.awt.Color color )
   {
@@ -662,8 +812,9 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
   /**
    * Returns Color from Preference Store of this Plugin with Key.
+   * 
    * @param RGB
-   * @return java.awt.Color  
+   * @return java.awt.Color
    */
   static public final java.awt.Color getThisColor( String key )
   {
@@ -675,4 +826,77 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     return makeAWTColor( (PreferenceConverter.getColor( preferenceStore_, key )) );
   }
 
+  private void checkMinTextValue( final Composite elevationChooseComposite, final Text minText )
+  {
+    String tempText = minText.getText();
+
+    Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" );
+    Matcher m = p.matcher( tempText );
+
+    if( !m.matches() )
+    {
+      minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+    }
+    else
+    {
+      minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      tempText.replaceAll( ",", "." );
+
+      Double db = new Double( tempText );
+      if( db < dataModel.getElevationModelSystem().getMinElevation() )
+      {
+        db = dataModel.getElevationModelSystem().getMinElevation() ;
+        minText.setText( db.toString());
+      }
+      else if( db >= dataModel.getElevationModelSystem().getMaxElevation() )
+      {
+        db = dataModel.getElevationModelSystem().getMinElevation() ;
+        minText.setText( db.toString());
+      }
+      m_minElevationBorder = db;
+      ElevationColorControl.setMinElevation( m_minElevationBorder );
+      preferenceStore_.setValue( ELEV_MIN, m_minElevationBorder );
+      m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
+      windowCanvas.redraw();
+      m_applyColors.setSelection( true );
+      m_minTextLabel.setText( String.format( "%.3f",db));
+    }
+  }
+
+  private void checkMaxTextValue( final Composite elevationChooseComposite, final Text maxText )
+  {
+    String tempText = maxText.getText();
+
+    Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" );
+    Matcher m = p.matcher( tempText );
+
+    if( !m.matches() )
+    {
+      maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+    }
+    else
+    {
+      maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      tempText.replaceAll( ",", "." );
+
+      Double db = new Double( tempText );
+      if( db > dataModel.getElevationModelSystem().getMaxElevation() )
+      {
+        db = dataModel.getElevationModelSystem().getMaxElevation() ;
+        maxText.setText( db.toString());
+      }
+      else if( db <= dataModel.getElevationModelSystem().getMinElevation() )
+      {
+        db = dataModel.getElevationModelSystem().getMaxElevation() ;
+        maxText.setText( db.toString());
+      }
+      m_maxElevationBorder = db;
+      ElevationColorControl.setMaxElevation( m_maxElevationBorder );
+      preferenceStore_.setValue( ELEV_MAX, m_maxElevationBorder );
+      m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
+      windowCanvas.redraw();
+      m_maxTextLabel.setText( String.format( "%.3f",db));
+    }
+  }
+  
 }

@@ -208,6 +208,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( 0 ).getGreen();
           blue = m_colorList.get( 0 ).getBlue();
         }
+        final Color rgbColor = new Color( red, green, blue, 100 );
+
+        return rgbColor;
       }
 
       /* check, if the elevation is less than the specified minimum */
@@ -226,6 +229,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( (m_numOfClasses - 1) ).getGreen();
           blue = m_colorList.get( (m_numOfClasses - 1) ).getBlue();
         }
+        final Color rgbColor = new Color( red, green, blue, 100 );
+
+        return rgbColor;
       }
     }
     final Color rgbColor = new Color( red, green, blue, m_transparency );
@@ -237,6 +243,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   {
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
+    fillColorList();
   }
 
   /**
@@ -267,6 +274,17 @@ public class SimpleElevationColorModel implements IElevationColorModel
   {
     float[] val = getHSB( elevation );
     return new float[] { Color.getHSBColor( val[0], val[1], val[2] ).getRed(), Color.getHSBColor( val[0], val[1], val[2] ).getGreen(), Color.getHSBColor( val[0], val[1], val[2] ).getBlue() };
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getElevationMinMax(double, double)
+   */
+  public double[] getElevationMinMax( )
+  {
+    double[] values = new double [2];
+    values[0] = m_minElevation;
+    values[1] = m_maxElevation;
+    return values;
   }
 
 }

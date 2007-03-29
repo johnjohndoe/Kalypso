@@ -80,6 +80,10 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
 
   private static boolean minMaxStatus = DEFAULT_MINMAX;
 
+  private static double m_maxElevation;
+
+  private static double m_minElevation;
+
   /* int colors from preferency store */
   static
   {
@@ -132,6 +136,11 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     return new SimpleElevationColorModel( minElevation, maxElevation, getMinColor(), getMaxColor(), getNoElevationColor(), getTransparencyIndex(), getColorIndex(), getMinMaxStatus() );
   }
 
+  public static final IElevationColorModel getColorModel( )
+  {
+    return new SimpleElevationColorModel( m_minElevation, m_maxElevation, getMinColor(), getMaxColor(), getNoElevationColor(), getTransparencyIndex(), getColorIndex(), getMinMaxStatus() );
+  }
+  
   public static void setBaseColor( Color baseColor1 )
   {
     ElevationColorControl.m_baseColor = baseColor1;
@@ -203,4 +212,25 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
   {
     ElevationColorControl.transparencyIndex = transparencyIndex1;
   }
+  
+  public static void setMaxElevation( double max )
+  {
+    m_maxElevation = max;
+  }
+  
+  public static void setMinElevation( double min )
+  {
+    m_minElevation = min;
+  }
+  
+  public static double getMaxElevation(  )
+  {
+    return m_maxElevation;
+  }
+  
+  public static double getMinElevation( )
+  {
+    return m_minElevation;
+  }
+  
 }

@@ -109,16 +109,13 @@ public class SurfacePatchVisitableDisplayElement
     {
       ascElevationModel=(SurfacePatchVisitable)elevationProvider;
       colorModel = 
-        ElevationColorControl.getColorModel( 
-                  elevationProvider.getMinElevation(), 
-                  elevationProvider.getMaxElevation());
-//        new SimpleElevationColorModel(
-//            elevationProvider.getMinElevation(),
-//            elevationProvider.getMaxElevation(),
-//            Color.GRAY,
-//            0.10,
-//            0.80,
-//            Color.BLUE.brighter().brighter());
+        ElevationColorControl.getColorModel();
+      final double[] values = colorModel.getElevationMinMax();
+      if ( values[0] == 0 &&  values[1] ==0)
+        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+//      ElevationColorControl.getColorModel( 
+//          elevationProvider.getMinElevation(), 
+//          elevationProvider.getMaxElevation());
     }
     else
     {
@@ -201,19 +198,6 @@ public class SurfacePatchVisitableDisplayElement
     }
   }
 
-
-
-  
-//  public void paint( 
-//                  Graphics g, 
-//                  GeoTransform p, 
-//                  double scale, 
-//                  GM_Envelope bbox, 
-//                  boolean selected,
-//                  IElevationColorModel colorModel)
-//  {
-//    paint( g, p, bbox );
-//  }
   
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
@@ -271,48 +255,6 @@ public class SurfacePatchVisitableDisplayElement
     }
   }
   
-  
-  
-//  public void paint( Graphics g, GeoTransform projection,GM_Envelope env )
-//  {
-//    try
-//    {
-//      
-//      Area area = null;
-//      List<GM_Surface> surfaces=null;
-//      List<GM_Position> cellLLCornerList = 
-//          this.ascElevationModel.getCellLLCornerIterator( env );
-//      //TODO patrice remove that from hier
-//      CS_CoordinateSystem crs=ascElevationModel.getCoordinateSystem();
-//      GM_Envelope bbox=null;
-//      double cellSize=ascElevationModel.getCellSize();
-//      Graphics graphics = g;//.create();
-//      SimpleElevationColorModel colorModel = 
-//            new SimpleElevationColorModel(
-//                        ascElevationModel.getMinElevation(),
-//                        ascElevationModel.getMaxElevation(),
-//                        Color.RED,
-//                        0.10,
-//                        0.80,
-//                        Color.WHITE);
-////      g.setPaintMode();
-//      for(GM_Position position:cellLLCornerList)
-//      {
-//        double minx=position.getX();
-//        double miny=position.getY();
-//        bbox = GeometryFactory.createGM_Envelope( minx, miny, minx+cellSize, miny+cellSize ); 
-//        GM_Surface surface= GeometryFactory.createGM_Surface( bbox, crs );
-//        area = calcTargetCoordinates( projection, surface );
-//        g.setColor( colorModel.getColor( position.getZ() ) );
-//        drawPolygon( graphics, area );
-//      }
-////      graphics.dispose();
-//    }
-//    catch (Exception e) 
-//    {
-//      e.printStackTrace();
-//    }
-//  }
   
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
@@ -415,23 +357,6 @@ public class SurfacePatchVisitableDisplayElement
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
-//        color = new Color( red*0, green*0, blue*1, alpha );
-//        g2d.setColor( color );
-//        g2d.setBackground( color );
-        
-        
-//        
-//        GraphicFill gFill = fill.getGraphicFill();
-        
-//        if( gFill != null )
-//        {
-//          BufferedImage texture = gFill.getGraphic().getAsImage( feature );
-//          if( texture != null )
-//          {
-//            Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
-//            g2.setPaint( new TexturePaint( texture, anchor ));
-//          }
-//        }
 
         try
         {
@@ -444,48 +369,6 @@ public class SurfacePatchVisitableDisplayElement
         }
       }
     }
-
-    // only stroke outline, if Stroke-Element is given
-//    if( stroke != null )
-//    {
-//      double opacity = stroke.getOpacity( feature );
-//      if( opacity > 0.01 )
-//      {
-//        Color color = stroke.getStroke( feature );
-//        int alpha = (int) Math.round( opacity * 255 );
-//        int red = color.getRed();
-//        int green = color.getGreen();
-//        int blue = color.getBlue();
-//        color = new Color( red, green, blue, alpha );
-//
-//        g2d.setColor( color );
-//
-//        float[] dash = stroke.getDashArray( feature );
-//
-//        // use a simple Stroke if dash == null or dash length < 2
-//        BasicStroke bs2 = null;
-//        float w = (float) stroke.getWidth( feature );
-//
-//        if( (dash == null) || (dash.length < 2) )
-//        {
-//          bs2 = new BasicStroke( w );
-//        }
-//        else
-//        {
-//          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash, stroke.getDashOffset( feature ) );
-//        }
-//
-//        g2d.setStroke( bs2 );
-//        try
-//        {
-//          g2d.draw( area );
-//        }
-//        catch( Exception e )
-//        {
-//          //  
-//        }
-//      }
-//    }
   }
 
   private PolygonSymbolizer getSymbolizer( )
@@ -546,13 +429,18 @@ public class SurfacePatchVisitableDisplayElement
 //            "\n\televation:"+elevationSample);
         Area area = calcTargetCoordinates( this.projection, surfacePatch );
    //     if (colorModel.getColor( elevationSample )!= null){
-        graphics.setColor( colorModel.getColor( elevationSample ));
-//        drawPolygon( graphics, area );
-        ((Graphics2D)graphics).fill( area );
+        final double[] values = colorModel.getElevationMinMax();
+        if (elevationSample <= values[1] && elevationSample >= values[0])
+        {
+          graphics.setColor( colorModel.getColor( elevationSample ));
         
-        java.awt.Stroke bs2= new BasicStroke(3);
-        ((Graphics2D)graphics).setStroke( bs2 );
-        ((Graphics2D)graphics).draw(  area );
+//        drawPolygon( graphics, area );
+          ((Graphics2D)graphics).fill( area );
+        
+          java.awt.Stroke bs2= new BasicStroke(3);
+          ((Graphics2D)graphics).setStroke( bs2 );
+          ((Graphics2D)graphics).draw(  area );
+        }
     }
     catch (Exception e) 
     {

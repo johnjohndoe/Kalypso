@@ -52,4 +52,6 @@ public interface IColorModelPreferenceConstants
   public String LINE_COLOR_INDEX = "LINE_NO_CLASSES";
   public String LINE_TRANSPARENCY = "LINE_TRANSPARENCY";
   public String LINE_MIN_MAX = "LINE_MIN_MAX";
+  public String ELEV_MAX = "ELEV_MAX";
+  public String ELEV_MIN = "ELEV_MIN";
 }
