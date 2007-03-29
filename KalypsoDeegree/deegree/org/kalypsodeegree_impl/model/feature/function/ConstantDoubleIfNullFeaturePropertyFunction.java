@@ -42,31 +42,24 @@ package org.kalypsodeegree_impl.model.feature.function;
 
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * This function property simply compares a value whith the value of a property.
+ * This function property returns a constant as double if the original value is null.
  * <p>
  * Parameters:
  * <ul>
- * <li>compareToValue (Double): The value to be compared with.</li>
- * <li>compareValueProperty (String): Property which should be compared.</li>
+ * <li>value (Double): The value to return.</li>
  * </ul>
- * </p>
+ * </p>*
  * 
  * @author thuel2
  */
-public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
+public class ConstantDoubleIfNullFeaturePropertyFunction extends FeaturePropertyFunction
 {
-
-  private Object m_compareToValue;
-
-  private QName m_compareValueName = null;
+  private Double m_value;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -75,18 +68,7 @@ public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
   public void init( Map<String, String> properties )
   {
 
-    m_compareToValue = Double.valueOf( properties.get( "compareToValue" ) );
-    final String compareValueProperty = properties.get( "compareValueProperty" );
-
-    try
-    {
-      m_compareValueName = compareValueProperty == null ? null : QName.valueOf( compareValueProperty );
-    }
-    catch( final IllegalArgumentException e )
-    {
-      // ignore
-    }
-
+    m_value = Double.valueOf( (properties.get( "value" )).toString() );
   }
 
   /**
@@ -95,19 +77,10 @@ public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
    */
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
-    if( m_compareValueName == null )
-      return null;
+    if( currentValue == null )
+      return m_value;
 
-    final IFeatureType featureType = feature.getFeatureType();
-    final IPropertyType compareValueProperty = featureType.getProperty( m_compareValueName );
-    if( compareValueProperty == null )
-      return null;
-
-    final Object propCompareValue = feature.getProperty( compareValueProperty );
-    if( propCompareValue == null )
-      return null;
-
-    return propCompareValue.equals( m_compareToValue );
+    return currentValue;
   }
 
   /**
@@ -117,6 +90,7 @@ public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
   public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {
 
-    return null;
+    return valueToSet;
   }
+
 }
