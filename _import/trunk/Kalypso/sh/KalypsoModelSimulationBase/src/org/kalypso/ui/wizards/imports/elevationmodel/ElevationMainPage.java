@@ -107,7 +107,7 @@ public class ElevationMainPage extends WizardPage
 
     // Coordinate system combo box
     Label coordinateLabel = new Label( container, SWT.NONE );
-    coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
+    coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) ); //$NON-NLS-1$
     coordinateLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
 
     coordinateSystem_Combo = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
@@ -122,7 +122,7 @@ public class ElevationMainPage extends WizardPage
 
     final Label nameForFile = new Label( container, SWT.NONE );
     nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
-    nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.7" ) );
+    nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) );
     nameForFileText = new Text( container, SWT.BORDER );  
 
    
@@ -136,14 +136,14 @@ public class ElevationMainPage extends WizardPage
 
     final Label descriptionForFile = new Label( container, SWT.NONE );
     descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_BEGINNING ) );
-    descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.8" ) ); //$NON-NLS-1$
+    descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
     
     descriptionForFileArea = new Text( container, SWT.BORDER | SWT.MULTI );
     GridData gridData2 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     gridData2.horizontalSpan = 2;
     gridData2.heightHint = 100;
     descriptionForFileArea.setLayoutData( gridData2 );
-    descriptionForFileArea.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.9" ) );
+    descriptionForFileArea.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) );
     initContents();    
   }
 
