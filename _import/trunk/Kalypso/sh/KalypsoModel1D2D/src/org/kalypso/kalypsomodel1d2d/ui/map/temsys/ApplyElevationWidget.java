@@ -47,10 +47,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -64,28 +61,21 @@ import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * 

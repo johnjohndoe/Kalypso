@@ -393,4 +393,14 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
     return minElevation;
   }
 
+
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
+   */
+  public void setCoordinateSystem( String coordinateSystem )
+  {    
+   // TODO Has to Do      
+  }
+
 }

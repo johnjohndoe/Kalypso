@@ -110,6 +110,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
     super.setDescription(desc);
 
   }
+  
 
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
@@ -188,6 +189,14 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
    */
   public double getMinElevation( )
   {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
+   */
+  public void setCoordinateSystem( String coordinateSystem )
+  {    
     throw new UnsupportedOperationException();
   }
 }

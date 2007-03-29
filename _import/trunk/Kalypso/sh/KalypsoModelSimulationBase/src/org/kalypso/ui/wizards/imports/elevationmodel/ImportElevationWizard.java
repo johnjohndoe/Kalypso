@@ -48,11 +48,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.net.*;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -153,6 +153,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       final String setFileDescription = mPage.getDescriptionForFileArea();
       final String defaultText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" );
       final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.10" );
+      final String selectedCoordinateSystem = mPage.getCoordinateSystem();
 
       getContainer().run( true, true, new IRunnableWithProgress()
       {
@@ -213,10 +214,18 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             {
               tem.setDescription( replaceText );
             }
+            
+            if (selectedCoordinateSystem.compareTo("")!=0)
+            {
+              tem.setCoordinateSystem( selectedCoordinateSystem );
+            }
+            
             cmdWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( cmdWorkspace, temSys.getWrappedFeature(), tem.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             pool.saveObject( cmdWorkspace, new SubProgressMonitor( monitor, 1 ) );
           }
+          
+          
           catch( Exception e )
           {
             e.printStackTrace();
@@ -224,6 +233,8 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
           }
         }
       } );
+      
+      
     }
     catch( Throwable th )
     {

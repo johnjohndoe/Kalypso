@@ -92,5 +92,7 @@ public interface IElevationProvider
    * @return the maximal elevation of this provider as double 
    */
   public double getMaxElevation();
+  
+  public void setCoordinateSystem(String coordinateSystem);  
 
 }

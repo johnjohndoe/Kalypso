@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -57,6 +60,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate;
+import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 
@@ -72,6 +77,7 @@ public class ImportElevationHandler extends WorkflowCommandHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
@@ -115,6 +121,26 @@ public class ImportElevationHandler extends WorkflowCommandHandler
       // wizard.initModelProperties( data );
       if( wizardDialog.open() == Window.OK )
       {
+//        try
+//        {
+//          SelectWidgetHandler handler = new SelectWidgetHandler();
+//          Map<String, String> newParameterMap = new HashMap<String,String>();
+//          Map parameters = event.getParameters();
+//          newParameterMap.putAll( parameters );
+//          newParameterMap.put(SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS,
+//              "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget");
+//          newParameterMap.put(SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID,
+//              "org.kalypso.model1d2d");
+//          handler.setInitializationData( null, null, newParameterMap );
+//          ExecutionEvent exc =  new ExecutionEvent(event.getCommand(),
+//              newParameterMap,event.getTrigger(),event.getApplicationContext());
+//          handler.execute(exc);
+//        }
+//        catch(Throwable th)
+//        {
+//          th.printStackTrace();
+//        }
+        
         return Status.OK_STATUS;
       }
       else

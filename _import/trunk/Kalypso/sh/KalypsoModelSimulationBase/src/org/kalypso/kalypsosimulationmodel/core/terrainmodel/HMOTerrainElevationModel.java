@@ -243,4 +243,12 @@ public class HMOTerrainElevationModel
     return minElevation;
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
+   */
+  public void setCoordinateSystem( String coordinateSystem )
+  {
+    // TODO    
+  }
+
 }

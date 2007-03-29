@@ -107,7 +107,7 @@ public class ElevationMainPage extends WizardPage
 
     // Coordinate system combo box
     Label coordinateLabel = new Label( container, SWT.NONE );
-    coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) ); //$NON-NLS-1$
+    coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.12" ) ); //$NON-NLS-1$
     coordinateLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
 
     coordinateSystem_Combo = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
@@ -127,11 +127,13 @@ public class ElevationMainPage extends WizardPage
 
    
     GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING);
-    gridData.horizontalSpan = 1;
+    gridData.horizontalSpan = 2;
     nameForFileText.setLayoutData( gridData );
     
-    statusText = new Label( container, SWT.NONE );
-    statusText.setText("Give in a Name else file name will be set as default name");
+//    statusText = new Label( container, SWT.NONE );
+//    statusText.setText("Enter a Name for Elevation Model");
+//    gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//    statusText.setLayoutData( gridData );
     
 
     final Label descriptionForFile = new Label( container, SWT.NONE );
@@ -316,5 +318,9 @@ public class ElevationMainPage extends WizardPage
   public String getNameForFile( )
   {
     return nameForFileText.getText();
+  }
+  
+  public String getCoordinateSystem(){
+    return coordinateSystem_Combo.getSelection().toString();
   }
 }

@@ -217,4 +217,13 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
 
     return minEle;
   }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
+   */
+  public void setCoordinateSystem( String coordinateSystem )
+  {
+    // TODO 
+    
+  }
 }
