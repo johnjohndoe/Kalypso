@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
@@ -121,10 +122,45 @@ public class OpsGeoEditAffected
       OpsGeoEditAffected.addAffectedFeaturesByPolyElementGeomChange(
                                          changedFeature, affectedFeatures);
     }
+    else if(TypeInfo.isElement1DFeature( changedFeature ))
+    {
+      OpsGeoEditAffected.addAffectedFeaturesByElement1DGeomChange(
+                                                    changedFeature, 
+                                                    affectedFeatures);
+    }
     else
     {
       throw new RuntimeException(
           "Moving this type of node is not supported:"+changedFeature);
+    }
+  }
+
+  /**
+   * To get the element affected by a change of the geometry of a 1D element
+   */
+  private static void addAffectedFeaturesByElement1DGeomChange( Feature changedFeature, List<Feature> affectedFeatures )
+  {
+    final IElement1D element1D= 
+      (IElement1D) changedFeature.getAdapter( IElement1D.class );
+    if(element1D==null)
+    {
+      throw new IllegalArgumentException("feature mus be a 1d element:"+element1D);
+    }
+    
+    IFE1D2DEdge edge = element1D.getEdge(); 
+    if(edge!=null)
+    {
+      Feature wrappedFeature = edge.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
+      affectedFeatures.add(wrappedFeature);
+    }
+    
+    List<IFE1D2DNode> nodes = element1D.getNodes();
+    for(IFE1D2DNode node:nodes)
+    {
+      Feature wrappedFeature = node.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
+      affectedFeatures.add( wrappedFeature );
     }
   }
   

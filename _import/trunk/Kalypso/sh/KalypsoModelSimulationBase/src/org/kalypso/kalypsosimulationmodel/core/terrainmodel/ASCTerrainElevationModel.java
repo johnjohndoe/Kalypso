@@ -98,6 +98,8 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
    * The maximal envelop for the elevation
    */
   private  GM_Envelope maxEnvelope;
+
+  private CS_CoordinateSystem crs = CRS_GAUSS_KRUEGER;
   
   /**
    * Create an elevation provider based on the given asc file, in the specified 
@@ -379,7 +381,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
   public CS_CoordinateSystem getCoordinateSystem( )
   {
     //TODO Patrice introduce the it in the schema
-    return CRS_GAUSS_KRUEGER;
+    return this.crs ;
   }
   
   
@@ -400,7 +402,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
    */
   public void setCoordinateSystem( String coordinateSystem )
   {    
-   // TODO Has to Do      
+       
   }
 
 }

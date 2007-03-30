@@ -208,7 +208,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( 0 ).getGreen();
           blue = m_colorList.get( 0 ).getBlue();
         }
-        final Color rgbColor = new Color( red, green, blue, 100 );
+        final Color rgbColor = new Color( red, green, blue, m_transparency );
 
         return rgbColor;
       }
@@ -229,7 +229,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( (m_numOfClasses - 1) ).getGreen();
           blue = m_colorList.get( (m_numOfClasses - 1) ).getBlue();
         }
-        final Color rgbColor = new Color( red, green, blue, 100 );
+        final Color rgbColor = new Color( red, green, blue, m_transparency );
 
         return rgbColor;
       }

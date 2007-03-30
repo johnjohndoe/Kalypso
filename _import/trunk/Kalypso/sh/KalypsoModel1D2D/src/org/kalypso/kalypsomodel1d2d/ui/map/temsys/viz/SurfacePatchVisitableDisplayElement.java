@@ -108,14 +108,16 @@ public class SurfacePatchVisitableDisplayElement
     if(elevationProvider instanceof SurfacePatchVisitable)
     {
       ascElevationModel=(SurfacePatchVisitable)elevationProvider;
-      colorModel = 
-        ElevationColorControl.getColorModel();
-      final double[] values = colorModel.getElevationMinMax();
-      if ( values[0] == 0 &&  values[1] ==0)
-        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
-//      ElevationColorControl.getColorModel( 
-//          elevationProvider.getMinElevation(), 
-//          elevationProvider.getMaxElevation());
+//      colorModel = 
+//        ElevationColorControl.getColorModel();
+//      final double[] values = colorModel.getElevationMinMax();
+//      if ( values[0] == 0 &&  values[1] ==0)
+//        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+      
+      colorModel =
+        ElevationColorControl.getColorModel( 
+          elevationProvider.getMinElevation(), 
+          elevationProvider.getMaxElevation());
     }
     else
     {
@@ -428,10 +430,10 @@ public class SurfacePatchVisitableDisplayElement
 //            "\n\tsurface:"+surfacePatch+
 //            "\n\televation:"+elevationSample);
         Area area = calcTargetCoordinates( this.projection, surfacePatch );
-   //     if (colorModel.getColor( elevationSample )!= null){
-        final double[] values = colorModel.getElevationMinMax();
-        if (elevationSample <= values[1] && elevationSample >= values[0])
-        {
+//        if (colorModel.getColor( elevationSample )!= null){
+//        final double[] values = colorModel.getElevationMinMax();
+//        if (elevationSample <= values[1] && elevationSample >= values[0])
+//        {
           graphics.setColor( colorModel.getColor( elevationSample ));
         
 //        drawPolygon( graphics, area );
@@ -440,7 +442,7 @@ public class SurfacePatchVisitableDisplayElement
           java.awt.Stroke bs2= new BasicStroke(3);
           ((Graphics2D)graphics).setStroke( bs2 );
           ((Graphics2D)graphics).draw(  area );
-        }
+//        }
     }
     catch (Exception e) 
     {

@@ -9,8 +9,13 @@
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Element1D:sld:default" uri="Element1D.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Junction1D2D:sld:default" uri="Junction1D2D.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:MiddleNode:sld:default" uri="MiddleNode.sld" />
-
-	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:_FlowRelationship:sld:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase_FlowRelationship.sld" />
+	
+	<catalog:system 
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:NativeTerrainElevationModelWrapper:sld:default" 
+		uri="NativeTerrainElevationModelWrapper.sld" />
+	
+	<catalog:system 
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:_FlowRelationship:sld:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase_FlowRelationship.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel:BoundaryCondition:sld:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel.BoundaryCondition.sld" />
 	
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:Timesteps:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.Timesteps.gft" />

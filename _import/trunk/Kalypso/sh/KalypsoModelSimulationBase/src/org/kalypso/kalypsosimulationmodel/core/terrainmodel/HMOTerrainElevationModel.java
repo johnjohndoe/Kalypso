@@ -81,6 +81,8 @@ public class HMOTerrainElevationModel
   private Quadtree triangles;
 
   private Object regionOfInterest;
+
+  private CS_CoordinateSystem crs = CRS_GAUSS_KRUEGER;
  
   public HMOTerrainElevationModel(
                 URL hmoFileURL,
@@ -108,7 +110,7 @@ public class HMOTerrainElevationModel
     union = rings[0].getEnvelopeInternal();
     for(LinearRing ring:rings)
     {
-//      System.out.println("ring:"+ring);
+      System.out.println("ring:"+ring);
       triangleData=new TriangleData(ring);
       Envelope envelopeInternal = ring.getEnvelopeInternal();
       triangles.insert( 
@@ -160,7 +162,7 @@ public class HMOTerrainElevationModel
   public CS_CoordinateSystem getCoordinateSystem( )
   {
     //TODO Patrice this hard coded and not okay put it into the gml    
-    return CRS_GAUSS_KRUEGER;
+    return crs;
   }
 
   /**

@@ -65,10 +65,16 @@ public class KalypsoModelSimulationBaseConsts
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
               "TerrainElevationModelSystem");
+    
     public static final QName SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER = 
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
               "NativeTerrainElevationModelWrapper");
+    
+    public static final QName SIM_BASE_F_SRS_NAME = 
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+              "srsName");
     
     public static final QName SIM_BASE_PROP_FILE_NAME = 
       new QName(

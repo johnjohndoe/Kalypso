@@ -877,7 +877,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     else
     {
       maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText.replaceAll( ",", "." );
+      tempText = tempText.replaceAll( ",", "." );
 
       Double db = new Double( tempText );
       if( db > dataModel.getElevationModelSystem().getMaxElevation() )
