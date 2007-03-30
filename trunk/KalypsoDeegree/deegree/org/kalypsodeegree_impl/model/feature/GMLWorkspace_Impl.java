@@ -571,7 +571,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       else
         list.add( pos, newFeature );
     }
-    else 
+    else
       parent.setProperty( propName, newFeature );
 
     m_indexMap.put( newFeature.getId(), newFeature );
@@ -648,9 +648,20 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       final int maxOccurs = linkProp.getMaxOccurs();
       final List list = (List) srcFE.getProperty( linkProp );
       if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-        list.set( pos, featureID );
+      {
+        if( pos >= 0 )
+        {
+          list.set( pos, featureID );
+        }
+        else
+        {
+          list.add( featureID );
+        }
+      }
       else
+      {
         throw new Exception( "New Feature violates maxOccurs" );
+      }
     }
     else if( srcFE.getProperty( linkProp ) == null )
     {
@@ -662,7 +673,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked features.
+   * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked
+   * features.
    * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String, boolean)
