@@ -41,7 +41,6 @@
 package org.kalypso.ant;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
@@ -55,6 +54,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -121,9 +121,9 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(URL, IUrlResolver, ILogger, IProgressMonitor)
    */
-  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter, final IProgressMonitor monitor )
+  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
   {
     Date forecastFrom = null;
     if( m_forecastFrom != -1 )
@@ -138,11 +138,11 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     if( m_targetObservationDir != null )
     {      
     return new CopyObservationFeatureVisitor( context, resolver, m_targetObservationDir, srcs,
-        m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
+        m_metadata, forecastFrom, forecastTo, logger, m_tokens );
       
     }
     return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs,
-        m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
+        m_metadata, forecastFrom, forecastTo, logger, m_tokens );
   }
 
   public final String getTargetobservation()

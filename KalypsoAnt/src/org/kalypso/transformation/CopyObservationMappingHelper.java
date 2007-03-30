@@ -29,8 +29,6 @@
  */
 package org.kalypso.transformation;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
@@ -138,8 +136,6 @@ public class CopyObservationMappingHelper
   public static void runMapping( final GMLWorkspace workspace, final UrlResolver resolver, final URL srcContext,
       final ILogger logger, Date from, Date forecastStart, Date end, boolean keepForecast )
   {
-    final StringWriter stringWriter = new StringWriter();
-    final PrintWriter writer = new PrintWriter( stringWriter );
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
     {
@@ -161,8 +157,7 @@ public class CopyObservationMappingHelper
     // was set, from the deployed application it was not, however both used
     // exactly the same plugins. Setting it here succeeded however.
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
-        RESULT_TS_OUT_PROP, sources, new Properties(), forecastStart, end, writer, null );
+        RESULT_TS_OUT_PROP, sources, new Properties(), forecastStart, end, logger, null );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
-    logger.log( stringWriter.toString() );
   }
 }

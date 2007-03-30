@@ -42,11 +42,11 @@ package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -62,6 +62,7 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.FolderUtilities;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -121,6 +122,8 @@ public class ObservationResolver extends AbstractTransformation
   protected void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
+    // TODO: check this!
+    
     monitor.beginTask( "Zeitreihen auflösen", 3000 );
 
     // PROPS parsen
@@ -170,8 +173,7 @@ public class ObservationResolver extends AbstractTransformation
         throw new OperationCanceledException();
 
       resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2, targetObsName, targetFolder, start, middle,
-          stop, rangeMode1, rangeMode2, new SubProgressMonitor( monitor, 1000 ), new PrintWriter( msgWriter ),
-          new PrintWriter( logWriter ) );
+          stop, rangeMode1, rangeMode2, new SubProgressMonitor( monitor, 1000 ) );
 
       monitor.done();
     }
@@ -205,11 +207,18 @@ public class ObservationResolver extends AbstractTransformation
   private void resolveTimeseries( final URL baseURL, final Feature[] features, final String sourceName1,
       final String sourceName2, final String targetName, final IFolder targetFolder, final Date start,
       final Date middle, final Date stop, final String rangeMode1, final String rangeMode2,
-      final IProgressMonitor monitor, final PrintWriter msgWriter, final PrintWriter logWriter )
-      throws TransformationException
+      final IProgressMonitor monitor ) throws TransformationException
   {
     if( features.length == 0 )
       return;
+
+    final ILogger logger = new ILogger()
+    {
+      public void log( final Level level, final boolean mainMsg, final String message )
+      {
+        System.out.println( message );
+      }
+    };
 
     final FeatureType featureType = features[0].getFeatureType();
     checkColumn( featureType, sourceName1 );
@@ -248,8 +257,9 @@ public class ObservationResolver extends AbstractTransformation
       catch( final Exception e )
       {
         // migth occur when obs not defined on the server
-        write( "Zeitreihe möglicherweise unbekannt: " + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref(), e
-            .getLocalizedMessage(), msgWriter, logWriter );
+
+        logger.log( Level.WARNING, false, "Zeitreihe möglicherweise unbekannt: "
+            + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref() + "\t" + e.getLocalizedMessage() );
         e.printStackTrace();
         continue;
       }
@@ -287,7 +297,7 @@ public class ObservationResolver extends AbstractTransformation
         TimeserieUtils.setForecast( obs, from2, to2 );
 
         // protocol the observations here and inform the user
-        KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ), msgWriter, logWriter );
+        KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ), logger );
 
         // remove query part if present, href is also used as file name here!
         final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
@@ -313,12 +323,6 @@ public class ObservationResolver extends AbstractTransformation
         // TODO report to user!
       }
     }
-  }
-
-  private static void write( String msg, String desc, PrintWriter msgWriter, PrintWriter logWriter )
-  {
-    msgWriter.println( msg );
-    logWriter.println( desc );
   }
 
   private Date parseRange( final Date start, final Date middle, final Date stop, String rangeMode1,

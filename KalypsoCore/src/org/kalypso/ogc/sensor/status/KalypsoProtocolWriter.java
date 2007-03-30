@@ -40,8 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
-import java.io.PrintWriter;
+import java.util.logging.Level;
 
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -61,33 +62,26 @@ public class KalypsoProtocolWriter
   // not to be instanciated
   }
 
-  /**
-   * @see KalypsoProtocolWriter#analyseValues(IObservation[], ITuppleModel[], PrintWriter, PrintWriter, String)
-   */
   public static void analyseValues( final IObservation observation, final ITuppleModel model,
-      final PrintWriter logWriter, final String summInfo ) throws SensorException
+      final ILogger logger, final String summInfo ) throws SensorException
   {
     analyseValues( new IObservation[]
     { observation }, new ITuppleModel[]
-    { model }, null, logWriter, summInfo );
+    { model }, logger, summInfo );
   }
 
-  /**
-   * @see KalypsoProtocolWriter#analyseValues(IObservation[], ITuppleModel[], PrintWriter, PrintWriter, String)
-   */
   public static void analyseValues( final IObservation observation, final ITuppleModel model,
-      final PrintWriter summaryWriter, final PrintWriter detailsWriter ) throws SensorException
+      final ILogger logger ) throws SensorException
   {
     analyseValues( new IObservation[]
     { observation }, new ITuppleModel[]
-    { model }, summaryWriter, detailsWriter, "" );
+    { model }, logger, "" );
   }
 
   /**
    * Analyses the given tupple models and reports possible errors (according to status of tupples).
    */
-  public static void analyseValues( final IObservation[] observations, final ITuppleModel[] models,
-      final PrintWriter summaryWriter, final PrintWriter detailsWriter, final String summInfo ) throws SensorException
+  public static void analyseValues( final IObservation[] observations, final ITuppleModel[] models, final ILogger logger, final String summInfo ) throws SensorException
   {
     if( observations.length != models.length )
       throw new IllegalArgumentException( "Arrays not same length" );
@@ -140,14 +134,12 @@ public class KalypsoProtocolWriter
                 header += " (" + desc + ")";
               }
 
-              if( summaryWriter != null )
-                summaryWriter.println( header );
-
-              detailsWriter.println( summInfo + header );
-              detailsWriter.println( "Details:" );
+              logger.log( Level.WARNING, true, header );
+              logger.log( Level.WARNING, false, summInfo + header );
+              logger.log( Level.WARNING, false, "Details:" );
             }
 
-            detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true ) + " Grund: " + bf.toString() );
+            logger.log( Level.WARNING, false, ObservationUtilities.dump( models[i], "  ", ix, true ) + " Grund: " + bf.toString() );
           }
         }
       }

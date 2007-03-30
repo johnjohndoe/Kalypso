@@ -36,6 +36,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.xml.bind.Marshaller;
 
@@ -43,6 +44,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.commons.runtime.AntProjectLogger;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -101,14 +103,7 @@ public class GMLWeightingTask extends Task
   {
     try
     {
-      final Task me = this;
-      final ILogger logger = new ILogger()
-      {
-        public void log( String message )
-        {
-          me.log( message );
-        }
-      };
+      final ILogger logger = new AntProjectLogger( getProject() );
       final UrlResolver urlResolver = new UrlResolver();
       // create needed factories
       final ObjectFactory filterFac = new ObjectFactory();
@@ -120,7 +115,7 @@ public class GMLWeightingTask extends Task
       final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_modelURL );
 
       // 1. load srcgml
-      logger.log( " lade Modell " + m_modelURL );
+      logger.log( Level.INFO, false, "Lade Modell " + m_modelURL );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modelURL );
 
       // 2. locate features to process
@@ -149,7 +144,7 @@ public class GMLWeightingTask extends Task
           final Feature sourceFE = workspace.resolveLink( weightFEs[j], m_propRelationSourceFeature );
           if( sourceFE == null )
           {
-            logger.log( "Linked source feature missing in Feature: " + weightFEs[j].getId() );
+            logger.log( Level.WARNING, false, "Linked source feature missing in Feature: " + weightFEs[j].getId() );
 
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
@@ -159,7 +154,7 @@ public class GMLWeightingTask extends Task
           final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
           if( zmlLink == null )
           {
-            logger.log( "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
+            logger.log( Level.WARNING, false, "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
 
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
@@ -186,7 +181,7 @@ public class GMLWeightingTask extends Task
 
         // 11. add mapping to result workspace
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, targetURL.toExternalForm() );
-        logger.log( " Ziel-ZML " + targetURL );
+        logger.log( Level.INFO, false, "Ziel-ZML " + targetURL );
       }
       // 13. do the mapping
       CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, new Date( m_from ),
