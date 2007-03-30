@@ -50,7 +50,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
@@ -133,17 +132,9 @@ public class LogStatusWrapper
   /**
    * @return true if there are some messages for the user
    */
-  public boolean hasMessages()
+  private boolean hasMessages()
   {
     return m_summary.length() > 0;
-  }
-
-  /**
-   * @return Returns the logFile.
-   */
-  public File getLogFile()
-  {
-    return m_logFile;
   }
 
   /**
@@ -154,13 +145,7 @@ public class LogStatusWrapper
     if( !hasMessages() )
       return Status.OK_STATUS;
 
-    // the ErrorDialog cannot show a message which is too long: the dialog's
-    // height would be bigger than the user's monitor. That's why we truncate
-    // the summary string here. If the user wants to see more, he can have
-    // a look at the log file using the 'details' button in the ErrorDialog
-    final String truncatedSummary = StringUtils.left( m_summary, 512 );
-    // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
-    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + "Siehe Details oder Logdatei: "
+    final String msg = LogAnalyzer.shortenMessage( m_summary ) + "\nSiehe Details oder Logdatei: "
         + m_logFile.toString();
 
     return new LogStatus( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, msg, null, m_logFile, m_charsetName );

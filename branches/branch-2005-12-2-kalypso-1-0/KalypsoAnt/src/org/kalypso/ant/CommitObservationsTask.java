@@ -41,7 +41,6 @@
 
 package org.kalypso.ant;
 
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
@@ -55,6 +54,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.simulation.ui.wizards.calculation.modelpages.CommitPrognoseFeatureVisitor;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -84,13 +84,15 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   {
     super( false );
   }
-  
+
   /**
    * @throws InvocationTargetException
+   * 
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
-   *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
+  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger,
       final IProgressMonitor monitor ) throws InvocationTargetException
   {
     try
@@ -113,7 +115,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
     final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
     if( v.getStati().length > 0 )
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
-    
+
     return Status.OK_STATUS;
   }
 

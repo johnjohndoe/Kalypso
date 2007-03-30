@@ -42,13 +42,13 @@ package org.kalypso.ogc.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import javax.xml.bind.JAXBException;
 
@@ -59,6 +59,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -88,7 +89,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final IUrlResolver m_urlResolver;
 
-  private final PrintWriter m_logWriter;
+  private final ILogger m_logger;
 
   private static final String SUMM_INFO = "*** ";
 
@@ -97,7 +98,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private final Date m_forecastTo;
 
   private final Properties m_metadata;
-  
+
   /**
    * Die Liste der Tokens und deren Ersetzung in der Form:
    * <p>
@@ -115,17 +116,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    *          context to resolve relative url
    * @param urlResolver
    *          resolver for urls
-   * @param forecastFrom
-   * @param forecastTo
-   * @param logWriter
-   * @param sources
    * @param metadata
    *          All entries will be added to the target observation
    * @param targetobservation
    */
   public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
       final String targetobservation, final Source[] sources, final Properties metadata, final Date forecastFrom,
-      final Date forecastTo, final PrintWriter logWriter, final String tokens )
+      final Date forecastTo, final ILogger logger, final String tokens )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -135,7 +132,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     m_metadata = metadata;
     m_forecastFrom = forecastFrom;
     m_forecastTo = forecastTo;
-    m_logWriter = logWriter;
+    m_logger = logger;
     m_tokens = tokens;
   }
 
@@ -144,17 +141,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    *          context to resolve relative url
    * @param urlResolver
    *          resolver for urls
-   * @param forecastFrom
-   * @param forecastTo
-   * @param logWriter
-   * @param sources
    * @param metadata
    *          All entries will be added to the target observation
-   * @param targetobservationDir
    */
   public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
       final File targetobservationDir, final Source[] sources, final Properties metadata, final Date forecastFrom,
-      final Date forecastTo, final PrintWriter logWriter, final String tokens )
+      final Date forecastTo, final ILogger logger, final String tokens )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -164,7 +156,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     m_metadata = metadata;
     m_forecastFrom = forecastFrom;
     m_forecastTo = forecastTo;
-    m_logWriter = logWriter;
+    m_logger = logger;
     m_tokens = tokens;
   }
 
@@ -181,13 +173,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       if( targetlink == null )
       {
-        m_logWriter.println( SUMM_INFO + "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
+        m_logger.log( Level.WARNING, true, "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
 
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_logWriter.println( SUMM_INFO + "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
+        m_logger.log( Level.WARNING, true, "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
 
@@ -212,7 +204,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       resultObs.getMetadataList().putAll( m_metadata );
 
       // protocol the observations here and inform the user
-      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logWriter, SUMM_INFO );
+      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger, SUMM_INFO );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
@@ -239,8 +231,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logWriter.println( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
-      m_logWriter.println( e.getLocalizedMessage() );
+      m_logger.log( Level.SEVERE, true, "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() + "\t"
+          + e.getLocalizedMessage() );
     }
 
     return true;
@@ -311,8 +303,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         // it is possible to use the target also as input, e.g. if you want to update just a part of the zml.
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
-          m_logWriter
-              .println( "Hinweis: Zielzeitreihe konnte nicht gleichzeitig als Quelle verwendet werden und wird ignoriert. (kein Fehler)" );
+          m_logger
+              .log( Level.WARNING, false,
+                  "Hinweis: Zielzeitreihe konnte nicht gleichzeitig als Quelle verwendet werden und wird ignoriert. (kein Fehler)" );
         else
           throw new SensorException( e );
       }
