@@ -48,6 +48,7 @@ import junit.framework.TestCase;
 
 import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.commons.diff.DiffUtils;
+import org.kalypso.commons.runtime.AntProjectLogger;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypso.services.calculation.job.ICalcMonitor;
@@ -119,16 +120,7 @@ public class SchwarzeElsterCalcJobTest extends TestCase
   {
     System.out.print( "Checking file: " + file.getName() );
 
-    final ILogger logger = new ILogger()
-    {
-      /**
-       * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
-       */
-      public void log( final String message )
-      {
-        System.out.println( message );
-      }
-    };
+    final ILogger logger = new AntProjectLogger( null );
 
     final boolean failed = DiffUtils.diffUrls( logger, resource, file.toURL() );
     if( failed )

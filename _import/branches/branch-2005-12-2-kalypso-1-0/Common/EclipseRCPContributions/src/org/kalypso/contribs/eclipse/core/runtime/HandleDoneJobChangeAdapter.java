@@ -74,7 +74,8 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
         dialog.open();
       }
     };
-    m_shell.getDisplay().asyncExec( runnable );
+    if( !m_shell.isDisposed() )
+      m_shell.getDisplay().asyncExec( runnable );
 
     super.done( event );
   }
