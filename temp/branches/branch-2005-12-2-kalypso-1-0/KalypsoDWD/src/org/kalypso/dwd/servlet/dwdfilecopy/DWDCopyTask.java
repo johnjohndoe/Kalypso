@@ -100,10 +100,6 @@ class DWDCopyTask extends TimerTask
       /* Check for the file or the base file (this could be a directory). */
       m_fo = m_fsManager.resolveFile( m_URI );
 
-      //DWDFileCopyServlet.LOG.info( "URI: " + m_fo.getName() );
-
-      //DWDFileCopyServlet.LOG.info( "ROOT: " + m_fo.getFileSystem().getRoot() );
-
       if( m_fo.getType() != FileType.FOLDER )
       {
         System.out.println( "The URI " + m_URI + " is no folder." );
@@ -119,18 +115,8 @@ class DWDCopyTask extends TimerTask
         return;
       }
 
-      //DWDFileCopyServlet.LOG.info( "[StartOfFiles]" );
-
-      ///* Traverse through all elements. */
-      //for( int i = 0; i < m_list.length; i++ )
-      //{
-      //  DWDFileCopyServlet.LOG.info( m_list[i].getName().getBaseName().toString() );
-      //}
-
-      //DWDFileCopyServlet.LOG.info( "[EndOfFiles]" );
-
       /* Find the newest file. */
-      newFile = getNewestFile( m_dateFormat );
+      newFile = getNewestFile();
 
       if( newFile == null )
         return;
@@ -154,8 +140,14 @@ class DWDCopyTask extends TimerTask
 
       try
       {
+        final Date newestDate = getDateFromRaster( newFile, m_dateFormat );
+        final Date destFileDate = getDateFromRasterContent( m_destFile );
+
+        DWDFileCopyServlet.LOG.info( "Date of newest file: " + newestDate );
+        DWDFileCopyServlet.LOG.info( "Date of destination file: " + destFileDate );
+        
         // if dest file either does not exist or is not up to date, overwrite with current DWD forecast
-        if( !m_destFile.exists() || m_destFile.lastModified() < newFile.getContent().getLastModifiedTime() )
+        if( destFileDate == null || newestDate.after( destFileDate ) )
         {
           /* Copy the newest file. */
           DWDFileCopyServlet.LOG.info( "Copying ..." );
@@ -251,7 +243,7 @@ class DWDCopyTask extends TimerTask
   /**
    * Find the newest file, via the filename.
    */
-  public FileObject getNewestFile( final SimpleDateFormat df ) throws FileSystemException
+  public FileObject getNewestFile() throws FileSystemException
   {
     if( m_list == null )
       return null;
@@ -267,7 +259,7 @@ class DWDCopyTask extends TimerTask
       if( m_list[i].getType() == FileType.FOLDER )
         continue;
 
-      final Date testdate = getDateFromRaster( file, df );
+      final Date testdate = getDateFromRaster( file, m_dateFormat );
 
       if( testdate == null )
         continue;
@@ -299,9 +291,21 @@ class DWDCopyTask extends TimerTask
     }
     catch( final ParseException e )
     {
-      DWDFileCopyServlet.LOG.warning( "DWD-Forecast filename \"" + file.getName().getBaseName().toString()
+      DWDFileCopyServlet.LOG.fine( "DWD-Forecast filename \"" + file.getName().getBaseName().toString()
           + "\" has not a valid format, should be:" + df.toPattern() );
       return null;
     }
   }
+
+  public Date getDateFromRasterContent( final File destFile )
+  {
+    final String firstLine = DWDRasterHelper.readFirstLine( destFile );
+    DWDFileCopyServlet.LOG.info( "FirstLine of destFile: " + firstLine );
+    
+    if( firstLine == null )
+      return null;
+
+    return DWDRasterHelper.dateFromFirstLine( firstLine );
+  }
+
 }

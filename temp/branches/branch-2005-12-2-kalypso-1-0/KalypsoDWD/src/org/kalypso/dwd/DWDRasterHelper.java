@@ -43,7 +43,6 @@ package org.kalypso.dwd;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,7 +57,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
@@ -80,77 +78,6 @@ public class DWDRasterHelper
   private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
-
-  /**
-   * Return the most recent DWD file from the given folder, or null if nothing found.
-   * 
-   * @param srcDir
-   *          folder to look at
-   * @param prefix
-   *          prefix used for filtering files from source folder
-   * @param df
-   *          dateformat used for parsing the file name and to extract date from it
-   * @param removeOthers
-   *          when true other older dwd forecasts are deleted
-   */
-  public static File getNewestFile( final File srcDir, final String prefix, final SimpleDateFormat df,
-      final boolean removeOthers )
-  {
-    final FileFilter filter = new PrefixFileFilter( prefix );
-    final File[] files = srcDir.listFiles( filter );
-
-    if( files == null )
-      return null;
-
-    File result = null;
-    Date date = null;
-
-    // search newest...
-    for( int i = 0; i < files.length; i++ )
-    {
-      final File file = files[i];
-      if( file.isDirectory() )
-        continue;
-
-      final Date testdate = getDateFromRaster( file, df );
-      if( testdate == null )
-        continue;
-
-      if( result == null )
-      {
-        result = file;
-        date = testdate;
-      }
-      else if( testdate.after( date ) )
-      {
-        result = file;
-        date = testdate;
-      }
-    }
-
-    if( result == null )
-      return null;
-
-    if( removeOthers )
-    {
-      // got it, so now remove others
-      for( int i = 0; i < files.length; i++ )
-      {
-        final File file = files[i];
-        if( !file.isDirectory() )
-        {
-          final Date d = getDateFromRaster( file, df );
-          if( d != null && d.before( date ) )
-          {
-            LOG.info( "Removing old DWD-Forecast file: " + file.getName() );
-            file.delete();
-          }
-        }
-      }
-    }
-
-    return result;
-  }
 
   /**
    * Return the date of the dwd forecast file. The date is coded in the file name.
@@ -295,6 +222,7 @@ public class DWDRasterHelper
           final Date startDate = DATEFORMAT_RASTER.parse( dynamicHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( dynamicHeaderMatcher.group( 2 ) );
           final long hour = Long.parseLong( dynamicHeaderMatcher.group( 3 ) );
+          // ARG: use calendar to add hours to date
           date = new Date( startDate.getTime() + 60 * 60 * 1000 * hour );
           if( key == dwdKey )
           {
@@ -414,6 +342,58 @@ public class DWDRasterHelper
     {
       IOUtils.closeQuietly( reader );
       IOUtils.closeQuietly( writer );
+    }
+  }
+
+  /**
+   * Parses the date from the first line of a lm file.
+   */
+  public static Date dateFromFirstLine( final String line )
+  {
+    final Matcher staticHeaderMatcher = HEADER_DYNAMIC.matcher( line );
+    if( staticHeaderMatcher.matches() )
+    {
+      try
+      {
+        final String dateString = staticHeaderMatcher.group( 1 );
+        System.out.println( "Parsing date string: " + dateString );
+        return DATEFORMAT_RASTER.parse( dateString );
+      }
+      catch( final ParseException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Read the first line from a file.
+   * <p>
+   * Remark: we put this method here instead of one of the FileUtility classes, so we may deploy the DWDServlet without
+   * too many dependencies.
+   * 
+   * @return null, f the file is empty or could not be read.
+   */
+  public static String readFirstLine( final File file )
+  {
+    BufferedReader r = null;
+    try
+    {
+      r = new BufferedReader( new FileReader( file ) );
+      final String result = r.readLine();
+      r.close();
+      return result;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( r );
     }
   }
 }
