@@ -289,6 +289,8 @@ public class Feature_Impl extends AbstractFeature implements Feature
     final int pos = m_featureType.getPropertyPosition( pt );
     if(pos==-1)
     {
+      //if there is not regula property look for virtual
+      //function property
       if(m_featureType.isVirtualProperty( pt ))
       {
         final IFeaturePropertyHandler fsh = getPropertyHandler();
@@ -340,14 +342,15 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public Object getProperty( final QName propQName )
   {
-    /*final */IPropertyType pt = m_featureType.getProperty( propQName );
+    /*final */IPropertyType pt = 
+                m_featureType.getProperty( propQName );
     if( pt == null )
     {
-      pt = m_featureType.getVirtualProperty(propQName);
-      if(pt==null)
-      {
+//      pt = m_featureType.getVirtualProperty(propQName);
+//      if(pt==null)
+//      {
         throw new IllegalArgumentException( "Unknown property: " + propQName );
-      }
+//      }
     }
     return getProperty( pt );
   }
