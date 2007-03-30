@@ -132,7 +132,18 @@ public class FeatureCompositeGFTWrapper
     m_compFeature.setShowOk( false );
     m_compFeature.createControl( composite, SWT.NONE );
 
+    removeListener(workspace);
     addListener( workspace );
+  }
+
+  private void removeListener( CommandableWorkspace workspace )
+  {
+    if (m_compFeature != null && m_ifFtrChLstner != null)
+    {
+      m_compFeature.removeChangeListener( m_ifFtrChLstner );
+      m_ifFtrChLstner = null;
+    }
+    
   }
 
   private void addListener( final CommandableWorkspace workspace )
