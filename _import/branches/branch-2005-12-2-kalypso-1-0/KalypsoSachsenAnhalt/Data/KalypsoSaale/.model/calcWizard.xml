@@ -543,7 +543,7 @@
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 60 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_60"/>
@@ -595,6 +595,33 @@
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 65 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_65"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_65.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;SA_Assi_Saale_05_Abfluesse"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_65.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
@@ -741,8 +768,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -774,8 +801,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -802,8 +829,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -830,8 +857,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -858,8 +885,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -886,8 +913,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -914,8 +941,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -942,8 +969,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -970,8 +997,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -998,12 +1025,13 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Inhalt_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Abgabe - Vorhersage#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Inhalt_gerechnet#color=0x0000ff"/>
+		<!--arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/-->
+		<arg name="timeserie4" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
 		<arg name="timeserie5" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<arg name="timeserie6" value="nameString=Steuerung#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/>
+		<!--arg name="timeserie6" value="nameString=Steuerpegel (%featureprop%)#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/-->
+		<arg name="timeserie6" value="nameColumn=STEUNAME#linkColumn=Steuerung_gerechnet#color=0xa08270"/>
 		<!-- bräunlich, entspricht (160, 130, 70) -->
 		<arg name="timeserie7" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
 		<!-- hell blau, entspricht (160, 255, 255) -->
@@ -1030,8 +1058,8 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -3353,12 +3381,12 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Inhalt_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Abgabe - Vorhersage#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
+		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/-->
+		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Inhalt_gerechnet#color=0x0000ff"/>
+		<!--arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/-->
+		<arg name="timeserie4" value="nameString=Vorhersage#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
 		<arg name="timeserie5" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<arg name="timeserie6" value="nameString=Steuerung#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/>
+		<arg name="timeserie6" value="nameColumn=STEUNAME#linkColumn=Steuerung_gerechnet#color=0xa08270"/>
 		<!-- bräunlich, entspricht (160, 130, 70) -->
 		<arg name="timeserie7" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
 		<!-- hell blau, entspricht (160, 255, 255) -->

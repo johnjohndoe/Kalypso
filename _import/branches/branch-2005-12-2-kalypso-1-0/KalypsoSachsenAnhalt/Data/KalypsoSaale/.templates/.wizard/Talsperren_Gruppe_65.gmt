@@ -9,7 +9,7 @@
             <ns4:style linktype="sld" style="Speicher" ns3:actuate="onRequest" ns3:href="project:/.styles/speicher.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
         <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
-            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_60.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_65.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/.shape/Gewässerflächen#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="seen" ns7:actuate="onRequest" ns7:href="project:/.styles/seen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>

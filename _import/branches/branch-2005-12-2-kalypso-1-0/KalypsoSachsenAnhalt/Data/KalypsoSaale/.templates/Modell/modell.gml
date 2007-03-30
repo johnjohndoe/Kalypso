@@ -9065,7 +9065,7 @@
           <pegel:PNR>579013</pegel:PNR>
           <pegel:Name>Rappbode-TS, TWA</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>65</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9084,7 +9084,7 @@
           <pegel:QGMAX>9999</pegel:QGMAX>
           <pegel:Vorsp>24</pegel:Vorsp>
           <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>0</pegel:QDAT>
+          <pegel:QDAT>1</pegel:QDAT>
           <pegel:VORGP>0</pegel:VORGP>
           <pegel:KUM>0</pegel:KUM>
           <pegel:WMIN>-9999</pegel:WMIN>
@@ -9118,8 +9118,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS, TWA</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4423500.0,5734400.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -19913,8 +19913,8 @@
           <ombrometer:NR>130849</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5225351.383308723,5556724.2987532</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4516737.0,5700002.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19958,8 +19958,8 @@
           <ombrometer:NR>130939</ombrometer:NR>
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5205348.8544760365,5557528.711522516</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4576340.0,5685130.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19973,8 +19973,8 @@
           <ombrometer:NR>110814</ombrometer:NR>
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5245351.809291449,5555920.079894094</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4413100.0,5613950.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20003,8 +20003,8 @@
           <ombrometer:NR>110421</ombrometer:NR>
           <ombrometer:NR-Ersatz>110731</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5185344.222928293,5558333.326236554</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4438700.0,5596400.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20018,8 +20018,8 @@
           <ombrometer:NR>110731</ombrometer:NR>
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5265350.132269883,5555116.046917587</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4441975.0,5582400.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20033,8 +20033,8 @@
           <ombrometer:NR>100844</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5273356.920111481,5608885.081496356</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4486225.0,5603750.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>

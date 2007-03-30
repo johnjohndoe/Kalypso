@@ -641,22 +641,6 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
-    <Wiski fid="Pegel-575402">
-      <name>Kelbra Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575402.zml"/>
-      </lokal>
-      <wiski_vergangenheit/>
-      <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.575401"/>
-      </wiski_zukunft>
-      <wiski_simulation_vergangenheit/>
-      <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.575401"/>
-      </wiski_simulation_zukunft>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
     <Wiski fid="Pegel-575450">
       <name>Nikolausrieth</name>
       <lokal>
