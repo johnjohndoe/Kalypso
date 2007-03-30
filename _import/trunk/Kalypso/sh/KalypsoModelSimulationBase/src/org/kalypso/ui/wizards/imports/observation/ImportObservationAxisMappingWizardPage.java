@@ -84,7 +84,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   {
     super( pageName );
     setTitle( pageName );
-    setDescription( Messages.getString("ImportObservationAxisMappingWizardPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -102,13 +102,13 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     m_topLevel.setLayout( gridLayout );
 
     Label labelSource = new Label( m_topLevel, SWT.NONE );
-    labelSource.setText( Messages.getString("ImportObservationAxisMappingWizardPage.1") ); //$NON-NLS-1$
+    labelSource.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.1") ); //$NON-NLS-1$
     GridData data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelSource.setLayoutData( data );
 
     Label labelTarget = new Label( m_topLevel, SWT.NONE );
-    labelTarget.setText( Messages.getString("ImportObservationAxisMappingWizardPage.2") ); //$NON-NLS-1$
+    labelTarget.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.2") ); //$NON-NLS-1$
     data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelTarget.setLayoutData( data );
@@ -176,8 +176,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       catch( Exception e )
       {
         e.printStackTrace();
-        MessageDialog.openInformation( getShell(), Messages.getString("ImportObservationAxisMappingWizardPage.3"), //$NON-NLS-1$
-            Messages.getString("ImportObservationAxisMappingWizardPage.4") ); //$NON-NLS-1$
+        MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.3"), //$NON-NLS-1$
+            Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.4") ); //$NON-NLS-1$
       }
     }
 

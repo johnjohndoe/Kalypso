@@ -133,7 +133,8 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
 
   protected TimeserieTypeDescription[] getTimeserieDescriptions( )
   {
-    return new TimeserieTypeDescription[] { new TimeserieTypeDescription( "Wasserstand - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ),
+    return new TimeserieTypeDescription[] {
+        new TimeserieTypeDescription( "Wasserstand - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ),
         new TimeserieTypeDescription( "Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
         new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" ),
         new TimeserieTypeDescription( "W/Q - Beziehung", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ) };

@@ -125,7 +125,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     super( pageName, title, titleImage );
     setDescription( Messages.getString("ImportObservationSelectionWizardPage.1") ); //$NON-NLS-1$
-    setTitle( Messages.getString("ImportObservationSelectionWizardPage.2") ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.2") ); //$NON-NLS-1$
     setPageComplete( false );
 
     m_adapter = createNativeAdapters();
@@ -194,7 +194,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void createControlSource( Composite parent )
   {
     Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("ImportObservationSelectionWizardPage.5") ); //$NON-NLS-1$
+    group.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.5") ); //$NON-NLS-1$
 
     GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
@@ -207,7 +207,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     // line 1
     Label label = new Label( group, SWT.NONE );
-    label.setText( Messages.getString("ImportObservationSelectionWizardPage.6") ); //$NON-NLS-1$
+    label.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.6") ); //$NON-NLS-1$
 
     m_textFileSource = new Text( group, SWT.BORDER );
     m_textFileSource.setText( DEFAUL_FILE_LABEL );
@@ -219,7 +219,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_textFileSource.setLayoutData( data1 );
 
     Button button = new Button( group, SWT.PUSH );
-    button.setText( Messages.getString("ImportObservationSelectionWizardPage.7") ); //$NON-NLS-1$
+    button.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.7") ); //$NON-NLS-1$
     GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
@@ -240,7 +240,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     } );
 
     Label formatLabel = new Label( group, SWT.NONE );
-    formatLabel.setText( Messages.getString("ImportObservationSelectionWizardPage.10") ); //$NON-NLS-1$
+    formatLabel.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.10") ); //$NON-NLS-1$
 
     m_formatCombo = new ComboViewer( group, SWT.NONE );
     m_formatCombo.add( m_adapter );
@@ -307,7 +307,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void createControlTarget( Composite parent )
   {
     Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("ImportObservationSelectionWizardPage.11") ); //$NON-NLS-1$
+    group.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.11") ); //$NON-NLS-1$
     GridLayout gridLayout3 = new GridLayout();
     group.setLayout( gridLayout3 );
     GridData data4 = new GridData();
@@ -363,10 +363,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     bottom.setLayout( gridLayout2 );
 
     m_buttonRetainMeta = new Button( bottom, SWT.CHECK );
-    m_buttonRetainMeta.setText( Messages.getString("ImportObservationSelectionWizardPage.12") ); //$NON-NLS-1$
+    m_buttonRetainMeta.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.12") ); //$NON-NLS-1$
     m_buttonRetainMeta.setSelection( true );
     m_buttonAppend = new Button( bottom, SWT.CHECK );
-    m_buttonAppend.setText( Messages.getString("ImportObservationSelectionWizardPage.13") ); //$NON-NLS-1$
+    m_buttonAppend.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.13") ); //$NON-NLS-1$
     m_buttonAppend.setSelection( true );
   }
 
@@ -403,7 +403,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     else
     {
       // m_textFileSource.setText( DEFAUL_FILE_LABEL );
-      error.append( Messages.getString("ImportObservationSelectionWizardPage.14") ); //$NON-NLS-1$
+      error.append( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.14") ); //$NON-NLS-1$
       setPageComplete( false );
     }
     // m_buttonAppend.setEnabled( false );
@@ -427,7 +427,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     if( error.length() > 0 )
       setErrorMessage( error.toString() );
     else
-      setMessage( Messages.getString("ImportObservationSelectionWizardPage.15") ); //$NON-NLS-1$
+      setMessage( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15") ); //$NON-NLS-1$
     fireSelectionChanged();
   }
 

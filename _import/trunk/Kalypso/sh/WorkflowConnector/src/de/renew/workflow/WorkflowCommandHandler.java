@@ -110,6 +110,9 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
+      
+      
       // BUGFIX: use statusFromThrowable instead of always creating an error status, because
       // the thrown exception may be an CoreException containing a CANCEL or INFO status.
       status = StatusUtilities.statusFromThrowable( t, "Problem in internal execution" );

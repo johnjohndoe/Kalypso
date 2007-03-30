@@ -119,8 +119,8 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   @Override
   public boolean performCancel( )
   {
-    ((Transformer)m_operation).unprepare();
-    
+    ((Transformer) m_operation).unprepare();
+
     // m_data.getRoughnessPolygonCollection().clear(); THIS MAKES PROBLEM IN GUI!
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
@@ -145,38 +145,9 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
       m_pageMain.saveDataToModel();
       m_pageSecond.saveDataToModel();
       status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-      // m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
       ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
-      //m_data.getRoughnessPolygonCollection().clear();
       m_data.getRoughnessShapeStaticRelationMap().clear();
       m_data.getRoughnessStaticCollectionMap().clear();
-      // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
-      // IFile ifile = m_szenarioFolder.getFile( "maps/roughness.gmt" );
-      // Gismapview gismapview = GisTemplateHelper.loadGisMapView( ifile );
-      // Layers layers = gismapview.getLayers();
-      // StyledLayerType layer = new StyledLayerType();
-      // final Style style = new Style();
-      //
-      // layer.setName( "Roughness" ); //$NON-NLS-1$
-      // layer.setVisible( true );
-      // layer.setFeaturePath(
-      // "#fid#RoughnessLayerPolygonCollection11709431308431/roughnessLayerMember[RoughnessPolygon]" ); //$NON-NLS-1$
-      // layer.setHref( "project:/szenario/models/terrain.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-      // layer.setType( "simple" ); //$NON-NLS-1$
-      // layer.setLinktype( "gml" ); //$NON-NLS-1$
-      // layer.setActuate( "onRequest" ); //$NON-NLS-1$
-      // layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
-      //
-      // style.setLinktype( "sld" ); //$NON-NLS-1$
-      // style.setStyle( "Roughness style" ); //$NON-NLS-1$
-      // style.setActuate( "onRequest" ); //$NON-NLS-1$
-      // style.setHref( "project:/.metadata/roughness.sld" ); //$NON-NLS-1$
-      // style.setType( "simple" ); //$NON-NLS-1$
-      // layer.getStyle().add( style );
-      // layers.getLayer().add( 0, layer );
-      // gismapview.setLayers( layers );
-      // GisTemplateHelper.saveGisMapView( gismapview, new FileWriter( new File( ifile.getLocationURI() ) ), "UTF-8" );
-      // m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
       m_data.saveUserSelection();
       m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
@@ -184,7 +155,6 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     {
       e.printStackTrace();
     }
-
     return status.isOK();
   }
 

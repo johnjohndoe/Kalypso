@@ -41,21 +41,22 @@
 package org.kalypso.ui.wizards.imports.baseMap;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-
-import javax.xml.bind.JAXBException;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.deegree.services.wms.capabilities.Layer;
+import org.deegree.services.wms.capabilities.Style;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,31 +64,53 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.Gismapview.Layers;
-import org.kalypso.template.types.StyledLayerType;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoServiceConstants;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.views.map.MapView;
+import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
+import org.kalypso.ui.wizard.wms.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+
+enum SelectedPage
+{
+  PageNONE,
+  PageImportIMG,
+  PageImportSHP,
+  PageImportWMS
+}
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Madanagopal
  */
-public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport
+public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport, IKalypsoImportWMSWizard
 {
+  protected SelectedPage m_selectedPage = SelectedPage.PageNONE;
+
   private IStructuredSelection initialSelection;
 
   private IPath m_sourceLocation = null;
 
-  BaseMapMainPage mPage;
-
-  // private String m_projectFolder;
-  //
-  // private IProject m_project;
-
   IFolder m_scenarioFolder;
+
+  private ImportBaseMapWizardMainPage m_PageMain;
+
+  protected ImportBaseMapImportImgPage m_PageImportImg;
+
+//  protected LineShpMainPage m_PageImportShp;
+
+  protected ImportWmsWizardPage m_PageImportWMS;
+
+  private final ArrayList<String> m_catalog = new ArrayList<String>();
+
+  // private ISzenarioDataProvider m_modelProvider;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
@@ -108,6 +131,23 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
+
+    // read service catalog file
+    InputStream is = getClass().getResourceAsStream( "wms.catalog" );
+    try
+    {
+      readCatalog( is );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      m_catalog.clear();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
   }
 
   /**
@@ -115,18 +155,57 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
    */
   public void initModelProperties( IEvaluationContext context )
   {
-    // m_scenarioFolder = (IFolder) context.get( "ScenarioFolder" );
     m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
-    // m_project = (IProject) map.get( "Project" );
-    // m_projectFolder = (String) map.get( "ProjectFolder" );
+    // m_modelProvider = (ISzenarioDataProvider) context.getVariable(
+    // ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
 
   @Override
   public void addPages( )
   {
-    mPage = new BaseMapMainPage();
-    addPage( mPage );
-    mPage.init( initialSelection );
+    m_PageMain = new ImportBaseMapWizardMainPage();
+    m_PageImportImg = new ImportBaseMapImportImgPage();
+//    m_PageImportShp = new LineShpMainPage();
+    m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    m_PageImportImg.init( initialSelection );
+//    m_PageImportShp.init( initialSelection );
+    addPage( m_PageMain );
+    addPage( m_PageImportImg );
+    addPage( m_PageImportWMS );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#canFinish()
+   */
+  @Override
+  public boolean canFinish( )
+  {
+    if( m_selectedPage == SelectedPage.PageNONE )
+      return false;
+    else
+      return getContainer().getCurrentPage().isPageComplete();
+  }
+
+  public ArrayList<String> getCatalog( )
+  {
+    return m_catalog;
+  }
+
+  public void readCatalog( final InputStream is ) throws IOException, NullPointerException
+  {
+    m_catalog.clear();
+
+    // use properties to parse catalog: dont do everything yourself
+    // fixes bug with '=' inside of URLs
+    final Properties properties = new Properties();
+    properties.load( is );
+
+    final Set<Entry<Object, Object>> name = properties.entrySet();
+    for( final Entry<Object, Object> entry : name )
+    {
+      if( entry.getKey().toString().startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
+        m_catalog.add( entry.getValue().toString() );
+    }
   }
 
   /**
@@ -135,21 +214,46 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   @Override
   public boolean performFinish( )
   {
+    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    if( mapView == null )
+    {
+      StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      return false;
+    }
+    final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+    switch( m_selectedPage )
+    {
+      case PageImportIMG:
+        return performFinishIMG( mapView, mapModell );
+
+      case PageImportSHP:
+        return performFinishIMG( mapView, mapModell );
+
+      case PageImportWMS:
+        return performFinishWMS( mapView, mapModell );
+
+      default:
+        return false;
+    }
+  }
+
+  private boolean performFinishIMG( MapView mapView, GisTemplateMapModell mapModell )
+  {
     final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" );
-    final File srcFileImage = new File( mPage.getSourceLocation().toOSString() );
-    final IFile dstFileImage = dstFilePath.getFile( mPage.getSourceLocation().lastSegment() );
+    final File srcFileImage = new File( m_PageImportImg.getSourceLocation().toOSString() );
+    final IFile dstFileImage = dstFilePath.getFile( m_PageImportImg.getSourceLocation().lastSegment() );
     File srcFileGeoreference = null;
     IFile dstFileGeoreference = null;
-    final String extension = mPage.getSourceLocation().getFileExtension();
+    final String extension = m_PageImportImg.getSourceLocation().getFileExtension().toLowerCase();
     if( extension.equalsIgnoreCase( "tif" ) )
     {
-      srcFileGeoreference = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
-      dstFileGeoreference = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
+      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
+      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
     }
     else if( extension.equalsIgnoreCase( "jpg" ) )
     {
-      srcFileGeoreference = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() );
-      dstFileGeoreference = dstFilePath.getFile( mPage.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() );
+      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() );
+      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() );
     }
     else
     {
@@ -159,7 +263,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     {
       final File finalSrcGeoreference = srcFileGeoreference;
       final IFile finalDstGeoreference = dstFileGeoreference;
-      final String coordinateSystem = mPage.getCoordinateSystem();
+      final String coordinateSystem = m_PageImportImg.getCoordinateSystem();
       getContainer().run( true, true, new IRunnableWithProgress()
       {
         public void run( final IProgressMonitor monitor )
@@ -172,39 +276,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
             }
             copy( srcFileImage, dstFileImage, monitor );
             copy( finalSrcGeoreference, finalDstGeoreference, monitor );
-            final IFile file = m_scenarioFolder.getFile( "maps/base.gmt" );
-            m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
-            final Gismapview gismapview = GisTemplateHelper.loadGisMapView( file );
-            final Layers layers = gismapview.getLayers();
-            final StyledLayerType layer = new StyledLayerType();
-
-            layer.setName( getSourceLocation().removeFileExtension().lastSegment() );
-            // layer.setName( "BaseMap" ); //$NON-NLS-1$
-
-            layer.setVisible( true );
-            layer.setFeaturePath( "" ); //$NON-NLS-1$
-            layer.setHref( "file:/" + dstFileImage.getLocation().toOSString() + "#" + coordinateSystem ); //$NON-NLS-1$ //$NON-NLS-2$
-            layer.setType( "simple" ); //$NON-NLS-1$
-            layer.setLinktype( extension.toLowerCase() ); //$NON-NLS-1$
-            layer.setActuate( "onRequest" ); //$NON-NLS-1$
-            layer.setId( "ID_" + (layers.getLayer().size() + 2) ); //$NON-NLS-1$
-            layers.getLayer().add( layer );
-            gismapview.setLayers( layers );
-            // GM_Position max = GisTemplateHelper.getBoundingBox( gismapview ).getMax();
-            // GM_Position min = GisTemplateHelper.getBoundingBox( gismapview ).getMin();
-            // ExtentType extent = new ExtentType();
-            // extent.setLeft( min.getX() );
-            // extent.setBottom( min.getY() );
-            // extent.setRight( max.getX() );
-            // extent.setTop( max.getY() );
-            // extent.setSrs( mPage.getCoordinateSystem() );
-            // gismapview.setExtent( extent );
-            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            GisTemplateHelper.saveGisMapView( gismapview, bos, file.getCharset() );
-            final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-            bos.close();
-            file.setContents( bis, false, true, monitor );
-            m_scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
           }
           catch( final CoreException e )
           {
@@ -214,12 +285,12 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
           {
             e.printStackTrace();
           }
-          catch( final JAXBException e )
-          {
-            e.printStackTrace();
-          }
         }
       } );
+      final String layerName = getSourceLocation().removeFileExtension().lastSegment();
+      final String imgHref = "project:" + File.separator + "imports" + File.separator + getSourceLocation().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
+      final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, extension, null, imgHref );
+      mapView.postCommand( command, null );
     }
     catch( InvocationTargetException e )
     {
@@ -231,6 +302,70 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
       // User canceled, so stop but don’t close wizard.
       e.printStackTrace();
       return false;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return true;
+  }
+
+  private boolean performFinishWMS( MapView mapView, GisTemplateMapModell mapModell )
+  {
+    try
+    {
+      final StringBuffer source = new StringBuffer( KalypsoWMSTheme.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
+      final StringBuffer layers = new StringBuffer( KalypsoWMSTheme.KEY_LAYERS + "=" );
+      final StringBuffer styles = new StringBuffer( KalypsoWMSTheme.KEY_STYLES + "=" );
+      final Layer[] layerArray = m_PageImportWMS.getLayersList();
+
+      if( m_PageImportWMS.isMultiLayer() )
+      {
+        for( int i = 0; i < layerArray.length; i++ )
+        {
+          final Layer layer = layerArray[i];
+          final String layerName = layer.getName();
+          final String styleName;
+          final Style[] styles2 = layer.getStyles();
+          if( styles2.length > 0 )
+            styleName = styles2[0].getName();
+          else
+            styleName = "default";
+          layers.append( layerName );
+          styles.append( styleName );
+          if( i < layerArray.length - 1 )
+          {
+            layers.append( "," );
+            styles.append( "," );
+          }
+        }
+        final String layerName = "Multi" + source;
+        source.append( "#" ).append( layers.toString() );
+        source.append( "#" ).append( styles.toString() );
+        final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() );
+        mapView.postCommand( command, null );
+      }
+      else
+      {
+        for( int i = 0; i < layerArray.length; i++ )
+        {
+          final Layer layer = layerArray[i];
+          final String layerName = layer.getName();
+          final String styleName;
+          final Style[] styles2 = layer.getStyles();
+          if( styles2.length > 0 )
+            styleName = styles2[0].getName();
+          else
+            styleName = "default";
+
+          final String layerTitle = layer.getTitle();
+          source.append( "#" ).append( KalypsoWMSTheme.KEY_LAYERS ).append( "=" ).append( layerName );
+          source.append( "#" ).append( KalypsoWMSTheme.KEY_STYLES ).append( "=" ).append( styleName );
+          final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
+          mapView.postCommand( command, null );
+        }
+
+      }
     }
     catch( Exception e )
     {
@@ -266,7 +401,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   public IPath getSourceLocation( )
   {
     if( m_sourceLocation == null )
-      m_sourceLocation = mPage.getSourceLocation();
+      m_sourceLocation = m_PageImportImg.getSourceLocation();
     return m_sourceLocation;
   }
 

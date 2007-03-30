@@ -92,7 +92,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
     super();
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
-    setWindowTitle( Messages.getString( "ImportObservationWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -108,7 +108,7 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       m_selection = new StructuredSelection( selectedResources );
     }
 
-    setWindowTitle( Messages.getString( "ImportObservationWizard.1" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

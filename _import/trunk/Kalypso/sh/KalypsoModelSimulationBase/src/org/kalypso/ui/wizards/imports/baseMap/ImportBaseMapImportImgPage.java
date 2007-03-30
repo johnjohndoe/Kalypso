@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -31,7 +32,7 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class BaseMapMainPage extends WizardPage
+public class ImportBaseMapImportImgPage extends WizardPage
 {
   private Text sourceFileField;
 
@@ -43,11 +44,11 @@ public class BaseMapMainPage extends WizardPage
 
   List<String> fileExtensions = new LinkedList<String>();
 
-  public BaseMapMainPage( )
+  public ImportBaseMapImportImgPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.description" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ) );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ) );
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.description" ) );
   }
 
   /**
@@ -69,12 +70,12 @@ public class BaseMapMainPage extends WizardPage
     // final GridData gridData = new GridData();
     // gridData.horizontalSpan = 3;
     //    label.setLayoutData( gridData );
-    //label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
+    //label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.4" ) );
+    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.4" ) );
 
     sourceFileField = new Text( container, SWT.BORDER );
     sourceFileField.addModifyListener( new ModifyListener()
@@ -94,10 +95,10 @@ public class BaseMapMainPage extends WizardPage
         browseForSourceFile();
       }
     } );
-    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.BrowseButton" )); //$NON-NLS-1$
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.BrowseButton" )); //$NON-NLS-1$
 
     // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.1" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
     final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
@@ -152,7 +153,10 @@ public class BaseMapMainPage extends WizardPage
   private void initContents( )
   {
     if( initialSourcePath == null )
+    {
+      setPageComplete( false );
       return;
+    }
     IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     IPath path = initialSourcePath;
     if( rootLoc.isPrefixOf( path ) )
@@ -162,7 +166,7 @@ public class BaseMapMainPage extends WizardPage
     setMessage( null );
     setErrorMessage( null );
   }
-
+  
   /**
    * Update the current page complete state based on the field content.
    */
@@ -175,24 +179,24 @@ public class BaseMapMainPage extends WizardPage
     if( sourceLoc == null || !sourceLoc.toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.6" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.6" ) );
       return;
     }
     else if(sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
       return;
     }
     else if(sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment()} ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment()} ) );
       return;
     }
-    setPageComplete( true );
     setMessage( null );
     setErrorMessage( null );
+    setPageComplete( true );
   }
 
   /**
@@ -241,8 +245,8 @@ public class BaseMapMainPage extends WizardPage
    */
   public IPath getSourceLocation( )
   {
-    if(m_sourcePath != null)
-      return m_sourcePath;
+//    if(m_sourcePath != null)
+//      return m_sourcePath;
     String text = sourceFileField.getText().trim();
     if( text.length() == 0 )
       return null;
@@ -255,6 +259,15 @@ public class BaseMapMainPage extends WizardPage
   public String getCoordinateSystem( )
   {
     return cmb_CoordinateSystem.getText();
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
+   */
+  @Override
+  public IWizardPage getNextPage( )
+  {
+    return null;
   }
 
 }

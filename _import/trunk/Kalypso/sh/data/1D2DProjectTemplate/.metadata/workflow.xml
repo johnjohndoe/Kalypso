@@ -236,10 +236,12 @@
 				<ViewContext id="MapView" viewId="org.kalypso.ui.views.mapView" parent="MapContext">
 					<MapViewInputContext id="BaseMap" input="maps/base.gmt" parent="MapContext">
 						<WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						<!-- <WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />					-->
 						<WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+					</MapViewInputContext>
+					<MapViewInputContext id="BaseMap" input="maps/roughness.gmt" parent="MapContext">
+						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 					</MapViewInputContext>
 					<MapViewInputContext id="FenetMap" input="maps/fenet.gmt" parent="MapContext">
 						<ThemeContext id="1dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" parent="FenetMap">
