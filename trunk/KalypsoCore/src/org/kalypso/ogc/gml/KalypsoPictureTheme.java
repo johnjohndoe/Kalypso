@@ -40,6 +40,8 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -90,24 +92,28 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   public KalypsoPictureTheme( final String themeName, final String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel ) throws CoreException
   {
     super( themeName, linktype.toUpperCase(), mapModel );
+    final boolean isRelativePath = source.startsWith( "project:" );
+
     m_themeName = themeName;
     m_linkType = linktype;
     m_source = source;
     m_localCS = cs;
     String[] result = source.split( "#" );
     String wf = null;
+    String extension = "";
     final String baseName = (result[0].substring( 0, (source.lastIndexOf( "." ) + 1) ));
-    if( linktype.equals( "tif" ) )
-      wf = baseName.concat( WorldFileReader.SUFFIX_TIFF );
-    if( linktype.equals( "jpg" ) )
-      wf = baseName.concat( WorldFileReader.SUFFIX_JPG );
-    if( linktype.equals( "png" ) )
-      wf = baseName.concat( WorldFileReader.SUFFIX_PNG );
+    if( linktype.equalsIgnoreCase( "tif" ) )
+      extension = WorldFileReader.SUFFIX_TIFF;
+    if( linktype.equalsIgnoreCase( "jpg" ) )
+      extension = WorldFileReader.SUFFIX_JPG;
+    if( linktype.equalsIgnoreCase( "png" ) )
+      extension = WorldFileReader.SUFFIX_PNG;
     // if( linktype.equals( "gif" ) )
     // {
     // wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) )
     // .concat( SUFFIX_GIF );
     // }
+    wf = baseName.concat( extension );
 
     double ulcx = 0;
     double ulcy = 0;
@@ -116,8 +122,20 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     InputStream wfStream = null;
     try
     {
-      final URL worldFileURL = new URL( wf );
-      wfStream = worldFileURL.openStream();
+      if( isRelativePath )
+      {
+        final IProject project = mapModel.getProject();
+        IFile file = project.getFile( wf.split( ":" )[1] );
+        if( !file.exists() )
+          file = project.getFile( (baseName.concat( extension.toLowerCase() )).split( ":" )[1] );
+        wfStream = file.getContents();
+      }
+      else
+      {
+        final URL worldFileURL = new URL( wf );
+        wfStream = worldFileURL.openStream();
+      }
+
       final WorldFile worldFile = new WorldFileReader().readWorldFile( wfStream );
       m_dx = worldFile.getDx();
       m_dy = worldFile.getDy();
@@ -133,23 +151,29 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
       IOUtils.closeQuietly( wfStream );
     }
 
-    URL imageFileURL = null;
-    try
+    String imageAbsolutePath = "";
+    if( isRelativePath )
     {
-//      new UrlResolver().resolveURL( imageFileURL, baseName );
-      imageFileURL = new URL( source );
+      final IProject project = mapModel.getProject();
+      IFile file = project.getFile( source.split( ":" )[1].split( "#" )[0] );
+      imageAbsolutePath = file.getLocation().toOSString();
     }
-    catch( final MalformedURLException e1 )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Ungültige URL der Datei: " + source ) );
-    }
-    String imagePath = imageFileURL.getPath().substring( 1, imageFileURL.getPath().length() );
-    RenderedOp image = JAI.create( "fileload", imagePath );
+    else
+      try
+      {
+        URL imageFileURL = new URL( source );
+        imageAbsolutePath = imageFileURL.getPath().substring( 1 );
+      }
+      catch( final MalformedURLException e1 )
+      {
+        throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Ungültige URL der Datei: " + source ) );
+      }
+    RenderedOp image = JAI.create( "fileload", imageAbsolutePath );
     m_image = new TiledImage( image, true );
     // TODO: the image keeps does not release the stream onto the tiff
     // maybe we must call image.dispose in order to do this?
     // can we do that here??
-    
+
     // BufferedImage image = m_image.getAsBufferedImage();
     // m_image = image.getAsBufferedImage();
     int height = m_image.getHeight();

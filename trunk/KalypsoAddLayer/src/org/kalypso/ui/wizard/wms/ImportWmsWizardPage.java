@@ -309,7 +309,7 @@ public class ImportWmsWizardPage extends WizardPage
     // inizialize catalog
     // TODO use property file
     // TODO: better: store/retrieve list of url in dialog setting
-    List<String> catalog = ((ImportWmsSourceWizard) getWizard()).getCatalog();
+    List<String> catalog = ((IKalypsoImportWMSWizard) getWizard()).getCatalog();
     if( catalog == null )
       catalog = new ArrayList<String>();
     // fill base-url-combo
