@@ -65,7 +65,7 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 /**
  * @author Kuepferle
  */
-public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportWizard
+public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportWizard, IKalypsoImportWMSWizard
 {
   private ImportWmsWizardPage m_page = null;
 
