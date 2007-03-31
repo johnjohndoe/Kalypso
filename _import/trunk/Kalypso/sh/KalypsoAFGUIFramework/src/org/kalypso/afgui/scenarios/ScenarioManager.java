@@ -50,7 +50,7 @@ public class ScenarioManager implements IScenarioManager
       logger.setUseParentHandlers( false );
   }
 
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
 
   private final List<IScenarioManagerListener> m_listeners = new ArrayList<IScenarioManagerListener>();
 
