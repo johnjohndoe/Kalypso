@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WorkflowModel Plug-in
+Bundle-SymbolicName: de.renew.workflow.model
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.jwsdp
+Export-Package: de.renew.workflow.cases

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.renew.de/workflow/cases" xmlns:rwf="http://www.renew.de/workflow/cases" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
+
+	<complexType name="WorkflowCase">
+		<sequence>
+			<element name="CaseData" type="rwf:CaseData" minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+
+	<complexType name="CaseData">
+		<sequence>
+			<element name="DataElement" type="rwf:CaseDataElement" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="ECaseDataState">
+		<annotation>
+			<appinfo>
+				<jaxb:typesafeEnumClass />
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="UNAVAILABLE" />
+			<enumeration value="AVAILABLE" />
+			<enumeration value="DIRTY" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="CaseDataElement">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="key" type="string" />
+				<attribute name="state" type="rwf:ECaseDataState" />
+			</extension>
+		</simpleContent>
+	</complexType>
+</schema>
