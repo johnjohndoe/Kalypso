@@ -1,6 +1,6 @@
 package de.renew.workflow;
 
-public interface EclipseContextTask extends ConfirmedTask
+public interface CaseTask extends Task
 {
 
   public static final String PARAM_CMD_ID = "commandId";

@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/afgui/scenarios" xmlns:scm="http://www.kalypso.org/afgui/scenarios" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/afgui/scenarios" xmlns:scm="http://www.kalypso.org/afgui/scenarios" xmlns:rwf="http://www.renew.de/workflow/cases" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
+
+	<import namespace="http://www.renew.de/workflow/cases" schemaLocation="platform:/resource/WorkflowModel/etc/binding/workflow/workflow.xsd"/>
 
 	<!-- ==============================================================
 		elements and types
 		============================================================== -->
 
 	<complexType name="Scenario">
-		<sequence>
-			<element name="Name" type="string" maxOccurs="1" minOccurs="1" />
-			<element name="DerivedScenarios" type="scm:ScenarioList" maxOccurs="1" />
-		</sequence>
-		<attribute name="URI" type="ID" use="required" />
-		<attribute name="ParentScenario" type="IDREF">
-			<annotation>
-				<appinfo>
-					<jaxb:property>
-						<jaxb:baseType name="Scenario" />
-					</jaxb:property>
-				</appinfo>
-			</annotation>
-		</attribute>
+		<complexContent>
+			<extension base="rwf:WorkflowCase">
+				<sequence>
+					<element name="Name" type="string" maxOccurs="1" minOccurs="1" />
+					<element name="DerivedScenarios" type="scm:ScenarioList" maxOccurs="1" />
+				</sequence>
+				<attribute name="URI" type="ID" use="required" />
+				<attribute name="ParentScenario" type="IDREF">
+					<annotation>
+						<appinfo>
+							<jaxb:property>
+								<jaxb:baseType name="Scenario" />
+							</jaxb:property>
+						</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
 	</complexType>
 
 	<complexType name="ScenarioList">

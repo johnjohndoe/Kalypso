@@ -13,7 +13,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -21,12 +20,13 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollecti
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
@@ -38,7 +38,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Gernot Belger
  */
-public class SzenarioDataProvider implements ISzenarioDataProvider
+public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 {
   /**
    * Maps the (adapted) feature-wrapper-classes onto the (szenario-relative) path of its gml-file.
@@ -172,7 +172,7 @@ public class SzenarioDataProvider implements ISzenarioDataProvider
 
     /* If nothing changed, return */
     final KeyPoolListener oldListener = m_keyMap.get( wrapperClass );
-    final IPoolableObjectType oldKey = oldListener == null ?  null : oldListener.getKey();
+    final IPoolableObjectType oldKey = oldListener == null ? null : oldListener.getKey();
     if( ObjectUtils.equals( oldKey, newKey ) )
       return;
 
@@ -198,19 +198,19 @@ public class SzenarioDataProvider implements ISzenarioDataProvider
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  public IFeatureWrapper2 getModel( final Class wrapperClass ) throws CoreException
+  public IFeatureWrapper2 getModel( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( wrapperClass );
     return (IFeatureWrapper2) workspace.getRootFeature().getAdapter( wrapperClass );
   }
 
-  public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception
-  {
-    final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
-    modelWorkspace.postCommand( command );
-  }
+  // public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception
+  // {
+  // final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
+  // modelWorkspace.postCommand( command );
+  // }
 
-  private CommandableWorkspace getModelWorkspace( final Class wrapperClass ) throws IllegalArgumentException, CoreException
+  private CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     if( !LOCATION_MAP.containsKey( wrapperClass ) )
       throw new IllegalArgumentException( "No gml-file defined for wrapper class: " + wrapperClass );
@@ -225,12 +225,13 @@ public class SzenarioDataProvider implements ISzenarioDataProvider
     final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
     return workspace;
   }
-  
-  /**
-   * @see org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider#getCommandableWorkspace(java.lang.Class)
-   */
-  public CommandableWorkspace getCommandableWorkspace( Class wrapperClass ) throws IllegalArgumentException, CoreException
-  {
-    return getModelWorkspace( wrapperClass );
-  }
+
+  // /**
+  // * @see org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider#getCommandableWorkspace(java.lang.Class)
+  // */
+  // public CommandableWorkspace getCommandableWorkspace( Class wrapperClass ) throws IllegalArgumentException,
+  // CoreException
+  // {
+  // return getModelWorkspace( wrapperClass );
+  // }
 }

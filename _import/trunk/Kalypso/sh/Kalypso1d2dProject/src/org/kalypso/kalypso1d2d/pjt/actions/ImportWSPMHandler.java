@@ -60,13 +60,14 @@ import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.WorkflowCommandHandler;
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Gernot Belger
@@ -81,7 +82,7 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ISzenarioDataProvider modelProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider modelProvider = (ICaseDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
     final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( IFEDiscretisationModel1d2d.class );
@@ -102,10 +103,12 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     try
     {
       final ICommand discCommand = new EmptyCommand( "WSPM Import", false );
-      modelProvider.postCommand( IFEDiscretisationModel1d2d.class, discCommand );
+      final CommandableWorkspace workspace1 = (CommandableWorkspace) discModel.getWrappedFeature().getWorkspace();
+      workspace1.postCommand( discCommand );
 
+      final CommandableWorkspace workspace2 = (CommandableWorkspace) terrainModel.getWrappedFeature().getWorkspace();
       final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
-      modelProvider.postCommand( ITerrainModel.class, terrainCommand );
+      workspace2.postCommand( terrainCommand );
     }
     catch( final Exception e )
     {

@@ -18,7 +18,8 @@ Require-Bundle:
  org.kalypso.ui,
  org.kalypso.model.wspm.schema;visibility:=reexport,
  org.kalypso.gml.processes,
- org.kalypso.ui.addlayer
+ org.kalypso.ui.addlayer,
+ de.renew.workflow.model
 Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.flowrel,
  org.kalypso.kalypsosimulationmodel.core.discr,

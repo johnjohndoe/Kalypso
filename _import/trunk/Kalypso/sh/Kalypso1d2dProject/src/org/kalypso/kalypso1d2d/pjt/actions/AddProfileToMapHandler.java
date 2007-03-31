@@ -61,10 +61,10 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import de.renew.workflow.WorkflowCommandHandler;
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Gernot Belger
@@ -79,7 +79,7 @@ public class AddProfileToMapHandler extends WorkflowCommandHandler implements IH
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ISzenarioDataProvider modelProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider modelProvider = (ICaseDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );

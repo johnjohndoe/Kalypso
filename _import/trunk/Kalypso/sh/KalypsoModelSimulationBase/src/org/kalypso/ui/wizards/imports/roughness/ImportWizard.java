@@ -18,9 +18,11 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
-import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+
+import de.renew.workflow.cases.ICaseDataProvider;
+
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -68,7 +70,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
    */
   public void initModelProperties( IEvaluationContext context )
   {
-    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider szenarioDataProvider = (ICaseDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     ITerrainModel model;
     try
     {
@@ -119,8 +121,8 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   @Override
   public boolean performCancel( )
   {
-    ((Transformer) m_operation).unprepare();
-
+    ((Transformer)m_operation).unprepare();
+    
     // m_data.getRoughnessPolygonCollection().clear(); THIS MAKES PROBLEM IN GUI!
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
@@ -155,6 +157,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     {
       e.printStackTrace();
     }
+
     return status.isOK();
   }
 

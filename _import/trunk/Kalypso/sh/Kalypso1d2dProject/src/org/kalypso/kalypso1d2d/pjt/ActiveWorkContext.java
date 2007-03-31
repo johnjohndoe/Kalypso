@@ -148,6 +148,10 @@ public class ActiveWorkContext
 
   synchronized public Scenario getCurrentScenario( )
   {
+    if( m_scenarioManager == null )
+    {
+      return null;
+    }
     return m_scenarioManager.getCurrentScenario();
   }
 

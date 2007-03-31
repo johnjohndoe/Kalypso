@@ -15,7 +15,8 @@ Bundle-ClassPath: .,
  lib/renew-2.2dev/plugins/simulator-2.2dev_1.0.jar,
  lib/renew-2.2dev/plugins/util-2.2dev_1.0.jar,
  lib/renew-2.2dev/plugins/workflow-2.2dev_0.6.jar,
- lib/renew-2.2dev/libs/log4j/log4j-1.2.12.jar
+ lib/renew-2.2dev/libs/log4j/log4j-1.2.12.jar,
+ lib/renew-2.2dev/plugins/wfnet-2.2dev_0.6.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: .,
@@ -64,6 +65,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.ide,
- org.kalypso.contribs.eclipsercp
+ org.kalypso.contribs.eclipsercp,
+ de.renew.workflow.model
 Eclipse-LazyStart: true
 Bundle-Activator: de.renew.workflow.WorkflowConnectorPlugin

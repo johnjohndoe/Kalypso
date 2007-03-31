@@ -71,7 +71,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.util.pool.IPoolListener;
@@ -103,8 +102,6 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    */
   private IFolder temFolder;
 
-  private CommandableWorkspace cmdWorkspace;
-
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
@@ -131,7 +128,6 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     terrainModel = (ITerrainModel) selIterator.next();
     modelFolder = (IFolder) selIterator.next();
     temFolder = (IFolder) selIterator.next();
-    cmdWorkspace = (CommandableWorkspace) selIterator.next();
   }
 
   @Override
@@ -220,9 +216,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
             
-            cmdWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( cmdWorkspace, temSys.getWrappedFeature(), tem.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getWrappedFeature(), tem.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
-            pool.saveObject( cmdWorkspace, new SubProgressMonitor( monitor, 1 ) );
+            pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
           }
           
           

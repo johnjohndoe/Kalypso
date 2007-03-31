@@ -15,9 +15,10 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
-import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -59,7 +60,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
    */
   public void initModelProperties( IEvaluationContext context )
   {
-    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider szenarioDataProvider = (ICaseDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     IFEDiscretisationModel1d2d model;
     try
     {

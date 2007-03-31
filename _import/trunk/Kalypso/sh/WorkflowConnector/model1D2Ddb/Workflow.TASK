@@ -1,4 +1,4 @@
-Preprocessing,"Preprocessing",de.renew.workflow.WorkflowTaskImpl,1,"",model
+CreateNewScenario,"Create New Scenario",de.renew.workflow.ConfirmedTaskImpl,1,"",model
 RoughLoad,"Load Roughness Shapes",de.renew.workflow.ConfirmedTaskImpl,1,"",model
 ZoneAreaDef,"Edit Roughness Zones",de.renew.workflow.UnconfirmedTaskImpl,1,"",model
 ZoneParaDef,"Edit Roughness Parameters",de.renew.workflow.UnconfirmedTaskImpl,1,"",model

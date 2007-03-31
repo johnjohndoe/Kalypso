@@ -18,7 +18,7 @@
 				<Name>Import von Höhendaten</Name>
 				</Task>
 			-->
-			<Task context="BaseMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad">
+			<Task context="FenetMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad">
 				<Help>Einladen von Höhendaten (TIN/GRID)</Help>
 				<Name>Import von Höhendaten</Name>
 			</Task>
@@ -236,16 +236,16 @@
 				<ViewContext id="MapView" viewId="org.kalypso.ui.views.mapView" parent="MapContext">
 					<MapViewInputContext id="BaseMap" input="maps/base.gmt" parent="MapContext">
 						<WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-						<!-- <WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />					-->
 						<WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 					</MapViewInputContext>
-					<MapViewInputContext id="BaseMap" input="maps/roughness.gmt" parent="MapContext">
-						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+					<MapViewInputContext id="RoughnessMap" input="maps/roughness.gmt" parent="MapContext">
+						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessMap" />
 					</MapViewInputContext>
 					<MapViewInputContext id="FenetMap" input="maps/fenet.gmt" parent="MapContext">
 						<ThemeContext id="1dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" parent="FenetMap">
-							<!-- <WizardContext id="ImportWSPM" wizardId="???" wizardType="NEW_WIZARD" parent="1dElementTheme"/> -->
+						<!-- <WizardContext id="ImportWSPM" wizardId="???" wizardType="NEW_WIZARD" parent="1dElementTheme"/> -->
+						<!-- <WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />	-->
 						</ThemeContext>
 						<ThemeContext id="FlowRelationshipTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelationship" parent="FenetMap" />
 						<ThemeContext id="2dElementTheme" featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" parent="FenetMap">

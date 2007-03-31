@@ -59,11 +59,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.wizards.imports.ISzenarioDataProvider;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -77,35 +76,20 @@ public class ImportElevationHandler extends WorkflowCommandHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   @Override
   protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
     try
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+      final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
       final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
       final IFolder modelFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
-      final CommandableWorkspace commandableWorkspace = 
-              szenarioDataProvider.getCommandableWorkspace( ITerrainModel.class );
 
       final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
 
-      IStructuredSelection selection = 
-              new StructuredSelection( 
-                  new Object[] { 
-                      terrainModel, 
-                      modelFolder, 
-                      temFolder,
-                      commandableWorkspace
-                      } );
+      IStructuredSelection selection = new StructuredSelection( new Object[] { terrainModel, modelFolder, temFolder } );
 
-      // if(selection == null)
-      // {
-      // final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
-      // selection = new StructuredSelection(currentFolder);
-      // }
       final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
       final IWorkbench workbench = (workbenchWindow).getWorkbench();
 
@@ -113,34 +97,25 @@ public class ImportElevationHandler extends WorkflowCommandHandler
       final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
       final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
 
-//    final HashMap<String, Object> data = new HashMap<String, Object>();
-      // data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
-      // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
-
       wizard.init( workbench, selection );
-      // wizard.initModelProperties( data );
+
       if( wizardDialog.open() == Window.OK )
       {
-//        try
-//        {
-//          SelectWidgetHandler handler = new SelectWidgetHandler();
-//          Map<String, String> newParameterMap = new HashMap<String,String>();
-//          Map parameters = event.getParameters();
-//          newParameterMap.putAll( parameters );
-//          newParameterMap.put(SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS,
-//              "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget");
-//          newParameterMap.put(SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID,
-//              "org.kalypso.model1d2d");
-//          handler.setInitializationData( null, null, newParameterMap );
-//          ExecutionEvent exc =  new ExecutionEvent(event.getCommand(),
-//              newParameterMap,event.getTrigger(),event.getApplicationContext());
-//          handler.execute(exc);
-//        }
-//        catch(Throwable th)
-//        {
-//          th.printStackTrace();
-//        }
-        
+        try
+        {
+          final SelectWidgetHandler handler = new SelectWidgetHandler();
+          final Map<String, String> newParameterMap = new HashMap<String, String>();          
+          newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
+          newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
+          handler.setInitializationData( null, null, newParameterMap );
+          final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
+          handler.execute( exc );
+        }
+        catch( final Throwable th )
+        {
+          th.printStackTrace();
+        }
+
         return Status.OK_STATUS;
       }
       else
@@ -151,7 +126,7 @@ public class ImportElevationHandler extends WorkflowCommandHandler
     catch( Throwable th )
     {
       th.printStackTrace();
-      
+
       return Status.CANCEL_STATUS;
     }
 

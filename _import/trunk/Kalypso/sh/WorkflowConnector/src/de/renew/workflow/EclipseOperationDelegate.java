@@ -56,7 +56,7 @@ public class EclipseOperationDelegate implements ClientOperation
   public Object execute( )
   {
     final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-    final String cmdId = (String) m_parameterMap.get( EclipseContextTask.PARAM_CMD_ID );
+    final String cmdId = (String) m_parameterMap.get( CaseTask.PARAM_CMD_ID );
     final Command cmd = cmdService.getCommand( cmdId );
     logger.log( Level.INFO, "checking command " + cmdId );
     if( cmd.isDefined() && cmd.isEnabled() )

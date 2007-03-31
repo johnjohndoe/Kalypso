@@ -51,4 +51,5 @@ public interface ISzenarioSourceProvider
 
   public static final String ACTIVE_SZENARIO_FOLDER_NAME = "activeSimulationModelBaseFolder";
 
+  public static final String ACTIVE_SCENARIO_CASEDATA_NAME = "activeScenarioCaseData";
 }

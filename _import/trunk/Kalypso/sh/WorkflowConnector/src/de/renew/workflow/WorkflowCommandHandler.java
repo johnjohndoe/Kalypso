@@ -63,8 +63,6 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
-  public static final String PARAM_TASK = "task";
-
   private static final boolean m_isWorkflowMode = false;
 
   static
@@ -110,9 +108,6 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
     }
     catch( final Throwable t )
     {
-      t.printStackTrace();
-      
-      
       // BUGFIX: use statusFromThrowable instead of always creating an error status, because
       // the thrown exception may be an CoreException containing a CANCEL or INFO status.
       status = StatusUtilities.statusFromThrowable( t, "Problem in internal execution" );
