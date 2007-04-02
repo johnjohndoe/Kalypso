@@ -1,4 +1,4 @@
-C     Last change:  K    19 Mar 2007    2:33 pm
+C     Last change:  K    29 Mar 2007    5:43 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -378,13 +378,13 @@ c  250 CONTINUE
       !nis,feb07,testing
       if (maxn == 1) then
         ALLOCATE (matrix(2*maxp-2, 2*maxp-2), vector(2*maxp-2))
-      endif
-      do i = 1, 2*maxp-2
-        do j = 1, 2*maxp-2
-          matrix(i,j) = 0.0
+        do i = 1, 2*maxp-2
+          do j = 1, 2*maxp-2
+            matrix(i,j) = 0.0
+          end do
+          vector(i) = 0.0
         end do
-        vector(i) = 0.0
-      end do
+      endif
       !-
 
       CALL FRONT(1)
@@ -396,16 +396,23 @@ c  250 CONTINUE
       !enddo
       !-
       !nis,feb07,testing: Write whole matrix
-      write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
-      teststat = 0
-      open (9919, matrixname, iostat = teststat)
-      if (teststat /= 0) STOP 'Fehler bei Matrixdatei'
-      do i = 1, 2*maxp-2
-        WRITE(9919, '(6(f7.2),2(1x,f9.4))')
-     *       (matrix(i,j), j = 1, 2*maxp-2), vector (i), r1(i)
-      ENDDO
-      close (9919, status = 'keep')
-      !pause
+      if (maxn > -1) then
+        write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+        teststat = 0
+        open (9919, matrixname, iostat = teststat)
+        if (teststat /= 0) STOP 'Fehler bei Matrixdatei'
+        do i = 1, 2*maxp-2
+          WRITE(9919, '(6(f7.2),2(1x,f9.4))')
+     *         (matrix(i,j), j = 1, 2*maxp-2), vector (i), r1(i)
+        ENDDO
+        do i = 1, 2*maxp-2
+          do j = 1, 2*maxp-2
+            matrix(i,j) = 0.0
+          end do
+          vector(i) = 0.0
+        end do
+      pause
+      endif
       !-
 
       !nis,feb07,testing in coefs, stop after calc job
