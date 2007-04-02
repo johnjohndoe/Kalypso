@@ -1,4 +1,4 @@
-!     Last change:  K     2 Mar 2007    6:28 pm
+!     Last change:  K    27 Mar 2007   11:13 am
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -392,30 +392,30 @@ write_nodes: DO i = 1, np
   END IF
 
   !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
-  teschke(i)=0
-  do j=1,13
-    if (apoly(i,j).ne.0) then
-      teschke(i)=1
+  teschke(i) = 0
+  do j = 0, 12
+    if (apoly(i,j) /= 0.0) then
+      teschke(i) = 1
     end if
   end do
 
   if (teschke(i).eq.1) then
     WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
-    WRITE (IKALYPSOFM, 7021) i, (apoly(i,j), j=1,5)
-    WRITE (IKALYPSOFM, 7022) i, (apoly(i,j), j=6,10)
-    WRITE (IKALYPSOFM, 7023) i, (apoly(i,j), j=11,13)
-    WRITE (IKALYPSOFM, 7024) i, qgef(i),(qpoly(i,j), j=1,4)
-    WRITE (IKALYPSOFM, 7025) i, (qpoly(i,j), j=5,9)
-    WRITE (IKALYPSOFM, 7026) i, (qpoly(i,j), j=10,13)
+    WRITE (IKALYPSOFM, 7021) i, (apoly(i,j), j = 0, 4)
+    WRITE (IKALYPSOFM, 7022) i, (apoly(i,j), j = 5, 9)
+    WRITE (IKALYPSOFM, 7023) i, (apoly(i,j), j = 10, 12)
+    WRITE (IKALYPSOFM, 7024) i, qgef(i), (qpoly(i,j), j = 0, 3)
+    WRITE (IKALYPSOFM, 7025) i, (qpoly(i,j), j = 4, 8)
+    WRITE (IKALYPSOFM, 7026) i, (qpoly(i,j), j = 9, 12)
     WRITE (IKALYPSOFM, 7027) i, hbordv(i)
-    WRITE (IKALYPSOFM, 7028) i, alphah(i),(alphad(i,j), j=1,4)
-    WRITE (IKALYPSOFM, 7029) i, (alphapk(i,j), j=1,5)
-    WRITE (IKALYPSOFM, 7030) i, (alphapk(i,j), j=6,10)
-    WRITE (IKALYPSOFM, 7031) i, (alphapk(i,j), j=11,13)
-    WRITE (IKALYPSOFM, 7032) i, betah(i),(betad(i,j), j=1,4)
-    WRITE (IKALYPSOFM, 7033) i, (betapk(i,j), j=1,5)
-    WRITE (IKALYPSOFM, 7034) i, (betapk(i,j), j=6,10)
-    WRITE (IKALYPSOFM, 7035) i, (betapk(i,j), j=11,13)
+    WRITE (IKALYPSOFM, 7028) i, alphah(i), (alphad(i,j), j = 0, 3)
+    WRITE (IKALYPSOFM, 7029) i, (alphapk(i,j), j = 0, 4)
+    WRITE (IKALYPSOFM, 7030) i, (alphapk(i,j), j = 5, 9)
+    WRITE (IKALYPSOFM, 7031) i, (alphapk(i,j), j = 10, 12)
+    WRITE (IKALYPSOFM, 7032) i, betah(i), (betad(i,j), j = 0, 3)
+    WRITE (IKALYPSOFM, 7033) i, (betapk(i,j), j = 0, 4)
+    WRITE (IKALYPSOFM, 7034) i, (betapk(i,j), j = 5, 9)
+    WRITE (IKALYPSOFM, 7035) i, (betapk(i,j), j = 10, 12)
   end if
 
 END DO write_nodes

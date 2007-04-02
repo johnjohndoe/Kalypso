@@ -1,4 +1,4 @@
-!     Last change:  K     7 Feb 2007   12:16 pm
+!     Last change:  K    27 Mar 2007   11:09 am
 
 subroutine TransVelDistribution
 
@@ -75,8 +75,8 @@ if (maxn.ne.1) then
     !if width is zero, but the element is 1D it can only be a Teschke element
     else
 !     !polynomial calculation
-!     DO k = 1, 13
-!       CSArea = CSArea + APoly(TransNo,k)*TransVel**(k-1)
+!     DO k = 0, 12
+!       CSArea = CSArea + apoly(TransNo,k) * TransVel**(k)
 !     ENDDO
     end if
 

@@ -1,4 +1,4 @@
-!     Last change:  K     2 Mar 2007    6:27 pm
+!     Last change:  K    27 Mar 2007   11:08 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1177,7 +1177,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j=1,5)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j = 0, 4)
         !write (*,*) 'AP1',i,(apoly(i,j), j=1,5)
       endif
     end if
@@ -1186,7 +1186,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local,i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j=6,10)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j = 5, 9)
         !write (*,*) 'AP2',i,(apoly(i,j), j=6,10)
       endif
     end if
@@ -1195,7 +1195,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,3f20.7)') id_local, i,(apoly(i,j), j=11,13)
+        read (linie, '(a3,i9,3f20.7)') id_local, i,(apoly(i,j), j = 10, 12)
         !write (*,*) 'AP3',i,(apoly(i,j), j=11,13)
       endif
     end if
@@ -1205,7 +1205,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,qgef(i),(qpoly(i,j), j=1,4)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,qgef(i),(qpoly(i,j), j = 0, 3)
         !write (*,*) 'QP1',i,qgef(i),(qpoly(i,j), j=1,4)
       endif
     end if
@@ -1214,7 +1214,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(qpoly(i,j), j=5,9)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(qpoly(i,j), j = 4, 8)
         !write (*,*) 'QP2',i,(qpoly(i,j), j=5,9)
       endif
     end if
@@ -1223,7 +1223,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,4f20.7)') id_local, i,(qpoly(i,j), j=10,13)
+        read (linie, '(a3,i9,4f20.7)') id_local, i,(qpoly(i,j), j = 9, 12)
         !write (*,*) 'QP3',(qpoly(i,j), j=10,13)
       endif
     end if
@@ -1243,7 +1243,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a2,i10)') id_local, i
       else
-        read (linie, '(a2,i10,5f20.7)') id_local, i,alphah(i),(alphad(i,j), j=1,4)
+        read (linie, '(a2,i10,5f20.7)') id_local, i,alphah(i),(alphad(i,j), j = 0, 3)
         !write (*,*) 'AD',i,alphah(i),(alphad(i,j), j=1,4)
       endif
     end if
@@ -1253,7 +1253,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j=1,5)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j = 0, 4)
         !write (*,*) 'AK1',i,(alphapk(i,j), j=1,5)
       endif
     end if
@@ -1262,7 +1262,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j=6,10)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j = 5, 9)
         !write (*,*) 'AK2',i,(alphapk(i,j), j=6,10)
       endif
     end if
@@ -1271,7 +1271,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,3f20.7)') id_local, i,(alphapk(i,j), j=11,13)
+        read (linie, '(a3,i9,3f20.7)') id_local, i,(alphapk(i,j), j = 10, 12)
         !write (*,*) 'AK3',i,(alphapk(i,j), j=11,13)
       endif
     end if
@@ -1281,7 +1281,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a2,i10)') id_local, i
       else
-        read (linie, '(a2,i10,5f20.7)') id_local, i,betah(i),(betad(i,j), j=1,4)
+        read (linie, '(a2,i10,5f20.7)') id_local, i,betah(i),(betad(i,j), j = 0, 3)
         !write (*,*) 'BD',i,betah(i),(betad(i,j), j=1,4)
       endif
     end if
@@ -1291,7 +1291,7 @@ reading: do
        IF (KSWIT == 1) then
          read (linie, '(a3,i9)') id_local, i
        else
-         read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j=1,5)
+         read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j = 0, 4)
          !write (*,*) 'BK1',i,(betapk(i,j), j=1,5)
        endif
     end if
@@ -1300,7 +1300,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j=6,10)
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j = 5, 9)
         !write (*,*) 'BK2',i,(betapk(i,j), j=6,10)
       endif
     end if
@@ -1309,7 +1309,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,3f20.7)') id_local, i,(betapk(i,j), j=11,13)
+        read (linie, '(a3,i9,3f20.7)') id_local, i,(betapk(i,j), j = 10, 12)
         !write (*,*) 'BK3',i,(betapk(i,j), j=11,13)
       endif
     end if
@@ -2248,9 +2248,9 @@ WRITE ( * , 105)
 105 format (1X, 'Reordering has to be done.')
 
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
-CALL start_node (qlist, k, np)
+!CALL start_node (qlist, k, np)
 !CALL reord (np, ne, qlist)
-CALL reord_Kalyps (np, ne, qlist)
+!CALL reord_Kalyps (np, ne, qlist)
 !-
 
 

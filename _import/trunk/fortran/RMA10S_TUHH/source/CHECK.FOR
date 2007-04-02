@@ -1,4 +1,4 @@
-C     Last change:  K    16 Mar 2007    4:00 pm
+C     Last change:  K    27 Mar 2007   11:08 am
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -258,7 +258,7 @@ cipk feb01  skip out for zero lines
             testProd = 1
             testSum  = 0
             !Testsum and Testproduct
-            AddMultTest: do i = 1, 13
+            AddMultTest: do i = 0, 12
               testSum  = testSum + qpoly(NA,i)
               if (qpoly(NA,i) == 0) CYCLE AddMultTest
               testProd = testProd * qpoly(NA,i)
@@ -267,8 +267,8 @@ cipk feb01  skip out for zero lines
             !Proceed on nodes of polynomial approach
             if (testSum /= 0 .or. testProd /= 1) then
               TempArea = 0.0
-              do i = 1, 13
-                TempArea = TempArea + APoly(NA,i) * vel(3,na)**(i-1)
+              do i = 0, 12
+                TempArea = TempArea + apoly(NA,i) * vel(3,na)**(i)
               end do
 
               SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea

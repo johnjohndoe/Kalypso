@@ -1,4 +1,4 @@
-C     Last change:  EF    5 Mar 2007    2:34 pm
+C     Last change:  K    27 Mar 2007   11:08 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -794,18 +794,18 @@ CIPK MAR01
 !-
 
       !EFa Nov06, allocating für Teschke-1D-Elemente
-      ALLOCATE(apoly(maxp,13))
+      ALLOCATE(apoly(maxp,0:12))
       ALLOCATE(hhmin(maxp))
       ALLOCATE(hhmax(maxp))
-      ALLOCATE(qpoly(maxp,13))
+      ALLOCATE(qpoly(maxp,0:12))
       ALLOCATE(qgef(maxp))
       ALLOCATE(hbordv(maxp))
       ALLOCATE(alphah(maxp))
-      ALLOCATE(alphad(maxp,5))
-      ALLOCATE(alphapk(maxp,13))
+      ALLOCATE(alphad(maxp,0:3))
+      ALLOCATE(alphapk(maxp,0:12))
       ALLOCATE(betah(maxp))
-      ALLOCATE(betad(maxp,5))
-      ALLOCATE(betapk(maxp,13))
+      ALLOCATE(betad(maxp,0:3))
+      ALLOCATE(betapk(maxp,0:12))
       ALLOCATE(kmx(maxp))
       ALLOCATE(sfwicht(maxp))
       ALLOCATE(ah(maxp))
@@ -818,8 +818,8 @@ CIPK MAR01
       ALLOCATE(sfnod(maxp))
       ALLOCATE(dsfnoddh(maxp))
       ALLOCATE(dsfnoddq(maxp))
-      ALLOCATE(pdif(maxp,4))
-      ALLOCATE(pbei(maxp,13))
+      ALLOCATE(pdif(maxp,0:3))
+      ALLOCATE(pbei(maxp,0:12))
       ALLOCATE(bei(maxp))
       ALLOCATE(dbeidh(maxp))
       ALLOCATE(d2beidh(maxp))
@@ -874,98 +874,100 @@ CIPK MAR01
       ALLOCATE(kennung(maxp))
 
       outer3: DO i = 1, MaxP
-            hhmin(i)=0
-            hhmax(i)=0
-            qgef(i)=0
-            hbordv(i)=0
-            alphah(i)=0
-            betah(i)=0
-            kmx(i)=-1
-            sfwicht(i)=1
-            ah(i)=0
-            qh(i)=0
-            hdif(i)=0
-            dahdh(i)=0
-            dqhdh(i)=0
-            d2ahdh(i)=0
-            d2qhdh(i)=0
-            sfnod(i)=0
-            bei(i)=0
-            dbeidh(i)=0
-            d2beidh(i)=0
-            dbeizdh(i)=0
-            d2beizdh(i)=0
-            dbeiodh(i)=0
-            d2beiodh(i)=0
-            bnode(i)=0
-            qqt(i)=0
-            froude(i)=0
-            sbot(i)=0
-            teschke(i)=0
-            hht(i)=0
-            kennung(maxp)=0
-        inner3: DO j = 1, 13
-              apoly (i, j) = 0
-              qpoly (i, j) = 0
-              alphapk(i,j) = 0
-              betapk(i,j) = 0
-              pbei(i,j)=0
+        hhmin(i)      = 0.0
+        hhmax(i)      = 0.0
+        qgef(i)       = 0.0
+        hbordv(i)     = 0.0
+        alphah(i)     = 0.0
+        betah(i)      = 0.0
+        kmx(i)        = -1.0
+        sfwicht(i)    = 1.0
+        ah(i)         = 0.0
+        qh(i)         = 0.0
+        hdif(i)       = 0.0
+        dahdh(i)      = 0.0
+        dqhdh(i)      = 0.0
+        d2ahdh(i)     = 0.0
+        d2qhdh(i)     = 0.0
+        sfnod(i)      = 0.0
+        bei(i)        = 0.0
+        dbeidh(i)     = 0.0
+        d2beidh(i)    = 0.0
+        dbeizdh(i)    = 0.0
+        d2beizdh(i)   = 0.0
+        dbeiodh(i)    = 0.0
+        d2beiodh(i)   = 0.0
+        bnode(i)      = 0.0
+        qqt(i)        = 0.0
+        froude(i)     = 0.0
+        sbot(i)       = 0.0
+        teschke(i)    = 0.0
+        hht(i)        = 0.0
+        kennung(maxp) = 0.0
+        inner3: DO j = 0, 12
+          apoly (i, j) = 0.0
+          qpoly (i, j) = 0.0
+          alphapk(i,j) = 0.0
+          betapk(i,j)  = 0.0
+          pbei(i,j)    = 0.0
         ENDDO inner3
       ENDDO outer3
+
       outer4: DO i = 1,MaxP
-        inner4: DO j = 1, 5
-              alphad(i,j) = 0
-              betad(i,j) = 0
+        inner4: DO j = 0, 3
+          alphad(i,j) = 0.0
+          betad(i,j)  = 0.0
+          pdif(i,j)   = 0.0
         ENDDO inner4
       ENDDO outer4
+
       outer5: DO i = 1,MaxP
-              qhalt(i)=0
+        qhalt(i)=0
         inner5: DO j = 1, 4
-              pdif(i,j) = 0
-              hhint(i,j) = 0
-              dhhintdx(i,j) = 0
-              dhintdt(i,j) = 0
-              qqint(i,j) = 0
-              qqintdx(i,j) = 0
-              areaint(i,j) = 0
-              dareaintdh(i,j) = 0
-              d2areaintdh(i,j) = 0
-              daintdx(i,j) = 0
-              d2aintdx(i,j) = 0
-              d2aidhdx(i,j)=0
-              daintdt(i,j) = 0
-              qschint(i,j) = 0
-              dqsintdh(i,j) = 0
-              d2qsidh(i,j) = 0
-              dqsintdx(i,j) = 0
-              d2qsidhdx(i,j) = 0
-              s0schint(i,j) = 0
-              sfwicint(i,j) = 0
-              sfint(i,j) = 0
-              dsfintdh1(i,j) = 0
-              beiint(i,j) = 0
-              dbeiintdh(i,j) = 0
-              d2beiintdh(i,j) = 0
-              dbeiintdx(i,j) = 0
-              d2beiintdhdx(i,j) = 0
-              bint(i,j) = 0
-              froudeint(i,j)=0
-              dqintdt(i,j)=0
-              vflowint(i,j)=0
-              dvintdx(i,j)=0
+          hhint(i,j)       = 0.0
+          dhhintdx(i,j)    = 0.0
+          dhintdt(i,j)     = 0.0
+          qqint(i,j)       = 0.0
+          qqintdx(i,j)     = 0.0
+          areaint(i,j)     = 0.0
+          dareaintdh(i,j)  = 0.0
+          d2areaintdh(i,j) = 0.0
+          daintdx(i,j)     = 0.0
+          d2aintdx(i,j)    = 0.0
+          d2aidhdx(i,j)    = 0.0
+          daintdt(i,j)     = 0.0
+          qschint(i,j)     = 0.0
+          dqsintdh(i,j)    = 0.0
+          d2qsidh(i,j)     = 0.0
+          dqsintdx(i,j)    = 0.0
+          d2qsidhdx(i,j)   = 0.0
+          s0schint(i,j)    = 0.0
+          sfwicint(i,j)    = 0.0
+          sfint(i,j)       = 0.0
+          dsfintdh1(i,j)   = 0.0
+          beiint(i,j)      = 0.0
+          dbeiintdh(i,j)   = 0.0
+          d2beiintdh(i,j)  = 0.0
+          dbeiintdx(i,j)   = 0.0
+          d2beiintdhdx(i,j)= 0.0
+          bint(i,j)        = 0.0
+          froudeint(i,j)   = 0.0
+          dqintdt(i,j)     = 0.0
+          vflowint(i,j)    = 0.0
+          dvintdx(i,j)     = 0.0
         ENDDO inner5
       ENDDO outer5
 
-      urfc=1
+      urfc=1.0
 
       do i=1,maxe
         do j=1,2
-          dhht(i,j)=0
-          hhalt(i,j)=0
-          dhdtaltzs(i,j)=0
-          dqqt(i,j)=0
-          !qhalt(i,j)=0
-          dqdtaltzs(i,j)=0
+          dhht(i,j)      = 0.0
+          hhalt(i,j)     = 0.0
+          dhdtaltzs(i,j) = 0.0
+          dqqt(i,j)      = 0.0
+          !qhalt(i,j)     = 0.0
+          dqdtaltzs(i,j) = 0.0
         end do
       end do
 
