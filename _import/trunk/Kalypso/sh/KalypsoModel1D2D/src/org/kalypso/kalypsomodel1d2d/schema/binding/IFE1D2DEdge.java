@@ -88,6 +88,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *   
    */
   public void addNode( String nodeID );
+
   
   /**
    * Sets the inverted edge of this node

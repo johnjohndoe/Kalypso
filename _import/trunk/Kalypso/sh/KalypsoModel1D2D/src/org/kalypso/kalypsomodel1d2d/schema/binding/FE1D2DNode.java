@@ -223,45 +223,45 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     return result;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getEdges()
-   */
-  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( )
-  {
-    // TODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
-    // the containers.
-
-    final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
-    final FeatureList edgeList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-
-    // get all elements touching this node
-    // TODO: is this really necessary, causes performance bug in bce.2d loading
-    final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
-
-    final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
-
-    // filter all element which contain this node
-    for( final Object object : touchingEdges )
-    {
-      final Feature f = (Feature) object;
-      final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) f.getAdapter( IFE1D2DEdge.class );
-      final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
-      for( final IFE1D2DNode node : nodes )
-      {
-        if( node.equals( this ) )
-        {
-          foundEdges.add( edge );
-          break;
-        }
-      }
-    }
-
-    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] result = new IFE1D2DEdge[foundEdges.size()];
-    for( int i = 0; i < foundEdges.size(); i++ )
-      result[i] = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) foundEdges.get( i );
-
-    return result;
-  }
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getEdges()
+//   */
+//  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( )
+//  {
+//    // TODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
+//    // the containers.
+//
+//    final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
+//    final FeatureList edgeList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
+//
+//    // get all elements touching this node
+//    // TODO: is this really necessary, causes performance bug in bce.2d loading
+//    final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
+//
+//    final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
+//
+//    // filter all element which contain this node
+//    for( final Object object : touchingEdges )
+//    {
+//      final Feature f = (Feature) object;
+//      final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) f.getAdapter( IFE1D2DEdge.class );
+//      final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
+//      for( final IFE1D2DNode node : nodes )
+//      {
+//        if( node.equals( this ) )
+//        {
+//          foundEdges.add( edge );
+//          break;
+//        }
+//      }
+//    }
+//
+//    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] result = new IFE1D2DEdge[foundEdges.size()];
+//    for( int i = 0; i < foundEdges.size(); i++ )
+//      result[i] = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) foundEdges.get( i );
+//
+//    return result;
+//  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()

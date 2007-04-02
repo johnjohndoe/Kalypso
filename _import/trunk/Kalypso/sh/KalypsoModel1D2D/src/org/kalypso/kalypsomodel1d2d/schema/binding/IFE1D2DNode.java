@@ -76,11 +76,11 @@ public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode<CT>
    */
   public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( );
   
-  /**
-   * To get all edges containing this node
-   * @return all edges containing this node as array
-   */
-  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( );
+//  /**
+//   * To get all edges containing this node
+//   * @return all edges containing this node as array
+//   */
+//  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( );
 
   /**
    * Gets all neighbours of this node. Neighbours nodes are nodes
