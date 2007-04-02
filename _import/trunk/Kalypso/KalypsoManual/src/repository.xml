@@ -37,11 +37,11 @@
 
     <para><note>
         <para>Der Zeitreihenbrowser ermöglicht ausdrücklich kein Editieren der
-        Zeitreihen innerhalb der externen Datenbanksysteme (wie z.B. WISKI,
+        Zeitreihen innerhalb der externen Datenbanksysteme (wie <abbrev>z. B.</abbrev> WISKI,
         PSICompact oder Ingres-Datacenter).</para>
       </note>Mit dem Zeitreihenbrowser besteht zudem die Möglichkeit, weitere
     Zeitreihen Repositories (Zeitreihen-Quellen) hinzuzufügen. Dabei kann es
-    sich z.B. um Fremddaten oder historische Daten aus einer lokalen
+    sich <abbrev>z. B.</abbrev> um Fremddaten oder historische Daten aus einer lokalen
     Datenquelle handeln. Voraussetzung ist allerdings, dass die in der
     Datenquelle enthaltenen Zeitreihen im ZML-Format vorliegen (siehe <xref
     linkend="gui_zml-import" />).</para>
@@ -56,7 +56,7 @@
     eingefügt werden.</para>
 
     <para>Eine weitere Funktion des Zeitreihenbrowsers besteht im Datenexport.
-    So können z.B. Zeitreihen aus einer Datenbank heruntergeladen und in ein
+    So können <abbrev>z. B.</abbrev> Zeitreihen aus einer Datenbank heruntergeladen und in ein
     beliebiges Verzeichnis im Netzwerk oder lokal gespeichert werden. Beim
     Export werden die Zeitreihen im ZML-Format abgelegt. Der Export von
     Zeitreihen ist in <xref linkend="repository_zeitreihenverwaltung" />
@@ -94,7 +94,7 @@
 
     <para>Unten links unter dem Diagramm-Fenster ist das Eigenschaften-Fenster
     gezeigt, das die sogenannten Metadaten der Zeitreihe enthält. Eine
-    Metadaten-Information kann z.B. der Stationsname sein. Die Metadaten sind
+    Metadaten-Information kann <abbrev>z. B.</abbrev> der Stationsname sein. Die Metadaten sind
     typspezifisch, d.h., dass Niederschlagsstationen prinzipiell andere
     Metadaten enthalten können als Wasserstandspegel. Die einzelnen Zellen
     enthalten nicht immer einfache Werte, sondern es können auch komplexe

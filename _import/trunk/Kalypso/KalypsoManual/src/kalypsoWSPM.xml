@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="kalypso_wspm" vendor="KalypsoModeller,hh_ingenieurbueros">
+  <title>1D Spiegellinienmodell KalypsoWSPM</title>
+
+  <indexterm>
+    <primary>1D Spiegellinienmodell KalypsoWSPM</primary>
+  </indexterm>
+
+  <para>blabla Allgemeine Modellbeschreibung. 1D, stationär...</para>
+
+  <figure>
+    <title>Das Modellkonzept</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center"
+                   fileref="img/modelle/kalypso_na/modellkonzept_na.png"
+                   scale="100" />
+      </imageobject>
+    </mediaobject>
+  </figure>
+
+  <para>Rechenkernhistorie, Welche Rechenalgorythmen sind implementiert, Wofür Anwenden</para>
+
+  <section id="kalypso_wspm-Allgemeines">
+    <title>Allgemeine Einführung</title>
+
+    <para>Willkommen, Perspektive... .</para>
+  </section>
+
+  <section id="kalypso_wspm-Datenakquisition">
+    <title>Datenakquisition</title>
+
+    <indexterm>
+      <primary>Datenakquisition und Aufbereitung KalypsoWSPM</primary>
+    </indexterm>
+
+    <para>Für die Erstellung eines eindimensionalen Spiegellinienmodelles sind
+    umfangreiche Vorarbeiten notwendig. Profilvermessung, Bauwerke...</para>
+
+    <para>Datenakquisition:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Profildaten, Pegeldaten...</para>
+      </listitem>
+</itemizedlist>
+    <para>Datenaufbereitung:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Stationierung, Eingangsdateiaufbereitung, D66/ Trippel...</para>
+      </listitem>
+  </itemizedlist>
+    <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
+    Modelles in der Oberfläche begonnen werden.</para>
+  </section>
+
+  <section id="kalypso_wspm-Preprozessing">
+    <title>Preprozessing - Modellaufbau</title>
+
+    <indexterm>
+      <primary>Preprozessing KalypsoWSPM</primary>
+    </indexterm>
+
+    <figure>
+      <title>Vorgehensweise zum Modellaufbau</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/modelle/kalypso_na/arbeitsschritte_na.png"
+                     scale="60" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Nach der Datenaufbereitung im betrachteten Gewässer kann mit
+    dem eigentlichen Modellaufbau begonnen werden. Hierbei werden folgende
+    Teilschritte bearbeitet:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Ein neues Projekt anlegen (...)</para>
+      </listitem>
+</orderedlist>
+
+    <section id="kalypso_wspm-neues_projekt">
+      <title>Ein neues WSPM Projekt anlegen</title>
+
+      <indexterm>
+        <primary>Neues KalypsoWSPM Projekt anlegen</primary>
+      </indexterm>
+      </section>
+      </section>
+<section id="kalypso_wspm-prozessing">
+    <title>Prozessing</title>
+
+    <indexterm>
+      <primary>Prozessing KalypsoWSPM</primary>
+    </indexterm>
+      
+    <section id="kalypso_wspm-Berechnungseinstellungen">
+      <title>Berechnungseinstellungen</title>
+
+      <indexterm>
+        <primary>Berechnungseinstellungen KalypsoWSPM</primary>
+      </indexterm>
+
+      <para></para>
+
+      <table>
+        <title>verfügbare Rechenkernversionen</title>
+        <tgroup align="center" cols="2">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" />
+
+          <thead>          
+            <row>
+              <entry>Key (Versionsangabe)</entry>
+
+              <entry>Verwendete Rechenkernversion</entry>
+            </row>
+                      </thead>
+<tbody>
+
+            <row>
+              <entry>XXX</entry>
+
+              <entry>xxx</entry>
+            </row>
+
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+
+    
+  </section>
+
+  <section id="kalypso_wspm-Postprozessing">
+    <title>Postprozessing</title>
+
+    <indexterm>
+      <primary>Postprozessing KalypsoWSPM</primary>
+    </indexterm>
+
+    <para>Ist eine Berechnung erfolgreich durchgeführt...</para>
+
+    <para>Bei nicht erfolgreicher Berechnung stehen verschiedene Log-Dateien
+    zur Fehlerlokalisierung zur Verfügung.</para>
+  </section>
+
+  <section id="WSPM-Modellkalibrierung">
+    <title>Modellkalibrierung</title>
+
+    <indexterm>
+      <primary>Modellkalibrierung KalypsoWSPM</primary>
+    </indexterm>
+
+    <para>Nach der Aufstellung des...</para>
+  </section>
+
+
+  <section id="kalypso_na-allgemeineProjektstruktur">
+    <title>Erläuterung der allgemeinen Projektstruktur</title>
+
+    <indexterm>
+      <primary>Allgemeine Datenstruktur KalypsoWSPM</primary>
+    </indexterm>
+
+    <para>Die Verwaltung des WSPM-Modelles...</para>
+
+    <figure id="pic_we_navigator">
+      <title>Navigator WSPM-Modell</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" fileref="img/modelle/navigator.png"
+                     scale="60" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+  </section>
+</chapter>

@@ -24,8 +24,14 @@
     </mediaobject>
   </figure>
 
+  <section>
+    <title>Willkommen</title>
+
+    <para>... Modellauswahl...</para>
+  </section>
+
   <section id="allgemeines_zur_gui">
-    <title>Allgemeines zu Ansichten</title>
+    <title>Allgemeines zu Ansichten und Perspektiven</title>
 
     <indexterm>
       <primary>Ansichten</primary>
@@ -48,9 +54,17 @@
         Karten-Ansicht können vorab definierte Kartenvorlagen - einschließlich
         der in der Vorlage referenzierten Geo-Informationen - im Lageplan
         visualisiert werden. Die Karten-Ansicht eignet sich für die
-        Darstellung von geografischen Modelldaten (z.B. Einzugsgebietsgrenzen)
-        sowie relevanten Hintergrundkarten (z.B. topografische
-        Grundkarten).</para>
+        Darstellung von geografischen Modelldaten (<abbrev>z. B.</abbrev>
+        Einzugsgebietsgrenzen) sowie relevanten Hintergrundkarten (<abbrev>z.
+        B.</abbrev> topografische Grundkarten).</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Outline</emphasis>...</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Gliederung</emphasis> ... </para>
       </listitem>
 
       <listitem>
@@ -69,17 +83,18 @@
         <para><emphasis role="bold">Tabellen-Ansicht</emphasis>: Die
         Tabellen-Ansicht erlaubt den Zugriff auf Modellparameter bzw.
         geografische Attribute, welche gleichzeitig mit der Kartenvorlage
-        verknüpft sind. Ebenfalls sind Zeitreihenwerte mit der Tabellenansicht
-        darstellbar und veränderbar.</para>
+        verknüpft sind. </para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Diagramm-Ansicht</emphasis>: Anhand der
-        Diagramm-Ansicht werden Zeitreihen (z.B. Wasserstandsganglinien oder
+        <para><emphasis role="bold">Diagramm- und Tabellenansicht auf
+        Zeitreihen</emphasis>: Anhand der Diagramm-Ansicht werden Zeitreihen
+        (<abbrev>z. B.</abbrev> Wasserstandsganglinien oder
         Niederschlagsmessreihen) als Ganglinie oder Blockdiagramm dargestellt.
         In der Diagramm-Ansicht können mehrere Zeitreihen zugleich angezeigt
         werden. Zur Bearbeitung von Zeitreihen wird das Grafikprogramm
-        benutzt.</para>
+        benutzt. Ebenfalls sind Zeitreihenwerte mit der Tabellenansicht
+        darstellbar und veränderbar.</para>
       </listitem>
 
       <listitem>
@@ -90,6 +105,14 @@
         Zeitreihen mit unterschiedlichen Ordinaten-Achsen behandelt sowie
         Zeitreihenwerte verändert werden können.</para>
       </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Zeitreihenbrowser</emphasis>...</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Log Ansicht</emphasis>...</para>
+      </listitem>
     </itemizedlist>
 
     <para>Die Ergonomie und Logik der Oberfläche ähnelt denen gängiger
@@ -98,9 +121,9 @@
     <xref linkend="grundfunktionen" />).</para>
 
     <para>I.d.R. gehört zu jeder der oben genannten Ansichten ein spezifisches
-    Untermenü bzw. Werkzeuge in Form von Toolbars. Z.B. umfasst die
-    Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen oder zum
-    Zoomen innerhalb der Ansicht (siehe <xref
+    Untermenü bzw. Werkzeuge in Form von Toolbars. <abbrev>Z. B.</abbrev>
+    umfasst die Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen
+    oder zum Zoomen innerhalb der Ansicht (siehe <xref
     linkend="ansichtssteuerung" />).</para>
 
     <section id="gui-oeffnen_ansichten">
@@ -121,10 +144,10 @@
       GIS-Tabelle (*.gtt), eine Zeitreihentabelle (*.ott) oder ein Diagramm
       (*.odt) - im Navigator ausgewählt wird. Wenn dabei die rechte Maustaste
       gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem> ein für
-      den Vorlagentyp speziell konfigurierter Editor gewählt werden. Z.B. ist
-      dies im Falle der Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
-      linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
-      Tabellen-Editor.</para>
+      den Vorlagentyp speziell konfigurierter Editor gewählt werden.
+      <abbrev>Z. B.</abbrev> ist dies im Falle der Karten-Ansicht der KALYPSO
+      Karten-Editor (siehe <xref linkend="gis_view_editor" />) und bei
+      Tabellen der KALYPSO Tabellen-Editor.</para>
 
       <figure id="gis_view_editor">
         <title>Öffnen einer Karte anhand des Karten-Editors</title>
@@ -146,10 +169,10 @@
 
       <para>Bei Doppelklick mit der linken Maustaste auf die zu öffnende Datei
       wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
-      aufgerufen wurde. Bei bestimmten Dateitypen (z.B. Zeitreihen (*.zml))
-      wird bei Doppelklick auf die Datei ein Vorlagenauswahl-Fenster geöffnet.
-      Hier besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
-      (Tabelle, Diagramm).</para>
+      aufgerufen wurde. Bei bestimmten Dateitypen (<abbrev>z. B.</abbrev>
+      Zeitreihen (*.zml)) wird bei Doppelklick auf die Datei ein
+      Vorlagenauswahl-Fenster geöffnet. Hier besteht die Möglichkeit, die
+      Datei unterschiedlich zu visualisieren (Tabelle, Diagramm).</para>
 
       <note>
         <para>Eine Vorlagendatei kann nur einmal geöffnet werden und folglich
@@ -168,13 +191,13 @@
       </indexterm>
 
       <para>Zur Bearbeitung von Modelldaten oder Zeitreihen ist das Arbeiten
-      mit mehreren Ansichten sinnvoll, sodass z.B. die geografischen
-      Informationen und Modelldaten in der Karten-Ansicht simultan mit der
-      Tabellen-Ansicht angezeigt werden können. Dabei sind die Ansichten
-      gekoppelt, d.h., der in der Tabelle selektierte Bezugspunkt bzw. das
-      Gebiet wird gleichzeitig in der Karte markiert und umgekehrt. Somit
-      lässt sich in der Modellbearbeitung permanent ein Lagebezug
-      herstellen.</para>
+      mit mehreren Ansichten sinnvoll, sodass <abbrev>z. B.</abbrev> die
+      geografischen Informationen und Modelldaten in der Karten-Ansicht
+      simultan mit der Tabellen-Ansicht angezeigt werden können. Dabei sind
+      die Ansichten gekoppelt, d.h., der in der Tabelle selektierte
+      Bezugspunkt bzw. das Gebiet wird gleichzeitig in der Karte markiert und
+      umgekehrt. Somit lässt sich in der Modellbearbeitung permanent ein
+      Lagebezug herstellen.</para>
 
       <figure id="gis_view_multi">
         <title>Parallele Ansicht von Karte und Tabelle</title>
@@ -215,9 +238,9 @@
       Hervorhebung des Ansichtsnamens (und des -rahmens) in der oberen
       Ansichtsleiste markiert.</para>
 
-      <para>Die geöffneten Ansichten können geschlossen werden, indem z.B. mit
-      der Maus auf das Kreuz neben dem Ansichtsnamen in der oberen
-      Ansichtsleiste geklickt wird.</para>
+      <para>Die geöffneten Ansichten können geschlossen werden, indem
+      <abbrev>z. B.</abbrev> mit der Maus auf das Kreuz neben dem
+      Ansichtsnamen in der oberen Ansichtsleiste geklickt wird.</para>
 
       <para id="menu_fenster">Generell können die Ansichtsfenster auch über
       das Menü <guimenu>Fenster</guimenu> im Hauptmenü von KALYPSO gesteuert
@@ -375,17 +398,24 @@
       <figure id="navigation_karten_ansicht">
         <title>Navigation in der Karten-Ansicht</title>
 
+        <mediaobject vendor="sachsen">
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/gis_karte2.png"
+                       format="PNG" scale="45" vendor="" />
+          </imageobject>
+        </mediaobject>
+
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/gis_karte2.png"
-                       format="PNG" scale="45" vendor="sachsen-anhalt" />
+                       format="PNG" scale="45" vendor="" />
           </imageobject>
         </mediaobject>
 
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_karte.png"
-                       format="PNG" scale="100" vendor="hh_ingenieurbueros" />
+                       format="PNG" scale="100" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -424,10 +454,17 @@
         Style-Editor</title>
 
         <screenshot>
+          <mediaobject vendor="sachsen">
+            <imageobject>
+              <imagedata align="center" fileref="img/gui/style_editor.png"
+                         format="PNG" scale="45" vendor="" />
+            </imageobject>
+          </mediaobject>
+
           <mediaobject vendor="sachsen-anhalt">
             <imageobject>
               <imagedata align="center" fileref="img/gui/style_editor.png"
-                         format="PNG" scale="45" vendor="sachsen-anhalt" />
+                         format="PNG" scale="45" vendor="" />
             </imageobject>
           </mediaobject>
 
@@ -435,7 +472,7 @@
             <imageobject>
               <imagedata align="center"
                          fileref="img/gui/style_editor_tuhh.png" format="PNG"
-                         scale="100" vendor="hh_ingenieurbueros" />
+                         scale="100" vendor="" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -498,14 +535,15 @@
         entsprechende Assistent durch Doppelklick im Auswahlfenster zu starten
         (siehe <xref linkend="pic_datenquelle_waehlen" />). Die Angaben, die
         im dann folgenden Dialog zu machen sind, hängen von der Art der
-        gewählten Datenquelle ab. So muss z.B. für das Einbinden einer
-        Shape-Datei eine entsprechende Datei im aktuellen Arbeitsverzeichnis
-        ausgewählt und das Koordinatensystem, in dem die Daten abgelegt sind,
-        angegeben werden. Zur Symbolisierung kann der Benutzer einen bereits
-        definierten Style auswählen oder einen Standard-Style generieren
-        lassen. Ähnliche angaben sind für alle dateibasierten Datenquellen zu
-        machen. Bei den webbasierten Datenquellen (Web Service) sind vor der
-        Datenauswahl gültige Verbindungsdaten anzugeben.</para>
+        gewählten Datenquelle ab. So muss <abbrev>z. B.</abbrev> für das
+        Einbinden einer Shape-Datei eine entsprechende Datei im aktuellen
+        Arbeitsverzeichnis ausgewählt und das Koordinatensystem, in dem die
+        Daten abgelegt sind, angegeben werden. Zur Symbolisierung kann der
+        Benutzer einen bereits definierten Style auswählen oder einen
+        Standard-Style generieren lassen. Ähnliche angaben sind für alle
+        dateibasierten Datenquellen zu machen. Bei den webbasierten
+        Datenquellen (Web Service) sind vor der Datenauswahl gültige
+        Verbindungsdaten anzugeben.</para>
 
         <figure id="pic_datenquelle_waehlen">
           <title>Auswahl der Datenquelle</title>
@@ -633,17 +671,24 @@
       <figure id="navigation_tabellen_ansicht">
         <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
 
+        <mediaobject vendor="sachsen">
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/tabelle2.png"
+                       scale="45" vendor="" />
+          </imageobject>
+        </mediaobject>
+
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/tabelle2.png"
-                       scale="45" vendor="sachsen-anhalt" />
+                       scale="45" vendor="" />
           </imageobject>
         </mediaobject>
 
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_tabelle.png"
-                       scale="100" vendor="hh_ingenieurbueros" />
+                       scale="100" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -734,15 +779,16 @@
       Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
       möglich, wenn es sich um Zeitreihen mit unterschiedlichen Einheiten
       handelt (Niederschlag, Abfluss, Wasserstand). Zusätzlich ist es in der
-      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
-      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
-      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
-      des Häkchens).</para>
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe
+      (<abbrev>z. B.</abbrev> Wasserstands- und Abflusswerte eines Pegels)
+      individuell darstellen zu lassen oder in der Ansicht auszuschalten
+      (Aktivieren bzw. Deaktivieren des Häkchens).</para>
 
       <para>Es besteht die Möglichkeit, bestimmte Achsentypen für alle
-      dargestellten Zeitreihen zu deaktivieren. Z.B. kann für alle
-      dargestellten Zeitreihen die Darstellung des Abflusses unterdrückt
-      werden. Hierzu klicken Sie auf die Schaltfläche <inlinemediaobject>
+      dargestellten Zeitreihen zu deaktivieren. <abbrev>Z. B.</abbrev> kann
+      für alle dargestellten Zeitreihen die Darstellung des Abflusses
+      unterdrückt werden. Hierzu klicken Sie auf die Schaltfläche
+      <inlinemediaobject>
           <imageobject>
             <imagedata fileref="img/gui/Button_filter.png" />
           </imageobject>
@@ -838,8 +884,9 @@
 
             <para>Die markierten Tabellenwerte werden in die Zwischenablage
             kopiert und können an anderer Stelle wieder eingefügt werden. Dies
-            betrifft auch den Austausch mit anderen Programmen (z.B. Microsoft
-            Excel). Die Auswahl ist spaltenübergreifend möglich.</para>
+            betrifft auch den Austausch mit anderen Programmen (<abbrev>z.
+            B.</abbrev> Microsoft Excel). Die Auswahl ist spaltenübergreifend
+            möglich.</para>
           </listitem>
 
           <listitem>
@@ -875,21 +922,15 @@
           lokal gespeicherte ZML-Datei.</para>
         </important>
 
-        <!--PROFILING ANFANG-->
-
-        <para vendor="sachsen-anhalt">Beim <emphasis
-        role="bold">Export</emphasis> über die Schaltfläche <inlinemediaobject>
+        <para vendor="sachsen">Beim <emphasis role="bold">Export</emphasis>
+        über die Schaltfläche <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/gui/icon_bericht.png" />
             </imageobject>
           </inlinemediaobject> wird die Tabelle im CSV-Format in das
         Berichtswesen (IMS) abgelegt. Vom Anwender sind Metadaten anzugeben,
         die dem IMS übergeben werden.</para>
-
-        <!--PROFLING ENDE-->
       </section>
-
-      <!--PROFILING ANFANG-->
 
       <section id="tabellen_kennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
@@ -970,8 +1011,6 @@
             </tbody>
           </tgroup>
         </table>
-
-        <!--PROFLING ENDE-->
       </section>
 
       <section>
@@ -984,7 +1023,7 @@
         Spalte (hier Q) ist dabei gelb hinterlegt.</para>
 
         <para>Das gleiche gilt darüber hinaus auch für andere Wert-Beziehungen
-        wie z.B. Wasserstand-Volumen (W/V).</para>
+        wie <abbrev>z. B.</abbrev> Wasserstand-Volumen (W/V).</para>
       </section>
     </section>
 
@@ -1023,10 +1062,10 @@
       in die Gliederung-Ansicht mehrere Zeitreihen dargestellt werden.
       Voraussetzung ist allerdings, dass die Zeitreihen die gleiche Einheit
       auf der Ordinaten-Achse vorweisen. Zusätzlich ist es in der
-      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
-      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
-      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
-      des Häkchens).</para>
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe
+      (<abbrev>z. B.</abbrev> Wasserstands- und Abflusswerte eines Pegels)
+      individuell darstellen zu lassen oder in der Ansicht auszuschalten
+      (Aktivieren bzw. Deaktivieren des Häkchens).</para>
 
       <para>Zum Entfernen einer Zeitreihe aus der Diagramm-Ansicht dient das
       rote Kreuz oben rechts in der Gliederung-Ansicht.</para>

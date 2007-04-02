@@ -9,22 +9,23 @@
       <primary>Einführung in KALYPSO</primary>
     </indexterm>
 
-    <para>Das Programmsystem KALYPSO Enterprise ist eine Open-Source
-    Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
-    mit dem Arbeitsbereich Wasserbau der Technischen Universität
-    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung
+    <para>Das Programmsystem <productname>Kalypso Enterprise</productname> ist
+    eine Open-Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE)
+    in Kooperation mit dem Institut für Wasserbau der Technischen Universität
+    Hamburg Harburg (TUHH). Kalypso erlaubt die Integration und Verwaltung
     numerischer Modelle - hydraulischer und hydrologischer Art - innerhalb
-    einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
+    einer einheitlichen Benutzeroberfläche. Somit stellt Kalypso eine
     Abstraktionsschicht mit folgenden Eigenschaften dar:</para>
 
     <itemizedlist>
       <listitem>
-        <para>einheitliche Verwaltung und Strukturierung
+        <para>Einheitliche Verwaltung und Strukturierung
         hydrologisch-hydraulischer Modelle</para>
       </listitem>
 
       <listitem>
-        <para>zentrale Datenspeicherung (ggf. mit Datenbankanbindung)</para>
+        <para>Zentrale Datenspeicherung mit möglicher
+        Datenbankanbindung</para>
       </listitem>
 
       <listitem>
@@ -33,6 +34,15 @@
       </listitem>
     </itemizedlist>
 
+    <para>Kalypso ist eine in JAVA programmierte Open-Source-Software und
+    basiert auf dem vom IBM entwickelten Framework Eclipse (<ulink
+    url="http://www.eclipse.org/">http://www.eclipse.org/</ulink>). Die
+    Berücksichtigung der durch das Open Geospatial Consortium (<ulink
+    url="http://www.opengeospatial.org/">http://www.opengeospatial.org/</ulink>)
+    spezifizierten Schnittstellen garantiert einen reibungslosen Austausch von
+    Geodaten durch Zugriffe auf standardisierte Dienste zwischen verschiedenen
+    Systemen.</para>
+
     <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
     an:</para>
 
@@ -40,7 +50,7 @@
       <listitem>
         <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
         Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
-        info@bjoernsen.de</para>
+        <email>info@bjoernsen.de</email></para>
 
         <mediaobject>
           <imageobject>
@@ -55,7 +65,7 @@
 
     <itemizedlist>
       <listitem>
-        <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
+        <para>TUHH - Institut für Wasserbau - Denickestrasse 22 - 21073
         Hamburg - Tel. 040 / 42878-3761 - www.tu-harburg.de/wb</para>
 
         <mediaobject>
@@ -67,8 +77,9 @@
       </listitem>
     </itemizedlist>
 
-    <para>Besuchen sie uns auch auf unserer Homepage im Internet:
-    http://ibpm.bjoernsen.de/kalypso/ .</para>
+    <para>Besuchen sie uns auch auf unserer Homepage im Internet: <ulink
+    url="http://www.kalypso-simulation-platform.org/">http://www.kalypso-simulation-platform.org/</ulink>
+    .</para>
 
     <section id="nymphe_kalypso">
       <title>Die Nymphe Kalypso</title>
@@ -77,7 +88,7 @@
         <primary>Nymphe</primary>
       </indexterm>
 
-      <para>Der Name KALYPSO ist aus der griechischen Mythologie entliehen. In
+      <para>Der Name Kalypso ist aus der griechischen Mythologie entliehen. In
       Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas genannt.
       Eine der vielzähligen Töchter von Okeanos und Thetys trägt ebenfalls
       diesen Namen.</para>
@@ -223,7 +234,7 @@
     Client-Installation derartig angepasst werden, dass ein lokaler
     Rechendienst unterstützt wird.</para>
 
-    <section>
+    <section id="server_installation">
       <title>Server-Installation</title>
 
       <indexterm>
@@ -244,13 +255,13 @@
         <primary>Installation-Client</primary>
       </indexterm>
 
-      <para>Die Installation des KALYPSO-Client erfolgte im Hochwasserzentrum
-      auf einem zentralen Dateiserver, so dass pro Arbeitsplatzrechner
-      lediglich die Verknüpfung aus dem Startmenü bzw. vom Desktop auf das
-      Programm eingerichtet werden muss. Dabei muss zusätzlich noch das lokale
-      Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der Erstellung des
-      Benutzerhandbuches waren die Arbeitsplatzrechner der HVZ bereits
-      entsprechend eingerichtet.</para>
+      <para>Die Installation des KALYPSO-Client erfolgte in der
+      Hochwasservorhersagezentrale auf einem zentralen Dateiserver, so dass
+      pro Arbeitsplatzrechner lediglich die Verknüpfung aus dem Startmenü bzw.
+      vom Desktop auf das Programm eingerichtet werden muss. Dabei muss
+      zusätzlich noch das lokale Arbeitsverzeichnis angegeben werden. Zum
+      Zeitpunkt der Erstellung des Benutzerhandbuches waren die
+      Arbeitsplatzrechner der HVZ bereits entsprechend eingerichtet.</para>
 
       <para>Eine genaue Beschreibung des Installationsortes und der zu tätigen
       Einstellung findet sich in der Technischen Dokumentation.</para>
@@ -265,26 +276,57 @@
     </section>
   </section>
 
-  <section id="kalypso_installation" vendor="hh_ingenieurbueros">
+  <section id="kalypso_installation"
+           vendor="hh_ingenieurbueros,KalypsoModeller">
     <title>KALYPSO-Installation</title>
 
     <indexterm>
       <primary>Installation</primary>
     </indexterm>
 
-    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
-    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
-    serverseitigen Dienste sind als Installation auf dem physisch
-    eigenständigen KALYPSO-Server möglich:</para>
+    <para>Kalypso ist eine Client-Server-Anwendung, mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Das Programm
+    beinhaltet standardmäßig die Client Komponente, welche über den vollen
+    Funktionsumfang der Oberfläche sowie die folgenden freien Rechendienste
+    verfügt:<itemizedlist>
+        <listitem>
+          <para>KalypsoNA (Niederschlag-Abfluss Modell)</para>
+        </listitem>
+
+        <listitem>
+          <para>KalypsoWSPM (Eindimensionales Spiegellinienmodell)</para>
+
+          <para>Zukünftig werden zusätzlich folgende Modelle
+          integriert:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Kalypso1D2D (gekoppeltes 1D-2D instationäres
+              Modell)</para>
+            </listitem>
+
+            <listitem>
+              <para>Kalypso Flood Modeller</para>
+            </listitem>
+
+            <listitem>
+              <para>Kalypso Risk</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist></para>
+
+    <para>Zusätzlich hierzu kann eine Server Komponente installiert werden,
+    welche folgende Zusatzdienste bietet:</para>
 
     <itemizedlist>
       <listitem>
-        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+        <para>Durchführung von numerischen Modellberechnungen auf dem Server
+        (Rechen-Dienst)</para>
       </listitem>
 
       <listitem>
-        <para>Durchführung von numerischen Modellberechnungen
-        (Rechen-Dienst)</para>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
       </listitem>
 
       <listitem>
@@ -294,18 +336,9 @@
       <listitem>
         <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
       </listitem>
-
-      <listitem>
-        <para>Datendienst zur Bereitstellung von DWD-Daten</para>
-      </listitem>
     </itemizedlist>
 
-    <para>Sollten bei den verwendeten Modellen neben dem Rechen-Dienst keine
-    serverseitigen Dienste erforderlich sein, so ist keine Serverinstallation
-    notwendig. Für diesen Fall beinhaltet die Client-Installation einen
-    lokalen Rechendienst, welcher die Modellberechnung ermöglicht.</para>
-
-    <section>
+    <section id="server_installation">
       <title>Server-Installation</title>
 
       <indexterm>
@@ -313,9 +346,9 @@
       </indexterm>
 
       <para>Die Server-Installation bedarf aufgrund der spezifischen
-      Systemeigenschaften einer direkten Abstimmung und Anpassung. Weitere
-      Informationen sind ggf. in der technischen Dokumentation
-      enthalten.</para>
+      Systemeigenschaften einer direkten Abstimmung und Anpassung an die vor
+      Ort vorhandenen Begebenheiten. Weitere Auskünfte hierzu erhalten sie
+      unter den Kontaktadressen.</para>
     </section>
 
     <section id="client-installation">
@@ -325,96 +358,115 @@
         <primary>Installation-Client</primary>
       </indexterm>
 
-      <para>Die Client-Installation wird auf Basis des gelieferten
-      ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
-      gewünschten Installationsort entpackt. Zum Programmstart muss der im
-      Hauptverzeichnis enthaltene Link (<emphasis>Kalypso.lnk</emphasis>)
-      entsprechend des Installationsortes und des gewünschten
-      Arbeitsverzeichnisses (Workspace) angepasst werden. Hierzu ist der Pfad
-      der Zielanwedung durch den aktuellen Installationspfad zu ersetzen.
-      Außerdem wird ein Arbeitsverzeichnis für die Modelldaten angelegt und
-      der Pfad entsprechend im Link angegeben.<table>
-          <title>Erläuterung der Eigenschaften</title>
+      <para>Die Client-Installation wird auf Basis des zur Verfügung
+      gestellten Archivs (Download unter: <ulink
+      url="https://www.kalypso.wb.tu-harburg.de/kalypsoDownload/index.php">
+      https://www.kalypso.wb.tu-harburg.de/kalypsoDownload/index.php</ulink>)
+      erläutert.</para>
 
-          <tgroup cols="3">
-            <colspec align="left" colwidth="1*" />
+      <para><orderedlist>
+          <listitem>
+            <para>Entpacken des Archivs an den gewünschten Installationsort
+            (<abbrev>z. B.</abbrev> C:\Programme) Das Installationsarchiv
+            enthält alle zur Anwendung erforderliche Plugins sowie ein
+            eigenständiges Java Runtime Environment, um Java Versionskonflikte
+            zu vermeiden.</para>
+          </listitem>
 
-            <colspec align="left" />
+          <listitem>
+            <para>Anpassen der Konfiguration (kalypso.ini) beim Programmstart
+            Um beim Programmstart einige Konfigurationen durchführen zu
+            können, ist es ratsam die Konfigurationsdatei anzupassen. Diese
+            befindet sich im Installationsordner und kann mit einem Texteditor
+            geöffnet werden.</para>
 
-            <colspec align="left" />
+            <table>
+              <title>Erläuterung der Eigenschaften</title>
 
-            <thead>
-              <row>
-                <entry>Link</entry>
+              <tgroup cols="3">
+                <colspec align="left" colwidth="1*" />
 
-                <entry>Beispiel</entry>
+                <colspec align="left" />
 
-                <entry>Bemerkung</entry>
-              </row>
-            </thead>
+                <colspec align="left" />
 
-            <tbody>
-              <row>
-                <entry>...\kalypso.exe</entry>
+                <thead>
+                  <row>
+                    <entry>Eintrag</entry>
 
-                <entry>D:\Programme\ KalypsoClient\kalypso.exe</entry>
+                    <entry>Beispiel</entry>
 
-                <entry>Lokales Installationsverzeichnis</entry>
-              </row>
+                    <entry>Bemerkung</entry>
+                  </row>
+                </thead>
 
-              <row>
-                <entry>-dev lib</entry>
+                <tbody>
+                  <row>
+                    <entry>-data %Workspace%</entry>
 
-                <entry></entry>
+                    <entry>-data D:\runtime-workspace</entry>
 
-                <entry></entry>
-              </row>
+                    <entry>lokales Arbeitsverzeichnis (hier werden die
+                    Modelldaten abgelegt)</entry>
+                  </row>
 
-              <row>
-                <entry>-data %Workspace%</entry>
+                  <row>
+                    <entry>-nl de_DE</entry>
 
-                <entry>-data D:\runtime-workspace</entry>
+                    <entry>-nl en_EN</entry>
 
-                <entry>lokales Arbeitsverzeichnis</entry>
-              </row>
+                    <entry>optionale Sprachauswahl (de_DE - deutsch, en_EN -
+                    englisch)</entry>
+                  </row>
 
-              <row>
-                <entry>-consoleLog</entry>
+                  <row>
+                    <entry>-vmargs -Xmx512m</entry>
 
-                <entry></entry>
+                    <entry></entry>
 
-                <entry>Console (optional)</entry>
-              </row>
+                    <entry>Max. Speicherausnutzung (RAM - 512m = 512 MB).
+                    Empfohlen mind. 512 MB</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </table>
+          </listitem>
 
-              <row>
-                <entry>-nl de_DE</entry>
+          <listitem>
+            <para>Triangulationsanwendung bereitstellen Für die im Model
+            KalypsoWSPM verwendete Triangulation ist ein Eintrag in die
+            Umgebungsvariabeln notwendig. Für diese Konfiguration ist es
+            notwendig Administrationsrechte auf dem PC zu besitzen, da eine
+            Umgebungsvariable in der Systemsteuerung hinzugefügt werden
+            muss:</para>
 
-                <entry>-nl en_EN</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Öffnen der Systemsteuerung
+                <guisubmenu>System</guisubmenu></para>
+              </listitem>
 
-                <entry>Sprache (optional)</entry>
-              </row>
+              <listitem>
+                <para>Öffnen der Umgebungsvariablen unter Erweitert
+                <guisubmenu>Umgebungsvariablen</guisubmenu></para>
+              </listitem>
 
-              <row>
-                <entry>-vmargs -Xmx250m</entry>
+              <listitem>
+                <para>Bearbeiten der Umgebungsvariablen (Systemvariablen)
+                PATH</para>
+              </listitem>
 
-                <entry></entry>
-
-                <entry>Speicherfreigabe gem. Arbeitsspeicher</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table></para>
-
-      <para>Die Installation enthält alle zur Kalypso-Anwedung erforderlichen
-      Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
+              <listitem>
+                <para>Hinzufügen des Pfades zu Triangulationsanwendung
+                (triangle.exe) – <abbrev>z. B.</abbrev>
+                C:\Programme\KalypsoClient</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </orderedlist></para>
 
       <para>Nachdem die Installation durchgeführt wurde kann das Programm
-      durch Doppelklick des Linkes gestartet werden. Nach dem Programmstart
-      müssen einmalig Voreinstellungen getroffen werden. Diese befinden sich
-      im Menu <guimenuitem>Fenster</guimenuitem> unter
-      <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich Kalypso.
-      Beim Verlassen des Programmes werden die Einstellung im aktuellen
-      Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
+      gestartet werden (siehe <xref linkend="programm_start" />). </para>
     </section>
 
     <section>
@@ -424,15 +476,23 @@
         <primary>Update</primary>
       </indexterm>
 
-      <para>Demnächst wird eine Update-Site verfügbar sein... .</para>
+      <para>Ein Programmupdate kann zur Zeit lediglich über eine
+      Neuinstallation (siehe <xref linkend="client-installation" />)
+      durchgeführt werden.</para>
+    </section>
+
+    <section>
+      <title>Deinstallation</title>
+
+      <para>...</para>
     </section>
   </section>
 
-  <section id="anwendungsfaelle">
+  <section id="anwendungsfaelle" vendor="sachsen,sachsen-anhalt">
     <title>Anwendungsfälle</title>
 
     <indexterm>
-      <primary>Anwendungsfaelle</primary>
+      <primary>Anwendungsfälle</primary>
     </indexterm>
 
     <para>Die KALYPSO-Installation unterscheidet grundsätzlich drei
@@ -475,6 +535,21 @@
     beschrieben.</para>
   </section>
 
+  <section id="benutzerrechte" vendor="sachsen">
+    <title>Benutzerrechte</title>
+
+    <indexterm>
+      <primary>Benutzerrechte</primary>
+    </indexterm>
+
+    <para>Die Benutzerrechte für KALYPSO werden im LHWZ Sachsen zentral durch
+    PSICompact verwaltet. Hier sind für die KALYPSO-Anwendung die Rollen
+    <emphasis>Experte</emphasis> und <emphasis>Administrator</emphasis>
+    definiert. Anwender mit diesen Benutzerprofilen haben die entsprechenden
+    Rechte innerhalb der Anwendung und können somit die unter <xref
+    linkend="anwendungsfaelle" /> beschriebenen Aufgaben ausführen.</para>
+  </section>
+
   <section id="benutzerrechte" vendor="sachsen-anhalt">
     <title>Benutzerrechte</title>
 
@@ -491,7 +566,7 @@
     ausführen.</para>
   </section>
 
-  <section id="datenmanagement">
+  <section id="datenmanagement" vendor="sachsen,sachsen-anhalt">
     <title>Datenmanagement</title>
 
     <indexterm>
@@ -525,7 +600,7 @@
     geführt, bleibt Ihm das Datenmanagement weitgehend verborgen.</para>
   </section>
 
-  <section id="dokumentationen">
+  <section id="dokumentationen" vendor="sachsen">
     <title>Dokumentation</title>
 
     <para>Für das Programmsystem KALYPSO liegen Dokumentationen für
@@ -545,5 +620,12 @@
         <para>ggf. Technische Dokumentation</para>
       </listitem>
     </itemizedlist>
+  </section>
+
+  <section>
+    <title vendor="KalypsoModeller,hh_ingenieurbueros">Support</title>
+
+    <para>Offenes User Forum unter <ulink
+    url="https://www.kalypso.wb.tu-harburg.de/">https://www.kalypso.wb.tu-harburg.de/</ulink>.</para>
   </section>
 </chapter>
