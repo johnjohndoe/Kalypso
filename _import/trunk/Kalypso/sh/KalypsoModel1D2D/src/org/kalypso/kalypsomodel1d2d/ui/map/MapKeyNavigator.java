@@ -81,9 +81,9 @@ public class MapKeyNavigator
     Assert.throwIAEOnNullParam( keyEvent, "keyEvent" );
     int code = keyEvent.getKeyCode();
     char keyChar= keyEvent.getKeyChar();
-    System.out.println("keyEvent:"+keyEvent+
-                        "\n\tKeyEvent.VK_PLUS:"+KeyEvent.VK_PLUS+
-                        "\n\t+"+(int)'+');
+//    System.out.println("keyEvent:"+keyEvent+
+//                        "\n\tKeyEvent.VK_PLUS:"+KeyEvent.VK_PLUS+
+//                        "\n\t+"+(int)'+');
     /* zoom in */
     if( keyChar == '+'/*KeyEvent.VK_PLUS*/ )
     {

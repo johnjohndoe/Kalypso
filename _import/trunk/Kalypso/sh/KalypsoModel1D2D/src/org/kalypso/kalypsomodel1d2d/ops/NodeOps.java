@@ -42,10 +42,14 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -168,6 +172,71 @@ public class NodeOps
     IFE1D2DNode edgeEnd = edgeToTest.getNode( 1 );
     boolean equals = endNode.equals( edgeEnd );
     return equals;    
+  }
+  
+  /**
+   * Gets the opposite of the given node within the specified edge
+   * @param edge the edge given the opposition context
+   * @param node the node to found the opposite for
+   * @throws IllegalArgumentException if 
+   *    <ul>
+   *        <li/> node or edge is null
+   *        <li/> if node is neither a starting nor an ending node of edge
+   *        <li/> if edge does not have 2 nodes
+   *    </ul>
+   * @throws RuntimeException on any other exception encontered while 
+   *            searching for the opposite node
+   */
+  public static final IFE1D2DNode<IFE1D2DEdge> getOpositeNode(
+                                        IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge,
+                                        IFE1D2DNode<IFE1D2DEdge> node)
+                                        throws IllegalArgumentException
+  {
+    Assert.throwIAEOnNullParam( node, "node" );
+    Assert.throwIAEOnNullParam( edge, "edge" );
+    
+    try
+    {
+      if( NodeOps.startOf( node, edge ))
+      {
+        return edge.getNode( 1 );//nodes.get( 1 );
+      }
+      else if( NodeOps.endOf( node, edge ))
+      {
+        return edge.getNode( 0 );//nodes.get( 0 );
+      }
+      else
+      {
+        String message = 
+          String.format( 
+              "Node[%s] does not bellong to egde[%s]", 
+              node.getGmlID(), 
+              edge.getGmlID() );
+        throw new IllegalArgumentException( message );
+      }
+    }
+    catch(IllegalArgumentException iae)
+    {
+      throw iae;
+    }
+    catch (ArrayIndexOutOfBoundsException aobe) 
+    {
+      String message = 
+          String.format( 
+              "Edge does not have 2 nodes: \n\tedge=%s \n\texception message:%s", 
+              edge.getGmlID(), 
+              aobe.getLocalizedMessage() );
+      throw new IllegalArgumentException(message,aobe);
+    }
+    catch(Throwable th)//else
+    {
+      String message = 
+        String.format( 
+            "Error while getting opposite of node[%s] in edge[%s]", 
+            node.getGmlID(),
+            edge.getGmlID());
+      throw new RuntimeException( message, th );
+    }
   }
   
 }

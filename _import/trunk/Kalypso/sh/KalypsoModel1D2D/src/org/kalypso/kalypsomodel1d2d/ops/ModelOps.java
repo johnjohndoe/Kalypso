@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
@@ -87,8 +88,8 @@ public class ModelOps
   }
 
   public static IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] routing( 
-                                  final /*FE1D2DNode*/IFE1D2DNode startNode, 
-                                  final /*FE1D2DNode*/IFE1D2DNode endNode ) 
+                                  final IFE1D2DNode startNode, 
+                                  final IFE1D2DNode endNode ) 
                                   throws CoreException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
@@ -101,13 +102,13 @@ public class ModelOps
       final Point endPoint = 
           (Point) JTSAdapter.export( endNode.getPoint() );
 
-      final FE1D2DDiscretisationModel model = 
+      final IFEDiscretisationModel1d2d model = 
           new FE1D2DDiscretisationModel( 
                 startNode.getWrappedFeature().getParent() );
       
       final int maxNodeCount = model.getNodes().size();
 
-      IFE1D2DNode lastFoundNode = startNode;
+      IFE1D2DNode<IFE1D2DEdge> lastFoundNode = startNode;
       int count = 0;
       while( count < maxNodeCount && !lastFoundNode.equals( endNode ) )
       {
@@ -122,7 +123,7 @@ public class ModelOps
         // alle benachbarten elemente des aktuellen knoten
         final Collection<IFE1D2DNode> neighbourNodes = lastFoundNode.getNeighbours( );
 
-        if( neighbourNodes.size()/*length*/ == 0 )
+        if( neighbourNodes.size() == 0 )
         {
           final IStatus status = StatusUtilities.createErrorStatus( "No good nodes found for node:" + lastFoundNode.getWrappedFeature().getId() );
           throw new CoreException( status );
@@ -133,7 +134,8 @@ public class ModelOps
         IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> shortestFoundEdge = null;
         double minEdgeLength = Double.MAX_VALUE;
 
-        final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = lastFoundNode.getEdges();
+        IFE1D2DEdge[] edges = 
+            lastFoundNode.getContainers().toArray( new IFE1D2DEdge[]{} );
         for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
         {
           if( edgeList.contains( edge ) )
@@ -142,22 +144,15 @@ public class ModelOps
           }
 
           // get opposite node (not me)
-          final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
-          if( nodes.size() == 2 )
+          try
           {
             final IFE1D2DNode oppositeNode;
-            if( nodes.get( 0 ).equals( lastFoundNode ) )
+            oppositeNode = NodeOps.getOpositeNode( edge, lastFoundNode);
+            if(NodeOps.startOf( oppositeNode, edge ))
             {
-              oppositeNode = nodes.get( 1 );
+              //get the inverted edge if opposite is the starting node
+              edge = model.findEdge( lastFoundNode, oppositeNode ); 
             }
-            else
-            {
-              //TODO cope with direction here by finding the right edge
-//              System.out.println();
-              oppositeNode = nodes.get( 0 );
-              edge=model.findEdge( lastFoundNode, oppositeNode );
-            }
-
             if( neighbourNodeList.contains( oppositeNode ) )
             {
               // the current best edge is the one, whichs endpoint is nearest to the target, intersect the line segment
@@ -171,6 +166,18 @@ public class ModelOps
               }
             }
           }
+          catch (ArrayIndexOutOfBoundsException e) 
+          {
+            e.printStackTrace();
+            String message = 
+              String.format( 
+                  "Edge does not have 2 nodes: \n\t edge=$%s \n\texceptionMessage=", 
+                  edge.getGmlID(), 
+                  e.getLocalizedMessage() );
+            final IStatus status = 
+              StatusUtilities.createErrorStatus( message );
+            throw new CoreException( status );
+          }
         }
 
         // if we have a shortest edge, use it!
@@ -178,19 +185,16 @@ public class ModelOps
         {
           edgeList.add( shortestFoundEdge );
 
-          final IFeatureWrapperCollection<IFE1D2DNode> nodes = 
-            (shortestFoundEdge instanceof IEdgeInv)?
-                  ((IEdgeInv)shortestFoundEdge).getInverted().getNodes():shortestFoundEdge.getNodes();
-          if( nodes.size() == 2 )
+          try
           {
-            if( nodes.get( 0 ).equals( lastFoundNode ) )
-              lastFoundNode = nodes.get( 1 );
-            else
-              lastFoundNode = nodes.get( 0 );
+            lastFoundNode = 
+                NodeOps.getOpositeNode( shortestFoundEdge, lastFoundNode );
           }
-          else
+          catch(Throwable th)//else
           {
-            final IStatus status = StatusUtilities.createErrorStatus( "Edge with nodeCount != 2 encountered." );
+            th.printStackTrace();
+            final IStatus status = 
+                StatusUtilities.createErrorStatus( "Edge with nodeCount != 2 encountered." );
             throw new CoreException( status );
           }
         }
