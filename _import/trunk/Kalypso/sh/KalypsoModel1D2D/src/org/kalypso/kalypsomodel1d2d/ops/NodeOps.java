@@ -174,6 +174,20 @@ public class NodeOps
     return equals;    
   }
   
+  public static boolean hasElevation(IFE1D2DNode<IFE1D2DEdge> node)
+  {
+      GM_Point point = node.getPoint();
+      boolean status = false;
+      if(point.getCoordinateDimension()<=2)
+      {
+        status = false;
+      }
+      else
+      {
+        return status = true;
+      }    
+   return status; 
+  }
   /**
    * Gets the opposite of the given node within the specified edge
    * @param edge the edge given the opposition context
@@ -237,6 +251,5 @@ public class NodeOps
             edge.getGmlID());
       throw new RuntimeException( message, th );
     }
-  }
-  
+  } 
 }
