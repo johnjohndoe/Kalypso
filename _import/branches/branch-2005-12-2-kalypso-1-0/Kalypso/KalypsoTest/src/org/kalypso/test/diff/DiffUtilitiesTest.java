@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.logging.Level;
 
 import junit.framework.TestCase;
 
@@ -70,9 +71,9 @@ public class DiffUtilitiesTest extends TestCase
       final ILogger logger = new ILogger()
       {
         /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
          */
-        public void log( String message )
+        public void log( Level level, boolean mainMsg, String message )
         {
           System.out.println( message );
           buffer.append( message );
@@ -83,10 +84,10 @@ public class DiffUtilitiesTest extends TestCase
       final InputStream resourceAsStream = getClass().getResourceAsStream( "resources/difflog.txt" );
       final StringWriter writer = new StringWriter();
       CopyUtils.copy( resourceAsStream, writer );
-      final String test = buffer.toString().replaceAll("\\s","");
-      
-      final String goal = writer.toString().replaceAll("\\s","");
-      assertEquals( test, goal);
+      final String test = buffer.toString().replaceAll( "\\s", "" );
+
+      final String goal = writer.toString().replaceAll( "\\s", "" );
+      assertEquals( test, goal );
     }
     catch( Exception e )
     {
