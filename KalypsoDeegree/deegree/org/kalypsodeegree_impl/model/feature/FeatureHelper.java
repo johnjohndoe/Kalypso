@@ -310,42 +310,18 @@ public class FeatureHelper
       final List targetList = (List) targetFeature.getProperty( pt );
 
       for( final Object listElement : list )
-        targetList.add( cloneData( sourceFeature, targetFeature, pt, listElement, version ) );
+      {
+        final Object cloneData = cloneData( sourceFeature, targetFeature, pt, listElement, version );
+        // TODO: this is not nice! Better: d not add feature to list within the cloneFeature Method
+        if( cloneData instanceof XLinkedFeature_Impl || !(cloneData instanceof Feature) )
+          targetList.add( cloneData );
+      }
 
       return targetList;
     }
 
     return cloneData( sourceFeature, targetFeature, pt, property, version );
   }
-
-  // /**
-  // * Clones a feature within a feature-list.
-  // */
-  // public static Feature cloneFeature( final Feature feature )
-  // {
-  // final IFeatureType featureType = feature.getFeatureType();
-  // final Feature parent = feature.getParent();
-  // final IRelationType parentRelation = feature.getParentRelation();
-  //
-  // final Feature newFeature = feature.getWorkspace().createFeature( parent, parentRelation, featureType );
-  //
-  // final IPropertyType[] properties = featureType.getProperties();
-  // for( final IPropertyType pt : properties )
-  // {
-  // try
-  // {
-  // final Object newValue = cloneProperty( feature, pt );
-  // newFeature.setProperty( pt, newValue );
-  // }
-  // catch( final CloneNotSupportedException e )
-  // {
-  // /* Just log, try to copy at least the rest */
-  // KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-  // }
-  // }
-  //
-  // return newFeature;
-  // }
 
   /**
    * @throws CloneNotSupportedException
@@ -738,45 +714,39 @@ public class FeatureHelper
 
   /**
    * Only works for non list feature property
-   * @param feature feature which list property receive the new feature
-   * @param listProperty the {@link QName} of the list property
-   * @param featureProperties the property of the feature to be set before adding the
-   *        feature to the list
-   * @param featurePropQNames the {@link QName} of the feature property to be set
-   *        before adding it the the 
-   * @param throws {@link IllegalArgumentException} if featureProperties and 
-   *        featurePropQNames are not all null or are not all non null with 
-   *        differen lengths 
+   * 
+   * @param feature
+   *          feature which list property receive the new feature
+   * @param listProperty
+   *          the {@link QName} of the list property
+   * @param featureProperties
+   *          the property of the feature to be set before adding the feature to the list
+   * @param featurePropQNames
+   *          the {@link QName} of the feature property to be set before adding it the the
+   * @param throws
+   *          {@link IllegalArgumentException} if featureProperties and featurePropQNames are not all null or are not
+   *          all non null with differen lengths
    */
-  public static Feature addFeature( 
-                            final Feature feature, 
-                            final QName listProperty, 
-                            final QName newFeatureName,
-                            final Object[] featureProperties,
-                            final QName[]  featurePropQNames) 
-                            throws GMLSchemaException, IllegalArgumentException
+  public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final Object[] featureProperties, final QName[] featurePropQNames ) throws GMLSchemaException, IllegalArgumentException
   {
-    if( (featureProperties == null & featurePropQNames==null))
+    if( (featureProperties == null & featurePropQNames == null) )
     {
-      //okay
+      // okay
     }
-    else if(featureProperties !=null && featurePropQNames!=null)
+    else if( featureProperties != null && featurePropQNames != null )
     {
-      if(featureProperties.length!=featurePropQNames.length)
+      if( featureProperties.length != featurePropQNames.length )
       {
-        throw new IllegalArgumentException(
-            "featurePropQName and featureProperties must have the same length");
+        throw new IllegalArgumentException( "featurePropQName and featureProperties must have the same length" );
       }
-      
+
     }
     else
     {
-      throw new IllegalArgumentException(
-          "featureProperties and FeaturePropQnames must be all null or all non null with"+
-          "the same length");
+      throw new IllegalArgumentException( "featureProperties and FeaturePropQnames must be all null or all non null with" + "the same length" );
     }
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
-    //TODO Patrice to check can the feature(param) be different from the list property parent
+    // TODO Patrice to check can the feature(param) be different from the list property parent
     final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
@@ -796,18 +766,17 @@ public class FeatureHelper
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
 
-    final Feature newFeature = 
-        workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
-    for(int i = featureProperties.length-1;i>=0;i--)
+    final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
+    for( int i = featureProperties.length - 1; i >= 0; i-- )
     {
       newFeature.setProperty( featurePropQNames[i], featureProperties[i] );
     }
 
     list.add( newFeature );
-    
+
     return newFeature;
   }
-  
+
   public static void setProperties( final Feature result, final Map<IPropertyType, Object> props )
   {
     for( final Map.Entry<IPropertyType, Object> entry : props.entrySet() )
