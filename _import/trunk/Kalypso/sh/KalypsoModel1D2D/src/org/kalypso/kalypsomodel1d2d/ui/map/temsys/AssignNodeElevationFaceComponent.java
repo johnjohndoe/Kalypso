@@ -69,6 +69,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -81,9 +83,11 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Madanagopal
@@ -180,6 +184,7 @@ public class AssignNodeElevationFaceComponent
           // return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
           ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation );
           IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
+
           if( nodeTheme == null )
           {
             return;
@@ -190,18 +195,28 @@ public class AssignNodeElevationFaceComponent
             // before the command execution by the framework sothat the table does
             // not display the right label
             command.process();
-            nodeTheme.postCommand( command, null );
-            // command.process();
 
+            CommandableWorkspace workspace = nodeTheme.getWorkspace();
+            // get notification fired for the nodes
+            FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( 
+                workspace, model1d2d.getWrappedFeature(), 
+                new Feature[] { node.getWrappedFeature(), model1d2d.getWrappedFeature() },// changedFeaturesArray,
+            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE );
+            workspace.fireModellEvent( modellEvent );
+//            nodeTheme.fireModellEvent( modellEvent );
+            ChangeTerrainElevationSystemCommand changeTE = new ChangeTerrainElevationSystemCommand( workspace, model1d2d );
+            changeTE.addCommand( command );
+            workspace.postCommand( changeTE );
+            MapPanel mapPanel = dataModel.getMapPanel();
+            mapPanel.repaint();  
+            
           }
           catch( Throwable th )
           {
             th.printStackTrace();
           }
-          // nodeElevationViewer.up
+          
           nodeElevationViewer.refresh( node, true );
-          // nodeElevationViewer.refresh( element, true );
-          System.out.println( "adadad" + node.getPoint() );
         }
       }
       else if( property.equals( nodeElevationViewer.getColumnProperties()[0] ) )
@@ -422,8 +437,8 @@ public class AssignNodeElevationFaceComponent
       {
         getAllNonElevationNodes();
       }
-    });
-    
+    } );
+
     // new SelectionAdapter()
     // {
     // public void widgetSelected( SelectionEvent event )
@@ -491,7 +506,6 @@ public class AssignNodeElevationFaceComponent
       {
         table.selectAll();
       }
-
     } );
 
     regionFormData = new FormData();
@@ -533,7 +547,7 @@ public class AssignNodeElevationFaceComponent
 
     } );
 
-   // noElevationBtnAdapter = 
+    // noElevationBtnAdapter =
 
     TextCellEditor textCellEditor = new TextCellEditor( table );
     TextCellEditor eleCellEditor = new TextCellEditor( table );
@@ -550,13 +564,15 @@ public class AssignNodeElevationFaceComponent
   {
     List<IFE1D2DNode> allNodes = dataModel.getDiscretisationModel().getNodes();
     List<IFE1D2DNode> noElevationNodes = new ArrayList<IFE1D2DNode>();
-    
-    for(int i = 0; i<allNodes.size();i++){
-      
+
+    for( int i = 0; i < allNodes.size(); i++ )
+    {
+
       try
       {
-        if (!NodeOps.hasElevation(allNodes.get(i))){
-          noElevationNodes.add(allNodes.get(i));
+        if( !NodeOps.hasElevation( allNodes.get( i ) ) )
+        {
+          noElevationNodes.add( allNodes.get( i ) );
         }
       }
       catch( RuntimeException e )
@@ -564,12 +580,14 @@ public class AssignNodeElevationFaceComponent
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      
-      
     }
-    System.out.println("Number of Nodes :"+allNodes.size());
-    System.out.println("Nodes With No Elevation:"+noElevationNodes.size());
+
+    nodeElevationViewer.setInput( noElevationNodes.toArray( new IFE1D2DNode[] {} ) );
+    nodeElevationViewer.refresh();
+    System.out.println( "Number of Nodes :" + allNodes.size() );
+    System.out.println( "Nodes With No Elevation:" + noElevationNodes.size() );
   }
+
   private final void applyElevation( ) throws Exception
   {
     // System.out.println( "List of Elements Selected " + selectionNodeList.size() );
