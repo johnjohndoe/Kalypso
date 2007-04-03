@@ -71,7 +71,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName )
   {
-    super( createDummyStyle(), styleName );
+    super( createDummyStyle( "loading..." ), styleName );
     m_styleKey = poolableStyleKey;
     // m_styleName = styleName;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -81,9 +81,9 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   /**
    * @return a empty style
    */
-  private static UserStyle createDummyStyle( )
+  private static UserStyle createDummyStyle( final String name )
   {
-    return new UserStyle_Impl( "loading", "loading", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return new UserStyle_Impl( name, "title", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public GisTemplateUserStyle( final UserStyle style, final String name )
@@ -103,12 +103,12 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       try
       {
         final StyledLayerDescriptor sld = (StyledLayerDescriptor) newValue;
-        // TODO: better error handling; if m_userStyle zero here, we get NPEs later
         m_userStyle = sld.findUserStyle( m_styleName );
         if( m_userStyle == null )
         {
-            System.out.println( "No user style with name: " + m_styleName + ". Dummy style created instead.");
-            m_userStyle = createDummyStyle();
+            final String msg = "No user style with name: " + m_styleName + ". Dummy style created instead.";
+            System.out.println( msg);
+            m_userStyle = createDummyStyle( msg );
         }
       }
       catch( Exception e )
@@ -128,7 +128,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
     {
       m_loaded = false;
-      m_userStyle = createDummyStyle();
+      m_userStyle = createDummyStyle( "Pool object was invalidated..." );
       fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
     }
   }
@@ -139,7 +139,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     super.dispose();
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
-    m_userStyle = createDummyStyle();
+    m_userStyle = createDummyStyle( "Disposed" );
   }
 
   /**
