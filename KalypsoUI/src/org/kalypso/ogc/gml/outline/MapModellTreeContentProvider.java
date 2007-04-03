@@ -49,6 +49,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -122,9 +123,13 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( element instanceof ThemeStyleTreeObject )
     {
-      ThemeStyleTreeObject obj = (ThemeStyleTreeObject) element;
-      UserStyle userStyle = obj.getStyle();
-      if( userStyle.getFeatureTypeStyles()[0].getRules().length > 0 )
+      final ThemeStyleTreeObject obj = (ThemeStyleTreeObject) element;
+      final UserStyle userStyle = obj.getStyle();
+      final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
+      if( featureTypeStyles.length == 0 )
+        return false;
+      
+      if( featureTypeStyles[0].getRules().length > 0 )
         return true;
     }
     return (element instanceof IKalypsoTheme);
