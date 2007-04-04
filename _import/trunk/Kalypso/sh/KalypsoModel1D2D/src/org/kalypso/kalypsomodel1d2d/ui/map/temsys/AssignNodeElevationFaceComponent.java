@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -61,9 +63,15 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -88,6 +96,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
 
 /**
  * @author Madanagopal
@@ -384,6 +393,10 @@ public class AssignNodeElevationFaceComponent
 
   private SelectionListener noElevationBtnAdapter;
 
+  private Group nodeViewerGroup;
+
+  private Group noElevationGroup;
+
   AssignNodeElevationFaceComponent( )
   {
 
@@ -415,21 +428,24 @@ public class AssignNodeElevationFaceComponent
     this.inputText = new Text( cComposite, SWT.FLAT | SWT.BORDER );
     inputText.setEditable( false );
     inputText.setText( "" );
+    inputText.setTextLimit( 100 );
     inputText.setLayoutData( regionFormData );
 
+    // The No Elevation Group
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( 0, 5 );
     regionFormData.top = new FormAttachment( infoLabel, 10 );
-    selectNoElevationLabel = new Label( cComposite, SWT.FLAT );
-    selectNoElevationLabel.setText( "Select Nodes with NoElevation" );
-    selectNoElevationLabel.setLayoutData( regionFormData );
+    //regionFormData.right = new FormAttachment( 100, 0 );
+    noElevationGroup = new Group( cComposite, SWT.NONE );
+    noElevationGroup.setText( "Automatisches selectieren von Modell-Knoten" );//Modelle Knoten Suchen    
+    noElevationGroup.setLayoutData( regionFormData );
+    noElevationGroup.setLayout( new GridLayout(2,false) );
+   
+    selectNoElevationLabel = new Label( noElevationGroup, SWT.FLAT );
+    selectNoElevationLabel.setText( "Select Nodes with NoElevation" );    
 
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( selectNoElevationLabel, 5 );
-    regionFormData.top = new FormAttachment( infoLabel, 10 );
-    selectNoElevationButton = new Button( cComposite, SWT.PUSH );
+    selectNoElevationButton = new Button( noElevationGroup, SWT.PUSH );
     selectNoElevationButton.setText( "Nodes" );
-    selectNoElevationButton.setLayoutData( regionFormData );
     selectNoElevationButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -439,46 +455,60 @@ public class AssignNodeElevationFaceComponent
       }
     } );
 
-    // new SelectionAdapter()
-    // {
-    // public void widgetSelected( SelectionEvent event )
-    // {
-    // table.selectAll();
-    // }
-    //
-    // } );
-
+    // The Node Viewer Group
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( 0, 5 );
-    regionFormData.top = new FormAttachment( selectNoElevationLabel, 5 );
-    // regionFormData.height = 70;
-    Label areaSelectLabel = new Label( cComposite, SWT.FLAT );
-    areaSelectLabel.setText( "Editierbare Knoten"/* "Select Area" */);
-    areaSelectLabel.setLayoutData( regionFormData );
-
+    regionFormData.top = new FormAttachment( noElevationGroup, 10 );
+    //regionFormData.right = new FormAttachment( 100, 0 );
+    nodeViewerGroup = new Group( cComposite, SWT.NONE );
+    nodeViewerGroup.setText( "Editierbare Knoten" );
+    nodeViewerGroup.setLayoutData( regionFormData );
+    nodeViewerGroup.setLayout( new FormLayout() );
+    
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( 0, 10 );
-    regionFormData.top = new FormAttachment( selectNoElevationButton, 10 );
+    regionFormData.top = new FormAttachment( 0, 10 );
+    regionFormData.bottom = new FormAttachment( 100, -10 );
     regionFormData.height = 70;
-    nodeElevationViewer = new TableViewer( cComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
-    this.table = nodeElevationViewer.getTable();
-    table.setLayoutData( regionFormData );
-
-    TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setText( "Knoten"/* "Node" */);
-    lineColumn.setWidth( 100 / 1 );
-    TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
-    actualPointNum.setText( "Höhe   "/* "Elevation" */);
-    actualPointNum.setWidth( 100 / 2 );
-
+    nodeElevationViewer = new TableViewer( nodeViewerGroup, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
     nodeElevationViewer.setUseHashlookup( true );
     nodeElevationViewer.setColumnProperties( new String[] { "Node", "Elevation" } );
-
+    nodeElevationViewer.setLabelProvider( new FENodeLabelProvider() );
+    nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+    nodeElevationViewer.setSorter( new FENodeViewerSorter() );
+    
+    this.table = nodeElevationViewer.getTable();
+    table.setLayoutData( regionFormData );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    nodeElevationViewer.setLabelProvider( new FENodeLabelProvider() );
-    nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+    TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
+    lineColumn.setText( "Knoten"/* "Node" */);
+    lineColumn.setWidth( 100 / 1 );    
+    lineColumn.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent event) {
+        nodeElevationViewer.setSorter( new FENodeViewerSorter() );
+        nodeElevationViewer.refresh();
+       // System.out.println("fired 0");
+      }
+    });
+    
+    TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
+    actualPointNum.setText( "Höhe   "/* "Elevation" */);
+    actualPointNum.setWidth( 100 / 2 );
+    actualPointNum.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent event) {
+        nodeElevationViewer.setSorter( new FENodeViewerSorter());
+        nodeElevationViewer.refresh();
+        System.out.println("fired 1");
+      }
+    });
+
+    
+
+
+
+
     List<IFE1D2DNode> selectedNode = dataModel.getSelectedNode();
     if( selectedNode == null )
     {
@@ -493,11 +523,35 @@ public class AssignNodeElevationFaceComponent
     // nodeElevationViewer.getControl().addFocusListener( focusListener );
     nodeElevationViewer.getTable().addMouseListener( mouseListener );
     // nodeElevationViewer.getControl().addMouseListener( mouseListener );
+    
+//    actualPointNum.addListener(SWT.Selection, new Listener() {
+//      public void handleEvent(Event e) {
+//        // sort column 2
+//        TableItem[] items = table.getItems();
+//        Collator collator = Collator.getInstance(Locale.getDefault());
+//        for (int i = 1; i < items.length; i++) {
+//          String value1 = items[i].getText(1);
+//          for (int j = 0; j < i; j++) {
+//            String value2 = items[j].getText(1);
+//            if (collator.compare(value1, value2) < 0) {
+//              String[] values = { items[i].getText(0),
+//                  items[i].getText(1) };
+//              items[i].dispose();
+//              TableItem item = new TableItem(table, SWT.NONE, j);
+//              item.setText(values);
+//              items = table.getItems();
+//              break;
+//            }
+//          }
+//        }
+//      }
+//    });
 
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( table, 5 );
-    regionFormData.top = new FormAttachment( selectNoElevationButton, 10 );
-    Button selectAll = new Button( cComposite, SWT.PUSH );
+    regionFormData.top = new FormAttachment( 0, 10 );
+    regionFormData.right = new FormAttachment(100, -2);
+    Button selectAll = new Button( nodeViewerGroup, SWT.PUSH );
     selectAll.setText( "Alles selektieren"/* "Select All" */);
     selectAll.setLayoutData( regionFormData );
     selectAll.addSelectionListener( new SelectionAdapter()
@@ -511,7 +565,8 @@ public class AssignNodeElevationFaceComponent
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( table, 5 );
     regionFormData.top = new FormAttachment( selectAll, 5 );
-    Button deSelectAll = new Button( cComposite, SWT.PUSH );
+    regionFormData.right = new FormAttachment(100, -2);
+    Button deSelectAll = new Button( nodeViewerGroup, SWT.PUSH );
     deSelectAll.setLayoutData( regionFormData );
     deSelectAll.setText( "Alles deselektieren"/* "DeSelect All" */);
 
@@ -527,7 +582,8 @@ public class AssignNodeElevationFaceComponent
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( table, 5 );
     regionFormData.top = new FormAttachment( deSelectAll, 5 );
-    Button applySelected = new Button( cComposite, SWT.PUSH );
+    regionFormData.right = new FormAttachment(100, -2);
+    Button applySelected = new Button( nodeViewerGroup, SWT.PUSH );
     applySelected.setLayoutData( regionFormData );
     applySelected.setText( "Höhen zuweisen"/* "Apply Selected" */);
     applySelected.addSelectionListener( new SelectionAdapter()

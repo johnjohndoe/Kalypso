@@ -554,13 +554,10 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
     maxText.addFocusListener( new FocusListener ()
     {
-
       public void focusGained( FocusEvent e )
       {
-        // TODO Auto-generated method stub
-        
+        // TODO Auto-generated method stub        
       }
-
       @SuppressWarnings("synthetic-access")
       public void focusLost( FocusEvent e )
       {
@@ -573,10 +570,8 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       public void modifyText( final ModifyEvent e )
       {
         String tempText = maxText.getText();
-
         Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" );
         Matcher m = p.matcher( tempText );
-
         if( !m.matches() )
         {
           maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
@@ -615,7 +610,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       {
         // TODO Auto-generated method stub       
       }
-
       @SuppressWarnings("synthetic-access")
       public void focusLost( FocusEvent e )
       {
