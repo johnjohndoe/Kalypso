@@ -1,4 +1,4 @@
-C     Last change:  K     3 Apr 2007    8:01 pm
+C     Last change:  EF    3 Apr 2007    4:38 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -872,6 +872,10 @@ CIPK MAR01
       ALLOCATE(hhalt(maxe,2))
       ALLOCATE(hht(maxp))
       ALLOCATE(kennung(maxp))
+      ALLOCATE(dvdtaltzs(maxe,2))
+      ALLOCATE(vvt(maxp))
+      ALLOCATE(dvvt(maxe,2))
+      ALLOCATE(dvintdt(maxp,4))
 
       outer3: DO i = 1, MaxP
         hhmin(i)      = 0.0
@@ -903,7 +907,9 @@ CIPK MAR01
         sbot(i)       = 0.0
         teschke(i)    = 0.0
         hht(i)        = 0.0
-        kennung(maxp) = 0.0
+        !kennung(maxp) = 0.0
+        kennung(i)    = 0.0
+        vvt(i)        = 0.0
         inner3: DO j = 0, 12
           apoly (i, j) = 0.0
           qpoly (i, j) = 0.0
@@ -955,6 +961,7 @@ CIPK MAR01
           dqintdt(i,j)     = 0.0
           vflowint(i,j)    = 0.0
           dvintdx(i,j)     = 0.0
+          dvintdt(i,j)     = 0.0
         ENDDO inner5
       ENDDO outer5
 
@@ -968,6 +975,8 @@ CIPK MAR01
           dqqt(i,j)      = 0.0
           !qhalt(i,j)     = 0.0
           dqdtaltzs(i,j) = 0.0
+          dvdtaltzs(i,j) = 0.0
+          dvvt(i,j)      = 0.0
         end do
       end do
 

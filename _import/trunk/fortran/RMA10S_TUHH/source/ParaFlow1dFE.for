@@ -1,4 +1,4 @@
-C     Last change:  K    27 Mar 2007    3:01 pm
+C     Last change:  EF    2 Apr 2007   11:18 am
       MODULE PARAFlow1dFE
 
 
@@ -82,7 +82,10 @@ C     Last change:  K    27 Mar 2007    3:01 pm
       REAL(KIND=8),ALLOCATABLE       :: hhalt(:,:)                   !EFa Dec06, Höhe des vorherigen Zeitschrittes
       REAL(KIND=8),ALLOCATABLE       :: hht(:)                       !EFa Dec06
       REAL(KIND=8),allocatable       :: kennung(:)                   !EFa Jan07, wird in coef1dFE mit 1 belegt; Kennung für Konten eines Teschke-Elementes
-
+      REAL(KIND=8),ALLOCATABLE       :: dvvt(:,:)                    !EFa Apr07, Zeitableitung der Fließgeschwindigkeit
+      REAL(KIND=8),ALLOCATABLE       :: dvdtaltzs(:,:)               !EFa Apr07, speichern der Zeitableitung der Fließgeschwindigkeit für den nächsten Zeitschritt
+      REAL(KIND=8),ALLOCATABLE       :: vvt(:)                       !EFa Apr07, speichern der Fließgeschwindigkeit für den nächsten Zeitschritt
+      REAL(KIND=8),ALLOCATABLE       :: dvintdt(:,:)                 !EFa Apr07, Zeitableitung der Fließgeschwindigkeit im Element
       !nis,feb07,testing
       REAL (KIND = 8), allocatable   :: matrix(:,:), vector(:)
       !-
