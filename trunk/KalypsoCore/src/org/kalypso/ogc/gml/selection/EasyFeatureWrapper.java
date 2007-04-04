@@ -88,4 +88,23 @@ public final class EasyFeatureWrapper
   {
     return m_workspace;
   }
+  
+  /**
+   * Equals which is only based on {@link Feature#equals(Object)}
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( Object obj )
+  {
+    if(obj instanceof EasyFeatureWrapper )
+    {
+      return m_feature.equals( 
+          ((EasyFeatureWrapper)obj).m_feature);
+    }
+    else
+    {
+      return super.equals(obj);
+    }
+  }
 }
