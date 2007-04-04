@@ -6,3 +6,4 @@ Makefile
 *.mod
 *.o
 KALYPSO-1D.exe
+errs.MD
