@@ -1,4 +1,4 @@
-C     Last change:  K    29 Mar 2007    5:43 pm
+C     Last change:  EF    4 Apr 2007   11:02 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -917,22 +917,25 @@ CIPK APR01  NOW RESET FOR MID-SIDES
             DO L=2,NCRN(K),2
               IF(IMAT(K) .LT. 901  .OR.  IMAT(K) .GT. 903) THEN
                 J=NOPS(K,L)
+                !EFa Apr07, not for mid-sides of Flow1dFE-elements
+                if (j>0) then
                 N1=NOPS(K,L-1)
-                IF(MOD(L,NCRN(K)) .EQ. 0) THEN
-                  N2=1
-                ELSE
-                  N2=NOPS(K,L+1)
-                ENDIF
-                WSLL(J) = (WSLL(N1)+WSLL(N2))/2.
-                KK=NREF(J)+1
-                IF(KK .NE. 1) THEN
-                  LL=NREF(J)+NDEP(J)-1
-                  IF(LL .GE. KK) THEN
-                    DO M=KK,LL
-                      WSLL(M)=WSLL(J)
-                    ENDDO
+                  IF(MOD(L,NCRN(K)) .EQ. 0) THEN
+                    N2=1
+                  ELSE
+                    N2=NOPS(K,L+1)
                   ENDIF
-                ENDIF
+                  WSLL(J) = (WSLL(N1)+WSLL(N2))/2.
+                  KK=NREF(J)+1
+                  IF(KK .NE. 1) THEN
+                    LL=NREF(J)+NDEP(J)-1
+                    IF(LL .GE. KK) THEN
+                      DO M=KK,LL
+                        WSLL(M)=WSLL(J)
+                      ENDDO
+                    ENDIF
+                  ENDIF
+                endif
               ENDIF
             ENDDO
           ENDIF
