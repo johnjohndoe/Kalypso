@@ -1,4 +1,4 @@
-!     Last change:  WP    7 Jun 2006    3:57 pm
+!     Last change:  MD    7 Mar 2007    4:35 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -783,15 +783,12 @@ IF (ifllen.gt.8) then
   ifllen = 8
 ENDIF
 
+
 unit2 (ilen + 1:nch80) = FLUSSNAME(1:ifllen)    ! Es soll der vollstaendige Dateiname *.qb1 und *.qb2
 						! in dem Unterordner \DATH erzeugt werden.
 ilen = LEN_TRIM(unit2)                          ! Neue Laenge des Dateinamens
 unit2 (ilen + 1:nch80) = '.qb1'                 ! Datei wird mit der Endung .qb1 versehen
-
-
 WRITE ( * , '('' Name 1.Datei: '',a)') unit2 (1:ilen + 5)
-
-
 
 !HB   damit der Pfad (unit2) dieser ersten Datei (*.qb1) nach SUB zeila
 !HB   uebergeben werden kann, wird er umbenannt.
@@ -800,19 +797,18 @@ WRITE ( * , '('' Name 1.Datei: '',a)') unit2 (1:ilen + 5)
 pfad_qb1 = unit2                                ! Vollstaendiger Dateiname der *.qb1-Datei
 !write (*,*) 'In QBORDV. pfad_qb1 = ', pfad_qb1
 
-!     Hier wird dem Dateipfad unit2 eine neue Endung gegeben
+
+!Hier wird dem Dateipfad unit2 eine neue Endung gegeben
 unit2 (ilen + 1:nch80) = '.qb2'
-
-
 WRITE ( * , '('' Name 2.Datei: '',a)') unit2 (1:ilen + 5)
-
-
 !HB   damit der Pfad (unit2) dieser zweiten Datei (*.qb2) nach SUB zeila
 !HB   ohne Verwechslungen uebergeben werden kann, wird er umbenannt.
 pfad_qb2 = unit2
 !write (*,*) 'In QBORDV. pfad_qb2 = ', pfad_qb2
 
 
+
+! Zuweisung des Pfades fuer NAME_OUT_LAENGS in MAIN (=wsp.f90)
 CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, NAME_OUT_LAENGS)
 
 
