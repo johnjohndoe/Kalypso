@@ -110,7 +110,7 @@ public class HMOTerrainElevationModel
     union = rings[0].getEnvelopeInternal();
     for(LinearRing ring:rings)
     {
-      System.out.println("ring:"+ring);
+//      System.out.println("ring:"+ring);
       triangleData=new TriangleData(ring);
       Envelope envelopeInternal = ring.getEnvelopeInternal();
       triangles.insert( 

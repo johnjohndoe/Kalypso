@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -117,7 +118,7 @@ public class FENetConceptSelectionWidget implements IWidget
               m_selector.select( 
                       env, 
                       m_featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
-                      false );
+                      true );
       for(int i=selected.size()-1;i>=0;i--)
       {
         //TODO WHAT is this doing???
@@ -126,13 +127,17 @@ public class FENetConceptSelectionWidget implements IWidget
       return filterSelected( selected,selectionFilter);
     }
     
-    public List<EasyFeatureWrapper> getSelectedByEnvelope(GM_Envelope env, ISelectionFilter selectionFilter)
+    public List<EasyFeatureWrapper> getSelectedByEnvelope(
+                                          GM_Envelope env, 
+                                          ISelectionFilter selectionFilter, 
+                                          boolean selectWithinBox)
     {
+      
       List selected = 
         m_selector.select( 
             env,
             m_featureTheme.getFeatureList(),
-            false);
+            selectWithinBox);
       return filterSelected( selected, selectionFilter );
       
     }
@@ -473,17 +478,11 @@ public class FENetConceptSelectionWidget implements IWidget
         GeometryFactory.createGM_Position( 
               point.getX()+delta, point.getY()+delta );
       GM_Envelope env= GeometryFactory.createGM_Envelope( min, max );
-      
-//      List selected = 
-//        selector.select( 
-//            env,
-//            featureTheme.getFeatureList(),
-//            false);
-//     addSelection( selected );
-     
+
      for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
      {
-       List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,m_selectionFilter );
+       List selectedByEnvelope = 
+         selectionContext.getSelectedByEnvelope( env,m_selectionFilter, false );
        addSelection( selectedByEnvelope );
      }
     }
@@ -494,61 +493,40 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     IFeatureSelectionManager selectionManager = 
                       mapPanel.getSelectionManager();
+    final Feature[] featuresToRemove;
+    
     if(addToSelection)
     {
       //features 
+      List<EasyFeatureWrapper> toRemoveSelection = 
+                  new ArrayList<EasyFeatureWrapper>(
+                      Arrays.asList( 
+                            selectionManager.getAllFeatures()));
+      toRemoveSelection.retainAll( selected ); 
+      selected.removeAll( toRemoveSelection );
+//      System.out.println("Selected size="+selected.size());
+      final int size = toRemoveSelection.size();
+      featuresToRemove= new Feature[size];
+      for(int i= size-1; i>=0;i--)
+      {
+        featuresToRemove[i] = 
+            toRemoveSelection.get( i ).getFeature(); 
+      }
     }
     else
     {
       selectionManager.clear();
+      featuresToRemove= new Feature[]{};
     }
     
     final int SIZE = selected.size();
-    EasyFeatureWrapper[] featuresToAdd = selected.toArray( new EasyFeatureWrapper[SIZE]);
-//    Feature parentFeature=model1d2d.getWrappedFeature();
-//    IFeatureType featureType = parentFeature.getFeatureType();
-//    IRelationType parentFeatureProperty=
-//      (IRelationType)featureType.getProperty( 
-//                                themeElementsQName);
+    EasyFeatureWrapper[] featuresToAdd = 
+                     selected.toArray( new EasyFeatureWrapper[SIZE]);
     
-//    if(selectionFilter==null)
-//    {
-//      featuresToAdd = new EasyFeatureWrapper[SIZE];
-//      for(int i=0;i<SIZE;i++)
-//      {
-//        Feature curFeature=(Feature)selected.get( i );
-//        featuresToAdd[i]=
-//          new EasyFeatureWrapper(
-//            cmdWorkspace,
-//            curFeature,
-//            parentFeature,
-//            parentFeatureProperty);
-//      }
-//    }
-//    else
-//    {
-//      List<EasyFeatureWrapper> addedAsList=
-//          new ArrayList<EasyFeatureWrapper>(SIZE);
-//      for(int i=0;i<SIZE;i++)
-//      {
-//        Feature curFeature=(Feature)selected.get( i );
-//        if(selectionFilter.accept( curFeature ))
-//        {
-//          
-//            EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
-//              cmdWorkspace,
-//              curFeature,
-//              parentFeature,
-//              parentFeatureProperty);
-//          addedAsList.add( easyFeatureWrapper );
-//          
-//        }
-//      }
-//      featuresToAdd = addedAsList.toArray(new EasyFeatureWrapper[]{});
-//    }
     
-    Feature[] featuresToRemove= new Feature[]{};
-    selectionManager.changeSelection( featuresToRemove, featuresToAdd ); 
+    selectionManager.changeSelection( 
+                        featuresToRemove, 
+                        featuresToAdd ); 
   }
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
@@ -572,15 +550,10 @@ public class FENetConceptSelectionWidget implements IWidget
         GeometryFactory.createGM_Envelope( 
                                     point0.getPosition(), 
                                     point1.getPosition() );
-//      List selected = 
-//        selector.select( 
-//            env, 
-//            featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
-//            false );
-//      addSelection( selected );
       for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
       {
-        List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env,m_selectionFilter );
+        List selectedByEnvelope = 
+            selectionContext.getSelectedByEnvelope( env,m_selectionFilter, true );
         addSelection( selectedByEnvelope );
       }
     }
