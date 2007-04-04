@@ -826,6 +826,28 @@ Kalypso 1.1f   06. Juni 2006
      Fehler tritt auf bei Kollau Projekt von Klütz & Collegen (Wagener)
 
                                                     Wolf Plöger, 06.06.2006
+                                                    
+Anmerkung zu CTFAK (1.) 
+     Die Variable ctfak wird in der Subroutine für das Pasche-Verfahren 
+     berechnet und beschreibt das Verhältnis des benetzten Umfanges auf 
+     dem Vorland zum Widerstandsbeiwertes der Trennflächen inkl. 
+     Fließwiderstand auf dem Vorland.
+     ctfak(1)    = u_tr (i1) / l_ks (ik)
+     = benetzten Umfang (linkes Vorland) / Widerstandsbeiwert (linkes Vorland)
+     ctfak(2)    = u_tr (i1) / l_ks (ik) 
+     = benetzten Umfang (rechtes Vorland) / Widerstandsbeiwert (rechtes Vorland)
+
+     Wenn eine der Trennflächen direkt am äußersten Rand (Durchströmten Bereich)
+     liegt, dann ist der Widerstandsbeiwert = 0 auf dem Vorland und 
+     die Ausgabe 'Berechnung von ctfak nicht moeglich.'' erscheint. 
+     Gleiches gilt auch für einen Widerstandsbeiwert auf dem Vorland links 
+     oder rechts mit l_ks (ik) kleiner gleich 1.e-04 .
+     Also heißt diese Meldung nur, dass Trennflächenwiderstand und die 
+     mitwirkende Breite für das Vorland nicht berechnet werden konnten. 
+     Da es ja eh kein Vorland gibt, geht es auch nicht in die hydraulische 
+     Berechnung mit ein
+                                                   Monika Donner, 04.04.2007              
+
 
 2.)  BUG in Wehrberechnung behoben. Sind eventl. noch weitere drin.
 
@@ -852,3 +874,48 @@ Kalypso 1.3      14. Februar 2007
 3.)  Kleinere Anpassungen im Code, keine Auswirkungen auf Berechnung.
 
                                                     Wolf Plöger, 14.02.2007
+
+Kalypso 1.3xx      04. April 2007
+-----------------------------------
+1.)  Generierung der Längsschnitt.txt auch fuer die stat. ungleichförmige 
+     Berechnung (=Abfluss-Steigergung): 
+     Änderung in zeila:
+     - Laengsschnitt wird auch fuer mark = 2 (stat. ungleichf. Berechnung) erzeugt
+     - derzeit noch auskommentiert ist die Erzeugung einer Laengschnitt-Datei 
+       über alle Abfluesse und Profile (die Endversion ist noch in Arbeit!)
+
+2.)  Neue Ueberarbeitung der Wehrberechnung in w_ber, g_wehr, beiwert und wspow:
+	
+     Änderung in der Berechnung des Ueberfall-Beiwertes fuer Wehre (beiwert):
+     - lineare Interpolation fuer Zwischenwerte am scharfkantigen Wehr
+     - Korrektur der Hilfsfunktion: phi1 = LN (1/phi) fuer rundkronige Wehre
+	 - Korrektur des Ueberfallbeiwert für rundkronige Wehre nach Knapp
+
+	 Änderung in der Berechnung des Wehrabflusse (w_ber):
+	 - bislang wurde die Energiehöhen-Iteration im Oberwasser immer mit
+	   der Energiehöhe im Unterwasser gestart, dies fuehrte zu Problemen: 
+	   Deswegen Start mit einer 10cm hoeheren Energiehöhe 
+	   (siehe erster Aufruf von wspow)
+	 - die Geometrie am Wehr und die Ueberfallhoehe wurde bislang immer
+	   fälschlicher Weise mit der Enenergiehoehe statt der Wasserhöhe 
+	   im Oberwasser berechnet (siehe alle Aufrufe von g_wehr)
+	 - die Iteration fuer den Abfluss uebers Wehr wurde auf Basis von
+	   drei Stuetzstellen (he_q, hea_q und heb_q )vorgenommen. Dadurch 
+	   sprang das Programm oft zwischen verschiedenen Abflussszuständen
+	   (z.B.: unvollk. und Uberstroemen). 
+	   Die neue Iteration berechnet nur zwei Stuetzstellen und guckt 
+	   vorher schon mal wo der Ziel Wert "q_wehr" liegt.
+	   (Details siehe DOC zur Wehrberechnung)
+	 - in den Formeln fuer die Wehrabfluss-Berechnung waren mehrere Fehler
+	 - vorzeitige Auswertung vor Abschluss der Iteration wurde entfernt
+	 - Fuer den Problemfall (nach wie vor!!) 
+	   "Engergiehoehe Unterwasser = Energiehoehe Oberwasser" und 
+	   "Zufluss aus dem OW kleiner Abfluss uebers Wehr" wird jetzt die 
+	   Impulsbilanz gelöst. Da sie Energiebilanz den Abfluss am Wehr
+	   manchmal ueberschätzt. Dies macht die Iteration stabiler; kann 
+	   aber im Grenzfall wieder zu einem Wechsel zwischen verschiedenen 
+	   Abflussszustaenden fuehren.
+	 --> genaue Beschreibung zur "neuen" Wehrberechnung siehe DOC  
+	                                                  
+ 													Monika Donner, 04.04.2007
+                                                    
