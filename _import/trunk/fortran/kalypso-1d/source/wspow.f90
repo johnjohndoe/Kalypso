@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006   11:13 am
+!     Last change:  MD    3 Apr 2007    4:09 pm
 !--------------------------------------------------------------------------
 ! This code, wspow.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE wspow (henow, strbr, q, q1, hrow, hv, rg, indmax, hvst,&
+SUBROUTINE wspow (henow, strbr, q, q1, hr, hv, rg, indmax, hvst,&
      & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz,    &
      & idr1)
 
@@ -149,13 +149,14 @@ REAL :: wsanf
                                                                         
 !write (*,*) 'In WSPOW. Start Subroutine.'
 
-IF (iwehr.eq.'w') hukmax = 0.0
+!MD  IF (iwehr.eq.'w') hukmax = 0.0
+IF (iwehr.eq.'w') hukmax = hokwmin
                                                                         
-dx = 0.10
-                                                                        
+dx = 0.05
 itmax_ow = 20
-                                                                        
-hranf = henow - .15
+
+hranf = henow - 0.05
+!MD  hranf = henow -.15
 
 hrow = hranf
                                                                         
@@ -176,7 +177,8 @@ DO 10 i = 1, itmax_ow
   CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst,&
    & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
 
-  he1 = hrow + hv
+  !MD  he1 = hrow + hv
+  he1 = hr + hv
   dif = henow - he1
 
   !JK      SCHREIBEN IN KONTROLLFILE
@@ -210,23 +212,23 @@ DO 10 i = 1, itmax_ow
 
   ENDIF
 
-
-  hrowa = hrow - dx
+  hrowa = hr + dx
+  !MD  hrowa = hrow - dx
 
   CALL wspanf (hrowa, strbr, q, q1, hra, hva, rg, indmax, hvst,   &
    & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
 
+  hea = hra + hva
+  !MD  hea = hrowa + hva
 
-  hea = hrowa + hva
-  df = (hea - he1) / (hrowa - hrow)
+  df = (hea - he1) / (hra - hr)
+  !MD  df = (hea - he1) / (hrowa - hrow)
 
   IF (df.lt.1.e-04) then
-
-    !JK         SCHREIBEN IN KONTROLLFILE
+    !JK      SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(''keine loesung fuer oberwasser hrow = henow!'')')
 
     hrow = henow
-
     CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, &
      & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
 
