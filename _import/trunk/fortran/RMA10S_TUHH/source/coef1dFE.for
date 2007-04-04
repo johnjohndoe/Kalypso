@@ -1,4 +1,4 @@
-C     Last change:  K     3 Apr 2007    8:26 pm
+C     Last change:  EF    2 Apr 2007    3:09 pm
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -406,8 +406,8 @@ CIPK MAY04 RESET ELEMENT INFLOW
         if (maxn.eq.1) then
           dhdtaltzs(nn,1)=dhht(nn,1)
           dhdtaltzs(nn,2)=dhht(nn,2)
-          hhalt(nn,1)=vel(3,n1)
-          hhalt(nn,2)=vel(3,n3)
+          !hhalt(nn,1)=vel(3,n1)
+          !hhalt(nn,2)=vel(3,n3)
           hht(n1)=vel(3,n1)
           hht(n3)=vel(3,n1)
         end if
@@ -418,18 +418,35 @@ CIPK MAY04 RESET ELEMENT INFLOW
       end if
 
       !nis,feb07,com: unsteady
+      !EFa apr07, deactivated
+      !if (icyc.gt.0) then
+      !  if (maxn.eq.1) then
+      !    dqdtaltzs(nn,1)=dqqt(nn,1)
+      !    dqdtaltzs(nn,2)=dqqt(nn,2)
+      !    qqt(n1)=qh(n1)
+      !    qqt(n3)=qh(n3)
+      !  end if
+      !  dqqt(nn,1)=1.6*(qhalt(n1)-qqt(n1))/delt+(1-1.6)*
+      !+             dqdtaltzs(nn,1)
+      !  dqqt(nn,2)=1.6*(qhalt(n3)-qqt(n3))/delt+(1-1.6)*
+      !+             dqdtaltzs(nn,2)
+      !end if
+      !-
+
+      !EFa Apr07, unsteady
       if (icyc.gt.0) then
         if (maxn.eq.1) then
-          dqdtaltzs(nn,1)=dqqt(nn,1)
-          dqdtaltzs(nn,2)=dqqt(nn,2)
-          qqt(n1)=qh(n1)
-          qqt(n3)=qh(n3)
+          dvdtaltzs(nn,1)=dvvt(nn,1)
+          dvdtaltzs(nn,2)=dvvt(nn,2)
+          vvt(n1)=vel(1,n1)
+          vvt(n3)=vel(1,n1)
         end if
-        dqqt(nn,1)=1.6*(qhalt(n1)-qqt(n1))/delt+(1-1.6)*
-     +             dqdtaltzs(nn,1)
-        dqqt(nn,2)=1.6*(qhalt(n3)-qqt(n3))/delt+(1-1.6)*
-     +             dqdtaltzs(nn,2)
+        dvvt(nn,1)=1.6*(vel(1,n1)-vvt(n1))/delt+(1-1.6)*
+     +           dvdtaltzs(nn,1)
+        dvvt(nn,2)=1.6*(vel(1,n3)-vvt(n3))/delt+(1-1.6)*
+     +           dvdtaltzs(nn,2)
       end if
+
 
       !EFa Nov06, Energiestrombeiwert
       if (beient.eq.1) then       
@@ -711,6 +728,7 @@ cipk nov97
       !EFa Dec06, Flieﬂgeschwindigkeit
       vflowint(nn,i) = xm(1) * vel_res(1) + xm(2) * vel_res(2)
       dvintdx(nn,i)  = dmx(1) * vel_res(1) + dmx(2) * vel_res(2)
+      dvintdt(nn,i) = xm(1)*dvvt(nn,1)+xm(2)*dvvt(nn,2)
 
       !EFa Nov06, areaelem(nn)
 
@@ -791,7 +809,9 @@ cipk nov97
       !EFa Nov06, flowelem(nn)
       qqint(nn,i) = vflowint(nn,i) * areaint(nn,i)
 !      qqintdx(nn,i) = qhalt(n1)  * dmx(1) + qhalt(n3)  * dmx(2)
-      dqintdt(nn,i) = dqqt(nn,1) * xm(1)  + dqqt(nn,2) * xm(2)
+      !EFa Apr07, deactivated
+      !dqintdt(nn,i) = dqqt(nn,1) * xm(1)  + dqqt(nn,2) * xm(2)
+      !-
 
       !EFa Nov06, Testen ob Schieﬂen im Element vorliegt
       froudeint(nn,i)=qqint(nn,i)/(areaint(nn,i)*sqrt(grav*hhint(nn,i)))
@@ -868,8 +888,7 @@ cipk nov97
 
 !      dsfintdh1(nn,i) = -2.0
 !     +               * (sfint(nn,i) / qschint(nn,i)**2) * dqsintdh(nn,i)
-      dsfintdh1(nn,i) = s0schint(nn,i)
-     +               * vflowint(nn,i) * ABS(vflowint(nn,i))
+      dsfintdh1(nn,i) = s0schint(nn,i) * vflowint(nn,i)**2
      +               * (QSchint(nn,i)**2 * 2 * areaint(nn,i)
      +                  * dareaintdh(nn,i) - areaint(nn,i)**2 * 2
      +                  * Qschint(nn,i) * dqsintdh(nn,i))
@@ -903,7 +922,7 @@ cipk nov97
      +     -xm(l)*hfact(i)*ABS(xl(3))/2*
 !     +     -xm(l)*hfact(i)*xl(3)/2*
            !Term a
-     +     (dqintdt(nn,i)
+     +     (vflowint(nn,i)*daintdt(nn,i)+areaint(nn,i)*dvintdt(nn,i)
            !Term b
      +     + vflowint(nn,i)**2 * areaint(nn,i) * dbeiintdx(nn,i)
            !Term c
@@ -922,28 +941,28 @@ cipk nov97
       if (nn < -3) then
         WRITE(*,*) 'Impulsintegral', f(3), f(11)
        WRITE(*,*) 'Einzelterme Gauﬂ: ', i
-        WRITE(*,*) 'Term A: ', dqintdt(nn,i)
+        WRITE(*,*) 'Term A: ', vflowint(nn,i)*daintdt(nn,i)+
+     +   areaint(nn,i)*dvintdt(nn,i)
         WRITE(*,*) 'Term B: ',
      +   + vflowint(nn,i)**2 * areaint(nn,i) * dbeiintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term C: ',
      +   + beiint(nn,i) * vflowint(nn,i)**2 * daintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term D: ',
      +   + 2 * beiint(nn,i) * vflowint(nn,i) * areaint(nn,i)
      +     * dvintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term E: ',
      +   + grav * areaint(nn,i) * dhhintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
        WRITE(*,*) 'Term F: ',
      +   + grav * areaint(nn,i) * sfint(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term G: ',
      +   - grav * areaint(nn,i) * sbot(nn)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-        WRITE(*,*) 'Wichtung: ',  xm(l)*hfact(i)*ABS(xl(3))/2
-      pause
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+      !pause
       endif
       !-
       enddo
@@ -984,11 +1003,13 @@ cipk nov97
                   !Wichtungsfunktion
      +            + xm(l)*hfact(i)*ABS(xl(3))/2*
 !     +            + xm(l)*hfact(i)*xl(3)/2*
+                  !Term A
+     +             (xm(c) * dareaintdh(nn,i) * dvintdt(nn,i)*
                   !Term B
 !     +              (xm(c) * vflowint(nn,i)**2 *
 !     +               (areaint(nn,i)*d2beiintdhdx(nn,i)
 !     +                + dareaintdh(nn,i) * dbeiintdx(nn,i))
-     +              (vflowint(nn,i)**2 *
+     +              vflowint(nn,i)**2 *
      +               (dareaintdh(nn,i) * dbeiintdh(nn,i)*xm(c)
      +                + areaint(nn,i) *
      +                  (d2beiintdhdx(nn,i) * xm(c)
@@ -1098,8 +1119,10 @@ cipk nov97
             !Wichtungsfunktion
      +      + xm(l)*hfact(i)*ABS(xl(3))/2*
 !     +      + xm(l)*hfact(i)*xl(3)/2*
+            !Term A
+     +      (xm(c) * daintdt(nn,i) *
             !Term B
-     +      (xm(c) * 2 * areaint(nn,i)* vflowint(nn,i) * dbeiintdx(nn,i)
+     +      xm(c) * 2 * areaint(nn,i)* vflowint(nn,i) * dbeiintdx(nn,i)
             !Term C
      +       + xm(c) * 2 * vflowint(nn,i) * beiint(nn,i) * daintdx(nn,i)
             !Term D
@@ -1206,8 +1229,9 @@ cipk nov97
       IF(NTX .EQ. 3) RETURN
 
 
-      hhalt(nn,1)=vel(3,n1)
-      hhalt(nn,2)=vel(3,n3)
+      !hhalt(nn,1)=vel(3,n1)
+      !hhalt(nn,2)=vel(3,n3)
+
 
 !      IF(MOD(IMMT,100) .GT. 90) GO TO 1305
 
