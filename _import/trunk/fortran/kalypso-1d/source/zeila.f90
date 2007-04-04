@@ -1,4 +1,4 @@
-!     Last change:  WP   16 Jun 2006    5:41 pm
+!     Last change:  MD    3 Apr 2007    8:19 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -120,7 +120,9 @@ weins = 1
                                                                         
 
 ! Die Datei Laengsschnitt.txt wird nur erzeugt, falls mark = 1 (normale Spiegellinienberechnung)
-if (mark == 1) then
+!MD  if (mark == 1) then
+!MD  Laengsschnitt wird auch fuer mark = 2 (stat. ungleichf. Berechnung) erzeugt
+if (mark.eq.1 .or. mark.eq.2) then
 
   ! Holen einer neuen Dateinummer
   UNIT_OUT_LAENGS = ju0gfu ()
@@ -213,8 +215,9 @@ WRITE (UNIT_OUT_QB1, 5) ' '
 !---Ende--- Kopf der *.wsl-Datei
                                                                         
 
-                                                                        
-IF (mark.eq.1.or.mark.eq.3) then
+!MD  IF (mark.eq.1.or.mark.eq.3) then
+!MD  Laengsschnitt wird auch fuer mark = 2 (stat. ungleichf. Berechnung) erzeugt                                                                        
+IF (mark.eq.1 .or. mark.eq.3 .or. mark.eq.2) then
 
      yhmin = 10000.
      DO i = 1, nprof            ! minimale Sohlhoehe von allen Profilen
@@ -539,8 +542,7 @@ IF (mark.eq.1.or.mark.eq.3) then
                                                                         
      ENDIF
 
-
-     !WP Kopfzeile der Ausgabedatei "laengsschnitt.txt"
+  !WP Kopfzeile der Ausgabedatei "laengsschnitt.txt"
      WRITE (UNIT_OUT_LAENGS, 80) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
                              & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
                              & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN'
@@ -549,19 +551,39 @@ IF (mark.eq.1.or.mark.eq.3) then
                              & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
                              & 'mNN',    'mNN',      'mNN',      'm',       'm'
 
+    ! IF (BERECHNUNGSMODUS /= 'WATERLEVEL') then
+    !  do j = 1, anz_q   ! Anzahl der Abfluesse
+    !    do i = 1, anz_prof(j)   ! Anzahl der Profile
 
-     do i = 1, anz_prof(1)
+         !WP 16.06.2006
+         !WP Durch die komplizierten Iterationsschleifen bei der Lambda-Berechnung kann
+         !WP Lambda sehr groß werden. Das ist unrealistisch. Um das Format zu wahren,
+         !WP werden die Lambda-Werte bei der Ausgabe auf 99.9999 begrenzt!
 
-       !WP 16.06.2006
-       !WP Durch die komplizierten Iterationsschleifen bei der Lambda-Berechnung kann
-       !WP Lambda sehr groß werden. Das ist unrealistisch. Um das Format zu wahren,
-       !WP werden die Lambda-Werte bei der Ausgabe auf 99.9999 begrenzt!
-       do j = 1, 3
-         if (out_IND(i,1,j)%lambda > 99.9999) then
-           out_IND(i,1,j)%lambda = 99.9999
-         end if
-       end do
+    !     do k = 1, 3
+    !       if (out_IND(i,j,k)%lambda > 99.9999) then
+    !         out_IND(i,j,k)%lambda = 99.9999
+    !       end if
+    !     end do
+    !     write (UNIT_OUT_LAENGS, 90) out_PROF(i,j)%stat, out_PROF(i,j)%chr_kenn, out_PROF(i,j)%qges, &
+    !                            & out_PROF(i,j)%sohle, out_PROF(i,j)%wsp, &
+    !                            & out_PROF(i,j)%hen, out_PROF(i,j)%hbv, out_PROF(i,j)%boeli, out_PROF(i,j)%boere, &
+    !                            & out_PROF(i,j)%vm, out_PROF(i,j)%tau, &
+    !                            & out_IND(i,j,1)%lambda, out_IND(i,j,2)%lambda, out_IND(i,j,3)%lambda, &
+    !                            & out_IND(i,j,1)%A, out_IND(i,j,2)%A, out_IND(i,j,3)%A, &
+    !                            & out_IND(i,j,1)%B, out_IND(i,j,2)%B, out_IND(i,j,3)%B, &
+    !                            & out_PROF(i,j)%WehrOK, out_PROF(i,j)%BrueckOK, out_PROF(i,j)%BrueckUK, &
+    !                            & out_PROF(i,j)%BrueckB, out_PROF(i,j)%RohrD
+    !     END DO    ! Ueber alle Abfluesse
+    !   END DO    ! Ueber alle Profile
 
+    ! ELSEIF (BERECHNUNGSMODUS == 'WATERLEVEL') then
+       do i = 1, anz_prof(1)   ! Anzahl der Profile
+         do k = 1, 3
+           if (out_IND(i,1,k)%lambda > 99.9999) then
+             out_IND(i,1,k)%lambda = 99.9999
+           end if
+         end do
        write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%qges, &
                                 & out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
                                 & out_PROF(i,1)%hen, out_PROF(i,1)%hbv, out_PROF(i,1)%boeli, out_PROF(i,1)%boere, &
@@ -571,8 +593,8 @@ IF (mark.eq.1.or.mark.eq.3) then
                                 & out_IND(i,1,1)%B, out_IND(i,1,2)%B, out_IND(i,1,3)%B, &
                                 & out_PROF(i,1)%WehrOK, out_PROF(i,1)%BrueckOK, out_PROF(i,1)%BrueckUK, &
                                 & out_PROF(i,1)%BrueckB, out_PROF(i,1)%RohrD
-     end do
-
+       END DO
+    ! ENDIF
 
      7  FORMAT (1X, A8, ', ', A8, ' Uhr')
 
@@ -584,7 +606,7 @@ IF (mark.eq.1.or.mark.eq.3) then
      ! ST --------------------------------------------------------------------
                                                                         
 
-
+!MD  Achtung: die qb2 wird derzeit nicht fuer mark = 2 (stat. ungleichf. Berechnung) gefuellt!
 ELSEIF (mark.gt.1) then
 
      PRINT *
