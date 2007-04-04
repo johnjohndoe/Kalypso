@@ -1,4 +1,4 @@
-C     Last change:  K    27 Mar 2007   11:08 am
+C     Last change:  K     3 Apr 2007    8:01 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -32,7 +32,7 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE PARAFlow1dFE
 !-
       !nis,feb07: Add minimum number for some allocations coming from the midside node numbers of FFF elements
-      INTEGER :: minNoNu
+      INTEGER :: minNoNu, MaxFFFMS
       !-
       
 C	INCLUDE 'BLK10.COM'
@@ -147,8 +147,8 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
 
       !nis,feb07: Calculate minimum node number for particular calculations with Flow1DFE elements
-      if (MaxFFFMS /= 0) then
-        minNoNumber = (-1) * (1000 + MaxFFFMS)
+      if ((FFFMS+AddMS) /= 0) then
+        minNoNu = (-1) * (1000 + FFFMS + AddMS)
       else
         minNoNu = 1
       end if
@@ -972,6 +972,7 @@ CIPK MAR01
       end do
 
       !nis,feb07: Adding midside nodes storage of Flow1DFE elements
+      MaxFFFMS = FFFMS + AddMS
       ALLOCATE (FFFmidsidenodes(1:MaxFFFMS))
       do i = 1, MaxFFFMS
         FFFmidsidenodes(i) = 0

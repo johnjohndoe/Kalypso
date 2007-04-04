@@ -1,4 +1,4 @@
-C     Last change:  K    16 Mar 2007   12:30 pm
+C     Last change:  K     3 Apr 2007    8:15 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -35,7 +35,7 @@ CIPK APR06
       DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
       CHARACTER(LEN=20)    :: inquiretest
-      INTEGER              :: dummy(5), j
+      INTEGER              :: dummy(6), j
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
       REAL(KIND=8)         :: VAAA, HTP, H, HS
@@ -57,7 +57,8 @@ C-
 
       RESTARTTEST: IF (inquiretest .eq. 'FORMATTED') THEN
         WRITE(*,*) ' Going to RDKALYPSO for restarting'
-        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),dummy(5),2)
+        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),dummy(5),
+     +                dummy(6),2)
         npx = maxp-1
         ndx = 9
         !NiS,may06: Testausgabe

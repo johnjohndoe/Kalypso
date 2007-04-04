@@ -1,4 +1,4 @@
-!     Last change:  K    27 Mar 2007   11:08 am
+!     Last change:  K     3 Apr 2007    8:05 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -800,7 +800,7 @@ IF (ierr.eq.1) stop 5
 !SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,KSWIT)
 !SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
-SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,FFFcnt,KSWIT)
+SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,FFFcnt,Addcnt,KSWIT)
 !-
 !-
 !
@@ -877,7 +877,7 @@ INTEGER                :: TLcnt                        !nominal 1D-2D-Transition
 
 !-
 !nis,feb07: Adding numberation for Flow 1D FE element midside nodes
-INTEGER                :: fffcnt, fff_midsides         !counter for midside nodes of flow1D-FE elements, so that they can also be enumberated
+INTEGER                :: fffcnt, AddCnt               !counter for midside nodes of flow1D-FE elements, so that they can also be enumberated
 !-
 INTEGER                :: elem (MaxE, 6)               !local array for element informations ([number of arcs +1]; node-numbers of corners); dependent
                                               	       !on the type and shape of element; the first entry can also show 1D-ELEMENT with negative value
@@ -970,7 +970,8 @@ elcnt   = 0
 TLcnt   = 0
 !-
 !nis,feb07: Initializing the number of midside nodes of Flow1DFE elements
-fff_midsides = 0
+fffCnt = 0
+AddCnt = 0
 !-
 !nis,dec06: Initilaizing CCL supporting variable
 DefLine = 0
@@ -1142,9 +1143,9 @@ reading: do
         !nis,feb07: Add for numbered midside nodes of FFF-elements
         ELSEIF (temparc(5) < 1000) then
           if (temparc(5) /= -9999) then
-            FFF_midsides = MAX(FFF_midsides, abs(temparc(5)+1000))
+            FFFcnt = MAX(FFFcnt, abs(temparc(5)+1000))
           else
-            FFFcnt = FFFcnt + 1
+            Addcnt = Addcnt + 1
           endif
         !-
         !nis,feb07: Error if no of previous cases
@@ -1580,9 +1581,8 @@ IF (KSWIT == 1) THEN                                                    !midside
   nodecnt = nodecnt + arcs_without_midside                              !geometry won't change between the runs with KSWIT=1 and KSWIT=0.
 
   !nis,feb07: Add numberation of midside nodes of Flow1DFE elements and control output
-  WRITE(*,*) FFFcnt, 'nodes get a new number'
+  WRITE(*,*) AddCnt, 'nodes get a new number'
   WRITE(*,*) 'They are part of Flow1DFE elements'
-  fffcnt = FFF_midsides
   !-
 
   REWIND(IFILE)
@@ -1655,10 +1655,10 @@ DO i = 1, arccnt
           if (arc(i,5) < -1000) then
           !-
             !EFa Nov06, Teschke (nur Eckknoten)
-            elem(j,1)=-3
+            elem(j,1) = -3
           else
             !EFa Nov06, mit Mittseitenknoten
-            elem(j,1)=-1
+            elem(j,1) = -1
           end if
         !4th NODE at 1D-2D-transition ELEMENTS; nodes for 1D-2D-TRANSITION ELEMENTS were already assigned in the reading section
         ELSE
@@ -1907,8 +1907,8 @@ end if
 !          & 1X, 'Number of arcs:     ', I6/)
 !NEW:
  !nis,feb07: Adding the number of midside nodes with a negative arc-number
-WRITE (Lout,103) elcnt, nodecnt, arccnt, FFF_midsides
-WRITE ( *  ,103) elcnt, nodecnt, arccnt, FFF_midsides
+WRITE (Lout,103) elcnt, nodecnt, arccnt, FFFCnt
+WRITE ( *  ,103) elcnt, nodecnt, arccnt, FFFCnt
 WRITE (Lout,102) elzaehl
 WRITE (*   ,102) elzaehl
 103 format (1X, 'dimension of element-array   : ', I6 / &
@@ -1947,7 +1947,7 @@ all_arcs: DO i=1,arccnt
   if (arc(i,5) < -1000) then
     if (arc(i,5) == -9999) then
       FFF_mittzaehl = FFF_mittzaehl + 1
-      nop(arc(i,3),2) = (-1) * (MaxFFFMS + FFF_mittzaehl + 1000)
+      nop(arc(i,3),2) = (-1) * (FFFMS + FFF_mittzaehl + 1000)
     else
       nop(arc(i,3),2) = arc(i,5)
     end if

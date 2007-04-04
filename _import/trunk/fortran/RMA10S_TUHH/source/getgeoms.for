@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  IPK   5 Oct 98    3:29 pm
+C     Last change:  K     3 Apr 2007    7:58 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -29,7 +29,7 @@ CIPK  LAST UPDATE OCT 1 1996
       USE PARAMMOD
       SAVE
 !NiS,jul06: Consistent data types for passing parameters
-      INTEGER :: n, m, a, lt, fffms
+      INTEGER :: n, m, a, lt
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -327,7 +327,7 @@ CIPK JUN03
        ELSEIF (IGEO ==2) then
          !nis,feb07: Allow for numbered FFF midsides
          !call rdkalyps(n,m,a,lt,0)
-         call rdkalyps(n,m,a,lt,fffms,0)
+         call rdkalyps(n,m,a,lt,FFFms,AddMS,0)
          !-
   !NiS,apr06: adding this transoformation like it is called after RDRM1 (see above)
          NCLL = NCL
