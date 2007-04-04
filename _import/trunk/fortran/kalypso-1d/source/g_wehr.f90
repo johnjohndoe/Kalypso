@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Mar 2006   10:38 pm
+!     Last change:  MD   30 Mar 2007    3:56 pm
 !--------------------------------------------------------------------------
 ! This code, gwehr.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -58,7 +58,7 @@ SUBROUTINE g_wehr (hr, ifehl1, auew, huew, wl, hwmin)
 !**   hl      --      Schnittpunktkoordinate in z-Richtung links        
 !**   hmin    --      minimale Profilhöhe                               
 !**   hokwmin --      minimale Höhe der Wehroberkante im Profil         
-!**   hr      --      Wasserspiegelhöhe                                 
+!**   hr      --      Wasserspiegelhöhe im Unterwasser
 !**   hr2     --      z-Koordinate                                      
 !**   hwmin   --      minimale Wehrhöhe                                 
 !**   ianfw   --      Punktnummer des Anfangspunktes des Wehres         
@@ -135,19 +135,16 @@ REAL auew (maxw), huew (maxw), wl (maxw), hwmin (maxw)
 ! PROGRAMMBEGINN
 ! ------------------------------------------------------------------
                                                                         
-!**   SCHREIBEN IN KONTROLLFILE                                         
+!**   SCHREIBEN IN KONTROLLFILE: Unterwasserstand
 write (UNIT_OUT_LOG, '(//,'' hr='',f8.4)') hr
 
 ifehl1 = 0
-
 igraf = 0
-
 gen = 0.0001
-
-hmin = hokwmin - 5.
+hmin = hokwmin - 5.  ! ?????????????????????
 
 !**   SCHREIBEN IN KONTROLLFILE
- write (UNIT_OUT_LOG, '(''   j  huew    auew     wl     hwmin  '')')
+write (UNIT_OUT_LOG, '(''   j  huew    auew     wl     hwmin  '')')
 
 !JK   START DO-SCHLEIFE-------------------------------------------------
 !JK   FUER ALLE WEHRFELDER?? (nwfd)
@@ -158,51 +155,42 @@ DO 1000 j = 1, nwfd
   wl (j) = 0.0
   hwmin (j) = 10000.
 
-  !     ******************************************************************
+  !  ******************************************************************
   !       1. Linie      Wehroberkante
-  !     ******************************************************************
+  !  ******************************************************************
 
   !**        ifehl2 = 0
 
   CALL linie (hmin, xokw, hokw, nokw, ianfw (j), iendw (j), npl1, xl, hl)
 
   npl1 = npl1 + 1
-
   hl (npl1) = hl (1)
   xl (npl1) = xl (1)
 
   DO j1 = 1, npl1
-
     xko (j1, 1) = xl (j1)
     hko (j1, 1) = hl (j1)
-
   END DO
 
   na1 = npl1
 
 
-  !     ******************************************************************
-  !       2. Linie      Wasserspiegel
-  !     ******************************************************************
-
+  !  ******************************************************************
+  !       2. Linie     MD:  Wasserspiegel im Unterwasser !!!
+  !  ******************************************************************
 
   npl2 = 5
-
   n_anf = ianfw (j)
   n_end = iendw (j)
-
 
   xko (1, 2) = xokw (n_anf)
   hko (1, 2) = hr
 
-
   xko (2, 2) = xokw (n_end)
   hko (2, 2) = hr
 
-
   xko (3, 2) = xokw (n_end)
   hko (3, 2) = hmin
-
 
   xko (4, 2) = xokw (n_anf)
   hko (4, 2) = hmin
@@ -210,12 +198,9 @@ DO 1000 j = 1, nwfd
   xko (5, 2) = xokw (n_anf)
   hko (5, 2) = hr
 
-
   DO j1 = 1, npl1
-
     hl (j1) = hko (j1, 1)
     xl (j1) = xko (j1, 1)
-
   END DO
 
   CALL schwpkt (maxkla, npl1, xl, hl, xx, hh, ah, igra, gen)
@@ -225,13 +210,9 @@ DO 1000 j = 1, nwfd
     STOP
   ENDIF
 
-
-
   DO j1 = 1, npl2
-
     hl (j1) = hko (j1, 2)
     xl (j1) = xko (j1, 2)
-
   END DO
 
   CALL schwpkt (maxkla, npl2, xl, hl, xx, hh, ah, igra, gen)
@@ -243,7 +224,6 @@ DO 1000 j = 1, nwfd
 
   na1 = npl1
   na2 = npl2
-
 
   kr1 = 0
   kr2 = 0
@@ -267,16 +247,12 @@ DO 1000 j = 1, nwfd
 
   DO 40 i = 1, nwf
 
-
     npw = mr2 (i)
 
     DO i1 = i, npw
-
       xl (i1) = xr2 (i1, i)
       hl (i1) = hr2 (i1, i)
-
     END DO
-
 
     IF (npw.lt.3) goto 40
 
@@ -297,11 +273,9 @@ DO 1000 j = 1, nwfd
     xmax = - 10000.
 
     DO i2 = 1, npw
-
       IF (xl (i2) .lt.xmin) xmin = xl (i2)
       IF (xl (i2) .gt.xmax) xmax = xl (i2)
       IF (hl (i2) .lt.hwmin (j) ) hwmin (j) = hl (i2)
-
     END DO
 
     wl (j) = wl (j) + xmax - xmin
