@@ -174,21 +174,21 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
               }
             }
             
-            // TODO: is this really necessary? Probably really an invalidate problem
-            for(IFE1D2DElement ele:eleList)
-            {
-              if(ele instanceof PolyElement)
-              {
-                ((PolyElement)ele).resetGeometry();
-              }
-              else
-              {
-                System.out.println(
-                    "reset only possible for PolyElement impl:"+
-                    ele.getClass());
-              }
-              
-            }
+//            // TODO: is this really necessary? Probably really an invalidate problem
+//            for(IFE1D2DElement ele:eleList)
+//            {
+//              if(ele instanceof PolyElement)
+//              {
+//                ((PolyElement)ele).resetGeometry();
+//              }
+//              else
+//              {
+//                System.out.println(
+//                    "reset only possible for PolyElement impl:"+
+//                    ele.getClass());
+//              }
+//              
+//            }
             
             
           }
@@ -208,35 +208,5 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
       // TODO Auto-generated catch block
       e.printStackTrace();
     }    
-  }
-  
-//  public MapModell getMapModell()
-//  {
-//    IWorkbenchWindow window=
-//      PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-//    IEditorPart editor=window.getActivePage().getActiveEditor();
-//    if(editor==null)
-//    {
-//      System.out.println("Editor ist null");
-//      return null;
-//    }
-//    else
-//    {
-//      final String ID_GIS_MAP_EDITOR=
-//        "org.kalypso.ui.editor.mapeditor.GisMapEditor";
-//      if(ID_GIS_MAP_EDITOR.equals( 
-//                editor.getSite().getId()))
-//      {
-//        ((GisMapEditor)editor).getMapPanel().repaint( );
-//        
-//      }
-//      else
-//      {
-//        System.out.println("Editor:"+editor.getClass());
-//      }
-//      return null;
-//    }
-//    
-//  }
- 
+  } 
 }

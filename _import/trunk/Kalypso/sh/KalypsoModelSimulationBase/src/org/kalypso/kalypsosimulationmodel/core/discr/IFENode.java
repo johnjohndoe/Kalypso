@@ -9,7 +9,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Patrice Congo
  */
-public interface IFENode <CT extends IFEEdge> extends IFeatureWrapper2
+public interface IFENode extends IFeatureWrapper2
 {
 	//yes empty	
 }

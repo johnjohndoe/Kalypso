@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 
 /**
  * @author Gernot Belger
  */
-public interface IRiverChannel1D extends IFE1D2DComplexElement<IFE1D2DComplexElement, IElement1D>
+public interface IRiverChannel1D<ET extends IElement1D> extends IFE1D2DComplexElement</*IFE1D2DComplexElement,*/ ET>
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel1D" );
 }

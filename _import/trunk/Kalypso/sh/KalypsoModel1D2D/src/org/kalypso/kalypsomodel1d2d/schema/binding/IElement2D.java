@@ -48,11 +48,13 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
  * @author Gernot Belger
  */
 // TODO: is templatisation needed?
-public interface IElement2D extends IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
+public interface IElement2D<    CT extends IFE1D2DComplexElement, 
+                                ET extends IFE1D2DEdge> 
+                  extends IFE1D2DElement<CT, ET>
 {
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
+  public IFeatureWrapperCollection<ET> getEdges( );
 
   public void addEdge( final String edgeID );
   
-  public void setEdges( final IFE1D2DEdge[] edges );
+  public void setEdges( final /*IFE1D2DEdge*/ET[] edges );
 }

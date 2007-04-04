@@ -11,8 +11,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Patrice Congo
  */
-public interface IFEEdge<	CT extends IFEElement,
-							ET extends IFENode> 
+public interface IFEEdge
 				extends IFeatureWrapper2
 {
 	

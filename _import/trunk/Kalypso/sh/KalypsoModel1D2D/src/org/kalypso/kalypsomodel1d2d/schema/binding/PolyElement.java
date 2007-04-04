@@ -204,31 +204,6 @@ public class PolyElement extends AbstractFeatureBinder
     for( final IFE1D2DEdge edge : edges )
     {
       edgeList.add( edge.getGmlID() );
-//      if(edge instanceof IEdgeInv)
-//      {
-//        edgeInvFeature=((IEdgeInv)edge).getWrappedFeature();
-//        if(edgeInvFeature==null)
-//        {
-////           new EdgeInv(
-////               ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-////               feature,
-////               Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-//          //TODO why is invedge not added
-//          ((IEdgeInv)edge).addInvEdgeToElement( this );
-//        }
-//        else
-//        {
-////          new EdgeInv(
-////              ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-////              feature,
-////              Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-//          
-//        }
-//      }
-//      else
-//      {
-//        edgeList.add( edge.getWrappedFeature().getId() );
-//      }
     }
     ModelOps.sortElementEdges( this );
     
@@ -303,17 +278,6 @@ public class PolyElement extends AbstractFeatureBinder
     return edges;
   }
 
-  public void resetGeometry()
-  {
-    try
-    {
-      setGeometry( (GM_Surface)recalculateElementGeometry() );
-    }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
    */
@@ -410,24 +374,5 @@ public class PolyElement extends AbstractFeatureBinder
   {
     return (GM_Surface) getFeature().getProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement#getGeometry()
-   */
-  public GM_Surface getGeometry( )
-  {
-    return (GM_Surface) getFeature().getProperty( 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement#setGeometry(org.kalypsodeegree.model.geometry.GM_Surface)
-   */
-  public void setGeometry( final GM_Surface surface )
-  {
-      getFeature().setProperty( 
-              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM, 
-              surface);
   }
 }

@@ -40,39 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Interface to be implemented by classes to provide a java 
- * representation compatible with the wb1d2d:ComplexElement
+ * Default implementation of {@link IFEComplexElement2D}
  * 
  * @author Patrice Congo
+ *
  */
-public interface IFE1D2DComplexElement <ET extends IFE1D2DElement>
-                  extends IFEComplexElement
+public class FEComplexElement2D<ET extends IElement2D>
+              extends FE1D2DComplexElement<ET>
+              implements IFEComplexElement2D<ET>
 {
-  
-  /**
-   * To get the element this complex element is made of
-   * 
-   * @return a {@link IFeatureWrapperCollection} of element 
-   *            composing this complex elements
-   */
-  public IFeatureWrapperCollection<ET> getElements( );
-  
-  /**
-   * Adds the given element as reference to this complex type
-   * @param element the 1d 2d element to be added as reference
-   * @return true if the element has been added  otherwise false
-   */
-  public boolean addElementAsRef(ET element);
-  
-  /**
-   * Remove all reference to this element from this complex element
-   * @return true if a referen to the given element as been added
-   *    otherwis false
-   */
-  public boolean removeElementAsRef(ET elment);
+
+  protected FEComplexElement2D( 
+                  Feature featureToBind, 
+                  QName qnameToBind,
+                  QName elementListPropQName,
+                  Class<ET> eleClass)
+  {
+    super(
+        featureToBind, 
+        qnameToBind, 
+        //null/*containerListPropQName*/, 
+        elementListPropQName,
+        eleClass);
+   
+  }
+
 
 }

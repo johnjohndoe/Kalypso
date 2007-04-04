@@ -53,6 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -267,20 +268,30 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
    */
   private GM_Object geometryFromNetItem( final IFeatureWrapper2 netItem )
   {
-    // TODO: add other known classes to switch
+    try
+    {
+      // TODO: add other known classes to switch
+      
+      // ATTENTION: order of these ifs is importent, because
+      // IFE1D2DContinuityLine inherits from FE1D2D_2DElement but
+      // has no surface...
+      // FIX: make an own wrapper-class for Polygon-Elements, only those
+      // have a surface
+      if( netItem instanceof IFE1D2DContinuityLine )
+        return ((IFE1D2DContinuityLine) netItem).recalculateElementGeometry();
+      
+      if( netItem instanceof IPolyElement )
+      {
+        return ((IPolyElement) netItem).recalculateElementGeometry();//getGeometry();
+      }
+      return null;
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
     
-    // ATTENTION: order of these ifs is importent, because
-    // IFE1D2DContinuityLine inherits from FE1D2D_2DElement but
-    // has no surface...
-    // FIX: make an own wrapper-class for Polygon-Elements, only those
-    // have a surface
-    if( netItem instanceof IFE1D2DContinuityLine )
-      return ((IFE1D2DContinuityLine) netItem).getGeometry();
-    
-    if( netItem instanceof IPolyElement )
-      return ((IPolyElement) netItem).getGeometry();
-
-    return null;
   }
 
   private GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )

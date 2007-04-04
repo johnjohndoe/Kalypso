@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
@@ -70,7 +71,7 @@ public class OpsGeoEditAffected
    */
   private static final void addAffectedFeaturesByPolyElementGeomChange( Feature feature, List<Feature> affectedFeature )
   {
-    final IPolyElement polyElement= 
+    final IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement= 
           (IPolyElement) feature.getAdapter( IPolyElement.class );
     if(polyElement==null)
     {

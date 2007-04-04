@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypsodeegree.model.geometry.GM_Curve;
 
 
 /**
@@ -48,7 +47,5 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public interface IFE1D2DContinuityLine extends IElement2D
 {
-  public GM_Curve getGeometry();
   
-  public void setGeometry( final GM_Curve curve );
 }

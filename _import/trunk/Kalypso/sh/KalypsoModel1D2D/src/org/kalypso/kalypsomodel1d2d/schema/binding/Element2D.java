@@ -28,8 +28,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * @see FE1D2DContinuityLine
  */
 @SuppressWarnings("hiding")
-public abstract class Element2D extends FE1D2DElement 
-                              implements IElement2D
+public abstract class Element2D<    
+                          CT extends IFE1D2DComplexElement, 
+                          ET extends IFE1D2DEdge>
+                extends FE1D2DElement<CT,ET> 
+                implements IElement2D<CT,ET>
 {
   private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
 
@@ -38,9 +41,11 @@ public abstract class Element2D extends FE1D2DElement
     this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
   }
   
-  public Element2D( final Feature featureToBind, QName featureQName )
+  public Element2D( 
+            final Feature featureToBind, 
+            final QName featureQName )
   {
-    super( featureToBind, featureQName );
+    super( featureToBind, featureQName,IFEComplexElement2D.class );
     //
     Object prop =null;
     try
@@ -161,7 +166,7 @@ public abstract class Element2D extends FE1D2DElement
   }
 
   @SuppressWarnings("unchecked")
-  public void setEdges( final IFE1D2DEdge[] edges )
+  public void setEdges( final ET[] edges )
   {
     final Feature feature = getFeature();
     final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
@@ -172,31 +177,6 @@ public abstract class Element2D extends FE1D2DElement
     for( final IFE1D2DEdge edge : edges )
     {
       edgeList.add( edge.getGmlID() );
-//      if(edge instanceof IEdgeInv)
-//      {
-//        edgeInvFeature=((IEdgeInv)edge).getWrappedFeature();
-//        if(edgeInvFeature==null)
-//        {
-////           new EdgeInv(
-////               ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-////               feature,
-////               Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-//          //TODO why is invedge not added
-//          ((IEdgeInv)edge).addInvEdgeToElement( this );
-//        }
-//        else
-//        {
-////          new EdgeInv(
-////              ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-////              feature,
-////              Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-//          
-//        }
-//      }
-//      else
-//      {
-//        edgeList.add( edge.getWrappedFeature().getId() );
-//      }
     }
     ModelOps.sortElementEdges( this );
     
@@ -206,9 +186,9 @@ public abstract class Element2D extends FE1D2DElement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getEdges()
    */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
+  public IFeatureWrapperCollection<ET> getEdges( )
   {
-    return edges;
+    return (IFeatureWrapperCollection<ET>) edges;
   }
 
   /**

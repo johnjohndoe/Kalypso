@@ -40,16 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * Interface corresponding to the wb1d2d:PolyElementType in the sim_1d2d_discretisation.xsd
  * 
  * @author Gernot Belger
  */
-public interface IPolyElement extends IElement2D
+public interface IPolyElement<    CT extends IFE1D2DComplexElement, 
+                                  ET extends IFE1D2DEdge>  
+                  extends IElement2D<CT,ET>
 {
-  public GM_Surface getGeometry();
-  
-  public void setGeometry( final GM_Surface surface );
+
 }

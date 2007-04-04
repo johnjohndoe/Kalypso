@@ -176,8 +176,8 @@ public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
    *             
    * 
    */
-  public static final <T extends IFeatureWrapper> 
-            IFeatureWrapperCollection<T>get(
+  public static final  <T extends IFeatureWrapper> IFeatureWrapperCollection<T> 
+                              get(
                                     Feature feature,
                                     QName featureQName,
                                     QName listPropQName,

@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  * 
  * @author Patrice Congo
  */
-public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge<CT, ET>
+public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge
 {
   /**
    * To get the computed geometry of this edge as curve

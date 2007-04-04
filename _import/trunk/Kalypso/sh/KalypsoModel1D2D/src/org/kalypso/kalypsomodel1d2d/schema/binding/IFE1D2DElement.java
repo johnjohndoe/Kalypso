@@ -48,19 +48,32 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
+ * Interface for classes that represents a feature of the
+ * type wb1d2d:Element
+ * 
  * @author Patrice Congo
  *
  */
 public interface IFE1D2DElement 
           <CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
-                  extends IFEElement<CT, ET>
+                  extends IFEElement
 {
+  /**
+   * To get the containers, complex elements, containing this
+   * element 
+   * @return a list of complex element features containg this element
+   */
   public IFeatureWrapperCollection<CT> getContainers();
      
   /**
-   * returns a list of element nodes
+   * To get the nodes of this element
+   * @return a list of the nodes of this elements
    */
   public List<IFE1D2DNode> getNodes();
   
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
+  /**
+   * Gets the virtual geometry of this element by recalculating it
+   * @return the recalculated geometry of this element
+   */
+  public GM_Object recalculateElementGeometry( )throws GM_Exception;
 }

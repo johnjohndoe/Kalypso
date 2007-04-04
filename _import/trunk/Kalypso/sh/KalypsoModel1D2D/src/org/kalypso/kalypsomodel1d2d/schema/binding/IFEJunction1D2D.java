@@ -50,7 +50,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
  */
 public interface IFEJunction1D2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
+  public IFeatureWrapperCollection<ET> getEdges( );
 
   public void addEdge( final String gmlID );
 }

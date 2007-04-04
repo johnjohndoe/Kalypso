@@ -345,12 +345,12 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                     Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D) )
                 {
                   return 
-                    new FE1D2DComplexElement(
+                    new FE1D2DComplexElement<IFE1D2DElement>(
                         feature,
                         Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D,
-                        null,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE,//container
-                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D//elements
-                        );     
+//                        null,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE,//container
+                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,//elements
+                        IFE1D2DElement.class);     
                 }
                 else
                 {

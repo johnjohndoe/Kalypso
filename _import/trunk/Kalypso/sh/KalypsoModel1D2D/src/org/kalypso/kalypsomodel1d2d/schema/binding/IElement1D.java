@@ -40,22 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Gernot Belger
  */
 public interface IElement1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
-  public static final QName QNAME = Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D;
-
-  public static final QName QNAME_PROPS_DIRECTED_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedEdge" );
-
-  public static final QName QNAME_PROPS_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
   /**
    * Returns the current edge of this 1d-element.

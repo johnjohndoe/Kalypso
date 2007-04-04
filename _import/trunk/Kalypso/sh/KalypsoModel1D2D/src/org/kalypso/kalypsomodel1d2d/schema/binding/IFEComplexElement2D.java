@@ -40,39 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
-
 /**
- * Interface to be implemented by classes to provide a java 
- * representation compatible with the wb1d2d:ComplexElement
+ * Interface for classes representing a feature of the
+ * type wb1d2d:ComplexElement2D
  * 
  * @author Patrice Congo
+ *
  */
-public interface IFE1D2DComplexElement <ET extends IFE1D2DElement>
-                  extends IFEComplexElement
+public interface IFEComplexElement2D <ET extends IElement2D>
+                        extends IFE1D2DComplexElement<ET>
 {
-  
-  /**
-   * To get the element this complex element is made of
-   * 
-   * @return a {@link IFeatureWrapperCollection} of element 
-   *            composing this complex elements
-   */
-  public IFeatureWrapperCollection<ET> getElements( );
-  
-  /**
-   * Adds the given element as reference to this complex type
-   * @param element the 1d 2d element to be added as reference
-   * @return true if the element has been added  otherwise false
-   */
-  public boolean addElementAsRef(ET element);
-  
-  /**
-   * Remove all reference to this element from this complex element
-   * @return true if a referen to the given element as been added
-   *    otherwis false
-   */
-  public boolean removeElementAsRef(ET elment);
 
 }

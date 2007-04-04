@@ -77,4 +77,23 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper> extend
    * @return the wrapped feature list
    */
   public FeatureList getWrappedList( );
+  
+  /**
+   * Renove all reference to this feature from this list
+   * @param toRemove a wrapper wrapping the feature which reference 
+   *            is to be remove from this list
+   * @return true if an occurence of the feature has been removed
+   * @throws IllegalArgumentException if the argument toRemove
+   *            is null
+   */
+  public boolean removeAllRefs(FWCls toRemove)
+                            throws IllegalArgumentException;
+  
+  /**
+   * Add this feature as reference  to this list
+   * @param toAdd a wrapper wrapping the feature to be added as list
+   * @return true if the feature has been added
+   * @throws IllegalArgumentException if the argument toAdd is null
+   */
+  public boolean addRef(FWCls toAdd)throws IllegalArgumentException;
 }

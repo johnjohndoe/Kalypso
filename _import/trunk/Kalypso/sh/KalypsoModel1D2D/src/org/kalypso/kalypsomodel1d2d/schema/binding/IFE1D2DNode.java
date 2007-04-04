@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  *
  */
-public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode<CT>
+public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode/*<CT>*/
 {
   /**
    * To get the position of this fe-node

@@ -976,7 +976,7 @@
 	<xs:element 
 		name="MainChannel"
 		type="wb1d2d:MainChannelType"
-		substitutionGroup="wb1d2d:ComplexElement"/>
+		substitutionGroup="wb1d2d:ComplexElement2D"/>
 	<xs:complexType name="MainChannelType">
 		<xs:annotation>
 			<xs:documentation>
@@ -984,12 +984,12 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:ComplexElementType">
-					<xs:sequence>
+				base="wb1d2d:ComplexElement2DType">
+					<!--xs:sequence>
 						<xs:element 
 							ref="wb1d2d:element2D"
-							minOccurs="1" maxOccurs="unbounded"/>
-					</xs:sequence>
+							minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence-->
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
@@ -1001,7 +1001,7 @@
 	<xs:element 
 		name="MainForeland"
 		type="wb1d2d:ChannelForelandType"
-		substitutionGroup="wb1d2d:ComplexElement"/>
+		substitutionGroup="wb1d2d:ComplexElement2D"/>
 	<xs:complexType name="ChannelForelandType">
 		<xs:annotation>
 			<xs:documentation>
@@ -1009,23 +1009,23 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:ComplexElementType">
-					<xs:sequence>
+				base="wb1d2d:ComplexElement2DType">
+					<!--xs:sequence>
 						<xs:element 
 							ref="wb1d2d:element2D"
 							minOccurs="1" maxOccurs="unbounded"/>
 							
-					</xs:sequence>
+					</xs:sequence -->
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
 	
 	<xs:element 
 		name="ComplexElement2D"
-		type="wb1d2d:ComplexElement2D"
+		type="wb1d2d:ComplexElement2DType"
 		substitutionGroup="wb1d2d:ComplexElement"/>
 		
-	<xs:complexType name="ComplexElement2D">
+	<xs:complexType name="ComplexElement2DType">
 		<xs:annotation>
 			<xs:documentation>
 				a comlex element made of 2d element or continuity lines
@@ -1037,8 +1037,7 @@
 					<xs:sequence>
 						<xs:element 
 							ref="wb1d2d:element2D"
-							minOccurs="1" maxOccurs="unbounded"/>
-							
+							minOccurs="0" maxOccurs="unbounded"/>							
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

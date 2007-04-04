@@ -42,37 +42,48 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
  */
-public class Element1D extends FE1D2DElement implements IElement1D<IFE1D2DComplexElement, IFE1D2DEdge>
+public class Element1D< CT extends IFE1D2DComplexElement, 
+                        ET extends IFE1D2DEdge> 
+            extends FE1D2DElement<CT,ET> 
+            implements IElement1D<CT, ET>
 {
   public Element1D( final Feature featureToBind )
   {
-    super( featureToBind, QNAME );
+    super( 
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, 
+        IRiverChannel1D.class );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#getEdge()
    */
-  public IFE1D2DEdge getEdge( )
+  public ET getEdge( )
   {
     final Feature feature = getFeature();
-    final Object property = feature.getProperty( QNAME_PROPS_DIRECTED_EDGE );
+    final Object property = 
+      feature.getProperty( 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE/*QNAME_PROPS_DIRECTED_EDGE*/ );
     final Feature edgeFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
     if( edgeFeature == null )
       return null;
 
-    return (IFE1D2DEdge) edgeFeature.getAdapter( IFE1D2DEdge.class );
+    return (ET) edgeFeature.getAdapter( IFE1D2DEdge.class );
   }
 
   /**
@@ -93,12 +104,12 @@ public class Element1D extends FE1D2DElement implements IElement1D<IFE1D2DComple
     final Feature feature = getWrappedFeature();
     if( edge == null )
     {
-      feature.setProperty( QNAME_PROPS_DIRECTED_EDGE, null );
+      feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, null );
     }
     else
     {
       final String linkToEdge  = edge.getGmlID();
-      feature.setProperty( QNAME_PROPS_DIRECTED_EDGE, linkToEdge );
+      feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
       
       final IFeatureWrapperCollection containers = edge.getContainers();
       FeatureList wrappedList = containers.getWrappedList();
@@ -133,22 +144,34 @@ public class Element1D extends FE1D2DElement implements IElement1D<IFE1D2DComple
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-      return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
+//      return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
+      ET edge = getEdge();
+      if(edge==null)
+      {
+        return null;
+      }
+      
+      final List<IFE1D2DNode> nodes=edge.getNodes();
+      
+      final int SIZE=nodes.size();
+      if(SIZE!=2)
+      {
+        return null;
+      }
+      
+      final CS_CoordinateSystem crs = 
+                      nodes.get( 0 ).getPoint().getCoordinateSystem();
+      
+      
+      GM_Position positions[]= new GM_Position[SIZE];
+      GM_Point point;
+      
+      for( int i = 0; i < SIZE; i++ )
+      {
+        point = nodes.get( i ).getPoint();
+        positions[i] = point.getPosition();
+      }
+
+      return GeometryFactory.createGM_Curve( positions, crs );
   }
-  
-//  /**
-//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#getGeometry()
-//   */
-//  public GM_Curve getGeometry( )
-//  {
-//    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROPS_GEOMETRY );
-//  }
-//
-//  /**
-//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
-//   */
-//  public void setGeometry( final GM_Curve curve )
-//  {
-//    getWrappedFeature().setProperty( QNAME_PROPS_GEOMETRY, curve );
-//  }
 }

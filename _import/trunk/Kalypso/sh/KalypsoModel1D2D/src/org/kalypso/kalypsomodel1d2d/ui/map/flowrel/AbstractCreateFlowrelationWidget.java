@@ -222,7 +222,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       else if( modelElement instanceof IFE1D2DContinuityLine )
       {
         final IFE1D2DContinuityLine contiLine = (IFE1D2DContinuityLine) modelElement;
-        final GM_Curve line = contiLine.getGeometry();
+        final GM_Curve line = (GM_Curve) contiLine.recalculateElementGeometry();
         if( line != null )
         {
           final LineString jtsLine = (LineString) JTSAdapter.export( line );
@@ -233,13 +233,17 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       else if( modelElement instanceof IPolyElement )
       {
         final IPolyElement polyElement = (IPolyElement) modelElement;
-        final GM_Surface surface = polyElement.getGeometry();
+        final GM_Surface surface = (GM_Surface) polyElement.recalculateElementGeometry();
         return surface.getCentroid().getPosition();
       }
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
+    }
+    catch (Throwable th) 
+    {
+      th.printStackTrace();
     }
 
     return null;
@@ -270,7 +274,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       else if( m_modelElement instanceof IFE1D2DContinuityLine )
       {
         final IFE1D2DContinuityLine contiLine = (IFE1D2DContinuityLine) m_modelElement;
-        final GM_Curve line = contiLine.getGeometry();
+        final GM_Curve line = (GM_Curve) contiLine.recalculateElementGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
         final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
@@ -284,7 +288,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       else if( m_modelElement instanceof IPolyElement )
       {
         final IPolyElement polyElement = (IPolyElement) m_modelElement;
-        final GM_Surface surface = polyElement.getGeometry();
+        final GM_Surface surface = (GM_Surface) polyElement.recalculateElementGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
         final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
@@ -299,6 +303,10 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     catch( final IncompatibleGeometryTypeException e )
     {
       // should never happen
+      e.printStackTrace();
+    }
+    catch (GM_Exception e) 
+    {
       e.printStackTrace();
     }
   }

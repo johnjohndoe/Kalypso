@@ -563,4 +563,42 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	{
 		return featureList;
 	}
+    
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#removeAllRefs(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
+     */
+    public boolean removeAllRefs( FWCls toRemove )
+                                  throws IllegalArgumentException 
+    {
+      if(toRemove == null)
+      {
+        throw new IllegalArgumentException(
+            "Parameter toRemove must not be null");
+      }
+      
+      final String gmlID = toRemove.getGmlID();
+      boolean removed = false;
+      do
+      {      
+        removed = removed || featureList.remove( gmlID );
+      }
+      while(removed);
+      
+      return removed;
+      
+    }
+    
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#addRef(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
+     */
+    public boolean addRef(  FWCls toAdd )
+                            throws IllegalArgumentException
+    {
+      final String gmlID = toAdd.getGmlID();
+      if(featureList.contains( gmlID ))
+      {
+        return false;
+      }
+      return featureList.add(gmlID);
+    }
 }

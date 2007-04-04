@@ -61,10 +61,11 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * 
  * @author Patrice Congo
  */
-public class FEJunction1D2D 
-                  extends FE1D2DElement 
-                  implements IFEJunction1D2D<
-                                    IFE1D2DComplexElement, IFE1D2DEdge>
+public class FEJunction1D2D<
+                          CT extends IFE1D2DComplexElement, 
+                          ET extends IFE1D2DEdge> 
+                  extends FE1D2DElement<CT,ET> 
+                  implements IFEJunction1D2D<CT, ET>
 {
   private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
 
@@ -78,7 +79,10 @@ public class FEJunction1D2D
                 final Feature featureToBind )
                 throws IllegalArgumentException
   {
-    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
+    super( 
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D,
+        IFE1D2DComplexElement.class);
     
     edges = initEdges( featureToBind );
   }
@@ -227,9 +231,9 @@ public class FEJunction1D2D
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D#getEdges()
    */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
+  public IFeatureWrapperCollection<ET> getEdges( )
   {
-    return edges;
+    return (IFeatureWrapperCollection<ET>) edges;
   }
   
   /**

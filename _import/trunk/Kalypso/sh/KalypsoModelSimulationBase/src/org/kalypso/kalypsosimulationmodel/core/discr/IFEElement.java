@@ -7,8 +7,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * element element in the substitution hierarchy of simBase:_FEElement 
  * 
  * @author Patrice Congo
- */public interface IFEElement<	CT extends IFEComplexElement,
- 								ET extends IFEEdge> 
+ */public interface IFEElement
  					extends IFeatureWrapper2
 {
 }

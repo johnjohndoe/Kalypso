@@ -341,7 +341,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
     // IRiverChannel1D.QNAME );
     final IFeatureWrapperCollection<IFE1D2DComplexElement> discComplexElements = discretisationModel.getComplexElements();
     final FeatureList wrappedComplexList = discComplexElements.getWrappedList();
-    final Feature riverChannelFeature = Util.createFeatureForListProp( wrappedComplexList, wrappedComplexList.getParentFeatureTypeProperty().getQName(), IRiverChannel1D.QNAME );
+    final Feature riverChannelFeature = 
+                    Util.createFeatureForListProp( 
+                        wrappedComplexList, 
+                        wrappedComplexList.getParentFeatureTypeProperty().getQName(), 
+                        Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D/*IRiverChannel1D.QNAME*/ );
     addedFeatures.add( riverChannelFeature );
     final IRiverChannel1D riverChannel = (IRiverChannel1D) riverChannelFeature.getAdapter( IRiverChannel1D.class );
 
@@ -392,9 +396,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
         // REMARK: The next line does not work because of the substitution problem with the featurelistwrapper
         // final IElement1D<IFE1D2DComplexElement, IFE1D2DEdge> element1d = (IElement1D<IFE1D2DComplexElement,
         // IFE1D2DEdge>) discElements = discretisationModel.getElements().addNew( IElement1D.QNAME );
-        final Feature elementFeature = Util.createFeatureForListProp( discElementsList, discElementsMemberQName, IElement1D.QNAME );
+        final Feature elementFeature = 
+          Util.createFeatureForListProp( 
+                          discElementsList, 
+                          discElementsMemberQName, 
+                          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
         addedFeatures.add( elementFeature );
-        final IElement1D element1d = (IElement1D) elementFeature.getAdapter( IElement1D.class );
+        final IElement1D element1d = 
+              (IElement1D) elementFeature.getAdapter( IElement1D.class );
 
         element1d.setEdge( edge );
         // adding element to 1d containers is not necessary since setting the edge to the element already does

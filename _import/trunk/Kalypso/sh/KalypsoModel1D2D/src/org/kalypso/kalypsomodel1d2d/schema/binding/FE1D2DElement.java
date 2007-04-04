@@ -24,17 +24,25 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @see FE1D2DContinuityLine
  */
 @SuppressWarnings("hiding")
-public abstract class FE1D2DElement extends AbstractFeatureBinder 
-                              implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
+public abstract class FE1D2DElement<    CT extends IFE1D2DComplexElement, 
+                                        ET extends IFE1D2DEdge> 
+                    extends AbstractFeatureBinder 
+                    implements IFE1D2DElement<CT, ET>
 {
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
 
   public FE1D2DElement( final Feature featureToBind )
   {
-    this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
+    this(
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT,
+        IFE1D2DComplexElement.class);
   }
   
-  public FE1D2DElement( final Feature featureToBind, QName featureQName )
+  public <CT>FE1D2DElement( 
+              final Feature featureToBind, 
+              QName featureQName,
+              Class<CT> complexElementClass)
   {
     super( featureToBind, featureQName );
     //
@@ -117,9 +125,9 @@ public abstract class FE1D2DElement extends AbstractFeatureBinder
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getContainers()
    */
-  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
+  public IFeatureWrapperCollection<CT> getContainers( )
   {
-    return containers;
+    return (IFeatureWrapperCollection<CT>) containers;
   }
   
   /**

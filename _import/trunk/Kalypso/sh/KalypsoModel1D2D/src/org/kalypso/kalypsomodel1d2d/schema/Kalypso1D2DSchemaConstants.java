@@ -57,19 +57,26 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_PROP_JUNCTION_2DEDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge2D" );
 
-  public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:middleNode" );
+  public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" );
 
-  public final static QName WB1D2D_PROP_FE1D2DEDGE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:edgeContainer" );
+  public final static QName WB1D2D_PROP_FE1D2DEDGE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer" );
 
   public static final QName WB1D2D_F_COMPLEX_ELE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement" );
 
+  
   public static final QName WB1D2D_F_COMPLEX_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement2D" );
+
+  public static final QName WB1D2D_F_RIVER_CHANNEL1D= new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel1D" );
 
   public static final QName WB1D2D_F_MAIN_RIVER_CHANNEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "MainChannel" );
 
-  public final static QName WB1D2D_PROP_COMPLEX_ELE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:complexElementContainer" );
+  public final static QName WB1D2D_PROP_COMPLEX_ELE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElementContainer" );
 
-  public final static QName WB1D2D_PROP_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:element2D" );
+  public final static QName WB1D2D_PROP_ELE_2D = 
+            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element2D" );
+  
+  public static final QName WB1D2D_PROP_ELEMENT1D = 
+                new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element1D" );
 
   // fe1d2d_2DElement
   // ///////////////////////////////////////////////////////////////

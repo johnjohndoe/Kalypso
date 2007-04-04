@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger
@@ -55,39 +50,87 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 // contain an 'elements' property
 // which is assumed by FE1DComplexElement. Solution: remove 'getElements' from FE1DComplexElement as this propertty is
 // not contained in its corresponding feasture type.
-public class RiverChannel1D extends /* FE1DComplexElement */AbstractFeatureBinder implements IRiverChannel1D
+public class RiverChannel1D<ET extends IElement1D> 
+              extends FE1D2DComplexElement<ET>
+//              extends /* FE1DComplexElement */AbstractFeatureBinder 
+              implements IRiverChannel1D<ET>
 {
-  private static final QName QNAME_PROP_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element1D" );
-
-  private FeatureWrapperCollection<IElement1D> m_elements;
-
-  public RiverChannel1D( final Feature featureToBind )
+  
+  public RiverChannel1D( final Feature featureToBind)
   {
-    super( featureToBind, IRiverChannel1D.QNAME );
-
-    m_elements = new FeatureWrapperCollection<IElement1D>( featureToBind, IElement1D.class, QNAME_PROP_ELEMENT1D );
+    this(featureToBind, (Class<ET>)IElement1D.class);
   }
-
-  /**
-   * REMARK: do not call this method:
-   * <p>
-   * The corresponding feature type has no 'containers' This method is only here to fullfil the complex-element
-   * interface.
-   * <p>
-   * TODO remove as soon as complex-element has no containers any more.
-   * 
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getContainers()
-   */
-  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
+  
+  
+  
+  public RiverChannel1D( final Feature featureToBind, Class<ET> eleClass )
   {
-    throw new UnsupportedOperationException( "The corresponding feature type has no 'containers' This method is only here to fullfil the complex-element interface." );
+//    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass )
+    super( 
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D,//qnameToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,// elementListPropQName, 
+        eleClass//(Class<ET>) IElement1D.class//wrapperClass 
+        );
   }
+//  private FeatureWrapperCollection<ET> m_elements;
+//
+//  public RiverChannel1D( final Feature featureToBind )
+//  {
+//    super( 
+//          featureToBind, 
+//          Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D //IRiverChannel1D.QNAME 
+//          );
+//
+//    m_elements = (FeatureWrapperCollection<ET>) new FeatureWrapperCollection<IElement1D>( 
+//                              featureToBind, 
+//                              IElement1D.class, 
+//                              Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D/*QNAME_PROP_ELEMENT1D*/
+//                              );
+//  }
+//
+//  
+//  /**
+//   * REMARK: do not call this method:
+//   * <p>
+//   * The corresponding feature type has no 'containers' This method is only here to fullfil the complex-element
+//   * interface.
+//   * <p>
+//   * TODO remove as soon as complex-element has no containers any more.
+//   * 
+//   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getContainers()
+//   */
+//  /*
+//  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
+//  {
+//    throw new UnsupportedOperationException( "The corresponding feature type has no 'containers' This method is only here to fullfil the complex-element interface." );
+//  }*/
+//
+//  /**
+//   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
+//   */
+//  public IFeatureWrapperCollection<ET> getElements( )
+//  {
+//    return m_elements;
+//  }
+//  
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+//   */
+//  public boolean addElementAsRef( ET element )
+//  {
+//    // TODO Auto-generated method stub
+//    return false;
+//  }
+//  
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+//   */
+//  public boolean removeElementAsRef( ET elment )
+//  {
+//    // TODO Auto-generated method stub
+//    return false;
+//  }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
-   */
-  public IFeatureWrapperCollection<IElement1D> getElements( )
-  {
-    return m_elements;
-  }
+
 }

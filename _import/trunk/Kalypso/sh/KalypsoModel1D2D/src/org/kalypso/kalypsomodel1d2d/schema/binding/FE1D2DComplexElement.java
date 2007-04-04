@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
@@ -52,22 +53,23 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Patrice Congo
  *
  */
-public class FE1D2DComplexElement 
+public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET extends IFE1D2DElement>
         extends AbstractFeatureBinder 
-        implements IFE1D2DComplexElement<IFE1D2DComplexElement, IFE1D2DElement> 
+        implements IFE1D2DComplexElement</*CT,*/ ET> 
 {
   
-  private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
-  private final IFeatureWrapperCollection<IFE1D2DElement> elements;
+//  private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
+  private final IFeatureWrapperCollection<ET> elements;
   
   protected FE1D2DComplexElement( 
                           Feature featureToBind, 
                           QName qnameToBind ,
-                          QName containerListPropQName,
-                          QName elementListPropQName)
+                          /*QName containerListPropQName,*/
+                          QName elementListPropQName,
+                          Class<ET> wrapperClass)
   {
     super(featureToBind, qnameToBind);
-    if(containerListPropQName==null)
+    /*if(containerListPropQName==null)
     {
       containers= null;
     }
@@ -81,12 +83,13 @@ public class FE1D2DComplexElement
             IFE1D2DComplexElement.class, 
             true);
     }
-    
-    elements=Util.get( 
+    */
+    //TODO Patrice pass the right et class
+    elements = Util.<ET>get( 
         featureToBind, 
         qnameToBind, 
         elementListPropQName, 
-        IFE1D2DElement.class, 
+        wrapperClass,//IFE1D2DElement.class, 
         true);    
   }
 
@@ -95,19 +98,19 @@ public class FE1D2DComplexElement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getContainers()
    */
-  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
+  /*public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
   {
     return containers;
-  }
+  }*/
 
 
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
    */
-  public IFeatureWrapperCollection<IFE1D2DElement> getElements( )
+  public IFeatureWrapperCollection<ET> getElements( )
   {
-    return elements;
+    return (IFeatureWrapperCollection<ET>) elements;
   }
 
 
@@ -119,14 +122,42 @@ public class FE1D2DComplexElement
   {
     return getFeature();
   }
-  
+
+
+
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
-  public String getGmlID( )
+  public boolean addElementAsRef( ET element )
   {
-    return getFeature().getId();
+//    Assert.throwIAEOnNullParam( element, "element" );
+//    if(elements.contains( element ))
+//    {
+//      return false;
+//    }
+//    return elements.getWrappedList().add(element.getGmlID());
+    Assert.throwIAEOnNullParam( element, "element" );
+    return elements.addRef( element );
   }
+
+
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public boolean removeElementAsRef( ET element )
+  {
+    Assert.throwIAEOnNullParam( element, "element" );
+    return elements.removeAllRefs( element );
+  }
+   
+//  /**
+//   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+//   */
+//  public String getGmlID( )
+//  {
+//    return getFeature().getId();
+//  }
   
   
 
