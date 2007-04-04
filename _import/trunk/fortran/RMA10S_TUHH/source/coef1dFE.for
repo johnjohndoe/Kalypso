@@ -1,4 +1,4 @@
-C     Last change:  K     3 Apr 2007    8:26 pm
+C     Last change:  EF    4 Apr 2007    1:47 pm
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -1049,6 +1049,19 @@ cipk nov97
      +               + sfint(nn,i) * dareaintdh(nn,i))
                   !Term G
      +            - grav * xm(c) * sbot(nn) * dareaintdh(nn,i))
+
+          !unsteady term
+          if (icyc > 0) then
+            estifm(ia,ib) = estifm(ia,ib)
+                        !Wichtungsfunktion
+     +                  + xm(l) * hfact(i) * ABS(xl(3))/2*
+!     +                  + xm(l) * hfact(i) * xl(3)/2*
+                        !Term A
+     +                  xm(c) * vflowint(nn,i) *
+     +                  (d2areaintdh(nn,i) * dhintdt(nn,i)
+     +                   + dareaintdh(nn,i) * 1.6/delt)
+          end if
+
 
       if (nn < -3) then
       WRITE(*,*) '*****************************'
