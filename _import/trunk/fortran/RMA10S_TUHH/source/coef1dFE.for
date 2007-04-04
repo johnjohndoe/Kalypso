@@ -1,4 +1,4 @@
-C     Last change:  K     2 Apr 2007    8:14 am
+C     Last change:  K     3 Apr 2007    8:26 pm
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -270,7 +270,6 @@ C-
 
         !nis,feb07: Just using placeholder for resulting velocity
         vel_res(m) = vel(1,n)*COS(alfa(n)) + vel(2,n)*SIN(alfa(n))
-        !WRITE(*,*) xl(3), dx, dy, cxx, saa, th(nn), alfa(n)
         !pause
       enddo
 
@@ -869,7 +868,8 @@ cipk nov97
 
 !      dsfintdh1(nn,i) = -2.0
 !     +               * (sfint(nn,i) / qschint(nn,i)**2) * dqsintdh(nn,i)
-      dsfintdh1(nn,i) = s0schint(nn,i) * vflowint(nn,i)**2
+      dsfintdh1(nn,i) = s0schint(nn,i)
+     +               * vflowint(nn,i) * ABS(vflowint(nn,i))
      +               * (QSchint(nn,i)**2 * 2 * areaint(nn,i)
      +                  * dareaintdh(nn,i) - areaint(nn,i)**2 * 2
      +                  * Qschint(nn,i) * dqsintdh(nn,i))
@@ -925,24 +925,25 @@ cipk nov97
         WRITE(*,*) 'Term A: ', dqintdt(nn,i)
         WRITE(*,*) 'Term B: ',
      +   + vflowint(nn,i)**2 * areaint(nn,i) * dbeiintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term C: ',
      +   + beiint(nn,i) * vflowint(nn,i)**2 * daintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term D: ',
      +   + 2 * beiint(nn,i) * vflowint(nn,i) * areaint(nn,i)
      +     * dvintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term E: ',
      +   + grav * areaint(nn,i) * dhhintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
        WRITE(*,*) 'Term F: ',
      +   + grav * areaint(nn,i) * sfint(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term G: ',
      +   - grav * areaint(nn,i) * sbot(nn)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-      !pause
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(*,*) 'Wichtung: ',  xm(l)*hfact(i)*ABS(xl(3))/2
+      pause
       endif
       !-
       enddo
@@ -1210,72 +1211,25 @@ cipk nov97
 
 !      IF(MOD(IMMT,100) .GT. 90) GO TO 1305
 
-C...... Compute boundary forces
-C-
+      !nis,apr07: Boundary Conditions - Waterdepth H
+      HBCAssign: DO L=1, NCN, 2
+        N1=NCON(L)
 
-      !EFa Nov06, Anpassung an 1D-Teschke-Elemente
-      DO L=1,NCN,2
-      N1=NCON(L)
+        IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
 
-      IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
+          NA=(L-1)*NDF+1
+          do iii=1, nef
+            estifm(na,iii) = 0.0
+          enddo
 
-!       NA = (L-1) * NDF + 1
-!
-!       ASoll = 0.0
-!       do k = 0,12
-!         ASoll = ASoll + apoly(n1,k) * spec(n1,3)**(k)
-!       end do
-!
-!       !EFa Mar07, Boundary condition
-!       ppl = grav * ASoll !* qfact(L)
-!       IF(L .EQ. 1) PPL = -PPL
-!
-!       Term = 0.0
-!       Wert = 0.0
-!       do k = 1, 12
-!         kreal = k
-!         Term = Term + (kreal) / (kreal + 1.0)
-!     +          * apoly(n1,k) * vel(3,n1)**(k+1)
-!         WRITE(*,*) Term, kreal/(kreal+1)*apoly(n1,k)*vel(3,n1)**(k+1)
-!       end do
-!       zist = Term/ vel(3,n1)
-!
-!       dTermdh = 0.0
-!       do k = 1, 12
-!         dTermdh = dTermdh + k * apoly(n1,k) * vel(3,n1)**(k)
-!       end do
-!       WRITE(*,*) 'RBTest:', ah(n1), zist, asoll, dTermdh
-!
-!       F(NA) = F(NA) - PPL * (SPEC(N1,3) - 2*zist)
-!       ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) - PPL *
-!     + 2 * ((dtermdh * vel(3,n1) - Term) / vel(3,n1)**2)
-!       !nis,testing
-!       WRITE(*,*) -2*PPL * ((dtermdh * vel(3,n1) - Term) / vel(3,n1)**2)
-!       WRITE(*,*) PPL * (SPEC(N1,3) - zist)
-!       WRITE(*,*) vel(3,n1), Term, dtermdh, zist, asoll, spec(n1, 3)
-!       WRITE(*,'(13(f5.2,1x))') (apoly(n1,i), i=0, 12)
-!       !-
+          estifm(na, na + 2) = 1.0
+          f(na)              = 0.0
 
-        NA=(L-1)*NDF+1
-        do iii=1, nef
-          estifm(na,iii) = 0.0
-        enddo
-
-        estifm(na, na + 2) = 1.0
-        f(na)             = 0.0
-
-      ENDIF
-      ENDDO
-
-      !EFa Mar07, changed estifm and residuenvector for steady state solution
-      !EFa Dec06, keine Berechnung der RB Q für stationären Fall, deaktiviert nach Test
-      !if (icyc.le.0) then
-      !  GO TO 1305
-      !endif
-      !-
+        ENDIF
+      ENDDO HBCAssign
 
       !nis,mar07: Boundary conditions - DISCHARGE Q
-      QBCAssign: DO N=1, NCN, 2 !no midside nodes
+      QBCAssign: DO N=1, NCN, 2
         M=NCON(N)
 
         !if no BC for Q then cycle
@@ -1293,37 +1247,19 @@ C-
         !actual velocity
         VT=VEL(1,M)*CX+VEL(2,M)*SA
 
-        !fictional width at node
-        AWIDT = bnode(m)
         !all other entrees are zero
         DO J=1,NEF
           ESTIFM(IRW,J)=0.
         ENDDO
 
         !install new boundary condition values
-        ESTIFM(IRW,IRW) =  ah(m)
-        ESTIFM(IRW,IRH) =  dahdh(m) * vt
+        ESTIFM(IRW,IRW) = ah(m)
+        ESTIFM(IRW,IRH) = dahdh(m) * vt
         F(IRW)          = (SPEC(M,1) - VT * ah(m))
      +                    * xl(3)/ ABS(xl(3)) * dirfact
-        !ESTIFM(IRW,IRW) = AREA(NN) * VEL(3,M) * AWIDT
-        !ESTIFM(IRW,IRH) = AREA(NN) * VT * AWIDT
-        !F(IRW)          = AREA(NN) * (SPEC(M,1) - AWIDT * VT * VEL(3,M))
-        !ESTIFM(IRW,IRW) = VEL(3,M) * AWIDT
-        !ESTIFM(IRW,IRH) = VT * AWIDT
-        !F(IRW)          = (SPEC(M,1) - AWIDT * VT * VEL(3,M))
-        !+                    * xl(3)/ abs(xl(3)) * dirfact
 
 !        WRITE(*,*) 'RB: ',spec(m,1), vt, ah(m), vt * ah(m)
 !        WRITE(*,*) vel(1,m), vel(2,m), cx, sa, vel(3,m)
-        !pause
-        !nis,mar07: Fixing velocity as Q-boundary condition
-        !do iii = 1, nef
-        !  ESTIFM (IRW, iii) = 0.0
-        !ENDDO
-        !F(IRW) = 0.0
-        !
-        !ESTIFM (IRW, IRH) = 1.0
-        !-
 
       ENDDO QBCAssign
       !-
@@ -1342,7 +1278,7 @@ C-
  1050 CONTINUE
 
       !nis,feb07,testing
-      if (nn < 3) then
+      if (nn < -3) then
         n3 = ncon(3)
         n1 = ncon(1)
         WRITE(*,*) '*************************'
@@ -1447,7 +1383,7 @@ C-
       !-
 
       !nis,mar07,testing
-      if (nn < 100) then
+      if (nn < 2) then
       write (*,*) 'Element: ', nn
       WRITE(*,9898) estifm(1,1), estifm(1,3),
      + estifm(1,9),estifm(1,11), f(1)
