@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006    4:30 pm
+!     Last change:  MD   30 Mar 2007    4:44 pm
 !--------------------------------------------------------------------------
 ! This code, beiwert.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 !***********************************************************************
 
 
-SUBROUTINE beiwert (huew, ii, wh, h_v, huw, iueart, cq, cm)
+SUBROUTINE beiwert (huew, ii, wh, h_v, h_uw, iueart, cq, cm)
 !MD SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm)
 
 
@@ -60,7 +60,7 @@ SUBROUTINE beiwert (huew, ii, wh, h_v, huw, iueart, cq, cm)
 !**   cm                                                                
 !**   cq                                                                
 !**   huew                                                              
-!**   huw                                                               
+!**   h_uw
 !**   ii                                                                
 !**   iueart                                                            
 !**   wh                                                                
@@ -79,8 +79,8 @@ SUBROUTINE beiwert (huew, ii, wh, h_v, huw, iueart, cq, cm)
 !**   dif     --      Differenz                                         
 !**   g2      --      Wurzel aus 2*Erdbeschleunigung                    
 !**   how     --      Wasserspiegelhöhe im Oberwasser                   
-!**   huew    --      Überfallhöhe                                      
-!**   huw     --      Wasserspiegelhöhe im Unterwasser                  
+!**   huew    --      Überfallhöhe = OW-Wasserhoehe - WehrkronenHöhe
+!**   h_uw    --      Wasserspiegelhöhe im Unterwasser (INPUT)
 !**   iueart  --      Art des Überfalls am Wehr                         
 !**   lw      --      Länge des Wehres in Fließrichtung
 !**   phi     --      Parameter zur Berechnung des Überfallbeiwertes    
@@ -93,9 +93,9 @@ SUBROUTINE beiwert (huew, ii, wh, h_v, huw, iueart, cq, cm)
 !**   rkr     --      Radius der Wehrkrone                              
 !**   wart    --      Art des Wehres                                    
 !**   wh      --      Wehrhöhe                                          
-!**   y0      --      Überfallhöhe im Wehrscheitel                      
-!**   y01     --      Überfallhöhe im Wehrscheitel                      
-!**   y011    --      Überfallhöhe im Wehrscheitel                      
+!**   y0      --      Überfallhöhe des gebogenen Wasserstrahls im Wehrscheitel
+!**   y01     --      Überfallhöhe des gebogenen Wasserstrahls im Wehrscheitel
+!**   y011    --      Überfallhöhe des gebogenen Wasserstrahls im Wehrscheitel
 !**                                                                     
 !**                                                                     
 !**                                                                     
@@ -124,37 +124,38 @@ COMMON / wehr2 / beiw, rkw, lw, wart
 
 cm = 1.
 
-!HW      Regelwehr mit Beiwert
+!HW  Regelwehr mit Beiwert
 IF (wart.eq.'bw') then
 
   cq = beiw (ii)
 
-!HW      scharfkantiges Wehr
+!HW  scharfkantiges Wehr
 ELSEIF (wart.eq.'sk') then
 
-  d1 = huew / wh
-  d2 = 1. / d1
+  d1 = huew / wh    ! relative Überströmungshöhe
+  d2 = 1. / d1      ! Kehrwert der relativen Überströmungshöhe
 
   !HW  Überfallbeiwert nach empirischer Formel von Rehbock
   !HW  für kleine relative Überströmungshöhen d1
   IF (d1.le.6.) then
-    cq = 0.61 + 0.08 * d1
+    cq = 0.61 + (0.08 * d1)
 
-  !HW  Überfallbeiwert für kleine relative Wehrhöhen d2 -> scharfkan
+  !HW  Überfallbeiwert für kleine relative Wehrhöhen d2 -> scharfkant
   ELSEIF (d2.le.0.06) then
-    cq = 1.061 * (1 + d2) **1.5
+    cq = 1.061 * ((1 + d2) **1.5)
 
-  ELSE
-    !   Mittelwert
-    cq = 1.15
+  ELSE ! lineare Interpolation fuer Werte zwischen 1/6 und 0.06
+  !MD cq = 1.15
+   cq = 1.09 * ((d2 -(1/6)) / (0.06 - (1/6)) * (1.157 - 1.090))
   ENDIF
 
-!HW      rundkroniges Wehr
+!HW   rundkroniges Wehr
 ELSEIF (wart.eq.'rk') then
 
   rkr = rkw (ii)
 
-  !HW   Überfallhoehe im Wehrscheitel
+  !HW Überfallhoehe im Wehrscheitel
+  !MD y0 = Strahlhöhe im Wehr etwas kleiner als huew
   y0 = 0.7 * huew
   dif = 100.
 
@@ -170,42 +171,40 @@ ELSEIF (wart.eq.'rk') then
     WRITE (UNIT_OUT_LOG, '(''dif='',f8.4)') dif
     it10 = it10 + 1
 
-    IF (it10.gt.it10max) then
-      !                keine y0 gefunden
-      y0 = .7 * huew
-
-      !JK              SCHREIBEN IN KONTROLILE
+    IF (it10.gt.it10max) then ! keine y0 gefunden
+      y0 = 0.7 * huew
+      !JK  SCHREIBEN IN KONTROLILE
       write (UNIT_OUT_LOG, '(''Keine y0-Tiefe gefunden y0=.7*HO ='',f8.4,/)') y0
-
       GOTO 20
     ENDIF
 
-    !HW          Geschwindigkeitsverhaeltnis
+    !HW  Geschwindigkeitsverhaeltnis
     phi = rkr / (rkr + y0)
 
-    !HW          Hilfsfunktionen
-    phi1 = alog (1. / phi)
+    !HW Hilfsfunktionen
+
+    !MD phi1 = alog (1. / phi)
+    !MD Korrektur: LN (1/phi)
+    phi1 = log (1. / phi)
     phi2 = phi * phi
 
-    !HW          Bedingungsgleichung für den Druckbeiwert beta
-    beta = (1./phi2) * (1.+phi-(1. + 2.*phi) * phi1) / (1.+phi+(2.+phi) * phi1)
+    !HW  Bedingungsgleichung für den Druckbeiwert beta
+    beta = (1./phi2) * ((1.+phi) -(1.+2.*phi) * phi1) / ((1.+phi) +(2.+phi) * phi1)
+    y01 = huew * (1.-phi2) / (1. - phi2 * beta)
+    r01 = huew * (phi * (1.+phi) / (1. - phi2 * beta) )
 
-    y01 = huew * (1. - phi2) / (1. - phi2 * beta)
-
-    r01 = huew * (phi * (1. + phi) / (1. - phi2 * beta) )
-
-    !                 Berechnen y011 aus y01
-
+    ! Berechnen y011 aus y01
+    ! -------------------------
     phi = rkr / (rkr + y01)
 
-    phi1 = alog (1. / phi)
+    !MD phi1 = alog (1. / phi)
+    !MD Korrektur: LN (1/phi)
+    phi1 = log (1. / phi)
     phi2 = phi * phi
 
-    beta = (1./phi2) * (1.+phi-(1. + 2.*phi) * phi1) / (1.+phi+(2.+phi) * phi1)
-
-    y011 = huew * (1. - phi2) / (1. - phi2 * beta)
-
-    r011 = huew * (phi * (1. + phi) / (1. - phi2 * beta) )
+    beta = (1./phi2) * ((1.+phi) -(1.+2.*phi) * phi1) / ((1.+phi) +(2.+phi) * phi1)
+    y011 = huew * (1.-phi2) / (1. - phi2 * beta)
+    r011 = huew * (phi * (1.+phi) / (1. - phi2 * beta) )
 
     df = (y01 - y011) / (r01 - r011)
 
@@ -215,7 +214,6 @@ ELSEIF (wart.eq.'rk') then
     ENDIF
 
     dif = df * (rkr - r01)
-
     y0 = y0 + dif
 
   !JK         ENDE ITERATION ------------------------------------
@@ -223,12 +221,14 @@ ELSEIF (wart.eq.'rk') then
 
   20 CONTINUE
 
-  !HW         Überfallbeiwert für rundkronige Wehre nach Knapp, S. 232
-  cq = (3./2.)*phi*( (1.+phi) * (1.-beta)**0.5) / (1. - beta*phi2) ** (3./2.) * phi1
+  !HW Überfallbeiwert für rundkronige Wehre nach Knapp, S. 232
+  !MD Formel korregiert
+  !cq = (3./2.)*phi*( (1.+phi) * (1.-beta)**0.5) / (1. - beta*phi2) ** (3./2.) * phi1
+  cq = sqrt(2.*g) *phi *(1.+phi) *((1.-beta)**0.5) / ((1. -beta*phi2) **(3./2.)) * phi1
 
-ELSE
 
-  !HW breitkroniges Wehr
+ELSE  !HW breitkroniges Wehr
+
   !HW Empirische Formel nach Knapp, S. 297
   !MD berichtigt am 01.08.2006
   cq = 1.8 * ( ((huew + h_v )/ lw (ii)) ** 0.0544)
@@ -236,92 +236,66 @@ ELSE
 
   !HW Grenzwert für den Überfallbeiwert eines breitkronigen Wehre
   !HW cq,grenz=1.7048, nach Knapp S. 295
-  IF (cq.gt.1.705) cq = 1.705
+  IF (cq.gt.1.7048) cq = 1.7048
 
-  g2 = sqrt (2. * g)
-
-  cq = cq / ( (2. / 3.) * g2)
+  g2 = sqrt (2.* g)
+  cq = cq / ( (2./3.) * g2)
 
 ENDIF
 
-!JK      WENN UNVOLLKOMMENER UEBERFALL
+!JK  WENN UNVOLLKOMMENER UEBERFALL
+!--------------------------------------------
 IF (iueart.eq.1) then
 
-  !           Berechnen des Minderungsfaktors
-  !HW         für den Abfluss ueber das Wehr
+  !   Berechnen des Minderungsfaktors
+  !HW für den Abfluss ueber das Wehr
 
   how = huew
+  dh = h_uw / how
 
-  dh = huw / how
-
-  !JK         FUER SCHARFKANTIGES WEHR
-  !HW         Abminderungsfaktoren nach Press/Schroeder
-  !HW         Annaeherung der nichtlinearen Funktion mittels Polygonzug
+  !JK  FUER SCHARFKANTIGES WEHR
+  !HW  Abminderungsfaktoren nach Press/Schroeder
+  !HW  Annaeherung der nichtlinearen Funktion mittels Polygonzug
   IF (wart.eq.'sk') then
 
     IF (dh.le.0.5) then
-
       cm = 1. - 0.44 * dh
-
     ELSEIF (dh.gt.0.5.and.dh.le.0.8) then
-
       cm = 1.115 - 0.67 * dh
-
     ELSEIF (dh.gt.0.8.and.dh.le.0.95) then
-
       cm = 1.54 - 1.20 * dh
-
     ELSEIF (dh.gt.0.95.and.dh.le.1.0) then
-
       cm = 4.20 - 4.0 * dh
-
     ELSE
-
-      !JK                SCHREIBEN IN KONTROLLFILE
+      !JK   SCHREIBEN IN KONTROLLFILE
       write (UNIT_OUT_LOG, '(''Widerspruch!  dh=huw/how='',f8.4,'' >1.0 '')') dh
       WRITE (*, *) 'Widerspruch in der Beiwertberechnung, deshalb STOP!'
       STOP
-
     ENDIF
 
-  !           untere Kurve rundkronig fuer die anderen Faelle
-  !HW         Abminderungsfaktoren nach Press/Schroeder
-  !HW         Annaeherung der nichtlinearen Funktion mittels Polygonzug
+  !   FUER rundkronig Wehre oder anderen Faelle
+  !HW Abminderungsfaktoren nach Press/Schroeder
+  !HW Annaeherung der nichtlinearen Funktion mittels Polygonzug
   ELSE
-
     IF (dh.le.0.25) then
-
       cm = 1.0
-
     ELSEIF (dh.gt.0.25.and.dh.le.0.78) then
-
       cm = 1.05 - 0.19 * dh
-
     ELSEIF (dh.gt.0.78.and.dh.le.0.90) then
-
       cm = 2.20 - 1.67 * dh
-
     ELSEIF (dh.gt.0.90.and.dh.le.0.95) then
-
       cm = 4.30 - 4.0 * dh
-
     ELSEIF (dh.gt.0.95.and.dh.le.1.00) then
-
       cm = 5.20 - 5.0 * dh
-
     ELSE
-
       !JK          SCHREIBEN IN KONTROLLFILE
       write (UNIT_OUT_LOG, '(''Widerspruch! dh=huw/how='',f8.4,'' >1.0 '')') dh
       write (*,*) 'Widerspruch in der Beiwertberechnung', 'deshalb STOP!!'
       STOP
-
     ENDIF
-
   !JK         ENDIF ZU (wart.eq.'sk')
   ENDIF
-
 !JK      ENDIF ZU (iueart.eq.1)
 ENDIF
 
-END SUBROUTINE beiwert                                                                   
+END SUBROUTINE beiwert
