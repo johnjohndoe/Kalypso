@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Apr 2007   10:45 am
+!     Last change:  MD    4 Apr 2007    3:09 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -622,9 +622,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
         if (he_q .eq. hen1 .and. q_w (j) .ge. q_wehr) then  !MD  sonst Impulsbilanz am Wehr
           TermA = (v_ow**2.) + (2.*g*huew(j))
-          TermB = ((wl(j)* g*2.) - (8.*g)) * ( ((v_ow**2.)* huew(j)) + ((g /2.)*(huew(j)**2.)) )
+          TermB = ((-6.*g)) * ( ((v_ow**2.)* huew(j)) + ((g /2.)*(huew(j)**2.)) )
           TermC = SQRT ((TermA**2.) + TermB)
-          huew_neu(j) = (- TermA + TermC) / ((wl(j)* g) - (4.*g))
+          huew_neu(j) = (- TermA - TermC) / (-3.*g)
+          if (huew_neu(j) .le. 0.0) then
+            huew_neu(j) = (- TermA + TermC) / (-3.*g)
+          end if
           v_uew(j) = SQRT ((v_ow**2.) + (2.*g* (huew(j) - huew_neu(j)) ) )
           q_w (j) = huew_neu(j) * wl(j) * v_uew(j)
 
@@ -833,9 +836,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
       if (hea_q .eq. hen1 .and. q_w (j) .ge. q_wehr) then  !MD  sonst Berechnung mit Impulsbilanz
         TermA = (v_ow**2.) + (2.*g*huew(j))
-        TermB = ((wl(j)* g*2.) - (8.*g)) * ( ((v_ow**2.)* huew(j)) + ((g /2.)*(huew(j)**2.)) )
+        TermB = ((-6.*g)) * ( ((v_ow**2.)* huew(j)) + ((g /2.)*(huew(j)**2.)) )
         TermC = SQRT ((TermA**2.) + TermB)
-        huew_neu(j) = (- TermA + TermC) / ((wl(j)* g) - (4.*g))
+        huew_neu(j) = (- TermA - TermC) / (-3.*g)
+        if (huew_neu(j) .le. 0.0) then
+          huew_neu(j) = (- TermA + TermC) / (-3.*g)
+        end if
         v_uew(j) = SQRT ((v_ow**2.) + (2.*g* (huew(j) - huew_neu(j)) ) )
         q_w (j) = huew_neu(j) * wl(j) * v_uew(j)
         WRITE (UNIT_OUT_LOG, '(''huew(j)='',f8.4, '' aus Impulsbilanz'')')  (huew(j))
@@ -1100,9 +1106,12 @@ DO j = 1, nwfd   ! Ueber alle Wehrfelder
 
     if (he_q .eq. hen1 .and. q_w (j) .ge. q_wehr) then  ! sonst Impulsbilanz
       TermA = (v_ow**2.) + (2.*g*huew(j))
-      TermB = ((wl(j)* g*2.) - (8.*g)) * ( ((v_ow**2.)* huew(j)) + ((g /2.)*(huew(j)**2.)) )
+      TermB = ((-6.*g)) * ( ((v_ow**2.)* huew(j)) + ((g /2.)*(huew(j)**2.)) )
       TermC = SQRT ((TermA**2.) + TermB)
-      huew_neu(j) = (- TermA + TermC) / ((wl(j)* g) - (4.*g))
+      huew_neu(j) = (- TermA - TermC) / (-3.*g)
+      if (huew_neu(j) .le. 0.0) then
+        huew_neu(j) = (- TermA + TermC) / (-3.*g)
+      end if
       v_uew(j) = SQRT ((v_ow**2.) + (2.*g* (huew(j) - huew_neu(j)) ) )
       q_w (j) = huew_neu(j) * wl(j) * v_uew(j)
 
