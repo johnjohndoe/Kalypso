@@ -1,4 +1,4 @@
-C     Last change:  EF    2 Apr 2007    3:09 pm
+C     Last change:  K     3 Apr 2007    8:26 pm
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -888,7 +888,8 @@ cipk nov97
 
 !      dsfintdh1(nn,i) = -2.0
 !     +               * (sfint(nn,i) / qschint(nn,i)**2) * dqsintdh(nn,i)
-      dsfintdh1(nn,i) = s0schint(nn,i) * vflowint(nn,i)**2
+      dsfintdh1(nn,i) = s0schint(nn,i)
+     +               * vflowint(nn,i) * ABS(vflowint(nn,i))
      +               * (QSchint(nn,i)**2 * 2 * areaint(nn,i)
      +                  * dareaintdh(nn,i) - areaint(nn,i)**2 * 2
      +                  * Qschint(nn,i) * dqsintdh(nn,i))
@@ -941,28 +942,30 @@ cipk nov97
       if (nn < -3) then
         WRITE(*,*) 'Impulsintegral', f(3), f(11)
        WRITE(*,*) 'Einzelterme Gauß: ', i
-        WRITE(*,*) 'Term A: ', vflowint(nn,i)*daintdt(nn,i)+
-     +   areaint(nn,i)*dvintdt(nn,i)
+        WRITE(*,*) 'Term A: ', (vflowint(nn,i)*daintdt(nn,i)+
+     +   areaint(nn,i)*dvintdt(nn,i))
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term B: ',
      +   + vflowint(nn,i)**2 * areaint(nn,i) * dbeiintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term C: ',
      +   + beiint(nn,i) * vflowint(nn,i)**2 * daintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term D: ',
      +   + 2 * beiint(nn,i) * vflowint(nn,i) * areaint(nn,i)
      +     * dvintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term E: ',
      +   + grav * areaint(nn,i) * dhhintdx(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
        WRITE(*,*) 'Term F: ',
      +   + grav * areaint(nn,i) * sfint(nn,i)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Term G: ',
      +   - grav * areaint(nn,i) * sbot(nn)
-     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-      !pause
+!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(*,*) 'Wichtung: ',  xm(l)*hfact(i)*ABS(xl(3))/2
+      pause
       endif
       !-
       enddo
