@@ -73,6 +73,7 @@ import java.awt.image.renderable.ParameterBlock;
 import java.io.Serializable;
 import java.util.TreeMap;
 
+import javax.imageio.ImageWriter;
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RasterFactory;
@@ -82,15 +83,18 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
+import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
@@ -162,6 +166,15 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     try
     {
+      final GM_Surface surface = (GM_Surface) geom;
+      final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
+      final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
+      final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing.getAsCurveSegment() );
+      final LineStringDisplayElement lineDE = new LineStringDisplayElement_Impl( feature, curve );
+      
+//      final PolygonDisplayElement de = new PolygonDisplayElement_Impl( feature, surface );
+      lineDE.paint( g2, projection );
+      
       drawRasterImage( g2, projection, rasterImage, rgDomain, cs );
     }
     catch( Exception e )
@@ -257,7 +270,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     // draw the image with the given transformation
     bufferGraphics.drawRenderedImage( image, trafo );
-
+//image.getAsBufferedImage() -> write into file
     // draw bufferedImage on the screen
     g2.drawImage( buffer, (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY(), null );
   }
@@ -312,6 +325,12 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     try
     {
       final RectifiedGridCoverageDoubleRaster raster = new RectifiedGridCoverageDoubleRaster( coverage.getFeature() );
+      
+//      final MinMaxRasterWalker minMaxWalker = new MinMaxRasterWalker();
+//      raster.walk( minMaxWalker, new NullProgressMonitor() );
+//      final String msg = String.format( "Min: %f\tMax: %f", minMaxWalker.getMin(), minMaxWalker.getMax() );
+//      System.out.println( msg );
+      
       DataBufferRasterWalker pwo = new DataBufferRasterWalker( treeColorMap, mode );
       raster.walk( pwo, new NullProgressMonitor() );
 

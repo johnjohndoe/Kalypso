@@ -47,9 +47,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -65,21 +69,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 {
   private TiledImage m_image;
 
-  private GM_Envelope m_origBBox;
-
   private CS_CoordinateSystem m_localCS;
-
-  private double m_dx = 0;
-
-  // Andreas: dieses Pattern (variable m_rx und m_ry nicht benutzt)
-  // taucht im Code verteilt mehrfach auf; doppelter code?
-  // private double m_rx = 0;
-
-  // private double m_ry = 0;
-
-  private double m_dy = 0;
-
-  private CS_CoordinateSystem m_imageCS;
 
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
 
@@ -89,7 +79,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-  public KalypsoPictureTheme( final String themeName, final String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel ) throws CoreException
+  private RectifiedGridDomain m_domain;
+
+  public KalypsoPictureTheme( final String themeName, final String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel ) throws Exception
   {
     super( themeName, linktype.toUpperCase(), mapModel );
     final boolean isRelativePath = source.startsWith( "project:" );
@@ -115,11 +107,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     // }
     wf = baseName.concat( extension );
 
-    double ulcx = 0;
-    double ulcy = 0;
-
     // read worldfile
     InputStream wfStream = null;
+    WorldFile worldFile = null;
     try
     {
       if( isRelativePath )
@@ -135,12 +125,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
         final URL worldFileURL = new URL( wf );
         wfStream = worldFileURL.openStream();
       }
-
-      final WorldFile worldFile = new WorldFileReader().readWorldFile( wfStream );
-      m_dx = worldFile.getDx();
-      m_dy = worldFile.getDy();
-      ulcx = worldFile.getUlcx();
-      ulcy = worldFile.getUlcy();
+      worldFile = new WorldFileReader().readWorldFile( wfStream );
     }
     catch( final Throwable e )
     {
@@ -174,10 +159,18 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     // maybe we must call image.dispose in order to do this?
     // can we do that here??
 
-    // BufferedImage image = m_image.getAsBufferedImage();
-    // m_image = image.getAsBufferedImage();
-    int height = m_image.getHeight();
-    int width = m_image.getWidth();
+    final int height = m_image.getHeight();
+    final int width = m_image.getWidth();
+
+    final CS_CoordinateSystem imageCS = ConvenienceCSFactory.getInstance().getOGCCSByName( result[1] );
+
+    final GM_Point origin = GeometryFactory.createGM_Point( worldFile.getUlcx(), worldFile.getUlcy(), imageCS );
+
+    final OffsetVector offsetX = new OffsetVector( worldFile.getRasterXGeoX(), worldFile.getRasterXGeoY() );
+    final OffsetVector offsetY = new OffsetVector( worldFile.getRasterYGeoX(), worldFile.getRasterYGeoY() );
+    final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
+
+    m_domain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
 
     // ColorModel cm = m_image.getColorModel();
     // int[] size = cm.getComponentSize();
@@ -203,10 +196,6 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     // false, getProperties(image));
     //    
     // m_image = bi;
-
-    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + (height * m_dy), ulcx + (width * m_dx), ulcy );
-
-    m_imageCS = ConvenienceCSFactory.getInstance().getOGCCSByName( result[1] );
   }
 
   /**
@@ -233,7 +222,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
     try
     {
-      WMSHelper.transformImage( m_image, m_origBBox, m_localCS, m_imageCS, p, g );
+      final GM_Envelope envelope = m_domain.getGM_Envelope( m_localCS );
+      final CS_CoordinateSystem crs = m_domain.getCoordinateSystem();
+      WMSHelper.transformImage( m_image, envelope, m_localCS, crs, p, g );
     }
     catch( final Exception e )
     {
@@ -250,8 +241,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     GM_Envelope bbox = null;
     try
     {
-      GeoTransformer gt = new GeoTransformer( m_localCS );
-      bbox = gt.transformEnvelope( m_origBBox, m_imageCS );
+      return m_domain.getGM_Envelope( m_localCS );
     }
     catch( Exception e2 )
     {

@@ -16,7 +16,6 @@ import org.kalypso.gis.doubleraster.grid.ImageGrid;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -53,10 +52,8 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
     m_rangeSet = (RangeSetType) rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
     final GM_Point origin = domain.getOrigin( null );
     m_origin = new Coordinate( origin.getX(), origin.getY() );
-    final CS_CoordinateSystem crs = origin.getCoordinateSystem();
-    // TODO: Refactor RectifiedGridDomain to support vector offsets
-    m_offsetX = new Coordinate( domain.getOffsetX( crs ), 0 );
-    m_offsetY = new Coordinate( 0, domain.getOffsetY( crs ) );
+    m_offsetX = new Coordinate( domain.getOffsetX(  ).getGeoX(), domain.getOffsetX(  ).getGeoY() );
+    m_offsetY = new Coordinate( domain.getOffsetY(  ).getGeoX(), domain.getOffsetY(  ).getGeoY() );
 
     m_sizeX = domain.getNumColumns();
     m_sizeY = domain.getNumRows();

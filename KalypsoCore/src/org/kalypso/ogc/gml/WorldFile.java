@@ -43,41 +43,60 @@ package org.kalypso.ogc.gml;
 /**
  * Reads tfw, gfw, and so on world files.
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class WorldFile
 {
-  private final double m_dx; 
-  private final double m_dy; 
-  private final double m_ulcx; 
+  private final double m_rasterXGeoX;
+
+  private final double m_rasterXGeoY;
+
+  private final double m_rasterYGeoX;
+
+  private final double m_rasterYGeoY;
+
+  private final double m_ulcx;
+
   private final double m_ulcy;
-  
-  public WorldFile( final double dx, final double dy, final double ulcx, final double ulcy )
+
+  public WorldFile( final double rasterXGeoX, final double rasterXGeoY, final double rasterYGeoX, final double rasterYGeoY, final double ulcx, final double ulcy )
   {
-    m_dx = dx;
-    m_dy = dy;
+    m_rasterXGeoX = rasterXGeoX;
+    m_rasterXGeoY = rasterXGeoY;
+    m_rasterYGeoX = rasterYGeoX;
+    m_rasterYGeoY = rasterYGeoY;
     m_ulcx = ulcx;
     m_ulcy = ulcy;
   }
-  
-  public double getDx( )
+
+  public double getRasterXGeoX( )
   {
-    return m_dx;
+    return m_rasterXGeoX;
   }
-  public double getDy( )
+
+  public double getRasterXGeoY( )
   {
-    return m_dy;
+    return m_rasterXGeoY;
   }
+
+  public double getRasterYGeoX( )
+  {
+    return m_rasterYGeoX;
+  }
+
+  public double getRasterYGeoY( )
+  {
+    return m_rasterYGeoY;
+  }
+
   public double getUlcx( )
   {
     return m_ulcx;
   }
+
   public double getUlcy( )
   {
     return m_ulcy;
-  } 
-  
-  
-  
+  }
 
 }
