@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -64,10 +66,18 @@ public class Element1D< CT extends IFE1D2DComplexElement,
 {
   public Element1D( final Feature featureToBind )
   {
-    super( 
+    this( 
         featureToBind, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, 
-        IRiverChannel1D.class );
+        (Class<CT>)IRiverChannel1D.class );
+  }
+  
+  public Element1D( 
+      final Feature featureToBind, 
+      QName featureQName,
+      Class<CT> complexElementClass)
+  {
+    super(featureToBind, featureQName, complexElementClass);   
   }
 
   /**

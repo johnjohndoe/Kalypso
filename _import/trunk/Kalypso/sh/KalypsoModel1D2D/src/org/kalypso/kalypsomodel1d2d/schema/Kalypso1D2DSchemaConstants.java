@@ -68,7 +68,8 @@ public class Kalypso1D2DSchemaConstants
 
   public static final QName WB1D2D_F_RIVER_CHANNEL1D= new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel1D" );
 
-  public static final QName WB1D2D_F_MAIN_RIVER_CHANNEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "MainChannel" );
+  public static final QName WB1D2D_F_RIVER_CHANNEL_2D = 
+                new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel2D" );
 
   public final static QName WB1D2D_PROP_COMPLEX_ELE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElementContainer" );
 

@@ -34,19 +34,15 @@ public abstract class Element2D<
                 extends FE1D2DElement<CT,ET> 
                 implements IElement2D<CT,ET>
 {
-  private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
+  private final IFeatureWrapperCollection<ET> edges;
 
-  public Element2D( final Feature featureToBind )
-  {
-    this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
-  }
-  
   public Element2D( 
-            final Feature featureToBind, 
-            final QName featureQName )
+      final Feature featureToBind, 
+      QName featureQName,
+      Class<CT> complexElementClass,
+      Class<ET> edgeClass)
   {
-    super( featureToBind, featureQName,IFEComplexElement2D.class );
-    //
+    super(featureToBind, featureQName, complexElementClass); 
     Object prop =null;
     try
     {
@@ -73,22 +69,83 @@ public abstract class Element2D<
     if( prop == null )
     {
       // create the property that is still missing
-      edges = new FeatureWrapperCollection<IFE1D2DEdge>( 
+      edges = new FeatureWrapperCollection<ET>( 
                           featureToBind, 
                           // TODO: problem here?
                           Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, 
                           Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, 
-                          IFE1D2DEdge.class );
+                          edgeClass//IFE1D2DEdge.class 
+                          );
     }
     else
     {
       // just wrapped the existing one
       edges = 
-        new FeatureWrapperCollection<IFE1D2DEdge>( 
+        new FeatureWrapperCollection<ET>( 
                   featureToBind, 
-                  IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                  edgeClass,//IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
                   Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
+  }
+  
+  public Element2D( final Feature featureToBind )
+  {
+    this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
+  }
+  
+  public Element2D( 
+            final Feature featureToBind, 
+            final QName featureQName )
+  {
+    this( 
+          featureToBind, 
+          featureQName,
+          (Class<CT>)IFEComplexElement2D.class,
+          (Class<ET>)IFE1D2DEdge.class );
+//    super( featureToBind, featureQName,IFEComplexElement2D.class );
+    //
+//    Object prop =null;
+//    try
+//    {
+//        prop=featureToBind.getProperty( 
+//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+//    }
+//    catch(Throwable th)
+//    {
+//      th.printStackTrace();
+//    }
+//
+//    // edges
+//    try
+//    {
+//      prop = featureToBind.getProperty( 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+//    }
+//    catch (Throwable th) 
+//    {
+//      th.printStackTrace();
+//      prop=null;
+//    }
+//
+//    if( prop == null )
+//    {
+//      // create the property that is still missing
+//      edges = new FeatureWrapperCollection<IFE1D2DEdge>( 
+//                          featureToBind, 
+//                          // TODO: problem here?
+//                          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, 
+//                          Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, 
+//                          IFE1D2DEdge.class );
+//    }
+//    else
+//    {
+//      // just wrapped the existing one
+//      edges = 
+//        new FeatureWrapperCollection<IFE1D2DEdge>( 
+//                  featureToBind, 
+//                  IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+//                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+//    }
   }
 
   /**

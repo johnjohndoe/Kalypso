@@ -46,10 +46,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -64,12 +62,22 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Patrice Congo
  */
-public class FE1D2DContinuityLine 
-                  extends Element2D 
-                  implements IFE1D2DContinuityLine
+public class FE1D2DContinuityLine<    
+                              CT extends IFE1D2DComplexElement, 
+                              ET extends IFE1D2DEdge> 
+                  extends Element2D<CT,ET> 
+                  implements IFE1D2DContinuityLine<CT,ET> 
 {
-  private static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
+//  private static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
+  public FE1D2DContinuityLine( 
+      final Feature featureToBind, 
+      QName featureQName,
+      Class<CT> complexElementClass,
+      Class<ET> edgeClass)
+  {
+    super(featureToBind, featureQName, complexElementClass,edgeClass);
+  }
   /**
    * Create a new continuity line binding the provided feature.
    * @param featureToBind the feature to bind. null values are illegal
@@ -80,7 +88,11 @@ public class FE1D2DContinuityLine
                 final Feature featureToBind )
                 throws IllegalArgumentException
   {
-    super( featureToBind );
+    this( 
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
+        (Class<CT>)IFE1D2DComplexElement.class,
+        (Class<ET>)IFE1D2DEdge.class);
   }
 
   /**
@@ -98,7 +110,7 @@ public class FE1D2DContinuityLine
                 QName propQName )
                 throws IllegalArgumentException
   {
-    super( 
+    this( 
         parentFeature, 
         propQName, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
@@ -122,7 +134,12 @@ public class FE1D2DContinuityLine
                 QName newFeatureQName ) 
                 throws IllegalArgumentException
   {
-    super( parentFeature, propQName, newFeatureQName );
+//    super( parentFeature, propQName, newFeatureQName );
+    this(Util.createFeatureAsProperty(
+        parentFeature, 
+        propQName,
+        newFeatureQName
+        ));
   }
   
   /**
@@ -154,7 +171,7 @@ public class FE1D2DContinuityLine
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
-    IFeatureWrapperCollection<IFE1D2DEdge> edges = super.getEdges();
+    IFeatureWrapperCollection<ET> edges = super.getEdges();
     List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
     IFE1D2DNode lastAddedNode=null;
     
@@ -215,20 +232,20 @@ public class FE1D2DContinuityLine
       return GeometryFactory.createGM_Curve( poses, crs );
   }
   
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#getLine()
-   */
-  public GM_Curve getGeometry( )
-  {
-    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROP_GEOMETRY );
-  }
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#getLine()
+//   */
+//  public GM_Curve getGeometry( )
+//  {
+//    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROP_GEOMETRY );
+//  }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
-   */
-  public void setGeometry( final GM_Curve curve )
-  {
-    getWrappedFeature().setProperty( QNAME_PROP_GEOMETRY, curve );
-  }
+//  /**
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
+//   */
+//  public void setGeometry( final GM_Curve curve )
+//  {
+//    getWrappedFeature().setProperty( QNAME_PROP_GEOMETRY, curve );
+//  }
   
 }

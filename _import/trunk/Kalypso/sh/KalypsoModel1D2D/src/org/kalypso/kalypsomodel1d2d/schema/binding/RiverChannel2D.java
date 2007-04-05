@@ -42,42 +42,54 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Default implementation of {@link IFEComplexElement2D}
+ * Default implementation for {@link IRiverChannel2D}
+ * based on {@link FEComplexElement2D}
  * 
  * @author Patrice Congo
- *
  */
-public class FEComplexElement2D<ET extends IElement2D>
-              extends FE1D2DComplexElement<ET>
-              implements IFEComplexElement2D<ET>
+public class RiverChannel2D<ET extends IElement2D>
+              extends FEComplexElement2D<ET> 
+              implements IRiverChannel2D<ET>
 {
-
   /**
-   * Construct a new wrapper object for the given feature
+   * Create a River channel wrapper for the given feature
+   * @param featureToBind the feature to wrapp
+   * @throws IllegalArgumentException if 
+   * <ul>
+   *    <li/> featureToBind is null
+   *    <li/> feature to bind is not of the type wb1d2d:RiverChannel2D 
+   * </ul> 
    * 
+   */
+  public RiverChannel2D(
+                Feature featureToBind) 
+                throws IllegalArgumentException
+  {
+    this(
+        featureToBind,
+        Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL_2D,
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
+        (Class<ET>)IElement2D.class);
+  }
+  
+  /**
    * @param featureToBind the feature to wrap
    * @param qnameToBind the {@link QName} given the type of the feature to wrap
    * @param elementListPropQName the {@link QName} of the list property
    *            holding the property
    * @param eleClass the base wrapper class for the elements
    */
-  protected FEComplexElement2D( 
-                  Feature featureToBind, 
-                  QName qnameToBind,
-                  QName elementListPropQName,
-                  Class<ET> eleClass)
+  public RiverChannel2D( 
+                Feature featureToBind, 
+                QName qnameToBind, 
+                QName elementListPropQName, 
+                Class<ET> eleClass )
   {
-    super(
-        featureToBind, 
-        qnameToBind, 
-        //null/*containerListPropQName*/, 
-        elementListPropQName,
-        eleClass);
-   
+    super( featureToBind, qnameToBind, elementListPropQName, eleClass );
   }
-
 
 }

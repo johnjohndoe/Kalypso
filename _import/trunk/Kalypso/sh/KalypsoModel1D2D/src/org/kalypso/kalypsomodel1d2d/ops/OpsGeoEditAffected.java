@@ -40,13 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -69,34 +75,79 @@ public class OpsGeoEditAffected
    * Implements the algorithm to get the fe concept features affected
    * by a modification of a PolyElement geometry 
    */
-  private static final void addAffectedFeaturesByPolyElementGeomChange( Feature feature, List<Feature> affectedFeature )
+  private static final void addAffectedFeaturesByPolyElementGeomChange( 
+                                                  Feature feature, 
+                                                  Set<Feature> affectedFeature )
   {
+//    final IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement= 
+//          (IPolyElement) feature.getAdapter( IPolyElement.class );
+//    if(polyElement==null)
+//    {
+//      throw new IllegalArgumentException("feature mus be a Polyelement:"+polyElement);
+//    }
+//    
+//    for(IFE1D2DEdge edge : polyElement.getEdges())
+//    {
+//      Feature wrappedFeature = edge.getWrappedFeature();
+//      wrappedFeature.invalidEnvelope();
+//      affectedFeature.add(wrappedFeature);
+//    }
+//    
+//    List<IFE1D2DNode> nodes = polyElement.getNodes();
+//    for(IFE1D2DNode node:nodes)
+//    {
+//      Feature wrappedFeature = node.getWrappedFeature();
+//      wrappedFeature.invalidEnvelope();
+//      affectedFeature.add( wrappedFeature );
+//    }
+    
     final IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement= 
-          (IPolyElement) feature.getAdapter( IPolyElement.class );
+                    (IPolyElement) feature.getAdapter( IPolyElement.class );
     if(polyElement==null)
     {
       throw new IllegalArgumentException("feature mus be a Polyelement:"+polyElement);
     }
-    
-    for(IFE1D2DEdge edge : polyElement.getEdges())
-    {
-      Feature wrappedFeature = edge.getWrappedFeature();
-      wrappedFeature.invalidEnvelope();
-      affectedFeature.add(wrappedFeature);
-    }
-    
     List<IFE1D2DNode> nodes = polyElement.getNodes();
-    for(IFE1D2DNode node:nodes)
+    for(IFE1D2DNode node: nodes)
     {
-      Feature wrappedFeature = node.getWrappedFeature();
-      wrappedFeature.invalidEnvelope();
-      affectedFeature.add( wrappedFeature );
+      addAffectedFeaturesByNodeGeomChange( 
+                              node.getWrappedFeature(), 
+                              affectedFeature );
     }
+    
   }
 
-  private static final void addAffectedFeaturesByNodeGeomChange( Feature feature, List<Feature> targetFeature )
+  private static final void addAffectedFeaturesByNodeGeomChange( 
+                                          Feature feature, 
+                                          Set<Feature> targetFeature )
   {
-    throw new UnsupportedOperationException("not supported yet");
+    Assert.throwIAEOnNullParam( feature, "feature" );
+    IFE1D2DNode<IFE1D2DEdge> node = 
+        (IFE1D2DNode<IFE1D2DEdge>) feature.getAdapter( IFE1D2DNode.class );
+    if(node == null)
+    {
+      throw new IllegalArgumentException(
+          "Unable to adapt to node argument must be a node"+
+          "Argument feature must be a node; but is "+feature.getFeatureType().getQName()
+          );
+    }
+    
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = node.getContainers();
+    List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> elements=
+      new ArrayList<IFE1D2DElement<IFE1D2DComplexElement,IFE1D2DEdge>>();
+    for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
+    {
+      targetFeature.add(edge.getWrappedFeature());
+      elements.addAll( 
+            (Collection< ? extends IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>) edge.getContainers());
+    }
+    
+    for(IFE1D2DElement element:elements)
+    {
+      targetFeature.add( element.getWrappedFeature() );
+    }
+    
+    
   } 
 
   /**
@@ -111,7 +162,7 @@ public class OpsGeoEditAffected
    */
   public static final  void addAffectedsByFEFeatureGeomChange(
                                               Feature changedFeature, 
-                                              List<Feature> affectedFeatures )
+                                              Set<Feature> affectedFeatures )
   {
     if(TypeInfo.isNode( changedFeature ))
     {
@@ -139,7 +190,9 @@ public class OpsGeoEditAffected
   /**
    * To get the element affected by a change of the geometry of a 1D element
    */
-  private static void addAffectedFeaturesByElement1DGeomChange( Feature changedFeature, List<Feature> affectedFeatures )
+  private static void addAffectedFeaturesByElement1DGeomChange( 
+                                          Feature changedFeature, 
+                                          Set<Feature> affectedFeatures )
   {
     final IElement1D element1D= 
       (IElement1D) changedFeature.getAdapter( IElement1D.class );
@@ -148,20 +201,27 @@ public class OpsGeoEditAffected
       throw new IllegalArgumentException("feature mus be a 1d element:"+element1D);
     }
     
-    IFE1D2DEdge edge = element1D.getEdge(); 
-    if(edge!=null)
-    {
-      Feature wrappedFeature = edge.getWrappedFeature();
-      wrappedFeature.invalidEnvelope();
-      affectedFeatures.add(wrappedFeature);
-    }
-    
+//    IFE1D2DEdge edge = element1D.getEdge(); 
+//    if(edge!=null)
+//    {
+//      Feature wrappedFeature = edge.getWrappedFeature();
+//      wrappedFeature.invalidEnvelope();
+//      affectedFeatures.add(wrappedFeature);
+//    }
+//    
+//    List<IFE1D2DNode> nodes = element1D.getNodes();
+//    for(IFE1D2DNode node:nodes)
+//    {
+//      Feature wrappedFeature = node.getWrappedFeature();
+//      wrappedFeature.invalidEnvelope();
+//      affectedFeatures.add( wrappedFeature );
+//    }
     List<IFE1D2DNode> nodes = element1D.getNodes();
-    for(IFE1D2DNode node:nodes)
+    for(IFE1D2DNode node: nodes)
     {
-      Feature wrappedFeature = node.getWrappedFeature();
-      wrappedFeature.invalidEnvelope();
-      affectedFeatures.add( wrappedFeature );
+      addAffectedFeaturesByNodeGeomChange( 
+                              node.getWrappedFeature(), 
+                              affectedFeatures );
     }
   }
   

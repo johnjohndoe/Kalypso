@@ -67,7 +67,7 @@ public class FEJunction1D2D<
                   extends FE1D2DElement<CT,ET> 
                   implements IFEJunction1D2D<CT, ET>
 {
-  private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
+  private final IFeatureWrapperCollection<ET> edges;
 
   /**
    * Create a new continuity line binding the provided feature.
@@ -79,15 +79,26 @@ public class FEJunction1D2D<
                 final Feature featureToBind )
                 throws IllegalArgumentException
   {
-    super( 
+    this( 
         featureToBind, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D,
-        IFE1D2DComplexElement.class);
-    
-    edges = initEdges( featureToBind );
+        (Class<CT>)IFE1D2DComplexElement.class,
+        (Class<ET>)IFE1D2DEdge.class);    
+  }
+  
+  public FEJunction1D2D( 
+      final Feature featureToBind, 
+      QName featureQName,
+      Class<CT> complexElementClass,
+      Class<ET> edgeClass)
+  {
+    super(featureToBind,featureQName,complexElementClass);
+    edges = initEdges( featureToBind, edgeClass );
   }
 
-  private FeatureWrapperCollection<IFE1D2DEdge> initEdges( final Feature featureToBind ) throws IllegalArgumentException
+  private FeatureWrapperCollection<ET> initEdges( 
+                                      final Feature featureToBind,
+                                      Class<ET> edgeClass) throws IllegalArgumentException
   {
     // edges
     Object prop =null;
@@ -105,20 +116,21 @@ public class FEJunction1D2D<
     if( prop == null )
     {
       // create the property that is still missing
-      return new FeatureWrapperCollection<IFE1D2DEdge>( 
+      return new FeatureWrapperCollection<ET>( 
                           featureToBind, 
                           // TODO: problem here?
                           Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, 
                           Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, 
-                          IFE1D2DEdge.class );
+                          edgeClass//IFE1D2DEdge.class 
+                          );
     }
     else
     {
       // just wrapped the existing one
       return 
-        new FeatureWrapperCollection<IFE1D2DEdge>( 
+        new FeatureWrapperCollection<ET>( 
                   featureToBind, 
-                  IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                  edgeClass,//IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
                   Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
@@ -143,7 +155,7 @@ public class FEJunction1D2D<
         propQName, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D );
     
-    edges = initEdges( getWrappedFeature() );
+    edges = initEdges( getWrappedFeature(),(Class<ET>)IFE1D2DEdge.class );
   }
 
   /**
@@ -166,7 +178,7 @@ public class FEJunction1D2D<
   {
     super( parentFeature, propQName, newFeatureQName );
     
-    edges = initEdges( getWrappedFeature() );
+    edges = initEdges( getWrappedFeature(),(Class<ET>)IFE1D2DEdge.class );
   }
   
   /**

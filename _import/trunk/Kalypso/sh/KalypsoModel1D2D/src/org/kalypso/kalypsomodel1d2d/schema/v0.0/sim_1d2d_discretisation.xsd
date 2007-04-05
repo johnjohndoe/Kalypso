@@ -458,17 +458,12 @@
 				Property type for defining complex elements
 			</xs:documentation>
 		</xs:annotation>
-		<!--xs:complexContent-->
-			<!--xs:restriction 
-						base="simBase:FEComplexElementPropertyType"-->
-				<xs:sequence> 
-					<xs:element 
-						ref="wb1d2d:ComplexElement"
-						minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-			<!--/xs:restriction-->
-		<!-- /xs:complexContent-->
+		<xs:sequence> 
+			<xs:element 
+				ref="wb1d2d:ComplexElement"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	<!-- =================================================================
@@ -477,7 +472,8 @@
 	<xs:element 
 		name="ComplexElement"
 		type="wb1d2d:ComplexElementType"
-		substitutionGroup="simBase:_FEComplexElement"/>
+		substitutionGroup="simBase:_FEComplexElement"
+		abstract="true"/>
 		
 	<xs:complexType 
 		name="ComplexElementType"
@@ -494,6 +490,8 @@
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
+	
+	
 	
 	
 	<!-- =================================================================
@@ -721,7 +719,7 @@
 	<xs:element 
 		name="ContinuityLine"
 		type="wb1d2d:ContinuityLineType"
-		substitutionGroup="wb1d2d:Element2D"/>
+		substitutionGroup="wb1d2d:Element"/>
 	
 	<xs:complexType name="ContinuityLineType">
 		<xs:annotation>
@@ -739,14 +737,11 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:Element2DType">
+				base="wb1d2d:ElementType">
 					<xs:sequence>
-					<!--xs:element 
-						name="geometry" 
-						type="gml:LineStringPropertyType"/-->
-					<xs:element
-						ref="wb1d2d:directedEdge"
-						minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element
+							ref="wb1d2d:directedEdge"
+							minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 				
 			</xs:extension>			
@@ -757,10 +752,10 @@
 		Element 1D Continuity line Junction element context
 	 =================================================================-->
 	 <xs:element 
-		name="JunctionContext"
-		type="wb1d2d:JunctionContextType"
-		substitutionGroup="wb1d2d:ComplexElement"/>
-	<xs:complexType name="JunctionContextType">
+		name="JunctionContext1DToCLine"
+		type="wb1d2d:JunctionContext1DToCLineType"
+		substitutionGroup="wb1d2d:_JunctionContext"/>
+	<xs:complexType name="JunctionContext1DToCLineType">
 		<xs:annotation>
 			<xs:documentation>
 				The context for a junction base on a
@@ -769,7 +764,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:restriction 
-				base="wb1d2d:ComplexElementType">
+				base="wb1d2d:AbstractJunctionContextType">
 					<xs:sequence>
 						<xs:element 
 							ref="wb1d2d:element1D"
@@ -779,6 +774,55 @@
 							minOccurs="1" maxOccurs="1"/>
 					</xs:sequence>
 			</xs:restriction>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<xs:element 
+		name="JunctionContext1DTo2D"
+		type="wb1d2d:JunctionContext1DTo2DType"
+		substitutionGroup="wb1d2d:_JunctionContext"/>
+	<xs:complexType name="JunctionContext1DTo2DType">
+		<xs:annotation>
+			<xs:documentation>
+				The context for a junction base on a
+				1d element and a 2d element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction 
+				base="wb1d2d:AbstractJunctionContextType">
+					<xs:sequence>
+						<xs:element 
+							ref="wb1d2d:element1D"
+							minOccurs="1" maxOccurs="1"/>
+						<xs:element 
+								ref="wb1d2d:continuityLine"
+								minOccurs="1" maxOccurs="1"/>
+						<xs:element 
+								ref="wb1d2d:element2D"
+								minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	<xs:element 
+		name="_JunctionContext"
+		type="wb1d2d:AbstractJunctionContextType"
+		substitutionGroup="wb1d2d:ComplexElement"/>
+		
+	<xs:complexType name="AbstractJunctionContextType">
+		<xs:annotation>
+			<xs:documentation>
+				The context for a junction base on a
+				continuity line and a 1d element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:ComplexElementType">
+			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
 	
@@ -974,10 +1018,10 @@
 				Main Channel
 	================================================================== -->
 	<xs:element 
-		name="MainChannel"
-		type="wb1d2d:MainChannelType"
+		name="RiverChannel2D"
+		type="wb1d2d:RiverChannel2DType"
 		substitutionGroup="wb1d2d:ComplexElement2D"/>
-	<xs:complexType name="MainChannelType">
+	<xs:complexType name="RiverChannel2DType">
 		<xs:annotation>
 			<xs:documentation>
 			</xs:documentation>

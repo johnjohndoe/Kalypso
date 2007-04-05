@@ -42,7 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.OpsGeoEditAffected;
@@ -120,10 +123,10 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#perform()
    */
   @Override
-  protected List<Feature> perform( )
+  protected Collection<Feature> perform( )
   {
-    List<Feature> list = super.perform();
-    List<Feature> affectedFeatures= new ArrayList<Feature>();
+    Collection<Feature> list = super.perform();
+    Set<Feature> affectedFeatures= new HashSet<Feature>();//ArrayList<Feature>();
     
     System.out.println("List:"+list);
     
@@ -140,7 +143,7 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
   
   private static final void fireModelChangedEvent(
                                     CommandableWorkspace workspace,
-                                    List<Feature> modifiedFeature)
+                                    Collection<Feature> modifiedFeature)
   {
     Assert.throwIAEOnNullParam( workspace, "workspace" );
     Assert.throwIAEOnNullParam( modifiedFeature, "modifiedFeature" );

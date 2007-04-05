@@ -123,17 +123,16 @@ public class CreateFEContlineWidget extends AbstractWidget
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = featureTheme.getFeatureType();
+        //TODO Patrice Change this to use searching with maputil
         if( GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_NODE
-                        /*FE1D2DNode.QNAME_FE1D2DNode*/ ) || 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) || 
             GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE
-                    /*FE1D2DEdge.QNAME_FE1D2DEdge*/ )|| 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE)|| 
             GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement ) )
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
         {
           final Feature parentFeature = featureTheme.getFeatureList().getParentFeature();
 

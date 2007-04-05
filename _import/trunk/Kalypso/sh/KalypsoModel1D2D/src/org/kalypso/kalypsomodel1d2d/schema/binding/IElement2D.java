@@ -56,5 +56,5 @@ public interface IElement2D<    CT extends IFE1D2DComplexElement,
 
   public void addEdge( final String edgeID );
   
-  public void setEdges( final /*IFE1D2DEdge*/ET[] edges );
+  public void setEdges( final ET[] edges );
 }

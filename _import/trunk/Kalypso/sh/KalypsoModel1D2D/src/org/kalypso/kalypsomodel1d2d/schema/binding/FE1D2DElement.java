@@ -29,17 +29,17 @@ public abstract class FE1D2DElement<    CT extends IFE1D2DComplexElement,
                     extends AbstractFeatureBinder 
                     implements IFE1D2DElement<CT, ET>
 {
-  private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
+  private final IFeatureWrapperCollection<CT> containers;
 
   public FE1D2DElement( final Feature featureToBind )
   {
     this(
         featureToBind, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT,
-        IFE1D2DComplexElement.class);
+        (Class<CT>)IFE1D2DComplexElement.class);
   }
   
-  public <CT>FE1D2DElement( 
+  public FE1D2DElement( 
               final Feature featureToBind, 
               QName featureQName,
               Class<CT> complexElementClass)
@@ -61,20 +61,20 @@ public abstract class FE1D2DElement<    CT extends IFE1D2DComplexElement,
     {
       // create the property that is still missing
       containers = 
-          new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+          new FeatureWrapperCollection<CT>( 
                 featureToBind, 
                 // TODO: problem here?
                 Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, 
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, 
-                IFE1D2DComplexElement.class );
+                complexElementClass );
     }
     else
     {
       // just wrapped the existing one
       containers = 
-        new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+        new FeatureWrapperCollection<CT>( 
                 featureToBind, 
-                IFE1D2DComplexElement.class,
+                complexElementClass,
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
   }
@@ -127,7 +127,7 @@ public abstract class FE1D2DElement<    CT extends IFE1D2DComplexElement,
    */
   public IFeatureWrapperCollection<CT> getContainers( )
   {
-    return (IFeatureWrapperCollection<CT>) containers;
+    return containers;
   }
   
   /**

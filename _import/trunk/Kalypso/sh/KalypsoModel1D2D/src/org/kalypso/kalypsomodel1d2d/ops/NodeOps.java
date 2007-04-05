@@ -78,11 +78,14 @@ public class NodeOps
                       final GM_Point point, 
                       final FE1D2DDiscretisationModel model )
   {
+    Assert.throwIAEOnNullParam( point, "point" );
+    Assert.throwIAEOnNullParam( model, "model" );
     
     final FeatureList elementList = 
-          (FeatureList) model.getFeature().getProperty( 
-              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
-    final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
+          model.getElements().getWrappedList();//(FeatureList) model.getFeature().getProperty( 
+//              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    final FeatureList element2DList = 
+          new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
 
     // 1. Try: look, if the position is within an element
     // TODO: comment: why is this better than just searching within the node list?

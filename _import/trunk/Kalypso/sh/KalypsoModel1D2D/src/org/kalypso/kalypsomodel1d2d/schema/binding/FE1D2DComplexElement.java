@@ -61,6 +61,15 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
 //  private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
   private final IFeatureWrapperCollection<ET> elements;
   
+  /**
+   * Construct a new wrapper object for the given feature
+   * 
+   * @param featureToBind the feature to wrap
+   * @param qnameToBind the {@link QName} given the type of the feature to wrap
+   * @param elementListPropQName the {@link QName} of the list property
+   *            holding the property
+   * @param eleClass the base wrapper class for the elements
+   */
   protected FE1D2DComplexElement( 
                           Feature featureToBind, 
                           QName qnameToBind ,
@@ -95,13 +104,13 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
 
 
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getContainers()
-   */
-  /*public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
-  {
-    return containers;
-  }*/
+//  /**
+//   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getContainers()
+//   */
+//  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
+//  {
+//    return containers;
+//  }
 
 
 
@@ -110,7 +119,7 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
    */
   public IFeatureWrapperCollection<ET> getElements( )
   {
-    return (IFeatureWrapperCollection<ET>) elements;
+    return elements;
   }
 
 

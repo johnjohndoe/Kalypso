@@ -8,7 +8,7 @@
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	gml:id="node1">
 		<gml:name>node00</gml:name>
-		<gml:metaDataProperty about="em:elevationSource"><drf /> </gml:metaDataProperty>
+		<!--gml:metaDataProperty about="em:elevationSource"></gml:metaDataProperty-->
 			<gml:pointProperty>
 				<gml:Point 
 					srsName="EPSG:31467">
