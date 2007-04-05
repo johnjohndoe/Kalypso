@@ -89,73 +89,74 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatistics( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid ) throws Exception
   {
-    Hashtable<Integer, Vector<Double>> statistics = null;
-    // control Geometries
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
-
-    statistics = new Hashtable<Integer, Vector<Double>>();
-    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
-    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
-    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
-    double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
-    for( int i = 0; i < damage_rangeSetData.size(); i++ )
-    {
-      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
-
-      for( int j = 0; j < damage_rowData.size(); j++ )
-      {
-        if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
-        {
-          try
-          {
-            double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
-            double damage = damagePerSquaremeter * cellArea;
-            Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
-
-            if( !statistics.containsKey( landuseKey ) )
-            {
-              Vector<Double> statisticVector = new Vector<Double>();
-              statisticVector.addElement( new Double( damage ) );
-              statisticVector.addElement( new Double( damagePerSquaremeter ) );
-              statisticVector.addElement( new Double( damagePerSquaremeter ) );
-              statistics.put( landuseKey, statisticVector );
-            }
-            else
-            {
-              Vector actualStatisticVector = statistics.get( landuseKey );
-              double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
-              double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
-              double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
-              actualDamage = actualDamage + damage;
-              if( actualMinValue > damagePerSquaremeter )
-              {
-                actualMinValue = damagePerSquaremeter;
-              }
-              if( actualMaxValue < damagePerSquaremeter )
-              {
-                actualMaxValue = damagePerSquaremeter;
-              }
-              Vector<Double> statisticVector = new Vector<Double>();
-              statisticVector.addElement( new Double( actualDamage ) );
-              statisticVector.addElement( new Double( actualMinValue ) );
-              statisticVector.addElement( new Double( actualMaxValue ) );
-              statistics.put( landuseKey, statisticVector );
-            }
-          }
-          catch( Exception e )
-          {
-            System.out.println( e );
-          }
-        }
-      }// for j
-      /*
-       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
-       */
-    }// for i
-    return statistics;
+//    Hashtable<Integer, Vector<Double>> statistics = null;
+//    // control Geometries
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
+//
+//    statistics = new Hashtable<Integer, Vector<Double>>();
+//    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
+//    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
+//    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
+//    double cellArea = offsetX * offsetY;
+//    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+//    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+//    for( int i = 0; i < damage_rangeSetData.size(); i++ )
+//    {
+//      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+//      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+//
+//      for( int j = 0; j < damage_rowData.size(); j++ )
+//      {
+//        if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
+//        {
+//          try
+//          {
+//            double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
+//            double damage = damagePerSquaremeter * cellArea;
+//            Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+//
+//            if( !statistics.containsKey( landuseKey ) )
+//            {
+//              Vector<Double> statisticVector = new Vector<Double>();
+//              statisticVector.addElement( new Double( damage ) );
+//              statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//              statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//              statistics.put( landuseKey, statisticVector );
+//            }
+//            else
+//            {
+//              Vector actualStatisticVector = statistics.get( landuseKey );
+//              double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+//              double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+//              double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
+//              actualDamage = actualDamage + damage;
+//              if( actualMinValue > damagePerSquaremeter )
+//              {
+//                actualMinValue = damagePerSquaremeter;
+//              }
+//              if( actualMaxValue < damagePerSquaremeter )
+//              {
+//                actualMaxValue = damagePerSquaremeter;
+//              }
+//              Vector<Double> statisticVector = new Vector<Double>();
+//              statisticVector.addElement( new Double( actualDamage ) );
+//              statisticVector.addElement( new Double( actualMinValue ) );
+//              statisticVector.addElement( new Double( actualMaxValue ) );
+//              statistics.put( landuseKey, statisticVector );
+//            }
+//          }
+//          catch( Exception e )
+//          {
+//            System.out.println( e );
+//          }
+//        }
+//      }// for j
+//      /*
+//       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
+//       */
+//    }// for i
+//    return statistics;
+    return null;
   }
 
   /**
@@ -171,83 +172,84 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 templateGrid ) throws Exception
   {
-    Hashtable<Integer, Vector<Double>> statistics = null;
-    // control Geometries
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), templateGrid.getGridDomain() );
-
-    statistics = new Hashtable<Integer, Vector<Double>>();
-    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
-    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
-    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
-    double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
-    Vector template_rangeSetData = null;//templateGrid.getRangeSet().getRangeSetData();
-    Double data = new Double( 1 );
-    for( int i = 0; i < template_rangeSetData.size(); i++ )
-    {
-      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
-      Vector template_rowData = (Vector) template_rangeSetData.get( i );
-
-      for( int j = 0; j < template_rowData.size(); j++ )
-      {
-        if( template_rowData.get( j ) != null )
-        {
-          if( template_rowData.get( j ).equals( data ) )
-          {
-            if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
-            {
-              try
-              {
-                double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
-                double damage = damagePerSquaremeter * cellArea;
-                Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
-
-                if( !statistics.containsKey( landuseKey ) )
-                {
-                  Vector<Double> statisticVector = new Vector<Double>();
-                  statisticVector.addElement( new Double( damage ) );
-                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                  statistics.put( landuseKey, statisticVector );
-                }
-                else
-                {
-                  Vector actualStatisticVector = statistics.get( landuseKey );
-                  double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
-                  double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
-                  double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
-                  actualDamage = actualDamage + damage;
-                  if( actualMinValue > damagePerSquaremeter )
-                  {
-                    actualMinValue = damagePerSquaremeter;
-                  }
-                  if( actualMaxValue < damagePerSquaremeter )
-                  {
-                    actualMaxValue = damagePerSquaremeter;
-                  }
-                  Vector<Double> statisticVector = new Vector<Double>();
-                  statisticVector.addElement( new Double( actualDamage ) );
-                  statisticVector.addElement( new Double( actualMinValue ) );
-                  statisticVector.addElement( new Double( actualMaxValue ) );
-                  statistics.put( landuseKey, statisticVector );
-                }
-              }
-              catch( Exception e )
-              {
-                System.out.println( e );
-              }
-            }
-          }
-        }
-      }// for j
-      /*
-       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
-       */
-    }// for i
-    return statistics;
+//    Hashtable<Integer, Vector<Double>> statistics = null;
+//    // control Geometries
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), templateGrid.getGridDomain() );
+//
+//    statistics = new Hashtable<Integer, Vector<Double>>();
+//    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
+//    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
+//    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
+//    double cellArea = offsetX * offsetY;
+//    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+//    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+//    Vector template_rangeSetData = null;//templateGrid.getRangeSet().getRangeSetData();
+//    Double data = new Double( 1 );
+//    for( int i = 0; i < template_rangeSetData.size(); i++ )
+//    {
+//      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+//      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+//      Vector template_rowData = (Vector) template_rangeSetData.get( i );
+//
+//      for( int j = 0; j < template_rowData.size(); j++ )
+//      {
+//        if( template_rowData.get( j ) != null )
+//        {
+//          if( template_rowData.get( j ).equals( data ) )
+//          {
+//            if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
+//            {
+//              try
+//              {
+//                double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
+//                double damage = damagePerSquaremeter * cellArea;
+//                Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+//
+//                if( !statistics.containsKey( landuseKey ) )
+//                {
+//                  Vector<Double> statisticVector = new Vector<Double>();
+//                  statisticVector.addElement( new Double( damage ) );
+//                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                  statistics.put( landuseKey, statisticVector );
+//                }
+//                else
+//                {
+//                  Vector actualStatisticVector = statistics.get( landuseKey );
+//                  double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+//                  double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+//                  double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
+//                  actualDamage = actualDamage + damage;
+//                  if( actualMinValue > damagePerSquaremeter )
+//                  {
+//                    actualMinValue = damagePerSquaremeter;
+//                  }
+//                  if( actualMaxValue < damagePerSquaremeter )
+//                  {
+//                    actualMaxValue = damagePerSquaremeter;
+//                  }
+//                  Vector<Double> statisticVector = new Vector<Double>();
+//                  statisticVector.addElement( new Double( actualDamage ) );
+//                  statisticVector.addElement( new Double( actualMinValue ) );
+//                  statisticVector.addElement( new Double( actualMaxValue ) );
+//                  statistics.put( landuseKey, statisticVector );
+//                }
+//              }
+//              catch( Exception e )
+//              {
+//                System.out.println( e );
+//              }
+//            }
+//          }
+//        }
+//      }// for j
+//      /*
+//       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
+//       */
+//    }// for i
+//    return statistics;
+    return null;
   }
 
   /**
@@ -341,89 +343,90 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatistics( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 administrationUnitGrid ) throws Exception
   {
-    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
-    // control Geometries
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), administrationUnitGrid.getGridDomain() );
-
-    statistics = new Hashtable<Integer, Hashtable<Integer, Vector<Double>>>();
-    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
-    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
-    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
-    double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
-    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
-    for( int i = 0; i < damage_rangeSetData.size(); i++ )
-    {
-      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
-      Vector administrationUnit_rowData = (Vector) administrationUnit_rangeSetData.get( i );
-      for( int j = 0; j < damage_rowData.size(); j++ )
-      {
-        if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null && administrationUnit_rowData != null )
-        {
-          try
-          {
-            double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
-            double damage = damagePerSquaremeter * cellArea;
-            Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
-            Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
-            if( !statistics.containsKey( administrationUnitKey ) )
-            {
-              Hashtable<Integer, Vector<Double>> statistics_landuse = new Hashtable<Integer, Vector<Double>>();
-              Vector<Double> statisticVector = new Vector<Double>();
-              statisticVector.addElement( new Double( damage ) );
-              statisticVector.addElement( new Double( damagePerSquaremeter ) );
-              statisticVector.addElement( new Double( damagePerSquaremeter ) );
-              statistics_landuse.put( landuseKey, statisticVector );
-              statistics.put( administrationUnitKey, statistics_landuse );
-            }
-            else
-            {
-              Hashtable<Integer, Vector<Double>> statistics_landuse = statistics.get( administrationUnitKey );
-              if( !statistics_landuse.containsKey( landuseKey ) )
-              {
-                Vector<Double> statisticVector = new Vector<Double>();
-                statisticVector.addElement( new Double( damage ) );
-                statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                statistics_landuse.put( landuseKey, statisticVector );
-              }
-              else
-              {
-                Vector actualStatisticVector = statistics_landuse.get( landuseKey );
-                double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
-                double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
-                double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
-                actualDamage = actualDamage + damage;
-                if( actualMinValue > damagePerSquaremeter )
-                {
-                  actualMinValue = damagePerSquaremeter;
-                }
-                if( actualMaxValue < damagePerSquaremeter )
-                {
-                  actualMaxValue = damagePerSquaremeter;
-                }
-                Vector<Double> statisticVector = new Vector<Double>();
-                statisticVector.addElement( new Double( actualDamage ) );
-                statisticVector.addElement( new Double( actualMinValue ) );
-                statisticVector.addElement( new Double( actualMaxValue ) );
-                statistics_landuse.put( landuseKey, statisticVector );
-              }
-            }
-          }
-          catch( Exception e )
-          {
-            System.out.println( e );
-          }
-        }
-      }// for j
-      /*
-       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
-       */
-    }// for i
-    return statistics;
+//    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
+//    // control Geometries
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), administrationUnitGrid.getGridDomain() );
+//
+//    statistics = new Hashtable<Integer, Hashtable<Integer, Vector<Double>>>();
+//    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
+//    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
+//    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
+//    double cellArea = offsetX * offsetY;
+//    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+//    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+//    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
+//    for( int i = 0; i < damage_rangeSetData.size(); i++ )
+//    {
+//      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+//      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+//      Vector administrationUnit_rowData = (Vector) administrationUnit_rangeSetData.get( i );
+//      for( int j = 0; j < damage_rowData.size(); j++ )
+//      {
+//        if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null && administrationUnit_rowData != null )
+//        {
+//          try
+//          {
+//            double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
+//            double damage = damagePerSquaremeter * cellArea;
+//            Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+//            Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
+//            if( !statistics.containsKey( administrationUnitKey ) )
+//            {
+//              Hashtable<Integer, Vector<Double>> statistics_landuse = new Hashtable<Integer, Vector<Double>>();
+//              Vector<Double> statisticVector = new Vector<Double>();
+//              statisticVector.addElement( new Double( damage ) );
+//              statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//              statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//              statistics_landuse.put( landuseKey, statisticVector );
+//              statistics.put( administrationUnitKey, statistics_landuse );
+//            }
+//            else
+//            {
+//              Hashtable<Integer, Vector<Double>> statistics_landuse = statistics.get( administrationUnitKey );
+//              if( !statistics_landuse.containsKey( landuseKey ) )
+//              {
+//                Vector<Double> statisticVector = new Vector<Double>();
+//                statisticVector.addElement( new Double( damage ) );
+//                statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                statistics_landuse.put( landuseKey, statisticVector );
+//              }
+//              else
+//              {
+//                Vector actualStatisticVector = statistics_landuse.get( landuseKey );
+//                double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+//                double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+//                double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
+//                actualDamage = actualDamage + damage;
+//                if( actualMinValue > damagePerSquaremeter )
+//                {
+//                  actualMinValue = damagePerSquaremeter;
+//                }
+//                if( actualMaxValue < damagePerSquaremeter )
+//                {
+//                  actualMaxValue = damagePerSquaremeter;
+//                }
+//                Vector<Double> statisticVector = new Vector<Double>();
+//                statisticVector.addElement( new Double( actualDamage ) );
+//                statisticVector.addElement( new Double( actualMinValue ) );
+//                statisticVector.addElement( new Double( actualMaxValue ) );
+//                statistics_landuse.put( landuseKey, statisticVector );
+//              }
+//            }
+//          }
+//          catch( Exception e )
+//          {
+//            System.out.println( e );
+//          }
+//        }
+//      }// for j
+//      /*
+//       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
+//       */
+//    }// for i
+//    return statistics;
+    return null;
   }
 
   /**
@@ -440,101 +443,102 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 administrationUnitGrid, RectifiedGridCoverage2 templateGrid ) throws Exception
   {
-    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
-    // control Geometries
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), administrationUnitGrid.getGridDomain() );
-    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), templateGrid.getGridDomain() );
-
-    statistics = new Hashtable<Integer, Hashtable<Integer, Vector<Double>>>();
-    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
-    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
-    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
-    double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
-    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
-    Vector template_rangeSetData = null;//templateGrid.getRangeSet().getRangeSetData();
-    Double data = new Double( 1 );
-    for( int i = 0; i < template_rangeSetData.size(); i++ )
-    {
-      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
-      Vector administrationUnit_rowData = (Vector) administrationUnit_rangeSetData.get( i );
-      Vector template_rowData = (Vector) template_rangeSetData.get( i );
-
-      for( int j = 0; j < template_rowData.size(); j++ )
-      {
-        if( template_rowData.get( j ) != null )
-        {
-          if( template_rowData.get( j ).equals( data ) )
-          {
-            if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null && administrationUnit_rowData != null )
-            {
-              try
-              {
-                double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
-                double damage = damagePerSquaremeter * cellArea;
-                Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
-                Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
-                if( !statistics.containsKey( administrationUnitKey ) )
-                {
-                  Hashtable<Integer, Vector<Double>> statistics_landuse = new Hashtable<Integer, Vector<Double>>();
-                  Vector<Double> statisticVector = new Vector<Double>();
-                  statisticVector.addElement( new Double( damage ) );
-                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                  statistics_landuse.put( landuseKey, statisticVector );
-                  statistics.put( administrationUnitKey, statistics_landuse );
-                }
-                else
-                {
-                  Hashtable<Integer, Vector<Double>> statistics_landuse = statistics.get( administrationUnitKey );
-                  if( !statistics_landuse.containsKey( landuseKey ) )
-                  {
-                    Vector<Double> statisticVector = new Vector<Double>();
-                    statisticVector.addElement( new Double( damage ) );
-                    statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                    statisticVector.addElement( new Double( damagePerSquaremeter ) );
-                    statistics_landuse.put( landuseKey, statisticVector );
-                  }
-                  else
-                  {
-                    Vector actualStatisticVector = statistics_landuse.get( landuseKey );
-                    double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
-                    double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
-                    double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
-                    actualDamage = actualDamage + damage;
-                    if( actualMinValue > damagePerSquaremeter )
-                    {
-                      actualMinValue = damagePerSquaremeter;
-                    }
-                    if( actualMaxValue < damagePerSquaremeter )
-                    {
-                      actualMaxValue = damagePerSquaremeter;
-                    }
-                    Vector<Double> statisticVector = new Vector<Double>();
-                    statisticVector.addElement( new Double( actualDamage ) );
-                    statisticVector.addElement( new Double( actualMinValue ) );
-                    statisticVector.addElement( new Double( actualMaxValue ) );
-                    statistics_landuse.put( landuseKey, statisticVector );
-                  }
-                }
-              }
-              catch( Exception e )
-              {
-                System.out.println( e );
-              }
-            }
-          }
-        }
-      }// for j
-      /*
-       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
-       */
-    }// for i
-
-    return statistics;
+//    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
+//    // control Geometries
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), administrationUnitGrid.getGridDomain() );
+//    GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), templateGrid.getGridDomain() );
+//
+//    statistics = new Hashtable<Integer, Hashtable<Integer, Vector<Double>>>();
+//    GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
+//    double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
+//    double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
+//    double cellArea = offsetX * offsetY;
+//    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+//    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+//    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
+//    Vector template_rangeSetData = null;//templateGrid.getRangeSet().getRangeSetData();
+//    Double data = new Double( 1 );
+//    for( int i = 0; i < template_rangeSetData.size(); i++ )
+//    {
+//      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+//      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+//      Vector administrationUnit_rowData = (Vector) administrationUnit_rangeSetData.get( i );
+//      Vector template_rowData = (Vector) template_rangeSetData.get( i );
+//
+//      for( int j = 0; j < template_rowData.size(); j++ )
+//      {
+//        if( template_rowData.get( j ) != null )
+//        {
+//          if( template_rowData.get( j ).equals( data ) )
+//          {
+//            if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null && administrationUnit_rowData != null )
+//            {
+//              try
+//              {
+//                double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
+//                double damage = damagePerSquaremeter * cellArea;
+//                Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+//                Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
+//                if( !statistics.containsKey( administrationUnitKey ) )
+//                {
+//                  Hashtable<Integer, Vector<Double>> statistics_landuse = new Hashtable<Integer, Vector<Double>>();
+//                  Vector<Double> statisticVector = new Vector<Double>();
+//                  statisticVector.addElement( new Double( damage ) );
+//                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                  statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                  statistics_landuse.put( landuseKey, statisticVector );
+//                  statistics.put( administrationUnitKey, statistics_landuse );
+//                }
+//                else
+//                {
+//                  Hashtable<Integer, Vector<Double>> statistics_landuse = statistics.get( administrationUnitKey );
+//                  if( !statistics_landuse.containsKey( landuseKey ) )
+//                  {
+//                    Vector<Double> statisticVector = new Vector<Double>();
+//                    statisticVector.addElement( new Double( damage ) );
+//                    statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                    statisticVector.addElement( new Double( damagePerSquaremeter ) );
+//                    statistics_landuse.put( landuseKey, statisticVector );
+//                  }
+//                  else
+//                  {
+//                    Vector actualStatisticVector = statistics_landuse.get( landuseKey );
+//                    double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+//                    double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+//                    double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
+//                    actualDamage = actualDamage + damage;
+//                    if( actualMinValue > damagePerSquaremeter )
+//                    {
+//                      actualMinValue = damagePerSquaremeter;
+//                    }
+//                    if( actualMaxValue < damagePerSquaremeter )
+//                    {
+//                      actualMaxValue = damagePerSquaremeter;
+//                    }
+//                    Vector<Double> statisticVector = new Vector<Double>();
+//                    statisticVector.addElement( new Double( actualDamage ) );
+//                    statisticVector.addElement( new Double( actualMinValue ) );
+//                    statisticVector.addElement( new Double( actualMaxValue ) );
+//                    statistics_landuse.put( landuseKey, statisticVector );
+//                  }
+//                }
+//              }
+//              catch( Exception e )
+//              {
+//                System.out.println( e );
+//              }
+//            }
+//          }
+//        }
+//      }// for j
+//      /*
+//       * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
+//       */
+//    }// for i
+//
+//    return statistics;
+    return null;
   }
 
   /**
