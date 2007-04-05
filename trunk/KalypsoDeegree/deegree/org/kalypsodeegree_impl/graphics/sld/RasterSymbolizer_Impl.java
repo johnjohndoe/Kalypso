@@ -61,17 +61,9 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
-import java.io.StringWriter;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TreeMap;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-
-import net.opengis.sld.ObjectFactory;
-
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Interval;
@@ -88,7 +80,6 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer, Marshallable
 {
-
   private TreeMap m_colorMap = null;
 
   private Geometry m_geometry = null;
@@ -148,6 +139,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       ColorMapEntry colorMapEntry_i1 = (ColorMapEntry) m_colorMap.get( colorMapKeys[i + 1] );
       Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1.getQuantity() );
       Color color = colorMapEntry_i.getColor();
+      // TODO Opacity allways 0, check this
       Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int) Math.round( colorMapEntry_i.getOpacity() * 255 ) );
       intervalMap.put( interval, colorWithOpacity );
     }
@@ -174,40 +166,6 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     sb.append( "</RasterSymbolizer>" );
     
     return sb.toString();
-    
-    /*
-    try
-    {
-      final ObjectFactory fac = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();
-      if( m_colorMap != null )
-      {
-        net.opengis.sld.ColorMap colorMapElement = fac.createColorMap();
-        List colorMapEntryList = colorMapElement.getColorMapEntry();
-        Iterator it = m_colorMap.keySet().iterator();
-        while( it.hasNext() )
-        {
-          ColorMapEntry colorMapEntry = (ColorMapEntry) m_colorMap.get( it.next() );
-          colorMapEntryList.add( colorMapEntry.exportAsXML() );
-        }
-        rasterSymbolizerElement.setColorMap( colorMapElement );
-      }
-      StringWriter writer = new StringWriter();
-      marshaller.marshal( rasterSymbolizerElement, writer );
-      writer.close();
-      // System.out.println( writer.toString() );
-      return ((writer.toString()).replaceFirst( "<?.*?>", "" )).trim();
-    }
-    catch( Exception e )
-    {
-      System.out.println( e );
-      return null;
-    }
-    */
-
   }
 
 }

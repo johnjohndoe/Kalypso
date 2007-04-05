@@ -146,8 +146,9 @@ public class DataBufferRasterWalker implements DoubleRasterWalker
             if( interval.contains( value ) )
             {
               actualColor = (Color) m_intervalMap.get( interval );
-              //alphaValue = actualColor.getAlpha();
-              alphaValue = (int) Math.round( 0.8 * 255 );
+              // TODO: check alpha value
+              alphaValue = actualColor.getAlpha();
+//              alphaValue = (int) Math.round( 0.8 * 255 );
               break;
             }
           }

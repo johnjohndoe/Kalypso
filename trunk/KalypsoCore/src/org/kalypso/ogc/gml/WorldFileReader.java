@@ -101,13 +101,13 @@ public class WorldFileReader
   {
     final BufferedReader br = new BufferedReader( new InputStreamReader( stream ) );
 
-    double dx = Double.parseDouble( br.readLine().trim() );
-    /* m_rx = */Double.parseDouble( br.readLine().trim() );
-    /* m_ry = */Double.parseDouble( br.readLine().trim() );
-    double dy = Double.parseDouble( br.readLine().trim() );
-    double ulcx = Double.parseDouble( br.readLine().trim() );
-    double ulcy = Double.parseDouble( br.readLine().trim() );
+    final double rasterXGeoX = Double.parseDouble( br.readLine().trim() );
+    final double rasterXGeoY = Double.parseDouble( br.readLine().trim() );
+    final double rasterYGeoX = Double.parseDouble( br.readLine().trim() );
+    final double rasterYGeoY = Double.parseDouble( br.readLine().trim() );
+    final double ulcx = Double.parseDouble( br.readLine().trim() );
+    final double ulcy = Double.parseDouble( br.readLine().trim() );
 
-    return new WorldFile( dx, dy, ulcx, ulcy );
+    return new WorldFile( rasterXGeoX, rasterXGeoY, rasterYGeoX, rasterYGeoY, ulcx, ulcy );
   }
 }

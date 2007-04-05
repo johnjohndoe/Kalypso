@@ -1,7 +1,8 @@
 package org.kalypsodeegree_impl.model.cv;
 
 import java.net.URL;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -11,6 +12,7 @@ import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapte
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
 import org.w3c.dom.Document;
@@ -109,13 +111,15 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     e_origin.appendChild( e_point );
     e_rectifiedGrid.appendChild( e_origin );
 
-    double[] offset = gridDomain.getOffset();
-    Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "gml:offsetVector" );
-    String offsetVector1 = new String( "0.0" + " " + offset[0] );
+    final OffsetVector offsetX = gridDomain.getOffsetX();
+    final OffsetVector offsetY = gridDomain.getOffsetY();
+    
+    final Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
+    final String offsetVector1 = new String( offsetX.getGeoX() + " " + offsetX.getGeoY() );
     e_offsetVector1.appendChild( ownerDocument.createTextNode( offsetVector1 ) );
     e_rectifiedGrid.appendChild( e_offsetVector1 );
-    Element e_offsetVector2 = ownerDocument.createElementNS( NS.GML3, "gml:offsetVector" );
-    String offsetVector2 = new String( offset[1] + " " + "0.0" );
+    final Element e_offsetVector2 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
+    final String offsetVector2 = new String( offsetY.getGeoX() + " " + offsetY.getGeoY() );
     e_offsetVector2.appendChild( ownerDocument.createTextNode( offsetVector2 ) );
     e_rectifiedGrid.appendChild( e_offsetVector2 );
     ((Element) node).appendChild( e_rectifiedGrid );
@@ -161,31 +165,33 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
       System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );
       System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
 
-      NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "offsetVector" );
-      Vector<double[]> offSetVectors = new Vector<double[]>();
+      final NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "offsetVector" );
+      final List<RectifiedGridDomain.OffsetVector> offSetVectors = new ArrayList<OffsetVector>();
       for( int i = 0; i < nl_offSetVector.getLength(); i++ )
       {
-        Node n_offsetVector = nl_offSetVector.item( i );
-        String[] vectorCoos = n_offsetVector.getFirstChild().getNodeValue().trim().split( " " );
-        double[] vectorCoo = new double[vectorCoos.length];
+        final Node n_offsetVector = nl_offSetVector.item( i );
+        final String[] vectorCoos = n_offsetVector.getFirstChild().getNodeValue().trim().split( " " );
+        final double[] vectorCoo = new double[vectorCoos.length];
         for( int n = 0; n < vectorCoo.length; n++ )
-        {
           vectorCoo[n] = Double.parseDouble( vectorCoos[n] );
-          // System.out.println(n+": "+vectorCoo[n]);
-        }
-        offSetVectors.addElement( vectorCoo );
-      }
-      double[] offset = new double[2];
-      double[] p1 = offSetVectors.get( 0 );
-      offset[1] = p1[1];
-      double[] p2 = offSetVectors.get( 1 );
-      offset[0] = p2[0];
-      System.out.println( "OffSetX: " + p2[0] + ", OffSetY: " + p1[1] );
 
-      RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offset, gridRange );
-      return gridDomain;
+        if( vectorCoos.length >= 2 )
+          offSetVectors.add( new RectifiedGridDomain.OffsetVector( vectorCoo[0], vectorCoo[1] ) );
+      }
+
+      if( offSetVectors.size() == 2 )
+      {
+        final RectifiedGridDomain.OffsetVector offsetX = offSetVectors.get( 0 );
+        final RectifiedGridDomain.OffsetVector offsetY = offSetVectors.get( 1 );
+        System.out.println( "OffSetX: " + offsetX.toString() );
+        System.out.println( "OffSetY: " + offsetY.toString() );
+
+        return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+      }
+      else
+        throw new IllegalStateException( "Wrong number of offset vectors" );
     }
-    catch( Exception e )
+    catch( final Throwable e )
     {
       System.out.println( e );
       return null;

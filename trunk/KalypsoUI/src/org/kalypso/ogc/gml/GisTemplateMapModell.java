@@ -95,7 +95,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
    * @throws CoreException
    *           if a theme in the {@link Gismapview} cannot be loaded.
    */
-  public void createFromTemplate( final Gismapview gisview ) throws CoreException
+  public void createFromTemplate( final Gismapview gisview ) throws Exception
   {
     for( IKalypsoTheme theme : getAllThemes() )
     {
@@ -116,7 +116,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     }
   }
 
-  public IKalypsoTheme addTheme( final StyledLayerType layer ) throws CoreException
+  public IKalypsoTheme addTheme( final StyledLayerType layer ) throws Exception
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -133,7 +133,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
       m_modell.dispose();
   }
 
-  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws CoreException
+  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
   {
     if( "wms".equals( layerType.getLinktype() ) ) //$NON-NLS-1$
     {

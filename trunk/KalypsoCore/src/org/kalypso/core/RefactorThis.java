@@ -46,7 +46,6 @@ import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 /**
  * TODO things in this class need to be refactored
@@ -60,7 +59,6 @@ public class RefactorThis
   {
     // TODO move these to extentionpoints...
     registry.registerTypeHandler( new RangeSetTypeHandler() );
-    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
     registry.registerTypeHandler( new ResourceFileTypeHandler() );
     registry.registerTypeHandler( new ObservationLinkHandler() );
   }

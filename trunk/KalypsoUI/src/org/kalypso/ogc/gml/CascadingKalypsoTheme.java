@@ -99,7 +99,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
         {
           startLoadJob();
         }
-        catch( final CoreException e )
+        catch( final Exception e )
         {
           // TODO something useful
           e.printStackTrace();
@@ -116,7 +116,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
 
   IFile m_file;
 
-  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException
+  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
     super( layerType.getHref(), "Cascading", mapModel );
     m_mapViewRefUrl = layerType.getHref();
@@ -146,7 +146,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
     }
   }
 
-  void startLoadJob( ) throws CoreException
+  void startLoadJob( ) throws Exception
   {
     m_file.refreshLocal( IResource.DEPTH_ZERO, null );
     final InputSource inputSource = new InputSource( m_file.getContents() );
