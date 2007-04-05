@@ -475,32 +475,32 @@ public class AssignNodeElevationFaceComponent
     nodeElevationViewer.setColumnProperties( new String[] { "Node", "Elevation" } );
     nodeElevationViewer.setLabelProvider( new FENodeLabelProvider() );
     nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-    nodeElevationViewer.setSorter( new FENodeViewerSorter() );
+    //nodeElevationViewer.setSorter( new FENodeViewerSorter() );
     
     this.table = nodeElevationViewer.getTable();
     table.setLayoutData( regionFormData );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
+    final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
     lineColumn.setText( "Knoten"/* "Node" */);
     lineColumn.setWidth( 100 / 1 );    
     lineColumn.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
-        nodeElevationViewer.setSorter( new FENodeViewerSorter() );
+        nodeElevationViewer.setSorter( new FENodeViewerSorter(lineColumn) );
         nodeElevationViewer.refresh();
        // System.out.println("fired 0");
       }
     });
     
-    TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
+    final TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
     actualPointNum.setText( "Höhe   "/* "Elevation" */);
     actualPointNum.setWidth( 100 / 2 );
     actualPointNum.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
-        nodeElevationViewer.setSorter( new FENodeViewerSorter());
+        nodeElevationViewer.setSorter( new FENodeViewerSorter(actualPointNum));
         nodeElevationViewer.refresh();
-        System.out.println("fired 1");
+        //System.out.println("fired 1");
       }
     });
 

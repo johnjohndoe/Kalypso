@@ -40,63 +40,142 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.text.CollationKey;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypsodeegree.model.geometry.GM_Point;
+
+import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;
 
 /**
- * @author madanago
+ * @author Madanagopal
  *
  */
 public class FENodeViewerSorter extends ViewerSorter
 {
-
-    private static final int ASCENDING = 0;
-
-    private static final int DESCENDING = 1;
-
-    private int column;
-
-    private int direction;
-
-    /**
-     * Does the sort. If it's a different column from the previous sort, do an
-     * ascending sort. If it's the same column as the last sort, toggle the sort
-     * direction.
-     * 
-     * @param column
-     */
-    public void doSort(int column) {
-      if (column == this.column) {
-        // Same column as last sort; toggle the direction
-        direction = 1 - direction;
-      } else {
-        // New column; do an ascending sort
-        this.column = column;
-        direction = ASCENDING;
-      }
-    }
-
-    /**
-     * Compares the object for sorting
-     */
-    public int compare(Viewer viewer, IFE1D2DNode p1, IFE1D2DNode p2) {
-      int rc = 0;
-      // Determine which column and do the appropriate sort
-      switch (column) {
-      case 0:
-        rc = collator.compare(FENodeLabelProvider.getNameOrID(p1),
-                              FENodeLabelProvider.getNameOrID(p2));
-        break;
-      case 1:
-        rc = collator.compare(FENodeLabelProvider.getElevationString(p1),
-                              FENodeLabelProvider.getElevationString(p2));
-        break;
-      }
-      // If descending order, flip the direction
-      if (direction == DESCENDING)
-        rc = -rc;
-      return rc;
-
+  private Map sortMap = new HashMap();
+    
+  
+  public FENodeViewerSorter(TableColumn defaultColumn) {
+      setCurrentColumn(defaultColumn);
   }
+  
+  /**
+   * Pushs the current sortorder in a map which key is the
+   * table-column.
+   * @param column
+   */
+  public void pushSortCriteria(TableColumn column) {
+      if (this.sortMap.get(column) == null) {
+          this.sortMap.put(column,new Boolean(true));
+      }
+      else {
+          boolean newSort = !((Boolean)this.sortMap.get(column)).booleanValue();
+          this.sortMap.put(column,new Boolean(newSort));
+      }
+  }
+  
+  /**
+   * Asks for the current sort-order and inverts the sort-order
+   * @param column the requested column
+   * @return true if the sortIndex is descending, else false.
+   */
+  public boolean isDescending(TableColumn column) {
+      boolean returnValue = true;
+      if (this.sortMap.get(column) != null) {
+          returnValue = ((Boolean)this.sortMap.get(column)).booleanValue();
+      } else {
+          pushSortCriteria(column);
+      }
+      return returnValue;
+  }
+  
+  private TableColumn currentColumn = null;
+  
+  
+  
+  
+  public int compare(Viewer viewer, Object obj1, Object obj2) {
+      int rc = -1;
+      // get the data
+      IFE1D2DNode data1 = (IFE1D2DNode) obj1;
+      IFE1D2DNode data2 = (IFE1D2DNode) obj2;
+      
+      CollationKey key1 = null;
+      CollationKey key2 = null;
+      
+      if (this.currentColumn == ((TableViewer)viewer).getTable().getColumn(0)) {
+          key1 = getCollator().getCollationKey(getNameOrID(data1));
+          key2 = getCollator().getCollationKey(getNameOrID( data2 ));
+          
+      }
+      else if (this.currentColumn == ((TableViewer)viewer).getTable().getColumn(1)){
+          key1 = getCollator().getCollationKey(getElevationString( data1 ));
+          key2 = getCollator().getCollationKey(getElevationString( data2 ));
+      }
+      // replace null-strings with empty-strings
+      if (key1 == null)
+          key1 = getCollator().getCollationKey(""); //$NON-NLS-1$
+      
+      if (key2 == null)
+          key2 = getCollator().getCollationKey(""); //$NON-NLS-1$
+
+      if (isDescending(this.currentColumn)) {
+              rc = key1.compareTo(key2);
+      }
+      else {
+              rc = key2.compareTo(key1);
+      }
+      return rc;
+  }
+  
+  /**
+   * Sets the sort column.
+   * @param currentColumn The currentColumn to set.
+   */
+  public void setCurrentColumn(TableColumn currentColumn) {
+      this.currentColumn  = currentColumn;
+      pushSortCriteria(currentColumn);
+  }
+
+  public static final String getNameOrID(IFE1D2DNode node)
+  {
+    String name = node.getName();
+    if(name!=null)
+    {
+      name=name.trim();
+      if(name.length()==0)
+      {
+        name=node.getGmlID();
+      }
+      return name;
+    }
+    else
+    {
+      return node.getGmlID();
+    }
+  }
+ 
+  
+  public static final String getElevationString(IFE1D2DNode node)
+  {
+    GM_Point point = node.getPoint();
+    if(point.getCoordinateDimension()<=2)
+    {
+      return String.valueOf( Double.NaN );
+    }
+    else
+    {
+      return String.valueOf( point.getZ() );
+    }
+  }
+
+
+  
 }
