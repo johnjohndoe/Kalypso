@@ -42,9 +42,9 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.commons.runtime.AntProjectLogger;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -103,7 +103,30 @@ public class GMLWeightingTask extends Task
   {
     try
     {
-      final ILogger logger = new AntProjectLogger( getProject() );
+      final Project antProject = getProject();
+      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
+      // else we get an LinkageError when accessing the Project class. 
+      final ILogger logger = new ILogger()
+      {
+        /**
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+         */
+        public void log( final Level level, final boolean mainMsg, final String message )
+        {
+          final StringBuffer sb = new StringBuffer( level.toString() );
+          sb.append( ": " );
+          if( mainMsg )
+            sb.append( '*' );
+          sb.append( message );
+
+          final String outString = sb.toString();
+          if( antProject == null )
+            System.out.print( outString );
+          else
+            antProject.log( outString );
+        }
+      };
+
       final UrlResolver urlResolver = new UrlResolver();
       // create needed factories
       final ObjectFactory filterFac = new ObjectFactory();
