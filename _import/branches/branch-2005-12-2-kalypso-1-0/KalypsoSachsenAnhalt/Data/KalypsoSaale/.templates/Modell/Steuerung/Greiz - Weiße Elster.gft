@@ -27,14 +27,14 @@
 			<group style="SWT.NONE" text="Steuerungsart">
 				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" horizontalSpan="2"/>
 				<gridLayout numColumns="2" horizontalSpacing="10"/>
-		        <radiobutton text="Berechnung" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="1">
+		        <radiobutton text="Berechnung" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="0">
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </radiobutton>
 		        <label style="SWT.NONE" visible="false">
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </label>
 		
-		        <radiobutton text="Durchfluss ist vorgegeben" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="2">
+		        <radiobutton text="Durchfluss ist vorgegeben" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="1">
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </radiobutton>
 		        <label style="SWT.NONE" visible="false">

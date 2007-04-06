@@ -45,10 +45,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:Feuchte>-11</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -222,10 +222,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:Feuchte>10</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -396,7 +396,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -573,7 +573,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -750,7 +750,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -924,10 +924,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:Feuchte>2</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1104,7 +1104,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1135,37 +1135,37 @@
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
-          <pegel:L>3</pegel:L>
-          <pegel:N>4</pegel:N>
-          <pegel:M>36</pegel:M>
+          <pegel:L>11</pegel:L>
+          <pegel:N>14</pegel:N>
+          <pegel:M>48</pegel:M>
           <pegel:IWE>80</pegel:IWE>
           <pegel:ISOA>140</pegel:ISOA>
           <pegel:ISOE>270</pegel:ISOE>
           <pegel:IWA>330</pegel:IWA>
-          <pegel:NRH>2</pegel:NRH>
-          <pegel:IP9>1</pegel:IP9>
+          <pegel:NRH>1</pegel:NRH>
+          <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.9975</pegel:PAR_1>
+          <pegel:PAR_1>0.9988</pegel:PAR_1>
           <pegel:PAR_2>0.0015</pegel:PAR_2>
-          <pegel:PAR_3>7.0E-4</pegel:PAR_3>
-          <pegel:PAR_4>2.7</pegel:PAR_4>
-          <pegel:PAR_5>9.0</pegel:PAR_5>
-          <pegel:PAR_6>1.5</pegel:PAR_6>
-          <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.4</pegel:PAR_8>
-          <pegel:PAR_9>4.0</pegel:PAR_9>
+          <pegel:PAR_3>4.0E-4</pegel:PAR_3>
+          <pegel:PAR_4>4.5</pegel:PAR_4>
+          <pegel:PAR_5>12.0</pegel:PAR_5>
+          <pegel:PAR_6>1.25</pegel:PAR_6>
+          <pegel:PAR_7>0.042</pegel:PAR_7>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
-          <pegel:G_1>0.689</pegel:G_1>
-          <pegel:G_2>0.455</pegel:G_2>
-          <pegel:G_3>0.201</pegel:G_3>
-          <pegel:G_4>0.086</pegel:G_4>
-          <pegel:G_5>0.037</pegel:G_5>
-          <pegel:G_6>0.017</pegel:G_6>
-          <pegel:G_7>0.0070</pegel:G_7>
-          <pegel:G_8>0.0030</pegel:G_8>
-          <pegel:G_9>0.0020</pegel:G_9>
-          <pegel:G_10>0.0010</pegel:G_10>
-          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_1>0.094</pegel:G_1>
+          <pegel:G_2>0.108</pegel:G_2>
+          <pegel:G_3>0.121</pegel:G_3>
+          <pegel:G_4>0.134</pegel:G_4>
+          <pegel:G_5>0.148</pegel:G_5>
+          <pegel:G_6>0.125</pegel:G_6>
+          <pegel:G_7>0.117</pegel:G_7>
+          <pegel:G_8>0.098</pegel:G_8>
+          <pegel:G_9>0.078</pegel:G_9>
+          <pegel:G_10>0.059</pegel:G_10>
+          <pegel:G_11>0.039</pegel:G_11>
           <pegel:G_12>0.0</pegel:G_12>
           <pegel:G_13>0.0</pegel:G_13>
           <pegel:G_14>0.0</pegel:G_14>
@@ -1173,17 +1173,17 @@
           <pegel:G_16>0.0</pegel:G_16>
           <pegel:G_17>0.0</pegel:G_17>
           <pegel:G_18>0.0</pegel:G_18>
-          <pegel:H_1>0.05</pegel:H_1>
-          <pegel:H_2>0.1</pegel:H_2>
-          <pegel:H_3>0.1</pegel:H_3>
-          <pegel:H_4>0.0</pegel:H_4>
-          <pegel:H_5>0.0</pegel:H_5>
-          <pegel:H_6>0.0</pegel:H_6>
-          <pegel:H_7>0.0</pegel:H_7>
-          <pegel:H_8>0.0</pegel:H_8>
-          <pegel:H_9>0.0</pegel:H_9>
-          <pegel:H_10>0.0</pegel:H_10>
-          <pegel:H_11>0.0</pegel:H_11>
+          <pegel:H_1>0.0080</pegel:H_1>
+          <pegel:H_2>0.012</pegel:H_2>
+          <pegel:H_3>0.013</pegel:H_3>
+          <pegel:H_4>0.014</pegel:H_4>
+          <pegel:H_5>0.014</pegel:H_5>
+          <pegel:H_6>0.013</pegel:H_6>
+          <pegel:H_7>0.011</pegel:H_7>
+          <pegel:H_8>0.0090</pegel:H_8>
+          <pegel:H_9>0.0070</pegel:H_9>
+          <pegel:H_10>0.0050</pegel:H_10>
+          <pegel:H_11>0.0020</pegel:H_11>
           <pegel:H_12>0.0</pegel:H_12>
           <pegel:H_13>0.0</pegel:H_13>
           <pegel:H_14>0.0</pegel:H_14>
@@ -1281,7 +1281,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1458,7 +1458,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1647,7 +1647,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1818,7 +1818,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1989,7 +1989,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2160,7 +2160,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2337,7 +2337,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2514,7 +2514,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2685,7 +2685,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2862,7 +2862,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3033,7 +3033,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3081,7 +3081,7 @@
           <pegel:PAR_5>3.5</pegel:PAR_5>
           <pegel:PAR_6>0.25</pegel:PAR_6>
           <pegel:PAR_7>0.03</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.5</pegel:PAR_9>
           <pegel:PAR_10>0.5</pegel:PAR_10>
           <pegel:G_1>0.035</pegel:G_1>
@@ -3204,7 +3204,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3252,7 +3252,7 @@
           <pegel:PAR_5>8.0</pegel:PAR_5>
           <pegel:PAR_6>0.9</pegel:PAR_6>
           <pegel:PAR_7>0.07</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.017</pegel:G_1>
@@ -3381,7 +3381,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3429,7 +3429,7 @@
           <pegel:PAR_5>50.0</pegel:PAR_5>
           <pegel:PAR_6>1.5</pegel:PAR_6>
           <pegel:PAR_7>0.01</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.056</pegel:G_1>
@@ -3558,7 +3558,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3606,7 +3606,7 @@
           <pegel:PAR_5>50.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.01</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.129</pegel:G_1>
@@ -3734,8 +3734,8 @@
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Steuerung>1</pegel:Steuerung>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3783,7 +3783,7 @@
           <pegel:PAR_5>17.0</pegel:PAR_5>
           <pegel:PAR_6>5.5</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.5</pegel:PAR_10>
           <pegel:G_1>0.162</pegel:G_1>
@@ -3906,7 +3906,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3954,7 +3954,7 @@
           <pegel:PAR_5>60.0</pegel:PAR_5>
           <pegel:PAR_6>5.3</pegel:PAR_6>
           <pegel:PAR_7>0.07</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.5</pegel:PAR_10>
           <pegel:G_1>0.239</pegel:G_1>
@@ -4077,7 +4077,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4125,7 +4125,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.8</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.215</pegel:G_1>
@@ -4254,7 +4254,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4302,7 +4302,7 @@
           <pegel:PAR_5>28.0</pegel:PAR_5>
           <pegel:PAR_6>2.0</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.025</pegel:G_1>
@@ -4437,7 +4437,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4485,7 +4485,7 @@
           <pegel:PAR_5>25.0</pegel:PAR_5>
           <pegel:PAR_6>1.6</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.196</pegel:G_1>
@@ -4608,7 +4608,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4656,7 +4656,7 @@
           <pegel:PAR_5>35.0</pegel:PAR_5>
           <pegel:PAR_6>1.3</pegel:PAR_6>
           <pegel:PAR_7>0.025</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.141</pegel:G_1>
@@ -4779,7 +4779,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4827,7 +4827,7 @@
           <pegel:PAR_5>7.0</pegel:PAR_5>
           <pegel:PAR_6>1.2</pegel:PAR_6>
           <pegel:PAR_7>0.06</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.017</pegel:G_1>
@@ -4950,7 +4950,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4996,9 +4996,9 @@
           <pegel:PAR_3>8.5E-4</pegel:PAR_3>
           <pegel:PAR_4>2.6</pegel:PAR_4>
           <pegel:PAR_5>6.0</pegel:PAR_5>
-          <pegel:PAR_6>0.58</pegel:PAR_6>
+          <pegel:PAR_6>0.575</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.6</pegel:PAR_10>
           <pegel:G_1>0.01</pegel:G_1>
@@ -5121,7 +5121,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5169,7 +5169,7 @@
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -5292,7 +5292,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5340,7 +5340,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.03</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.217</pegel:G_1>
@@ -5463,7 +5463,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5511,7 +5511,7 @@
           <pegel:PAR_5>8.0</pegel:PAR_5>
           <pegel:PAR_6>0.5</pegel:PAR_6>
           <pegel:PAR_7>0.08</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
           <pegel:G_1>0.02</pegel:G_1>
@@ -5634,7 +5634,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5682,7 +5682,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
           <pegel:G_1>0.0080</pegel:G_1>
@@ -5805,7 +5805,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5853,7 +5853,7 @@
           <pegel:PAR_5>20.0</pegel:PAR_5>
           <pegel:PAR_6>0.3</pegel:PAR_6>
           <pegel:PAR_7>0.055</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.2</pegel:PAR_10>
           <pegel:G_1>0.012</pegel:G_1>
@@ -5982,7 +5982,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6030,7 +6030,7 @@
           <pegel:PAR_5>20.0</pegel:PAR_5>
           <pegel:PAR_6>0.75</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.134</pegel:G_1>
@@ -6159,7 +6159,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6207,7 +6207,7 @@
           <pegel:PAR_5>15.0</pegel:PAR_5>
           <pegel:PAR_6>0.2</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0080</pegel:G_1>
@@ -6336,7 +6336,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6384,7 +6384,7 @@
           <pegel:PAR_5>15.0</pegel:PAR_5>
           <pegel:PAR_6>1.4</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -6507,7 +6507,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6555,7 +6555,7 @@
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -6678,7 +6678,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6726,7 +6726,7 @@
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.3</pegel:PAR_6>
           <pegel:PAR_7>0.045</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -6849,7 +6849,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6897,7 +6897,7 @@
           <pegel:PAR_5>9.0</pegel:PAR_5>
           <pegel:PAR_6>1.25</pegel:PAR_6>
           <pegel:PAR_7>0.06</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -7026,7 +7026,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7074,7 +7074,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -7203,7 +7203,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7251,7 +7251,7 @@
           <pegel:PAR_5>50.0</pegel:PAR_5>
           <pegel:PAR_6>0.8</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.022</pegel:G_1>
@@ -7374,7 +7374,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7422,7 +7422,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>0.7</pegel:PAR_6>
           <pegel:PAR_7>0.03</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.196</pegel:G_1>
@@ -7544,8 +7544,8 @@
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Steuerung>1</pegel:Steuerung>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7593,7 +7593,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>2.5</pegel:PAR_6>
           <pegel:PAR_7>0.0090</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -7722,7 +7722,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7770,7 +7770,7 @@
           <pegel:PAR_5>35.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.018</pegel:PAR_7>
-          <pegel:PAR_8>0.2</pegel:PAR_8>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.037</pegel:G_1>
@@ -7896,10 +7896,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:Feuchte>8</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7970,7 +7970,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8041,7 +8041,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8112,7 +8112,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8183,7 +8183,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8254,7 +8254,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8325,7 +8325,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8396,7 +8396,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8467,7 +8467,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8538,7 +8538,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8609,7 +8609,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8680,7 +8680,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8751,7 +8751,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8822,7 +8822,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8893,7 +8893,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8903,7 +8903,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
+          <pegel:Reserve10>Ül-Sperre, Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5209800.0,5742200.0</gml:coordinates>
@@ -8964,7 +8964,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9035,7 +9035,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9106,7 +9106,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9177,7 +9177,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9248,7 +9248,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9319,7 +9319,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9390,7 +9390,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9461,7 +9461,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9532,7 +9532,7 @@
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante/>
+          <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>

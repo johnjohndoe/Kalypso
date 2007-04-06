@@ -1,4 +1,4 @@
-#Thu Mar 29 15:07:59 CEST 2007
+#Fri Apr 06 15:18:07 CEST 2007
 encoding//.prognose/Vorhersage-19-11-2004_17h24/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_BOXBRG.zml=UTF-8
 encoding//.prognose/prognose2/results.gml=UTF-8
@@ -148,6 +148,7 @@ encoding//..BCE_intern/.HWVOR00_import/oldBeispiel/Daten=Cp1252
 encoding//.prognose/Vorhersage-25-11-2004_15h28/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SPREMB.zml=UTF-8
 encoding//.prognose/DerTest/Durchfluss/570210.zml=UTF-8
+encoding//Test/Gegenrechnungen/00/Versteckt=Cp1252
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_BAUTZWB.zml=UTF-8
 encoding//.prognose/prognose5/results.gml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSBAUTZ.zml=UTF-8
@@ -210,8 +211,8 @@ encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//Rechenvarianten/Beispiel/.calculation=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/calcCase.gml=UTF-8
 encoding//Rechenvarianten/040427/calcCase.gml=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/calcCase.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/steuerparameter.gft=UTF-8
 encoding//.shape/aktivpeg.shx=Cp1252
@@ -308,6 +309,7 @@ encoding//Rechenl\u00E4ufe/test/calcCase.gml=UTF-8
 eclipse.preferences.version=1
 encoding//.prognose/DerTest/Niederschlag/574210.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/Anfangsvolumen.gtt=UTF-8
+encoding//Rechenvarianten/TestPopest/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2005-09-15_19h05/.calculation=UTF-8
 encoding//Rechenvarianten/OmbroTest/.calculation=UTF-8
 encoding//.templates/.wizard/berichtTabelleGebietsN.ott=UTF-8
