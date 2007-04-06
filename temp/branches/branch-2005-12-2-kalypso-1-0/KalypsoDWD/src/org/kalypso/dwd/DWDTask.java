@@ -44,13 +44,14 @@ import java.io.File;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.kalypso.commons.runtime.AntProjectLogger;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.SystemOutLogger;
 
 /**
  * this task generates zml-files from
@@ -140,7 +141,23 @@ public class DWDTask extends Task
   {
     try
     {
-      final ILogger logger = new AntProjectLogger( getProject() );
+      final Project antProject = getProject();
+      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
+      // else we get an LinkageError when accessing the Project class.
+      final ILogger logger = new ILogger()
+      {
+        /**
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+         */
+        public void log( final Level level, final boolean mainMsg, final String message )
+        {
+          final String outString = SystemOutLogger.formatLogStylish( level, mainMsg, message );
+          if( antProject == null )
+            System.out.print( outString );
+          else
+            antProject.log( outString );
+        }
+      };
 
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
       delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
