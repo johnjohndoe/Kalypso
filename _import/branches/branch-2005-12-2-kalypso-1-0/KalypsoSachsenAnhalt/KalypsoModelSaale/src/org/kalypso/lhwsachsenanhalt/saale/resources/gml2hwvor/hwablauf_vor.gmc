@@ -16,6 +16,7 @@
 		<column>Reserve7</column>
 		<column>Reserve8</column>
 		<column>Reserve9</column>
-		<column>Reserve10</column>	</csvtarget>
+		<column>Reserve10</column>
+	</csvtarget>
 	<registersource registeredID="INTERNE_GML"/>
 </gmlconvert>

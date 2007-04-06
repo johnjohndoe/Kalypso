@@ -56,13 +56,13 @@ public class SaaleCalcJob implements ICalcJob
 {
   public static final String HWDIR_DATEN = "Daten";
 
-  public static final String HWDIR_STAMMDAT = "stammdat";
+  public static final String HWDIR_STAMMDAT = "Stammdat";
 
-  public static final String HWDIR_WQ = "wq";
+  public static final String HWDIR_WQ = "WQ";
 
-  public static final String HWDIR_AUSGABE = "ausgabe";
+  public static final String HWDIR_AUSGABE = "Ausgabe";
 
-  public static final String HWDIR_ARCHIV = "archiv";
+  public static final String HWDIR_ARCHIV = "Archiv";
 
   public static final String HWEXE = "hwvor00.exe";
 
