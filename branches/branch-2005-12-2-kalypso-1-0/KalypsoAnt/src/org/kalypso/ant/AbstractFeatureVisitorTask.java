@@ -62,7 +62,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.commons.runtime.AntProjectLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
@@ -71,6 +70,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.SystemOutLogger;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -105,6 +105,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
    * <ul>
    * <li>zero</li>
    * <li>infinite</li>
+   * x
    * <li>infinite_links</li>
    * </ul>
    * </p>
@@ -211,7 +212,22 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
     final Project antProject = getProject();
-    final ILogger logger = new AntProjectLogger( antProject );
+    // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
+    // else we get an LinkageError when accessing the Project class.
+    final ILogger logger = new ILogger()
+    {
+      /**
+       * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+       */
+      public void log( final Level level, final boolean mainMsg, final String message )
+      {
+        final String outString = SystemOutLogger.formatLogStylish( level, mainMsg, message );
+        if( antProject == null )
+          System.out.print( outString );
+        else
+          antProject.log( outString );
+      }
+    };
 
     try
     {
