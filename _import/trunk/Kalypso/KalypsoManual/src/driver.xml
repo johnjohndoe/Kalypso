@@ -17,6 +17,8 @@
 	<!ENTITY file_wizard_Ilse SYSTEM "Vorhersage_Assistent_Ilse.xml">
 	<!ENTITY file_wizard_Bode SYSTEM "Vorhersage_Assistent_Bode.xml">
 	<!ENTITY file_wizard_Saale SYSTEM "Vorhersage_Assistent_Saale.xml">
+	
+	<!ENTITY file_glossar SYSTEM "glossar.xml">    
 ]>
 <!--book id="book" lang="de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xinclude="http://www.w3.org/2001/XInclude" xsi:schemaLocation="http://www.w3.org/2001/XInclude xincluder.xsd"-->
 <book id="book" lang="de">
@@ -49,7 +51,7 @@
 		&file_wizard_Bode;
 		&file_wizard_Saale;
 	</chapter>
-	
+	&file_glossar;
 	<lot/>
 	<index/>
 </book>
