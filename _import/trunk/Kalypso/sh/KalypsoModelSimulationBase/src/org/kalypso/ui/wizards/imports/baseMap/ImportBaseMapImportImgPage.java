@@ -90,6 +90,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
     final Button button = new Button( container, SWT.NONE );
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         browseForSourceFile();

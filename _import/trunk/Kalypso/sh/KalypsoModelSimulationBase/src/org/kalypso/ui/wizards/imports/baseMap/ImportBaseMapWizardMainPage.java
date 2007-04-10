@@ -68,16 +68,6 @@ public class ImportBaseMapWizardMainPage extends WizardPage
   }
   
   /**
-   * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-   */
-  @Override
-  public void setVisible( boolean visible )
-  {
-    super.setVisible(visible);
-    ((ImportBaseMapWizard)getWizard()).m_selectedPage = visible?SelectedPage.PageNONE:SelectedPage.PageImportIMG;
-  }
-  
-  /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   public void createControl( Composite parent )

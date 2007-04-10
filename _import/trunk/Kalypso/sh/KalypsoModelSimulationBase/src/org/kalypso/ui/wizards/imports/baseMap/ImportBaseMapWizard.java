@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -92,8 +93,6 @@ enum SelectedPage
  */
 public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport, IKalypsoImportWMSWizard
 {
-  protected SelectedPage m_selectedPage = SelectedPage.PageNONE;
-
   private IStructuredSelection initialSelection;
 
   private IPath m_sourceLocation = null;
@@ -104,7 +103,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
 
   protected ImportBaseMapImportImgPage m_PageImportImg;
 
-//  protected LineShpMainPage m_PageImportShp;
+  // protected LineShpMainPage m_PageImportShp;
 
   protected ImportWmsWizardPage m_PageImportWMS;
 
@@ -165,22 +164,31 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   {
     m_PageMain = new ImportBaseMapWizardMainPage();
     m_PageImportImg = new ImportBaseMapImportImgPage();
-//    m_PageImportShp = new LineShpMainPage();
+    // m_PageImportShp = new LineShpMainPage();
     m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     m_PageImportImg.init( initialSelection );
-//    m_PageImportShp.init( initialSelection );
+    // m_PageImportShp.init( initialSelection );
     addPage( m_PageMain );
     addPage( m_PageImportImg );
     addPage( m_PageImportWMS );
   }
-
+  
+  private SelectedPage getSelectedPage() {
+    IWizardPage currentPage = getContainer().getCurrentPage();
+    if( currentPage == m_PageImportImg )
+      return SelectedPage.PageImportIMG;
+    if( currentPage == m_PageImportWMS )
+      return SelectedPage.PageImportWMS;
+    return SelectedPage.PageNONE;
+  }
+  
   /**
    * @see org.eclipse.jface.wizard.Wizard#canFinish()
    */
   @Override
   public boolean canFinish( )
   {
-    if( m_selectedPage == SelectedPage.PageNONE )
+    if( getSelectedPage() == SelectedPage.PageNONE )
       return false;
     else
       return getContainer().getCurrentPage().isPageComplete();
@@ -221,7 +229,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
       return false;
     }
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
-    switch( m_selectedPage )
+    switch( getSelectedPage() )
     {
       case PageImportIMG:
         return performFinishIMG( mapView, mapModell );
