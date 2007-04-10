@@ -44,10 +44,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-// import org.eclipse.swt.graphics.Color;
-// import org.eclipse.swt.graphics.Device;
-// import org.eclipse.swt.graphics.RGB;
-
 /**
  * @author Patrice Congo
  */
@@ -94,7 +90,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   private Color m_noElevationColor;
 
-
   public SimpleElevationColorModel( double minElevation, double maxElevation, Color minColor, Color maxColor, Color noElevationColor, double transparency, int numOfClasses, boolean goDarkerFromMinToMax )
   {
     m_minElevation = minElevation;
@@ -125,7 +120,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   }
 
   /**
-   * fills the color list with colors for each class
+   * fills the color list with colors for each class by interpolation between two chosen colors
    */
   private void fillColorList( )
   {
@@ -158,9 +153,13 @@ public class SimpleElevationColorModel implements IElevationColorModel
   {
     return interpolateColor( elevation );
   }
-/**
- * gets the corresponding color class for the given elevation
- */
+
+  /**
+   * gets the corresponding color class for the given elevation
+   * 
+   * @param elevation
+   *          given elevation
+   */
   private final Color interpolateColor( double elevation )
   {
     final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
@@ -239,6 +238,10 @@ public class SimpleElevationColorModel implements IElevationColorModel
     return rgbColor;
   }
 
+  /**
+   * 
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#setElevationMinMax(double, double)
+   */
   public void setElevationMinMax( double minElevation, double maxElevation )
   {
     m_minElevation = minElevation;
@@ -267,7 +270,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
       // or return a translucent color
       throw new IllegalArgumentException( "Elevation is out of range:" + "\n\tminElevation=" + m_minElevation + "\n\tmaxElevation=" + m_maxElevation + "\n\tcurrentElevation=" + elevation );
     }
-
   }
 
   public float[] getRealRGB( double elevation )
@@ -281,7 +283,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    */
   public double[] getElevationMinMax( )
   {
-    double[] values = new double [2];
+    double[] values = new double[2];
     values[0] = m_minElevation;
     values[1] = m_maxElevation;
     return values;

@@ -80,7 +80,7 @@ public class SurfacePatchVisitableDisplayElement
 {
   private IElevationColorModel/*SimpleElevationColorModel*/ colorModel; 
     
-  private NativeTerrainElevationModelWrapper elevationModel;
+  private NativeTerrainElevationModelWrapper m_elevationModel;
   
   private boolean isHighlighted=false;
  
@@ -92,7 +92,7 @@ public class SurfacePatchVisitableDisplayElement
 
   private Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
   
-  private DisplayElement decorated;
+  private DisplayElement m_decorated;
 
   private GeoTransform projection;
  
@@ -101,18 +101,25 @@ public class SurfacePatchVisitableDisplayElement
                 NativeTerrainElevationModelWrapper elevationModel )
   {
     Assert.throwIAEOnNullParam( elevationModel, "elevationModel" );
-    this.elevationModel=elevationModel;
+    m_elevationModel=elevationModel;
     IElevationProvider elevationProvider = 
               elevationModel.getElevationProvider();
     //TODO continue
     if(elevationProvider instanceof SurfacePatchVisitable)
     {
       ascElevationModel=(SurfacePatchVisitable)elevationProvider;
-//      colorModel = 
-//        ElevationColorControl.getColorModel();
-//      final double[] values = colorModel.getElevationMinMax();
-//      if ( values[0] == 0 &&  values[1] ==0)
-//        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+      colorModel = 
+        ElevationColorControl.getColorModel();
+      /*
+       * please don't comment code out!
+       * If you have questions concerning the code, please ask.
+       * 
+       * if the user defines an elevation range, he doesn't want to see the elevations below and above that range.
+       * this is what this code is good for. 
+       */
+      final double[] values = colorModel.getElevationMinMax();
+      if ( values[0] == 0 &&  values[1] ==0)
+        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
       
       colorModel =
         ElevationColorControl.getColorModel( 
@@ -130,9 +137,9 @@ public class SurfacePatchVisitableDisplayElement
    */
   public boolean doesScaleConstraintApply( double scale )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      return decorated.doesScaleConstraintApply( scale );
+      return m_decorated.doesScaleConstraintApply( scale );
     }
     else
     {
@@ -145,13 +152,13 @@ public class SurfacePatchVisitableDisplayElement
    */
   public String getAssociateFeatureId( )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      return decorated.getAssociateFeatureId();
+      return m_decorated.getAssociateFeatureId();
     }
     else
     {
-      return elevationModel.getGmlID();
+      return m_elevationModel.getGmlID();
     }
   }
 
@@ -160,13 +167,13 @@ public class SurfacePatchVisitableDisplayElement
    */
   public Feature getFeature( )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      return decorated.getFeature();
+      return m_decorated.getFeature();
     }
     else
     {
-      return elevationModel.getFeature();
+      return m_elevationModel.getFeature();
     }
   }
 
@@ -175,9 +182,9 @@ public class SurfacePatchVisitableDisplayElement
    */
   public boolean isHighlighted( )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      return decorated.isHighlighted();
+      return m_decorated.isHighlighted();
     }
     else
     {
@@ -190,9 +197,9 @@ public class SurfacePatchVisitableDisplayElement
    */
   public boolean isSelected( )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      return decorated.isSelected();
+      return m_decorated.isSelected();
     }
     else
     {
@@ -206,9 +213,9 @@ public class SurfacePatchVisitableDisplayElement
    */
   public void setHighlighted( boolean highlighted )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      decorated.setHighlighted( highlighted );
+      m_decorated.setHighlighted( highlighted );
     }
     this.isHighlighted=highlighted;
   }
@@ -219,28 +226,26 @@ public class SurfacePatchVisitableDisplayElement
    */
   public void setSelected( boolean selected )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      decorated.setSelected( selected );
+      m_decorated.setSelected( selected );
     }
     this.isSelected=selected;
   }
   
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( Graphics g, @SuppressWarnings("hiding")
+  GeoTransform projection )
   {
-    if(decorated!=null)
+    if(m_decorated!=null)
     {
-      decorated.paint( g, projection );
+      m_decorated.paint( g, projection );
     }
-//    paint( g, projection, elevationModel.getBoundingBox() );
     try
     {
       //TODO Patrice try to get the current paint box
       this.graphics=g;
       this.projection=projection;
-//      GM_Envelope worldRect = projection.getSourceRect();
-//      
-//      System.out.println("destRect="+worldRect);
+
       ascElevationModel.aceptSurfacePatches( 
                     projection.getSourceRect(),//ascElevationModel.getBoundingBox(), 
                     this );
@@ -261,9 +266,10 @@ public class SurfacePatchVisitableDisplayElement
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  private Area calcTargetCoordinates( GeoTransform projection, GM_Surface surface ) throws Exception
+  private Area calcTargetCoordinates( @SuppressWarnings("hiding")
+  GeoTransform projection, GM_Surface surface ) throws Exception
   {
-    final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
+    final PolygonSymbolizer sym =  getSymbolizer();
     final Stroke stroke = sym.getStroke();
     float width = 1;
     if( stroke != null )
@@ -297,7 +303,8 @@ public class SurfacePatchVisitableDisplayElement
     return null;
   }
   
-  private Area areaFromRing( GeoTransform projection, float width, final GM_Position[] ex )
+  private Area areaFromRing( @SuppressWarnings("hiding")
+  GeoTransform projection, float width, final GM_Position[] ex )
   {
     final int[] x = new int[ex.length];
     final int[] y = new int[ex.length];
@@ -375,13 +382,10 @@ public class SurfacePatchVisitableDisplayElement
 
   private PolygonSymbolizer getSymbolizer( )
   {
-    decorated.doesScaleConstraintApply( 0 );
+    m_decorated.doesScaleConstraintApply( 0 );
     return (PolygonSymbolizer) defaultSymbolizer;
   }
-  
-  
-  
-  
+ 
   public static final SurfacePatchVisitableDisplayElement createDisplayElement(Feature feature)
   {
     if(feature == null)
@@ -407,7 +411,7 @@ public class SurfacePatchVisitableDisplayElement
    */
   public DisplayElement getDecorated( )
   {
-    return decorated;
+    return m_decorated;
   }
 
   /**
@@ -415,7 +419,7 @@ public class SurfacePatchVisitableDisplayElement
    */
   public void setDecorated( DisplayElement decorated )
   {
-    this.decorated=decorated;    
+    m_decorated=decorated;    
   }
 
   /**
@@ -430,10 +434,20 @@ public class SurfacePatchVisitableDisplayElement
 //            "\n\tsurface:"+surfacePatch+
 //            "\n\televation:"+elevationSample);
         Area area = calcTargetCoordinates( this.projection, surfacePatch );
-//        if (colorModel.getColor( elevationSample )!= null){
-//        final double[] values = colorModel.getElevationMinMax();
-//        if (elevationSample <= values[1] && elevationSample >= values[0])
+//        if (colorModel.getColor( elevationSample )!= null)
 //        {
+        
+        /*
+         * PLEASE!!
+         * Don't comment code out!
+         * If you have questions concerning the code, plese ask.
+         * 
+         * if the user defines an elevation range, he doesn't want to see the elevations below and above that range.
+         * this is what this code is good for
+         */
+        final double[] values = colorModel.getElevationMinMax();
+        if (elevationSample <= values[1] && elevationSample >= values[0])
+        {
           graphics.setColor( colorModel.getColor( elevationSample ));
         
 //        drawPolygon( graphics, area );
@@ -442,7 +456,8 @@ public class SurfacePatchVisitableDisplayElement
           java.awt.Stroke bs2= new BasicStroke(3);
           ((Graphics2D)graphics).setStroke( bs2 );
           ((Graphics2D)graphics).draw(  area );
-//        }
+        }
+        
     }
     catch (Exception e) 
     {
