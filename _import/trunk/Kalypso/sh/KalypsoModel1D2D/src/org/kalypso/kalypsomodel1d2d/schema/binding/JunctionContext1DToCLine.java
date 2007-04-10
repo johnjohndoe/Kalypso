@@ -1,0 +1,359 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.kalypsomodel1d2d.schema.binding;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
+/**
+ * Default implementation of {@link IJunctionContext1DToCLine}
+ * 
+ * @author Patrice Congo
+ */
+public class JunctionContext1DToCLine 
+                  extends AbstractFeatureBinder 
+                  implements IJunctionContext1DToCLine
+{
+
+  public JunctionContext1DToCLine( Feature featureToBind )
+  {
+    this(
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE);
+  }
+  public JunctionContext1DToCLine( 
+                    Feature featureToBind, 
+                    QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#getContinuityLine()
+   */
+  public IFE1D2DContinuityLine getContinuityLine( )
+  {
+    Object obj = 
+      getFeature().getProperty( 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
+    if(obj instanceof Feature)
+    {
+      return (IFE1D2DContinuityLine) 
+              ((Feature)obj).getAdapter( IFE1D2DContinuityLine.class );
+    }
+    else
+    {  
+      return null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#getElement1D()
+   */
+  public IElement1D getElement1D( )
+  {
+    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
+    if(obj instanceof Feature)
+    {
+      return (IElement1D) ((Feature)obj).getAdapter( IElement1D.class );
+    }
+    else
+    {  
+      return null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public boolean addElementAsRef( IFE1D2DElement element )
+  {
+    Feature wrappedFeature = element.getWrappedFeature();
+    if(TypeInfo.isContinuityLine( wrappedFeature ))
+    {
+      getFeature().setProperty( 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
+          wrappedFeature.getId() );
+      return true;
+    }
+    else if(TypeInfo.isElement1DFeature( wrappedFeature ))
+    {
+      getFeature().setProperty( 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
+          wrappedFeature.getId() );
+      return true;
+    }
+    else
+    {
+      String message = 
+        String.format( 
+            "This complex element accept only one 1D element and one "+
+              " continuity line; so adding this feature is not possible"+
+              "\n\tfeature to add as ref=%s \n\ttype=", 
+            wrappedFeature, 
+            wrappedFeature.getFeatureType().getQName() );
+     throw new IllegalArgumentException(message); 
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#getElements()
+   */
+  public IFeatureWrapperCollection getElements( )
+  {
+    return (IFeatureWrapperCollection) getJunctionAsList(  );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public boolean removeElementAsRef( IFE1D2DElement element )
+  {
+    Feature featureToDel = element.getWrappedFeature();
+    if(TypeInfo.isContinuityLine( featureToDel ))
+    {
+      if(featureToDel.equals( getContinuityLine().getWrappedFeature() ))
+      {
+        getFeature().setProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
+            null );
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else if(TypeInfo.isElement1DFeature( featureToDel ))
+    {
+      if(featureToDel.equals( getElement1D().getWrappedFeature() ))
+      {
+        getFeature().setProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
+            null );
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      String message = 
+        String.format( 
+            "This complex element accept only one 1D element and one "+
+              " continuity line; so adding this feature is not possible"+
+              "\n\tfeature to add as ref=%s \n\ttype=", 
+            featureToDel, 
+            featureToDel.getFeatureType().getQName() );
+     throw new IllegalArgumentException(message); 
+    }
+  }
+  
+  protected List<IFE1D2DElement> collectJunctionElements()
+  {
+    List<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>();
+    IElement1D element1D = getElement1D();
+    if(element1D != null)
+    {
+      eleList.add( element1D );
+    }
+    
+    IFE1D2DContinuityLine continuityLine = getContinuityLine();
+    if(continuityLine != null)
+    {
+      eleList.add( continuityLine );
+    }
+    return eleList;
+  }
+  
+  private final List<IFE1D2DElement> getJunctionAsList()
+  {
+//    List<IFeatureWrapper2> list = Collections.unmodifiableList( eleList );
+    List<IFE1D2DElement> list = 
+      new List<IFE1D2DElement>()
+    {
+
+      public boolean add( IFE1D2DElement o )
+      {
+        return addElementAsRef( o );
+      }
+
+      public void add( int index, IFE1D2DElement element )
+      {
+        throw new UnsupportedOperationException(); 
+      }
+
+      public boolean addAll( Collection< ? extends IFE1D2DElement> c )
+      {
+        throw new UnsupportedOperationException(); 
+      }
+
+      public boolean addAll( int index, Collection< ? extends IFE1D2DElement> c )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public void clear( )
+      {
+        Feature contextFeature = getFeature();
+        contextFeature.setProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
+            null );
+        contextFeature.setProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
+            null );
+      }
+
+      public boolean contains( Object o )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public boolean containsAll( Collection< ? > c )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public IFE1D2DElement get( int index )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public int indexOf( Object o )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public boolean isEmpty( )
+      {
+        return getElement1D()==null  && getContinuityLine()==null;
+      }
+
+      public Iterator<IFE1D2DElement> iterator( )
+      {
+        return collectJunctionElements().iterator();
+      }
+
+      public int lastIndexOf( Object o )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public ListIterator<IFE1D2DElement> listIterator( )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public ListIterator<IFE1D2DElement> listIterator( int index )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public boolean remove( Object o )
+      {
+        if(o instanceof IFE1D2DElement)
+        {
+         return removeElementAsRef( (IFE1D2DElement) o ); 
+        }
+        else
+        {
+          return false;
+        }
+      }
+
+      public IFE1D2DElement remove( int index )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public boolean removeAll( Collection< ? > c )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public boolean retainAll( Collection< ? > c )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public IFE1D2DElement set( int index, IFE1D2DElement element )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public int size( )
+      {
+        return collectJunctionElements().size();
+      }
+
+      public List<IFE1D2DElement> subList( int fromIndex, int toIndex )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      public Object[] toArray( )
+      {
+        return null;
+      }
+
+      public <T> T[] toArray( T[] a )
+      {
+        return null;
+      }
+      
+    };
+    
+    return list;
+  }
+}

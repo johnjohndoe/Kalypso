@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -78,29 +79,7 @@ public class OpsGeoEditAffected
   private static final void addAffectedFeaturesByPolyElementGeomChange( 
                                                   Feature feature, 
                                                   Set<Feature> affectedFeature )
-  {
-//    final IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement= 
-//          (IPolyElement) feature.getAdapter( IPolyElement.class );
-//    if(polyElement==null)
-//    {
-//      throw new IllegalArgumentException("feature mus be a Polyelement:"+polyElement);
-//    }
-//    
-//    for(IFE1D2DEdge edge : polyElement.getEdges())
-//    {
-//      Feature wrappedFeature = edge.getWrappedFeature();
-//      wrappedFeature.invalidEnvelope();
-//      affectedFeature.add(wrappedFeature);
-//    }
-//    
-//    List<IFE1D2DNode> nodes = polyElement.getNodes();
-//    for(IFE1D2DNode node:nodes)
-//    {
-//      Feature wrappedFeature = node.getWrappedFeature();
-//      wrappedFeature.invalidEnvelope();
-//      affectedFeature.add( wrappedFeature );
-//    }
-    
+  {    
     final IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> polyElement= 
                     (IPolyElement) feature.getAdapter( IPolyElement.class );
     if(polyElement==null)
@@ -180,11 +159,37 @@ public class OpsGeoEditAffected
                                                     changedFeature, 
                                                     affectedFeatures);
     }
+    else if(TypeInfo.isContinuityLine( changedFeature ))
+    {
+      addAffectedFeaturesByContinuityLineGeomChange(
+                                    changedFeature, 
+                                    affectedFeatures);
+    }
     else
     {
       throw new RuntimeException(
           "Moving this type of node is not supported:"+changedFeature);
     }
+  }
+
+  private static void addAffectedFeaturesByContinuityLineGeomChange( Feature changedFeature, Set<Feature> affectedFeatures )
+  {
+    final IFE1D2DContinuityLine cLine= 
+      (IFE1D2DContinuityLine)changedFeature.getAdapter( IFE1D2DContinuityLine.class );
+    if(cLine==null)
+    {
+      throw new IllegalArgumentException(
+          "feature mus be a continuity line element:"+cLine);
+    }
+    
+    List<IFE1D2DNode> nodes = cLine.getNodes();
+    for(IFE1D2DNode node: nodes)
+    {
+      addAffectedFeaturesByNodeGeomChange( 
+                              node.getWrappedFeature(), 
+                              affectedFeatures );
+    }
+    
   }
 
   /**
@@ -201,21 +206,6 @@ public class OpsGeoEditAffected
       throw new IllegalArgumentException("feature mus be a 1d element:"+element1D);
     }
     
-//    IFE1D2DEdge edge = element1D.getEdge(); 
-//    if(edge!=null)
-//    {
-//      Feature wrappedFeature = edge.getWrappedFeature();
-//      wrappedFeature.invalidEnvelope();
-//      affectedFeatures.add(wrappedFeature);
-//    }
-//    
-//    List<IFE1D2DNode> nodes = element1D.getNodes();
-//    for(IFE1D2DNode node:nodes)
-//    {
-//      Feature wrappedFeature = node.getWrappedFeature();
-//      wrappedFeature.invalidEnvelope();
-//      affectedFeatures.add( wrappedFeature );
-//    }
     List<IFE1D2DNode> nodes = element1D.getNodes();
     for(IFE1D2DNode node: nodes)
     {

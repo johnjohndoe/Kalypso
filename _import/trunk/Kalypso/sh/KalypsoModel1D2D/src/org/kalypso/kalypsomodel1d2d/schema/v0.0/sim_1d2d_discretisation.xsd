@@ -780,29 +780,31 @@
 	<xs:element 
 		name="JunctionContext1DTo2D"
 		type="wb1d2d:JunctionContext1DTo2DType"
-		substitutionGroup="wb1d2d:_JunctionContext"/>
+		substitutionGroup="wb1d2d:JunctionContext1DToCLine"/>
 	<xs:complexType name="JunctionContext1DTo2DType">
 		<xs:annotation>
 			<xs:documentation>
 				The context for a junction base on a
-				1d element and a 2d element
+				1d element and a 2D element, where the actual
+				connection from 1D is made to the edge wrapped in 
+				the continuity line
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:restriction 
-				base="wb1d2d:AbstractJunctionContextType">
+			<xs:extension 
+				base="wb1d2d:JunctionContext1DToCLineType">
 					<xs:sequence>
-						<xs:element 
+						<!--xs:element 
 							ref="wb1d2d:element1D"
-							minOccurs="1" maxOccurs="1"/>
-						<xs:element 
+							minOccurs="1" maxOccurs="1"/-->
+						<!--xs:element 
 								ref="wb1d2d:continuityLine"
-								minOccurs="1" maxOccurs="1"/>
+								minOccurs="1" maxOccurs="1"/-->
 						<xs:element 
 								ref="wb1d2d:element2D"
 								minOccurs="1" maxOccurs="1"/>
 					</xs:sequence>
-			</xs:restriction>
+			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
 	

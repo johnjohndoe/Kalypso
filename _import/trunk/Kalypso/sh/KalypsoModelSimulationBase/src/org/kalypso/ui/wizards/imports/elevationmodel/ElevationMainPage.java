@@ -160,8 +160,8 @@ public class ElevationMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( "asc" );
     fileExtensions.add( "hmo" );
+    fileExtensions.add( "asc" );
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
@@ -282,7 +282,7 @@ public class ElevationMainPage extends WizardPage
   private IPath browse( IPath path, boolean mustExist )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.asc", "*.hmo" } );
+    dialog.setFilterExtensions( new String[] { "*.hmo", "*.asc" } );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
