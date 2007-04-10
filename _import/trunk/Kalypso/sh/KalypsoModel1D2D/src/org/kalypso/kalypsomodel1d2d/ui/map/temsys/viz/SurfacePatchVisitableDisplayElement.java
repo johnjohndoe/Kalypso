@@ -108,18 +108,19 @@ public class SurfacePatchVisitableDisplayElement
     if(elevationProvider instanceof SurfacePatchVisitable)
     {
       ascElevationModel=(SurfacePatchVisitable)elevationProvider;
-      colorModel = 
-        ElevationColorControl.getColorModel();
-      /*
-       * please don't comment code out!
-       * If you have questions concerning the code, please ask.
-       * 
-       * if the user defines an elevation range, he doesn't want to see the elevations below and above that range.
-       * this is what this code is good for. 
-       */
-      final double[] values = colorModel.getElevationMinMax();
-      if ( values[0] == 0 &&  values[1] ==0)
-        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+//      colorModel = 
+//        ElevationColorControl.getColorModel();
+//      /*
+//       * this is done in the color model 
+//       * please don't comment code out!
+//       * If you have questions concerning the code, please ask.
+//       * 
+//       * if the user defines an elevation range, he doesn't want to see the elevations below and above that range.
+//       * this is what this code is good for. 
+//       */
+//      final double[] values = colorModel.getElevationMinMax();
+//      if ( values[0] == 0 &&  values[1] ==0)
+//        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
       
       colorModel =
         ElevationColorControl.getColorModel( 
@@ -437,17 +438,18 @@ public class SurfacePatchVisitableDisplayElement
 //        if (colorModel.getColor( elevationSample )!= null)
 //        {
         
-        /*
-         * PLEASE!!
-         * Don't comment code out!
-         * If you have questions concerning the code, plese ask.
-         * 
-         * if the user defines an elevation range, he doesn't want to see the elevations below and above that range.
-         * this is what this code is good for
-         */
-        final double[] values = colorModel.getElevationMinMax();
-        if (elevationSample <= values[1] && elevationSample >= values[0])
-        {
+//        /*
+//         * PLEASE!!
+//         * Don't comment code out!
+//         * If you have questions concerning the code, plese ask.
+//         * 
+//         * if the user defines an elevation range,
+//         * he doesn't want to see the elevations below and above that range.
+//         * this is what this code is good for
+//         */
+//        final double[] values = colorModel.getElevationMinMax();
+//        if (elevationSample <= values[1] && elevationSample >= values[0])
+//        {
           graphics.setColor( colorModel.getColor( elevationSample ));
         
 //        drawPolygon( graphics, area );
@@ -456,7 +458,7 @@ public class SurfacePatchVisitableDisplayElement
           java.awt.Stroke bs2= new BasicStroke(3);
           ((Graphics2D)graphics).setStroke( bs2 );
           ((Graphics2D)graphics).draw(  area );
-        }
+//        }
         
     }
     catch (Exception e) 

@@ -162,6 +162,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    */
   private final Color interpolateColor( double elevation )
   {
+    System.out.println("elevation :"+elevation);
     final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
     int red = 0;
     int green = 0;
@@ -185,6 +186,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
         green = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getGreen();
         blue = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getBlue();
       }
+      
     }
     else
     {
@@ -194,7 +196,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
        */
       if( elevation >= m_maxElevation )
       {
-        elevation = m_maxElevation;
         if( !m_goDarkerFromMinToMax )
         {
           red = m_colorList.get( (m_numOfClasses - 1) ).getRed();
@@ -207,15 +208,16 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( 0 ).getGreen();
           blue = m_colorList.get( 0 ).getBlue();
         }
-        final Color rgbColor = new Color( red, green, blue, m_transparency );
-
+        final Color rgbColor = 
+          new Color( 
+              red,green, blue, 
+              elevation == m_maxElevation?m_transparency:0 );
         return rgbColor;
       }
 
       /* check, if the elevation is less than the specified minimum */
       if( elevation <= m_minElevation )
       {
-        elevation = m_minElevation;
         if( !m_goDarkerFromMinToMax )
         {
           red = m_colorList.get( 0 ).getRed();
@@ -228,10 +230,14 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( (m_numOfClasses - 1) ).getGreen();
           blue = m_colorList.get( (m_numOfClasses - 1) ).getBlue();
         }
-        final Color rgbColor = new Color( red, green, blue, m_transparency );
+        final Color rgbColor = 
+            new Color( 
+                red, green, blue, 
+                elevation == m_minElevation?m_transparency:0);
 
         return rgbColor;
       }
+      
     }
     final Color rgbColor = new Color( red, green, blue, m_transparency );
 
