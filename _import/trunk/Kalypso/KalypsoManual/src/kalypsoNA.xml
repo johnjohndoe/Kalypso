@@ -28,31 +28,32 @@
     </mediaobject>
   </figure>
 
-  <para>Der Rechenkern basiert ursprünglich auf dem Programm BCENA der Firma
-  Björnsen Beratende Ingenieure GmbH, welcher am Arbeitsbereich Wasserbau
-  unter dem Namen Kalypso-NA ständig weiter entwickelt wird. Das
-  Anwendungsgebiet des NA-Modells ist sowohl in der Prozessanalyse, der
-  Berechnung von Planungszuständen (wie <abbrev>z. B.</abbrev> Renaturierungen
-  und Integration von Hochwasserentlastungsanlagen) und der
-  Hochwasservorhersage im operativen Einsatz (Schutz vor Hochwasser durch
-  Wasserstandsvorhersage) zu sehen. Das Modellkonzept beruht auf der
-  Simulation der einzelnen hydrologischen Teilprozesse als Speicherelemente,
-  die über Wasserflüsse miteinander zu einer Kaskade von Speichern gekoppelt
-  sind. Der Prozess der Abflussbildung wird als eindimensional-vertikal
-  angenommen und auf Hydrotopebene simuliert. Zur Beschreibung der
-  Abflusskonzentration werden die entstandenen Abflussvolumina auf
-  Teilgebietsebene aggregiert und unter Berücksichtigung der
-  charakteristischen Fließzeiten nach Translation und Retention als
-  Teilgebietsabfluss gesammelt und einem Gewässerstrang im Gerinnennetz
-  zugeordnet. Dabei werden die Prozesse als lateral eindimensional aufgefasst.
-  Die Abflussverformung im Gerinne erfolgt nach dem Verfahren von
-  Kalinin-Miljukov.</para>
+  <para>Der Rechenkern basiert ursprünglich auf dem Programm BCENA Björnsen
+  Beratende Ingenieure GmbH, welcher am Arbeitsbereich Wasserbau unter dem
+  Namen Kalypso-NA ständig weiter entwickelt wird. Das Anwendungsgebiet des
+  NA-Modells ist sowohl in der Prozessanalyse, der Berechnung von
+  Planungszuständen (wie <abbrev>z. B.</abbrev> Renaturierungen und
+  Integration von Hochwasserentlastungsanlagen) und der Hochwasservorhersage
+  im operativen Einsatz (Schutz vor Hochwasser durch Wasserstandsvorhersage)
+  zu sehen. Das Modellkonzept beruht auf der Simulation der einzelnen
+  hydrologischen Teilprozesse als Speicherelemente, die über Wasserflüsse
+  miteinander zu einer Kaskade von Speichern gekoppelt sind. Der Prozess der
+  Abflussbildung wird als eindimensional-vertikal angenommen und auf
+  Hydrotopebene simuliert. Zur Beschreibung der Abflusskonzentration werden
+  die entstandenen Abflussvolumina auf Teilgebietsebene aggregiert und unter
+  Berücksichtigung der charakteristischen Fließzeiten nach Translation und
+  Retention als Teilgebietsabfluss gesammelt und einem Gewässerstrang im
+  Gerinnennetz zugeordnet. Dabei werden die Prozesse als lateral
+  eindimensional aufgefasst. Die Abflussverformung im Gerinne erfolgt nach dem
+  Verfahren von Kalinin-Miljukov.</para>
 
   <section id="kalypso_na-Allgemeines">
     <title>Allgemeine Einführung</title>
-<indexterm>
+
+    <indexterm>
       <primary>Allgemeines Einführung KalypsoNA</primary>
     </indexterm>
+
     <para>Willkommen, Perspektive... .</para>
   </section>
 
@@ -371,7 +372,6 @@
           <colspec align="left" />
 
           <thead>
-
             <row>
               <entry>Quelle</entry>
 
@@ -379,7 +379,8 @@
 
               <entry>Bedeutung</entry>
             </row>
-            </thead>
+          </thead>
+
           <tbody>
             <row>
               <entry>GEOM</entry>
@@ -439,7 +440,6 @@
           </thead>
 
           <tbody>
-
             <row>
               <entry>GEOM</entry>
 
@@ -809,16 +809,19 @@
 
       <table>
         <title>Allgemeine Teilgebietsinformationen</title>
+
         <tgroup align="center" cols="5">
           <colspec align="left" colwidth="1*" />
 
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -830,8 +833,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>name</entry>
 
@@ -925,10 +929,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -940,8 +946,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>Zielstrang</entry>
 
@@ -983,10 +990,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -998,9 +1007,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Zeitreihe T lokal</entry>
 
@@ -1065,10 +1074,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1080,9 +1091,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Zeitflächenfunktion</entry>
 
@@ -1288,10 +1299,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1303,9 +1316,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Anfangsinhalt Interzeption</entry>
 
@@ -1342,10 +1355,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1357,8 +1372,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>Bodenkorrektur (Link)</entry>
 
@@ -1475,10 +1491,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1490,9 +1508,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Faktor Niederschlag</entry>
 
@@ -1567,10 +1585,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1582,8 +1602,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>min h GW</entry>
 
@@ -1724,10 +1745,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1739,9 +1762,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>faktorAigw</entry>
 
@@ -1797,10 +1820,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1812,8 +1837,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>name</entry>
 
@@ -1864,10 +1890,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1879,8 +1907,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>Relation UW-Knoten (Link)</entry>
 
@@ -1906,10 +1935,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -1921,8 +1952,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>km Unterwasser</entry>
 
@@ -2105,10 +2137,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2120,8 +2154,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>berechnen</entry>
 
@@ -2333,10 +2368,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2348,8 +2385,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>name</entry>
 
@@ -2414,10 +2452,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2429,9 +2469,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Unterwasserstrang (Link)</entry>
 
@@ -2457,10 +2497,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2472,9 +2514,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Pegel (lok)</entry>
 
@@ -2531,10 +2573,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2546,9 +2590,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>Knoten zu Knoten (Link)</entry>
 
@@ -2658,10 +2702,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2673,8 +2719,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry>Geometrie</entry>
 
@@ -2825,10 +2872,12 @@
           <colspec align="left" />
 
           <colspec align="left" />
-          <colspec align="left" />
+
           <colspec align="left" />
 
-          <thead>          
+          <colspec align="left" />
+
+          <thead>
             <row>
               <entry>Parameter</entry>
 
@@ -2840,8 +2889,9 @@
 
               <entry>Datentyp</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
+
+          <tbody>
             <row>
               <entry morerows=""><emphasis
               role="bold">Schneeparameter</emphasis></entry>
@@ -3291,7 +3341,8 @@
       <title>Ergebnismanagement/ Ergebnisvisualisierung</title>
 
       <indexterm>
-        <primary>Ergebnismanagement/ Ergebnisvisualisierung KalypsoNA</primary>
+        <primary>Ergebnismanagement/ Ergebnisvisualisierung
+        KalypsoNA</primary>
       </indexterm>
 
       <para>Um für ein Modellknoten bzw. Pegel, ein Teilgebiet oder ein
@@ -3401,20 +3452,21 @@
 
       <table>
         <title>verfügbare Rechenkernversionen</title>
+
         <tgroup align="center" cols="2">
           <colspec align="left" colwidth="1*" />
 
           <colspec align="left" />
 
-          <thead>          
+          <thead>
             <row>
               <entry>Key (Versionsangabe)</entry>
 
               <entry>Verwendete Rechenkernversion</entry>
             </row>
-                      </thead>
-<tbody>
+          </thead>
 
+          <tbody>
             <row>
               <entry>v2.0.5</entry>
 
@@ -3861,4 +3913,336 @@
         Basisverzeichnis erfolgt!</para>
       </note></para>
   </section>
+
+  <glossary>
+    <title>Glossar</title>
+
+    <glossdiv>
+      <title>A</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>B</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>C</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>D</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>E</title>
+
+      <glossentry id="xml">
+        <glossterm>Extensible Markup Language</glossterm>
+
+        <acronym>XML</acronym>
+
+        <glossdef>
+          <para>Some reasonable definition here.</para>
+
+          <glossseealso otherterm="sgml">SGML</glossseealso>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>F</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>G</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>H</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>I</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>J</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>K</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>L</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>M</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>N</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>O</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>P</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>Q</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>R</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>S</title>
+
+      <glossentry>
+        <glossterm>SGML</glossterm>
+
+        <glosssee otherterm="sgml"></glosssee>
+      </glossentry>
+
+      <glossentry id="sgml">
+        <glossterm>Standard Generalized Markup Language</glossterm>
+
+        <acronym>SGML</acronym>
+
+        <abbrev>ISO 8879:1986</abbrev>
+
+        <glossdef>
+          <para>Some reasonable definition here.</para>
+
+          <glossseealso otherterm="xml">XML</glossseealso>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>T</title>
+
+      <glossentry>
+        <glossterm>aaaa</glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>U</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>V</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>W</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>X</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>Y</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>Z</title>
+
+      <glossentry>
+        <glossterm></glossterm>
+
+        <glossdef>
+          <para></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+  </glossary>
 </chapter>
