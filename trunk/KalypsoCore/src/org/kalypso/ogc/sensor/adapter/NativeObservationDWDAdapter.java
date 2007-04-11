@@ -106,6 +106,11 @@ public class NativeObservationDWDAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
+    return createObservationFromSource( source, true );
+  }
+
+  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  {
     SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" );
     TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
     format.setTimeZone( timeZone );
@@ -113,13 +118,16 @@ public class NativeObservationDWDAdapter implements INativeObservationAdapter
     final MetadataList metaDataList = new MetadataList();
     // create axis
     IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis );
+    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel );
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis ) throws IOException, ParseException
+  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException, ParseException
   {
+    final int MAX_NO_OF_ERRORS = 30;
+    int numberOfErrors = 0;
+
     StringBuffer errorBuffer = new StringBuffer();
     FileReader fileReader = new FileReader( source );
     LineNumberReader reader = new LineNumberReader( fileReader );
@@ -133,6 +141,8 @@ public class NativeObservationDWDAdapter implements INativeObservationAdapter
     long startDate = 0;
     while( (lineIn = reader.readLine()) != null )
     {
+      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+        return null;
       lineNumber = reader.getLineNumber();
       // System.out.println( "Lese Zeile:" + lineNumber );
       switch( step )
@@ -159,6 +169,7 @@ public class NativeObservationDWDAdapter implements INativeObservationAdapter
           else
           {
             errorBuffer.append( "line " + lineNumber + " header not parseable: \"" + lineIn + "\"\n" );
+            numberOfErrors++;
           }
           step++;
           break;

@@ -54,5 +54,7 @@ public interface INativeObservationAdapter extends IExecutableExtension
 {
   public abstract IObservation createObservationFromSource( File file ) throws Exception;
 
+  public abstract IObservation createObservationFromSource( File file, boolean continueWithErrors ) throws Exception;
+
   public abstract IAxis[] createAxis();
 }

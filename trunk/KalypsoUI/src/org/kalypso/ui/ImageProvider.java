@@ -104,6 +104,8 @@ public class ImageProvider
   //public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
   //public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
 
+  public static final ImageDescriptor IMAGE_NEW_FILE = id( "icons/util/newfile_wiz.gif" );
+  
   public static final ImageDescriptor IMAGE_ZML_FILE = id( "icons/observation/zml-icon.gif" );
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY = id( "icons/repository/repository_rep.gif" );
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ITEM = id( "icons/repository/repository_item.gif" );

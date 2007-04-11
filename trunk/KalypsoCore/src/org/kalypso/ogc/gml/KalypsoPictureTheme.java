@@ -158,6 +158,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     // TODO: the image keeps does not release the stream onto the tiff
     // maybe we must call image.dispose in order to do this?
     // can we do that here??
+    
+    // Dejan: neider image.dispose(); nor m_image.dispose();  does not solve the problem :(  - I tried...
+    
 
     final int height = m_image.getHeight();
     final int width = m_image.getWidth();
@@ -171,6 +174,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
 
     m_domain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+    
 
     // ColorModel cm = m_image.getColorModel();
     // int[] size = cm.getComponentSize();

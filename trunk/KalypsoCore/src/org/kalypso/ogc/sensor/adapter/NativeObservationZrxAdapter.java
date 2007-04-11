@@ -54,6 +54,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -80,7 +82,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
   private String m_title;
 
   private String m_axisTypeValue;
-  
+
   private String m_SNAME = "titel";
 
   /**
@@ -95,19 +97,29 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
+    return createObservationFromSource( source, true );
+  }
+
+  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  {
     final MetadataList metaDataList = new MetadataList();
     // TODO: allgemein setzten im Import dialog!
     TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
     m_zrxDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis );
+    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    if( tuppelModel == null )
+      return null;
     final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel );
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis ) throws IOException
+  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
+    final int MAX_NO_OF_ERRORS = 30;
+    int numberOfErrors = 0;
+
     StringBuffer errorBuffer = new StringBuffer();
     FileReader fileReader = new FileReader( source );
     LineNumberReader reader = new LineNumberReader( fileReader );
@@ -116,6 +128,8 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     String lineIn = null;
     while( (lineIn = reader.readLine()) != null )
     {
+      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+        return null;
       try
       {
         Matcher matcher = m_zrxDataPattern.matcher( lineIn );
@@ -130,6 +144,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           catch( Exception e )
           {
             errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+            numberOfErrors++;
           }
           try
           {
@@ -138,6 +153,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           catch( Exception e )
           {
             errorBuffer.append( "line " + reader.getLineNumber() + " value not parseable: \"" + lineIn + "\"\n" );
+            numberOfErrors++;
           }
           dateCollector.add( date );
           valueCollector.add( value );
@@ -152,22 +168,38 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
               m_SNAME = matcher.group( 2 );
           }
           else
+          {
             errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
+            numberOfErrors++;
+          }
         }
       }
       catch( Exception e )
       {
         errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
+        numberOfErrors++;
       }
     }
+    if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
+    {
+
+      MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+      messageBox.setMessage( "Too many errors, probably wrong format selected. Continue (slow operation)?" );
+      messageBox.setText( "Import errors" );
+      if( messageBox.open() == SWT.NO )
+        return null;
+      else
+        continueWithErrors = true;
+    }
+    // TODO handle error
+    System.out.println( errorBuffer.toString() );
+
     Object[][] tuppleData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tuppleData[i][0] = dateCollector.get( i );
       tuppleData[i][1] = valueCollector.get( i );
     }
-    // TODO handle error
-    System.out.println( errorBuffer.toString() );
     return new SimpleTuppleModel( axis, tuppleData );
   }
 
