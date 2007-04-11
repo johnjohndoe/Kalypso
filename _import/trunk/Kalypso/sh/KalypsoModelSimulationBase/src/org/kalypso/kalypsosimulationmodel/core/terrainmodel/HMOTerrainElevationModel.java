@@ -231,18 +231,21 @@ public class HMOTerrainElevationModel
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   * @returns a valid Maximum Elevation value or Double.NaN and not the default Double.MIN_VALUE
    */
   public double getMaxElevation( )
   {
-    return maxElevation;
+    
+    return maxElevation==Double.MIN_VALUE?Double.NaN:maxElevation;
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMinElevation()
+   * @returns either a valid Minimum Elevation value or Double.NaN and not the default Double.MAX_VALUE
    */
   public double getMinElevation( )
   {
-    return minElevation;
+    return minElevation == Double.MAX_VALUE?Double.NaN:minElevation;
   }
 
   /**
@@ -252,5 +255,5 @@ public class HMOTerrainElevationModel
   {
     // TODO    
   }
-
+  
 }

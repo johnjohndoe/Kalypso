@@ -191,7 +191,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       }
     }
 
-    return maxEle;
+    return maxEle==Double.MIN_VALUE?Double.NaN:maxEle;
   }
 
   /**
@@ -215,7 +215,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       }
     }
 
-    return minEle;
+    return minEle==Double.MAX_VALUE?Double.NaN:minEle;
   }
 
   /**

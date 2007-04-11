@@ -160,18 +160,15 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
   
       elevations = new double[N_ROWS][N_COLS];
       minElevation=Double.MAX_VALUE;
-      maxElevation=Double.MIN_VALUE;
+      maxElevation=Double.MIN_VALUE;       
+      
       String[] strRow;
-//      for(int y=0; y<N_ROWS; y++)
       for(int y=N_ROWS-1; y>=0; y--)
       {
         strRow = br.readLine().trim().split( " " );
         for(int x=0; x<N_COLS; x++)
         {
           currentValue = Double.parseDouble( strRow[x] );
-  //        elevations[y][x] = 
-  //            (currentValue != noDataValue)?currentValue:Double.NaN;
-          
           if(currentValue!=noDataValue)
           {
             elevations[y][x] = currentValue;
@@ -185,7 +182,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
             {
               maxElevation = currentValue;
             }
-            
           }
           else
           {
@@ -195,7 +191,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
         }
       }
       maxEnvelope=makeMaxEnvelope();
-  //    br.close();
     }
     catch( NumberFormatException e )
     {
@@ -222,8 +217,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
                             xllcorner+cellSize*N_COLS, 
                             yllcorner+cellSize*N_ROWS );
     GM_Envelope envelope = 
-        GeometryFactory.createGM_Envelope( posMin, posMax );
-    
+        GeometryFactory.createGM_Envelope( posMin, posMax );    
     return envelope;
     
   }
@@ -300,9 +294,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
     else
     {
       return NULL_LIST;
-    }
-    
-    
+    }    
   }
   
   public void aceptSurfacePatches(GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
@@ -369,7 +361,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
     return maxEnvelope;
   }
 
-
   public double getCellSize( )
   {
     return cellSize;
@@ -382,20 +373,25 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
   {
     //TODO Patrice introduce the it in the schema
     return this.crs ;
-  }
-  
-  
+  }  
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   * @returns a valid Maximum Elevation value or Double.NaN and not the default Double.MIN_VALUE
+   */
   public double getMaxElevation( )
   {
-    return maxElevation;
+    return (maxElevation==Double.MIN_VALUE)?Double.NaN:maxElevation;
   }
   
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getMaxElevation()
+   * @returns a valid Minimum Elevation value or Double.NaN and not the default Double.MAX_VALUE
+   */
   public double getMinElevation( )
   {
-    return minElevation;
+    return (minElevation==Double.MAX_VALUE)?Double.NaN:minElevation;
   }
-
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
