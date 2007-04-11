@@ -47,7 +47,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
@@ -55,6 +57,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardPageZmlChooser;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Phenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -79,6 +82,8 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private NodalBCSelectionWizardPage2 m_page2;
 
+  private WizardPageZmlChooser m_page3;
+
   IFolder m_scenarioFolder;
 
   private final TimeserieTypeDescription[] m_descriptions;
@@ -101,6 +106,10 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     setWindowTitle( "Randbedinung definieren" );
+    System.out.println("PATH: " + workspace.getContext().getPath());
+//    final IProject project = mapModel.getProject();
+//    IFile file = project.getFile( source.split( ":" )[1].split( "#" )[0] );
+//    imageAbsolutePath = file.getLocation().toOSString();
   }
 
   @Override
@@ -111,6 +120,12 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_page1.init( initialSelection );
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
+    m_page3 = new WizardPageZmlChooser( "" );
+//    FileLocator.;
+//    defaultplu
+    // m_page3.init( m_scenarioFolder.getFolder( "imports" ).getLocation().toOSString() );
+    m_page3.init( "D:\\Eclipse\\runtime-KalypsoEnterprise3\\New01\\imports" );
+    addPage( m_page3 );
   }
 
   /**
@@ -187,7 +202,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     ObservationFeatureFactory.toFeature( obs, obsFeature );
 
     m_boundaryCondition = bc;
-
+    
     return true;
   }
 

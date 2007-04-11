@@ -241,7 +241,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     {
       e.printStackTrace();
     }
-    catch (Throwable th) 
+    catch( Throwable th )
     {
       th.printStackTrace();
     }
@@ -305,7 +305,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       // should never happen
       e.printStackTrace();
     }
-    catch (GM_Exception e) 
+    catch( GM_Exception e )
     {
       e.printStackTrace();
     }
@@ -354,38 +354,55 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_existingFlowRelation == null )
     {
       /* Create flow relation at position */
-      final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
-      final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
-      final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation );
-      if( flowRel == null )
+      display.asyncExec( new Runnable()
       {
-        getMapPanel().repaint();
-        return;
-      }
-
-      final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
-      final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
-
-      /* Post it as an command */
-      final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
-      try
-      {
-        workspace.postCommand( command );
-      }
-      catch( final Throwable e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        display.asyncExec( new Runnable()
+        public void run( )
         {
-          public void run( )
+          final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
+          final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
+          final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation );
+          if( flowRel == null )
           {
-            final Shell shell = display.getActiveShell();
-            ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+            getMapPanel().repaint();
+            return;
           }
-        } );
-      }
+
+          final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
+          final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+          flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
+
+          /* Post it as an command */
+          final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+          final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
+          try
+          {
+            workspace.postCommand( command );
+          }
+          catch( final Throwable e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e );
+            display.asyncExec( new Runnable()
+            {
+              public void run( )
+              {
+                final Shell shell = display.getActiveShell();
+                ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+              }
+            } );
+          }
+          getMapPanel().repaint();
+          try
+          {
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          }
+          catch( final Throwable pie )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( pie );
+            KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+            pie.printStackTrace();
+          }
+        }
+      } );
     }
     else
     {
@@ -397,25 +414,25 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
       final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
       selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
-    }
 
-    /* Open the feature view in order to show the newly created parameters */
-    display.asyncExec( new Runnable()
-    {
-      public void run( )
+      /* Open the feature view in order to show the newly created parameters */
+      display.asyncExec( new Runnable()
       {
-        try
+        public void run( )
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          try
+          {
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          }
+          catch( final Throwable pie )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( pie );
+            KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+            pie.printStackTrace();
+          }
         }
-        catch( final Throwable pie )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( pie );
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-          pie.printStackTrace();
-        }
-      }
-    } );
+      } );
+    }
   }
 
   /** Overwrite to let this widget consider other 1d2d-element than nodes. */

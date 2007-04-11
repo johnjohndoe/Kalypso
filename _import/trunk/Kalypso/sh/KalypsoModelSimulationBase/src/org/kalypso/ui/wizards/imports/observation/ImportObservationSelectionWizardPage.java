@@ -233,7 +233,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         if( m_sourceFile != null )
         {
         m_textFileSource.setText( m_sourceFile.getPath() );
-          m_targetFile = m_project.getLocation().append( "/imports/" + m_sourceFile.getName() + ".zml" ).toFile();
+          m_targetFile = m_project.getLocation().append( "/imports/timeseries/" + m_sourceFile.getName() + ".zml" ).toFile();
         validate();
       }
       }

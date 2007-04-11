@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.ui.wizards.imports.roughness.DataContainer;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -46,7 +47,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
 
   public ImportBaseMapImportImgPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ) );
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.description" ) );
   }

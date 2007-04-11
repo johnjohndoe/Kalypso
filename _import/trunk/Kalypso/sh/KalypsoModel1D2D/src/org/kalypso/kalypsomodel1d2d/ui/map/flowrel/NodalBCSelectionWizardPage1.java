@@ -41,13 +41,18 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardZmlChooser;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -55,6 +60,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidg
 public class NodalBCSelectionWizardPage1 extends WizardPage
 {
   private Button[] m_radioBtnGroup;
+
   private TimeserieTypeDescription[] m_descriptions;
 
   protected NodalBCSelectionWizardPage1( final TimeserieTypeDescription[] descriptions )
@@ -91,23 +97,47 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     }
     m_radioBtnGroup[m_radioBtnGroup.length - 1] = new Button( container, SWT.RADIO );
     m_radioBtnGroup[m_radioBtnGroup.length - 1].setText( "Zeitreihe aus Repository" );
-    
-    final GridData gridData2 = new GridData( SWT.BEGINNING, SWT.CENTER, false, false);
+
+    final GridData gridData2 = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
     gridData2.horizontalSpan = 2;
     m_radioBtnGroup[m_radioBtnGroup.length - 1].setLayoutData( gridData2 );
-    
-    Button button = new Button(container, SWT.PUSH);
+
+    Button button = new Button( container, SWT.PUSH );
     button.setText( "Durchsuchen..." );
-    
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        for(int i=0; i<m_radioBtnGroup.length - 1; i++)
+          m_radioBtnGroup[i].setSelection( false );
+        m_radioBtnGroup[m_radioBtnGroup.length - 1].setSelection( true );
+        blahBlah();
+        
+      }
+    } );
+
     m_radioBtnGroup[0].setFocus();
   }
-  
-  public int getSelectedChoice(){
+
+  protected void blahBlah( )
+  {
+    WizardZmlChooser wizard = new WizardZmlChooser();
+    WizardDialog dialog = new WizardDialog( null, wizard );
+    dialog.create();
+    if(dialog.open() != Window.CANCEL)
+      System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+  }
+
+  public int getSelectedChoice( )
+  {
     for( int i = 0; i < m_radioBtnGroup.length; i++ )
     {
-      if( m_radioBtnGroup[i].getSelection()) return i;
+      if( m_radioBtnGroup[i].getSelection() )
+        return i;
     }
     // TODO what if nothing is selected (if possible)
     return 0;
   }
+
 }

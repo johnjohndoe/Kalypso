@@ -58,7 +58,6 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -95,19 +94,19 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
 {
   private IStructuredSelection initialSelection;
 
-  private IPath m_sourceLocation = null;
-
   IFolder m_scenarioFolder;
 
   private ImportBaseMapWizardMainPage m_PageMain;
 
   protected ImportBaseMapImportImgPage m_PageImportImg;
 
+  protected ImportBaseMapImportShpPage m_PageImportShp;
   // protected LineShpMainPage m_PageImportShp;
 
   protected ImportWmsWizardPage m_PageImportWMS;
 
   private final ArrayList<String> m_catalog = new ArrayList<String>();
+
 
   // private ISzenarioDataProvider m_modelProvider;
 
@@ -164,24 +163,28 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   {
     m_PageMain = new ImportBaseMapWizardMainPage();
     m_PageImportImg = new ImportBaseMapImportImgPage();
-    // m_PageImportShp = new LineShpMainPage();
+    m_PageImportShp = new ImportBaseMapImportShpPage();
     m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     m_PageImportImg.init( initialSelection );
-    // m_PageImportShp.init( initialSelection );
+    m_PageImportShp.init( initialSelection );
     addPage( m_PageMain );
     addPage( m_PageImportImg );
+    addPage( m_PageImportShp );
     addPage( m_PageImportWMS );
   }
-  
-  private SelectedPage getSelectedPage() {
+
+  private SelectedPage getSelectedPage( )
+  {
     IWizardPage currentPage = getContainer().getCurrentPage();
     if( currentPage == m_PageImportImg )
       return SelectedPage.PageImportIMG;
+    if( currentPage == m_PageImportShp )
+      return SelectedPage.PageImportSHP;
     if( currentPage == m_PageImportWMS )
       return SelectedPage.PageImportWMS;
     return SelectedPage.PageNONE;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#canFinish()
    */
@@ -235,7 +238,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
         return performFinishIMG( mapView, mapModell );
 
       case PageImportSHP:
-        return performFinishIMG( mapView, mapModell );
+        return performFinishSHP( mapView, mapModell );
 
       case PageImportWMS:
         return performFinishWMS( mapView, mapModell );
@@ -247,7 +250,17 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
 
   private boolean performFinishIMG( MapView mapView, GisTemplateMapModell mapModell )
   {
-    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" );
+    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" );
+
+    if( !dstFilePath.exists() )
+      try
+      {
+        dstFilePath.create( true, true, null );
+      }
+      catch( CoreException e1 )
+      {
+        e1.printStackTrace();
+      }
     final File srcFileImage = new File( m_PageImportImg.getSourceLocation().toOSString() );
     final IFile dstFileImage = dstFilePath.getFile( m_PageImportImg.getSourceLocation().lastSegment() );
     File srcFileGeoreference = null;
@@ -295,9 +308,94 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
           }
         }
       } );
-      final String layerName = getSourceLocation().removeFileExtension().lastSegment();
-      final String imgHref = "project:" + File.separator + "imports" + File.separator + getSourceLocation().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
+      final String layerName = m_PageImportImg.getSourceLocation().removeFileExtension().lastSegment();
+      final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportImg.getSourceLocation().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
       final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, extension, null, imgHref );
+      mapView.postCommand( command, null );
+    }
+    catch( InvocationTargetException e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+    catch( InterruptedException e )
+    {
+      // User canceled, so stop but don’t close wizard.
+      e.printStackTrace();
+      return false;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return true;
+  }
+
+  private boolean performFinishSHP( MapView mapView, GisTemplateMapModell mapModell )
+  {
+    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" );
+
+    if( !dstFilePath.exists() )
+      try
+      {
+        dstFilePath.create( true, true, null );
+      }
+      catch( CoreException e1 )
+      {
+        e1.printStackTrace();
+      }
+      final File srcFileShape = new File( m_PageImportShp.getSourceLocation().toOSString() );
+      final IFile dstFileShape = dstFilePath.getFile( m_PageImportShp.getSourceLocation().lastSegment() );
+      File srcFileIndex = null;
+      IFile dstFileIndex = null;
+      File srcFileDBase = null;
+      IFile dstFileDBase = null;
+      final String extension = m_PageImportShp.getSourceLocation().getFileExtension();
+      if( extension.equalsIgnoreCase( "shp" ) )
+      {
+        srcFileIndex = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).toOSString() );
+        dstFileIndex = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).lastSegment() );
+        srcFileDBase = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).toOSString() );
+        dstFileDBase = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).lastSegment() );
+      }
+      else
+      {
+        throw new UnsupportedOperationException( "Unsuported file type: " + extension );
+      }
+    try
+    {
+      final File finalSrcIndex = srcFileIndex;
+      final IFile finalDstIndex = dstFileIndex;
+      final File finalSrcDBase = srcFileDBase;
+      final IFile finalDstDBase = dstFileDBase;
+      final String coordinateSystem = m_PageImportShp.getCoordinateSystem();
+      getContainer().run( true, true, new IRunnableWithProgress()
+      {
+        public void run( final IProgressMonitor monitor )
+        {
+          try
+          {
+            if( !dstFilePath.exists() )
+            {
+              dstFilePath.create( true, true, monitor );
+            }
+            copy( srcFileShape, dstFileShape, monitor );
+            copy( finalSrcIndex, finalDstIndex, monitor );
+            copy( finalSrcDBase, finalDstDBase, monitor );
+          }
+          catch( final CoreException e )
+          {
+            e.printStackTrace();
+          }
+          catch( final IOException e )
+          {
+            e.printStackTrace();
+          }
+        }
+      } );
+      final String layerName = m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment();
+      final String shpHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
+      final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "shape", "featureMember", shpHref );
       mapView.postCommand( command, null );
     }
     catch( InvocationTargetException e )
@@ -401,16 +499,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     {
       IOUtils.closeQuietly( in );
     }
-  }
-
-  /**
-   * Answer the selected source location
-   */
-  public IPath getSourceLocation( )
-  {
-    if( m_sourceLocation == null )
-      m_sourceLocation = m_PageImportImg.getSourceLocation();
-    return m_sourceLocation;
   }
 
 }

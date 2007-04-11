@@ -39,10 +39,12 @@
 				<Help>Einladen von Zeitreihendaten (WISKI)</Help>
 				<Name>Import von Zeitreihen</Name>
 			</Task>
+			<!-- 
 			<Task context="ImportShape" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ShapeImport">
 				<Help>Einladen genereller Daten (SHP)</Help>
 				<Name>Import von Shapedateien</Name>
 			</Task>
+			 -->
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
 			<Help>Bereitstellung aller Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes.</Help>
@@ -237,7 +239,9 @@
 					<MapViewInputContext id="BaseMap" input="maps/base.gmt" parent="MapContext">
 						<WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						<WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						<!-- 
 						<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						 -->
 					</MapViewInputContext>
 					<MapViewInputContext id="RoughnessMap" input="maps/roughness.gmt" parent="MapContext">
 						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessMap" />

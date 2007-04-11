@@ -60,12 +60,6 @@
             class="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             name="Observation load"/>
-      <wizard
-            class="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard"
-            icon="etc/images/icons/kalypso_gmt.gif"
-            id="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard"
-            name="Line shp import wizard"
-            project="false"/>
             
    </extension>
    <extension

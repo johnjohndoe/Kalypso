@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.lineShp;
+package org.kalypso.ui.wizards.imports.baseMap;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -19,18 +20,24 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.ui.wizards.imports.roughness.DataContainer;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class LineShpMainPage extends WizardPage
+public class ImportBaseMapImportShpPage extends WizardPage
 {
   private Text sourceFileField;
+
+  Combo cmb_CoordinateSystem;
 
   private IPath initialSourcePath;
   
@@ -38,11 +45,11 @@ public class LineShpMainPage extends WizardPage
 
   List<String> fileExtensions = new LinkedList<String>();
 
-  public LineShpMainPage( )
+  public ImportBaseMapImportShpPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.Title" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0" ) );
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.description" ) );
   }
 
   /**
@@ -60,16 +67,16 @@ public class LineShpMainPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-//    final Label label = new Label( container, SWT.NONE );
-//    final GridData gridData = new GridData();
-//    gridData.horizontalSpan = 3;
-//    label.setLayoutData( gridData );
-//    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.3" ) );
+    // final Label label = new Label( container, SWT.NONE );
+    // final GridData gridData = new GridData();
+    // gridData.horizontalSpan = 3;
+    //    label.setLayoutData( gridData );
+    //label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
-    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
+    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.4" ) );
+    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.4" ) );
 
     sourceFileField = new Text( container, SWT.BORDER );
     sourceFileField.addModifyListener( new ModifyListener()
@@ -84,12 +91,25 @@ public class LineShpMainPage extends WizardPage
     final Button button = new Button( container, SWT.NONE );
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         browseForSourceFile();
       }
     } );
-    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.Browse" ) );//$NON-NLS-1$
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.BrowseButton" )); //$NON-NLS-1$
+
+    // Coordinate system combo box
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.1" ) ); //$NON-NLS-1$
+    cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
+    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
+    cmb_CoordinateSystem.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
+    GridData gd = new GridData();
+    gd.horizontalAlignment = GridData.FILL;
+    gd.widthHint = 75;
+    cmb_CoordinateSystem.setEnabled( true );
+    cmb_CoordinateSystem.setLayoutData( gd );
 
     button.setFocus();
     initContents();
@@ -107,7 +127,9 @@ public class LineShpMainPage extends WizardPage
       return;
 
     fileExtensions.add( new String( "shp" ) );
+    // fileExtensions.add( new String( "gml" ) );
 
+    // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
@@ -132,7 +154,10 @@ public class LineShpMainPage extends WizardPage
   private void initContents( )
   {
     if( initialSourcePath == null )
+    {
+      setPageComplete( false );
       return;
+    }
     IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     IPath path = initialSourcePath;
     if( rootLoc.isPrefixOf( path ) )
@@ -142,7 +167,7 @@ public class LineShpMainPage extends WizardPage
     setMessage( null );
     setErrorMessage( null );
   }
-
+  
   /**
    * Update the current page complete state based on the field content.
    */
@@ -155,18 +180,18 @@ public class LineShpMainPage extends WizardPage
     if( sourceLoc == null || !sourceLoc.toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.6" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.6" ) );
       return;
     }
-    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile())
+    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile() && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile())
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "dbf/shx" ).lastSegment()}) );
       return;
     }
-    setPageComplete( true );
     setMessage( null );
     setErrorMessage( null );
+    setPageComplete( true );
   }
 
   /**
@@ -215,8 +240,8 @@ public class LineShpMainPage extends WizardPage
    */
   public IPath getSourceLocation( )
   {
-    if(m_sourcePath != null)
-      return m_sourcePath;
+//    if(m_sourcePath != null)
+//      return m_sourcePath;
     String text = sourceFileField.getText().trim();
     if( text.length() == 0 )
       return null;
@@ -224,6 +249,20 @@ public class LineShpMainPage extends WizardPage
     if( !m_sourcePath.isAbsolute() )
       m_sourcePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( m_sourcePath );
     return m_sourcePath;
+  }
+
+  public String getCoordinateSystem( )
+  {
+    return cmb_CoordinateSystem.getText();
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
+   */
+  @Override
+  public IWizardPage getNextPage( )
+  {
+    return null;
   }
 
 }

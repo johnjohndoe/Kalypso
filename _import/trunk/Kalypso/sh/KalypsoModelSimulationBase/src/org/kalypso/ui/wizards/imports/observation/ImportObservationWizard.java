@@ -55,6 +55,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -158,7 +160,17 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
-      final IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource );
+      IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, false );
+      if( srcObservation == null )
+      {
+        MessageBox messageBox = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+        messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ) );
+        messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ) );
+        if( messageBox.open() == SWT.NO )
+          return true;
+        else
+          srcObservation = nativaAdapter.createObservationFromSource( fileSource, true );
+      }
 
       final IAxis[] axesSrc = m_page2.getAxisMappingSrc();
       final IAxis[] axesNew = m_page2.getAxisMappingTarget();
@@ -256,8 +268,12 @@ public class ImportObservationWizard extends Wizard implements INewWizardKalypso
     }
     catch( Exception e )
     {
-      e.printStackTrace();
-      return false;
+//      e.printStackTrace();
+      MessageBox messageBox = new MessageBox( getShell(), SWT.OK );
+      messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ) );
+      messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ) );
+      messageBox.open();
+      return true;
     }
     return true;
   }

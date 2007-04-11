@@ -46,6 +46,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
 /**
@@ -56,13 +57,13 @@ public class ImportBaseMapWizardMainPage extends WizardPage
 
   private Button m_btnImportImg;
 
-//  private Button m_btnImportShp;
+  private Button m_btnImportShp;
 
   private Button m_btnImportWMS;
 
   public ImportBaseMapWizardMainPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ) ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.description" ) ); //$NON-NLS-1$
   }
@@ -80,8 +81,8 @@ public class ImportBaseMapWizardMainPage extends WizardPage
     m_btnImportImg = new Button( composite, SWT.RADIO );
     m_btnImportImg.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.3" ) ); //$NON-NLS-1$
 
-//    m_btnImportShp = new Button( composite, SWT.RADIO );
-//    m_btnImportShp.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.4" ) ); //$NON-NLS-1$
+    m_btnImportShp = new Button( composite, SWT.RADIO );
+    m_btnImportShp.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.4" ) ); //$NON-NLS-1$
 //    m_btnImportShp.setEnabled( false );
 
     m_btnImportWMS = new Button( composite, SWT.RADIO );
@@ -101,8 +102,8 @@ public class ImportBaseMapWizardMainPage extends WizardPage
     IWizardPage page = null;
     if( m_btnImportImg.getSelection() )
       page = ((ImportBaseMapWizard) getWizard()).m_PageImportImg;
-//    else if( m_btnImportShp.getSelection() )
-//      page = ((ImportBaseMapWizard) getWizard()).m_PageImportShp;
+    else if( m_btnImportShp.getSelection() )
+      page = ((ImportBaseMapWizard) getWizard()).m_PageImportShp;
     else if( m_btnImportWMS.getSelection() )
       page = ((ImportBaseMapWizard) getWizard()).m_PageImportWMS;
     return page;
