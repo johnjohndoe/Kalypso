@@ -67,9 +67,9 @@
             class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDAdapter"
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDAdapter.n.label"/>
       <adapter
-            axisType="N"
+            axisType="W"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.n.label"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.w.label"/>
       <adapter
             axisType="Q"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter"

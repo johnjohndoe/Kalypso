@@ -90,19 +90,27 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
+    return createObservationFromSource( source, true );
+  }
+
+  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  {
     final MetadataList metaDataList = new MetadataList();
     // TODO: allgemein setzten im Import dialog!
     TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
     m_ex2DateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis );
+    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel );
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis ) throws IOException
+  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
+    final int MAX_NO_OF_ERRORS = 30;
+    int numberOfErrors = 0;
+
     StringBuffer errorBuffer = new StringBuffer();
     FileReader fileReader = new FileReader( source );
     LineNumberReader reader = new LineNumberReader( fileReader );
@@ -111,6 +119,8 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
     String lineIn = null;
     while( (lineIn = reader.readLine()) != null )
     {
+      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+        return null;
       try
       {
         Matcher matcher = m_ex2Pattern.matcher( lineIn );
@@ -142,14 +152,19 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
           else
           {
             errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+            numberOfErrors++;
           }
         }
         else
+        {
           errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
+          numberOfErrors++;
+        }
       }
       catch( Exception e )
       {
         errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
+        numberOfErrors++;
       }
     }
     Object[][] tupelData = new Object[dateCollector.size()][2];
