@@ -6,8 +6,8 @@
     <primary>1D Spiegellinienmodell KalypsoWSPM</primary>
   </indexterm>
 
-  <para><emphasis role="bold">blabla Allgemeine Modellbeschreibung. 1D,
-  stationär...</emphasis></para>
+  <para><emphasis>Allgemeine Modellbeschreibung, 1D,
+  stationär</emphasis></para>
 
   <para>Die Benutzeroberfläche KALYPSO-WSPM ist an ein Spiegellinienprogramm
   (KALYPSO-1D) gekoppelt, welches die eigentliche Berechnung durchführt. Die
@@ -147,10 +147,106 @@
   <para><emphasis role="bold">Beschreibung zur
   Triangulation:</emphasis></para>
 
+  <section id="kalypso_wspm-Datenakquisition">
+    <title>Datenakquisition</title>
+
+    <indexterm>
+      <primary>Datenakquisition und Aufbereitung KalypsoWSPM</primary>
+    </indexterm>
+
+    <para>Für die Erstellung eines eindimensionalen Spiegellinienmodelles sind
+    umfangreiche Vorarbeiten notwendig. Profilvermessung, Bauwerke...</para>
+
+    <para>Datenakquisition:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Profildaten, Pegeldaten...</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Datenaufbereitung:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Stationierung, Eingangsdateiaufbereitung, D66/ Trippel...</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
+    Modelles in der Oberfläche begonnen werden.</para>
+
+    <section>
+      <title>Was enthält ein Spiegellinien-Modell?</title>
+
+      <para><emphasis>Was kann WSPM berechnen und welche Daten werden hierfür
+      benötigt? Allgemeinen Ablauf erläutern: Preprozessing, Prozessing,
+      Postprozessing</emphasis></para>
+
+      <para><emphasis role="bold">Projekt: Projektname und
+      Beschreibung</emphasis></para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Gewässer:</emphasis> Gewässername und
+          Beschreibung (ein Projekt kann n Gewässer haben)</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><emphasis role="bold">Profile:</emphasis> hier finden Sie
+              alle Profile mit: Profil-km und Profil-Nummer. Sie können
+              Profile erstellen und bearbeiten (Ein Gewässer kann m Profile
+              haben)</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">Gewässerstränge:</emphasis>
+              entspricht einem Gewässerzustand. Hierzu ist zunächst das
+              richtige Gewässer auszuwählen und dann die Profile aus der
+              Profildatenbank, sowie eine Reihenfolge und Abstand der Profile
+              zu wählen.</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">Abflussereignis = Boundary
+              Condition: </emphasis>Ereignisname, Beschreibung und Datum. Hier
+              kann ein konstantes oder über die Fließlänge gestaffeltes
+              Abflussereignis angegeben werden (derzeit noch nicht möglich).
+              Die Angabe ist an das Gewässer, aber noch nicht an den Zustand
+              gebunden.</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">WSP-Fixierungen:</emphasis>
+              Fixierungsname, Beschreibung und Datum. Hier kann eine
+              Wasserspiegelhöhe aus einer Messung o.ä. angegeben werden. Diese
+              Angabe wird meist für die Kalibrierung verwendet und dient als
+              Referenzwert zur visuellen Kontrolle. Sie ist an das Gewässer,
+              aber noch nicht an den Zustand gebunden.</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">Berechnungsvarianten:
+      WSPM-Berechnungen</emphasis></para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Berechnungsfall xxx:</emphasis> Name,
+          Beschreibung und Datum. Hier kann eine Kombination aus Zustand,
+          Abflussereignis, Berechnungsparametern und WSP-Fixierung ausgewählt
+          werden. Berechnungsart, Anfang und Ende des Stranges,
+          Widerstandsgesetz, Numerische Parameter, Bedingungen.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+
   <section id="kalypso_wspm-Allgemeines">
     <title>Allgemeine Einführung</title>
 
-    <para><emphasis role="bold">Willkommen, Perspektive... .</emphasis></para>
+    <para><emphasis>Welcome Dialog</emphasis></para>
 
     <para>Wenn man das Programm Kalypso.exe startet erscheint die
     Kalypso-Startseite mit allen Plug-in Modulen:</para>
@@ -203,42 +299,14 @@
       </listitem>
     </itemizedlist>
 
-    <section id="kalypso_wspm-neues_projekt">
-      <title>Neues Projekt erstellen</title>
+    <section>
+      <title>Die Default Oberfläche/ Perspektive von WSPM</title>
 
-      <indexterm>
-        <primary>Neues KalypsoWSPM Projekt erstellen</primary>
-      </indexterm>
+      <para><emphasis>Navigator, Feature View, Gliederung, Karten-Editor
+      Default Struktur/ Wofür sind die gut??</emphasis></para>
 
-      <para>Bei der Wahl ein neues Kalypso-WSPM Projekt anzulegen erscheint
-      folgendes Pop-up-window:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para><emphasis role="bold">Bild einfügen</emphasis></para>
-        </listitem>
-
-        <listitem>
-          <para>Projektname eingeben z.B: FlussXXX</para>
-        </listitem>
-
-        <listitem>
-          <para>Wählen Sie <guibutton>Finish</guibutton>, um das Projekt zu
-          generieren</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>Ein neues leeres Projekt wird im referenzierten Workspace
-      erzeugt.</para>
-
-      <para>Es erscheint ein weiteres Pop-up-window mit der Frage, ob das neue
-      Datenmodell ein Spiegellinienmodell sei. Hier muss
-      <guibutton>Yes</guibutton> gewählt werden <emphasis
-      role="bold">(BILD!!!!)</emphasis>.</para>
-
-      <para>Kalypso1d hat das Projekt erstellt und eine „Default“-Struktur
-      (eine bestimmte Perspektive) angelegt. <emphasis
-      role="bold">(BILD!!!)</emphasis></para>
+      <para>Kalypso1d erstellt eine „Default“-Struktur (eine bestimmte
+      Perspektive) <emphasis role="bold">(BILD!!!)</emphasis></para>
 
       <itemizedlist>
         <listitem>
@@ -252,58 +320,337 @@
         </listitem>
 
         <listitem>
-          <para>das Bäumchen mit den Projektdaten mittig und</para>
+          <para>das Bäumchen (Gliederung) mit den Projektdaten mittig
+          und</para>
         </listitem>
 
         <listitem>
           <para>der FeatureView zum Einsehen in diverse Eigenschaften rechts
           auf dem Bildschirm.</para>
         </listitem>
-
-        <listitem>
-          <para>Gehen Sie ins Bäumchen und führe folgende Schritte
-          durch:</para>
-        </listitem>
       </itemizedlist>
+    </section>
 
-      <orderedlist>
-        <listitem>
-          <para>Dem Projekt einen Namen geben und ggf eine Beschreibung im
-          FeatureView</para>
-        </listitem>
+    <section id="kalypso_wspm-neues_projekt">
+      <title>Neues Projekt erstellen</title>
 
-        <listitem>
-          <para>Im Bäumchen das Projekt öffnen</para>
-        </listitem>
+      <indexterm>
+        <primary>Neues KalypsoWSPM Projekt erstellen</primary>
+      </indexterm>
 
-        <listitem>
-          <para>Gehen Sie mit der rechten Maustaste auf <guimenuitem>Gewässer
-          &gt; Neu &gt; Gewässer</guimenuitem></para>
-        </listitem>
+      <section>
+        <title>Neues Projekt erstellen</title>
 
-        <listitem>
-          <para>Dem Gewässer einen Namen geben und ggf eine Beschreibung im
-          FeatureView</para>
-        </listitem>
+        <para>Bei der Wahl ein neues Kalypso-WSPM Projekt anzulegen erscheint
+        folgendes Pop-up-window:</para>
 
-        <listitem>
-          <para>Das Bäumchen weiter öffnen und gehe mit der rechten Maustaste
-          auf <guimenuitem>Profile &gt; Neu &gt; Profil</guimenuitem></para>
-        </listitem>
+        <para><itemizedlist>
+            <listitem>
+              <para><emphasis role="bold">Bild einfügen</emphasis></para>
+            </listitem>
 
-        <listitem>
-          <para>geben Sie eine Stationsnummer an <emphasis
-          role="bold">(BILDER!!!!)</emphasis></para>
-        </listitem>
-      </orderedlist>
+            <listitem>
+              <para>Projektname eingeben z.B: FlussXXX</para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie <guibutton>Fertig stellen</guibutton>, um das
+              Projekt zu generieren</para>
+            </listitem>
+          </itemizedlist></para>
+
+        <para>Ein neues leeres Projekt wird im referenzierten Workspace
+        erzeugt.</para>
+
+        <para>Es erscheint ein weiteres Pop-up-window mit der Frage, ob das
+        neue Datenmodell ein Spiegellinienmodell sei. Hier muss
+        <guibutton>Yes</guibutton> (Fehlermeldung!) gewählt werden <emphasis
+        role="bold">(BILD!!!!)</emphasis>.</para>
+
+        <para><itemizedlist>
+            <listitem>
+              <para>Gehen Sie ins Bäumchen (Gliederung) und führen Sie
+              folgende Schritte durch:</para>
+
+              <orderedlist>
+                <listitem>
+                  <para>Dem Projekt einen Namen geben und ggf eine
+                  Beschreibung im FeatureView</para>
+                </listitem>
+
+                <listitem>
+                  <para>Im Bäumchen das Projekt öffnen</para>
+                </listitem>
+
+                <listitem>
+                  <para>Gehen Sie mit der rechten Maustaste auf
+                  <guimenuitem>Gewässer &gt; Neu &gt;
+                  Gewässer</guimenuitem></para>
+                </listitem>
+
+                <listitem>
+                  <para>Dem Gewässer einen Namen geben und ggf eine
+                  Beschreibung im FeatureView</para>
+                </listitem>
+
+                <listitem>
+                  <para>Das Bäumchen weiter öffnen und gehe mit der rechten
+                  Maustaste auf <guimenuitem>Profile &gt; Neu &gt;
+                  Profil</guimenuitem></para>
+                </listitem>
+
+                <listitem>
+                  <para>geben Sie eine Stationsnummer an <emphasis
+                  role="bold">(BILDER!!!!)</emphasis></para>
+                </listitem>
+              </orderedlist>
+            </listitem>
+          </itemizedlist></para>
+      </section>
     </section>
 
     <section>
-      <title>Öffnen eines Projektes aus dem Navigator</title>
+      <title>Importieren von WspWin-Projekten</title>
 
-      <indexterm>
-        <primary>Öffnen eines Projektes aus dem Navigator</primary>
-      </indexterm>
+      <para>Gehe in den Navigatorbereich um dort ein Projekt zu
+      importieren.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><guimenuitem>Datei &gt; Neu... &gt; Projekt...</guimenuitem>
+          neues Projekt erstellen markieren auf <guibutton>Weiter</guibutton>
+          klicken und dann einen Projektnamen eingeben</para>
+        </listitem>
+
+        <listitem>
+          <para>Anschließend können Sie das Projekt entweder direkt
+          <guibutton>Fertig stellen</guibutton> oder erst auf
+          <guibutton>Weiter</guibutton>, eine Projektabhängigkeit auswählen
+          und dann fertigstellen</para>
+        </listitem>
+
+        <listitem>
+          <para>Eine weitere Möglichkeit ein Projekt zu importieren:
+          <guimenuitem>Datei &gt; Neu... &gt; Projekt &gt; Kalypso &gt;
+          Spiegellinienberechnung &gt; TUHH ... aus WspWinProjekt &gt;
+          Weiter</guimenuitem></para>
+        </listitem>
+
+        <listitem>
+          <para>Pfad browsen mit Projekt-Ordner nur Überordner aktivieren
+          <guimenuitem>OK &gt; Weiter</guimenuitem></para>
+        </listitem>
+
+        <listitem>
+          <para>Projektname vergeben <guibutton>Fertig
+          stellen</guibutton></para>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">Probleme?</emphasis></para>
+
+      <itemizedlist>
+        <para>Wenn Fehlermeldung zu fehlenden Profilen z.B: „ko000259.prf
+        fehlt“:</para>
+
+        <listitem>
+          <para>Prüfe unter dem Ordner <filename>/Prof</filename> die
+          Strangdateien: die <literal>*.str</literal> und
+          <literal>profproj.txt</literal> Datei</para>
+        </listitem>
+
+        <listitem>
+          <para>Ggf. aus profproj.txt Datei das Profil entfernen, wenn nicht
+          im Strang erwähnt UND in der ersten Zeile die erste Zahl um eins
+          verringern (= Anzahl der auszulesenden Zeilen)</para>
+        </listitem>
+
+        <listitem>
+          <para>Wenn Profil in der Strangdatei, dann WspWin-Pojekt
+          prüfen</para>
+        </listitem>
+      </itemizedlist>
+
+      <section>
+        <title>Importieren von Daten aus WspWin</title>
+
+        <para><itemizedlist>
+            <listitem>
+              <para><guimenuitem>Datei &gt; Neu &gt; TUHH 1D -
+              Spiegellinienberechnung Projekt aus WspWin
+              Projekt</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie den Ordner aus, der das gewünschte Projekt
+              enthält und klicken auf <guibutton>Weiter</guibutton></para>
+            </listitem>
+
+            <listitem>
+              <para>Geben Sie Ihrem Projekt einen Namen und gehen auf
+              <guibutton>Fertig stellen</guibutton></para>
+            </listitem>
+          </itemizedlist></para>
+      </section>
+
+      <section>
+        <title>Export von Daten in WspWin</title>
+
+        <para>Mit einem Export können nur geänderte Profile ausgelagert werden
+        und in Verbindung mit einem ursprünglichem WspWin-Projekt mit dem
+        Ordner Dath und Prof verwendet werden.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie im Navigator mit der rechten Maustaste auf
+            <filename>modell.gml</filename></para>
+          </listitem>
+
+          <listitem>
+            <para><guimenuitem>Exportieren &gt; Andere... &gt; WspWin Format
+            &gt; Weiter</guimenuitem></para>
+          </listitem>
+
+          <listitem>
+            <para>Ordner auswählen, wo das Projekt hin soll und
+            <guibutton>Fertig stellen</guibutton></para>
+          </listitem>
+        </itemizedlist>
+
+        <note>
+          <para>Nur der Prof-Ordner wird angelegt</para>
+        </note>
+
+        <para><emphasis role="bold">Bilder!!!!!!!!!!!!!!</emphasis></para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie im Explorer in den Ordner und wählen Sie im
+            Unterordner den letzten Ordner und kopieren den Dath Ordner heraus
+            <emphasis role="bold">?????</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para>Kopiere Dein ursprünglich importiertes WspWin-Projekt und
+            füge nur die neuen Profile (unter Prof) ein ?????</para>
+          </listitem>
+        </itemizedlist>
+
+        <note>
+          <para>Sie müssen die gleichen Namen wie zuvor im WspWin-Ordner
+          haben.</para>
+        </note>
+
+        <para>Neu angelegte Berechnungsfälle, Zustände oder Ergebnisse können
+        nicht in WspWin zurückgeführt werden (bislang</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Bereits vorhandene Projekte bearbeiten...</title>
+
+      <section>
+        <title>Import eines bestehenden Kalypso-WSPM-Projektes aus einem
+        anderen Ordner</title>
+
+        <para><itemizedlist>
+            <listitem>
+              <para>Gehen Sie in den Navigator und klicken auf die rechte
+              Maustaste und wählen <guibutton>Importieren</guibutton>
+              aus</para>
+            </listitem>
+
+            <listitem>
+              <para><guimenuitem>Vorhandene Projekte in den Arbeitsbereich
+              &gt; Weiter</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Nun gibt es zwei Möglichkeiten: <emphasis
+              role="bold">(BILDER!!!!)</emphasis></para>
+
+              <orderedlist>
+                <listitem>
+                  <para><itemizedlist>
+                      <listitem>
+                        <para><guilabel>Stammverzeichnis auswählen</guilabel>
+                        markieren, dann zum gewünschten Projekt-Ordner browsen
+                        und auswählen mit <guibutton>OK</guibutton></para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Neben dem Projects Fenster auf
+                        <guibutton>Anzeige aktualisieren</guibutton>
+                        gehen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Aus der Liste das Projekt auswählen und gehen
+                        Sie anschließend auf <guibutton>Fertig
+                        stellen</guibutton></para>
+                      </listitem>
+                    </itemizedlist></para>
+                </listitem>
+
+                <listitem>
+                  <para><itemizedlist>
+                      <listitem>
+                        <para><guilabel>Stammverzeichnis auswählen</guilabel>
+                        markieren, dann nur den workspace-Ordner
+                        auswählen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Neben dem Projects Fenster auf
+                        <guibutton>Anzeige aktualisieren</guibutton>
+                        gehen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Wählen Sie ein Projekt aus oder mehrere und
+                        gehen anschließen auf <guibutton>Fertig
+                        stellen</guibutton></para>
+                      </listitem>
+                    </itemizedlist></para>
+                </listitem>
+              </orderedlist>
+            </listitem>
+          </itemizedlist></para>
+      </section>
+    </section>
+  </section>
+
+  <section id="kalypso_wspm-Preprozessing">
+    <title>Preprozessing - Modellaufbau</title>
+
+    <indexterm>
+      <primary>Preprozessing KalypsoWSPM</primary>
+    </indexterm>
+
+    <figure>
+      <title>Vorgehensweise zum Modellaufbau</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/modelle/kalypso_na/arbeitsschritte_na.png"
+                     scale="60" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Nach der Datenaufbereitung im betrachteten Gewässer kann mit dem
+    eigentlichen Modellaufbau begonnen werden. Hierbei werden folgende
+    Teilschritte bearbeitet:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Ein neues Projekt anlegen (...)</para>
+      </listitem>
+    </orderedlist>
+
+    <section>
+      <title>Öffnen eines Projektes aus dem Navigator</title>
 
       <para>Links oben in der Perspektive befindet sich der Navigator, der
       alle Projekte enthält</para>
@@ -327,8 +674,8 @@
         </listitem>
 
         <listitem>
-          <para>mit der rechten Maustaste auf <guimenuitem>modell.gml &gt;Open
-          with &gt; GIS Vorlagenauswahl</guimenuitem></para>
+          <para>mit der rechten Maustaste auf <guimenuitem>modell.gml
+          &gt;Öffnen mit... &gt; GIS Vorlagenauswahl</guimenuitem></para>
         </listitem>
       </orderedlist>
 
@@ -398,8 +745,8 @@
         <caution>
           <itemizedlist>
             <listitem>
-              <para>Speichern der reinen Ansicht unter <guimenuitem>File &gt;
-              Save As...</guimenuitem></para>
+              <para>Speichern der reinen Ansicht unter <guimenuitem>Datei &gt;
+              Speichern unter...</guimenuitem></para>
             </listitem>
 
             <listitem>
@@ -409,335 +756,18 @@
           </itemizedlist>
         </caution>
       </section>
-    </section>
-
-    <section>
-      <title>Importieren von WspWin-Projekten</title>
-
-      <para>Gehe in den Navigatorbereich um dort ein Projekt zu
-      importieren.</para>
-
-      <itemizedlist>
-        <listitem>
-          <para><guimenuitem>File &gt; New... &gt; Projekt...</guimenuitem>
-          neues Projekt erstellen markieren auf <guibutton>Next</guibutton>
-          klicken und dann einen Projektnamen eingeben</para>
-        </listitem>
-
-        <listitem>
-          <para>Anschließend können Sie das Projekt entweder direkt
-          fertigstellen mit <guibutton>Finish</guibutton> oder erst auf
-          <guibutton>Next</guibutton>, eine Projektabhängigkeit auswählen und
-          dann fertigstellen</para>
-        </listitem>
-
-        <listitem>
-          <para>Eine weitere Möglichkeit ein Projekt zu importieren:
-          <guimenuitem>File &gt; New... &gt; Projekt &gt; Kalypso &gt;
-          Spiegellinienberechnung &gt; TUHH ... aus WspWinProjekt &gt;
-          Next</guimenuitem></para>
-        </listitem>
-
-        <listitem>
-          <para>Pfad browsen mit Projekt-Ordner nur Überordner aktivieren
-          <guimenuitem>OK &gt; Next</guimenuitem></para>
-        </listitem>
-
-        <listitem>
-          <para>Projektname vergeben <guibutton>Finish</guibutton></para>
-        </listitem>
-      </itemizedlist>
-
-      <para><emphasis role="bold">Probleme?</emphasis></para>
-
-      <itemizedlist>
-        <para>Wenn Fehlermeldung zu fehlenden Profilen z.B: „ko000259.prf
-        fehlt“:</para>
-
-        <listitem>
-          <para>Prüfe unter dem Ordner <filename>/Prof</filename> die
-          Strangdateien: die <literal>*.str</literal> und
-          <literal>profproj.txt</literal> Datei</para>
-        </listitem>
-
-        <listitem>
-          <para>Ggf. aus profproj.txt Datei das Profil entfernen, wenn nicht
-          im Strang erwähnt UND in der ersten Zeile die erste Zahl um eins
-          verringern (= Anzahl der auszulesenden Zeilen)</para>
-        </listitem>
-
-        <listitem>
-          <para>Wenn Profil in der Strangdatei, dann WspWin-Pojekt
-          prüfen</para>
-        </listitem>
-      </itemizedlist>
 
       <section>
-        <title>Importieren von Daten aus WspWin</title>
+        <title>Arbeiten in der Feature-Ansicht</title>
 
-        <para><itemizedlist>
-            <listitem>
-              <para><guimenuitem>File &gt; Import &gt;
-              ...Auswahl</guimenuitem></para>
-            </listitem>
-
-            <listitem>
-              <para>Wählen Sie <guimenuitem>WspWin Daten &gt;
-              Next</guimenuitem> und dann den Ordner auswählen, der das
-              gewünschte Projekt enthält</para>
-            </listitem>
-
-            <listitem>
-              <para>Daten auswählen und zugeordnetes Projekt (muss schon
-              bestehen) auswählen</para>
-            </listitem>
-          </itemizedlist></para>
+        <para></para>
       </section>
 
       <section>
-        <title>Export von Daten in WspWin</title>
+        <title>Arbeiten in der Karten-Ansicht</title>
 
-        <para>Mit einem Export können nur geänderte Profile ausgelagert werden
-        und in Verbindung mit einem ursprünglichem WspWin-Projekt mit dem
-        Ordner Dath und Prof verwendet werden.</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Gehen Sie im Navigator mit der rechten Maustaste auf
-            <filename>modell.gml</filename></para>
-          </listitem>
-
-          <listitem>
-            <para><guimenuitem>Exportieren &gt; Other &gt; WspWin Format &gt;
-            Weiter</guimenuitem></para>
-          </listitem>
-
-          <listitem>
-            <para>Ordner auswählen, wo das Projekt hin soll
-            <guibutton>Fertig</guibutton></para>
-          </listitem>
-        </itemizedlist>
-
-        <note>
-          <para>Nur der Prof-Ordner wird angelegt</para>
-        </note>
-
-        <para><emphasis role="bold">Bilder!!!!!!!!!!!!!!</emphasis></para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Gehen Sie im Explorer in den Ordner und wählen Sie im
-            Unterordner den letzten Ordner und kopieren den Dath Ordner heraus
-            <emphasis role="bold">?????</emphasis></para>
-          </listitem>
-
-          <listitem>
-            <para>Kopiere Dein ursprünglich importiertes WspWin-Projekt und
-            füge nur die neuen Profile (unter Prof) ein ?????</para>
-          </listitem>
-        </itemizedlist>
-
-        <note>
-          <para>Sie müssen die gleichen Namen wie zuvor im WspWin-Ordner
-          haben.</para>
-        </note>
-
-        <para>Neu angelegte Berechnungsfälle, Zustände oder Ergebnisse können
-        nicht in WspWin zurückgeführt werden (bislang</para>
+        <para></para>
       </section>
-    </section>
-
-    <section>
-      <title>Import eines bestehenden Kalypso-WSPM-Projektes aus einem anderen
-      Ordner</title>
-
-      <para><itemizedlist>
-          <listitem>
-            <para>Gehen Sie in den Navigator und klicken auf die rechte
-            Maustaste und wählen <guibutton>Import</guibutton> aus</para>
-          </listitem>
-
-          <listitem>
-            <para>General Existing Projects into Workspace Next</para>
-          </listitem>
-
-          <listitem>
-            <para>Nun gibt es zwei Möglichkeiten: <emphasis
-            role="bold">(BILDER!!!!)</emphasis></para>
-
-            <orderedlist>
-              <listitem>
-                <para><itemizedlist>
-                    <listitem>
-                      <para><guilabel>Select root directory</guilabel>
-                      markieren, dann zum gewünschten Projekt-Ordner browsen
-                      und auswählen mit <guibutton>OK</guibutton></para>
-                    </listitem>
-
-                    <listitem>
-                      <para>Neben dem Projects Fenster auf
-                      <guibutton>Refresh</guibutton> gehen</para>
-                    </listitem>
-
-                    <listitem>
-                      <para>Aus der Liste das Projekt auswählen und gehen Sie
-                      anschließend auf <guibutton>Finish</guibutton></para>
-                    </listitem>
-                  </itemizedlist></para>
-              </listitem>
-
-              <listitem>
-                <para><itemizedlist>
-                    <listitem>
-                      <para><guilabel>Select root directory</guilabel>
-                      markieren, dann nur den workspace-Ordner
-                      auswählen</para>
-                    </listitem>
-
-                    <listitem>
-                      <para>Neben dem Projects Fenster auf
-                      <guibutton>Refresh</guibutton> gehen</para>
-                    </listitem>
-
-                    <listitem>
-                      <para>Wählen Sie ein Projekt aus oder mehrere und gehen
-                      anschließen auf <guibutton>Finish</guibutton></para>
-                    </listitem>
-                  </itemizedlist></para>
-              </listitem>
-            </orderedlist>
-          </listitem>
-        </itemizedlist></para>
-    </section>
-  </section>
-
-  <section id="kalypso_wspm-Datenakquisition">
-    <title>Datenakquisition</title>
-
-    <indexterm>
-      <primary>Datenakquisition und Aufbereitung KalypsoWSPM</primary>
-    </indexterm>
-
-    <para>Für die Erstellung eines eindimensionalen Spiegellinienmodelles sind
-    umfangreiche Vorarbeiten notwendig. Profilvermessung, Bauwerke...</para>
-
-    <para>Datenakquisition:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para>Profildaten, Pegeldaten...</para>
-      </listitem>
-    </itemizedlist>
-
-    <para>Datenaufbereitung:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para>Stationierung, Eingangsdateiaufbereitung, D66/ Trippel...</para>
-      </listitem>
-    </itemizedlist>
-
-    <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
-    Modelles in der Oberfläche begonnen werden.</para>
-
-    <section>
-      <title>Was enthält ein Spiegellinien-Modell?</title>
-
-      <para><emphasis role="bold">Projekt: Projektname und
-      Beschreibung</emphasis></para>
-
-      <itemizedlist>
-        <listitem>
-          <para><emphasis role="bold">Gewässer:</emphasis> Gewässername und
-          Beschreibung (ein Projekt kann n Gewässer haben)</para>
-
-          <itemizedlist>
-            <listitem>
-              <para><emphasis role="bold">Profile:</emphasis> hier finden Sie
-              alle Profile mit: Profil-km und Profil-Nummer. Sie können
-              Profile erstellen und bearbeiten (Ein Gewässer kann m Profile
-              haben)</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">Gewässerstränge:</emphasis>
-              entspricht einem Gewässerzustand. Hierzu ist zunächst das
-              richtige Gewässer auszuwählen und dann die Profile aus der
-              Profildatenbank, sowie eine Reihenfolge und Abstand der Profile
-              zu wählen.</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">Abflussereignis = Boundary
-              Condition: </emphasis>Ereignisname, Beschreibung und Datum. Hier
-              kann ein konstantes oder über die Fließlänge gestaffeltes
-              Abflussereignis angegeben werden (derzeit noch nicht möglich).
-              Die Angabe ist an das Gewässer, aber noch nicht an den Zustand
-              gebunden.</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">WSP-Fixierungen:</emphasis>
-              Fixierungsname, Beschreibung und Datum. Hier kann eine
-              Wasserspiegelhöhe aus einer Messung o.ä. angegeben werden. Diese
-              Angabe wird meist für die Kalibrierung verwendet und dient als
-              Referenzwert zur visuellen Kontrolle. Sie ist an das Gewässer,
-              aber noch nicht an den Zustand gebunden.</para>
-            </listitem>
-          </itemizedlist>
-        </listitem>
-      </itemizedlist>
-
-      <para><emphasis role="bold">Berechnungsvarianten:
-      WSPM-Berechnungen</emphasis></para>
-
-      <itemizedlist>
-        <listitem>
-          <para><emphasis role="bold">Berechnungsfall xxx:</emphasis> Name,
-          Beschreibung und Datum. Hier kann eine Kombination aus Zustand,
-          Abflussereignis, Berechnungsparametern und WSP-Fixierung ausgewählt
-          werden. Berechnungsart, Anfang und Ende des Stranges,
-          Widerstandsgesetz, Numerische Parameter, Bedingungen.</para>
-        </listitem>
-      </itemizedlist>
-    </section>
-  </section>
-
-  <section id="kalypso_wspm-Preprozessing">
-    <title>Preprozessing - Modellaufbau</title>
-
-    <indexterm>
-      <primary>Preprozessing KalypsoWSPM</primary>
-    </indexterm>
-
-    <figure>
-      <title>Vorgehensweise zum Modellaufbau</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata align="center"
-                     fileref="img/modelle/kalypso_na/arbeitsschritte_na.png"
-                     scale="60" />
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Nach der Datenaufbereitung im betrachteten Gewässer kann mit dem
-    eigentlichen Modellaufbau begonnen werden. Hierbei werden folgende
-    Teilschritte bearbeitet:</para>
-
-    <orderedlist>
-      <listitem>
-        <para>Ein neues Projekt anlegen (...)</para>
-      </listitem>
-    </orderedlist>
-
-    <section id="kalypso_wspm-neues_projekt">
-      <title>Ein neues WSPM Projekt anlegen</title>
-
-      <indexterm>
-        <primary>Neues KalypsoWSPM Projekt anlegen</primary>
-      </indexterm>
     </section>
 
     <section>
@@ -1932,7 +1962,13 @@
 
       <para><itemizedlist>
           <listitem>
-            <para>Rechte Maustaste Neu Berechnungsvarianten</para>
+            <para>Im Baum in der Übersicht mit der rechten Maustaste auf
+            <guimenuitem>WSPM-Berechnungen</guimenuitem> klicken</para>
+          </listitem>
+
+          <listitem>
+            <para><guimenuitem>Neu &gt;
+            Berechnungsvarianten</guimenuitem></para>
           </listitem>
 
           <listitem>
@@ -2050,11 +2086,11 @@
     <section>
       <title>Kartenansichten und Karten einladen</title>
 
-      <para><guimenuitem>File &gt; New... &gt; Other... &gt; GisMapView &gt;
-      Weiter &gt; Browse</guimenuitem> Ihren Projektpfad und auf
-      <guibutton>OK</guibutton> klicken. Jetzt steht im Navigator eine neue
-      <filename>Karte.gmt</filename> zur Verfügung <emphasis
-      role="bold">(BILD!!!)</emphasis></para>
+      <para><guimenuitem>Datei &gt; Neu... &gt; Andere... &gt; Kalypso &gt;
+      GisMapView &gt; Weiter &gt; Durchsuchen</guimenuitem> Ihren Projektpfad
+      und auf <guibutton>Fertig stellen</guibutton> klicken. Jetzt steht im
+      Navigator eine neue <filename>Karte.gmt</filename> zur Verfügung
+      <emphasis role="bold">(BILD!!!)</emphasis></para>
 
       <para>Gehen Sie in dem Fenster Gliederung auf das grüne
       <guibutton>+</guibutton> um ein Objekt hinzuzufügen. Selektieren Sie nun
