@@ -214,6 +214,8 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DTo2D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine"/>
       </factory>
    </extension>
      <!--extension

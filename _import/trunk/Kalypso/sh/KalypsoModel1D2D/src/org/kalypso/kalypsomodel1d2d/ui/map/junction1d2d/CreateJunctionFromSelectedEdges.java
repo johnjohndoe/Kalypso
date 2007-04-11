@@ -47,6 +47,8 @@ import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionContextFromEdgesCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionElementFromEdgesCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
@@ -66,7 +68,7 @@ public class CreateJunctionFromSelectedEdges
                     implements IWidget
 {
   
-  private QNameBasedSelectionFilter selectionFilter;
+  
 
   public CreateJunctionFromSelectedEdges()
   {
@@ -74,11 +76,9 @@ public class CreateJunctionFromSelectedEdges
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
         "Junction element hinzufügen",
         "Junction element hinzufügen");
-    selectionFilter= new QNameBasedSelectionFilter();
-    selectionFilter.add( 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-    
-    setSelectionFilter( selectionFilter );
+    setSelectionFilter( 
+        QNameBasedSelectionFilter.getFilterForQName( 
+                      Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE) );
   }  
   
   /**
@@ -125,11 +125,16 @@ public class CreateJunctionFromSelectedEdges
      
      IFEDiscretisationModel1d2d model1d2d = 
          getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
-    AddJunctionElementFromEdgesCmd junctionCmd=
-       new AddJunctionElementFromEdgesCmd(
-           model1d2d,
-           selected1DEdge,
-           selected2DEdge);
+//    AddJunctionElementFromEdgesCmd junctionCmd=
+//       new AddJunctionElementFromEdgesCmd(
+//           model1d2d,
+//           selected1DEdge,
+//           selected2DEdge);
+     AddJunctionContextFromEdgesCmd junctionCmd =
+           new AddJunctionContextFromEdgesCmd(
+                   model1d2d,
+                   selected1DEdge,
+                   selected2DEdge);
      
     CommandableWorkspace workspace = 
        getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE).getWorkspace();
@@ -137,7 +142,7 @@ public class CreateJunctionFromSelectedEdges
            new ChangeDiscretiationModelCommand(
                workspace,model1d2d);
      changeModelCmd.addCommand( junctionCmd );
-     try
+    try
     {
       workspace.postCommand( changeModelCmd);
     }
@@ -156,11 +161,11 @@ public class CreateJunctionFromSelectedEdges
   {
     for(Feature feature:selectedFeatures)
     {
-     if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
+     if( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
                                   feature.getFeatureType().getQName()))
      {
        IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
-      if(TypeInfo.is2DEdge( edge ))
+       if(TypeInfo.is2DEdge( edge ))
        {
          return edge;
        }

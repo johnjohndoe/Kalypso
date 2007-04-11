@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -82,6 +83,24 @@ public class TypeInfo
       }
     }
     return false;
+  }
+  
+  /**
+   * Answer whether the given edge is a 1D edge.
+   * E.i. an edge in a 1D element.
+   * This method get the edge container an checks 
+   * return true if a container has the Name {@link Kalypso1D2DSchemaConstants#WB1D2D_F_ELEMENT1D}
+   * @return true if the given edge is an 1d edge otherwise false
+   * 
+   */
+  public static final boolean is1DEdgeFeature(Feature edgeFeature)
+  {
+    if(edgeFeature == null )
+    {
+      return false;
+    }
+    IFE1D2DEdge edge = (IFE1D2DEdge)edgeFeature.getAdapter( IFE1D2DEdge.class );
+    return is1DEdge( edge );
   }
 
   /**
@@ -199,5 +218,25 @@ public class TypeInfo
       return false;
     }
     return Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( selecFeature.getFeatureType().getQName() );
+  }
+  
+  public static final boolean isBorderEdge(IFE1D2DEdge edge)
+  {
+    IFeatureWrapperCollection edgeContainer = edge.getContainers();
+    if(edgeContainer.size()!=1)
+    {
+      return false;      
+    }
+    IEdgeInv edgeInv = edge.getEdgeInv();
+    if(edgeInv!=null)
+    {
+      if(!edgeInv.getContainers().isEmpty())
+      {
+        return false;
+      }
+    }
+    
+    return true;
+    
   }
 }

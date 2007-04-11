@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.deegree_impl.clients.wcasclient.configuration.CMapping;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -348,9 +349,18 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                     new FE1D2DComplexElement<IFE1D2DElement>(
                         feature,
                         Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D,
-//                        null,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE,//container
                         Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,//elements
                         IFE1D2DElement.class);     
+                }
+                else if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D) )
+                {
+                  return new JunctionContext1DTo2D(feature);
+                }
+                else if(featureQName.equals( 
+                      Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE) )
+                {
+                  return new JunctionContext1DToCLine(feature);
                 }
                 else
                 {
@@ -359,6 +369,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFE1D2DComplexElement.class, cTor);
+        cMap.put(IJunctionContext1DTo2D.class, cTor);
+        cMap.put(IJunctionContext1DToCLine.class, cTor );
  
         // RiverChannel1D
         cTor = new AdapterConstructor()
@@ -372,6 +384,35 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IRiverChannel1D.class, cTor);
+        
+////      JunctionContext
+//        cTor = new AdapterConstructor()
+//        {
+//            public Object constructAdapter(
+//                                        Feature feature, 
+//                                        Class cls) 
+//                                        throws IllegalArgumentException
+//            {
+//              QName featureQName = feature.getFeatureType().getQName();
+//              if(featureQName.equals( 
+//                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D) )
+//              {
+//                return new JunctionContext1DTo2D(feature);
+//              }
+//              else if(featureQName.equals( 
+//                    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE) )
+//              {
+//                return new JunctionContext1DToCLine(feature);
+//              }
+//              else
+//              {
+//                return null; 
+//              }
+//            }
+//        };
+//        cMap.put(IJunctionContext1DTo2D.class, cTor);
+//        cMap.put( IJunctionContext1DToCLine.class, cTor );
+        
  
         
         // DiscretisationModel  

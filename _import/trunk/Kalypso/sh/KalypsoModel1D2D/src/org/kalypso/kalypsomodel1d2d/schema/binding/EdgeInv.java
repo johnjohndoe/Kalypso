@@ -236,6 +236,23 @@ public class EdgeInv implements IEdgeInv
   }
   
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#removeContainerAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public boolean removeContainerAsRef( IFE1D2DElement containerToRemove )
+  {
+    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" );
+    final String id = containerToRemove.getGmlID();
+    FeatureList wrappedList = containers.getWrappedList();
+    boolean hasBeenRemoved = false;
+    while(wrappedList.remove( id ))
+    {
+      hasBeenRemoved = true;
+    }
+    
+    return hasBeenRemoved;
+  }
+  
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
    */
   public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException
@@ -256,15 +273,11 @@ public class EdgeInv implements IEdgeInv
                       "adding node to inv not supported");
   }
 
-  // TODO: The methods below should better be implemented by extending 'AbstractFeatureBinder'
-  // Sadly, this is not so easily possible because of the second constructor of this class...
-  
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
   public String getDescription( )
   {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException();
   }
 
@@ -273,7 +286,6 @@ public class EdgeInv implements IEdgeInv
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException();
   }
 
@@ -282,7 +294,6 @@ public class EdgeInv implements IEdgeInv
    */
   public void setDescription( String desc )
   {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException();
   }
 
@@ -291,7 +302,6 @@ public class EdgeInv implements IEdgeInv
    */
   public void setName( String name )
   {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException();
   }
   

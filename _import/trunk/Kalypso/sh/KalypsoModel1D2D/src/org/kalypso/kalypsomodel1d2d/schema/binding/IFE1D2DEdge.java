@@ -64,6 +64,14 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @param containerID the id of the container
    */
   public void addContainer( String containerID );
+  
+  /**
+   * Remove the given element as container of this edge
+   * @param containerToRemove the element to be removed as container
+   * @return true if the given element has been removed, false otherwise
+   * 
+   */
+  public boolean removeContainerAsRef(CT containerToRemove);
 
   /**
    * To get the edge node at the given index

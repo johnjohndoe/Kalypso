@@ -320,6 +320,23 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     }
   }
   
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#removeContainerAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public boolean removeContainerAsRef( IFE1D2DElement containerToRemove )
+  {
+    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" );
+    final String id = containerToRemove.getGmlID();
+    FeatureList wrappedList = m_containers.getWrappedList();
+    boolean hasBeenRemoved = false;
+    while(wrappedList.remove( id ))
+    {
+      hasBeenRemoved = true;
+    }
+    
+    return hasBeenRemoved;
+  }
+  
  /**
  * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
  */

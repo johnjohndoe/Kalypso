@@ -54,6 +54,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -194,14 +195,8 @@ public class FENetConceptSelectionWidget implements IWidget
   
   private MapPanel mapPanel;
  
-//  private IFEDiscretisationModel1d2d model1d2d;
-
   private boolean addToSelection;
-
-  
-//  private IKalypsoFeatureTheme featureTheme;
-
-  
+ 
   private PolygonGeometryBuilder m_polygonGeometryBuilder; 
   
   private JMSelector m_selector= new JMSelector();
@@ -212,6 +207,34 @@ public class FENetConceptSelectionWidget implements IWidget
   
   private ISelectionFilter m_selectionFilter;
   
+  private Point draggedPoint0;
+  
+  private Point draggedPoint1;
+
+  private boolean polygonSelectModus;
+
+  private CS_CoordinateSystem crs;
+
+  private Point currentPoint;
+
+  private String toolTip;
+
+  private String name;
+  
+  /**
+   * Creates a new fe net concept selection to select in a theme 
+   * showing feature of the given q-name.
+   * The provided q-name is used to look for a suitable themes.
+   * 
+   * Note that {@link QNameBasedSelectionFilter}s, which support substitution,
+   * are created for those q-names.
+   * 
+   * use {@link #setSelectionFilter(ISelectionFilter)} to override this beahaviour
+   * @param themeElementsQNames an array of q-name to select
+   * @param name the name of the widget
+   * @param toolTip the tooltip of the widget
+   * @see #FENetConceptSelectionWidget(QName[], String, String)
+   */
   public FENetConceptSelectionWidget(
                       QName themeElementsQName,
                       String name, 
@@ -220,6 +243,20 @@ public class FENetConceptSelectionWidget implements IWidget
     this(new QName[]{themeElementsQName},name,toolTip);    
   }
   
+  /**
+   * Creates a new fe net concept selection to select in themes 
+   * showing feature of the given q-names.
+   * The provided qnames are used to look for suitable themes.
+   * 
+   * Note that {@link QNameBasedSelectionFilter}s, which support substitution,
+   * are created for those q-names.
+   * 
+   * use {@link #setSelectionFilter(ISelectionFilter)} to override this beahaviour
+   * @param themeElementsQNames an array of q-name to select
+   * @param name the name of the widget
+   * @param toolTip the tooltip of the widget
+   * 
+   */
   public FENetConceptSelectionWidget(
                   QName themeElementsQNames[],
                   String name, 
@@ -228,11 +265,27 @@ public class FENetConceptSelectionWidget implements IWidget
     this.name=name;
     this.toolTip=toolTip;
     this.m_selectionContexts= new QNameBasedSelectionContext[themeElementsQNames.length];
+    
+    QNameBasedSelectionFilter qnameBasedFilter = null;
     for(int i=0;i<themeElementsQNames.length;i++)
     {
       m_selectionContexts[i] = 
         new QNameBasedSelectionContext(themeElementsQNames[i]);
+      //TODO patrice check if this is working properly
+      //make qname base filter
+      if(qnameBasedFilter == null)
+      {
+        qnameBasedFilter =
+          QNameBasedSelectionFilter.getFilterForQName( themeElementsQNames[i] );
+        qnameBasedFilter.setAcceptSubstituables( true );
+      }
+      else
+      {
+        qnameBasedFilter.add( themeElementsQNames[i] );
+      }
     }
+    
+    m_selectionFilter = qnameBasedFilter;
   }
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
@@ -324,18 +377,7 @@ public class FENetConceptSelectionWidget implements IWidget
     
   }
   
-  Point draggedPoint0;
-  Point draggedPoint1;
-
-  private boolean polygonSelectModus;
-
-  private CS_CoordinateSystem crs;
-
-  private Point currentPoint;
-
-  private String toolTip;
-
-  private String name;
+  
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
