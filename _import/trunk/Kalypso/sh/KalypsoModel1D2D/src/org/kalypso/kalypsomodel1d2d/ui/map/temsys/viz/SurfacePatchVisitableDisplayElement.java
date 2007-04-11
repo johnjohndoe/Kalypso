@@ -70,75 +70,54 @@ import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Provide display mechanism for asc terrain elevation model
- *  
- * @author Madanagopal 
+ * 
+ * @author Madanagopal
  * @author Patrice Congo
  */
-public class SurfacePatchVisitableDisplayElement 
-                implements  DisplayElementDecorator,
-                            SurfacePatchVisitor
+public class SurfacePatchVisitableDisplayElement implements DisplayElementDecorator, SurfacePatchVisitor
 {
-  private IElevationColorModel/*SimpleElevationColorModel*/ colorModel; 
-    
-  private NativeTerrainElevationModelWrapper m_elevationModel;
-  
-  private boolean isHighlighted=false;
- 
-  private Graphics graphics=null;
-  
-  private boolean isSelected=false;
+  private IElevationColorModel/* SimpleElevationColorModel */colorModel;
 
-  private SurfacePatchVisitable/*ASCTerrainElevationModel*/ ascElevationModel;
+  private NativeTerrainElevationModelWrapper m_elevationModel;
+
+  private boolean isHighlighted = false;
+
+  private Graphics graphics = null;
+
+  private boolean isSelected = false;
+
+  private SurfacePatchVisitable/* ASCTerrainElevationModel */ascElevationModel;
 
   private Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
-  
+
   private DisplayElement m_decorated;
 
   private GeoTransform projection;
- 
-  
-  public SurfacePatchVisitableDisplayElement(
-                NativeTerrainElevationModelWrapper elevationModel )
+
+  public SurfacePatchVisitableDisplayElement( NativeTerrainElevationModelWrapper elevationModel )
   {
     Assert.throwIAEOnNullParam( elevationModel, "elevationModel" );
-    m_elevationModel=elevationModel;
-    IElevationProvider elevationProvider = 
-              elevationModel.getElevationProvider();
-    //TODO continue
-    if(elevationProvider instanceof SurfacePatchVisitable)
+    m_elevationModel = elevationModel;
+    IElevationProvider elevationProvider = elevationModel.getElevationProvider();
+    // TODO continue
+    if( elevationProvider instanceof SurfacePatchVisitable )
     {
-      ascElevationModel=(SurfacePatchVisitable)elevationProvider;
-//      colorModel = 
-//        ElevationColorControl.getColorModel();
-//      /*
-//       * this is done in the color model 
-//       * please don't comment code out!
-//       * If you have questions concerning the code, please ask.
-//       * 
-//       * if the user defines an elevation range, he doesn't want to see the elevations below and above that range.
-//       * this is what this code is good for. 
-//       */
-//      final double[] values = colorModel.getElevationMinMax();
-//      if ( values[0] == 0 &&  values[1] ==0)
-//        colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
-      
-      colorModel =
-        ElevationColorControl.getColorModel( 
-          elevationProvider.getMinElevation(), 
-          elevationProvider.getMaxElevation());
+      ascElevationModel = (SurfacePatchVisitable) elevationProvider;
+
+      colorModel = ElevationColorControl.getColorModel( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
     }
     else
     {
-      throw new RuntimeException("Can only handle asc ele model:"+elevationProvider);
+      throw new RuntimeException( "Can only handle asc ele model:" + elevationProvider );
     }
   }
-  
+
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
    */
   public boolean doesScaleConstraintApply( double scale )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       return m_decorated.doesScaleConstraintApply( scale );
     }
@@ -153,7 +132,7 @@ public class SurfacePatchVisitableDisplayElement
    */
   public String getAssociateFeatureId( )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       return m_decorated.getAssociateFeatureId();
     }
@@ -168,7 +147,7 @@ public class SurfacePatchVisitableDisplayElement
    */
   public Feature getFeature( )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       return m_decorated.getFeature();
     }
@@ -183,7 +162,7 @@ public class SurfacePatchVisitableDisplayElement
    */
   public boolean isHighlighted( )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       return m_decorated.isHighlighted();
     }
@@ -198,7 +177,7 @@ public class SurfacePatchVisitableDisplayElement
    */
   public boolean isSelected( )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       return m_decorated.isSelected();
     }
@@ -208,49 +187,46 @@ public class SurfacePatchVisitableDisplayElement
     }
   }
 
-  
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
    */
   public void setHighlighted( boolean highlighted )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       m_decorated.setHighlighted( highlighted );
     }
-    this.isHighlighted=highlighted;
+    this.isHighlighted = highlighted;
   }
 
-  
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
   public void setSelected( boolean selected )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       m_decorated.setSelected( selected );
     }
-    this.isSelected=selected;
+    this.isSelected = selected;
   }
-  
+
   public void paint( Graphics g, @SuppressWarnings("hiding")
   GeoTransform projection )
   {
-    if(m_decorated!=null)
+    if( m_decorated != null )
     {
       m_decorated.paint( g, projection );
     }
     try
     {
-      //TODO Patrice try to get the current paint box
-      this.graphics=g;
-      this.projection=projection;
+      // TODO Patrice try to get the current paint box
+      this.graphics = g;
+      this.projection = projection;
 
-      ascElevationModel.aceptSurfacePatches( 
-                    projection.getSourceRect(),//ascElevationModel.getBoundingBox(), 
-                    this );
-      
+      ascElevationModel.aceptSurfacePatches( projection.getSourceRect(),// ascElevationModel.getBoundingBox(),
+      this );
+
     }
     catch( GM_Exception e )
     {
@@ -262,15 +238,14 @@ public class SurfacePatchVisitableDisplayElement
       this.projection = null;
     }
   }
-  
-  
+
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
   private Area calcTargetCoordinates( @SuppressWarnings("hiding")
   GeoTransform projection, GM_Surface surface ) throws Exception
   {
-    final PolygonSymbolizer sym =  getSymbolizer();
+    final PolygonSymbolizer sym = getSymbolizer();
     final Stroke stroke = sym.getStroke();
     float width = 1;
     if( stroke != null )
@@ -303,7 +278,7 @@ public class SurfacePatchVisitableDisplayElement
 
     return null;
   }
-  
+
   private Area areaFromRing( @SuppressWarnings("hiding")
   GeoTransform projection, float width, final GM_Position[] ex )
   {
@@ -337,18 +312,18 @@ public class SurfacePatchVisitableDisplayElement
     final Polygon polygon = new Polygon( x, y, k - 1 );
     return new Area( polygon );
   }
-  
+
   private double distance( double x1, double y1, double x2, double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
-  
+
   /**
    * renders one surface to the submitted graphic context considering the also submitted projection
    */
   private void drawPolygon( Graphics gg, Area area ) throws FilterEvaluationException
   {
-    Graphics2D g2d=(Graphics2D) gg;
+    Graphics2D g2d = (Graphics2D) gg;
     PolygonSymbolizer sym = getSymbolizer();
     org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
     org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
@@ -370,7 +345,7 @@ public class SurfacePatchVisitableDisplayElement
 
         try
         {
-          
+
           g2d.fill( area );
         }
         catch( Exception e )
@@ -386,23 +361,21 @@ public class SurfacePatchVisitableDisplayElement
     m_decorated.doesScaleConstraintApply( 0 );
     return (PolygonSymbolizer) defaultSymbolizer;
   }
- 
-  public static final SurfacePatchVisitableDisplayElement createDisplayElement(Feature feature)
+
+  public static final SurfacePatchVisitableDisplayElement createDisplayElement( Feature feature )
   {
-    if(feature == null)
+    if( feature == null )
     {
       return null;
     }
-    ITerrainElevationModel terrainElevationModel=
-            (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
-    if(terrainElevationModel instanceof NativeTerrainElevationModelWrapper)
+    ITerrainElevationModel terrainElevationModel = (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
+    if( terrainElevationModel instanceof NativeTerrainElevationModelWrapper )
     {
-      return new SurfacePatchVisitableDisplayElement(
-                      (NativeTerrainElevationModelWrapper)terrainElevationModel);
+      return new SurfacePatchVisitableDisplayElement( (NativeTerrainElevationModelWrapper) terrainElevationModel );
     }
     else
     {
-      System.out.println("Could not adapt to a native terrain ele model:"+feature);
+      System.out.println( "Could not adapt to a native terrain ele model:" + feature );
       return null;
     }
   }
@@ -420,48 +393,26 @@ public class SurfacePatchVisitableDisplayElement
    */
   public void setDecorated( DisplayElement decorated )
   {
-    m_decorated=decorated;    
+    m_decorated = decorated;
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor#accept(org.kalypsodeegree.model.geometry.GM_Surface, double)
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor#accept(org.kalypsodeegree.model.geometry.GM_Surface,
+   *      double)
    */
   public boolean visit( GM_Surface surfacePatch, double elevationSample )
   {
     try
     {
-//        System.out.println(
-//            "Drawing:"+
-//            "\n\tsurface:"+surfacePatch+
-//            "\n\televation:"+elevationSample);
-        Area area = calcTargetCoordinates( this.projection, surfacePatch );
-//        if (colorModel.getColor( elevationSample )!= null)
-//        {
-        
-//        /*
-//         * PLEASE!!
-//         * Don't comment code out!
-//         * If you have questions concerning the code, plese ask.
-//         * 
-//         * if the user defines an elevation range,
-//         * he doesn't want to see the elevations below and above that range.
-//         * this is what this code is good for
-//         */
-//        final double[] values = colorModel.getElevationMinMax();
-//        if (elevationSample <= values[1] && elevationSample >= values[0])
-//        {
-          graphics.setColor( colorModel.getColor( elevationSample ));
-        
-//        drawPolygon( graphics, area );
-          ((Graphics2D)graphics).fill( area );
-        
-          java.awt.Stroke bs2= new BasicStroke(3);
-          ((Graphics2D)graphics).setStroke( bs2 );
-          ((Graphics2D)graphics).draw(  area );
-//        }
-        
+      Area area = calcTargetCoordinates( this.projection, surfacePatch );
+
+      graphics.setColor( colorModel.getColor( elevationSample ) );
+      ((Graphics2D) graphics).fill( area );
+      java.awt.Stroke bs2 = new BasicStroke( 3 );
+      ((Graphics2D) graphics).setStroke( bs2 );
+      ((Graphics2D) graphics).draw( area );
     }
-    catch (Exception e) 
+    catch( Exception e )
     {
       e.printStackTrace();
     }
