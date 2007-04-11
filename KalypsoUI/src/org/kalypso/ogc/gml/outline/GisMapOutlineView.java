@@ -65,7 +65,6 @@ import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
