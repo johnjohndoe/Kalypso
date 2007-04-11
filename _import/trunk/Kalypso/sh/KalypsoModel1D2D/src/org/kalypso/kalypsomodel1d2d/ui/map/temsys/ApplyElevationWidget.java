@@ -89,11 +89,9 @@ public class ApplyElevationWidget
 {
   
   
-
   private Composite rootComposite;
-  
   private WizardComposite wizardComposite;
-  
+
   
   ApplyElevationWidgetDataModel dataModel= new ApplyElevationWidgetDataModel();
   private ApplyElevationWidgetFace widgetFace = 

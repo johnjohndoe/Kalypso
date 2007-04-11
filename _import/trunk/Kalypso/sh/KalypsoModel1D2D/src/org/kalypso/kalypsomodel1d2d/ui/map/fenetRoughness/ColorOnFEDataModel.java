@@ -38,20 +38,68 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
+package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
+
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * @author Madanagopal
+ * @author madanago
  *
  */
-public interface IColorModelPreferenceConstants
+public class ColorOnFEDataModel
 {
-  public String LINE_MIN_COLOR = "LINE_MIN_COLOR";
-  public String LINE_MAX_COLOR = "LINE_MAX_COLOR";
-  public String LINE_NO_COLOR = "LINE_NO_COLOR";
-  public String LINE_COLOR_INDEX = "LINE_NO_CLASSES";
-  public String LINE_TRANSPARENCY = "LINE_TRANSPARENCY";
-  public String LINE_MIN_MAX = "LINE_MIN_MAX";
-  public String ELEV_MAX = "ELEV_MAX";
-  public String ELEV_MIN = "ELEV_MIN";
+  private IMapModell mapModell;
+  private MapPanel mapPanel;
+  private IKalypsoFeatureTheme roughnessTheme;
+  private IRoughnessClsCollection system;
+  
+  
+
+  public ColorOnFEDataModel( )
+  {
+  }
+
+  public IMapModell getMapModell( )
+  {
+    return mapModell;
+  }
+
+  public void setMapModell( IMapModell mapModell )
+  {
+    this.mapModell = mapModell;
+  }
+
+  public MapPanel getMapPanel( )
+  {
+    return mapPanel;
+  }
+
+  public void setMapPanel( MapPanel mapPanel )
+  {
+    this.mapPanel = mapPanel;
+  }
+
+  public void setRoughnessTheme( IKalypsoFeatureTheme roughnessTheme )
+  {
+    this.roughnessTheme = roughnessTheme;    
+  }
+  
+  public IKalypsoFeatureTheme getRoughnessTheme()
+  {
+    return roughnessTheme;
+  }
+
+  public void setRoughnessClsCollectionSystem( IRoughnessClsCollection system )
+  {
+    this.system = system;
+    
+  }
+  
+
+  
+
+  
 }

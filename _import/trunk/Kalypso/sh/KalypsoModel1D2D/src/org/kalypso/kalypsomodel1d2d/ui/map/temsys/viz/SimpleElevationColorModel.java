@@ -92,6 +92,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   public SimpleElevationColorModel( double minElevation, double maxElevation, Color minColor, Color maxColor, Color noElevationColor, double transparency, int numOfClasses, boolean goDarkerFromMinToMax )
   {
+
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
 
@@ -115,7 +116,6 @@ public class SimpleElevationColorModel implements IElevationColorModel
     m_numOfClasses = numOfClasses;
     m_transparency = (255 - (int) (transparency * 255.0 / 100.0));
     m_goDarkerFromMinToMax = goDarkerFromMinToMax;
-
     fillColorList();
   }
 
@@ -162,6 +162,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
    */
   private final Color interpolateColor( double elevation )
   {
+    
+    if (elevation == Double.MAX_VALUE||elevation == Double.MIN_VALUE)
+      System.out.println("SaveMe");
     System.out.println("elevation :"+elevation);
     final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
     int red = 0;
