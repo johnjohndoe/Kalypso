@@ -60,9 +60,10 @@ import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -82,7 +83,7 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider modelProvider = (ICaseDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
     final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( IFEDiscretisationModel1d2d.class );
@@ -90,7 +91,7 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
 
     /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
-    
+
     final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel, flowRelationModel );
     importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
 
@@ -100,15 +101,16 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
       return Status.CANCEL_STATUS;
 
     /* post empty command(s) in order to make pool dirty. */
+    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     try
     {
       final ICommand discCommand = new EmptyCommand( "WSPM Import", false );
-      final CommandableWorkspace workspace1 = (CommandableWorkspace) discModel.getWrappedFeature().getWorkspace();
-      workspace1.postCommand( discCommand );
+      // final CommandableWorkspace workspace1 = discModel.getWrappedFeature().getWorkspace();
+      mapView.postCommand( discCommand, null );
 
-      final CommandableWorkspace workspace2 = (CommandableWorkspace) terrainModel.getWrappedFeature().getWorkspace();
+      // final CommandableWorkspace workspace2 = terrainModel.getWrappedFeature().getWorkspace();
       final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
-      workspace2.postCommand( terrainCommand );
+      mapView.postCommand( terrainCommand, null );
     }
     catch( final Exception e )
     {
@@ -118,15 +120,13 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
 
     /* Add new layer to profile-collection-map */
     // TODO: add a new layer containing the new profiles in the profile-network map?
-
     /* Zoom to new elements in fe-map? */
-    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView != null )
     {
       final Feature[] newFEFeatures = importWizard.getDiscretisationModelAdds();
       final GM_Envelope envelope = FeatureHelper.getEnvelope( newFEFeatures );
       if( envelope != null )
-        mapView.getMapPanel().setBoundingBox( envelope );
+        mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
     }
 
     return Status.OK_STATUS;

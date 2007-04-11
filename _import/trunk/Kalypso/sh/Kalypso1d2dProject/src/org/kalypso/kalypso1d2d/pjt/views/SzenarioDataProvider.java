@@ -11,8 +11,10 @@ import java.util.Map;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -22,6 +24,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -198,17 +201,17 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  public IFeatureWrapper2 getModel( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws CoreException
+  public IFeatureWrapper2 getModel( final Class< ? extends IFeatureWrapper2> modelClass ) throws CoreException
   {
-    final CommandableWorkspace workspace = getModelWorkspace( wrapperClass );
-    return (IFeatureWrapper2) workspace.getRootFeature().getAdapter( wrapperClass );
+    final CommandableWorkspace workspace = getModelWorkspace( modelClass );
+    return (IFeatureWrapper2) workspace.getRootFeature().getAdapter( modelClass );
   }
 
-  // public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception
-  // {
-  // final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
-  // modelWorkspace.postCommand( command );
-  // }
+  public void postCommand( final Class< ? extends IFeatureWrapper2> wrapperClass, final ICommand command ) throws Exception
+  {
+    final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
+    modelWorkspace.postCommand( command );
+  }
 
   private CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
@@ -226,12 +229,38 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     return workspace;
   }
 
-  // /**
-  // * @see org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider#getCommandableWorkspace(java.lang.Class)
-  // */
-  // public CommandableWorkspace getCommandableWorkspace( Class wrapperClass ) throws IllegalArgumentException,
-  // CoreException
-  // {
-  // return getModelWorkspace( wrapperClass );
-  // }
+  /**
+   * @see de.renew.workflow.cases.ICaseDataProvider#isDirty(java.lang.Class)
+   */
+  public boolean isDirty( final Class< ? extends IFeatureWrapper2> modelClass )
+  {
+    final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
+    final IPoolableObjectType key = keyPoolListener.getKey();
+    if( key == null )
+    {
+      // TODO throw (core/other) exception?
+      return false;
+    }
+
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final KeyInfo infoForKey = pool.getInfoForKey( key );
+    return infoForKey.isDirty();
+  }
+
+
+  /**
+   * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void saveModel( final Class< ? extends IFeatureWrapper2> modelClass, final IProgressMonitor monitor ) throws Exception
+  {
+    final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
+    final IPoolableObjectType key = keyPoolListener.getKey();
+    if( key != null )
+    {
+      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      final KeyInfo infoForKey = pool.getInfoForKey( key );
+      infoForKey.saveObject( monitor );
+    }
+  }
+
 }

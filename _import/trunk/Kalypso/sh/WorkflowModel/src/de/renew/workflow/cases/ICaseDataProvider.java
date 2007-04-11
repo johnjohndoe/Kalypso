@@ -41,10 +41,11 @@
 package de.renew.workflow.cases;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
- * provide a way to create data providers that return data objects of a type more specific type than {@link Object}.
+ * provide a way to create data providers that return data objects of a type more specific than {@link Object}.
  * 
  * @author Gernot Belger, Stefan Kurzbach
  */
@@ -52,7 +53,18 @@ public interface ICaseDataProvider<T extends Object>
 {
 
   /**
-   * Returns the data object corresponding to the given case data key
+   * Returns the data object corresponding to the given case data key.
    */
   public T getModel( final Class< ? extends T> modelClass ) throws CoreException;
+
+  /**
+   * Saves the data object corresponding to the given case data key
+   */
+  public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws Exception;
+
+  /**
+   * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
+   * was retrieved.
+   */
+  public boolean isDirty( final Class< ? extends T> modelClass );
 }
