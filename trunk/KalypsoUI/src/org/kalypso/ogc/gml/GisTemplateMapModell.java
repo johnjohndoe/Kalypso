@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -97,9 +98,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
    */
   public void createFromTemplate( final Gismapview gisview ) throws Exception
   {
-    for( IKalypsoTheme theme : getAllThemes() )
+    for( final IKalypsoTheme theme : getAllThemes() )
     {
-      if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
+      if( !((theme instanceof KalypsoLegendTheme) || (theme instanceof ScrabLayerFeatureTheme)) )
       {
         removeTheme( theme );
       }
@@ -108,11 +109,13 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     final Object activeLayer = layerListType.getActive();
 
     final List<StyledLayerType> layerList = layerListType.getLayer();
-    for( StyledLayerType layerType : layerList )
+    for( final StyledLayerType layerType : layerList )
     {
       final IKalypsoTheme theme = addTheme( layerType );
       if( layerType == activeLayer )
+      {
         activateTheme( theme );
+      }
     }
   }
 
@@ -130,24 +133,25 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   public void dispose( )
   {
     if( m_modell != null )
+    {
       m_modell.dispose();
+    }
   }
 
   private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
   {
+    final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
+
     if( "wms".equals( layerType.getLinktype() ) ) //$NON-NLS-1$
     {
-      String layerName = layerType.getName();
-      String source = layerType.getHref();
-      CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      final String layerName = layerType.getName();
+      final String source = layerType.getHref();
+      final CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
       return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs, this );
     }
-    else if( "tif".equals( layerType.getLinktype() ) || "jpg".equals( layerType.getLinktype() ) //$NON-NLS-1$ //$NON-NLS-2$
-        || "png".equals( layerType.getLinktype() ) || "gif".equals( layerType.getLinktype() ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    else if( ArrayUtils.contains( arrImgTypes, layerType.getLinktype().toLowerCase() ) ) 
     {
-      String source = layerType.getHref();
-      String layerName = layerType.getName();
-      return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), this );
+      return KalypsoPictureTheme.getPictureTheme( layerType, context, this, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
     }
     else if( "gmt".equals( layerType.getLinktype() ) )
     {
@@ -155,6 +159,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     }
     else
     {
+      // TODO: returns handling of gml files - part of else?!? dont assume it, proofe it!
       return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
     }
   }
@@ -186,12 +191,14 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
 
     // Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
     // final List layerList = (List)gismapview.getLayers(); //CK
-    IKalypsoTheme[] themes = m_modell.getAllThemes();
+    final IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
       final StyledLayerType layer = templateFactory.createStyledLayerType();
-      if( layer == null ) // e.g. legend
+      if( layer == null )
+      {
         continue;
+      }
 
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
@@ -202,7 +209,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
       }
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
-        String name = kalypsoTheme.getName();
+        final String name = kalypsoTheme.getName();
         GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), //$NON-NLS-1$
         (KalypsoWMSTheme) kalypsoTheme );
         layerList.add( layer );
@@ -219,7 +226,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
         layerList.add( layer );
       }
       if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
+      {
         layersType.setActive( layer );
+      }
     }
     // try
     // {
@@ -237,12 +246,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     return gismapview;
   }
 
-  public void activateTheme( IKalypsoTheme theme )
+  public void activateTheme( final IKalypsoTheme theme )
   {
     m_modell.activateTheme( theme );
   }
 
-  public void addModellListener( ModellEventListener listener )
+  public void addModellListener( final ModellEventListener listener )
   {
     m_modell.addModellListener( listener );
   }
@@ -253,12 +262,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     m_modell.addTheme( theme );
   }
 
-  public void enableTheme( IKalypsoTheme theme, boolean status )
+  public void enableTheme( final IKalypsoTheme theme, final boolean status )
   {
     m_modell.enableTheme( theme, status );
   }
 
-  public void fireModellEvent( ModellEvent event )
+  public void fireModellEvent( final ModellEvent event )
   {
     m_modell.fireModellEvent( event );
   }
@@ -283,7 +292,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     return m_modell.getFullExtentBoundingBox();
   }
 
-  public IKalypsoTheme getTheme( int pos )
+  public IKalypsoTheme getTheme( final int pos )
   {
     return m_modell.getTheme( pos );
   }
@@ -293,22 +302,22 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     return m_modell.getThemeSize();
   }
 
-  public boolean isThemeActivated( IKalypsoTheme theme )
+  public boolean isThemeActivated( final IKalypsoTheme theme )
   {
     return m_modell.isThemeActivated( theme );
   }
 
-  public boolean isThemeEnabled( IKalypsoTheme theme )
+  public boolean isThemeEnabled( final IKalypsoTheme theme )
   {
     return m_modell.isThemeEnabled( theme );
   }
 
-  public void moveDown( IKalypsoTheme theme )
+  public void moveDown( final IKalypsoTheme theme )
   {
     m_modell.moveDown( theme );
   }
 
-  public void moveUp( IKalypsoTheme theme )
+  public void moveUp( final IKalypsoTheme theme )
   {
     m_modell.moveUp( theme );
   }
@@ -323,7 +332,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     m_modell.paint( g, p, bbox, scale, selected );
   }
 
-  public void removeModellListener( ModellEventListener listener )
+  public void removeModellListener( final ModellEventListener listener )
   {
     m_modell.removeModellListener( listener );
   }
@@ -334,12 +343,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     theme.dispose();
   }
 
-  public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception
+  public void setCoordinateSystem( final CS_CoordinateSystem crs ) throws Exception
   {
     m_modell.setCoordinateSystem( crs );
   }
 
-  public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 )
+  public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_modell.swapThemes( theme1, theme2 );
   }
@@ -362,7 +371,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
     fireModellEvent( modellEvent );
   }
@@ -400,6 +409,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   {
     // TODO this hack is for getting a repaint when a theme changes
     if( event.isType( KalypsoThemeEvent.CONTENT_CHANGED ) )
+    {
       fireModellEvent( null );
+    }
   }
 }

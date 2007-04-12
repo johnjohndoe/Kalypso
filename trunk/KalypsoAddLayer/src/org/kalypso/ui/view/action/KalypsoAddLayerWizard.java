@@ -63,7 +63,7 @@ public class KalypsoAddLayerWizard extends Wizard
   /**
    * Returns the import wizards that are available for invocation.
    */
-  public KalypsoAddLayerWizard( IMapModellView outlineviewer )
+  public KalypsoAddLayerWizard( final IMapModellView outlineviewer )
   {
     m_outlineviewer = outlineviewer;
     setWindowTitle( "Kalypso Daten Import" ); //$NON-NLS-1$
@@ -77,7 +77,6 @@ public class KalypsoAddLayerWizard extends Wizard
   @Override
   public void addPages( )
   {
-
     addPage( new KalypsoWizardSelectionPage( m_workbench, null, getAvailableImportWizards(), "Kalypso Import", m_outlineviewer ) );
   }
 
