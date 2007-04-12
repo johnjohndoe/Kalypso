@@ -93,7 +93,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
   private static final String SETTINGS_FILTER_PATH = "fileDialogPath";
 
-//  private static final DateFormat DF = DateFormat.getDateInstance( DateFormat.LONG );
+  // private static final DateFormat DF = DateFormat.getDateInstance( DateFormat.LONG );
 
   /**
    * @see org.eclipse.ui.actions.ActionDelegate#init(org.eclipse.jface.action.IAction)
@@ -165,7 +165,9 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     /* convert them into the profile-list */
     try
     {
-      loadIntoGml( profiles );
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
+      final CommandableWorkspace workspace = m_selection.getWorkspace( fate.getParentFeature() );
+      loadIntoGml( profiles, fate, workspace );
     }
     catch( final Exception e )
     {
@@ -177,8 +179,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
   private MultiStatus readProfiles( final IAction action, final Shell shell, final File[] files, final List<IProfil> profiles )
   {
     final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, "Eine oder mehrere der .rpf Dateien konnten nicht gelesen werden.", null );
-//    final Date today = new Date();
-//    final String todayString = DF.format( today );
+    // final Date today = new Date();
+    // final String todayString = DF.format( today );
     for( final File file : files )
     {
       try
@@ -190,8 +192,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
         // do not overwrite original comment from wspwin profile
         // TODO: put this information into metadata strings
-//        final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
-//        profil.setComment(  description );
+        // final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
+        // profil.setComment( description );
 
         profiles.add( profil );
       }
@@ -239,10 +241,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     return results;
   }
 
-  private void loadIntoGml( final List<IProfil> profiles ) throws Exception
+  public static void loadIntoGml( final List<IProfil> profiles, final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace ) throws Exception
   {
-    final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
-
     final ICommand command = new ICommand()
     {
       private Feature[] m_addedFeatures = null;
@@ -312,7 +312,6 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       }
     };
 
-    final CommandableWorkspace workspace = m_selection.getWorkspace( fate.getParentFeature() );
     if( workspace != null )
       workspace.postCommand( command );
   }

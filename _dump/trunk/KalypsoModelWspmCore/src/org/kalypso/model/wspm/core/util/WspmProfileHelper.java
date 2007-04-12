@@ -244,6 +244,38 @@ public class WspmProfileHelper
 
         return (GM_Point) object;
       }
+      /* if the point is lying on the start point of the segemnt */
+      else if( widthValueOne == width )
+      {
+        /* calculate the georeference */
+        final double x = rechtsWertOne;
+        final double y = hochWertOne;
+        final double z = heigthValueOne;
+
+        Coordinate geoCoord = new Coordinate( x, y, z );
+        GeometryFactory factory = new GeometryFactory();
+
+        Point point = factory.createPoint( geoCoord );
+        GM_Object object = JTSAdapter.wrap( point );
+
+        return (GM_Point) object;
+      }
+      /* if the point is lying on the end point of the segemnt */
+      else if( widthValueTwo == width )
+      {
+        /* calculate the georeference */
+        final double x = rechtsWertTwo;
+        final double y = hochWertTwo;
+        final double z = heigthValueTwo;
+
+        Coordinate geoCoord = new Coordinate( x, y, z );
+        GeometryFactory factory = new GeometryFactory();
+
+        Point point = factory.createPoint( geoCoord );
+        GM_Object object = JTSAdapter.wrap( point );
+
+        return (GM_Point) object;
+      }
     }
     return null;
   }
