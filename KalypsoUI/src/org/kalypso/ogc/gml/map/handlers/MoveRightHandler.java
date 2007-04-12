@@ -82,8 +82,8 @@ public class MoveRightHandler extends AbstractHandler implements IHandler
     final GM_Position currentMax = currentBBox.getMax();
     final GM_Position currentMin = currentBBox.getMin();
 
-    final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-    final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+    final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+    final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
 
     final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
