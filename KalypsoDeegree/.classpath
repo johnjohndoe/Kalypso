@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="deegree"/>
 	<classpathentry kind="src" path="srcbind"/>
+	<classpathentry exported="true" kind="lib" path="lib/xtiff-jai/xtiff-jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/geotiff-jai/geotiff-jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.7.2.jar" sourcepath="lib/jts/jts-1.7.2_src.zip"/>
