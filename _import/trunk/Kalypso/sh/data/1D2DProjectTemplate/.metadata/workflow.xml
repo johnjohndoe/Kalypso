@@ -22,7 +22,8 @@
 				<Help>Einladen von Höhendaten (TIN/GRID)</Help>
 				<Name>Import von Höhendaten</Name>
 			</Task>
-			<!--		<Task context="BaseMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RivNetLoad">
+			<!--		
+			<Task context="BaseMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RivNetLoad">
 				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
 				<Name>Import eines Gewässernetzes</Name>
 				</Task>
@@ -110,6 +111,10 @@
 				<Task context="2dElementTheme" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
 					<Help>Weist den FE-2D-Elementknoten mittels zuvor importierter Geländemodelle Höhen zu.</Help>
 					<Name>Höhen zuweisen</Name>
+				</Task>
+				<Task context="2dElementTheme" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughnessFENETColor">
+					<Help>Apply Colors to FE ELements</Help>
+					<Name>Colors For FE ELement</Name>
 				</Task>
 			</TaskGroup>
 			<!--
