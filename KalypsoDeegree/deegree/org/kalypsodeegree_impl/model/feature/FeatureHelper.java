@@ -794,7 +794,9 @@ public class FeatureHelper
     final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
     final Object value = feature.getProperty( property );
     if( value instanceof Feature )
+    {
       return (Feature) value;
+    }
     else
     {
       /* Its a local link inside a xlinked-feature */
@@ -804,8 +806,15 @@ public class FeatureHelper
         final String href = xlinkedFeature.getUri() + "#" + value;
         return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
       }
-      /* A normal local link inside the same workspace */
-      return feature.getWorkspace().getFeature( (String) value );
+      else if(value == null )
+      {
+        return null;
+      }
+      else
+      {
+        /* A normal local link inside the same workspace */
+        return feature.getWorkspace().getFeature( (String) value );
+      }
     }
   }
 
