@@ -55,24 +55,25 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.floodrisk.tools.GridUtils;
+import org.kalypso.raster.GridUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 
 /**
- * 
- * 
  * Wizard to export a raster from gml to another format (e.g. ascii)
  * 
  * @author Nadja Peiler
+ * 
+ * @deprecated use KalypsoGmlUi - RectifiedGridCoverageImportWizard for importing raster files (ascii, tif, geotif)...
  */
+@Deprecated
 public class ExportRasterWizard extends Wizard implements IImportWizard
 {
   private ExportRasterSelectionWizardPage m_page1 = null;
 
   private IStructuredSelection m_selection;
 
-  public ExportRasterWizard()
+  public ExportRasterWizard( )
   {
     super();
     setHelpAvailable( false );
@@ -84,7 +85,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection currentSelection )
+  public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
     final List selectedResources = IDE.computeSelectedResources( currentSelection );
@@ -101,7 +102,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   @Override
-  public void addPages()
+  public void addPages( )
   {
     super.addPages();
 
@@ -115,9 +116,9 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
-  public boolean performFinish()
+  public boolean performFinish( )
   {
-    final RasterExportSelection selection = (RasterExportSelection)m_page1.getSelection();
+    final RasterExportSelection selection = (RasterExportSelection) m_page1.getSelection();
     final File fileSource = selection.getSourceFile();
     final File fileTarget = selection.getFileTarget();
     final String format = selection.getTargetFormat();
@@ -126,7 +127,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
     {
       if( format.equals( "Ascii" ) )
       {
-        Job exportGridJob = new Job( "Raster exportieren" )
+        final Job exportGridJob = new Job( "Raster exportieren" )
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
@@ -146,7 +147,9 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
               if( monitor.isCanceled() )
               {
                 if( fileTarget.exists() )
+                {
                   fileTarget.delete();
+                }
                 return Status.CANCEL_STATUS;
               }
               monitor.worked( 50 );

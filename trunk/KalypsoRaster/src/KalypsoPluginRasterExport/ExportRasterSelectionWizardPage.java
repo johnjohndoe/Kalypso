@@ -76,7 +76,10 @@ import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
  * ExportRasterSelectionWizardPage, Selection: source(*.gml) and target(*.asc) file
  * 
  * @author Nadja Peiler
+ * 
+ * @deprecated use KalypsoGmlUi - RectifiedGridCoverageImportWizard for importing raster files (ascii, tif, geotif)...
  */
+@Deprecated
 public class ExportRasterSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider
 {
   private static final String DEFAUL_FILE_LABEL = "";
@@ -101,12 +104,12 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
   IProject selectedProject;
 
-  public ExportRasterSelectionWizardPage( String pageName )
+  public ExportRasterSelectionWizardPage( final String pageName )
   {
     this( pageName, null, null );
   }
 
-  public ExportRasterSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ExportRasterSelectionWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -118,15 +121,15 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
     m_topLevel = new Composite( parent, SWT.NONE );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     m_topLevel.setLayout( gridLayout );
 
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
     m_topLevel.setLayoutData( data );
@@ -136,51 +139,51 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     setControl( m_topLevel );
   }
 
-  public void createControlSource( Composite parent )
+  public void createControlSource( final Composite parent )
   {
-    Group group = new Group( parent, SWT.NONE );
+    final Group group = new Group( parent, SWT.NONE );
     group.setText( "Quelle" );
 
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
     group.setLayoutData( data );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     group.setLayout( gridLayout );
 
     // line 1
-    Label label = new Label( group, SWT.NONE );
+    final Label label = new Label( group, SWT.NONE );
     label.setText( "von " );
 
     m_textFileSource = new Text( group, SWT.BORDER );
-    m_textFileSource.setText( DEFAUL_FILE_LABEL );
+    m_textFileSource.setText( ExportRasterSelectionWizardPage.DEFAUL_FILE_LABEL );
     m_textFileSource.addFocusListener( this );
 
-    GridData data1 = new GridData();
+    final GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
     data1.grabExcessHorizontalSpace = true;
     m_textFileSource.setLayoutData( data1 );
 
-    Button button = new Button( group, SWT.PUSH );
+    final Button button = new Button( group, SWT.PUSH );
     button.setText( "Auswahl ..." );
-    GridData data2 = new GridData();
+    final GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
 
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         selectedProject = ProjectUtilities.getSelectedProjects()[0];
-        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "gml" } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "gml" } );
         dialog.open();
-        Object[] result = dialog.getResult();
+        final Object[] result = dialog.getResult();
         if( result != null )
         {
-          Path resultPath = (Path) result[0];
+          final Path resultPath = (Path) result[0];
           m_textFileSource.setText( resultPath.toString() );
           m_sourcePath = resultPath;
         }
@@ -189,69 +192,75 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     } );
   }
 
-  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
     return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource", fileResourceExtensions, selectedProject, new ResourceSelectionValidator() );
   }
 
-  public void createControlTarget( Composite parent )
+  public void createControlTarget( final Composite parent )
   {
-    Group group = new Group( parent, SWT.NONE );
+    final Group group = new Group( parent, SWT.NONE );
     group.setText( "Ziel" );
-    GridLayout gridLayout3 = new GridLayout();
+    final GridLayout gridLayout3 = new GridLayout();
     group.setLayout( gridLayout3 );
-    GridData data4 = new GridData();
+    final GridData data4 = new GridData();
     data4.horizontalAlignment = GridData.FILL;
     data4.grabExcessHorizontalSpace = true;
     group.setLayoutData( data4 );
 
-    Composite top = new Composite( group, SWT.NONE );
-    GridData data = new GridData();
+    final Composite top = new Composite( group, SWT.NONE );
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
     top.setLayoutData( data );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     top.setLayout( gridLayout );
 
-    Label label = new Label( top, SWT.NONE );
+    final Label label = new Label( top, SWT.NONE );
     label.setText( "nach" );
 
     m_textFileTarget = new Text( top, SWT.BORDER );
-    m_textFileTarget.setText( DEFAUL_FILE_LABEL );
+    m_textFileTarget.setText( ExportRasterSelectionWizardPage.DEFAUL_FILE_LABEL );
     m_textFileTarget.addFocusListener( this );
-    GridData data1 = new GridData();
+    final GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
     data1.grabExcessHorizontalSpace = true;
     m_textFileTarget.setLayoutData( data1 );
-    Button button = new Button( top, SWT.PUSH );
+    final Button button = new Button( top, SWT.PUSH );
     button.setText( "Auswahl ..." );
-    GridData data2 = new GridData();
+    final GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
 
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( m_format.equals( formats[0] ) )
         {
-          String targetFileName = chooseFile( m_targetFile, new String[] { "*.asc" } );
+          final String targetFileName = chooseFile( m_targetFile, new String[] { "*.asc" } );
           if( targetFileName != null )
           {
             if( targetFileName.indexOf( "." ) == -1 )
+            {
               m_targetFile = new File( targetFileName + ".asc" );
+            }
             else
+            {
               m_targetFile = new File( targetFileName );
+            }
           }
         }
         else
         {
-          String targetFileName = chooseFile( m_targetFile, null );
+          final String targetFileName = chooseFile( m_targetFile, null );
           if( targetFileName != null )
+          {
             m_targetFile = new File( targetFileName );
+          }
         }
         validate();
       }
@@ -259,7 +268,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
     // line 2
 
-    Label formatLabel = new Label( group, SWT.NONE );
+    final Label formatLabel = new Label( group, SWT.NONE );
     formatLabel.setText( "Format " );
 
     m_formatCombo = new Combo( group, SWT.NONE );
@@ -268,20 +277,20 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     m_formatCombo.addSelectionListener( new SelectionListener()
     {
 
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_format = formats[m_formatCombo.getSelectionIndex()];
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {// default
       }
     } );
   }
 
-  String chooseFile( File selectedFile, String[] filterExtensions )
+  String chooseFile( final File selectedFile, final String[] filterExtensions )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
     dialog.setFilterExtensions( filterExtensions );
     if( selectedFile != null )
     {
@@ -289,10 +298,10 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
       dialog.setFilterPath( selectedFile.getParent() );
     }
     dialog.open();
-    String fileName = dialog.getFileName();
-    String filterPath = dialog.getFilterPath();
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
     String filePath = null;
-    if( fileName != null && fileName != "" && filterPath != null )
+    if( (fileName != null) && (fileName != "") && (filterPath != null) )
     {
       filePath = filterPath + "/" + fileName;
     }
@@ -307,14 +316,14 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     setErrorMessage( null );
     setMessage( null );
     setPageComplete( true );
-    StringBuffer error = new StringBuffer();
+    final StringBuffer error = new StringBuffer();
     if( m_sourcePath != null )
     {
       setPageComplete( true );
     }
     else
     {
-      m_textFileSource.setText( DEFAUL_FILE_LABEL );
+      m_textFileSource.setText( ExportRasterSelectionWizardPage.DEFAUL_FILE_LABEL );
       error.append( "Quelle nicht ausgewählt \n" );
       setPageComplete( false );
     }
@@ -325,14 +334,18 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     }
     else
     {
-      m_textFileTarget.setText( DEFAUL_FILE_LABEL );
+      m_textFileTarget.setText( ExportRasterSelectionWizardPage.DEFAUL_FILE_LABEL );
       error.append( "Ziel nicht ausgewählt" );
       setPageComplete( false );
     }
     if( error.length() > 0 )
+    {
       setErrorMessage( error.toString() );
+    }
     else
+    {
       setMessage( "Eingaben OK" );
+    }
   }
 
   /**
@@ -351,7 +364,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   public void dispose( )
   {
     super.dispose();
-    if( m_topLevel != null && !m_topLevel.isDisposed() )
+    if( (m_topLevel != null) && !m_topLevel.isDisposed() )
     {
       m_topLevel.dispose();
       m_topLevel = null;
@@ -361,7 +374,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
    */
-  public void focusGained( FocusEvent e )
+  public void focusGained( final FocusEvent e )
   {
     // nothing
   }
@@ -369,13 +382,13 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
    */
-  public void focusLost( FocusEvent e )
+  public void focusLost( final FocusEvent e )
   {
-    if( m_sourcePath != null && !m_sourcePath.equals( m_textFileSource.getText() ) )
+    if( (m_sourcePath != null) && !m_sourcePath.equals( m_textFileSource.getText() ) )
     {
       m_sourcePath = new Path( m_textFileSource.getText() );
     }
-    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
+    if( (m_targetFile != null) && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
     {
       m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
     }
@@ -385,7 +398,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.add( listener );
   }
@@ -401,7 +414,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.remove( listener );
   }
@@ -409,11 +422,11 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     if( selection instanceof RasterExportSelection )
     {
-      RasterExportSelection s = ((RasterExportSelection) selection);
+      final RasterExportSelection s = ((RasterExportSelection) selection);
       m_sourcePath = s.getPathSource();
       m_targetFile = s.getFileTarget();
       selectedProject = s.getProject();

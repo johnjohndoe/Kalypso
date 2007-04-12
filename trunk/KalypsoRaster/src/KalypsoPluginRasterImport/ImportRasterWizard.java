@@ -41,32 +41,27 @@
 
 package KalypsoPluginRasterImport;
 
-import java.io.File;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.floodrisk.tools.GridUtils;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Wizard to import a raster from another format (e.g. ascii) to gml
  * 
  * @author Nadja Peiler
+ * 
+ * @deprecated use KalypsoGmlUi - RectifiedGridCoverageImportWizard for importing raster files (ascii, tif, geotif)...
  */
+@Deprecated
 public class ImportRasterWizard extends Wizard implements IImportWizard
 {
   private ImportRasterSelectionWizardPage m_page1 = null;
@@ -75,7 +70,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
 
   private IWorkbench m_workbench;
 
-  public ImportRasterWizard()
+  public ImportRasterWizard( )
   {
     super();
     setHelpAvailable( false );
@@ -87,7 +82,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection currentSelection )
+  public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
     m_workbench = workbench;
@@ -105,7 +100,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   @Override
-  public void addPages()
+  public void addPages( )
   {
     super.addPages();
 
@@ -119,7 +114,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.jface.wizard.IWizard#performCancel()
    */
   @Override
-  public boolean performCancel()
+  public boolean performCancel( )
   {
     return true;
   }
@@ -128,78 +123,20 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
-  public boolean performFinish()
+  public boolean performFinish( )
   {
-    final RasterImportSelection selection = (RasterImportSelection)m_page1.getSelection();
-    final File fileSource = selection.getFileSource();
-    final File fileTarget = selection.getTargetFile();
-    final IProject targetProject = selection.getProject();
-    final String format = selection.getSourceFormat();
+    final RasterImportSelection selection = (RasterImportSelection) m_page1.getSelection();
     final CS_CoordinateSystem cs = m_page1.getSelectedCoordinateSystem();
 
-    if( fileSource.exists() )
-    {
-      if( format.equals( "Ascii" ) )
-      {
-        Job importGridJob = new Job( "Raster importieren" )
-        {
-          @Override
-          protected IStatus run( final IProgressMonitor monitor )
-          {
-            try
-            {
-              monitor.beginTask( "Lese Rasterdaten", 100 );
-              RectifiedGridCoverage2 rasterGrid = GridUtils.importGridArc( fileSource, cs );
-              monitor.worked( 50 );
-              if( monitor.isCanceled() )
-              {
-                return Status.CANCEL_STATUS;
-              }
-              monitor.setTaskName( "Schreibe GML-Datei" );
-              GridUtils.writeRasterData( fileTarget, rasterGrid );
-              targetProject.refreshLocal( IResource.DEPTH_INFINITE, null );
-              if( monitor.isCanceled() )
-              {
-                if( fileTarget.exists() )
-                {
-                  fileTarget.delete();
-                  targetProject.refreshLocal( IResource.DEPTH_INFINITE, null );
-                }
-                return Status.CANCEL_STATUS;
-              }
-              monitor.worked( 50 );
-            }
-            catch( Exception e )
-            {
-              e.printStackTrace();
-              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e.getMessage(), e );
-            }
-            finally
-            {
-              monitor.done();
-            }
-            return Status.OK_STATUS;
-          }
-        };
-        importGridJob.setUser( true );
-        importGridJob.schedule();
+    final ImportRasterWizardPerformFinishWorker worker = new ImportRasterWizardPerformFinishWorker( selection, cs );
 
-      }
-      else
-      {
-        MessageDialog.openConfirm( this.getShell(), "Information", "Import-Function not implemented" );
-        return false;
-      }
-    }
-    else
-    {
-      System.out.println( "fileSource does not exist" );
-    }
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, worker );
+    ErrorDialog.openError( getShell(), "Information", "Import-Function not implemented", status );
 
-    return true;
+    return status.isOK();
   }
 
-  public IWorkbench getWorkbench()
+  public IWorkbench getWorkbench( )
   {
     return m_workbench;
   }
