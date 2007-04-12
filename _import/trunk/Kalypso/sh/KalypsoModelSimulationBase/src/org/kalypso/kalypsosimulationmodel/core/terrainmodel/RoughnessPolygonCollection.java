@@ -38,7 +38,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
 
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon polygon )
   {
-    // TODO: to be implemented
+   System.out.println("Polygon : "+polygon); 
     return null;
   }
   
