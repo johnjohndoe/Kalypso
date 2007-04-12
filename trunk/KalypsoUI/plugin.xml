@@ -1187,21 +1187,21 @@
           commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
           contextId="org.eclipse.ui.contexts.window"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Left"/> 
+          sequence="M1+ARROW_LEFT"/> 
     <key
           commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
           contextId="org.eclipse.ui.contexts.window"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Right"/> 
+          sequence="M1+ARROW_RIGHT"/> 
     <key
           commandId="org.kalypso.ogc.gml.map.MoveUpCommand"
           contextId="org.eclipse.ui.contexts.window"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Up"/> 
+          sequence="M1+ARROW_UP"/> 
     <key
           commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
           contextId="org.eclipse.ui.contexts.window"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Down"/>                                                
+          sequence="M1+ARROW_DOWN"/>                                                
  </extension>
 </plugin>
