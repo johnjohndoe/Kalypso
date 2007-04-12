@@ -48,12 +48,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.ISelection;
 
 /**
- * 
- * 
  * Selection with information needed to export a raster from gml to another format (e.g. ascii)
  * 
  * @author Nadja Peiler
+ * 
+ * @deprecated use KalypsoGmlUi - RectifiedGridCoverageImportWizard for importing raster files (ascii, tif, geotif)...
  */
+@Deprecated
 public class RasterExportSelection implements ISelection
 {
 
@@ -65,7 +66,7 @@ public class RasterExportSelection implements ISelection
 
   private IProject m_selectedProject;
 
-  public RasterExportSelection( IPath pathSource, IProject selectedProject, File fileTarget, String format )
+  public RasterExportSelection( final IPath pathSource, final IProject selectedProject, final File fileTarget, final String format )
   {
     m_pathSource = pathSource;
     m_selectedProject = selectedProject;
@@ -76,32 +77,32 @@ public class RasterExportSelection implements ISelection
   /**
    * @see org.eclipse.jface.viewers.ISelection#isEmpty()
    */
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
-    return m_pathSource == null || m_fileTarget == null;
+    return (m_pathSource == null) || (m_fileTarget == null);
   }
 
-  public IPath getPathSource()
+  public IPath getPathSource( )
   {
     return m_pathSource;
   }
 
-  public File getSourceFile()
+  public File getSourceFile( )
   {
     return new File( m_selectedProject.getLocation() + "/" + m_pathSource.removeFirstSegments( 1 ).toString() );
   }
 
-  public IProject getProject()
+  public IProject getProject( )
   {
     return m_selectedProject;
   }
 
-  public File getFileTarget()
+  public File getFileTarget( )
   {
     return m_fileTarget;
   }
 
-  public String getTargetFormat()
+  public String getTargetFormat( )
   {
     return m_format;
   }
