@@ -60,6 +60,7 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -90,8 +91,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private final IUrlResolver m_urlResolver;
 
   private final ILogger m_logger;
-
-  private static final String SUMM_INFO = "*** ";
 
   private final Date m_forecastFrom;
 
@@ -173,13 +172,15 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       if( targetlink == null )
       {
-        m_logger.log( Level.WARNING, true, "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX,
+            "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
 
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_logger.log( Level.WARNING, true, "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX,
+            "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
 
@@ -204,7 +205,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       resultObs.getMetadataList().putAll( m_metadata );
 
       // protocol the observations here and inform the user
-      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger, SUMM_INFO );
+      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
@@ -231,8 +232,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.log( Level.SEVERE, true, "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() + "\t"
-          + e.getLocalizedMessage() );
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Fehler beim Kopieren der Zeitreihen für Feature: "
+          + f.getId() + "\t" + e.getLocalizedMessage() );
     }
 
     return true;
@@ -304,7 +305,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
           m_logger
-              .log( Level.WARNING, false,
+              .log( Level.WARNING, LoggerUtilities.CODE_NONE,
                   "Hinweis: Zielzeitreihe konnte nicht gleichzeitig als Quelle verwendet werden und wird ignoriert. (kein Fehler)" );
         else
           throw new SensorException( e );

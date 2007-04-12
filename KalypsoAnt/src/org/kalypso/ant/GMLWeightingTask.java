@@ -46,6 +46,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.CopyObservationMappingHelper;
@@ -104,28 +105,25 @@ public class GMLWeightingTask extends Task
     try
     {
       final Project antProject = getProject();
-      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
-      // else we get an LinkageError when accessing the Project class. 
+      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin
+      // code) else we get an LinkageError when accessing the Project class.
       final ILogger logger = new ILogger()
       {
         /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
-        public void log( final Level level, final boolean mainMsg, final String message )
+        public void log( final Level level, final int msgCode, final String message )
         {
-          final StringBuffer sb = new StringBuffer( level.toString() );
-          sb.append( ": " );
-          if( mainMsg )
-            sb.append( '*' );
-          sb.append( message );
+          final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
 
-          final String outString = sb.toString();
           if( antProject == null )
-            System.out.print( outString );
+            System.out.println( outString );
           else
             antProject.log( outString );
         }
       };
+
+      logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, "Berechnung Gebietsniederschlag" );
 
       final UrlResolver urlResolver = new UrlResolver();
       // create needed factories
@@ -138,7 +136,7 @@ public class GMLWeightingTask extends Task
       final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_modelURL );
 
       // 1. load srcgml
-      logger.log( Level.INFO, false, "Lade Modell " + m_modelURL );
+      logger.log( Level.INFO, -1, "Lade Modell " + m_modelURL );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modelURL );
 
       // 2. locate features to process
@@ -167,7 +165,7 @@ public class GMLWeightingTask extends Task
           final Feature sourceFE = workspace.resolveLink( weightFEs[j], m_propRelationSourceFeature );
           if( sourceFE == null )
           {
-            logger.log( Level.WARNING, false, "Linked source feature missing in Feature: " + weightFEs[j].getId() );
+            logger.log( Level.WARNING, -1, "Linked source feature missing in Feature: " + weightFEs[j].getId() );
 
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
@@ -177,7 +175,7 @@ public class GMLWeightingTask extends Task
           final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
           if( zmlLink == null )
           {
-            logger.log( Level.WARNING, false, "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
+            logger.log( Level.WARNING, -1, "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
 
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
@@ -204,7 +202,7 @@ public class GMLWeightingTask extends Task
 
         // 11. add mapping to result workspace
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, targetURL.toExternalForm() );
-        logger.log( Level.INFO, false, "Ziel-ZML " + targetURL );
+        logger.log( Level.INFO, -1, "Ziel-ZML " + targetURL );
       }
       // 13. do the mapping
       CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, new Date( m_from ),
