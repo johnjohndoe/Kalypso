@@ -69,7 +69,7 @@ public class Element1D< CT extends IFE1D2DComplexElement,
     this( 
         featureToBind, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, 
-        (Class<CT>)IRiverChannel1D.class );
+        (Class<CT>)IFE1D2DComplexElement.class/*IRiverChannel1D.class*/ );
   }
   
   public Element1D( 

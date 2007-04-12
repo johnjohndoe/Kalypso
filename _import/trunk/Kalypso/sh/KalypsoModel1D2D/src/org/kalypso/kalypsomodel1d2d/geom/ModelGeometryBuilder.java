@@ -45,10 +45,15 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
+import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -62,6 +67,45 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class ModelGeometryBuilder
 {
   
+  /**
+   * Create a surface given its exterior ring represented
+   * by a list of nodes
+   * @param nodes the nodes representing the exterior of the surface
+   * @return a surface which has its exterior specified by the nodes
+   *            or null if less than 3 nodes have been provided
+   *            
+   * @throws IllegalArgumentException if nodes is null   
+   */
+  public static final GM_Surface createSurfaceFromNode(List<IFE1D2DNode> nodes) throws GM_Exception
+  {
+      Assert.throwIAEOnNullParam( nodes, "nodes" );
+      
+      final int SIZE=nodes.size();
+      /* Positions from nodes */
+      final GM_Position[] poses = new GM_Position[SIZE];
+ 
+      if( SIZE <= 3 )
+      {
+        System.out.println("Less than 3 node as exterior ");
+        return null;
+      }
+
+      final CS_CoordinateSystem crs = 
+        nodes.get(0).getPoint().getCoordinateSystem();
+
+      for( int i = 0; i < poses.length; i++ )
+      {
+        final GM_Point point = nodes.get( i ).getPoint();
+        poses[i] = point.getPosition();
+      }
+      
+      return GeometryFactory.createGM_Surface( 
+                      poses, 
+                      new GM_Position[0][], 
+                      new GM_SurfaceInterpolation_Impl( 
+                                    GM_SurfaceInterpolation.PLANAR ), 
+                      crs );
+  }
   
   public static final GM_Curve computeEgdeGeometry( 
               IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge) throws GM_Exception

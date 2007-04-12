@@ -11,15 +11,51 @@
 		<Name>Element1D</Name>
 		<Title>1D FE-Element</Title>
 		<Abstract>default</Abstract>
+		
+		<ogc:Filter>
+			<ogc:PropertyIsEqualTo>
+				<ogc:PropertyName>wb1d2d:isJunctionElement</ogc:PropertyName>
+				<ogc:Literal>false</ogc:Literal>
+			</ogc:PropertyIsEqualTo>
+        </ogc:Filter>
+		
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<LineSymbolizer>
-			<!--Geometry>
+			<Geometry>
 				<ogc:PropertyName>geometry</ogc:PropertyName>
-			</Geometry-->
+			</Geometry>
 			<Stroke>
 				<CssParameter name="stroke">#ff22ff</CssParameter>
 				<CssParameter name="stroke-width">2.0</CssParameter>
+				<CssParameter name="stroke-linejoin">mitre</CssParameter>
+				<CssParameter name="stroke-opacity">1.0</CssParameter>
+				<CssParameter name="stroke-linecap">butt</CssParameter>
+			</Stroke>
+		</LineSymbolizer>
+	</Rule>
+	
+	<Rule>
+		<Name>Element1D</Name>
+		<Title>1D FE-Element</Title>
+		<Abstract>default</Abstract>
+		
+		<ogc:Filter>
+			<ogc:PropertyIsEqualTo>
+				<ogc:PropertyName>wb1d2d:isJunctionElement</ogc:PropertyName>
+				<ogc:Literal>true</ogc:Literal>
+			</ogc:PropertyIsEqualTo>
+        </ogc:Filter>
+		
+		<MinScaleDenominator>0.0</MinScaleDenominator>
+		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
+		<LineSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>geometry</ogc:PropertyName>
+			</Geometry>
+			<Stroke>
+				<CssParameter name="stroke">#ff11ff</CssParameter>
+				<CssParameter name="stroke-width">4.0</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>

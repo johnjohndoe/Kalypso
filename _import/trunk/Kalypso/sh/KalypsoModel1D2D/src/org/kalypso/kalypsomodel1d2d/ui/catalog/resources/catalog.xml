@@ -13,6 +13,9 @@
 	<catalog:system 
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:NativeTerrainElevationModelWrapper:sld:default" 
 		uri="NativeTerrainElevationModelWrapper.sld" />
+	<catalog:system 
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:JunctionContext1DToCLine:sld:default" 
+		uri="JunctionContext.sld" />
 	
 	<catalog:system 
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:_FlowRelationship:sld:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase_FlowRelationship.sld" />

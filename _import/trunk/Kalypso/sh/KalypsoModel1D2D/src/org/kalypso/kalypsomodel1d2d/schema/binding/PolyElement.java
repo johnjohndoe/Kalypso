@@ -215,6 +215,7 @@ public class PolyElement extends AbstractFeatureBinder
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
+    //TODO Patrice use ModelGeometryBuilder createSurface
       List<IFE1D2DNode> nodes=getNodes();
       final int SIZE=nodes.size();
       /* Positions from nodes */

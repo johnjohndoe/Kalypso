@@ -49,8 +49,10 @@ public class Kalypso1D2DSchemaConstants
   
   public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_2D = 
                      new QName( 
-                           UrlCatalog1D2D.MODEL_1D2D_NS, 
-                           "JunctionContext1DTo2D" );
+                           UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DTo2D" );
+  public final static QName WB1D2D_F_JUNTCION_CONTEXT = 
+    new QName( 
+          UrlCatalog1D2D.MODEL_1D2D_NS, "_JunctionContext" );
   
   public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 

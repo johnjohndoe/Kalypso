@@ -560,6 +560,11 @@
 					kapp:property="wb1d2d:geometry"
 					kapp:valueType="gml:LineStringPropertyType"
 					kapp:isVirtual="true"/>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DJunctionNatureTest"
+					kapp:property="wb1d2d:isJunctionElement"
+					kapp:isVirtual="true"
+					kapp:valueType="xs:boolean"/>
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -761,6 +766,14 @@
 				The context for a junction base on a
 				continuity line and a 1d element
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+						kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
+						kapp:property="wb1d2d:geometry"
+						kapp:valueType="gml:PolygonPropertyType"
+						kapp:isVirtual="true"/>
+			</xs:appinfo>
+			
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:restriction 

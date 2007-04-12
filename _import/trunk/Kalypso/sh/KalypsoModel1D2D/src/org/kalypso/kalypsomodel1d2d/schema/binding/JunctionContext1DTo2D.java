@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Default implementation of {@link IJunctionContext1DTo2D}
@@ -81,6 +82,8 @@ public class JunctionContext1DTo2D extends JunctionContext1DToCLine implements I
       getFeature().setProperty( 
           Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D, 
           wrappedFeature.getId() );
+      //TODO Patrice 
+      element.getContainers().addRef( this );
       return true;
     }
     else
@@ -100,6 +103,7 @@ public class JunctionContext1DTo2D extends JunctionContext1DToCLine implements I
     {
       if(featureToDel.equals( getElement2D().getWrappedFeature() ))
       {
+        element.getContainers().removeAllRefs( this );
         getFeature().setProperty( 
             Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D, 
             null );
@@ -123,15 +127,27 @@ public class JunctionContext1DTo2D extends JunctionContext1DToCLine implements I
    */
   public IPolyElement getElement2D( )
   {
-    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
-    if(obj instanceof Feature)
+    Feature feature = getFeature();
+    Feature element2dFeature = 
+      FeatureHelper.resolveLink( 
+          feature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D );
+    if(element2dFeature == null)
     {
-      return (IPolyElement) ((Feature)obj).getAdapter( IPolyElement.class );
-    }
-    else
-    {  
       return null;
     }
+    else
+    {
+      return (IPolyElement) element2dFeature.getAdapter( IPolyElement.class );
+    }
+//    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
+//    if(obj instanceof Feature)
+//    {
+//      return (IPolyElement) ((Feature)obj).getAdapter( IPolyElement.class );
+//    }
+//    else
+//    {  
+//      return null;
+//    }
   }
 
   /**

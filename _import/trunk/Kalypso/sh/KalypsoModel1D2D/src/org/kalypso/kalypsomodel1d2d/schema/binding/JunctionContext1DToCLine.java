@@ -48,11 +48,18 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
+import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
+import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * Default implementation of {@link IJunctionContext1DToCLine}
@@ -82,18 +89,46 @@ public class JunctionContext1DToCLine
    */
   public IFE1D2DContinuityLine getContinuityLine( )
   {
-    Object obj = 
-      getFeature().getProperty( 
-          Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
-    if(obj instanceof Feature)
+    Feature feature = getFeature();
+    Feature cLineFeature = 
+      FeatureHelper.resolveLink( 
+          feature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE );
+    if(cLineFeature == null)
     {
-      return (IFE1D2DContinuityLine) 
-              ((Feature)obj).getAdapter( IFE1D2DContinuityLine.class );
-    }
-    else
-    {  
       return null;
     }
+    else
+    {
+      return (IFE1D2DContinuityLine) 
+                cLineFeature.getAdapter( IFE1D2DContinuityLine.class );
+    }
+//    Object obj = 
+//      feature.getProperty( 
+//          Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE );
+//    if(obj !=null)
+//    {
+//      Feature cLine = FeatureHelper.getFeature( feature.getWorkspace(), obj );
+//      if(cLine!=null)
+//      {
+//        
+//        return (IFE1D2DContinuityLine) 
+//        cLine.getAdapter( IFE1D2DContinuityLine.class );
+//      }
+//      else
+//      {
+//        String message = 
+//          String.format( 
+//              "Could not get feature from the workspace:"+
+//                "\n\tworkspace feature=%s \n\tproperty(ref)=%s", 
+//              feature,
+//              obj );
+//        throw new RuntimeException(message);
+//      }
+//    }
+//    else
+//    {  
+//      return null;
+//    }
   }
 
   /**
@@ -101,15 +136,28 @@ public class JunctionContext1DToCLine
    */
   public IElement1D getElement1D( )
   {
-    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
-    if(obj instanceof Feature)
+    Feature feature = getFeature();
+    Feature element1dFeature = 
+      FeatureHelper.resolveLink( 
+          feature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
+    if(element1dFeature == null)
     {
-      return (IElement1D) ((Feature)obj).getAdapter( IElement1D.class );
-    }
-    else
-    {  
       return null;
     }
+    else
+    {
+      return (IElement1D) element1dFeature.getAdapter( IElement1D.class );
+    }
+    
+//    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
+//    if(obj instanceof Feature)
+//    {
+//      return (IElement1D) ((Feature)obj).getAdapter( IElement1D.class );
+//    }
+//    else
+//    {  
+//      return null;
+//    }
   }
 
   /**
@@ -123,6 +171,7 @@ public class JunctionContext1DToCLine
       getFeature().setProperty( 
           Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
           wrappedFeature.getId() );
+      element.getContainers().addRef( this );
       return true;
     }
     else if(TypeInfo.isElement1DFeature( wrappedFeature ))
@@ -130,6 +179,7 @@ public class JunctionContext1DToCLine
       getFeature().setProperty( 
           Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
           wrappedFeature.getId() );
+      element.getContainers().addRef( this );
       return true;
     }
     else
@@ -163,6 +213,7 @@ public class JunctionContext1DToCLine
     {
       if(featureToDel.equals( getContinuityLine().getWrappedFeature() ))
       {
+        element.getContainers().removeAllRefs( this );
         getFeature().setProperty( 
             Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
             null );
@@ -177,6 +228,7 @@ public class JunctionContext1DToCLine
     {
       if(featureToDel.equals( getElement1D().getWrappedFeature() ))
       {
+        element.getContainers().removeAllRefs( this );
         getFeature().setProperty( 
             Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
             null );
@@ -215,6 +267,32 @@ public class JunctionContext1DToCLine
       eleList.add( continuityLine );
     }
     return eleList;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#recalculateElementGeometry()
+   */
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  {
+    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = getContinuityLine();
+    if(continuityLine == null )
+    {
+      return null;
+    }
+    
+    IElement1D element1D = getElement1D();
+    if(element1D == null )
+    {
+      return null;
+    }
+    
+    final IFE1D2DNode endNode1D = EdgeOps.find1DEdgeEndNode( element1D.getEdge());
+    
+    List<IFE1D2DNode> nodes = continuityLine.getNodes();
+    nodes.add(0, endNode1D );
+    nodes.add( endNode1D );//close exterior ring
+    
+    return ModelGeometryBuilder.createSurfaceFromNode( nodes );
   }
   
   private final List<IFE1D2DElement> getJunctionAsList()
@@ -356,4 +434,6 @@ public class JunctionContext1DToCLine
     
     return list;
   }
+  
+  
 }

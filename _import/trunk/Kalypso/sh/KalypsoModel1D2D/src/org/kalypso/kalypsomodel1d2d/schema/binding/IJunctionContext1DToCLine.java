@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+
 /**
  * Interface for classes representing
  * 
@@ -62,5 +65,13 @@ public interface IJunctionContext1DToCLine
    *            if this junction context does not have a continuity line
    */
   public IFE1D2DContinuityLine getContinuityLine();
+  
+  /**
+   * Gets the virtual geometry of this junction context 
+   * by recalculating it
+   * 
+   * @return the recalculated geometry of this junction context
+   */
+  public GM_Object recalculateElementGeometry( )throws GM_Exception;
   
 }

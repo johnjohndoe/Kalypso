@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="mapEditStrategy" name="Map Edit Strategy" schema="schema/mapEditSpecification.exsd"/>
-   <extension-point id="mapEditStrategySet" name="Map edit Strategy Set" schema="schema/mapEditSpecificationSet.exsd"/>
      <extension
            point="org.kalypso.simulation.core.simulation">
         <simulation
@@ -40,7 +38,14 @@
               class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
               name="Element1DTypeGeometry"/>
-              
+         <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DJunctionNatureTest"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DJunctionNatureTest"
+              name="Element1DJunctionNatureTest"/>
+         <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
+              name="JunctionContextGeometry"/>
      </extension>     
      <extension
            id="editorActions"
@@ -218,18 +223,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine"/>
       </factory>
    </extension>
-     <!--extension
-         name="Workflow Views"
-         point="org.eclipse.ui.views">
-	      <view
-	            allowMultiple="false"
-	            class="xp.ModelMapEditStrategyView"
-	            id="xp.ModelMapEditProtocolView"
-	            name="Model Map Edit Protocol View "/>
-	  </extension-->
-     <extension
-           point="org.kalypso.model1d2d.mapEditStrategy">
-     </extension>
+     
      <extension
            point="org.kalypso.deegree.gmlWorkspaceListener">
         <listener

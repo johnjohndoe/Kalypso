@@ -42,8 +42,11 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -238,5 +241,36 @@ public class TypeInfo
     
     return true;
     
+  }
+
+  /**
+   * Check if the given complex element wrapper object
+   * wrapps a junction context feature, i.e. a feature which is
+   * substituable to wb1d2d:JunctionContext
+   * @param complexElement the complex element to test for its
+   *        junction context nature
+   * @return true if the given complex element wrapper object wrapps
+   *            a junction context feature otherwise false, including
+   *            the case where the passed junction element is null
+   */
+  public static final boolean isJuntionContext( IFE1D2DComplexElement complexElement )
+  {
+    if(complexElement == null )
+    {
+      return false;
+    }
+    Feature ceFeature = complexElement.getWrappedFeature();
+    IFeatureType featureType = ceFeature.getFeatureType();
+    
+    if( GMLSchemaUtilities.substitutes( 
+            featureType, 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT ))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 }
