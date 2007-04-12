@@ -71,9 +71,9 @@ public class DiffUtilitiesTest extends TestCase
       final ILogger logger = new ILogger()
       {
         /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
-        public void log( Level level, boolean mainMsg, String message )
+        public void log( final Level level, final int msgCode, final String message )
         {
           System.out.println( message );
           buffer.append( message );

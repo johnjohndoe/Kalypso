@@ -22,14 +22,17 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
 
   private final int m_stateMask;
 
+  private final boolean m_showMultipleDialogs;
+
   /**
-   * Same as {@link HandleDoneJobChangeAdapter#HandleDoneJobChangeAdapter(Shell, String, String, boolean, int)},
+   * Same as {@link HandleDoneJobChangeAdapter#HandleDoneJobChangeAdapter(Shell, String, String, boolean, int, boolean)},
    * stateMask defaulting to <code>IStatus.CANCEL | IStatus.INFO | IStatus.WARNING</code>.
    */
   public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
-      final boolean autoRemoveListener )
+      final boolean autoRemoveListener, final boolean showMultipleDialogs )
   {
-    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING );
+    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING,
+        showMultipleDialogs );
   }
 
   /**
@@ -45,7 +48,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
    *      org.eclipse.core.runtime.IStatus, int)
    */
   public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
-      final boolean autoRemoveListener, final int stateMask )
+      final boolean autoRemoveListener, final int stateMask, final boolean showMultipleDialogs )
   {
     super( autoRemoveListener );
 
@@ -53,6 +56,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
     m_messageTitle = messageTitle;
     m_messageFirstline = messageFirstline;
     m_stateMask = stateMask;
+    m_showMultipleDialogs = showMultipleDialogs;
   }
 
   /**
@@ -64,14 +68,15 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
     final Shell shell = m_shell;
     final String messageTitle = m_messageTitle;
     final String messageFirstline = m_messageFirstline;
+    final boolean showMultipleDialogs = m_showMultipleDialogs;
 
     final Runnable runnable = new Runnable()
     {
       public void run()
       {
         final IStatus status = event.getResult();
-        final ErrorDialog dialog = new ErrorDialog( shell, messageTitle, messageFirstline, status, stateMask );
-        dialog.open();
+        StatusUtilities.openSpecialErrorDialog( shell, messageTitle, messageFirstline, status, stateMask,
+            showMultipleDialogs );
       }
     };
     if( !m_shell.isDisposed() )

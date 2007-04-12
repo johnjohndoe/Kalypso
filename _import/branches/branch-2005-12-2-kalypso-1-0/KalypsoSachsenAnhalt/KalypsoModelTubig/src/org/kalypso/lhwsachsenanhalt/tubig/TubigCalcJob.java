@@ -247,14 +247,17 @@ public class TubigCalcJob implements ICalcJob
       // Fehler bei Abarbeitung einer Batch. Batches werden nicht weiter
       // abgearbeitet: kontrollierter Abbruch
       e.printStackTrace();
+      
       pwCalcLog.println( TubigConst.FINISH_ERROR_TEXT );
 
       String finishText = e.getFinishText();
-
       try
       {
         if( fleBatErr != null )
-          finishText += "\n" + FileUtils.readFileToString( fleBatErr, "CP1252" );
+        {
+          final String strBatErr = FileUtils.readFileToString( fleBatErr, "CP1252" );
+          finishText += "\n" + strBatErr;
+        }
       }
       catch( final IOException e1 )
       {

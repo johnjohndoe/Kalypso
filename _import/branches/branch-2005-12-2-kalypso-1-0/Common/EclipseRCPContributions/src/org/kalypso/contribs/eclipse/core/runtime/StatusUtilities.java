@@ -51,6 +51,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
@@ -205,7 +208,7 @@ public final class StatusUtilities
     {
       if( t.getCause() != null )
         return statusFromThrowable( t.getCause(), message + "\n" + t.toString() );
-      
+
       // beser t.toString, weil manche Exceptions dann doch nich mehr verraten
       // z.B. ValidationException
       msg = t.toString();//"<Keine weitere Information vorhanden>";
@@ -325,4 +328,119 @@ public final class StatusUtilities
 
     return newStatus;
   }
+
+  /**
+   * Opens an error dialog on the given status.
+   * 
+   * @param showMultipleDialogs
+   *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
+   *          multi-status. Else, only one dialog pops-up.
+   * @return See
+   *         {@link ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus)}
+   */
+  public static int openErrorDialog( final Shell shell, final String title, final String message, final IStatus status,
+      final boolean showMultipleDialogs )
+  {
+    if( !status.isMultiStatus() || !showMultipleDialogs )
+      return ErrorDialog.openError( shell, title, message, status );
+
+    final IStatus[] children = ( (MultiStatus)status ).getChildren();
+    for( int i = 0; i < children.length; i++ )
+    {
+      final IStatus child = children[i];
+      final int result = ErrorDialog.openError( shell, title, message, child );
+      if( result == Window.CANCEL )
+        return result;
+    }
+
+    return Window.OK;
+  }
+
+  /**
+   * @see #openSpecialErrorDialog(Shell, String, String, IStatus, int, boolean)
+   */
+  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message,
+      final IStatus status, final boolean showMultipleDialogs )
+  {
+    return openSpecialErrorDialog( shell, title, message, status, IStatus.OK | IStatus.INFO | IStatus.WARNING
+        | IStatus.ERROR, showMultipleDialogs );
+  }
+
+  /**
+   * Opens an error dialog on the given status. Tweaks the error message.
+   * 
+   * @param showMultipleDialogs
+   *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
+   *          multi-status. Else, only one dialog pops-up.
+   * @return See
+   *         {@link ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus, int)}
+   */
+  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message,
+      final IStatus status, final int displayMask, final boolean showMultipleDialogs )
+  {
+    if( !status.isMultiStatus() || !showMultipleDialogs )
+    {
+      final StringBuffer msg = new StringBuffer();
+      switch( status.getSeverity() )
+      {
+      case IStatus.ERROR:
+        msg.append( "Fehler" );
+        break;
+      case IStatus.WARNING:
+        msg.append( "Warnung(en)" );
+        break;
+      case IStatus.INFO:
+        msg.append( "Information(en)" );
+        break;
+      }
+
+      msg.append( " bei der Bearbeitung von: \n" );
+      msg.append( message );
+
+      return ErrorDialog.openError( shell, title, msg.toString(), status, displayMask );
+    }
+
+    final IStatus[] children = ( (MultiStatus)status ).getChildren();
+    for( int i = 0; i < children.length; i++ )
+    {
+      final IStatus child = children[i];
+
+      final String msg;
+      if( child instanceof DialogMultiStatus )
+        msg = ( (DialogMultiStatus)child ).getDialogMessage();
+      else
+        msg = message;
+
+      final int result = openSpecialErrorDialog( shell, title, msg, child, false );
+      if( result == Window.CANCEL )
+        return result;
+    }
+
+    return Window.OK;
+  }
+
+  /**
+   * Returns an (internationalized) string corresponding to the severity of the given status.
+   * <p>
+   * TODO: internationalize it
+   */
+  public static String getLocalizedSeverity( final IStatus status )
+  {
+    switch( status.getSeverity() )
+    {
+    case IStatus.OK:
+      return "OK";
+    case IStatus.INFO:
+      return "INFO";
+    case IStatus.WARNING:
+      return "WARNUNG";
+    case IStatus.ERROR:
+      return "FEHLER";
+    case IStatus.CANCEL:
+      return "ABBRUCH";
+    default:
+      return "UNBEKANNT";
+    }
+  }
+
 }

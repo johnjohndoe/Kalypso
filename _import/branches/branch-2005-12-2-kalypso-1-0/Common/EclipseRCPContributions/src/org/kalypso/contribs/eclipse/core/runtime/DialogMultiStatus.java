@@ -39,23 +39,41 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.contribs.java.util.logging;
+package org.kalypso.contribs.eclipse.core.runtime;
 
-import java.util.logging.Level;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 
 /**
- * Simple implementation printing everything to System.out in the log-file-style (LEVEL: warning).
+ * An extension of {@link org.eclipse.core.runtime.MultiStatus}, adding an extra dialog message string to it.
+ * <p>
+ * This is useful, because the normal error dialog show the status-message as 'reason' and the dialog message must be
+ * provided from outside.
  * 
  * @author Belger
  */
-public class SystemOutLogger implements ILogger
+public class DialogMultiStatus extends MultiStatus
 {
-  /**
-   * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
-   */
-  public void log( final Level level, final int msgCode, final String message )
+  private String m_dialogMessage = null;
+  
+  public DialogMultiStatus( final String pluginId, final int code, final IStatus[] newChildren, final String message, final Throwable exception )
   {
-    final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
-    System.out.print( outString );
+    super( pluginId, code, newChildren, message, exception );
   }
+
+  public DialogMultiStatus( final String pluginId, final int code, final String message, final Throwable exception )
+  {
+    super( pluginId, code, message, exception );
+  }
+
+  public String getDialogMessage()
+  {
+    return m_dialogMessage == null ? getMessage() : m_dialogMessage;
+  }
+  
+  public void setDialogMessage( final String dialogMessage )
+  {
+    m_dialogMessage = dialogMessage;
+  }
+  
 }
