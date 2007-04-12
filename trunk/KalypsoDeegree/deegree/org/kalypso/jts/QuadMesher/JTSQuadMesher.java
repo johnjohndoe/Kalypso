@@ -124,8 +124,8 @@ public class JTSQuadMesher
     }
 
     /*
-     * TODO: // the begin of the left sided line string must identical with the begin of the bottom line string, if not
-     * then flip // the line if( coordinatesLeft[coordinatesLeft.length - 1].equals2D( coordinatesBottom[0] ) ) {
+     * the beginning of the left sided line string must identical with the begin of the bottom line string, if not
+     * then flip the line if( coordinatesLeft[coordinatesLeft.length - 1].equals2D( coordinatesBottom[0] ) ) {
      * newLeft = LineStringUtilities.changeOrientation( m_leftLine ); } else { newLeft = m_leftLine; } // the begin of
      * the right sided line string must identical with the end of the bottom line string, if not then flip // the line
      * if( coordinatesRight[coordinatesRight.length - 1].equals2D( coordinatesBottom[coordinatesBottom.length - 1] ) ) {
