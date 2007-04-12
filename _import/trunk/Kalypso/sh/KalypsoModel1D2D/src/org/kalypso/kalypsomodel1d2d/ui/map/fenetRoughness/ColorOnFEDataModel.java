@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * @author madanago
+ * @author Madanagopal
  *
  */
 public class ColorOnFEDataModel
@@ -54,7 +55,8 @@ public class ColorOnFEDataModel
   private IMapModell mapModell;
   private MapPanel mapPanel;
   private IKalypsoFeatureTheme roughnessTheme;
-  private IRoughnessClsCollection system;
+  private IRoughnessPolygonCollection roughnessPolygonCollection;
+  private IFEDiscretisationModel1d2d discretisationModel;
   
   
 
@@ -92,14 +94,24 @@ public class ColorOnFEDataModel
     return roughnessTheme;
   }
 
-  public void setRoughnessClsCollectionSystem( IRoughnessClsCollection system )
+  public void setRoughnessPolygonCollection( IRoughnessPolygonCollection collection )
   {
-    this.system = system;
-    
+    this.roughnessPolygonCollection = collection;    
   }
   
+  public IRoughnessPolygonCollection getRoughnessPolygonCollection() {
+    return roughnessPolygonCollection;
+  }
 
-  
+  public void setDiscretisationModel1d2d( IFEDiscretisationModel1d2d discretisationModel )
+  {
+    this.discretisationModel = discretisationModel;    
+  }
+
+  public IFEDiscretisationModel1d2d getDiscretisationModel( )
+  {
+    return discretisationModel;
+  } 
 
   
 }

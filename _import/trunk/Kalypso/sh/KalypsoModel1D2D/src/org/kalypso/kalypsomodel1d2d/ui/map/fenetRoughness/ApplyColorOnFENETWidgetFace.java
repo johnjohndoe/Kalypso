@@ -40,25 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -68,25 +58,21 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * @author Madanagopal
@@ -131,6 +117,8 @@ public class ApplyColorOnFENETWidgetFace
     }
     //TODO
   };
+  private IRoughnessPolygonCollection roughnessPolygons;
+  private IFEDiscretisationModel1d2d nodeModel;
   
   public Control createControl( Composite parent )
   {
@@ -184,7 +172,7 @@ public class ApplyColorOnFENETWidgetFace
     activateColorBtn.addSelectionListener( new SelectionAdapter(){
       public void widgetSelected( SelectionEvent e )
       {
-        // TODO Auto-generated method stub        
+        paintRoughnessColors();        
       }      
     });
     
@@ -193,6 +181,8 @@ public class ApplyColorOnFENETWidgetFace
     formData.left = new FormAttachment(0,5);
     formData.top = new FormAttachment(activateColorBtn,5);
     formData.bottom = new FormAttachment(100, -5);
+    newComposite.setLayoutData( formData );
+    newComposite.setLayout( new GridLayout(1,false) );
     
     final ColorFieldEditor maxColorSelector = new ColorFieldEditor( "All Color", "Select Farbe", newComposite);
     Button buttonMax = maxColorSelector.getColorSelector().getButton();
@@ -200,6 +190,16 @@ public class ApplyColorOnFENETWidgetFace
     
   }
 
+
+  protected void paintRoughnessColors( )
+  {
+    nodeModel = dataModel.getDiscretisationModel();
+    roughnessPolygons = dataModel.getRoughnessPolygonCollection();
+    for (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> inte: nodeModel.getElements()) {
+      roughnessPolygons.getRoughnessEstimateSpec( (GM_Polygon)inte );  
+    }
+    
+  }
 
   public void disposeControl( )
   {
