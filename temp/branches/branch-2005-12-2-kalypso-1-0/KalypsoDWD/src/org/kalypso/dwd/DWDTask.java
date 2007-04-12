@@ -51,7 +51,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.contribs.java.util.logging.SystemOutLogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 
 /**
  * this task generates zml-files from
@@ -147,18 +147,22 @@ public class DWDTask extends Task
       final ILogger logger = new ILogger()
       {
         /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
-        public void log( final Level level, final boolean mainMsg, final String message )
+        public void log( final Level level, final int msgCode, final String message )
         {
-          final String outString = SystemOutLogger.formatLogStylish( level, mainMsg, message );
+          final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
           if( antProject == null )
-            System.out.print( outString );
+            System.out.println( outString );
           else
             antProject.log( outString );
         }
       };
 
+      final String taskDesk = getDescription();
+      if( taskDesk != null )
+        logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
+      
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
       delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
           m_forecastFrom ), new Date( m_to ), m_filter, m_metadata );
