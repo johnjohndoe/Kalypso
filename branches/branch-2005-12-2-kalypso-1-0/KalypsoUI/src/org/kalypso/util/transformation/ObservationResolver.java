@@ -63,6 +63,7 @@ import org.kalypso.commons.resources.FolderUtilities;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -123,7 +124,7 @@ public class ObservationResolver extends AbstractTransformation
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
     // TODO: check this!
-    
+
     monitor.beginTask( "Zeitreihen auflösen", 3000 );
 
     // PROPS parsen
@@ -214,7 +215,7 @@ public class ObservationResolver extends AbstractTransformation
 
     final ILogger logger = new ILogger()
     {
-      public void log( final Level level, final boolean mainMsg, final String message )
+      public void log( final Level level, final int msgCode, final String message )
       {
         System.out.println( message );
       }
@@ -227,6 +228,8 @@ public class ObservationResolver extends AbstractTransformation
     checkColumn( featureType, targetName );
 
     monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
+
+    logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, "Zeitreihen auslesen" );
 
     // parse range modi
     // TODO: input validation should be done at the gui level
@@ -258,7 +261,7 @@ public class ObservationResolver extends AbstractTransformation
       {
         // migth occur when obs not defined on the server
 
-        logger.log( Level.WARNING, false, "Zeitreihe möglicherweise unbekannt: "
+        logger.log( Level.WARNING, LoggerUtilities.CODE_NONE, "Zeitreihe möglicherweise unbekannt: "
             + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref() + "\t" + e.getLocalizedMessage() );
         e.printStackTrace();
         continue;

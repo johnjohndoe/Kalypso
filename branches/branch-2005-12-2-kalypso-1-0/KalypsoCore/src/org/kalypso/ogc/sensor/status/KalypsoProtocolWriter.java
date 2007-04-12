@@ -43,11 +43,12 @@ package org.kalypso.ogc.sensor.status;
 import java.util.logging.Level;
 
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -62,26 +63,19 @@ public class KalypsoProtocolWriter
   // not to be instanciated
   }
 
-  public static void analyseValues( final IObservation observation, final ITuppleModel model,
-      final ILogger logger, final String summInfo ) throws SensorException
+  public static void analyseValues( final IObservation observation, final ITuppleModel model, final ILogger logger )
+      throws SensorException
   {
     analyseValues( new IObservation[]
     { observation }, new ITuppleModel[]
-    { model }, logger, summInfo );
-  }
-
-  public static void analyseValues( final IObservation observation, final ITuppleModel model,
-      final ILogger logger ) throws SensorException
-  {
-    analyseValues( new IObservation[]
-    { observation }, new ITuppleModel[]
-    { model }, logger, "" );
+    { model }, logger );
   }
 
   /**
    * Analyses the given tupple models and reports possible errors (according to status of tupples).
    */
-  public static void analyseValues( final IObservation[] observations, final ITuppleModel[] models, final ILogger logger, final String summInfo ) throws SensorException
+  public static void analyseValues( final IObservation[] observations, final ITuppleModel[] models, final ILogger logger )
+      throws SensorException
   {
     if( observations.length != models.length )
       throw new IllegalArgumentException( "Arrays not same length" );
@@ -90,58 +84,65 @@ public class KalypsoProtocolWriter
 
     for( int i = 0; i < models.length; i++ )
     {
-      boolean sumDone = false;
-
-      final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( models[i].getAxisList() );
+      final ITuppleModel tuppleModel = models[i];
+      final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( tuppleModel.getAxisList() );
+      final int[] mergedStati = new int[statusAxes.length];
+      for( int iAxes = 0; iAxes < mergedStati.length; iAxes++ )
+        mergedStati[iAxes] = KalypsoStati.BIT_OK;
 
       if( statusAxes.length != 0 )
       {
-        for( int ix = 0; ix < models[i].getCount(); ix++ )
+        final IObservation observation = observations[i];
+        for( int ix = 0; ix < tuppleModel.getCount(); ix++ )
         {
           // clear reporting buffer
-          boolean bError = false;
-          bf.delete( 0, bf.length() );
+          bf.setLength( 0 );
 
           for( int iAxes = 0; iAxes < statusAxes.length; iAxes++ )
           {
-            final Number nb = (Number)models[i].getElement( ix, statusAxes[iAxes] );
-            final int nbValue = nb == null ? 0 : nb.intValue();
-            if( !KalypsoStatusUtils.checkMask( nbValue, KalypsoStati.BIT_OK ) )
-            {
-              bError = true;
+            final IAxis axis = statusAxes[iAxes];
+            final Number nb = (Number)tuppleModel.getElement( ix, axis );
+            final int statusValue = nb == null ? 0 : nb.intValue();
 
-              bf.append( "[" + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] ) + " - "
-                  + KalypsoStatusUtils.getTooltipFor( nbValue ) + "]\n" );
-            }
-          }
-
-          // got error at least for one axis?
-          if( bError )
-          {
-            // did already summ up?
-            if( !sumDone )
-            {
-              sumDone = true;
-
-              String header = "Warnung in Zeitreihe: " + observations[i].getName();
-
-              String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" );
-              if( desc.length() > 0 )
-              {
-                desc += " aus "
-                    + observations[i].getMetadataList().getProperty( ObservationConstants.MD_ORIGIN, "<unbekannt>" );
-
-                header += " (" + desc + ")";
-              }
-
-              logger.log( Level.WARNING, true, header );
-              logger.log( Level.WARNING, false, summInfo + header );
-              logger.log( Level.WARNING, false, "Details:" );
-            }
-
-            logger.log( Level.WARNING, false, ObservationUtilities.dump( models[i], "  ", ix, true ) + " Grund: " + bf.toString() );
+            mergedStati[iAxes] = mergedStati[iAxes] | statusValue;
           }
         }
+
+        final MetadataList metadataList = observation.getMetadataList();
+
+        for( int iAxes = 0; iAxes < mergedStati.length; iAxes++ )
+        {
+          final IAxis axis = statusAxes[iAxes];
+
+          final String obsName = observation.getName();
+          final String type = KalypsoStatusUtils.getAxisLabelFor( axis );
+
+          final StringBuffer sb = new StringBuffer( "Zeitreihe " );
+          sb.append( obsName );
+
+          final String desc = metadataList.getProperty( ObservationConstants.MD_DESCRIPTION, "" );
+          if( desc.length() > 0 )
+          {
+            // desc += " aus " + observations[i].getMetadataList().getProperty( ObservationConstants.MD_ORIGIN,
+            // "<unbekannt>" );
+            sb.append( " (" );
+            sb.append( desc );
+            sb.append( ")" );
+          }
+
+          sb.append( ", " );
+          sb.append( type );
+          sb.append( ", " );
+
+          final String message = sb.toString();
+
+          if( axis.isPersistable() && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_CHECK ) )
+            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, message + " Werte müssen geprüft werden" );
+          else if( !axis.isPersistable()
+              && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_DERIVATION_ERROR ) )
+            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, message + " Fehler beim Ableiten der Werte" );
+        }
+
       }
     }
   }

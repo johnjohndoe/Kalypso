@@ -70,7 +70,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.contribs.java.util.logging.SystemOutLogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -217,13 +217,13 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     final ILogger logger = new ILogger()
     {
       /**
-       * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
+       * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
        */
-      public void log( final Level level, final boolean mainMsg, final String message )
+      public void log( final Level level, final int msgCode, final String message )
       {
-        final String outString = SystemOutLogger.formatLogStylish( level, mainMsg, message );
+        final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
         if( antProject == null )
-          System.out.print( outString );
+          System.out.println( outString );
         else
           antProject.log( outString );
       }
@@ -231,7 +231,12 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
     try
     {
-      monitor.beginTask( ClassUtilities.getOnlyClassName( getClass() ), m_featurePath.length );
+      final String myClassName = ClassUtilities.getOnlyClassName( getClass() );
+      monitor.beginTask( myClassName, m_featurePath.length );
+
+      final String taskDesk = getDescription();
+      if( taskDesk != null )
+        logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
 
       validateInput();
 
@@ -273,18 +278,18 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           final IStatus status = StatusUtilities.statusFromThrowable( e );
           if( m_ignoreIllegalFeaturePath )
           {
-            logger.log( Level.WARNING, false, "Feature wird ignoriert (" + status.getMessage() + ")" );
+            logger.log( Level.WARNING, -1, "Feature wird ignoriert (" + status.getMessage() + ")" );
           }
           else
           {
-            logger.log( Level.WARNING, false, status.getMessage() );
+            logger.log( Level.WARNING, -1, status.getMessage() );
             stati.add( status );
           }
         }
         catch( final Throwable t )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( t );
-          logger.log( Level.SEVERE, false, status.getMessage() );
+          logger.log( Level.SEVERE, -1, status.getMessage() );
           stati.add( status );
         }
         finally

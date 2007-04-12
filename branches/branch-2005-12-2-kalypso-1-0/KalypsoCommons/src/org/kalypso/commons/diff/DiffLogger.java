@@ -86,16 +86,16 @@ public class DiffLogger implements IDiffLogger
     StringBuffer tab = new StringBuffer();
     for( int i = 0; i < offset; i++ )
       tab.append( " " );
-    innerLog( Level.INFO, false, tab.toString() + diff + message );
+    innerLog( Level.INFO, -1, tab.toString() + diff + message );
   }
 
-  public void innerLog( final Level level, final boolean mainMsg, final String message )
+  public void innerLog( final Level level, final int msgCode, final String message )
   {
     if( m_buffers.isEmpty() )
-      m_logger.log( level, mainMsg, message );
+      m_logger.log( level, msgCode, message );
     else
     {
-      StringBuffer buffer = (StringBuffer)m_buffers.peek();
+      final StringBuffer buffer = (StringBuffer)m_buffers.peek();
       if( buffer.length() > 0 )
         buffer.append( "\n" );
       buffer.append( message );
@@ -118,6 +118,6 @@ public class DiffLogger implements IDiffLogger
   {
     final StringBuffer buffer = (StringBuffer)m_buffers.pop();
     if( keepLastLog )
-      innerLog( Level.INFO, false, buffer.toString() );
+      innerLog( Level.INFO, -1, buffer.toString() );
   }
 }
