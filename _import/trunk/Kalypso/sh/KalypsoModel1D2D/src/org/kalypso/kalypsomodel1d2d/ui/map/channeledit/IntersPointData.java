@@ -47,7 +47,15 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHOR
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author jung
+ * Stores the intersection points for a single channel segment created by intersecting the banklines with the profiles.<br>
+ * The intersection points have information such as:<br>
+ * -geographical information (x,y,z) (Point)<br>
+ * -corresponding profile of the segment (upstream/downstream) (PROF)<br>
+ * -corresponding bankline of the segment (left/right) (SIDE)<br>
+ * -the rank of the intersection point relative to the width coordinates of the profiles (WIDTHORDER)<br>
+ * -the width coordinate of the intersection point on the profile<br>
+ * 
+ * @author Thomas Jung
  */
 public class IntersPointData
 {

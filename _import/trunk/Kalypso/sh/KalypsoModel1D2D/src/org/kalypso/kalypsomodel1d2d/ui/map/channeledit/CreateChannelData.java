@@ -103,7 +103,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * State object for create main channel widget and composite.
+ * State object for creating main channel widget and composite.
  * 
  * @author Thomas Jung
  */
@@ -128,7 +128,7 @@ public class CreateChannelData
   }
 
   private static ISchedulingRule THE_SEGMENT_INIT_MUTEX = new MutexRule();
-  
+
   private IKalypsoFeatureTheme m_profileTheme;
 
   private IKalypsoFeatureTheme m_bankTheme1; // LEFT = 1
@@ -144,8 +144,6 @@ public class CreateChannelData
   private final CreateMainChannelWidget m_widget;
 
   private boolean datacomplete;
-
-  private int m_numBankSelections;
 
   private int m_globNumbBankIntersections;
 
@@ -184,8 +182,6 @@ public class CreateChannelData
   public void setProfileTheme( final IKalypsoFeatureTheme profileTheme )
   {
     m_profileTheme = profileTheme;
-
-    // TODO: event handling
   }
 
   public void setBankTheme1( final IKalypsoFeatureTheme bankTheme )
@@ -244,7 +240,7 @@ public class CreateChannelData
 
         if( featureType == null )
           continue;
-        
+
         final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
         // choose only the linestrings
         // just take the first found property
@@ -269,11 +265,12 @@ public class CreateChannelData
     m_selectedProfiles.clear();
     initSegments();
   }
-  
+
   public void initSegments( )
   {
     final Job job = new Job( "Init segments" )
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
@@ -355,15 +352,15 @@ public class CreateChannelData
   {
     if( m_selectedProfiles.size() <= 1 )
       return new ProfilEventManager( null, null );
-    
-    if (getSelectedSegment() == 0)
-      return  new ProfilEventManager( null, null );
-    
+
+    if( getSelectedSegment() == 0 )
+      return new ProfilEventManager( null, null );
+
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
-    
-    if (segment == null)
-      return  new ProfilEventManager( null, null );
-    
+
+    if( segment == null )
+      return new ProfilEventManager( null, null );
+
     final IProfil profil;
     if( m_selectedProfile == PROF.UP )
     {
@@ -401,11 +398,6 @@ public class CreateChannelData
 
     if( datacomplete == false )
       m_segmentList.clear();
-
-    // if( datacomplete == true )
-    // /* intersects the banks with the profiles and manages the initial segment creation */
-    // intersectBanksWithProfs(); // initial calculation of the segments by global parameters
-    // // else if ( datacomplete == true & m_coordList.size() > 0)
 
     if( m_segmentList.size() > 0 )
     /* if there are segments, start Quadmesher */
@@ -766,15 +758,12 @@ public class CreateChannelData
     final IPropertyType stationProperty = profileFeatures[0].getFeatureType().getProperty( WspmProfile.QNAME_STATION );
     Arrays.sort( profileFeatures, new FeatureComparator( stationProperty ) );
 
-    // TODO: intersect all selected profiles and banks and store it into a linkedList of SegmentData.
-
     // loop over all profiles
     // take two neighbouring profiles create a segment for them
 
     WspmProfile lastProfile = null;
     for( final Feature profileFeature : profileFeatures )
     {
-
       // get the profile line
       final WspmProfile profile = new WspmProfile( profileFeature );
 
@@ -855,37 +844,11 @@ public class CreateChannelData
     return globNumBankIntersections;
   }
 
-  private void paintCoords( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel )
-  {
-    final PointSymbolizer symb = new PointSymbolizer_Impl();
-    DisplayElement de;
-
-    for( int i = 0; i < coords.length; i++ )
-    {
-      for( int j = 0; j < coords[i].length; j++ )
-      {
-        GeometryFactory factory = new GeometryFactory();
-        Point point = factory.createPoint( coords[i][j] );
-        try
-        {
-          GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( point );
-          de = DisplayElementFactory.buildPointDisplayElement( null, gmpoint, symb );
-          de.paint( g, mapPanel.getProjection() );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-
   private void paintEdges( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel ) throws GM_Exception, IncompatibleGeometryTypeException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
-    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
-    defaultstroke = symb.getStroke();
+
     Color grey = new Color( 100, 100, 100 );
 
     stroke.setWidth( 1 );
@@ -1067,16 +1030,16 @@ public class CreateChannelData
     return neighbours;
   }
 
-  public  CreateChannelData.PROF getCurrentProfilePlace ( final double station )
+  public CreateChannelData.PROF getCurrentProfilePlace( final double station )
   {
-    double stationUp = m_segmentList.get( m_selectedSegment - 1).getProfilUpOrg().getStation();
-    double stationDown = m_segmentList.get( m_selectedSegment - 1).getProfilDownOrg().getStation();
-    
-    if ( stationUp == station )
+    double stationUp = m_segmentList.get( m_selectedSegment - 1 ).getProfilUpOrg().getStation();
+    double stationDown = m_segmentList.get( m_selectedSegment - 1 ).getProfilDownOrg().getStation();
+
+    if( stationUp == station )
       return CreateChannelData.PROF.UP;
-    else if ( stationDown == station )
+    else if( stationDown == station )
       return CreateChannelData.PROF.DOWN;
-      
+
     return null;
   }
 

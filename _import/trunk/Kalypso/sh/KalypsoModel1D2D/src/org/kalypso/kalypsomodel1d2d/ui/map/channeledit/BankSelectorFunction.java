@@ -66,15 +66,15 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author jung
- *
+ * @author Thomas Jung
  */
 public class BankSelectorFunction implements IRectangleMapFunction
 {
   private final CreateChannelData m_data;
+
   private final CreateChannelData.SIDE m_side;
 
-  public BankSelectorFunction( final CreateChannelData data, final CreateChannelData.SIDE side)
+  public BankSelectorFunction( final CreateChannelData data, final CreateChannelData.SIDE side )
   {
     m_data = data;
     m_side = side;
@@ -84,17 +84,18 @@ public class BankSelectorFunction implements IRectangleMapFunction
    * @see org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
+  @SuppressWarnings("unchecked")
   public void execute( MapPanel mapPanel, Rectangle rectangle )
   {
     final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
     IKalypsoFeatureTheme bankTheme = null;
-    if ( m_side == CreateChannelData.SIDE.LEFT )
+    if( m_side == CreateChannelData.SIDE.LEFT )
     {
       bankTheme = m_data.getBankTheme1();
     }
-    else if ( m_side == CreateChannelData.SIDE.RIGHT )
+    else if( m_side == CreateChannelData.SIDE.RIGHT )
     {
-      bankTheme = m_data.getBankTheme2();      
+      bankTheme = m_data.getBankTheme2();
     }
     if( bankTheme == null )
       return;
@@ -102,19 +103,17 @@ public class BankSelectorFunction implements IRectangleMapFunction
     // search bank within rectangle
     final FeatureList featureList = bankTheme.getFeatureList();
     final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-    
+
     final Feature[] selectedBanks = m_data.getSelectedBanks( m_side );
     final Set<Feature> selectedBankSet = new HashSet<Feature>( Arrays.asList( selectedBanks ) );
-
     final List list = featureList.query( envelope, null );
-
-    // TODO: test if rectangle (envelope) intersect geometry
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
+
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Object o = iter.next();
       final Feature feature = FeatureHelper.getFeature( workspace, o );
-      
+
       final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
       try
       {
@@ -124,15 +123,13 @@ public class BankSelectorFunction implements IRectangleMapFunction
       }
       catch( GM_Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
-    
+
     if( list.size() == 0 )
     {
       // empty selection: remove selection
-      // TODO: maybe extra button for that?
       m_data.removeSelectedBanks( selectedBanks );
     }
     else
@@ -142,15 +139,11 @@ public class BankSelectorFunction implements IRectangleMapFunction
         final Object o = list.get( i );
         final Feature feature = FeatureHelper.getFeature( workspace, o );
 
-        
         if( selectedBankSet.contains( feature ) )
           m_data.removeSelectedBanks( new Feature[] { feature } );
         else
           m_data.addSelectedBanks( new Feature[] { feature }, m_side );
       }
-
     }
-
   }
-
 }

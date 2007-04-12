@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilComparator;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
-import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfileUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
@@ -147,8 +146,8 @@ public class SegmentData
 
       final double f = (ey - by) / (ex - bx);
 
-      final double distance = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
-      return Math.abs( distance );
+      final double distance1 = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
+      return Math.abs( distance1 );
     }
 
   }
@@ -208,7 +207,6 @@ public class SegmentData
 
   public SegmentData( final CreateChannelData channelData, final WspmProfile upProfile, final WspmProfile downProfile, final Map<Feature, CreateChannelData.SIDE> bankLines, final int numBankIntersections )
   {
-
     m_channelData = channelData;
     m_upProfile = upProfile;
     m_DownProfile = downProfile;
@@ -227,19 +225,12 @@ public class SegmentData
 
   }
 
-  public LineString getBankLeftInters( )
-  {
-    return m_bankLeftInters;
-  }
-
+  /**
+   * GETTERS
+   */
   public LineString getBankLeftOrg( )
   {
     return m_bankLeftOrg;
-  }
-
-  public LineString getBankRightInters( )
-  {
-    return m_bankRightInters;
   }
 
   public LineString getBankRightOrg( )
@@ -247,9 +238,14 @@ public class SegmentData
     return m_bankRightOrg;
   }
 
-  public LineString getProfDownIntersLineString( )
+  public LineString getBankLeftInters( )
   {
-    return m_downIntersLinestring;
+    return m_bankLeftInters;
+  }
+
+  public LineString getBankRightInters( )
+  {
+    return m_bankRightInters;
   }
 
   public LineString getProfDownOrg( )
@@ -257,14 +253,19 @@ public class SegmentData
     return m_profDownOrg;
   }
 
-  public LineString getProfUpIntersLineString( )
-  {
-    return m_upIntersLinestring;
-  }
-
   public LineString getProfUpOrg( )
   {
     return m_profUpOrg;
+  }
+
+  public LineString getProfDownIntersLineString( )
+  {
+    return m_downIntersLinestring;
+  }
+
+  public LineString getProfUpIntersLineString( )
+  {
+    return m_upIntersLinestring;
   }
 
   public IProfil getProfilUpOrg( )
@@ -277,48 +278,46 @@ public class SegmentData
     return m_DownProfile.getProfil();
   }
 
-  public IProfil getProfDownIntersProfile( )
-  {
-    return m_downIntersProfile;
-  }
-
-  public IProfil getProfUpCroppedProfile( )
-  {
-    return m_upCroppedProfile;
-  }
-
   public IProfil getProfUpIntersProfile( )
   {
     return m_upIntersProfile;
   }
 
+  public IProfil getProfDownIntersProfile( )
+  {
+    return m_downIntersProfile;
+  }
+
   /**
-   * intersects the two selected WSPM profiles (upstream/downstream) with the allready intersected bank lines
-   * (left/right) of the current segment
+   * Intersects the two WSPM profiles (upstream/downstream) with the allready intersected bank lines (left/right) of the
+   * current segment.<br>
+   * The two profiles will be cropped at the intersection points and intersected by a specific number of points. <br>
+   * Afterwards an area adjustment for the intersected profiles will be done .
    */
   private void intersectOrigProfiles( )
   {
     /* get the cropped and intersected profiles & linestrings */
 
-    // muss jedes mal nach profile edit aufgerufen werden!
     // DOWNSTREAM
     try
     {
       /* crop the profile */
       // IProfil
       m_upCroppedProfile = createCroppedIProfile( m_upProfile, CreateChannelData.PROF.UP );
-
-      /* the cropped profile area is the desired value for the intersected profile area */
-      m_areaUpCroppedProfile = ProfilUtil.calcArea( m_upCroppedProfile );
+      // LineString
+      m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
 
       /* intersect the cropped profile */
       final IProfil tempUpIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
-      // LineString
-      m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
+
+      /*
+       * area adjustment
+       */
+
+      /* the cropped profile area is the desired value for the intersected profile area */
+      m_areaUpCroppedProfile = ProfilUtil.calcArea( m_upCroppedProfile );
       m_areaUpIntersProfile = ProfilUtil.calcArea( tempUpIntersProfile );
 
-      // Flächenausgleich!!
-      // m_upIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
       m_upIntersProfile = adjustProfileArea( tempUpIntersProfile, m_areaUpCroppedProfile, m_areaUpIntersProfile );
 
       GeometryFactory factory = new GeometryFactory();
@@ -339,15 +338,17 @@ public class SegmentData
       // IProfil
       m_downCroppedProfile = createCroppedIProfile( m_DownProfile, CreateChannelData.PROF.DOWN );
 
-      /* the cropped profile area is the desired value for the intersected profile area */
-      m_areaDownCroppedProfile = ProfilUtil.calcArea( m_downCroppedProfile );
-
       /* intersect the cropped profile */
       final IProfil tempDownIntersProfile = createIntersectedIProfile( m_downCroppedProfile );
+
+      /*
+       * area adjustment
+       */
+
+      /* the cropped profile area is the desired value for the intersected profile area */
+      m_areaDownCroppedProfile = ProfilUtil.calcArea( m_downCroppedProfile );
       m_areaDownIntersProfile = ProfilUtil.calcArea( tempDownIntersProfile );
 
-      // Flächenausgleich!!
-      // m_downIntersProfile = createIntersectedIProfile( m_downCroppedProfile );
       m_downIntersProfile = adjustProfileArea( tempDownIntersProfile, m_areaDownCroppedProfile, m_areaDownIntersProfile );
 
       GeometryFactory factory = new GeometryFactory();
@@ -358,9 +359,19 @@ public class SegmentData
     {
       e.printStackTrace();
     }
-
   }
 
+  /**
+   * changes the node elevations of the inner points of an IProfil so that its crosssection area (currentArea) is the
+   * same as the area of the cropped original IProfil (targetArea)
+   * 
+   * @param profile
+   *          intersected profile for which the area adjustment shall be done
+   * @param targetArea
+   *          area of the original cropped profile
+   * @param currentArea
+   *          current area of the intersected profile
+   */
   private IProfil adjustProfileArea( final IProfil profile, final double targetArea, final double currentArea )
   {
     final int numProfPoints = profile.getPoints().size();
@@ -369,18 +380,18 @@ public class SegmentData
     IProfil tmpProfile2 = null;
 
     tmpProfil.setStation( profile.getStation() );
-    if ( m_downCroppedProfile != null & m_upCroppedProfile != null)
+    if( m_downCroppedProfile != null & m_upCroppedProfile != null )
     {
-      if( profile.getStation() == m_downCroppedProfile.getStation()  )
-      tmpProfile2 = m_downCroppedProfile;
-    else
+      if( profile.getStation() == m_downCroppedProfile.getStation() )
+        tmpProfile2 = m_downCroppedProfile;
+      else
+        tmpProfile2 = m_upCroppedProfile;
+    }
+    else if( m_downCroppedProfile == null )
       tmpProfile2 = m_upCroppedProfile;
-    } 
-    else if ( m_downCroppedProfile == null)
-      tmpProfile2 = m_upCroppedProfile;
     else
       tmpProfile2 = m_downCroppedProfile;
-    
+
     final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
 
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -408,8 +419,8 @@ public class SegmentData
     }
     dZ = dArea / wi;
 
-    String t = String.format( "Schlauchgenerator: Anpassung der Profilhöhen um: %f ", dZ, " m." );
-    System.out.println( t );
+//    String t = String.format( "Schlauchgenerator: Anpassung der Profilhöhen um: %f ", dZ, " m." );
+//    System.out.println( t );
 
     // start point will not be changed
     tmpProfil.addPoint( profilPointList.get( 0 ).clonePoint() );
@@ -448,14 +459,21 @@ public class SegmentData
     final double diffArea = targetArea - areaNew;
     if( diffArea > 0.10 )
     {
-      String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea, areaNew );
-      System.out.println( s );
+//      String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea, areaNew );
+//      System.out.println( s );
     }
-    // /********************************
 
     return tmpProfil;
   }
 
+  /**
+   * initial intersection of an IProfil. There are two ways of intersection:<br> - if there are more profile points
+   * than the wished number of intersection points, the intersection is done by Douglas-Peucker<br> - if there are not
+   * enough profile points, the intersection is done with an equidistant approach.
+   * 
+   * @param profile
+   *          input profile to be intersected.
+   */
   private IProfil createIntersectedIProfile( IProfil profile ) throws Exception
   {
     final int numProfInters = m_channelData.getNumProfileIntersections();
@@ -548,7 +566,14 @@ public class SegmentData
   }
 
   /**
-   * intersects a specific linestring
+   * intersects a specific linestring by a given number of intersections.<br>
+   * the intersection is done by an equidistant approach. <BR>
+   * this method is used for intersecting the banklines (Linestrings)
+   * 
+   * @param linestring
+   *          input linestrin to be intersected
+   * @param numIntersects
+   *          number of intersections of the linestring
    */
   private LineString intersectLineString( LineString linestring, int numIntersects )
   {
@@ -605,64 +630,17 @@ public class SegmentData
   }
 
   /**
-   * calculates the intersection of a segment profile. at first the width coordinates will be calculated and added to
-   * the profile. next step is to intersect the profile (a) by Douglas-Peucker (b) equidistant the geographical data is
-   * interpolated from the original profile data. Input: original profile (WSPMProfile) to be intersected, corresponding
-   * intersection points (CreateChannelData.PROF). Output: LineString of the intersected / interpolated profile points.
-   * OBSOLETE!!! -> then delete it!!
+   * calculates the intersection of a segment profile. at first, the width coordinates will be calculated and added to
+   * the profile. next step is to intersect the profile <br>
+   * (a) by Douglas-Peucker <br>
+   * (b) equidistant. <br>
+   * the geographical data is interpolated from the original profile data.
+   * 
+   * @param wspmprofile
+   *          original profile (WSPMProfile) to be intersected
+   * @param prof
+   *          addinitonal informations of the corresponding intersection points of that profile (upstream / downstream)
    */
-
-  private IProfil createCroppedIProfile2( WspmProfile wspmprofile, CreateChannelData.PROF prof ) throws Exception
-  {
-    final double width1 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.FIRST );
-    final double width2 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.LAST );
-
-    // convert WSPM-Profil into IProfil an add the additional intersection width points.
-    final IProfil orgIProfil = wspmprofile.getProfil();
-
-    final IProfil tmpProfil = TuhhProfileUtilities.copyProfile( orgIProfil );
-
-    /* calculate the width of the intersected profile */
-    // sort intersection points by width
-    final double startWidth;
-    final double endWidth;
-    final Point geoPoint1;
-    final Point geoPoint2;
-
-    if( width1 > width2 )
-    {
-      startWidth = width2;
-      endWidth = width1;
-      geoPoint1 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST );
-      geoPoint2 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST );
-    }
-    else
-    {
-      startWidth = width1;
-      endWidth = width2;
-      geoPoint1 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST );
-      geoPoint2 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST );
-    }
-
-    ProfilUtil.croppProfile( tmpProfil, startWidth, endWidth );
-
-    tmpProfil.getPoints().getFirst().setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint1.getX() );
-    tmpProfil.getPoints().getFirst().setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint1.getY() );
-
-    tmpProfil.getPoints().getLast().setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint2.getX() );
-    tmpProfil.getPoints().getLast().setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint2.getY() );
-
-    return tmpProfil;
-  }
-
-  /**
-   * calculates the intersection of a segment profile. at first the width coordinates will be calculated and added to
-   * the profile. next step is to intersect the profile (a) by Douglas-Peucker (b) equidistant the geographical data is
-   * interpolated from the original profile data. Input: original profile (WSPMProfile) to be intersected, corresponding
-   * intersection points (CreateChannelData.PROF). Output: LineString of the intersected / interpolated profile points.
-   * OBSOLETE!!! -> then delete it!!
-   */
-
   private IProfil createCroppedIProfile( WspmProfile wspmprofile, CreateChannelData.PROF prof ) throws Exception
   {
     final double width1 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.FIRST );
@@ -745,6 +723,13 @@ public class SegmentData
 
   /**
    * gets the profile width coordinate of a specific intersection point corresponding to that profile
+   * 
+   * @param profile
+   *          input profile
+   * @param prof
+   *          additional infos concerning the intersection point (profile (up/down))
+   * @param widthorder
+   *          additional infos concerning the intersection point (First/Last)
    */
   private double calcWidthCoord( final WspmProfile profile, CreateChannelData.PROF prof, CreateChannelData.WIDTHORDER widthorder )
   {
@@ -769,6 +754,13 @@ public class SegmentData
 
   /**
    * crops the WSPM profile at the intersection points and converts it to a LineString
+   * 
+   * @param profile
+   *          input profile to be cropped
+   * @param prof
+   *          additional infos about the intersection points (wether it is the upstream / downstream profile of the
+   *          current segment)
+   * @see JTSUtilities.createLineSegment
    */
   private LineString createCroppedProfileLineString( WspmProfile profile, CreateChannelData.PROF prof ) throws GM_Exception
   {
@@ -788,11 +780,11 @@ public class SegmentData
   }
 
   /**
-   * intersects the selected bank lines with the two profiles of the segment
+   * Intersects the selected bank lines with the two profiles of the segment. This method will be called at the very
+   * beginning. Here, the four intersection points will be initialised.
    */
   private void intersectOrigBanks( )
   {
-    // final Map<Point, Boolean> intersectionpoints = new HashMap<Point, Boolean>();
     for( final Map.Entry<Feature, CreateChannelData.SIDE> bankEntry : m_bankLines.entrySet() )
     {
       final List<Point> intersPointList = new ArrayList<Point>();
@@ -979,6 +971,10 @@ public class SegmentData
 
   }
 
+  /**
+   * converts a WSPM profile into an linestring
+   * @param profile Input profile to be converted.
+   */
   private LineString convertProfilesToLineStrings( WspmProfile profile )
   {
     // get the profile line
@@ -1318,7 +1314,6 @@ public class SegmentData
       }
       catch( Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       tmpProfil.addPoint( pt );
@@ -1327,105 +1322,10 @@ public class SegmentData
   }
 
   /**
-   * intersects a profile linestring <br>
-   * (a) after initialisation of the widget <br>
-   * (b) after changing the number of profile intersection points, the intersection will be done by the
-   * Douglas-Peucker-Algorithm <br>
-   * if there are less profile points than the specified number of intersections, an equidistant approach will be done.<br>
-   * if the linestring has allready the right number of points, nothing will be done.
-   */
-  private LineString intersectProfileLineString( LineString profLinestring, int numProfIntersects )
-  {
-    if( profLinestring == null )
-      return null;
-
-    // calculate the distance between the intersection points by the distance along the profile linestring.
-    final double totaldistance = profLinestring.getLength();
-
-    // then compute the additional coodinates of the intersected profile linestring
-    // by the given spinner data of the composite
-
-    if( numProfIntersects > profLinestring.getNumPoints() )
-    {
-      /*
-       * equidistant widths, this attempt will be used, if there are not enough profile points to reach the number of
-       * intersection points
-       */
-      final double dDist = totaldistance / (numProfIntersects - 1); // equidistant widths
-      final double[] dist = new double[numProfIntersects];
-      final Point[] points = new Point[numProfIntersects];
-
-      dist[0] = 0;
-      points[0] = profLinestring.getStartPoint();
-
-      for( int i = 1; i < dist.length - 1; i++ )
-      {
-        dist[i] = dist[0] + dDist * i;
-        points[i] = JTSUtilities.pointOnLine( profLinestring, dist[i] );
-      }
-      dist[numProfIntersects - 1] = totaldistance;
-      points[numProfIntersects - 1] = profLinestring.getEndPoint();
-
-      final GM_Point[] gmpoints = new GM_Point[numProfIntersects]; // points for the LineString
-      GeometryFactory factory = new GeometryFactory();
-      Coordinate[] coordinates = new Coordinate[points.length];
-      for( int i = 0; i < gmpoints.length; i++ )
-      {
-        try
-        {
-          gmpoints[i] = (GM_Point) JTSAdapter.wrap( points[i] );
-
-          final double z = points[i].getCoordinate().z;
-
-          if( !Double.isNaN( z ) )
-          {
-            coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY(), gmpoints[i].getZ() );
-          }
-          else
-          {
-            coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY() );
-          }
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-      return factory.createLineString( coordinates );
-    }
-    else if( numProfIntersects < profLinestring.getNumPoints() )
-    {
-      /* TODO: implement Douglas-Peucker for width calculation */
-      final double dDist = totaldistance / (numProfIntersects - 1); // equidistant widths
-      final double[] dist = new double[numProfIntersects];
-      final Point[] points = new Point[numProfIntersects];
-
-      dist[0] = 0;
-      points[0] = profLinestring.getStartPoint();
-
-      for( int i = 1; i < dist.length - 1; i++ )
-      {
-        dist[i] = dist[0] + dDist * i;
-        points[i] = JTSUtilities.pointOnLine( profLinestring, dist[i] );
-      }
-      dist[numProfIntersects - 1] = totaldistance;
-      points[numProfIntersects - 1] = profLinestring.getEndPoint();
-      final GM_Point[] gmpoints = new GM_Point[numProfIntersects]; // points for the LineString
-      GeometryFactory factory = new GeometryFactory();
-      Coordinate[] coordinates = new Coordinate[points.length];
-
-      return factory.createLineString( coordinates );
-    }
-    /* the input profile linestring is allready correct intersected */
-    return profLinestring;
-  }
-
-  /**
    * gets the map extend (GM_Envelope) of the current segment
    */
   public GM_Envelope getSegmentMapExtend( )
   {
-    GM_Envelope segmentMapExtend = null;
     Geometry[] boundary = new Geometry[4];
     int i;
 
@@ -1506,7 +1406,6 @@ public class SegmentData
       }
       catch( GM_Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -1518,7 +1417,6 @@ public class SegmentData
       }
       catch( GM_Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -1639,6 +1537,9 @@ public class SegmentData
     return coords;
   }
 
+  /**
+   * sets the user edited profile as new intersected profile
+   */
   public void setNewIntersectedProfile( IProfil profile, PROF prof )
   {
     if( prof == PROF.UP )

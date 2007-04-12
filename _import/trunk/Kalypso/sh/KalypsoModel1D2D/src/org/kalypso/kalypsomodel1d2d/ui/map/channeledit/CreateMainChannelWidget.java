@@ -64,12 +64,10 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
 
 /**
  * @author Thomas Jung
@@ -170,11 +168,11 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       m_data.paintAllSegments( g, mapPanel );
 
     /* draw editable bankline */
-    if( m_composite.m_bankEdit1 == true & m_data.getMeshStatus() == true )
+    if( m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true )
     {
       m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
     }
-    if( m_composite.m_bankEdit2 == true & m_data.getMeshStatus() == true )
+    if( m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true )
     {
       m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
     }
@@ -507,6 +505,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param e
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyTyped( KeyEvent e )
   {
     if( m_delegateWidget != null )
@@ -517,6 +516,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
+  @Override
   public void leftClicked( Point p )
   {
     if( m_delegateWidget != null )
@@ -527,6 +527,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
+  @Override
   public void leftPressed( Point p )
   {
     if( m_delegateWidget != null )
@@ -537,6 +538,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
+  @Override
   public void leftReleased( Point p )
   {
     if( m_delegateWidget != null )
@@ -547,6 +549,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
+  @Override
   public void middleClicked( Point p )
   {
     if( m_delegateWidget != null )
@@ -557,6 +560,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
+  @Override
   public void middlePressed( Point p )
   {
     if( m_delegateWidget != null )
@@ -636,6 +640,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     m_composite.getDisplay().syncExec( new Runnable()
     {
+      @SuppressWarnings("synthetic-access")
       public void run( )
       {
         // check if all needed data is specified

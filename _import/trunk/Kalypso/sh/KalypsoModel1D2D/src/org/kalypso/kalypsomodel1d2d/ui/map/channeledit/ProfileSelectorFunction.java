@@ -67,7 +67,9 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author jung
+ * Manages the (de-)selection of several profiles on the map view by drwaing a rectangle
+ * 
+ * @author Thomas Jung
  */
 public class ProfileSelectorFunction implements IRectangleMapFunction
 {
@@ -82,6 +84,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
    * @see org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
+  @SuppressWarnings("unchecked")
   public void execute( final MapPanel mapPanel, final Rectangle rectangle )
   {
     final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
@@ -114,7 +117,6 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
       }
       catch( GM_Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -122,9 +124,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     if( list.size() == 0 )
     {
       // empty selection: remove selection
-      // TODO: maybe extra button for that?
       m_data.changeSelectedProfiles( selectedProfiles, new Feature[0] );
-
     }
     else
     {
@@ -141,7 +141,6 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
         else
           featureToAdd.add( feature );
       }
-
       m_data.changeSelectedProfiles( featureToRemove.toArray( new Feature[featureToRemove.size()] ), featureToAdd.toArray( new Feature[featureToAdd.size()] ) );
     }
   }

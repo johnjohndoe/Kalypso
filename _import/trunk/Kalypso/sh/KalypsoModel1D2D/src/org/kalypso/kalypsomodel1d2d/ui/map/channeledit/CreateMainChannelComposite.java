@@ -71,10 +71,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
@@ -134,11 +132,11 @@ public class CreateMainChannelComposite extends Composite
 
   protected int m_currentSegmentNum;
 
-  Button m_buttonEditBank2;
+  private final FormToolkit m_toolkit;
 
   Button m_buttonEditBank1;
 
-  private final FormToolkit m_toolkit;
+  Button m_buttonEditBank2;
 
   public CreateMainChannelComposite( final Composite parent, final FormToolkit toolkit, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -174,6 +172,7 @@ public class CreateMainChannelComposite extends Composite
 
     final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       protected Control createContents( final Composite parent, final int style )
       {
@@ -229,13 +228,16 @@ public class CreateMainChannelComposite extends Composite
     m_toolkit.adapt( creator.getScrolledComposite() );
 
     updateControl( true );
+    
     if( m_bankEdit1 == true )
     {
+      m_buttonEditBank1.setSelection( true );
       m_buttonEditBank2.setSelection( false );
       editButtonUpdateBank1();
     }
-    if( m_bankEdit2 == true )
+    else if( m_bankEdit2 == true )
     {
+      m_buttonEditBank1.setSelection( false );
       m_buttonEditBank2.setSelection( true );
       editButtonUpdateBank2();
     }
@@ -448,7 +450,7 @@ public class CreateMainChannelComposite extends Composite
     labelBankline1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
 
     /* edit button for bankline 1 */
-    m_buttonEditBank1 = new Button( compSegmBanks1, SWT.TOGGLE );
+    m_buttonEditBank1 = m_toolkit.createButton( compSegmBanks1, "", SWT.TOGGLE );
     m_buttonEditBank1.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
     final Image editImage = KalypsoModel1D2DUIImages.ID_EDIT.createImage();
     m_buttonEditBank1.setImage( editImage );
@@ -459,6 +461,7 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         editButtonUpdateBank1();
+        resetButtonGuard();
         m_widget.getPanel().repaint();
       }
     } );
@@ -471,7 +474,7 @@ public class CreateMainChannelComposite extends Composite
     labelBankline2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.12" ) ); //$NON-NLS-1$
 
     /* edit button for bankline 2 */
-    m_buttonEditBank2 = new Button( compSegmBanks2, SWT.TOGGLE );
+    m_buttonEditBank2 = m_toolkit.createButton( compSegmBanks2, "", SWT.TOGGLE );
     m_buttonEditBank2.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.13" ) ); //$NON-NLS-1$
     m_buttonEditBank2.setImage( editImage );
     m_buttonEditBank2.setSelection( m_bankEdit2 );
@@ -481,6 +484,7 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         editButtonUpdateBank2();
+        resetButtonGuard();
         m_widget.getPanel().repaint();
       }
     } );
@@ -821,7 +825,6 @@ public class CreateMainChannelComposite extends Composite
     try
     {
       updateSegmentSwitchSection();
-      // TODO: check if there is already a mesh calculated and no update is needed
       m_data.updateSegments( edit );
       updateProfilSection();
       m_buttonConvertToModel.setEnabled( m_data.getMeshStatus() );
@@ -932,6 +935,7 @@ public class CreateMainChannelComposite extends Composite
         /**
          * @see org.eclipse.jface.action.Action#run()
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run( )
         {
@@ -962,18 +966,23 @@ public class CreateMainChannelComposite extends Composite
     }
   }
 
-  void resetButtonGuard(  )
+  void resetButtonGuard( )
   {
     for( int i = 0; i < m_buttonList.size(); i++ )
     {
       final Button currentButton = m_buttonList.get( i );
-      if( currentButton.getSelection() ==true )
+      if( currentButton.getSelection() == true )
       {
         currentButton.setSelection( false );
       }
     }
+    // TODO: manage to switch off the edit bank line
+    // m_bankEdit1 = false;
+    // m_bankEdit2 = false;
+    // m_buttonEditBank1.setSelection( false );
+    // m_buttonEditBank2.setSelection( false );
   }
-  
+
   public void setConversionButton( )
   {
     Button button = m_buttonList.get( getStyle() );
@@ -1042,8 +1051,6 @@ public class CreateMainChannelComposite extends Composite
 
   protected void handleConvertButtonPressed( )
   {
-    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor )
@@ -1058,7 +1065,7 @@ public class CreateMainChannelComposite extends Composite
     if( status.isOK() == true )
     {
       m_data.resetSelectedProfiles();
-      resetButtonGuard();     
+      resetButtonGuard();
     }
 
   }
