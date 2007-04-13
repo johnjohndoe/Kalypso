@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+<gft:featuretemplate name="Rauheitsdatenbank" xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <gft:layer id="layer_1" featurePath="#fid#root" linktype="gml" xlink:href="project:/.metadata/roughness.gml"/>
     <gft:view typename="wbr:RoughnessClsCollection" style="SWT.NONE" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
