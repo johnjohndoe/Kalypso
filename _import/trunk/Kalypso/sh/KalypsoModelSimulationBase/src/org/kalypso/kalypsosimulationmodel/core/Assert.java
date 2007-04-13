@@ -1,6 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
 import java.io.File;
+import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
@@ -63,6 +64,67 @@ public class Assert
 		}
 	}
 	
+    /**
+     * Assert the given object for null value.
+     * This method throws concequently an illegal argument exception
+     * if the passed object is null
+     * 
+     * @param obj the object to be asserted
+     * @param message the exception message
+     * @throws IllegalArgumentException if the passed object is null
+     */
+    public static final void throwIAEOnCollectionNullOrHasNullElements(
+                                Collection param, 
+                                String paramName)
+                                throws IllegalArgumentException
+    {
+        if(param==null)
+        {
+            StringBuffer buf= new StringBuffer(128);
+            buf.append("Parameter must not be null; param name:");
+            buf.append(paramName);
+            throw new IllegalArgumentException(buf.toString());
+        }
+        
+        for(Object ele:param)
+        {
+          if(ele == null)
+          {
+            String message =
+              String.format(
+                "Parameter must not have a null element; "+
+                  "\n\tparam name:%s \n\tparam value=",
+                paramName,param);
+            throw new IllegalArgumentException(message);
+          }
+        }
+    }
+    
+    public static final void throwIAEOnCollectionNullOrEmpty(
+                                  Collection param, 
+                                  String paramName)
+                                  throws IllegalArgumentException
+    {
+      if( param==null )
+      {
+        String message = 
+          String.format( 
+              "Parameter must not be null; \n\tparam name:%s",
+              paramName);
+        throw new IllegalArgumentException(message);
+      }
+      
+      if( param.isEmpty() )
+      {
+        String message = 
+          String.format( 
+              "Parameter must not be empty; \n\tparam name:%s",
+              paramName);
+        throw new IllegalArgumentException(message);
+      }
+      
+    }
+    
 	/**
 	 * Assert the given object for null value.
 	 * This method throws concequently an illegal argument exception

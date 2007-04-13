@@ -42,7 +42,9 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -65,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToCLineJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DTo2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -248,62 +251,9 @@ public class ModelOps
     return junction1D2D;
   }
   
-  public static final IJunctionContext1DTo2D 
-                    createEdgeToEdgeJunctionContext(
-                                    IFEDiscretisationModel1d2d model1d2d,
-                                    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge1D,
-                                    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge2D)
-  {
-    //check 2d edge for being a border edge
-    if(!TypeInfo.isBorderEdge( edge2D ))
-    {
-      String message = 
-        String.format( 
-              "Edge 2d must be a border edge: \n\tedge=", 
-              edge2D );      
-      throw new IllegalArgumentException(message);
-    }
-    
-    //check 1dedge for being a real 1d edge and having a junctable point
-    if(!TypeInfo.is1DEdge( edge1D ))
-    {
-      String message = 
-        String.format( "Parameter edge1D must be an an 1d edge=", edge1D );
-      throw new IllegalArgumentException(message);
-    }
-    
-    if(EdgeOps.find1DEdgeEndNode( edge1D )==null)
-    {
-      String message = 
-         String.format( "Parameter edge1d must have a connectable node:\n\tedge1D=%s", edge1D );
-      throw new IllegalArgumentException(message);
-    }
-    
-    IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element2D = edge2D.getContainers().get( 0 );
-    IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element1D = edge1D.getContainers().get( 0 );
-    IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
-    
-    //create continuity line to hold the element
-    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = 
-                elements.addNew( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
-                    IFE1D2DContinuityLine.class );
-    cLine.setEdges( new IFE1D2DEdge[]{edge2D} );
-    
-    //
-    IFeatureWrapperCollection<IFE1D2DComplexElement> cElements = 
-                                              model1d2d.getComplexElements();
-    IJunctionContext1DTo2D jc1d2d = 
-          cElements.addNew( 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D,
-                IJunctionContext1DTo2D.class );
-    
-    jc1d2d.addElementAsRef( element1D);
-    jc1d2d.addElementAsRef( element2D);
-    jc1d2d.addElementAsRef( cLine);
-    
-    return jc1d2d;
-  }
+  
+  
+  
   
   public static final IFEJunction1D2D createElement1DToCLineJunction(
                                       IFEDiscretisationModel1d2d model1d2d,
@@ -382,58 +332,6 @@ public class ModelOps
   
  
   
-//  public static final void sortEdgesAddToElement(
-//                                  IFE1D2DElement element,
-//                                  List<IFE1D2DEdge> toSortAndAddEdges)
-//  {
-//    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges=element.getEdges();
-//    final int INITIAL_SIZE=toSortAndAddEdges.size();
-//    if(INITIAL_SIZE<3)
-//    {
-//      String str=
-//        "Illegal2D element:"+element.getGmlID()+
-//        " edgeCount="+INITIAL_SIZE;
-////      throw new IllegalStateException(str);
-//      System.out.println(str);
-//      return;
-//    }
-//    List<IFE1D2DEdge> edges=
-//          new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);
-//    
-//    //clear old edge for reordering
-//    elementEdges.clear();
-//    
-//    FeatureList edgeFeatureList=elementEdges.getWrappedList();
-//    
-////  just select the first node
-//    IFE1D2DEdge edge=edges.remove(0);    
-//    edgeFeatureList.add( edge.getGmlID() );
-//    for(int i=0; edges.size()>0;)
-//    {
-//      
-//      IFE1D2DNode nodeEnd=edge.getNode( 1 );
-//      i=edges.size()-1;
-//      for(;i>=0;i--)
-//      {
-//        if( nodeEnd.getGmlID().equals( edges.get( i ).getNode( 0 ).getGmlID()) )
-//        {
-//          break;
-//        }
-//      }
-//      if(i==-1)
-//      {
-//        ///no following not found ordering ends
-//        return;
-//      }
-//      else
-//      {
-//        edge=edges.remove( i );
-//        edgeFeatureList.add( edge.getGmlID() );
-//      }
-//    }
-//    
-//    
-//  }
 
   public static final void sortElementEdges(IFE1D2DElement element)
   {
@@ -452,10 +350,13 @@ public class ModelOps
   }
   
   //TODO patrice more general use ist also for element
+  @SuppressWarnings("deprecation")
   public static final void sortCLineEdges(
       IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine,
       List<IFE1D2DEdge> toSortAndAddEdges)
   {
+    
+    
     IFeatureWrapperCollection<IFE1D2DEdge> elementEdges = cLine.getEdges();
     final int INITIAL_SIZE=toSortAndAddEdges.size();
     if(toSortAndAddEdges.isEmpty())
@@ -477,53 +378,102 @@ public class ModelOps
     FeatureList edgeFeatureList = elementEdges.getWrappedList();
     
     //just select the first node
-    IFE1D2DEdge edge=edges.remove(0);
+    IFE1D2DEdge edge = edges.remove(0);
     edgeFeatureList.add( edge.getGmlID() );
     int SIZE=edges.size();
     boolean isPrevious = false;
+    boolean toInvert = false;
 
     //starting not of the edge string
-    IFE1D2DNode nodeEnd = edge.getNode( 1 );
+    IFE1D2DNode endNode = edge.getNode( 1 );
     
     //ending node of the edge string
-    IFE1D2DNode nodeStart = edge.getNode( 0 );
+    IFE1D2DNode startNode = edge.getNode( 0 );
     
     for( ; SIZE>0;SIZE=edges.size())
     {
     
+      edge = null;
+      isPrevious = false;
+      toInvert = false;
       
       findingNextNode: for(int j=0;j<SIZE;j++)
       {
-        IFE1D2DEdge nextEdge=edges.get( j );//:endNodeEdges
-        if(NodeOps.startOf(nodeEnd,nextEdge))
+        IFE1D2DEdge nextEdge = edges.get( j );//:endNodeEdges
+        if(NodeOps.startOf(endNode,nextEdge))
         {
-          edge=nextEdge;
+          edge = nextEdge;
           isPrevious = false;
-          nodeEnd = nextEdge.getNode( 0 );
+          endNode = nextEdge.getNode( 1 );
           break findingNextNode; 
         }
-        else if(NodeOps.endOf( nodeStart, nextEdge ))
+        else if(NodeOps.endOf( startNode, nextEdge ))
         {
          edge = nextEdge;
-         nodeStart = nextEdge.getNode( 0 );
+         startNode = nextEdge.getNode( 0 );
          isPrevious = true;
+         break findingNextNode;
+        }
+        else
+        {
+          if(NodeOps.endOf(endNode,nextEdge))
+          {
+            edge = nextEdge;
+            isPrevious = false;
+            toInvert = true;
+            endNode = nextEdge.getNode( 0 ); 
+          }
+          else if(NodeOps.endOf( startNode, nextEdge ))
+          {
+            toInvert = true;
+            edge = nextEdge;
+            startNode = nextEdge.getNode( 1 );
+            isPrevious = true;
+          } 
         }
     
       }
     
       if(edge==null)
       {
-        throw new RuntimeException("Could not fround next edge:"+
-        "\n\tnode:"+nodeEnd+
-        "\n\tedges="+edges);
+        throw new RuntimeException(
+            "Could not fround next edge:"+
+            "\n\tnodeStart:"+startNode+
+            "\n\tnodeEnd:"+endNode+
+            "\n\tedges="+edges+
+            "\n\tedgesToSort="+toSortAndAddEdges);
       }
       else
       {
         if(edges.remove( edge ))
         {
+          if(toInvert)
+          {
+            final IFE1D2DEdge edgeToInvert = edge; 
+            edge = edgeToInvert.getEdgeInv();
+            if(edge == null)
+            {
+              Feature edgeParent = 
+                  edgeToInvert.getWrappedFeature().getParent();
+              if(edgeParent == null)
+              {
+                throw new RuntimeException(
+                    "Could not get edge parent to adapt it to discretisation model");
+              }
+              IFEDiscretisationModel1d2d model1d2d = 
+                  (IFEDiscretisationModel1d2d) edgeParent.getAdapter( 
+                                          IFEDiscretisationModel1d2d.class );
+              if(model1d2d == null)
+              {
+                throw new RuntimeException(
+                    "Could not adap edge parent to dicretisation model");
+              }
+              edge = new EdgeInv( edgeToInvert, model1d2d );
+            }
+          }
           if(isPrevious)
           {
-            edgeFeatureList.add(0, edge.getGmlID() );
+            edgeFeatureList.add( 0, edge.getGmlID() );
           }
           else
           {
@@ -540,6 +490,112 @@ public class ModelOps
       }
     }
         
+  }
+  
+  //TODO Patrice finish me
+  /**
+   * Checks whether the provides edge build a continuous line
+   * @param toSortAndAddEdges the edge to check whether the build
+   *            a continuous line
+   * @return if the edges build a continiuous line 
+   */
+  public static final boolean isContinuousLine(
+                          List<IFE1D2DEdge> toSortAndAddEdges)
+  {
+    
+    if(toSortAndAddEdges == null)
+    {
+      return false;
+    }
+    
+    if(toSortAndAddEdges.isEmpty())
+    {
+      return false;
+    }
+    
+    List<IFE1D2DEdge> edges=
+    new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);//element.getEdges());
+    
+    
+    
+    
+    //just select the first node
+    IFE1D2DEdge edge = edges.remove(0);
+    int SIZE=edges.size();
+//    boolean isPrevious = false;
+//    boolean toInvert = false;
+
+    //starting not of the edge string
+    IFE1D2DNode endNode = edge.getNode( 1 );
+    
+    //ending node of the edge string
+    IFE1D2DNode startNode = edge.getNode( 0 );
+    
+    for( ; SIZE>0;SIZE=edges.size())
+    {
+    
+      edge = null;
+//      isPrevious = false;
+//      toInvert = false;
+      
+      findingNextNode: for(int j=0;j<SIZE;j++)
+      {
+        IFE1D2DEdge nextEdge = edges.get( j );//:endNodeEdges
+        if(NodeOps.startOf(endNode,nextEdge))
+        {
+          edge = nextEdge;
+//          isPrevious = false;
+          endNode = nextEdge.getNode( 1 );
+          break findingNextNode; 
+        }
+        else if(NodeOps.endOf( startNode, nextEdge ))
+        {
+         edge = nextEdge;
+         startNode = nextEdge.getNode( 0 );
+//         isPrevious = true;
+         break findingNextNode;
+        }
+        else
+        {
+          if(NodeOps.endOf(endNode,nextEdge))
+          {
+            edge = nextEdge;
+//            isPrevious = false;
+//            toInvert = true;
+            endNode = nextEdge.getNode( 0 ); 
+          }
+          else if(NodeOps.endOf( startNode, nextEdge ))
+          {
+//            toInvert = true;
+            edge = nextEdge;
+            startNode = nextEdge.getNode( 1 );
+//            isPrevious = true;
+          } 
+        }
+    
+      }
+    
+      if(edge==null)
+      {
+        return false;
+      }
+      else
+      {
+        if(edges.remove( edge ))
+        {
+          
+        }
+        else
+        {
+          throw new RuntimeException(
+          "edge not in list:"+
+          "\n\tedge="+edge+
+          "\n\tlist:"+edges);
+        }
+      }
+    }
+     
+    return true;
   }
   
   public static final void sortElementEdges(
@@ -676,6 +732,45 @@ public class ModelOps
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
     return containers;
+  }
+
+  
+  public static final Collection<IFE1D2DEdge> collectAll2DEdges( Feature[] selectedFeatures )
+  {
+    Set<IFE1D2DEdge> selected2DEdges = new HashSet<IFE1D2DEdge>();
+    for(Feature feature:selectedFeatures)
+    {
+     if( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
+                                  feature.getFeatureType().getQName()))
+     {
+       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+       if(TypeInfo.is2DEdge( edge ))
+       {
+         selected2DEdges.add( edge );
+       }
+     }
+    }
+    return selected2DEdges;
+  }
+
+  public static final Collection<IFE1D2DEdge> collectAll1DEdges( Feature[] selectedFeatures )
+  {
+    Set<IFE1D2DEdge> selected1DEdges = new HashSet<IFE1D2DEdge>();
+    
+    for(Feature feature:selectedFeatures)
+    {
+     if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
+                                  feature.getFeatureType().getQName()))
+     {
+       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
+      if(TypeInfo.is1DEdge( edge ))
+       {
+         selected1DEdges.add( edge );
+       }
+     }
+    }
+    return selected1DEdges;
+    
   }
   
 }

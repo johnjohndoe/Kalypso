@@ -53,7 +53,8 @@ public class CreateJunctionFromClAndElement1DActionDelegate extends AbstractGisM
 {
   public CreateJunctionFromClAndElement1DActionDelegate( )
   {
-    super( new CreateJunctionFromClAnd1DEleWidget() );
+//    super( new CreateJunctionFromClAnd1DEleWidget() );
+      super(new CreateJunctionContext1dToCLineFromSelectedEdges());
   }
 
 }

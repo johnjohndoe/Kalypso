@@ -42,20 +42,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 
 import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DTo2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Add junction context from 1D and 2D edge
@@ -63,7 +55,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Patrice Congo
  */
-class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
+public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d2dChangeCommand
 {
   private IFE1D2DEdge edge1D;
   
@@ -80,7 +72,7 @@ class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
    *  by this command. the array must contains only {@link AddEdgeCommand} and 
    *    {@link AddEdgeInvCommand} commands
    */
-  public AddJunctionContextFromEdgesCmd(
+  public AddJunctionContextEle1DToEle2DFromEdgesCmd(
               IFEDiscretisationModel1d2d model,
               IFE1D2DEdge edge1D,
               IFE1D2DEdge edge2D
@@ -122,35 +114,8 @@ class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
     {
       try
       {
-//        IFEMiddleNode targetClNodel = addTargetCLNode(edge2D);
-//        
-//        IFE1D2DNode<IFE1D2DEdge> node0 = 
-//                          findJunctionStartNode(edge1D);
-//        
-//        IFE1D2DEdge curEdge = model.findEdge( node0, targetClNodel );
-//        if(curEdge==null)
-//        {
-//            final int size1 = model.getEdges().size();
-//            curEdge=FE1D2DEdge.createFromModel( 
-//                            model, node0, targetClNodel );
-//            final int size2 = model.getEdges().size();
-//            if(size2-size1!=1)
-//            {
-//              throw new IllegalStateException("Multi edge created");
-//            }
-//        }
-//        else
-//        {
-//          //test whether the edge is in an element
-//          if(ModelOps.isContainedInAnElement( curEdge ))
-//          {
-//            System.out.println("Edge must not be already in an element:"+curEdge);
-//            return;
-//          }
-//        }
-        
         addedJunction = 
-          JunctionContextOps.createEdgeToEdgeJunctionContext(  
+          JunctionContextOps.createEdgeToEdgeJunctionContext( 
                                                 model, edge1D, edge2D );
       }
       catch( Exception e )
@@ -164,22 +129,6 @@ class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
  
 
   
-  private IFE1D2DEdge findCLMiddleEdge( 
-                          IFE1D2DContinuityLine continuityLine2 )
-  {
-      IFeatureWrapperCollection edges = 
-                    continuityLine2.getEdges();
-      if(edges.isEmpty())
-      {
-        return null;
-      }
-      else
-      {
-        int index = (int)Math.floor( edges.size()/2.0);
-        return (IFE1D2DEdge) edges.get( index );
-      }
-  }
-
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
@@ -207,7 +156,9 @@ class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{addedJunction};
+    final IFE1D2DContinuityLine continuityLine = 
+                            addedJunction.getContinuityLine();    
+    return new IFeatureWrapper[]{addedJunction, continuityLine};
   }
   
   /**

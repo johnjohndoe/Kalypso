@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,7 +52,7 @@ import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionContextEle1DToEle2DFromEdgesCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionContext1DToCLineFromEdgesCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.QNameBasedSelectionFilter;
@@ -65,14 +66,14 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Patrice Congo
  */
-public class CreateJunctionFromSelectedEdges 
+public class CreateJunctionContext1dToCLineFromSelectedEdges 
                     extends FENetConceptSelectionWidget 
                     implements IWidget
 {
   
   
 
-  public CreateJunctionFromSelectedEdges()
+  public CreateJunctionContext1dToCLineFromSelectedEdges()
   {
     super(
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
@@ -92,6 +93,7 @@ public class CreateJunctionFromSelectedEdges
     super.canBeActivated( selection, mapPanel );
     return true;
   }
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#keyTyped(java.awt.event.KeyEvent)
    */
@@ -100,93 +102,97 @@ public class CreateJunctionFromSelectedEdges
   {
     
     int keyCode=e.getKeyCode();
-    if(KeyEvent.VK_CONTROL  == keyCode)
+    if(e.VK_CONTROL  == keyCode)
     {
       //skip
       super.keyTyped(e);
     }
-    else if(KeyEvent.VK_SHIFT == keyCode )
+    else if(e.VK_SHIFT == keyCode )
     {
       //skip
       super.keyTyped(e);
     }
-    else if(KeyEvent.VK_ENTER == e.getKeyChar() )
+    else if(e.VK_ENTER == e.getKeyChar() )
     {
-       Feature[] selectedFeatures = getSelectedFeature();
-  //     if(selectedFeatures.length !=2 )
-  //     {
-  //       System.out.println(
-  //           "Selection must have 2 element:"+
-  //           selectedFeatures.length);
-  //       return;
-  //     }
-       Collection<IFE1D2DEdge> selected1DEdges = 
-             ModelOps.collectAll1DEdges( selectedFeatures );//findSelectedElement1DEdge(selectedFeatures);
-       
-       Collection<IFE1D2DEdge> selected2DEdges = 
-         ModelOps.collectAll2DEdges( selectedFeatures );//findSelectedElement2DEdge(selectedFeatures);
-       
-       IFEDiscretisationModel1d2d model1d2d = 
-           getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
-       
-       if(isBadSelection( selected1DEdges, selected2DEdges, selectedFeatures, model1d2d ))
-       {
-         return;
-       }
-       AddJunctionContextEle1DToEle2DFromEdgesCmd junctionCmd =
-             new AddJunctionContextEle1DToEle2DFromEdgesCmd(
-                     model1d2d,
-                     selected1DEdges.iterator().next(),
-                     selected2DEdges.iterator().next());
-       
-      CommandableWorkspace workspace = 
-         getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE).getWorkspace();
-       ChangeDiscretiationModelCommand changeModelCmd=
-             new ChangeDiscretiationModelCommand(
-                 workspace,model1d2d);
-       changeModelCmd.addCommand( junctionCmd );
-      try
-      {
-        workspace.postCommand( changeModelCmd);
-      }
-      catch( Exception e1 )
-      {
-        e1.printStackTrace();
-      }
+     Feature[] selectedFeatures = getSelectedFeature();
+//     if(selectedFeatures.length < 2 )
+//     {
+//       System.out.println(
+//           "Selection must have at least 2 element:"+
+//           selectedFeatures.length);
+//       return;
+//     }
+     Collection<IFE1D2DEdge> selected1DEdges = 
+           ModelOps.collectAll1DEdges( selectedFeatures );//findSelectedElement1DEdge(selectedFeatures);
+     Collection<IFE1D2DEdge> selected2DEdges = 
+       ModelOps.collectAll2DEdges( selectedFeatures );//findSelectedElement2DEdge(selectedFeatures);
+     
+     IFEDiscretisationModel1d2d model1d2d = 
+         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
+     if(isBadSelection(selected1DEdges, selected2DEdges,selectedFeatures,model1d2d))
+     {
+       return;
+     }
+     AddJunctionContext1DToCLineFromEdgesCmd junctionCmd =
+           new AddJunctionContext1DToCLineFromEdgesCmd(
+                   model1d2d,
+                   selected1DEdges.iterator().next(),
+                   selected2DEdges);
+     
+    CommandableWorkspace workspace = 
+       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE).getWorkspace();
+     ChangeDiscretiationModelCommand changeModelCmd=
+           new ChangeDiscretiationModelCommand(
+               workspace,model1d2d);
+     changeModelCmd.addCommand( junctionCmd );
+    try
+    {
+      workspace.postCommand( changeModelCmd);
+    }
+    catch( Exception e1 )
+    {
+      e1.printStackTrace();
+    }
     }
     else
     {
       super.keyTyped(e);
     }
   }
+
   
-  /**
-   * 
-   */
   private final boolean isBadSelection( 
-      Collection<IFE1D2DEdge> selected1DEdges, 
-      Collection<IFE1D2DEdge> selected2DEdges, 
-      Feature[] selectedFeatures, 
-      IFEDiscretisationModel1d2d model1d2d )
+                        Collection<IFE1D2DEdge> selected1DEdges, 
+                        Collection<IFE1D2DEdge> selected2DEdges, 
+                        Feature[] selectedFeatures, 
+                        IFEDiscretisationModel1d2d model1d2d )
   {
-    String message = null;
+    final String message;
     if(selected1DEdges.size()!=1)
     {
-      message = "Wählen sie ein 1D Kante";
-    
+      message =
+          "Wählen sie ein 1D Kante";
+      
     }
-    else if(selected2DEdges.size()!=1)
+    else if(selected2DEdges.size()<=0)
     {
-      message = "Wählen sie eine 2D Kante";
-    
+      message =
+          "Wählen sie ein 2D Kanten";
+      
     }
     else if(selected1DEdges.size()+selected2DEdges.size()!=selectedFeatures.length)
     {
-      message = "Nur 1d und 2d Kanten wählen";      
+      message =
+          "Nur 1d und 2d Kanten wählen";      
+    }
+    else if(!ModelOps.isContinuousLine( 
+              new ArrayList<IFE1D2DEdge>( selected2DEdges )))
+    {
+      message = "Selektierte 2D kanten müssen eine Linie builden";
     }
     else
     {
-      //nix
+      message = null;
     }
     if( message !=null )
     {
@@ -203,9 +209,10 @@ public class CreateJunctionFromSelectedEdges
   {
     System.out.println(message);
   }
-
-//  public static final Collection<IFE1D2DEdge> findSelectedElement2DEdge( Feature[] selectedFeatures )
+  
+//  private Collection<IFE1D2DEdge> findSelectedElement2DEdge( Feature[] selectedFeatures )
 //  {
+//    
 //    Set<IFE1D2DEdge> selected2DEdges = new HashSet<IFE1D2DEdge>();
 //    for(Feature feature:selectedFeatures)
 //    {
@@ -222,10 +229,8 @@ public class CreateJunctionFromSelectedEdges
 //    return selected2DEdges;
 //  }
 
-//  public static final Collection<IFE1D2DEdge> findSelectedElement1DEdge( Feature[] selectedFeatures )
+//  private IFE1D2DEdge findSelectedElement1DEdge( Feature[] selectedFeatures )
 //  {
-//    Set<IFE1D2DEdge> selected1DEdges = new HashSet<IFE1D2DEdge>();
-//    
 //    for(Feature feature:selectedFeatures)
 //    {
 //     if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
@@ -234,11 +239,11 @@ public class CreateJunctionFromSelectedEdges
 //       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
 //      if(TypeInfo.is1DEdge( edge ))
 //       {
-//         selected1DEdges.add( edge );
+//         return edge;
 //       }
 //     }
 //    }
-//    return selected1DEdges;
+//    return null;
 //    
 //  }
 }

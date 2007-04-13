@@ -231,8 +231,8 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
- 	 <!--*** 1D/2D transition handlers ***-->	     	     	     	     	     	     	     
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
+ 	 <!--*** 1D/2D transition handlers CreateJunctionContext1dToCLineFromSelectedEdges ***-->	     	     	     	     	     	     	     
+	     <!--handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -241,7 +241,19 @@
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
 		                 value="org.kalypso.model1d2d"/>
 	        </class>
-	     </handler>	     
+	     </handler-->	
+	     
+	    <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
+	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+		           <parameter
+		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+		                 value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionContext1dToCLineFromSelectedEdges"/>
+		           <parameter
+		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+		                 value="org.kalypso.model1d2d"/>
+	        </class>
+	     </handler>	
+	          
 	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
