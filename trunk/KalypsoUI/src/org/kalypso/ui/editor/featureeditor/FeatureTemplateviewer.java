@@ -170,21 +170,22 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return Status.OK_STATUS;
   }
 
-  public final void loadInput( final Reader reader, final URL context, final IProgressMonitor monitor, Properties props ) throws CoreException
+  public final Featuretemplate loadInput( final Reader reader, final URL context, final IProgressMonitor monitor, Properties props ) throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
+    Featuretemplate template = null;
     try
     {
       final InputSource is = new InputSource( reader );
 
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
-      final List<FeatureviewType> view = m_template.getView();
+      template = (Featuretemplate) unmarshaller.unmarshal( is );
+      final List<FeatureviewType> view = template.getView();
       for( final FeatureviewType featureviewType : view )
         m_fvFactory.addView( featureviewType );
 
-      final Layer layer = m_template.getLayer();
+      final Layer layer = template.getLayer();
       final String href;
       final String linktype;
       if( layer != null )
@@ -217,6 +218,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       monitor.done();
     }
+    return template;
   }
 
   private void setWorkspace( final CommandableWorkspace workspace )

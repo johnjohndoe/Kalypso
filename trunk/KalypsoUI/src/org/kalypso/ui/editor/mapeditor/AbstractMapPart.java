@@ -389,12 +389,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
     final IWorkbenchPartSite site = getSite();
+    String partName = null;
     try
     {
       // prepare for exception
       setMapModell( null );
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
+      partName = gisview.getName();
       monitor.worked( 1 );
 
       final URL context;
@@ -460,7 +462,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       monitor.done();
 
       final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : "<input not a file>";
-      final String partName = fileName;
+      if( partName == null )
+      {
+        partName = fileName;
+      }
       setCustomName( partName );
     }
   }
@@ -494,7 +499,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
       final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
       final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
-
+      final String customName = getCustomName();
+      if( customName != null )
+      {
+        modellTemplate.setName( customName );
+      }
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
       bos.close();
