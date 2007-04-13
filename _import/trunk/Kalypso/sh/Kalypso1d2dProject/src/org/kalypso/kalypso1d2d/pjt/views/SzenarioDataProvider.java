@@ -201,10 +201,10 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  public IFeatureWrapper2 getModel( final Class< ? extends IFeatureWrapper2> modelClass ) throws CoreException
+  public <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( modelClass );
-    return (IFeatureWrapper2) workspace.getRootFeature().getAdapter( modelClass );
+    return (T) workspace.getRootFeature().getAdapter( modelClass );
   }
 
   public void postCommand( final Class< ? extends IFeatureWrapper2> wrapperClass, final ICommand command ) throws Exception
@@ -247,9 +247,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     return infoForKey.isDirty();
   }
 
-
   /**
-   * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class, org.eclipse.core.runtime.IProgressMonitor)
+   * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   public void saveModel( final Class< ? extends IFeatureWrapper2> modelClass, final IProgressMonitor monitor ) throws Exception
   {

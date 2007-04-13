@@ -55,7 +55,7 @@ public interface ICaseDataProvider<T extends Object>
   /**
    * Returns the data object corresponding to the given case data key.
    */
-  public T getModel( final Class< ? extends T> modelClass ) throws CoreException;
+  public <D extends T> D getModel( final Class<D> modelClass ) throws CoreException;
 
   /**
    * Saves the data object corresponding to the given case data key

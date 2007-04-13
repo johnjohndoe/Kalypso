@@ -44,13 +44,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
@@ -85,9 +84,9 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
-    final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( IFEDiscretisationModel1d2d.class );
-    final IFlowRelationshipCollection flowRelationModel = (IFlowRelationshipCollection) modelProvider.getModel( IFlowRelationshipCollection.class );
+    final ITerrainModel terrainModel = modelProvider.getModel( ITerrainModel.class );
+    final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
+    final IFlowRelationshipCollection flowRelationModel = modelProvider.getModel( IFlowRelationshipCollection.class );
 
     /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
@@ -104,13 +103,15 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     try
     {
-      final ICommand discCommand = new EmptyCommand( "WSPM Import", false );
-      // final CommandableWorkspace workspace1 = discModel.getWrappedFeature().getWorkspace();
-      mapView.postCommand( discCommand, null );
+      modelProvider.saveModel( ITerrainModel.class, new NullProgressMonitor() );
+      modelProvider.saveModel( IFEDiscretisationModel1d2d.class, new NullProgressMonitor() );
 
+      // final ICommand discCommand = new EmptyCommand( "WSPM Import", false );
+      // final CommandableWorkspace workspace1 = discModel.getWrappedFeature().getWorkspace();
+      // mapView.postCommand( discCommand, null );
       // final CommandableWorkspace workspace2 = terrainModel.getWrappedFeature().getWorkspace();
-      final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
-      mapView.postCommand( terrainCommand, null );
+      // final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
+      // mapView.postCommand( terrainCommand, null );
     }
     catch( final Exception e )
     {
