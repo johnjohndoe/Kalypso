@@ -90,6 +90,13 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
       final MultiContextHandler contextHandler = new MultiContextHandler( multiContext, this );
       return contextHandler;
     }
+    else if( context instanceof ExtensionContext )
+    {
+      final ExtensionContext multiContext = (ExtensionContext) context;
+      final IContextHandlerFactory factory = ContextHandlerFactoryExtension.getFactory( multiContext );
+      final IHandler contextHandler = factory.getHandler( multiContext );
+      return contextHandler;
+    }
     else
       return null;
   }

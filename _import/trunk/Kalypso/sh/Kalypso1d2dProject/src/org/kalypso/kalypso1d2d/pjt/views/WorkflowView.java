@@ -11,6 +11,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
+import org.kalypso.afgui.workflow.WorkflowContextHandlerFactory;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -89,7 +90,7 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_workflowControl = new WorkflowControl( new KalypsoContextHandlerFactory());
+    m_workflowControl = new WorkflowControl( new WorkflowContextHandlerFactory());
     m_workflowControl.restoreState( memento );
   }
 

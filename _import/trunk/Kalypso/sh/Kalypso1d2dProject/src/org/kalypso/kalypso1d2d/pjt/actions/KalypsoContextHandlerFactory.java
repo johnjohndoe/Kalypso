@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.util.List;
+
 import org.eclipse.core.commands.IHandler;
 import org.kalypso.afgui.workflow.ContextType;
-import org.kalypso.afgui.workflow.FeatureViewInputContext;
-import org.kalypso.afgui.workflow.MapViewInputContext;
-import org.kalypso.afgui.workflow.ThemeContext;
-import org.kalypso.afgui.workflow.WorkflowContextHandlerFactory;
+import org.kalypso.afgui.workflow.ExtensionContext;
+import org.kalypso.afgui.workflow.IContextHandlerFactory;
+import org.kalypso.afgui.workflow.ExtensionContext.Parameter;
 
 /**
  * Extends the capabilities of the {@link WorkflowContextHandlerFactory} by the required context handlers for the
@@ -54,36 +55,59 @@ import org.kalypso.afgui.workflow.WorkflowContextHandlerFactory;
  * 
  * @author Stefan Kurzbach
  */
-public class KalypsoContextHandlerFactory extends WorkflowContextHandlerFactory
+public class KalypsoContextHandlerFactory implements IContextHandlerFactory
 {
+  private static final String PARAM_TYPE = "type";
+
+  private static final String PARAM_INPUT = "input";
+
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
    */
-  @Override
   public IHandler getHandler( final ContextType context )
   {
-    if( context instanceof MapViewInputContext )
+    if( context instanceof ExtensionContext )
     {
-      final MapViewInputContext inputContext = (MapViewInputContext) context;
-      final String input = inputContext.getInput();
-      final MapViewInputContextHandler inputContextHandler = new MapViewInputContextHandler( input );
-      return inputContextHandler;
+      final ExtensionContext extensionContext = (ExtensionContext) context;
+      final List<Parameter> parameters = extensionContext.getParameter();
+      String type = null;
+      String input = null;
+      for( final Parameter parameter : parameters )
+      {
+        if( parameter.getName().equals( PARAM_TYPE ) )
+        {
+          type = parameter.getValue();
+        }
+        else if( parameter.getName().equals( PARAM_INPUT ) )
+        {
+          input = parameter.getValue();
+        }
+      }
+      if( "mapViewInputContext".equals( type ) )
+      {
+        if( input != null )
+        {
+          final MapViewInputContextHandler inputContextHandler = new MapViewInputContextHandler( input );
+          return inputContextHandler;
+        }
+      }
+      else if( "featureViewInputContext".equals( type ) )
+      {
+        if( input != null )
+        {
+          final FeatureViewInputContextHandler inputContextHandler = new FeatureViewInputContextHandler( input );
+          return inputContextHandler;
+        }
+      }
+      else if( "themeContext".equals( type ) )
+      {
+        if( input != null )
+        {
+          final ThemeContextHandler contextHandler = new ThemeContextHandler( input );
+          return contextHandler;
+        }
+      }
     }
-    else if( context instanceof FeatureViewInputContext )
-    {
-      final FeatureViewInputContext inputContext = (FeatureViewInputContext) context;
-      final String input = inputContext.getInput();
-      final FeatureViewInputContextHandler inputContextHandler = new FeatureViewInputContextHandler( input );
-      return inputContextHandler;
-    }
-    else if( context instanceof ThemeContext )
-    {
-      final ThemeContext themeContext = (ThemeContext) context;
-      final String featureType = themeContext.getFeatureType();
-      final ThemeContextHandler contextHandler = new ThemeContextHandler( featureType );
-      return contextHandler;
-    }
-    else
-      return super.getHandler( context );
+    return null;
   }
 }

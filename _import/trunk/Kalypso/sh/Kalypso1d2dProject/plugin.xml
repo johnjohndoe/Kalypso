@@ -276,4 +276,10 @@
               configId="org.kalypso.model.product.configId"
               content="content/ext.xml"/>
    </extension>
+   <extension
+         point="org.kalypso.afgui.contextHandlerFactories">
+      <contextHandlerFactory
+            class="org.kalypso.kalypso1d2d.pjt.actions.KalypsoContextHandlerFactory"
+            id="kalypsoContextHandlerFactory"/>
+   </extension>
 </plugin>

@@ -132,7 +132,7 @@
 		</complexType>
 	</element>
 
-	<complexType name="InputContext" abstract="true">
+	<complexType name="EditorInputContext">
 		<complexContent>
 			<extension base="kwf:ContextType">
 				<attribute name="input" type="string" />
@@ -140,39 +140,51 @@
 		</complexContent>
 	</complexType>
 
-	<element name="EditorInputContext" substitutionGroup="kwf:_Context">
-		<complexType>
-			<complexContent>
-				<extension base="kwf:InputContext"></extension>
-			</complexContent>
-		</complexType>
-	</element>
-
-	<element name="FeatureViewInputContext" substitutionGroup="kwf:_Context">
-		<complexType>
-			<complexContent>
-				<extension base="kwf:InputContext"></extension>
-			</complexContent>
-		</complexType>
-	</element>
-
-	<element name="MapViewInputContext" substitutionGroup="kwf:_Context">
-		<complexType>
-			<complexContent>
-				<extension base="kwf:InputContext"></extension>
-			</complexContent>
-		</complexType>
-	</element>
-
-	<element name="ThemeContext" substitutionGroup="kwf:_Context">
+	<element name="ExtensionContext" substitutionGroup="kwf:_Context">
 		<complexType>
 			<complexContent>
 				<extension base="kwf:ContextType">
-					<attribute name="featureType" type="string" />
+					<sequence>
+						<element name="Parameter" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<attribute name="name" type="string" />
+								<attribute name="value" type="string" />
+							</complexType>
+						</element>
+					</sequence>
+					<attribute name="handlerFactoryId" type="string" />
 				</extension>
 			</complexContent>
 		</complexType>
 	</element>
+
+	<!--
+		<element name="FeatureViewInputContext" substitutionGroup="kwf:_Context">
+		<complexType>
+		<complexContent>
+		<extension base="kwf:InputContext"></extension>
+		</complexContent>
+		</complexType>
+		</element>
+		
+		<element name="MapViewInputContext" substitutionGroup="kwf:_Context">
+		<complexType>
+		<complexContent>
+		<extension base="kwf:InputContext"></extension>
+		</complexContent>
+		</complexType>
+		</element>
+		
+		<element name="ThemeContext" substitutionGroup="kwf:_Context">
+		<complexType>
+		<complexContent>
+		<extension base="kwf:ContextType">
+		<attribute name="featureType" type="string" />
+		</extension>
+		</complexContent>
+		</complexType>
+		</element>
+	-->
 
 	<complexType name="Task">
 		<complexContent>
