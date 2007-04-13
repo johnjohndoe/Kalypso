@@ -60,13 +60,21 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -78,9 +86,31 @@ public class FeatureTemplateView extends ViewPart
 
   private static final String MEMENTO_FILE = "file";
 
-  FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget( null, null ), 0, 0 );
+  private final Runnable m_dirtyRunnable = new Runnable()
+  {
+    public void run( )
+    {
+      final Shell shell = getSite().getShell();
+      if( shell != null )
+      {
+        shell.getDisplay().asyncExec( new Runnable()
+        {
+          public void run( )
+          {
+            fireDirtyChange();
+          }
+        } );
+      }
+    }
+  };
+
+  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
+
+  FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( m_commandTarget, 0, 0 );
 
   protected IFile m_file;
+
+  private String m_partName;
 
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
@@ -97,7 +127,7 @@ public class FeatureTemplateView extends ViewPart
       if( fullPath != null )
       {
         final IPath path = Path.fromPortableString( fullPath );
-        m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );        
+        m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
       }
     }
   }
@@ -127,6 +157,11 @@ public class FeatureTemplateView extends ViewPart
     {
       loadFromTemplate( m_file );
     }
+
+    final IActionBars actionBars = getViewSite().getActionBars();
+    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
+    actionBars.updateActionBars();
   }
 
   public void loadFromTemplate( final IFile file )
@@ -140,14 +175,22 @@ public class FeatureTemplateView extends ViewPart
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
+        String partName = null;
         try
         {
           if( file != null && file.exists() )
           {
             final Reader reader = new InputStreamReader( file.getContents(), file.getCharset() );
             final URL context = ResourceUtilities.createURL( file );
-            m_templateviewer.loadInput( reader, context, monitor, new Properties() );
+            final Featuretemplate template = m_templateviewer.loadInput( reader, context, monitor, new Properties() );
+            partName = template.getName();
             m_file = file;
+            final String fileName = m_file != null ? FileUtilities.nameWithoutExtension( m_file.getName() ) : "<input not a file>";
+            if( partName == null )
+            {
+              partName = fileName;
+            }
+            setCustomName(partName);
           }
           return Status.OK_STATUS;
         }
@@ -177,10 +220,28 @@ public class FeatureTemplateView extends ViewPart
     // m_templateviewer.dispose();
     // }
   }
+  
+  public void setCustomName( final String name )
+  {
+    m_partName = name;
+    final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+    if( !workbench.isClosing() )
+    {
+      workbench.getDisplay().asyncExec( new Runnable()
+      {
+        @SuppressWarnings("synthetic-access")
+        public void run( )
+        {
+          setPartName( m_partName );
+        }
+      } );
+    }
+  }
 
   @Override
   public void dispose( )
   {
+    m_commandTarget.dispose();
     if( m_templateviewer != null )
     {
       saveFeature();
@@ -231,6 +292,11 @@ public class FeatureTemplateView extends ViewPart
     {
       control.setFocus();
     }
+  }
+
+  protected void fireDirtyChange( )
+  {
+    firePropertyChange( IWorkbenchPartConstants.PROP_DIRTY );
   }
 
 }
