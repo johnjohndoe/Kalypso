@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -38,7 +39,8 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
 
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon polygon )
   {
-   System.out.println("Polygon : "+polygon); 
+    
+  // System.out.println("Polygon : "+polygon.); 
     return null;
   }
   
@@ -194,6 +196,19 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
       if(list[i] == -1)
         list[i] = member;
     return list;
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#getRoughnessEstimateSpec(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Object object )
+  {
+    object.getCoordinateDimension();
+    
+    
+    GM_Polygon ex =(GM_Polygon)object;
+    System.out.println(" Area "+ex.getArea());
+    return null;
   }
 
 }

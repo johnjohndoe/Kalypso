@@ -67,12 +67,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Madanagopal
@@ -196,9 +197,20 @@ public class ApplyColorOnFENETWidgetFace
     nodeModel = dataModel.getDiscretisationModel();
     roughnessPolygons = dataModel.getRoughnessPolygonCollection();
     for (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> inte: nodeModel.getElements()) {
-      roughnessPolygons.getRoughnessEstimateSpec( (GM_Polygon)inte );  
+       try
+      {
+         //roughnessPolygons.getSelectedPolygons( point )
+       IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygons.getRoughnessEstimateSpec( inte.recalculateElementGeometry());
+       //roughnessEstimateSpec.getContributingRoughnessPolygons()mostSpreadRoughness(); 
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }    
     }
     
+//  roughnessPolygons.getRoughnessEstimateSpec( inte. );
   }
 
   public void disposeControl( )

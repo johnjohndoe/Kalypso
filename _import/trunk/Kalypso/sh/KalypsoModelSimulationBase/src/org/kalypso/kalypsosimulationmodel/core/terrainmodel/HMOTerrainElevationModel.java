@@ -66,88 +66,86 @@ import com.vividsolutions.jts.io.ParseException;
  * An {@link IElevationProvider} based on an hmo file
  * 
  * @author Patrice Congo
+ * @author Madanagopal
  */
-public class HMOTerrainElevationModel 
-                    implements  IElevationProvider,
-                                SurfacePatchVisitable
+public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatchVisitable
 {
-  
+
   public static final double[][] NO_INTERIOR = {};
-  
+
   private double minElevation;
+
   private double maxElevation;
+
   private Envelope union;
-  
+
   private Quadtree triangles;
 
   private Object regionOfInterest;
 
   private CS_CoordinateSystem crs = CRS_GAUSS_KRUEGER;
- 
-  public HMOTerrainElevationModel(
-                URL hmoFileURL,
-                GM_Envelope regionOfInterest ) throws IOException, ParseException
+
+  public HMOTerrainElevationModel( URL hmoFileURL, GM_Envelope regionOfInterest ) throws IOException, ParseException
   {
     this.regionOfInterest = regionOfInterest;
     parseFile( hmoFileURL );
   }
-  
-  private final void parseFile(URL hmoFileURL) throws IOException, ParseException
+
+  private final void parseFile( URL hmoFileURL ) throws IOException, ParseException
   {
-    HMOReader hmoReader= new HMOReader(new GeometryFactory());
-    Reader r= new InputStreamReader(hmoFileURL.openStream());
+    HMOReader hmoReader = new HMOReader( new GeometryFactory() );
+    Reader r = new InputStreamReader( hmoFileURL.openStream() );
     LinearRing[] rings = hmoReader.read( r );
-    
-    this.triangles= new Quadtree();
-    
+
+    this.triangles = new Quadtree();
+
     TriangleData triangleData;
     minElevation = Double.MAX_VALUE;
     maxElevation = Double.MIN_VALUE;
     double extremum;
-    
-    
-//    System.out.println("Parsing:"+rings.length);
+
+    // System.out.println("Parsing:"+rings.length);
     union = rings[0].getEnvelopeInternal();
-    for(LinearRing ring:rings)
+    for( LinearRing ring : rings )
     {
-//      System.out.println("ring:"+ring);
-      triangleData=new TriangleData(ring);
+      // System.out.println("ring:"+ring);
+      triangleData = new TriangleData( ring );
       Envelope envelopeInternal = ring.getEnvelopeInternal();
-      triangles.insert( 
-          envelopeInternal, 
-          triangleData);
-      //set min
-      extremum=triangleData.getMinElevation();
-      if(minElevation>extremum)
+      triangles.insert( envelopeInternal, triangleData );
+      //
+      // set min
+      extremum = triangleData.getMinElevation();
+      if( minElevation > extremum )
       {
-        minElevation=extremum;
-      }      
-      //set max 
-      extremum=triangleData.getMaxElevation();
-      if(maxElevation<extremum)
+        minElevation = extremum;
+      }
+      // set max
+      extremum = triangleData.getMaxElevation();
+      if( maxElevation < extremum )
       {
         maxElevation = extremum;
       }
-      
+
       union.expandToInclude( envelopeInternal );
     }
   }
-  
+
+
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
   public GM_Envelope getBoundingBox( )
   {
-    //TODO patrice why not return the real geo object
+    // TODO patrice why not return the real geo object
     try
     {
-//      GM_Position min = JTSAdapter.wrap( union. ).getEnvelope();
-      return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( 
-                                              union.getMinX(),//minx,
-                                              union.getMinY(),//miny,
-                                              union.getMaxX(),//maxx,
-                                              union.getMaxY()//maxy 
-                                              );
+      // GM_Position min = JTSAdapter.wrap( union. ).getEnvelope();
+      return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( union.getMinX(),// minx,
+      union.getMinY(),// miny,
+      union.getMaxX(),// maxx,
+      union.getMaxY()// maxy
+      );
     }
     catch( Throwable th )
     {
@@ -161,7 +159,7 @@ public class HMOTerrainElevationModel
    */
   public CS_CoordinateSystem getCoordinateSystem( )
   {
-    //TODO Patrice this hard coded and not okay put it into the gml    
+    // TODO Patrice this hard coded and not okay put it into the gml
     return crs;
   }
 
@@ -174,58 +172,49 @@ public class HMOTerrainElevationModel
     {
       double x = location.getX();
       double y = location.getY();
-      Point jtsPoint = (Point)JTSAdapter.export( location );
-      Envelope searchEnv= new Envelope(x,x,y,y);
+      Point jtsPoint = (Point) JTSAdapter.export( location );
+      Envelope searchEnv = new Envelope( x, x, y, y );
       List<TriangleData> list = triangles.query( searchEnv );
-      if(list.isEmpty())
+      if( list.isEmpty() )
       {
-        System.out.println("List is empty");
+        System.out.println( "List is empty" );
         return Double.NaN;
       }
       else
       {
-       // System.out.println("Selected triange liste size="+list.size());
-        for(TriangleData data:list)
+        // System.out.println("Selected triange liste size="+list.size());
+        for( TriangleData data : list )
         {
-          if(data.contains( jtsPoint ))
+          if( data.contains( jtsPoint ) )
           {
-            return data.computeZOfTrianglePlanePoint( x, y );//getCenterElevation();
+            return data.computeZOfTrianglePlanePoint( x, y );// getCenterElevation();
           }
         }
-        //System.out.println("trinagle location not in list");
-        return Double.NaN;//((TriangleData)list.get( 0 )).getCenterElevation(); 
+        // System.out.println("trinagle location not in list");
+        return Double.NaN;// ((TriangleData)list.get( 0 )).getCenterElevation();
       }
     }
     catch( Throwable th )
     {
-      throw new RuntimeException("Error while getting the elevation",th);
+      throw new RuntimeException( "Error while getting the elevation", th );
     }
   }
 
-
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void aceptSurfacePatches( 
-                      GM_Envelope envToVisit, 
-                      SurfacePatchVisitor surfacePatchVisitor ) 
-                      throws GM_Exception
+  public void aceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
   {
-    Assert.throwIAEOnNullParam( 
-                      envToVisit, "envToVisit" );
-    Assert.throwIAEOnNullParam( 
-                      surfacePatchVisitor, "surfacePatchVisitor");
-    Coordinate max = JTSAdapter.export( envToVisit.getMax());
-    Coordinate min = JTSAdapter.export( envToVisit.getMin());
-    Envelope jtsEnv= new Envelope(min,max);
-    
+    Assert.throwIAEOnNullParam( envToVisit, "envToVisit" );
+    Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" );
+    Coordinate max = JTSAdapter.export( envToVisit.getMax() );
+    Coordinate min = JTSAdapter.export( envToVisit.getMin() );
+    Envelope jtsEnv = new Envelope( min, max );
     List triToVisit = triangles.query( jtsEnv );
-    
-    for(Object tri:triToVisit)
+    for( Object tri : triToVisit )
     {
-      ((TriangleData)tri).aceptSurfacePatches( 
-                                envToVisit, 
-                                surfacePatchVisitor ); 
+      ((TriangleData) tri).aceptSurfacePatches( envToVisit, surfacePatchVisitor );
     }
   }
 
@@ -235,8 +224,7 @@ public class HMOTerrainElevationModel
    */
   public double getMaxElevation( )
   {
-    
-    return maxElevation==Double.MIN_VALUE?Double.NaN:maxElevation;
+    return maxElevation == Double.MIN_VALUE ? Double.NaN : maxElevation;
   }
 
   /**
@@ -245,7 +233,7 @@ public class HMOTerrainElevationModel
    */
   public double getMinElevation( )
   {
-    return minElevation == Double.MAX_VALUE?Double.NaN:minElevation;
+    return minElevation == Double.MAX_VALUE ? Double.NaN : minElevation;
   }
 
   /**
@@ -253,7 +241,7 @@ public class HMOTerrainElevationModel
    */
   public void setCoordinateSystem( String coordinateSystem )
   {
-    // TODO    
+    // TODO
   }
-  
+
 }

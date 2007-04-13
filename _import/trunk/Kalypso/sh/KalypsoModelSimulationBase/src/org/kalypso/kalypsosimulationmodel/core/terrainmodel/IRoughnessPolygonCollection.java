@@ -3,6 +3,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
@@ -34,7 +35,16 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * @param polygon
    * @return
    */
-  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon polygon );
+  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon object );
+  
+  /**
+   * Build the roughness estimation specification of the given polygon (eg. FE element)
+   * 
+   * @param polygon
+   * @return
+   */
+  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Object object );
+  
 
   /**
    * Checks if there is overlapping between roughness polygons

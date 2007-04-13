@@ -107,7 +107,7 @@ public class NativeTerrainElevationModelFactory
       catch( ParseException e )
       {
         e.printStackTrace();
-        throw new IllegalArgumentException( "File has bad format could not parse it", e );
+        throw new IllegalArgumentException( "File has bad format; could not parse it", e );
       }
     }
     else
