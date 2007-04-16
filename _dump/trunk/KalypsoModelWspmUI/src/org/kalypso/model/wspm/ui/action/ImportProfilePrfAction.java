@@ -178,7 +178,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
   private MultiStatus readProfiles( final IAction action, final Shell shell, final File[] files, final List<IProfil> profiles )
   {
-    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, "Eine oder mehrere der .rpf Dateien konnten nicht gelesen werden.", null );
+    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, "Eine oder mehrere der .prf Dateien konnten nicht gelesen werden.", null );
     // final Date today = new Date();
     // final String todayString = DF.format( today );
     for( final File file : files )
