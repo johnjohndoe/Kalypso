@@ -37,7 +37,7 @@
             configId="org.kalypso.model.product.configId"
             content="content/ext.xml"/>
    </extension>
-   <!--<extension
+   <extension
          point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
@@ -49,5 +49,4 @@
             name="NA-Model Projekt aus Ascii File Projekt"
             project="true"/>
    </extension>
--->
 </plugin>
