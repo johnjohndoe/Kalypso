@@ -172,6 +172,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
       {
         public void run( )
         {
+          if( tt.isDisposed() )
+            return;
           try
           {
             final TreeItem[] items = tt.getItems();

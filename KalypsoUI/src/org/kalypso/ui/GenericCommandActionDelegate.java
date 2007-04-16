@@ -84,9 +84,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 public class GenericCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
     IActionDelegate2
 {
-  /**
-   * @author bce
-   */
   private static final class UpdateActionbarsJob extends UIJob
   {
     private final IActionBars m_bars;
@@ -106,6 +103,8 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
+      // TODO holger schreib mal was...
+           
       final IContributionManager toolBarManager = m_bars.getToolBarManager();
       final IContributionManager menuManager = m_bars.getMenuManager();
 
@@ -123,6 +122,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       }
 
       m_bars.updateActionBars();
+      
       return Status.OK_STATUS;
     }
   }
@@ -348,5 +348,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     final UIJob job = new UpdateActionbarsJob( "Update Action-Bars", actionBars, actionId, enabledState );
     job.setPriority( UIJob.INTERACTIVE );
     job.schedule();
+    //job.schedule(1000);
+    //TODO: just delay, when the map view gets the focus by pressing an allready existing button.
   }
 }
