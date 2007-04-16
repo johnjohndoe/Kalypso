@@ -44,9 +44,11 @@
       <plugin id="com.ibm.icu.nl1" fragment="true"/>
       <plugin id="de.belger.swtchart.core"/>
       <plugin id="de.renew.workflow.connector"/>
+      <plugin id="de.renew.workflow.model"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.commons.vfs"/>
       <plugin id="org.apache.lucene"/>
+      <plugin id="org.apache.xerces"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.ant.core.nl1" fragment="true"/>
       <plugin id="org.eclipse.ant.ui"/>
@@ -187,7 +189,6 @@
       <plugin id="org.kalypso.core"/>
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.featureview"/>
-      <plugin id="org.kalypso.floodrisk"/>
       <plugin id="org.kalypso.gml.processes"/>
       <plugin id="org.kalypso.gml.ui"/>
       <plugin id="org.kalypso.gmlschema"/>
@@ -214,7 +215,6 @@
       <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
       <plugin id="org.kalypso.wizard"/>
-      <plugin id="org.kalypso.wizard.CreateFloodRiskProject"/>
       <plugin id="org.kalypso.workflow"/>
       <plugin id="org.kalypso.wspwin.core"/>
    </plugins>
