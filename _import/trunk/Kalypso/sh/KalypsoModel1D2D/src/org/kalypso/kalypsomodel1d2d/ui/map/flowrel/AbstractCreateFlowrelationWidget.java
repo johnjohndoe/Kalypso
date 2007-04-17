@@ -47,6 +47,7 @@ import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 
+import org.apache.tools.ant.taskdefs.Sleep;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -390,7 +391,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
               }
             } );
           }
-          getMapPanel().repaint();
           try
           {
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );

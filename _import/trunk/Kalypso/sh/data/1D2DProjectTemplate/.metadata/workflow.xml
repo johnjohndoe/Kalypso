@@ -144,7 +144,7 @@
 				<Name>Rauheitszonen definieren</Name>
 			</Task>
 			<Task context="RoughnessDatabase" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
-				<Help>Ermöglicht die Bearbeitung der Rauheitswerte einer Rauheitszone in einer globalen Rauheitsdatenbank.</Help>
+				<Help>Ermöglicht die Bearbeitung der Rauheitswerte einer Rauheitszone in einer Rauheitsdatenbank.</Help>
 				<Name>Rauheitswerte bearbeiten</Name>
 			</Task>
 		</TaskGroup>

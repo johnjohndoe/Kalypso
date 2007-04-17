@@ -67,7 +67,7 @@ public class TestNodalWizard extends TestCase
 
       try
       {
-        NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(descriptions, null, null, null);
+        NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(descriptions, null, null, null, null);
         WizardDialog dialog = new WizardDialog( null, wizard );
         dialog.create();
         dialog.open();

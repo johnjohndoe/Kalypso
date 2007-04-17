@@ -47,14 +47,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardPageZmlChooser;
@@ -63,11 +63,16 @@ import org.kalypso.observation.Phenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -99,17 +104,18 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final TimeserieTypeDescription[] descriptions, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
-  {
+  public NodalBCSelectionWizard( final TimeserieTypeDescription[] descriptions, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, IFolder currentScenarioFolder )
+  {    
     m_descriptions = descriptions;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     setWindowTitle( "Randbedinung definieren" );
-    System.out.println("PATH: " + workspace.getContext().getPath());
-//    final IProject project = mapModel.getProject();
-//    IFile file = project.getFile( source.split( ":" )[1].split( "#" )[0] );
-//    imageAbsolutePath = file.getLocation().toOSString();
+    System.out.println( "PATH: " + workspace.getContext().getPath() );
+    System.out.println( "SCENARIO: " + currentScenarioFolder.toString() );
+    // final IProject project = mapModel.getProject();
+    // IFile file = project.getFile( source.split( ":" )[1].split( "#" )[0] );
+    // imageAbsolutePath = file.getLocation().toOSString();
   }
 
   @Override
@@ -121,8 +127,8 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
     m_page3 = new WizardPageZmlChooser( "" );
-//    FileLocator.;
-//    defaultplu
+    // FileLocator.;
+    // defaultplu
     // m_page3.init( m_scenarioFolder.getFolder( "imports" ).getLocation().toOSString() );
     m_page3.init( "D:\\Eclipse\\runtime-KalypsoEnterprise3\\New01\\imports" );
     addPage( m_page3 );
@@ -202,7 +208,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     ObservationFeatureFactory.toFeature( obs, obsFeature );
 
     m_boundaryCondition = bc;
-    
+
     return true;
   }
 

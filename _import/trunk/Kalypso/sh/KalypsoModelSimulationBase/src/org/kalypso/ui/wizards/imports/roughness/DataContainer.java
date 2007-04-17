@@ -10,7 +10,11 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -119,19 +123,32 @@ public class DataContainer
     m_feature = roughnessPolygonCollection;
   }
 
+  /**
+   * @param dbAxAy -
+   *          true if user wants dbAxAy database location, false if KS db location is required
+   */
   public final String getRoughnessDatabaseLocation( )
   {
     return m_roughnessDatabaseLocation;
   }
 
+  /**
+   * @param dbAxAy -
+   *          true if user wants dbAxAy database location, false if KS db location is required
+   */
   public final URL getRoughnessDatabaseLocationURL( ) throws MalformedURLException
   {
-    return new URL( "file:" + m_AbsolutePath + "/" + m_ProjectBaseFolder + m_roughnessDatabaseLocation );
+    return new URL( "file:" + m_AbsolutePath + "/" + m_ProjectBaseFolder + getRoughnessDatabaseLocation() );
   }
 
-  public final void setRoughnessDatabaseLocation( String roughnessDatabaseLocation )
+  public final void setRoughnessDatabaseLocation( String dbLocation ) throws Exception
   {
-    m_roughnessDatabaseLocation = roughnessDatabaseLocation;
+    m_roughnessDatabaseLocation = dbLocation;
+
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
+    final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
+    for( int i = 0; i < collection.size(); i++ )
+      m_roughnessStaticCollectionMap.put( collection.get( i ).getName(), collection.get( i ).getGmlID() );
   }
 
   public final String getProjectBaseFolder( )
@@ -143,7 +160,7 @@ public class DataContainer
   {
     m_ProjectBaseFolder = projectBaseFolder;
   }
-  
+
   public final LinkedHashMap<String, String> getUserSelectionMap( )
   {
     return m_userSelectionMap;
@@ -156,7 +173,7 @@ public class DataContainer
     {
       m_userSelectionFile = m_AbsolutePath + "/" + m_ProjectBaseFolder + "/" + userSelectionFile;
       File file = new File( m_userSelectionFile );
-      if( file.exists() && file.isFile() )
+      if( file.exists() && file.isFile() && file.length() > 0 )
       {
         FileInputStream fileStream = new FileInputStream( file );
         ObjectInputStream objectStream = new ObjectInputStream( fileStream );

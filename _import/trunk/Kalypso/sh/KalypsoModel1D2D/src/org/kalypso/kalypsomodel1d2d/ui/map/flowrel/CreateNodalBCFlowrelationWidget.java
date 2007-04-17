@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
@@ -51,7 +53,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -61,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Gernot Belger
  */
-public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
+public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget implements IEvaluationContextConsumer
 {
   // TODO: move this to the Nodal...Wizard
   public final static class TimeserieTypeDescription
@@ -86,6 +90,8 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
       return m_componentUrns;
     }
   }
+
+  private IFolder m_currentScenarioFolder;
 
   public CreateNodalBCFlowrelationWidget( )
   {
@@ -113,7 +119,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
         // TODO: make it dependend on the element type
         final TimeserieTypeDescription[] descriptions = getTimeserieDescriptions();
 
-        final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptions, workspace, parentFeature, parentRelation );
+        final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptions, workspace, parentFeature, parentRelation, m_currentScenarioFolder );
 
         final Shell shell = display.getActiveShell();
         final WizardDialog dialog = new WizardDialog( shell, wizard );
@@ -166,5 +172,13 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
 
     final IPolyElement element2d = discModel.find2DElement( currentPos, grabDistance );
     return element2d;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
+   */
+  public void setEvaluationContext( IEvaluationContext evaluationContext )
+  {
+    m_currentScenarioFolder = (IFolder) evaluationContext.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
   }
 }
