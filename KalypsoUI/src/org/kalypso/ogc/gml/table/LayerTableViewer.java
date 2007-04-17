@@ -399,7 +399,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
-  public void applyTableTemplate( final Gistableview tableView )
+  public void applyTableTemplate( final Gistableview tableView, final URL context, final boolean dummy )
   {
     m_isApplyTemplate = true;
     disposeTheme( getInput() );
@@ -407,6 +407,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( tableView != null )
     {
       final Layer layer = tableView.getLayer();
+      if( layer.getHref() != null )
+      {
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, null );
+        setInput( theme );
+      }
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();
       setSortAndColumns( sort, columnList );
@@ -507,6 +512,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   protected void setColumnText( final TableColumn tc )
   {
+//    System.out.println("");
     final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
     final String sortPropertyName = m_sorter.getPropertyName();
     String text;
