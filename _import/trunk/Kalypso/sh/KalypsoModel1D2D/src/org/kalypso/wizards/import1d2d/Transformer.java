@@ -19,7 +19,8 @@ import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
+ * Provides the mechanism for transforming a 2D-Ascii model into a 
+ * 1d 2d gml model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -70,17 +71,29 @@ public class Transformer implements ICoreRunnableWithProgress
   private void serialize( ) throws IllegalStateException, IOException, GmlSerializeException
   {
     GMLWorkspace workspace = m_data.getFE1D2DDiscretisationModel().getWrappedFeature().getWorkspace();
-    // RandomAccessFile rFile = new RandomAccessFile(m_data.getInputFile(), "r");
-    // rFile.length();
-    RMA10S2GmlConv.verboseMode = false;
-    IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem( true ) );
-    RMA10S2GmlConv.toDiscretisationModel( m_data.getInputFileURL().openStream(), m_data.getFE1D2DDiscretisationModel(), positionProvider, new TypeIdAppendIdProvider() );
-    String relPath = workspace.getContext().getPath().toString();
-    relPath = relPath.substring( 9 ); // trimming "/resource"
-    String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
-    System.out.println(absPath);
-    FileWriter writer = new FileWriter( absPath );
-    GmlSerializer.serializeWorkspace( writer, workspace );
-    writer.close();
+    try
+    {
+      // RandomAccessFile rFile = new RandomAccessFile(m_data.getInputFile(), "r");
+      // rFile.length();
+      RMA10S2GmlConv.verboseMode = false;
+      IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem( true ) );
+      RMA10S2GmlConv.toDiscretisationModel( m_data.getInputFileURL().openStream(), m_data.getFE1D2DDiscretisationModel(), positionProvider, new TypeIdAppendIdProvider() );
+      String relPath = workspace.getContext().getPath().toString();
+      relPath = relPath.substring( 9 ); // trimming "/resource"
+      String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
+      System.out.println(absPath);
+//      workspace.fireModellEvent( null );
+      FileWriter writer = new FileWriter( absPath );
+      GmlSerializer.serializeWorkspace( writer, workspace );
+      writer.close();
+    }
+    catch(Throwable th)
+    {
+      th.printStackTrace(); 
+    }
   }
+
+
+  
+  
 }

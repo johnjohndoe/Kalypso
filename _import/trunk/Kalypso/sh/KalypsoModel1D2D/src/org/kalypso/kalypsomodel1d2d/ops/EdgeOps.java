@@ -153,4 +153,33 @@ public class EdgeOps
     }
     return null;
   }
+  
+  /**
+   * Checks whether the given edge is an isolated edge.
+   * An isolated edge is an edge without any border edge. 
+   * 
+   * @param elementEdge the edge to check for isolation
+   * 
+   * @return true is the provided edge is an isolated edge 
+   *            false otherwise
+   *  
+   */
+  public static final boolean isIsolatedEdge(IFE1D2DEdge edge )
+  {
+    Assert.throwIAEOnNullParam( edge, "edge" );
+    
+    IFE1D2DNode node1 = edge.getNode( 1 );
+    if(node1.getContainers().size()!=1)
+    {
+      return false;
+    }
+    
+    IFE1D2DNode node0 = edge.getNode( 0 );
+    if(node0.getContainers().size()!=1)
+    {
+      return false;
+    }
+    
+    return true;
+  }
 }

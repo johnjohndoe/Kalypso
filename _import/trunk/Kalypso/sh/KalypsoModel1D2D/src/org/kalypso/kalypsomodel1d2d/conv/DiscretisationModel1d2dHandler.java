@@ -41,6 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.EdgeInv;
@@ -53,6 +56,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -74,6 +79,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private IFeatureWrapperCollection<IFE1D2DNode> modelNodes;
   private IFeatureWrapperCollection<IFE1D2DEdge> modelEdges;
   private IFeatureWrapperCollection<IFE1D2DElement> modelElements;
+  private List<IFeatureWrapper2> createdFeature = new ArrayList<IFeatureWrapper2>();
+  
 //  private CS_CoordinateSystem coordinateSystem;
   private GMLWorkspace workspace;
   
@@ -117,7 +124,23 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       ModelOps.sortElementEdges( el );      
     }
 //    modelElements.getWrappedFeature().invalidEnvelope();
-    
+    modelElements.getWrappedList().invalidate();
+    modelEdges.getWrappedList().invalidate();
+    modelNodes.getWrappedList().invalidate();
+    final int size = createdFeature.size();
+    Feature[] created = new Feature[size];
+    for(int i = size-1;i>=0;i--)
+    {
+      created[i]=createdFeature.get( i ).getWrappedFeature();
+      created[i].invalidEnvelope();      
+    }
+    workspace.fireModellEvent( 
+        new FeatureStructureChangeModellEvent( 
+                    workspace, 
+                    model.getWrappedFeature(), 
+                    created, 
+                    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+//    workspace.fireModellEvent( new  )
   }
 
   /**
@@ -148,8 +171,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = null;
     if(edgeFeature!=null)
     {
-      edge=(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>)
+      edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>)
               edgeFeature.getAdapter( IFE1D2DEdge.class );
+      
     }
     else
     {
@@ -159,7 +183,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       // TODO: commented it otu for the moment, because never an edge was found for
       // existing valid .2d files
       // check what to do
-//       edge=model.findEdge( node1, node2 );
+       edge = model.findEdge( node1, node2 );
+       if(edge!=null)
+       {
+         System.out.println("found edge to draw");
+       }
     }
     
     boolean isNew=false;
@@ -169,6 +197,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         modelEdges.addNew( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, 
           edgeID );
+      createdFeature.add( edge );
       edge.addNode( gmlNode1ID );
       edge.addNode( gmlNode2ID);
       node1.addContainer( edgeID );
@@ -227,13 +256,18 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
           IPolyElement eleRight=getElement2D(gmlID);
           //TODO remove dependencies to the inv edge use find node instead
           //change the api to get the whether is was newly created or not
-          IEdgeInv inv= new EdgeInv(edge,model);
-          int size=eleRight.getEdges().size();
-          eleRight.addEdge( inv.getGmlID() );
-          if(eleRight.getEdges().size()-size!=1)
+          IEdgeInv inv = edge.getEdgeInv();
+          if(inv == null)
           {
-            System.out.println("BAd Increment="+gmlID+" AR"+inv.getGmlID());
+            inv = new EdgeInv(edge,model);
+            createdFeature.add( inv );
           }
+//          int size=eleRight.getEdges().size();
+          eleRight.addEdge( inv.getGmlID() );
+//          if(eleRight.getEdges().size()-size!=1)
+//          {
+//            System.out.println("BAd Increment="+gmlID+" AR"+inv.getGmlID());
+//          }
           inv.addContainer( gmlID );
         }
         catch( Throwable th )
@@ -266,9 +300,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     Feature eleFeature=workspace.getFeature( gmlID );
     if(eleFeature==null)
     {
-     return  modelElements.addNew( 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
-                gmlID, IPolyElement.class);
+     IPolyElement addNew = modelElements.addNew( 
+                      Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
+                      gmlID, IPolyElement.class);
+     createdFeature.add( addNew );
+     return  addNew;
     }
     else
     {
@@ -311,6 +347,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
                      modelNodes.addNew( 
                            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
                            gmlID );
+       createdFeature.add( node );
 //       node.setPoint( 
 //           GeometryFactory.createGM_Point(
 //                             easting+35*100000,
@@ -372,6 +409,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     this.modelElementIDProvider=modelElementIDProvider;
   }
   
-  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
+   */
+  public List<IFeatureWrapper2> getCreatedFeatures( )
+  {
+    return createdFeature;
+  }
 
 }

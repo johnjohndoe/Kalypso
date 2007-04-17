@@ -216,7 +216,12 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
             
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getWrappedFeature(), tem.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( 
+                new FeatureStructureChangeModellEvent( 
+                            workspace, 
+                            temSys.getWrappedFeature(), 
+                            tem.getWrappedFeature(), 
+                            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
           }

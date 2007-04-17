@@ -49,6 +49,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -760,5 +761,10 @@ public class FENetConceptSelectionWidget implements IWidget
   public boolean isPolygonSelectModus( )
   {
     return polygonSelectModus;
+  }
+  
+  public MapPanel getMapPanel( )
+  {
+    return mapPanel;
   }
 }

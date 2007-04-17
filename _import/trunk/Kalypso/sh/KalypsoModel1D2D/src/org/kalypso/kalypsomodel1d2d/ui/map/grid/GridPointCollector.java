@@ -84,7 +84,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
   
   
   
-  private TempGrid tempGrid= new TempGrid();
+  private TempGrid tempGrid = new TempGrid(true);
   
   private List<IGridPointCollectorStateListener> stateListeners=
         new ArrayList<IGridPointCollectorStateListener>();

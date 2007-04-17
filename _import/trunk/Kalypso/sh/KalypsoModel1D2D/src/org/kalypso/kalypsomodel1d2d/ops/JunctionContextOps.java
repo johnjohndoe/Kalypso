@@ -173,8 +173,8 @@ public class JunctionContextOps
                                 model1d2d.getComplexElements();
     IJunctionContext1DTo2D jc1d2d = 
     cElements.addNew( 
-    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D,
-    IJunctionContext1DTo2D.class );
+          Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D,
+          IJunctionContext1DTo2D.class );
     
     jc1d2d.addElementAsRef( element1D);
     jc1d2d.addElementAsRef( element2D);

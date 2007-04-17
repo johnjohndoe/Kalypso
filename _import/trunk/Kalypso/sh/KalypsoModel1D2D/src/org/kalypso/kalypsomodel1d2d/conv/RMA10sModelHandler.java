@@ -41,6 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 
+import java.util.Collections;
+import java.util.List;
+
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.EdgeInv;
@@ -53,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -355,6 +359,13 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
     this.modelElementIDProvider=modelElementIDProvider;
   }
   
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
+   */
+  public List<IFeatureWrapper2> getCreatedFeatures( )
+  {
+    return Collections.emptyList();
+  }
   
 
 }

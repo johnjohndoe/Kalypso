@@ -1,5 +1,9 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.util.List;
+
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
   /**
    * The handler interface for rma10s model element.
    * Class implementing this interface can be set to handle
@@ -84,5 +88,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
       public void setIRoughnessIDProvider(
                         IRoughnessIDProvider roughnessIDProvider)
                         throws IllegalArgumentException;
+      
+      public List<IFeatureWrapper2> getCreatedFeatures();
   }
   

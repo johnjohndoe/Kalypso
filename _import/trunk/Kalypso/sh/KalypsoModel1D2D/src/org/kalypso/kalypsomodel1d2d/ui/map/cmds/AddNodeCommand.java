@@ -64,15 +64,71 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 
   private final double m_searchRectWidth;
 
-  public AddNodeCommand( IFEDiscretisationModel1d2d model, GM_Point nodePoint, double searchRectWidth )
+  private final boolean ignoreZCoordinate; 
+  
+  /**
+   * Adds a node at the given point if there is no node
+   * within the specified rectangle
+   * 
+   * @param model the model to add the new node to
+   * @param searchRectWidth the width of the search rectangle 
+   *            , its center if given by nodePoint 
+   * @param nodePoint the position of the node
+   *       <ul>
+   *        <li/>true to have the set coordinate 
+   *    of the point ignored (meaning a 2D point is created)
+   *        <li/>false to use the position without change
+   *       </ul>
+   *    
+   * 
+   */
+  public AddNodeCommand( 
+      IFEDiscretisationModel1d2d model, 
+      GM_Point nodePoint, 
+      double searchRectWidth)
   {
+    this(model,nodePoint,searchRectWidth,false);
+  }
+  /**
+   * Adds a node at the given point if there is no node
+   * within the specified rectangle
+   * @param model the model to add the new node to
+   * @param nodePoint the position of the node
+   * @param searchRectWidth the width of the search rectangle 
+   *            , its center if given by nodePoint
+   * @param ignoreZCoordinate 
+   *       <ul>
+   *        <li/>true to have the set coordinate 
+   *    of the point ignored (meaning a 2D point is created)
+   *        <li/>false to use the position without change
+   *       </ul>   
+   */
+  public AddNodeCommand( 
+            IFEDiscretisationModel1d2d model, 
+            GM_Point nodePoint, 
+            double searchRectWidth, 
+            boolean ignoreZCoordinate)
+  {
+    this.ignoreZCoordinate = ignoreZCoordinate;
     discretisationModel = model;
     m_searchRectWidth = searchRectWidth;
-    if( nodePoint.getCoordinateDimension() == 3 )   
-      m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getZ(), nodePoint.getCoordinateSystem() );
+    if(ignoreZCoordinate)
+    {
+      m_nodePoint = 
+        GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() ); 
+    }
     else
-      m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() );
-
+    {
+      if( nodePoint.getCoordinateDimension() == 3 )
+      {
+        m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getZ(), nodePoint.getCoordinateSystem() );
+      }
+      else
+      {
+        m_nodePoint = 
+          GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() );
+      }
+    }
     // PERFORMANCE-BUGFIX: first search for all nodes, then add it
     addedNode = model.findNode( nodePoint, searchRectWidth );
     if( addedNode != null )

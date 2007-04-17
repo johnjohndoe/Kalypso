@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
- * Profide Utility methodes for classes
+ * Provides map oriented utility methods.
  * 
  * @author Patrice Congo
  */

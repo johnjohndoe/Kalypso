@@ -47,6 +47,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -59,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.select.QNameBasedSelectionFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -68,10 +76,15 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CreateJunctionContext1dToCLineFromSelectedEdges 
                     extends FENetConceptSelectionWidget 
-                    implements IWidget
+                    implements IWidget,IWidgetWithOptions
 {
   
   
+
+  private Composite parentComposite;
+  private Composite optionComposite = null;
+  private JunctionContextWidgetFace face = 
+                      new JunctionContextWidgetFace();
 
   public CreateJunctionContext1dToCLineFromSelectedEdges()
   {
@@ -205,11 +218,62 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
     }
   }
 
-  private final void showMessage(String message)
+  private final void showMessage(final String message)
   {
-    System.out.println(message);
+    
+    if(parentComposite != null)
+    {
+      Display display = parentComposite.getDisplay();
+      Runnable runnable = new Runnable()
+      {
+        /**
+         * @see java.lang.Runnable#run()
+         */
+        public void run( )
+        {
+          Shell shell = parentComposite.getShell();
+          MessageBox messageBox = new MessageBox(shell );
+          messageBox.setMessage( message );
+          messageBox.open();
+        }
+      };
+      display.syncExec( runnable  );
+      
+    }
+    else
+    {
+      System.out.println(message);
+    }
   }
   
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  public Control createControl( Composite parent, FormToolkit toolkit )
+  {
+    this.parentComposite = parent;
+    
+//    this.optionComposite = new Composite(parent,SWT.NONE);
+//    return optionComposite;
+    
+    return this.face.createControl( parent, toolkit );
+    
+  }
+  
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
+   */
+  public void disposeControl( )
+  {
+//    if(optionComposite!=null)
+//    {
+//      if(!optionComposite.isDisposed())
+//      {
+//        optionComposite.dispose();
+//      }
+//    }
+    this.face.disposeControl();
+  }
 //  private Collection<IFE1D2DEdge> findSelectedElement2DEdge( Feature[] selectedFeatures )
 //  {
 //    

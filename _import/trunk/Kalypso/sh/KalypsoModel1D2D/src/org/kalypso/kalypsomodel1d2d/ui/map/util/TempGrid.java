@@ -76,7 +76,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
-//TODO model grid mechanism to here
 /**
  * This class provide the mechanism to calculate the grid finit element model
  * node and to display them.
@@ -87,11 +86,6 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class TempGrid 
 {
-//  /**
-//   * Stores the count of points which this geometry must have. If it is 0, there is no rule.
-//   */
-//  private int m_cnt_points;
-
   /**
    * The target coodinate reference system for the created grid point 
    */
@@ -106,23 +100,39 @@ public class TempGrid
    * Cache for grid computed grid points
    */
   private GM_Point[][] gridPoints;
+
+  private final boolean ignoreZCoordinate;
   
   
   /**
-   * The constructor.
+   * Create a temp grid, with a transformation into a model accepting 
+   * the all coordinate of the grid points.
    * 
-   * @param cnt_points
-   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *          count of the points will apply.
-   * @param targetCrs
-   *          The target coordinate system.
    */
-  public TempGrid()
+    public TempGrid()
+    {
+         this(false);
+    }
+
+
+  /**
+   * Create a temp grid with flag to control the usage of the
+   * the z-coordinate of the grid point when transforming it into a
+   * model
+   * @param ignoreZCoordinate 
+   *    <ul>
+   *        <li/>true to get the transformation into a 2d model ignores
+   *            the z-coordinate of the models (2D point will be created for 3D).
+   *        <li/>false to have the transformation accept the point
+   *            without change 
+   *    </ul>
+   * @see AddNodeCommand
+   */
+  public TempGrid(boolean ignoreZCoordinate)
   {
-       //yes it is empty
+       this.ignoreZCoordinate = ignoreZCoordinate;
   }
-
-
+  
   /**
    * Set the target {@link CS_CoordinateSystem}. All points this grid is coping
    * with are required to reside in that system and no reference system conversion 
@@ -452,7 +462,8 @@ public class TempGrid
           new AddNodeCommand(
                 model,
                 points1D[j], 
-                searchRectWidth );
+                searchRectWidth,
+                this.ignoreZCoordinate);
         newNodesArray2D[i][j]=nodeCommand;//newNodesArray1D[j]=nodeCommand;
         compositeCommand.addCommand( nodeCommand );
       }
