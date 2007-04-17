@@ -1,13 +1,10 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -40,7 +37,7 @@ public class Transformer implements ICoreRunnableWithProgress
   private static final QName m_GeometryFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON;
 
   private boolean isDataPrepared = false;
-  
+
   private int noOfEntriesAdded = -1;
 
   public Transformer( DataContainer data )
@@ -91,7 +88,7 @@ public class Transformer implements ICoreRunnableWithProgress
     if( resetMap )
     {
       m_data.getRoughnessShapeStaticRelationMap().clear();
-      //m_data.getRoughnessPolygonCollection().clear();
+      // m_data.getRoughnessPolygonCollection().clear();
     }
     QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
     QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -100,7 +97,7 @@ public class Transformer implements ICoreRunnableWithProgress
     Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
     List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
     IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
-    
+
     noOfEntriesAdded = 0;
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
@@ -121,9 +118,9 @@ public class Transformer implements ICoreRunnableWithProgress
 
   public void unprepare( )
   {
-    if(isDataPrepared)
+    if( isDataPrepared )
     {
-      for(int i=0; i< noOfEntriesAdded; i++)
+      for( int i = 0; i < noOfEntriesAdded; i++ )
         m_data.getRoughnessPolygonCollection().remove( m_data.getRoughnessPolygonCollection().size() - 1 );
     }
     isDataPrepared = false;
@@ -140,8 +137,8 @@ public class Transformer implements ICoreRunnableWithProgress
       Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:" + m_data.getRoughnessDatabaseLocation()
-            + "#" + linkedFeature.getId(), "", "", "", "", "" );
+        XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:"
+            + m_data.getRoughnessDatabaseLocation() + "#" + linkedFeature.getId(), "", "", "", "", "" );
         f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
@@ -150,15 +147,17 @@ public class Transformer implements ICoreRunnableWithProgress
   private void serialize( ) throws IOException, GmlSerializeException
   {
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
-    GMLWorkspace myWorkspace = roughnessPolygonCollection.getWrappedFeature().getWorkspace();
-    String relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator + "models" + File.separator + "terrain.gml";
-    String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
-    FileWriter writer = new FileWriter( absPath );
     // TODO comment this out, not needed
-    GmlSerializer.serializeWorkspace( writer, myWorkspace );
-    writer.close();
-    relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator + "maps" + File.separator + "base.gmt";
-    absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
+    // GMLWorkspace myWorkspace = roughnessPolygonCollection.getWrappedFeature().getWorkspace();
+    // String relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator +
+    // "models" + File.separator + "terrain.gml";
+    // String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
+    // FileWriter writer = new FileWriter( absPath );
+    // GmlSerializer.serializeWorkspace( writer, myWorkspace );
+    // writer.close();
+    // relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator + "maps" +
+    // File.separator + "base.gmt";
+    // absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
 
     final FeatureList wrappedList = roughnessPolygonCollection.getWrappedList();
     final Feature parentFeature = wrappedList.getParentFeature();

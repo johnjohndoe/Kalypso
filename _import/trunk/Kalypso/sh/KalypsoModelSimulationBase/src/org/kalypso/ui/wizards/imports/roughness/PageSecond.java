@@ -13,11 +13,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class PageSecond extends WizardPage
 {
@@ -33,10 +29,6 @@ public class PageSecond extends WizardPage
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Title" ));//$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Description" ));//$NON-NLS-1$
     m_data = data;
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
-    IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
-    for( int i = 0; i < collection.size(); i++ )
-      m_data.getRoughnessStaticCollectionMap().put( collection.get( i ).getName(), collection.get( i ).getGmlID() );
   }
 
   /**
@@ -91,8 +83,13 @@ public class PageSecond extends WizardPage
     composite.layout();
     composite.pack();
     Point pt = composite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    composite.getShell().setSize( pt.x + 30, composite.getShell().getSize().y );
-    composite.getShell().setMinimumSize( pt.x + 30, composite.getShell().getSize().y );
+    
+    int minimumSizeX = pt.x + 30;
+    if(minimumSizeX < 400)
+      minimumSizeX = 400;
+    composite.getShell().setSize( minimumSizeX, composite.getShell().getSize().y );
+    composite.getShell().setMinimumSize( minimumSizeX, composite.getShell().getSize().y );
+    
     // composite.getParent().layout();
     setPageComplete( true );
   }

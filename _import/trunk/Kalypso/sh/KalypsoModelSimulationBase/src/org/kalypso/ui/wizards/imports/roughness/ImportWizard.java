@@ -91,9 +91,17 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     m_project = m_szenarioFolder.getProject();
     // m_project = (IProject) context.get( "Project" );
     // m_szenarioFolder = (IFolder) context.get( "SzenarioPath" );
-    m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
     m_data.setProjectBaseFolder( m_szenarioFolder.getFullPath().segment( 0 ) );
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" );
+    try
+    {
+      m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   @Override

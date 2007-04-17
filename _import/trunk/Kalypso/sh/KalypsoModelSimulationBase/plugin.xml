@@ -72,6 +72,11 @@
             class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
             id="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
             name="Native-Terrain-Elevation-Shape-Builder"/>
+            
+      <function
+            class="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            id="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            name="ComputeMergedRougnessProperties"/>
    </extension>
 
 </plugin>

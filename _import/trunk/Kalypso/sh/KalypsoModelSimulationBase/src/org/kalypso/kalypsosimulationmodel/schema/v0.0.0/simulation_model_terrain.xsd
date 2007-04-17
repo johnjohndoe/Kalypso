@@ -387,9 +387,7 @@
 	<xs:complexType name="RoughnessPolygonType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
-					kapp:property="simBase:roughnessStyle" />
+				<kapp:functionProperty kapp:functionId="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction" kapp:property="simBase:roughnessStyle" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
