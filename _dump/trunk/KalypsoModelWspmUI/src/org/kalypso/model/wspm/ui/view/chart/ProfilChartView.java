@@ -150,7 +150,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     // get visibility
     final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
     for( final IChartLayer layer : m_chart.getLayers() )
-      visibility.put( layer.getId(), m_chart.isVisible( layer ) );
+      visibility.put( ((IAction) layer).getId(), m_chart.isVisible( layer ) );
 
     m_chart.clearLayers();
 
