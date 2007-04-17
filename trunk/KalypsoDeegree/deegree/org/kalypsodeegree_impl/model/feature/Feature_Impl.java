@@ -240,6 +240,8 @@ public class Feature_Impl extends AbstractFeature implements Feature
       else
       {
         GM_Position pos = ((GM_Point) geoms[i]).getPosition();
+//        System.out.println(geoms[i].getClass().getName());
+//        System.out.println("POS:"+pos);
         GM_Envelope env2 = GeometryFactory.createGM_Envelope( pos, pos );
         if( env == null )
           env = env2;

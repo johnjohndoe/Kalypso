@@ -157,8 +157,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       // create columns
       // add all columns
       if( m_tableView != null )
-      {
-        m_viewer.applyTableTemplate( m_tableView );
+      {        
+        m_viewer.applyTableTemplate( m_tableView, workspace.getContext(), false );
       }
       else
       {
