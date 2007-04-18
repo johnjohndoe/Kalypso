@@ -38,11 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
-public interface  SurfacePatchVisitor
+/**
+ * @author madanago
+ *
+ */
+public class Cust_GM_Surface
 {
-    public boolean visit(GM_Surface surfacePatch/*, double elevationSample */);
+  GM_Position _1;
+  GM_Position _2;
+  GM_Position _3;
+
+  Cust_GM_Surface( GM_Position _1,
+                   GM_Position _2,
+                   GM_Position _3){
+    this._1 = _1;
+    this._2 = _2;
+    this._3 = _3;
+  }
 }

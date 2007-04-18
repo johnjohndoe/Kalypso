@@ -50,6 +50,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 public interface SurfacePatchVisitable
 {
 
-  public void aceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception;
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception;
 
 }

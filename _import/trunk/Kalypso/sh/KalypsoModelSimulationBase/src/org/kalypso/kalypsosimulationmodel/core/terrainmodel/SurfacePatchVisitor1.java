@@ -42,7 +42,12 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
-public interface  SurfacePatchVisitor
+/**
+ * @author madanago
+ *
+ */
+public interface SurfacePatchVisitor1 extends SurfacePatchVisitor 
 {
-    public boolean visit(GM_Surface surfacePatch/*, double elevationSample */);
+      public boolean visit(GM_Surface surfacePatch, double elevationSample );  
+  
 }

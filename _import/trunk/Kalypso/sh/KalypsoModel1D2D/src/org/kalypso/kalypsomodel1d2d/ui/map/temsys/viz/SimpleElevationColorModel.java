@@ -163,9 +163,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
   private final Color interpolateColor( double elevation )
   {
     
-    if (elevation == Double.MAX_VALUE||elevation == Double.MIN_VALUE)
-      System.out.println("SaveMe");
-    System.out.println("elevation :"+elevation);
+//    if (elevation == Double.MAX_VALUE||elevation == Double.MIN_VALUE)
+//      System.out.println("SaveMe");
+//    System.out.println("elevation :"+elevation);
     final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
     int red = 0;
     int green = 0;

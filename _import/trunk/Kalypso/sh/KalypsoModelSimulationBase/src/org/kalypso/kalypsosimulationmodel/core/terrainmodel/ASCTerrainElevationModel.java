@@ -297,7 +297,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
     }    
   }
   
-  public void aceptSurfacePatches(GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches(GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
   {
     GM_Envelope env = 
       GMRectanglesClip.getIntersectionEnv(  
@@ -400,5 +400,9 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
   {    
        
   }
+
+
+
+
 
 }

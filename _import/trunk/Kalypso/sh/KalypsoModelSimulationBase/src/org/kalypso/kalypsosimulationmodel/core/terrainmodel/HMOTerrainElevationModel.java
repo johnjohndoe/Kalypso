@@ -50,6 +50,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -72,6 +73,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
 {
 
   public static final double[][] NO_INTERIOR = {};
+  public static final GM_Position[][] NO_INTERIOR_POS = {};
 
   private double minElevation;
 
@@ -204,7 +206,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void aceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( envToVisit, "envToVisit" );
     Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" );
@@ -214,7 +216,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
     List triToVisit = triangles.query( jtsEnv );
     for( Object tri : triToVisit )
     {
-      ((TriangleData) tri).aceptSurfacePatches( envToVisit, surfacePatchVisitor );
+      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor );
     }
   }
 

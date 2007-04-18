@@ -59,6 +59,7 @@ class TriangleData implements SurfacePatchVisitable
 {
   private LinearRing ring;
 
+  private TriangleDivider _divider;
   private Polygon polygon;
 
   private double[] planeEquation;
@@ -68,7 +69,9 @@ class TriangleData implements SurfacePatchVisitable
 
   public TriangleData( LinearRing ring )
   {
+    
     this.ring = ring;
+    _divider = new TriangleDivider(ring);
     polygon = new Polygon( ring, null, ring.getFactory() );
     Coordinate[] coords = ring.getCoordinates();
     planeEquation = calculateTrianglePlaneEquation( coords );
@@ -103,20 +106,6 @@ class TriangleData implements SurfacePatchVisitable
         return ring.contains( point );
       }
     }
-  }
-
-  private boolean furtherDivisionNeeded( LinearRing ring1 )
-  {
-
-    double _z1 = ring1.getCoordinates()[0].z;
-    double _z2 = ring1.getCoordinates()[1].z;
-    double _z3 = ring1.getCoordinates()[2].z;
-
-    if( (Math.abs( _z1 - _z2 ) > 1) || (Math.abs( _z2 - _z3 ) > 1) || (Math.abs( _z1 - _z3 ) > 1) )
-    {
-      return true;
-    }
-    return false;
   }
 
   public org.kalypsodeegree.model.geometry.GM_Surface getSurface( )
@@ -183,24 +172,19 @@ class TriangleData implements SurfacePatchVisitable
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void aceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
   {
-    Coordinate[] coordinates = ring.getCoordinates();
-    System.out.println(" Int :" +simple++);
-   
-//    if( furtherDivisionNeeded( ring ) )
-//    {
-//      
-//    }
-//    else
-    {
-      double[] exterior = { coordinates[0].x, coordinates[0].y, coordinates[0].z, coordinates[1].x, coordinates[1].y, coordinates[1].z, coordinates[2].x, coordinates[2].y, coordinates[2].z,
-          coordinates[0].x, coordinates[0].y, coordinates[0].z };
-      GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
-          createGM_Surface( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, IElevationProvider.CRS_GAUSS_KRUEGER );
-      surfacePatchVisitor.visit( surfacePatch, getCenterElevation() );
-    }
 
+//    System.out.println(" Int :" +simple++);
+//    double[] exterior = { coordinates[0].x, coordinates[0].y, coordinates[0].z, coordinates[1].x, coordinates[1].y, coordinates[1].z, coordinates[2].x, coordinates[2].y, coordinates[2].z,
+//          coordinates[0].x, coordinates[0].y, coordinates[0].z };
+//      
+//      GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
+//          createGM_Surface( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, IElevationProvider.CRS_GAUSS_KRUEGER );
+//      surfacePatchVisitor.visit( surfacePatch, getCenterElevation());
+      
+      _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor );
+      
   }
 
   public double getMinElevation( )

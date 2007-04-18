@@ -46,13 +46,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Area;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.HMOTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TriangleDivider;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -94,8 +102,20 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
 
   private GeoTransform projection;
 
+  private GM_Position[] ex;
+  private TriangleDivider divider;
+
+  private ArrayList<GM_Position[]> triangleList;
+
+  private List<GM_Surface> name;
+//  List<GM_Surface> toDivide = new ArrayList<GM_Surface>();
+//  List<GM_Surface> notToDivide = new ArrayList<GM_Surface>();
+
+  private ListRetriever _listRetriver;
+
   public SurfacePatchVisitableDisplayElement( NativeTerrainElevationModelWrapper elevationModel )
   {
+    triangleList = new ArrayList<GM_Position[]>();
     Assert.throwIAEOnNullParam( elevationModel, "elevationModel" );
     m_elevationModel = elevationModel;
     IElevationProvider elevationProvider = elevationModel.getElevationProvider();
@@ -224,7 +244,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       this.graphics = g;
       this.projection = projection;
 
-      ascElevationModel.aceptSurfacePatches( projection.getSourceRect(),// ascElevationModel.getBoundingBox(),
+      ascElevationModel.acceptSurfacePatches( projection.getSourceRect(),// ascElevationModel.getBoundingBox(),
       this );
 
     }
@@ -396,18 +416,72 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     m_decorated = decorated;
   }
 
+
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor#accept(org.kalypsodeegree.model.geometry.GM_Surface,
    *      double)
    */
-  public boolean visit( GM_Surface surfacePatch, double elevationSample )
-  {
+  public boolean visit( GM_Surface surface/*, double elevationSample */)
+  { 
+//    _listRetriver = ListRetriever.getInstance();
+//    GM_SurfacePatch patch = null;  
+//    //divider = new TriangleDivider();
+//    try
+//    {
+//      patch = surfacePatch.getSurfacePatchAt( 0 );
+//      ex = patch.getExteriorRing();    
+//    }   
+//    catch( GM_Exception e1 )
+//    {
+//      // TODO Auto-generated catch block
+//      e1.printStackTrace();
+//    }
+//    
+////    if (!_listRetriver.getListManager().containsKey( patch )) {
+////      name = divider.visitThisDivisionSurface(ex);
+////      _listRetriver.getListManager().put( patch, name );
+////    }
+////    else {
+////      name = _listRetriver.getMyGM_SurfacePatch( patch );  
+////    } 
+//    
+//    name = divider.visitThisDivisionSurface(ex);
+//    
+//    for (GM_Surface nam:name) {
+//      paintThisSurface( nam, divider.calculateCenterCoOrdinate( nam ).getZ()  );
+//    }
+    
+    paintThisSurface(surface);
+    return true;
+  }
+  
+  
+  public GM_Position[] getGM_PositionForThisSurface(GM_Surface surface) {
+    
+    GM_Position[] pos = null;
+    GM_SurfacePatch patch;    
     try
     {
-      Area area = calcTargetCoordinates( this.projection, surfacePatch );
+      patch = surface.getSurfacePatchAt( 0 );
+      pos = patch.getExteriorRing();    
+    }   
+    catch( GM_Exception e1 )
+    {
+      e1.printStackTrace();
+    }    
+    return pos;
+  }
 
-      graphics.setColor( colorModel.getColor( elevationSample ) );
+  private void paintThisSurface(GM_Surface _surface) {
+    
+    double elevation = calculateCenterCoOrdinate( getGM_PositionForThisSurface( _surface )).getZ();
+    try
+    {
+      Area area = calcTargetCoordinates( this.projection, _surface);
+      graphics.setColor( colorModel.getColor( elevation ) );
       ((Graphics2D) graphics).fill( area );
+      
       java.awt.Stroke bs2 = new BasicStroke( 3 );
       ((Graphics2D) graphics).setStroke( bs2 );
       ((Graphics2D) graphics).draw( area );
@@ -416,7 +490,22 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     {
       e.printStackTrace();
     }
-    return true;
+  }
+  
+  public GM_Position calculateCenterCoOrdinate( GM_Position[] coords )
+  {
+    
+    double[] centerCo = new double[3];
+    centerCo[0] = (coords[0].getX() + coords[1].getX() + coords[2].getX()) / 3;
+    centerCo[1] = (coords[0].getY() + coords[1].getY() + coords[2].getY()) / 3;
+    centerCo[2] = (coords[0].getZ() + coords[1].getZ() + coords[2].getZ()) / 3; 
+    //centerCo[2] = computeZOfTrianglePlanePoint( coords, centerCo[0], centerCo[1] );
+    
+    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( centerCo ); 
   }
 
+
+
+  
 }
+
