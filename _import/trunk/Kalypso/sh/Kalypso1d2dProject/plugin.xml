@@ -186,6 +186,9 @@
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
 	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>			   	           
+	     <handler
+	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler"
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfileImport"/>	
 	           
  	 <!--*** general net editing handler ***-->	     
 	     
