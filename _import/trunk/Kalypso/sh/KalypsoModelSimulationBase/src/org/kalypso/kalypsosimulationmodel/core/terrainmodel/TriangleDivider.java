@@ -48,8 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;

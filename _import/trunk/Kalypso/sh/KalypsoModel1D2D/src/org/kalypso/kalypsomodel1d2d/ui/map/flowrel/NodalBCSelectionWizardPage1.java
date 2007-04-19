@@ -97,36 +97,34 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     }
     m_radioBtnGroup[m_radioBtnGroup.length - 1] = new Button( container, SWT.RADIO );
     m_radioBtnGroup[m_radioBtnGroup.length - 1].setText( "Zeitreihe aus Repository" );
-
-    final GridData gridData2 = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    gridData2.horizontalSpan = 2;
-    m_radioBtnGroup[m_radioBtnGroup.length - 1].setLayoutData( gridData2 );
-
-    Button button = new Button( container, SWT.PUSH );
-    button.setText( "Durchsuchen..." );
-    button.addSelectionListener( new SelectionAdapter()
+    m_radioBtnGroup[m_radioBtnGroup.length - 1].addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        for(int i=0; i<m_radioBtnGroup.length - 1; i++)
-          m_radioBtnGroup[i].setSelection( false );
-        m_radioBtnGroup[m_radioBtnGroup.length - 1].setSelection( true );
-        blahBlah();
-        
+        getWizard().getContainer().updateButtons();
       }
     } );
 
-    m_radioBtnGroup[0].setFocus();
-  }
+    final GridData gridData2 = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
+    gridData2.horizontalSpan = 2;
+    m_radioBtnGroup[m_radioBtnGroup.length - 1].setLayoutData( gridData2 );
+    // Button button = new Button( container, SWT.PUSH );
+    // button.setText( "Durchsuchen..." );
+    // button.addSelectionListener( new SelectionAdapter()
+    // {
+    // @Override
+    // public void widgetSelected( SelectionEvent e )
+    // {
+    // for(int i=0; i<m_radioBtnGroup.length - 1; i++)
+    // m_radioBtnGroup[i].setSelection( false );
+    // m_radioBtnGroup[m_radioBtnGroup.length - 1].setSelection( true );
+    // blahBlah();
+    //        
+    // }
+    // } );
 
-  protected void blahBlah( )
-  {
-    WizardZmlChooser wizard = new WizardZmlChooser();
-    WizardDialog dialog = new WizardDialog( null, wizard );
-    dialog.create();
-    if(dialog.open() != Window.CANCEL)
-      System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+    m_radioBtnGroup[0].setFocus();
   }
 
   public int getSelectedChoice( )
@@ -140,4 +138,8 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     return 0;
   }
 
+  public boolean isChoiceTimeseries( )
+  {
+    return getSelectedChoice() == m_radioBtnGroup.length - 1;
+  }
 }

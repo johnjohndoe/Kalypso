@@ -47,14 +47,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardPageZmlChooser;
@@ -63,16 +63,11 @@ import org.kalypso.observation.Phenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
-import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -101,21 +96,19 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private IBoundaryCondition m_boundaryCondition;
 
+  private IPath m_repositoryPath;
+
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
   public NodalBCSelectionWizard( final TimeserieTypeDescription[] descriptions, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, IFolder currentScenarioFolder )
-  {    
+  {
     m_descriptions = descriptions;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     setWindowTitle( "Randbedinung definieren" );
-    System.out.println( "PATH: " + workspace.getContext().getPath() );
-    System.out.println( "SCENARIO: " + currentScenarioFolder.toString() );
-    // final IProject project = mapModel.getProject();
-    // IFile file = project.getFile( source.split( ":" )[1].split( "#" )[0] );
-    // imageAbsolutePath = file.getLocation().toOSString();
+    m_repositoryPath = currentScenarioFolder.getProject().getLocation().append( "/imports/timeseries" );
   }
 
   @Override
@@ -126,12 +119,38 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_page1.init( initialSelection );
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
-    m_page3 = new WizardPageZmlChooser( "" );
-    // FileLocator.;
-    // defaultplu
-    // m_page3.init( m_scenarioFolder.getFolder( "imports" ).getLocation().toOSString() );
-    m_page3.init( "D:\\Eclipse\\runtime-KalypsoEnterprise3\\New01\\imports" );
+    m_page3 = new WizardPageZmlChooser( );
+    m_page3.init( m_repositoryPath.toOSString() );
+    m_page3.setPreviousPage( m_page1 );
     addPage( m_page3 );
+  }
+
+  private int getSelectedPage( )
+  {
+    IWizardPage currentPage = getContainer().getCurrentPage();
+    if( currentPage == m_page1 )
+      return 1;
+    if( currentPage == m_page2 )
+      return 2;
+    if( currentPage == m_page3 )
+      return 3;
+    return 0;
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
+   */
+  @Override
+  public IWizardPage getNextPage( IWizardPage page )
+  {
+    switch( getSelectedPage() )
+    {
+      case 2:
+      case 3:
+        return null;
+      default:
+        return m_page1.isChoiceTimeseries() ? m_page3 : m_page2;
+    }
   }
 
   /**
@@ -140,7 +159,15 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   @Override
   public boolean canFinish( )
   {
-    return m_page2.isPageComplete();
+    switch( getSelectedPage() )
+    {
+      case 2:
+        return m_page2.isPageComplete();
+      case 3:
+        return m_page3.isPageComplete();
+      default:
+        return m_page1.isChoiceTimeseries() ? m_page3.isPageComplete() : m_page2.isPageComplete();
+    }
   }
 
   /**
