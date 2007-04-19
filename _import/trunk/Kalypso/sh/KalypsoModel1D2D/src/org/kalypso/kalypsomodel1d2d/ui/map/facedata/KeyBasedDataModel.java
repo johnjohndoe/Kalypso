@@ -61,7 +61,13 @@ public class KeyBasedDataModel
   
   final Object[] data;
   
-  public KeyBasedDataModel(String[] keys)
+  final IDataModelCheck[] dataChecks;
+  
+  IDataModelCheck modelCheck;
+  
+  public KeyBasedDataModel(
+                      String[] keys,
+                      IDataModelCheck modelCheck)
   {
     Assert.throwIAEOnNullParam( keys, "keys" );
     String[] tempKeys = new String[keys.length];
@@ -82,6 +88,8 @@ public class KeyBasedDataModel
     
     this.keys = tempKeys;
     this.data = new Object[keys.length];
+    this.dataChecks = new IDataModelCheck[keys.length];
+    this.modelCheck = modelCheck;
   }
   
   public Object getData(String key)
@@ -99,7 +107,30 @@ public class KeyBasedDataModel
     }
   }
   
+  public IDataModelCheck getDataCheck(String key)
+  {
+    
+    key=Assert.throwIAEOnNullOrEmpty(key);
+    int pos=findPosition( key );
+    if( pos==NO_POS )
+    {
+      return null;
+    }
+    else
+    {
+      return dataChecks[pos];
+    }
+  }
+  
   public void setData(String key, Object newEntry)
+  {
+    setData( key, newEntry, true );
+  }
+  
+  protected void setData(
+                    String key, 
+                    Object newEntry, 
+                    boolean doNotify)
   {
     key=Assert.throwIAEOnNullOrEmpty(key);
     int pos=findPosition( key );
@@ -113,10 +144,50 @@ public class KeyBasedDataModel
     else
     {
       data[pos]=newEntry;
-      fireDataChanged( key, newEntry );
+      if(dataChecks[pos]!=null)
+      {
+        dataChecks[pos].update( key, newEntry, this );
+      }
+      if(modelCheck!=null)
+      {
+        modelCheck.update( key, newEntry, this );
+      }
+      if(doNotify)
+      {
+        fireDataChanged( key, newEntry );
+      }
     }
   }
   
+  public void setDataCheck(
+      String key, 
+      IDataModelCheck newEntry)
+  {
+    key=Assert.throwIAEOnNullOrEmpty(key);
+    int pos=findPosition( key );
+    if(pos==NO_POS)
+    {
+      throw new IllegalArgumentException(
+      "Key not available:"+
+      "\n\tCurrent key="+key+
+      "\n\tavailablekeys="+Arrays.asList( keys ));
+    }
+    else
+    {
+        dataChecks[pos]=newEntry;
+      }
+  }
+  
+  public IDataModelCheck getModelCheck( )
+  {
+    return modelCheck;
+  }
+
+  public void setModelCheck( IDataModelCheck modelCheck )
+  {
+    this.modelCheck = modelCheck;
+  }
+
   private final int findPosition(String key)
   {
     for(int i=0;i<keys.length;i++)

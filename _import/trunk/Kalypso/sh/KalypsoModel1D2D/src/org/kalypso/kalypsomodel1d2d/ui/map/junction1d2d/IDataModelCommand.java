@@ -40,22 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import org.eclipse.ui.IEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
-
 /**
- * Test action delagate for junction widget
- * that create it from edge selection
+ * Command on data in a {@link org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel}
  * 
  * @author Patrice Congo
- *
  */
-public class CreateJunctionFromSelectedEdgesActionDelegate 
-                              extends AbstractGisMapEditorActionDelegate 
-                              implements IEditorActionDelegate
+public interface IDataModelCommand
 {
-  public CreateJunctionFromSelectedEdgesActionDelegate( )
-  {
-    super( new CreateJunctionContext1DTo2DFromSelectedEdges() );
-  }
+  public void execute();
 }

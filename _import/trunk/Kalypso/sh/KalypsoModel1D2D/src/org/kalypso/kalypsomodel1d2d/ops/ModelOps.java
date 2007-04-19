@@ -514,37 +514,32 @@ public class ModelOps
     }
     
     List<IFE1D2DEdge> edges=
-    new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);//element.getEdges());
+      new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);
     
-    
-    
-    
+    if(edges.size()==5)
+    {
+      System.out.println("size 5");
+    }
+    System.out.println("size:"+edges.size());
     //just select the first node
     IFE1D2DEdge edge = edges.remove(0);
-    int SIZE=edges.size();
-//    boolean isPrevious = false;
-//    boolean toInvert = false;
-
+    
     //starting not of the edge string
     IFE1D2DNode endNode = edge.getNode( 1 );
     
     //ending node of the edge string
     IFE1D2DNode startNode = edge.getNode( 0 );
     
-    for( ; SIZE>0;SIZE=edges.size())
+    for( int SIZE = edges.size() ; SIZE>0; SIZE=edges.size())
     {
     
       edge = null;
-//      isPrevious = false;
-//      toInvert = false;
-      
       findingNextNode: for(int j=0;j<SIZE;j++)
       {
         IFE1D2DEdge nextEdge = edges.get( j );//:endNodeEdges
         if(NodeOps.startOf(endNode,nextEdge))
         {
           edge = nextEdge;
-//          isPrevious = false;
           endNode = nextEdge.getNode( 1 );
           break findingNextNode; 
         }
@@ -552,7 +547,6 @@ public class ModelOps
         {
          edge = nextEdge;
          startNode = nextEdge.getNode( 0 );
-//         isPrevious = true;
          break findingNextNode;
         }
         else
@@ -560,16 +554,12 @@ public class ModelOps
           if(NodeOps.endOf(endNode,nextEdge))
           {
             edge = nextEdge;
-//            isPrevious = false;
-//            toInvert = true;
             endNode = nextEdge.getNode( 0 ); 
           }
-          else if(NodeOps.endOf( startNode, nextEdge ))
+          else if(NodeOps.startOf( startNode, nextEdge ))
           {
-//            toInvert = true;
             edge = nextEdge;
             startNode = nextEdge.getNode( 1 );
-//            isPrevious = true;
           } 
         }
     
@@ -771,6 +761,25 @@ public class ModelOps
     }
     return selected1DEdges;
     
+  }
+
+  public static boolean hasOnlyBorderEdges( Collection<IFE1D2DEdge> edges )
+  {
+     if(edges==null)
+     {
+       return false;
+     }
+     else
+     {
+       for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
+       {
+         if(!TypeInfo.isBorderEdge( edge ))
+         {
+           return false;
+         }
+       }
+       return true;
+     }
   }
   
 }

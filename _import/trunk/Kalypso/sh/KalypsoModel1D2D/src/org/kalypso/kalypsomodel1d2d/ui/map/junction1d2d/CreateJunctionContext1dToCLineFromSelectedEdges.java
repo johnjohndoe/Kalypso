@@ -41,36 +41,30 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddJunctionContext1DToCLineFromEdgesCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.IDataModelCheck;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.IDataModelCheck.VALIDITY_STATE;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.QNameBasedSelectionFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Implements a Strategy for selection an fe element
+ * Provides a widget functionality for creating a line junction
+ * from by selecting edges
  * 
  * @author Patrice Congo
  */
@@ -81,20 +75,43 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
   
   
 
-  private Composite parentComposite;
-  private Composite optionComposite = null;
-  private JunctionContextWidgetFace face = 
-                      new JunctionContextWidgetFace();
+  
+  final private ModelDataCheck1DToCLine1DSelection check1D =
+                    new ModelDataCheck1DToCLine1DSelection();
+  
+  final private ModelDataCheck1DToCLine2DSelection check2D =
+                new ModelDataCheck1DToCLine2DSelection();
+  final private ModelDataCompositeCheck1D2D messageBuilder1DToCLine =
+                new ModelDataCompositeCheck1D2D(check1D,check2D);
+  
+  final private JunctionContextWidgetDataModel dataModel =
+                   new JunctionContextWidgetDataModel(messageBuilder1DToCLine);
+  
+  final private JunctionContextWidgetFace face = 
+                      new JunctionContextWidgetFace(dataModel);
 
+
+  final private IDataModelCommand createModelPart =
+                makeCreateJunctionCommandFromDataModel( dataModel );
+    
   public CreateJunctionContext1dToCLineFromSelectedEdges()
   {
     super(
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
-        "Junction element hinzufügen",
-        "Junction element hinzufügen");
+        "Linienkopplung hinzufügen",
+        "Linienkopplung hinzufügen");
     setSelectionFilter( 
         QNameBasedSelectionFilter.getFilterForQName( 
                       Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE) );
+    dataModel.setDataCheck( 
+        JunctionContextWidgetDataModel.SELECTED_ELEMENT1D , 
+        check1D );
+    dataModel.setDataCheck( 
+        JunctionContextWidgetDataModel.SELECTED_ELEMENT2D , 
+        check2D );
+    dataModel.setData( 
+        JunctionContextWidgetDataModel.CREATE_MODEL_PART,
+        createModelPart );
   }  
   
   /**
@@ -105,6 +122,33 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
   {
     super.canBeActivated( selection, mapPanel );
     return true;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate(commandPoster, mapPanel);
+  }
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void setSelection( ISelection selection )
+  {
+    super.setSelection(selection);
+    System.out.println("Selection:"+selection);
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#selectionMade()
+   */
+  @Override
+  protected void selectionMade( )
+  {
+    dataModel.setSelected( getSelectedFeature() );
   }
   
   /**
@@ -127,45 +171,7 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
     }
     else if(e.VK_ENTER == e.getKeyChar() )
     {
-     Feature[] selectedFeatures = getSelectedFeature();
-//     if(selectedFeatures.length < 2 )
-//     {
-//       System.out.println(
-//           "Selection must have at least 2 element:"+
-//           selectedFeatures.length);
-//       return;
-//     }
-     Collection<IFE1D2DEdge> selected1DEdges = 
-           ModelOps.collectAll1DEdges( selectedFeatures );//findSelectedElement1DEdge(selectedFeatures);
-     Collection<IFE1D2DEdge> selected2DEdges = 
-       ModelOps.collectAll2DEdges( selectedFeatures );//findSelectedElement2DEdge(selectedFeatures);
-     
-     IFEDiscretisationModel1d2d model1d2d = 
-         getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
-     if(isBadSelection(selected1DEdges, selected2DEdges,selectedFeatures,model1d2d))
-     {
-       return;
-     }
-     AddJunctionContext1DToCLineFromEdgesCmd junctionCmd =
-           new AddJunctionContext1DToCLineFromEdgesCmd(
-                   model1d2d,
-                   selected1DEdges.iterator().next(),
-                   selected2DEdges);
-     
-    CommandableWorkspace workspace = 
-       getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE).getWorkspace();
-     ChangeDiscretiationModelCommand changeModelCmd=
-           new ChangeDiscretiationModelCommand(
-               workspace,model1d2d);
-     changeModelCmd.addCommand( junctionCmd );
-    try
-    {
-      workspace.postCommand( changeModelCmd);
-    }
-    catch( Exception e1 )
-    {
-      e1.printStackTrace();
-    }
+      createModelPart.execute();
     }
     else
     {
@@ -174,90 +180,67 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
   }
 
   
-  private final boolean isBadSelection( 
-                        Collection<IFE1D2DEdge> selected1DEdges, 
-                        Collection<IFE1D2DEdge> selected2DEdges, 
-                        Feature[] selectedFeatures, 
-                        IFEDiscretisationModel1d2d model1d2d )
-  {
-    final String message;
-    if(selected1DEdges.size()!=1)
-    {
-      message =
-          "Wählen sie ein 1D Kante";
-      
-    }
-    else if(selected2DEdges.size()<=0)
-    {
-      message =
-          "Wählen sie ein 2D Kanten";
-      
-    }
-    else if(selected1DEdges.size()+selected2DEdges.size()!=selectedFeatures.length)
-    {
-      message =
-          "Nur 1d und 2d Kanten wählen";      
-    }
-    else if(!ModelOps.isContinuousLine( 
-              new ArrayList<IFE1D2DEdge>( selected2DEdges )))
-    {
-      message = "Selektierte 2D kanten müssen eine Linie builden";
-    }
-    else
-    {
-      message = null;
-    }
-    if( message !=null )
-    {
-      showMessage( message );
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  private final void showMessage(final String message)
+  private IDataModelCommand makeCreateJunctionCommandFromDataModel(
+                                            final JunctionContextWidgetDataModel dataModel)
   {
     
-    if(parentComposite != null)
+    return new IDataModelCommand()
     {
-      Display display = parentComposite.getDisplay();
-      Runnable runnable = new Runnable()
+      /**
+       * @see org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.IDataModelCommand#execute()
+       */
+      public void execute( )
       {
-        /**
-         * @see java.lang.Runnable#run()
-         */
-        public void run( )
+        IDataModelCheck modelCheck = dataModel.getModelCheck();
+        
+        VALIDITY_STATE validityState = modelCheck.getValidityState();
+        
+        if( validityState!=IDataModelCheck.VALIDITY_STATE.INVALID )
         {
-          Shell shell = parentComposite.getShell();
-          MessageBox messageBox = new MessageBox(shell );
-          messageBox.setMessage( message );
-          messageBox.open();
+          Collection<IFE1D2DEdge> selected1DEdges = dataModel.getSelected1D();
+          Collection<IFE1D2DEdge> selected2DEdges = dataModel.getSelected2D();
+          
+          IFEDiscretisationModel1d2d model1d2d = 
+              getModel1d2d(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
+          
+          AddJunctionContext1DToCLineFromEdgesCmd junctionCmd =
+                new AddJunctionContext1DToCLineFromEdgesCmd(
+                        model1d2d,
+                        selected1DEdges.iterator().next(),
+                        selected2DEdges);
+          
+         CommandableWorkspace workspace = 
+            getTheme(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE).getWorkspace();
+          ChangeDiscretiationModelCommand changeModelCmd=
+                new ChangeDiscretiationModelCommand(
+                    workspace,model1d2d);
+          changeModelCmd.addCommand( junctionCmd );
+          try
+          {
+            workspace.postCommand( changeModelCmd);
+            dataModel.resetSelections();
+          }
+          catch( Exception e1 )
+          {
+            e1.printStackTrace();
+          }
         }
-      };
-      display.syncExec( runnable  );
-      
-    }
-    else
-    {
-      System.out.println(message);
-    }
+        else
+        {
+          System.out.println("Invalid data model");
+        }
+      }
+    };
   }
+  
+ 
   
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
    */
   public Control createControl( Composite parent, FormToolkit toolkit )
   {
-    this.parentComposite = parent;
-    
-//    this.optionComposite = new Composite(parent,SWT.NONE);
-//    return optionComposite;
-    
-    return this.face.createControl( parent, toolkit );
-    
+    return this.face.createControl( parent, toolkit );    
   }
   
   /**
@@ -265,49 +248,6 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
    */
   public void disposeControl( )
   {
-//    if(optionComposite!=null)
-//    {
-//      if(!optionComposite.isDisposed())
-//      {
-//        optionComposite.dispose();
-//      }
-//    }
     this.face.disposeControl();
   }
-//  private Collection<IFE1D2DEdge> findSelectedElement2DEdge( Feature[] selectedFeatures )
-//  {
-//    
-//    Set<IFE1D2DEdge> selected2DEdges = new HashSet<IFE1D2DEdge>();
-//    for(Feature feature:selectedFeatures)
-//    {
-//     if( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
-//                                  feature.getFeatureType().getQName()))
-//     {
-//       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
-//       if(TypeInfo.is2DEdge( edge ))
-//       {
-//         selected2DEdges.add( edge );
-//       }
-//     }
-//    }
-//    return selected2DEdges;
-//  }
-
-//  private IFE1D2DEdge findSelectedElement1DEdge( Feature[] selectedFeatures )
-//  {
-//    for(Feature feature:selectedFeatures)
-//    {
-//     if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( 
-//                                  feature.getFeatureType().getQName()))
-//     {
-//       IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
-//      if(TypeInfo.is1DEdge( edge ))
-//       {
-//         return edge;
-//       }
-//     }
-//    }
-//    return null;
-//    
-//  }
 }

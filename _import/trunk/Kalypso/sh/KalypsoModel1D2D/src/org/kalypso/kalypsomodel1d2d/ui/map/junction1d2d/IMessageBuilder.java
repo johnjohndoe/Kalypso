@@ -40,22 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import org.eclipse.ui.IEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
+import java.util.Collection;
+
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Test action delagate for junction widget
- * that create it from edge selection
+ * Interface to be implemented by classes that build message
+ * to be shown to the user drawing a 1d2d junction element 
+ * if the selection its has made is not valid 
  * 
  * @author Patrice Congo
- *
  */
-public class CreateJunctionFromSelectedEdgesActionDelegate 
-                              extends AbstractGisMapEditorActionDelegate 
-                              implements IEditorActionDelegate
+interface IMessageBuilder extends IMessageProvider
 {
-  public CreateJunctionFromSelectedEdgesActionDelegate( )
-  {
-    super( new CreateJunctionContext1DTo2DFromSelectedEdges() );
-  }
+  /**
+   * Update this message builder acoording to the
+   * this selection constelation
+   * 
+   * @param selected1DEdges the selected 1d edges
+   * @param selected2DEdges the selected 2d edges
+   * @param selectedFeatures the selected features
+   * @param model1d2d the target model
+   * 
+   */
+  public void update( 
+      Collection<IFE1D2DEdge> selected1DEdges, 
+      Collection<IFE1D2DEdge> selected2DEdges, 
+      Feature[] selectedFeatures, 
+      IFEDiscretisationModel1d2d model1d2d );
 }

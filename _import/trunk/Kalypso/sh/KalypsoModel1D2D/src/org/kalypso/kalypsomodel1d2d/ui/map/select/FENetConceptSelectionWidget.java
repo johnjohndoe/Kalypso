@@ -49,13 +49,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -569,7 +567,16 @@ public class FENetConceptSelectionWidget implements IWidget
     
     selectionManager.changeSelection( 
                         featuresToRemove, 
-                        featuresToAdd ); 
+                        featuresToAdd );
+    selectionMade();
+  }
+  
+  /**
+   * Called after a selection habe been made
+   */
+  protected void selectionMade()
+  {
+    
   }
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)

@@ -92,7 +92,7 @@ public class ApplyElevationWidgetDataModel
   
   public ApplyElevationWidgetDataModel( )
   {
-    super( KEYS );
+    super( KEYS, null );
   }
 
   public void setMapModell( IMapModell mapModell )

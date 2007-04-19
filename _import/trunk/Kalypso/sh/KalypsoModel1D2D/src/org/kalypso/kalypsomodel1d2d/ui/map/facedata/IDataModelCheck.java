@@ -38,24 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
-
-import org.eclipse.ui.IEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
+package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
 /**
- * Test action delagate for junction widget
- * that create it from edge selection
+ * Interface for classes that provides validation 
+ * checks for a data model
  * 
  * @author Patrice Congo
  *
  */
-public class CreateJunctionFromSelectedEdgesActionDelegate 
-                              extends AbstractGisMapEditorActionDelegate 
-                              implements IEditorActionDelegate
+public interface IDataModelCheck
 {
-  public CreateJunctionFromSelectedEdgesActionDelegate( )
-  {
-    super( new CreateJunctionContext1DTo2DFromSelectedEdges() );
+  
+  
+  
+  public enum VALIDITY_STATE{
+        VALID,
+        ACCEPTABLE,
+        INVALID
   }
+  
+  /**
+   * Returns the message associated with the current state
+   * of the model data being checked .
+   * <p>
+   * Such a message may provide hints to the user what to do
+   * in order t make the data valid
+   * </p>
+   * 
+   * @return the message, or <code>null</code> if none
+   */
+  public String getMessage();
+
+  /**
+   * Returns {@link VALIDITY_STATE} of the data model
+   * being checked
+   * 
+   * @return the validity check of the message being checked
+   * @see VALIDITY_STATE
+   */
+  public VALIDITY_STATE getValidityState();
+  
+  /**
+   * update this check 
+   * @param key key for the data being changed
+   * @param newData new data to be set
+   * @param dataModel new data providing a context for the check
+   * @throws IllegalArgumentException if data is not conform
+   *            to what is expected by the particular 
+   *            implementation 
+   */
+  public void update(
+                String key, 
+                Object newData, 
+                KeyBasedDataModel dataModel) 
+                throws IllegalArgumentException;
 }
