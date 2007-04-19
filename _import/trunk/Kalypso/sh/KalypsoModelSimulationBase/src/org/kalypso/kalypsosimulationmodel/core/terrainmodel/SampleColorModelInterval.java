@@ -40,18 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
- * @author congo
+ * @author madanago
  *
  */
-public interface SurfacePatchVisitable
+public class SampleColorModelInterval
 {
 
-  public void acceptSurfacePatches( GM_Envelope envToVisit,
-                                    SurfacePatchVisitor surfacePatchVisitor
-                                    ) throws GM_Exception;
+  private double interval;
+  private static SampleColorModelInterval instance = null;
 
+  private SampleColorModelInterval()
+  {   
+  }
+  
+  
+  public double getInterval( )
+  {
+    return interval;
+  }
+
+  public void setInterval( double interval )
+  {
+    this.interval = interval;
+  }   
+    
+  public static SampleColorModelInterval getInstance() {
+    if (instance== null) { 
+    instance = new SampleColorModelInterval();
+    }
+  return instance;
+  }
+
+  
 }

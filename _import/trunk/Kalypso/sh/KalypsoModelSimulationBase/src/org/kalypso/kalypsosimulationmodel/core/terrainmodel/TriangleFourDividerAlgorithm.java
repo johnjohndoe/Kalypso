@@ -56,24 +56,21 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
 
 /**
- * @author Madanagopal
+ * @author madanago
  *
  */
-public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
-{ 
-  private LinearRing ring;
-  
-  private Map<GM_Surface, Double> toBeVisited =  new HashMap<GM_Surface, Double>();
-  
-  public TriangleDivider( LinearRing _ring)
+public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfacePatchVisitable
+{
+  private LinearRing ring;  
+  private Map<GM_Surface, Double> toBeVisited =  new HashMap<GM_Surface, Double>();  
+  public TriangleFourDividerAlgorithm( LinearRing _ring)
   {
    this.ring = _ring;
-  }
+  }  
   public boolean furtherDivisionNeeded( GM_Position[] coOrds )
   {
     double max = PlaneUtils.convertToTwoDecimals( SampleColorModelInterval.getInstance().getInterval());
-    System.out.println("max :" +max);
-    
+    System.out.println("max :" +max);    
     double _z1 = coOrds[0].getZ();
     double _z2 = coOrds[1].getZ();
     double _z3 = coOrds[2].getZ();
@@ -112,11 +109,7 @@ public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
       return true;
     }
     return false;
-  }
-
-
-
-  
+  }  
 
   public HashMap<GM_Surface, Double> visitThisDivisionSurface( GM_Surface pos )
   {
@@ -132,23 +125,39 @@ public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
       if( this.furtherDivisionNeeded( splitCandidate ) )
       {
         System.out.println( "toSp" + Arrays.asList( splitCandidate ) );
-        // for (GM_Position gm: splitCandidate) {
-        // System.out.println("TOSplitCandidate : X :"+gm.getX()+" Y:"+gm.getY()+" Z:"+gm.getZ());
-        // }
         final GM_Position center = PlaneUtils.calculateCenterCoOrdinate( splitCandidate );
-        final GM_Position[] tri1 = new GM_Position[] { center, splitCandidate[0], splitCandidate[1], center };
-        final GM_Position[] tri2 = new GM_Position[] { center, splitCandidate[1], splitCandidate[2], center };
-        final GM_Position[] tri3 = new GM_Position[] { center, splitCandidate[2], splitCandidate[0], center };
-//        System.out.println( "cntr" + center );
-//        System.out.println( "tri1" + Arrays.asList( tri1 ) );
-//        System.out.println( "tri2" + Arrays.asList( tri2 ) );
-//        System.out.println( "tri3" + Arrays.asList( tri3 ) );
-        if( toSplit.size() < 10 )
-        {
-          toSplit.add( tri1 );
-          toSplit.add( tri2 );
-          toSplit.add( tri3 );
-        }
+        final GM_Position[] tri1 = new GM_Position[] { 
+                                              splitCandidate[0],
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[1]}),
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[2]}),
+                                              splitCandidate[0]
+                                                     };
+        final GM_Position[] tri2 = new GM_Position[] { 
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[1]}),
+                                              splitCandidate[1],
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[1],splitCandidate[2]}),
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[1]}),
+                                                     };
+        final GM_Position[] tri3 = new GM_Position[] { 
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[1]}),
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[1],splitCandidate[2]}),
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[2]}),
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[1]}),
+                                                     };
+        final GM_Position[] tri4 = new GM_Position[] { 
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[2]}),
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[1],splitCandidate[2]}),
+                                              splitCandidate[2],
+                                              PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[2]}),
+                                                     };
+        toSplit.add( tri1 );
+        toSplit.add( tri2 );
+        toSplit.add( tri3 );
+        toSplit.add( tri4 );
+        System.out.println( "tri1" + Arrays.asList( tri1 ) );
+        System.out.println( "tri2" + Arrays.asList( tri2 ) );
+        System.out.println( "tri3" + Arrays.asList( tri3 ) );
+        System.out.println( "tri4" + Arrays.asList( tri4 ) );   
       }
       else
       {
@@ -159,7 +168,9 @@ public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
                                           HMOTerrainElevationModel.NO_INTERIOR_POS,
                                           null,
                                           IElevationProvider.CRS_GAUSS_KRUEGER );
-          notToSplit.put( createGM_Surface, PlaneUtils.calculateCenterCoOrdinate( PlaneUtils.getGM_PositionForThisSurface( createGM_Surface )).getZ());
+          notToSplit.put( createGM_Surface,
+                          PlaneUtils.calculateCenterCoOrdinate( 
+                                          PlaneUtils.getGM_PositionForThisSurface( createGM_Surface )).getZ());
         }
         catch( Throwable e )
         {
@@ -171,9 +182,6 @@ public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
   
     return notToSplit;
   }
-  
-
-
   
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
@@ -197,11 +205,5 @@ public class TriangleDivider implements SurfacePatchVisitable,ITriangleAlgorithm
         surfacePatchVisitor.visit((GM_Surface)entry.getKey(),(double)(Double)entry.getValue());        
     }   
   }
-
-
-
-
-
-
- 
+  
 }

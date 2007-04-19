@@ -403,6 +403,28 @@ public class ASCTerrainElevationModel implements IElevationProvider, SurfacePatc
 
 
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor, double)
+   */
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor, double discretisationInterval ) throws GM_Exception
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#getDiscretisationInterval()
+   */
+  public double getDiscretisationInterval( )
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+
+
 
 
 }

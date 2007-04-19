@@ -43,7 +43,6 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -59,7 +58,7 @@ class TriangleData implements SurfacePatchVisitable
 {
   private LinearRing ring;
 
-  private TriangleDivider _divider;
+  private ITriangleAlgorithm _divider;
   private Polygon polygon;
 
   private double[] planeEquation;
@@ -71,7 +70,7 @@ class TriangleData implements SurfacePatchVisitable
   {
     
     this.ring = ring;
-    _divider = new TriangleDivider(ring);
+    _divider = new TriangleFourDividerAlgorithm(ring);
     polygon = new Polygon( ring, null, ring.getFactory() );
     Coordinate[] coords = ring.getCoordinates();
     planeEquation = calculateTrianglePlaneEquation( coords );
@@ -172,19 +171,9 @@ class TriangleData implements SurfacePatchVisitable
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor) throws GM_Exception
   {
-
-//    System.out.println(" Int :" +simple++);
-//    double[] exterior = { coordinates[0].x, coordinates[0].y, coordinates[0].z, coordinates[1].x, coordinates[1].y, coordinates[1].z, coordinates[2].x, coordinates[2].y, coordinates[2].z,
-//          coordinates[0].x, coordinates[0].y, coordinates[0].z };
-//      
-//      GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
-//          createGM_Surface( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, IElevationProvider.CRS_GAUSS_KRUEGER );
-//      surfacePatchVisitor.visit( surfacePatch, getCenterElevation());
-      
-      _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor );
-      
+     _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor);
   }
 
   public double getMinElevation( )
@@ -263,4 +252,6 @@ class TriangleData implements SurfacePatchVisitable
   {
     return ring;
   }
+
+
 }

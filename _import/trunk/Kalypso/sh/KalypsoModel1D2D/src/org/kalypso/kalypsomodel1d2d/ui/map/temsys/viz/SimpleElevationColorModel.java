@@ -44,6 +44,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.httpclient.methods.GetMethod;
+
 /**
  * @author Patrice Congo
  */
@@ -89,9 +91,11 @@ public class SimpleElevationColorModel implements IElevationColorModel
   private int m_numOfClasses;
 
   private Color m_noElevationColor;
-
+  
   public SimpleElevationColorModel( double minElevation, double maxElevation, Color minColor, Color maxColor, Color noElevationColor, double transparency, int numOfClasses, boolean goDarkerFromMinToMax )
   {
+    
+    
 
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
@@ -297,5 +301,21 @@ public class SimpleElevationColorModel implements IElevationColorModel
     values[1] = m_maxElevation;
     return values;
   }
+
+
+  public int getColorIndex( )
+  {
+    return m_numOfClasses;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getDiscretisationInterval()
+   */
+  public double getDiscretisationInterval( )
+  {    
+    return Math.abs((m_maxElevation - m_minElevation))/m_numOfClasses;
+  }
+  
+ 
 
 }

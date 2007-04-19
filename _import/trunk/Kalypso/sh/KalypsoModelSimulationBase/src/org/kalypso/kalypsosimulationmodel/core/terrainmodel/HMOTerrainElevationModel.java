@@ -132,8 +132,6 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
     }
   }
 
-
-
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getBoundingBox()
    */
@@ -206,8 +204,9 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor) throws GM_Exception
   {
+    
     Assert.throwIAEOnNullParam( envToVisit, "envToVisit" );
     Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" );
     Coordinate max = JTSAdapter.export( envToVisit.getMax() );
@@ -216,7 +215,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
     List triToVisit = triangles.query( jtsEnv );
     for( Object tri : triToVisit )
     {
-      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor );
+      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor);
     }
   }
 
@@ -245,5 +244,11 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
   {
     // TODO
   }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#getDiscretisationInterval()
+   */
+
+
 
 }

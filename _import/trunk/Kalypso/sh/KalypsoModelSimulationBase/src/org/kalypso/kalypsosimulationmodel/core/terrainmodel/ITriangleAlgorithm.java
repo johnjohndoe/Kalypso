@@ -40,18 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.util.HashMap;
+
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
- * @author congo
+ * @author madanago
  *
  */
-public interface SurfacePatchVisitable
+public interface ITriangleAlgorithm
 {
 
-  public void acceptSurfacePatches( GM_Envelope envToVisit,
-                                    SurfacePatchVisitor surfacePatchVisitor
-                                    ) throws GM_Exception;
+  public abstract boolean furtherDivisionNeeded( GM_Position[] coOrds );
+
+  public abstract HashMap<GM_Surface, Double> visitThisDivisionSurface( GM_Surface pos );
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
+   */
+  public abstract void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception;
 
 }

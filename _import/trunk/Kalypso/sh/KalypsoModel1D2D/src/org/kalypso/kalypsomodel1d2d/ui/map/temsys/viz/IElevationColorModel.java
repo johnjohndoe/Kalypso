@@ -71,4 +71,6 @@ public interface IElevationColorModel
   public double[] getElevationMinMax();
  // public float[] getHSB(double elevation);
   
+  public double getDiscretisationInterval();
+  
 }

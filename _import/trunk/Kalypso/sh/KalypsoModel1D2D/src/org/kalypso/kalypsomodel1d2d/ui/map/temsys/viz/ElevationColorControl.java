@@ -222,7 +222,6 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
 
   public static int getColorIndex( )
   {
-
     return colorIndex;
   }
 

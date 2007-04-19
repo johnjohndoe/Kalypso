@@ -52,8 +52,10 @@ import java.util.List;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITriangleAlgorithm;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ListRetriever;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SampleColorModelInterval;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TriangleDivider;
@@ -98,8 +100,10 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
 
   private GeoTransform projection;
 
+  private SurfacePatchVisitable hmoTerrain;
+  private SampleColorModelInterval sampleColorModel;
   private GM_Position[] ex;
-  private TriangleDivider divider;
+ 
 
   private ArrayList<GM_Position[]> triangleList;
 
@@ -107,12 +111,13 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
 //  List<GM_Surface> toDivide = new ArrayList<GM_Surface>();
 //  List<GM_Surface> notToDivide = new ArrayList<GM_Surface>();
 
-  private ListRetriever _listRetriver;
+  
 
   public SurfacePatchVisitableDisplayElement( NativeTerrainElevationModelWrapper elevationModel )
   {
     triangleList = new ArrayList<GM_Position[]>();
     Assert.throwIAEOnNullParam( elevationModel, "elevationModel" );
+    
     m_elevationModel = elevationModel;
     IElevationProvider elevationProvider = elevationModel.getElevationProvider();
     // TODO continue
@@ -121,11 +126,14 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       ascElevationModel = (SurfacePatchVisitable) elevationProvider;
 
       colorModel = ElevationColorControl.getColorModel( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+      SampleColorModelInterval.getInstance().setInterval( colorModel.getDiscretisationInterval() );
     }
     else
     {
       throw new RuntimeException( "Can only handle asc ele model:" + elevationProvider );
     }
+    //divider = new TriangleDivider((colorModel.getElevationMinMax()[1]-colorModel.getElevationMinMax()[0]) /colorModel.getColorIndex());
+    
   }
 
   /**
@@ -239,9 +247,8 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       // TODO Patrice try to get the current paint box
       this.graphics = g;
       this.projection = projection;
-
       ascElevationModel.acceptSurfacePatches( projection.getSourceRect(),// ascElevationModel.getBoundingBox(),
-      this );
+      this);
 
     }
     catch( GM_Exception e )
