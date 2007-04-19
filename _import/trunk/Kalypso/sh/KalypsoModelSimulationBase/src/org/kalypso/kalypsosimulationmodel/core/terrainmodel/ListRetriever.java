@@ -38,25 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypsodeegree.model.geometry.GM_Position;
+import java.util.HashMap;
+import java.util.List;
+
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * @author madanago
  *
  */
-public class Cust_GM_Surface
+public class ListRetriever
 {
-  GM_Position _1;
-  GM_Position _2;
-  GM_Position _3;
+  HashMap<GM_Surface, List<GM_Surface>> listManager = 
+    new HashMap<GM_Surface, List<GM_Surface>>();
+  
+  private ListRetriever() {}
+  
+  private static class SingletonHolder{
+    private static ListRetriever instance = new ListRetriever();
+  }
+  
+  public static ListRetriever getInstance() {
+    return SingletonHolder.instance;
+  }
+  public HashMap<GM_Surface, List<GM_Surface>> getListManager()
+  {
+    return listManager;
+  }
 
-  Cust_GM_Surface( GM_Position _1,
-                   GM_Position _2,
-                   GM_Position _3){
-    this._1 = _1;
-    this._2 = _2;
-    this._3 = _3;
+  public void addToListManager( HashMap<GM_Surface, List<GM_Surface>> gmSurface )
+  {
+    listManager.putAll( gmSurface );    
+  }
+  
+  public List<GM_Surface> getMyGM_SurfacePatch(GM_Surface key){
+    
+    return listManager.get( key );    
   }
 }

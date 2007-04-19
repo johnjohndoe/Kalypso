@@ -64,6 +64,10 @@ public class TriangleDivider implements SurfacePatchVisitable
   
   private LinearRing ring;
   
+  
+  private static ListRetriever _listRetriver;
+
+  private static List<GM_Surface> toBeVisited = new ArrayList<GM_Surface>();
   public TriangleDivider( LinearRing _ring)
   {
    this.ring = _ring;
@@ -71,7 +75,7 @@ public class TriangleDivider implements SurfacePatchVisitable
 
   public boolean furtherDivisionNeeded( GM_Position[] coOrds )
   {
-    final double max = 5.0;
+    final double max = 1.0;
     double _z1 = coOrds[0].getZ();
     double _z2 = coOrds[1].getZ();
     double _z3 = coOrds[2].getZ();
@@ -262,10 +266,23 @@ public class TriangleDivider implements SurfacePatchVisitable
     
     GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
         createGM_Surface( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, IElevationProvider.CRS_GAUSS_KRUEGER );
-   List <GM_Surface> toBeVisited = visitThisDivisionSurface( surfacePatch );
-    
+   
+   _listRetriver = ListRetriever.getInstance();
+
+   if (!_listRetriver.getListManager().containsKey( surfacePatch )) 
+   {
+     toBeVisited  = visitThisDivisionSurface( surfacePatch );
+     _listRetriver.getListManager().put( surfacePatch, toBeVisited );
+     
+   }
+   else 
+   {
+     toBeVisited = _listRetriver.getMyGM_SurfacePatch( surfacePatch );
+   }
+   double _dummy = 0.0;
+   
    for (GM_Surface visiting : toBeVisited)
-     surfacePatchVisitor.visit(visiting);
+     surfacePatchVisitor.visit(visiting,_dummy);
     
   }
   

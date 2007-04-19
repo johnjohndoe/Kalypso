@@ -57,6 +57,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.HMOTerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ListRetriever;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
@@ -422,7 +423,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor#accept(org.kalypsodeegree.model.geometry.GM_Surface,
    *      double)
    */
-  public boolean visit( GM_Surface surface/*, double elevationSample */)
+  public boolean visit( GM_Surface surface, double elevationSample )
   { 
 //    _listRetriver = ListRetriever.getInstance();
 //    GM_SurfacePatch patch = null;  

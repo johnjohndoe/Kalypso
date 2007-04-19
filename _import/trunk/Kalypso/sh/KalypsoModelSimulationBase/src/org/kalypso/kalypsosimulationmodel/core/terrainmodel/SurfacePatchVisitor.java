@@ -44,5 +44,5 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 public interface  SurfacePatchVisitor
 {
-    public boolean visit(GM_Surface surfacePatch/*, double elevationSample */);
+    public boolean visit(GM_Surface surfacePatch, double elevationSample );
 }
