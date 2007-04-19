@@ -509,6 +509,9 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
 
     final Rectangle editRect = RectangleUtils.buffer( editing );
     
+    /* snap behaviour */
+    //find the nearest profile point and check its distance to the cursor position */
+    
 //    final IPoint point = ProfilUtil.findPoint( getProfile(), computeIt, wasDuWillst );
     
     // TODO: if editRect near point: snap to point
