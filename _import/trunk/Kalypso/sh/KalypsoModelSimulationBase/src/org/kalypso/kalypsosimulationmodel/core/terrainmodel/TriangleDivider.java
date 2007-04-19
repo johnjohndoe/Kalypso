@@ -43,8 +43,13 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -61,13 +66,15 @@ import com.vividsolutions.jts.geom.LinearRing;
  */
 public class TriangleDivider implements SurfacePatchVisitable
 { 
+  //IElevationColorModel colorModel = ElevationColorControl.getColorModel();
   
   private LinearRing ring;
+  private double in = 0.0;
   
   
   private static ListRetriever _listRetriver;
 
-  private static List<GM_Surface> toBeVisited = new ArrayList<GM_Surface>();
+  private Map<GM_Surface, Double> toBeVisited =  new HashMap<GM_Surface, Double>();
   public TriangleDivider( LinearRing _ring)
   {
    this.ring = _ring;
@@ -75,6 +82,12 @@ public class TriangleDivider implements SurfacePatchVisitable
 
   public boolean furtherDivisionNeeded( GM_Position[] coOrds )
   {
+//    final double max = convertToTwoDecimals(
+//                       (ElevationColorControl.getMaxElevation() -
+//                        ElevationColorControl.getMinElevation()
+//                       ) / 
+//                        ElevationColorControl.getColorIndex());
+    
     final double max = 1.0;
     double _z1 = coOrds[0].getZ();
     double _z2 = coOrds[1].getZ();
@@ -112,8 +125,6 @@ public class TriangleDivider implements SurfacePatchVisitable
     {
       if (specA != specB)
       return true;
-//      else 
-//      return false;
     }
     return false;
   }
@@ -125,8 +136,6 @@ public class TriangleDivider implements SurfacePatchVisitable
     centerCo[0] = (coords[0].getX() + coords[1].getX() + coords[2].getX()) / 3;
     centerCo[1] = (coords[0].getY() + coords[1].getY() + coords[2].getY()) / 3;
     centerCo[2] = (coords[0].getZ() + coords[1].getZ() + coords[2].getZ()) / 3; 
-    //centerCo[2] = computeZOfTrianglePlanePoint( coords, centerCo[0], centerCo[1] );
-    
     return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( centerCo ); 
   }
 
@@ -186,18 +195,17 @@ public class TriangleDivider implements SurfacePatchVisitable
     bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
     return bd.doubleValue();   
   }
-  public List<GM_Surface> visitThisDivisionSurface( GM_Surface pos )
+  public HashMap<GM_Surface, Double> visitThisDivisionSurface( GM_Surface pos )
   {
     List<GM_Position[]> toSplit = new ArrayList<GM_Position[]>();
-    List<GM_Surface> notToSplit = new ArrayList<GM_Surface>();
+    //List<GM_Surface> notToSplit = new ArrayList<GM_Surface>();
+    HashMap<GM_Surface, Double> notToSplit = new HashMap<GM_Surface, Double>();
     toSplit.add( getGM_PositionForThisSurface(pos) );
     while( !toSplit.isEmpty() )
     {
       final GM_Position[] splitCandidate = toSplit.remove( 0 );
 
       System.out.println( "-----------------------------------------" );
-      System.out.println( "splitCandidate" + Arrays.asList( splitCandidate ) );
-
       if( this.furtherDivisionNeeded( splitCandidate ) )
       {
         System.out.println( "toSp" + Arrays.asList( splitCandidate ) );
@@ -208,10 +216,10 @@ public class TriangleDivider implements SurfacePatchVisitable
         final GM_Position[] tri1 = new GM_Position[] { center, splitCandidate[0], splitCandidate[1], center };
         final GM_Position[] tri2 = new GM_Position[] { center, splitCandidate[1], splitCandidate[2], center };
         final GM_Position[] tri3 = new GM_Position[] { center, splitCandidate[2], splitCandidate[0], center };
-        System.out.println( "cntr" + center );
-        System.out.println( "tri1" + Arrays.asList( tri1 ) );
-        System.out.println( "tri2" + Arrays.asList( tri2 ) );
-        System.out.println( "tri3" + Arrays.asList( tri3 ) );
+//        System.out.println( "cntr" + center );
+//        System.out.println( "tri1" + Arrays.asList( tri1 ) );
+//        System.out.println( "tri2" + Arrays.asList( tri2 ) );
+//        System.out.println( "tri3" + Arrays.asList( tri3 ) );
         if( toSplit.size() < 10 )
         {
           toSplit.add( tri1 );
@@ -223,8 +231,12 @@ public class TriangleDivider implements SurfacePatchVisitable
       {
         try
         {
-          notToSplit.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.
-              createGM_Surface( splitCandidate, HMOTerrainElevationModel.NO_INTERIOR_POS, null, IElevationProvider.CRS_GAUSS_KRUEGER ));
+          GM_Surface createGM_Surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface
+                                       (  splitCandidate,
+                                          HMOTerrainElevationModel.NO_INTERIOR_POS,
+                                          null,
+                                          IElevationProvider.CRS_GAUSS_KRUEGER );
+          notToSplit.put( createGM_Surface, calculateCenterCoOrdinate( getGM_PositionForThisSurface( createGM_Surface )).getZ());
         }
         catch( Throwable e )
         {
@@ -266,26 +278,14 @@ public class TriangleDivider implements SurfacePatchVisitable
     
     GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
         createGM_Surface( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, IElevationProvider.CRS_GAUSS_KRUEGER );
-   
-   _listRetriver = ListRetriever.getInstance();
 
-   if (!_listRetriver.getListManager().containsKey( surfacePatch )) 
-   {
-     toBeVisited  = visitThisDivisionSurface( surfacePatch );
-     _listRetriver.getListManager().put( surfacePatch, toBeVisited );
-     
-   }
-   else 
-   {
-     toBeVisited = _listRetriver.getMyGM_SurfacePatch( surfacePatch );
-   }
-   double _dummy = 0.0;
-   
-   for (GM_Surface visiting : toBeVisited)
-     surfacePatchVisitor.visit(visiting,_dummy);
-    
+    if (toBeVisited.isEmpty()) 
+       toBeVisited  = visitThisDivisionSurface( surfacePatch );
+
+    for (Iterator iter = toBeVisited.entrySet().iterator(); iter.hasNext();)
+    {
+        Map.Entry entry = (Map.Entry)iter.next();        
+        surfacePatchVisitor.visit((GM_Surface)entry.getKey(),(double)(Double)entry.getValue());        
+    }   
   }
-  
-
-
 }
