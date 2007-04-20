@@ -42,6 +42,8 @@ package org.kalypso.ui.editor;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
@@ -55,7 +57,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 /**
  * @author belger
  */
-public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate, IViewActionDelegate, ModellEventListener
+public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate, IViewActionDelegate, IActionDelegate2, ModellEventListener
 {
   private WidgetActionPart m_part;
 
@@ -148,6 +150,33 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
     {
       refreshAction( m_action, m_selection );
     }
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
+   */
+  public void init( final IAction action )
+  {
+    m_action = action;
+    refreshAction( m_action, m_selection );
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
+   */
+  public void runWithEvent( final IAction action, final Event event )
+  {
+    run( action );
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate2#dispose()
+   */
+  public void dispose( )
+  {
+    m_part = null;
+    m_action = null;
+    m_selection = null;
   }
 
   /**
