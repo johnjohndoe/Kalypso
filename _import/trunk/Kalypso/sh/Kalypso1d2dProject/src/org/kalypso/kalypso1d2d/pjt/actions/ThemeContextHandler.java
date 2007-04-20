@@ -5,8 +5,9 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -25,14 +26,12 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
 
-import de.renew.workflow.WorkflowCommandHandler;
-
 /**
  * Activates a given theme in the current map view.
  * 
  * @author Stefan Kurzbach
  */
-public class ThemeContextHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension, IKalypsoThemeListener
+public class ThemeContextHandler extends AbstractHandler implements IExecutableExtension, IKalypsoThemeListener
 {
   public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme"; //$NON-NLS-1$
 
@@ -52,7 +51,7 @@ public class ThemeContextHandler extends WorkflowCommandHandler implements IHand
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -116,10 +115,6 @@ public class ThemeContextHandler extends WorkflowCommandHandler implements IHand
       final Map parameterMap = (Map) data;
       m_featureType = (String) parameterMap.get( CONTEXT_THEME_FEATURE_TYPE );
     }
-    else
-    {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
-    }
   }
 
   /**
@@ -142,7 +137,6 @@ public class ThemeContextHandler extends WorkflowCommandHandler implements IHand
       final String themeContext = themeToActivate.getContext();
       if( m_featureType != null && m_featureType.equals( themeContext ) )
       {
-        logger.info( themeToActivate + " theme activated with feature type " + m_featureType ); //$NON-NLS-1$
         m_mapModell.activateTheme( themeToActivate );
       }
     }

@@ -1,4 +1,4 @@
-package de.renew.workflow.debug;
+package de.renew.workflow.connector.debug;
 
 import java.rmi.RemoteException;
 

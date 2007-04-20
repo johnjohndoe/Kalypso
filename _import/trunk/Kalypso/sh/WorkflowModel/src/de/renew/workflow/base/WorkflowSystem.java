@@ -1,16 +1,13 @@
 /**
  * 
  */
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.base;
 
 import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -18,13 +15,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.ScenarioManager;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.xml.sax.SAXException;
+
+import de.renew.workflow.base.Workflow;
 
 /**
  * This workflow system manages the workflow instance in a description file in the project .metadata folder
@@ -33,6 +27,8 @@ import org.xml.sax.SAXException;
  */
 public class WorkflowSystem implements IWorkflowSystem
 {
+  public static final String METADATA_FOLDER = ".metadata";
+
   public static final String WORKFLOW_FILENAME = "workflow.xml";
 
   private static final Logger logger = Logger.getLogger( WorkflowSystem.class.getName() );
@@ -45,7 +41,7 @@ public class WorkflowSystem implements IWorkflowSystem
       logger.setUseParentHandlers( false );
   }
 
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.workflow.ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( de.renew.workflow.base.ObjectFactory.class, de.renew.workflow.contexts.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
 
   private Workflow m_currentWorkflow;
 
@@ -62,7 +58,7 @@ public class WorkflowSystem implements IWorkflowSystem
   {
     try
     {
-      final IFolder metadataFolder = project.getFolder( ScenarioManager.METADATA_FOLDER );
+      final IFolder metadataFolder = project.getFolder( METADATA_FOLDER );
       final IFile workflowFile = metadataFolder.getFile( WORKFLOW_FILENAME );
       final URL url = workflowFile.getRawLocationURI().toURL();
       m_currentWorkflow = loadModel( url );
@@ -71,7 +67,7 @@ public class WorkflowSystem implements IWorkflowSystem
     {
       // either JAXBException or MalformedURLException
       IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+      // TODO log
       throw new CoreException( status );
     }
   }

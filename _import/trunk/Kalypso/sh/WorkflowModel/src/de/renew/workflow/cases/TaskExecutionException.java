@@ -38,20 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.workflow;
-
-import org.eclipse.core.commands.IHandler;
+package de.renew.workflow.cases;
 
 /**
- * An instance of {@link IContextHandlerFactory} can create context handlers for certain subclasses of
- * {@link ContextType}. These handlers do something to enable the context in the workbench.
- * 
  * @author Stefan Kurzbach
  */
-public interface IContextHandlerFactory
+public class TaskExecutionException extends Exception
 {
-  /**
-   * Returns the handler for the given context or <code>null</code> if the context is not known to this handler.
-   */
-  public IHandler getHandler( final ContextType context );
+  public TaskExecutionException( final String message, final Throwable cause )
+  {
+    super( message, cause );
+  }
+
+  public TaskExecutionException( final Throwable cause )
+  {
+    super( cause );
+  }
+
+  public TaskExecutionException( final String message )
+  {
+    super( message );
+  }
 }

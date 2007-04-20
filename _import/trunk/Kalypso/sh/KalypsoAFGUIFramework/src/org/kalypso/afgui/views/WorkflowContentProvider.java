@@ -3,14 +3,11 @@
  */
 package org.kalypso.afgui.views;
 
-import java.util.List;
-
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.afgui.workflow.Phase;
-import org.kalypso.afgui.workflow.Task;
-import org.kalypso.afgui.workflow.TaskGroup;
-import org.kalypso.afgui.workflow.Workflow;
+
+import de.renew.workflow.base.Task;
+import de.renew.workflow.base.TaskGroup;
 
 /**
  * @author Stefan Kurzbach
@@ -22,19 +19,7 @@ public class WorkflowContentProvider implements ITreeContentProvider
    */
   public Object[] getChildren( final Object element )
   {
-    if( element instanceof Workflow )
-    {
-      final Workflow workflow = ((Workflow) element);
-      final List<Phase> phases = workflow.getPhases();
-      return phases.toArray();
-    }
-    else if( element instanceof Phase )
-    {
-      final Phase phase = ((Phase) element);
-      final List<TaskGroup> taskGroups = phase.getTaskGroups();
-      return taskGroups.toArray();
-    }
-    else if( element instanceof TaskGroup )
+    if( element instanceof TaskGroup )
     {
       final TaskGroup taskGroup = ((TaskGroup) element);
       return taskGroup.getTasks().toArray();
@@ -62,17 +47,7 @@ public class WorkflowContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof Workflow )
-    {
-      final Workflow workflow = ((Workflow) element);
-      return !workflow.getPhases().isEmpty();
-    }
-    else if( element instanceof Phase )
-    {
-      final Phase phase = ((Phase) element);
-      return !phase.getTaskGroups().isEmpty();
-    }
-    else if( element instanceof TaskGroup )
+    if( element instanceof TaskGroup )
     {
       final TaskGroup taskGroup = ((TaskGroup) element);
       return !taskGroup.getTasks().isEmpty();

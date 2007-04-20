@@ -5,14 +5,13 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
@@ -20,15 +19,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
-import de.renew.workflow.WorkflowCommandHandler;
-
 /**
  * Loads a template file in the current feature view. Requires that the current context contains the feature view. Use a
  * {@link ViewContextHandler} for this purpose.
  * 
  * @author Stefan Kurzbach
  */
-public class FeatureViewInputContextHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension
+public class FeatureViewInputContextHandler extends AbstractHandler implements IExecutableExtension
 {
   public static final String FEATUREVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.featureViewInput"; //$NON-NLS-1$
 
@@ -47,7 +44,7 @@ public class FeatureViewInputContextHandler extends WorkflowCommandHandler imple
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -82,10 +79,6 @@ public class FeatureViewInputContextHandler extends WorkflowCommandHandler imple
     {
       final Map parameterMap = (Map) data;
       m_featureViewInput = (String) parameterMap.get( FEATUREVIEW_INPUT );
-    }
-    else
-    {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
     }
   }
 }

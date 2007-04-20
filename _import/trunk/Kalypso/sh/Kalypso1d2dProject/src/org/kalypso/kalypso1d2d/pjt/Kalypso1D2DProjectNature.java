@@ -63,10 +63,11 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.ScenarioManager;
-import org.kalypso.afgui.workflow.IWorkflowSystem;
-import org.kalypso.afgui.workflow.WorkflowSystem;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+
+import de.renew.workflow.base.IWorkflowSystem;
+import de.renew.workflow.base.WorkflowSystem;
 
 /**
  * Project Nature for 1d 2d simulation

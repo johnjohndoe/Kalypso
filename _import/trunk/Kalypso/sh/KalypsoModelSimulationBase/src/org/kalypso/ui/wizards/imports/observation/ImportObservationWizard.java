@@ -71,13 +71,14 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
-public class ImportObservationWizard extends Wizard implements INewWizardKalypsoImport
+import de.renew.workflow.contexts.IWithContext;
+
+public class ImportObservationWizard extends Wizard implements IWithContext
 {
   private final static JAXBContext zmlJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 

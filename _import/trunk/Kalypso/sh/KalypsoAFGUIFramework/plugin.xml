@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
-<plugin>
-   <extension-point id="contextHandlerFactories" name="contextHandlerFactories" schema="schema/org.kalypso.afgui.workflow.contextHandlerFactory.exsd"/>
-	
+<plugin>   	
 	<extension
          id="AFGUIApplication"
          point="org.eclipse.core.runtime.applications">

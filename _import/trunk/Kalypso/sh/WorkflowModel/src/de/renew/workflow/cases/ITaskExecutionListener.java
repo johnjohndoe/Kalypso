@@ -38,46 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.cases;
 
-import java.util.List;
-
-import javax.xml.bind.JAXBElement;
-
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
+import de.renew.workflow.base.Task;
 
 /**
  * @author Stefan Kurzbach
  */
-public class MultiContextHandler extends AbstractHandler
+public interface ITaskExecutionListener
 {
-
-  private final MultiContext m_multiContext;
-
-  private final IContextHandlerFactory m_contextHandlerFactory;
-
-  public MultiContextHandler( final MultiContext multiContext, final IContextHandlerFactory contextHandlerFactory )
-  {
-    m_multiContext = multiContext;
-    m_contextHandlerFactory = contextHandlerFactory;
-  }
-
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final List<JAXBElement< ? extends ContextType>> subContexts = m_multiContext.getSubContexts();
-    for( JAXBElement< ? extends ContextType> context : subContexts )
-    {
-      final IHandler handler = m_contextHandlerFactory.getHandler( context.getValue() );
-      handler.execute( event );
-    }
-    return null;
-  }
-
+  public void taskStarted( final Task task ) throws TaskExecutionException;
 }

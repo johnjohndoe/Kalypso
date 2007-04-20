@@ -14,16 +14,16 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
 import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.IWithContext;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportWizard extends Wizard implements INewWizardKalypsoImport
+public class ImportWizard extends Wizard implements IWithContext
 {
   protected DataContainer m_data; // the data model
 

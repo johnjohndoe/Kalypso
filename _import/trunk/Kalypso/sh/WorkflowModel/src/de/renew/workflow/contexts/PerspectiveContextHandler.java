@@ -1,30 +1,28 @@
 /**
  * 
  */
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.contexts;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-
-import de.renew.workflow.WorkflowCommandHandler;
+import org.eclipse.ui.WorkbenchException;
 
 /**
  * Opens the map view on a given resource and activates a given layer
  * 
  * @author Stefan Kurzbach
  */
-public class PerspectiveContextHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension
+public class PerspectiveContextHandler extends AbstractHandler implements IExecutableExtension
 {
   public static final String CONTEXT_PERSPECTIVE_ID = "org.kalypso.afgui.contexts.perspective"; //$NON-NLS-1$
 
@@ -44,7 +42,7 @@ public class PerspectiveContextHandler extends WorkflowCommandHandler implements
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -52,7 +50,14 @@ public class PerspectiveContextHandler extends WorkflowCommandHandler implements
     if( activeWorkbenchWindow != null && m_perspectiveId != null )
     {
       final IWorkbench workbench = activeWorkbenchWindow.getWorkbench();
-      workbench.showPerspective( m_perspectiveId, activeWorkbenchWindow );
+      try
+      {
+        workbench.showPerspective( m_perspectiveId, activeWorkbenchWindow );
+      }
+      catch( final WorkbenchException e )
+      {
+        throw new ExecutionException( "Could not show perspective " + m_perspectiveId, e );
+      }
       return Status.OK_STATUS;
     }
     else
@@ -71,10 +76,6 @@ public class PerspectiveContextHandler extends WorkflowCommandHandler implements
     {
       final Map parameterMap = (Map) data;
       m_perspectiveId = (String) parameterMap.get( CONTEXT_PERSPECTIVE_ID );
-    }
-    else
-    {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
     }
   }
 }

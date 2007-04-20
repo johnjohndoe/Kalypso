@@ -8,18 +8,23 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.management.monitor.MonitorMBean;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -29,6 +34,7 @@ import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
+import de.renew.workflow.cases.CaseData;
 import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
@@ -251,15 +257,63 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void saveModel( final Class< ? extends IFeatureWrapper2> modelClass, final IProgressMonitor monitor ) throws Exception
+  public void saveModel( final Class< ? extends IFeatureWrapper2> modelClass, IProgressMonitor monitor ) throws CoreException
   {
-    final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
-    final IPoolableObjectType key = keyPoolListener.getKey();
-    if( key != null )
+    if( monitor == null )
     {
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-      final KeyInfo infoForKey = pool.getInfoForKey( key );
-      infoForKey.saveObject( monitor );
+      monitor = new NullProgressMonitor();
+    }
+    try
+    {
+      monitor.beginTask( "Submodell " + modelClass.getSimpleName() + " speichern", 110 );
+
+      final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
+      final IPoolableObjectType key = keyPoolListener.getKey();
+      if( key != null )
+      {
+        final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+        final KeyInfo infoForKey = pool.getInfoForKey( key );
+        monitor.worked( 10 );
+        infoForKey.saveObject( new SubProgressMonitor( monitor, 100 ) );
+      }
+    }
+    catch( final LoaderException e )
+    {
+      monitor.done();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  /**
+   * @see de.renew.workflow.cases.ICaseDataProvider#getCaseData()
+   */
+  public CaseData getCaseData( )
+  {
+    // TODO fill case data with model information
+    return new CaseData();
+  }
+
+  public void saveModel( IProgressMonitor monitor ) throws CoreException
+  {
+    if( monitor == null )
+    {
+      monitor = new NullProgressMonitor();
+    }
+    try
+    {
+      monitor.beginTask( "Modell speichern", m_keyMap.size() * 100 );
+      for( final Class<IFeatureWrapper2> modelClass : m_keyMap.keySet() )
+      {
+        saveModel( modelClass, new SubProgressMonitor( monitor, 100 ) );
+      }
+    }
+    finally
+    {
+      monitor.done();
     }
   }
 

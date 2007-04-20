@@ -1,17 +1,17 @@
 /**
  * 
  */
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.contexts;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -22,17 +22,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.eclipse.ui.wizards.IWizardRegistry;
-import org.kalypso.afgui.workflow.EWizardType;
-import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
-
-import de.renew.workflow.WorkflowCommandHandler;
 
 /**
  * Opens a wizard.
  * 
  * @author Stefan Kurzbach
  */
-public class WizardContextHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension
+public class WizardContextHandler extends AbstractHandler implements IExecutableExtension
 {
   public static final String WIZARD_ID = "org.kalypso.kalypso1d2d.pjt.contexts.wizardId"; //$NON-NLS-1$
 
@@ -56,7 +52,7 @@ public class WizardContextHandler extends WorkflowCommandHandler implements IHan
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -85,9 +81,9 @@ public class WizardContextHandler extends WorkflowCommandHandler implements IHan
         final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
         wizard.init( workbench, StructuredSelection.EMPTY );
 
-        if( wizard instanceof INewWizardKalypsoImport )
+        if( wizard instanceof IWithContext )
         {
-          ((INewWizardKalypsoImport) wizard).initModelProperties( context );
+          ((IWithContext) wizard).initModelProperties( context );
         }
 
         if( wizardDialog.open() == Window.OK )
@@ -99,10 +95,9 @@ public class WizardContextHandler extends WorkflowCommandHandler implements IHan
           return Status.CANCEL_STATUS;
         }
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new ExecutionException( "Could not start wizard " + m_wizardId + " of type " + m_wizardType, e );
       }
     }
     return Status.OK_STATUS;
@@ -119,10 +114,6 @@ public class WizardContextHandler extends WorkflowCommandHandler implements IHan
       final Map parameterMap = (Map) data;
       m_wizardId = (String) parameterMap.get( WIZARD_ID );
       m_wizardType = EWizardType.valueOf( (String) parameterMap.get( WIZARD_TYPE ) );
-    }
-    else
-    {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
     }
   }
 }

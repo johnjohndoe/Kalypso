@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -51,7 +52,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -69,25 +69,32 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
-import de.renew.workflow.WorkflowCommandHandler;
 import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Thomas Jung
  */
-public class ImportProfileHandler extends WorkflowCommandHandler
+public class ImportProfileHandler extends AbstractHandler
 {
   /**
-   * @see org.kalypso.ui.command.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
-    final ITerrainModel terrainModel = modelProvider.getModel( ITerrainModel.class );
+    ITerrainModel terrainModel;
+    try
+    {
+      terrainModel = modelProvider.getModel( ITerrainModel.class );
+    }
+    catch( final CoreException e )
+    {
+      throw new ExecutionException( "Could not get terrain model", e );
+    }
 
     /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
@@ -137,7 +144,7 @@ public class ImportProfileHandler extends WorkflowCommandHandler
       }
     }
     else
-      throw new CoreException( StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." ) );
+      throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
 
     return Status.OK_STATUS;
   }

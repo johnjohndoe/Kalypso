@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -66,43 +67,43 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-import de.renew.workflow.WorkflowCommandHandler;
 import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWSPMHandler extends WorkflowCommandHandler
+public class ImportWSPMHandler extends AbstractHandler
 {
   /**
    * @see org.kalypso.ui.command.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
-    final ITerrainModel terrainModel = modelProvider.getModel( ITerrainModel.class );
-    final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
-    final IFlowRelationshipCollection flowRelationModel = modelProvider.getModel( IFlowRelationshipCollection.class );
-
-    /* Import Reach into Terrain-Model */
-    final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
-
-    final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel, flowRelationModel );
-    importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
-
-    final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
-    dialog.setRememberSize( true );
-    if( dialog.open() != Window.OK )
-      return Status.CANCEL_STATUS;
-
-    /* post empty command(s) in order to make pool dirty. */
-    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    ITerrainModel terrainModel;
     try
     {
+      terrainModel = modelProvider.getModel( ITerrainModel.class );
+      final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
+      final IFlowRelationshipCollection flowRelationModel = modelProvider.getModel( IFlowRelationshipCollection.class );
+
+      /* Import Reach into Terrain-Model */
+      final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
+
+      final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel, flowRelationModel );
+      importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
+
+      final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
+      dialog.setRememberSize( true );
+      if( dialog.open() != Window.OK )
+        return Status.CANCEL_STATUS;
+
+      /* post empty command(s) in order to make pool dirty. */
+      final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
       modelProvider.saveModel( ITerrainModel.class, new NullProgressMonitor() );
       modelProvider.saveModel( IFEDiscretisationModel1d2d.class, new NullProgressMonitor() );
 
@@ -112,22 +113,21 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
       // final CommandableWorkspace workspace2 = terrainModel.getWrappedFeature().getWorkspace();
       // final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
       // mapView.postCommand( terrainCommand, null );
-    }
-    catch( final Exception e )
-    {
-      // will never happen?
-      e.printStackTrace();
-    }
 
-    /* Add new layer to profile-collection-map */
-    // TODO: add a new layer containing the new profiles in the profile-network map?
-    /* Zoom to new elements in fe-map? */
-    if( mapView != null )
+      /* Add new layer to profile-collection-map */
+      // TODO: add a new layer containing the new profiles in the profile-network map?
+      /* Zoom to new elements in fe-map? */
+      if( mapView != null )
+      {
+        final Feature[] newFEFeatures = importWizard.getDiscretisationModelAdds();
+        final GM_Envelope envelope = FeatureHelper.getEnvelope( newFEFeatures );
+        if( envelope != null )
+          mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
+      }
+    }
+    catch( final CoreException e )
     {
-      final Feature[] newFEFeatures = importWizard.getDiscretisationModelAdds();
-      final GM_Envelope envelope = FeatureHelper.getEnvelope( newFEFeatures );
-      if( envelope != null )
-        mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
+      throw new ExecutionException( "Could not import wspm model.", e );
     }
 
     return Status.OK_STATUS;

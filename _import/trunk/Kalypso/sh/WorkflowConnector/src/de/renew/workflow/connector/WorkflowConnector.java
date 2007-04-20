@@ -1,4 +1,4 @@
-package de.renew.workflow;
+package de.renew.workflow.connector;
 
 import java.io.IOException;
 import java.rmi.Naming;
@@ -20,7 +20,15 @@ import de.renew.remote.RemoteServerRegistry;
 import de.renew.remote.SocketFactoryDeterminer;
 import de.renew.remote.RemoteServerRegistry.ServerDescriptor;
 import de.renew.util.ConcurrencyPreventer;
-import de.renew.workflow.event.IWorklistChangeListener;
+import de.renew.workflow.Activity;
+import de.renew.workflow.Agenda;
+import de.renew.workflow.AgendaChangeEvent;
+import de.renew.workflow.AgendaChangeListener;
+import de.renew.workflow.Client;
+import de.renew.workflow.ClientImpl;
+import de.renew.workflow.WorkItem;
+import de.renew.workflow.WorkflowManager;
+import de.renew.workflow.connector.event.IWorklistChangeListener;
 
 public class WorkflowConnector
 {
@@ -88,7 +96,7 @@ public class WorkflowConnector
     try
     {
       final RemoteServerRegistry instance = RemoteServerRegistry.instance();
-//      waitForServer(instance);
+      // waitForServer(instance);
       final ServerDescriptor descriptor = instance.connectServer( "localhost", "default" );
       m_manager = (Manager) Naming.lookup( descriptor.getUrl( SERVICE_NAME ) );
       m_login = new LoginInfo( "Stefan", "Stefan" );
@@ -119,25 +127,25 @@ public class WorkflowConnector
       logger.info( "Could not connect to workflow server" );
   }
 
-//  private void waitForServer(final RemoteServerRegistry instance )
-//  {
-//    int timeoutSeconds = 10;
-//    while( timeoutSeconds-- > 0 && instance.getSallServers().length == 0 )
-//    {
-//      try
-//      {
-//        Thread.sleep( 1000 );
-//      }
-//      catch( final InterruptedException e )
-//      {
-//        logger.log( Level.WARNING, "interrupted", e );
-//      }
-//    }
-//    if( instance.allServers().length == 0 )
-//    {
-//      logger.log( Level.SEVERE, "timeout reached" );
-//    }
-//  }
+  // private void waitForServer(final RemoteServerRegistry instance )
+  // {
+  // int timeoutSeconds = 10;
+  // while( timeoutSeconds-- > 0 && instance.getSallServers().length == 0 )
+  // {
+  // try
+  // {
+  // Thread.sleep( 1000 );
+  // }
+  // catch( final InterruptedException e )
+  // {
+  // logger.log( Level.WARNING, "interrupted", e );
+  // }
+  // }
+  // if( instance.allServers().length == 0 )
+  // {
+  // logger.log( Level.SEVERE, "timeout reached" );
+  // }
+  // }
 
   private Agenda getAgenda( ) throws RemoteException, IOException
   {
@@ -330,8 +338,15 @@ public class WorkflowConnector
       try
       {
         final Activity activity = getActivity( id );
-        activity.confirm( m_login, m_client, result );
-        logger.info( "confirmed " + activity.getWorkItem().getTask().getName() );
+        final boolean confirmed = activity.confirm( m_login, m_client, result );
+        if( confirmed )
+        {
+          logger.info( "confirmed " + activity.getWorkItem().getTask().getName() );
+        }
+        else
+        {
+          logger.info( "could not confirm " + activity.getWorkItem().getTask().getName() );
+        }
       }
       catch( final RemoteException e )
       {
@@ -353,7 +368,7 @@ public class WorkflowConnector
    */
   public void cancel( final String id )
   {
-    if(isActive( id ) )
+    if( isActive( id ) )
     {
       try
       {
@@ -369,7 +384,8 @@ public class WorkflowConnector
       {
         handleSecurityException( e );
       }
-    }else
+    }
+    else
     {
       logger.info( "no activity " + id );
     }

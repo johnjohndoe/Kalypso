@@ -1,4 +1,4 @@
-package de.renew.workflow.debug;
+package de.renew.workflow.connector.debug;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 
-import de.renew.workflow.WorkflowConnector;
-import de.renew.workflow.event.IWorklistChangeListener;
+import de.renew.workflow.connector.WorkflowConnector;
+import de.renew.workflow.connector.event.IWorklistChangeListener;
 
 public class DebugView extends ViewPart implements IWorklistChangeListener
 {

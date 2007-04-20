@@ -1,4 +1,6 @@
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.base;
+
+import de.renew.workflow.base.Workflow;
 
 
 /**

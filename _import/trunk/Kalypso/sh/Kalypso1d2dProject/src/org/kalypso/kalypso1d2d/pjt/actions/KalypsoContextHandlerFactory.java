@@ -43,10 +43,11 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import java.util.List;
 
 import org.eclipse.core.commands.IHandler;
-import org.kalypso.afgui.workflow.ContextType;
-import org.kalypso.afgui.workflow.ExtensionContext;
-import org.kalypso.afgui.workflow.IContextHandlerFactory;
-import org.kalypso.afgui.workflow.ExtensionContext.Parameter;
+
+import de.renew.workflow.contexts.ContextType;
+import de.renew.workflow.contexts.ExtensionContext;
+import de.renew.workflow.contexts.IContextHandlerFactory;
+import de.renew.workflow.contexts.ExtensionContext.Parameter;
 
 /**
  * Extends the capabilities of the {@link WorkflowContextHandlerFactory} by the required context handlers for the

@@ -17,17 +17,18 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.IWithContext;
 
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportWizard extends Wizard implements INewWizardKalypsoImport
+public class ImportWizard extends Wizard implements IWithContext
 {
   protected DataContainer m_data; // the data model
 
@@ -70,11 +71,11 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
    */
   public void initModelProperties( IEvaluationContext context )
   {
-    final ICaseDataProvider szenarioDataProvider = (ICaseDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     ITerrainModel model;
     try
     {
-      model = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
+      model = szenarioDataProvider.getModel( ITerrainModel.class );
       final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
       m_data.setRoughnessPolygonCollection( roughnessPolygonCollection );
     }
@@ -96,7 +97,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     try
     {
       m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
-    }
+  }
     catch( Exception e )
     {
       // TODO Auto-generated catch block

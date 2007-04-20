@@ -5,24 +5,21 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.views.map.MapView;
-
-import de.renew.workflow.WorkflowCommandHandler;
 
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
@@ -30,7 +27,7 @@ import de.renew.workflow.WorkflowCommandHandler;
  * 
  * @author Stefan Kurzbach
  */
-public class MapViewInputContextHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension
+public class MapViewInputContextHandler extends AbstractHandler implements IExecutableExtension
 {
   public static final String MAPVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.mapViewInput"; //$NON-NLS-1$
 
@@ -49,7 +46,7 @@ public class MapViewInputContextHandler extends WorkflowCommandHandler implement
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -70,7 +67,6 @@ public class MapViewInputContextHandler extends WorkflowCommandHandler implement
       final IFile currentFile = mapView.getFile();
       if( !file.equals( currentFile ) )
       {
-        logger.info( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.2" ) + file ); //$NON-NLS-1$
         mapView.startLoadJob( file );
       }
 
@@ -94,10 +90,6 @@ public class MapViewInputContextHandler extends WorkflowCommandHandler implement
     {
       final Map parameterMap = (Map) data;
       m_mapViewInput = (String) parameterMap.get( MAPVIEW_INPUT );
-    }
-    else
-    {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
     }
   }
 }

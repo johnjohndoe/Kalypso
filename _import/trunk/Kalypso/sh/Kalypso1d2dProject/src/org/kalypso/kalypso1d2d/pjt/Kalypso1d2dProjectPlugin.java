@@ -1,6 +1,10 @@
 package org.kalypso.kalypso1d2d.pjt;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.URL;
+import java.util.Properties;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -24,6 +28,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   public static final String KEY_ICON_SIM_MODEL = "_ICON_SIM_MODEL_";
 
+  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
+
+  private static final String LAST_PROJECT = "lastProject";
+
   private static ActiveWorkContext m_activeWorkContext;
 
   /**
@@ -41,6 +49,14 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+    Properties properties = new Properties();
+    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+    final File file = new File( fileName );
+    if( file.exists() )
+    {
+      properties.loadFromXML( new FileInputStream( file ) );
+    }
+    m_activeWorkContext = new ActiveWorkContext( properties );
   }
 
   /**
@@ -50,6 +66,15 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void stop( BundleContext context ) throws Exception
   {
     plugin = null;
+    final Properties properties = m_activeWorkContext.createProperties();
+    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+    final File file = new File( fileName );
+    if( file.exists() )
+    {
+      file.delete();
+    }
+    properties.storeToXML( new FileOutputStream( file ), "" );
+    m_activeWorkContext.setActiveProject( null );
     m_activeWorkContext.dispose();
     m_activeWorkContext = null;
     super.stop( context );
@@ -88,10 +113,6 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   public static ActiveWorkContext getActiveWorkContext( )
   {
-    if( m_activeWorkContext == null )
-    {
-      m_activeWorkContext = new ActiveWorkContext();
-    }
     return m_activeWorkContext;
   }
 }

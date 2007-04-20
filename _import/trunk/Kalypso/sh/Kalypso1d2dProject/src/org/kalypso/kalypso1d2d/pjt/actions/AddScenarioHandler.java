@@ -3,11 +3,10 @@
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import java.util.logging.Level;
-
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,18 +15,16 @@ import org.eclipse.ui.ISources;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.wizards.NewSimulationModelControlBuilder;
 
-import de.renew.workflow.WorkflowCommandHandler;
-
 /**
  * @author Patrice Congo, Stefan Kurzbach
  */
-public class AddScenarioHandler extends WorkflowCommandHandler
+public class AddScenarioHandler extends AbstractHandler
 {
   /**
    * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public IStatus executeInternal( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -54,24 +51,12 @@ public class AddScenarioHandler extends WorkflowCommandHandler
         return (Scenario) object;
       }
     }
-    else
-    {
-      logger.warning( "Cannot handle selection:" + selection );
-    }
     return null;
   }
 
   private void createWorkflowData( final Shell shell, final Scenario scenario )
   {
-    logger.info( "Creating Data: " + scenario.getURI() );
-    try
-    {
-      NewSimulationModelControlBuilder.startWizard( shell, scenario );
-    }
-    catch( Throwable th )
-    {
-      logger.log( Level.SEVERE, "Error creating data", th );
-    }
+    NewSimulationModelControlBuilder.startWizard( shell, scenario );
   }
 
 }

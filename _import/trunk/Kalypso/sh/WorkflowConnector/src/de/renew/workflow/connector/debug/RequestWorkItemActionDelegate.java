@@ -1,4 +1,4 @@
-package de.renew.workflow.debug;
+package de.renew.workflow.connector.debug;
 
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -12,8 +12,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import de.renew.workflow.WorkItem;
-import de.renew.workflow.WorkflowConnector;
-import de.renew.workflow.WorkflowServer;
+import de.renew.workflow.connector.WorkflowConnector;
+import de.renew.workflow.connector.WorkflowServer;
 
 public class RequestWorkItemActionDelegate implements IObjectActionDelegate
 {

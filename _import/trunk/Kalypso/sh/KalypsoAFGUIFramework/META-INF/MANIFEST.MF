@@ -20,5 +20,4 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-LazyStart: true 
 Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.scenarios,
- org.kalypso.afgui.views,
- org.kalypso.afgui.workflow
+ org.kalypso.afgui.views

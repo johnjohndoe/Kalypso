@@ -38,44 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.cases;
+package de.renew.workflow.contexts;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
+
+import de.renew.workflow.contexts.ContextType;
+import de.renew.workflow.contexts.MultiContext;
 
 /**
- * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
- * provide a way to create data providers that return data objects of a type more specific than {@link Object}.
- * 
- * @author Gernot Belger, Stefan Kurzbach
+ * @author Stefan Kurzbach
  */
-public interface ICaseDataProvider<T extends Object>
+public class MultiContextHandler extends AbstractHandler
 {
 
-  /**
-   * Returns the data object corresponding to the given case data key.
-   */
-  public <D extends T> D getModel( final Class<D> modelClass ) throws CoreException;
+  private final MultiContext m_multiContext;
+
+  private final IContextHandlerFactory m_contextHandlerFactory;
+
+  public MultiContextHandler( final MultiContext multiContext, final IContextHandlerFactory contextHandlerFactory )
+  {
+    m_multiContext = multiContext;
+    m_contextHandlerFactory = contextHandlerFactory;
+  }
 
   /**
-   * Saves all model data
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public void saveModel( final IProgressMonitor monitor ) throws CoreException;
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  {
+    final List<JAXBElement< ? extends ContextType>> subContexts = m_multiContext.getSubContexts();
+    for( JAXBElement< ? extends ContextType> context : subContexts )
+    {
+      final IHandler handler = m_contextHandlerFactory.getHandler( context.getValue() );
+      handler.execute( event );
+    }
+    return null;
+  }
 
-  /**
-   * Saves the data object corresponding to the given case data key
-   */
-  public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
-   * was retrieved.
-   */
-  public boolean isDirty( final Class< ? extends T> modelClass );
-
-  /**
-   * Returns the {@link CaseData} object describing the current model state. This method may require information about
-   * the validity of model elements.
-   */
-  public CaseData getCaseData( );
 }

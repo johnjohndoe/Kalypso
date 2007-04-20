@@ -1,25 +1,45 @@
 package org.kalypso.kalypso1d2d.pjt;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
-import org.kalypso.afgui.workflow.IWorkflowSystem;
-import org.kalypso.afgui.workflow.Workflow;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
+
+import de.renew.workflow.base.IWorkflowSystem;
+import de.renew.workflow.base.Task;
+import de.renew.workflow.base.Workflow;
+import de.renew.workflow.connector.ITaskExecutionAuthority;
 
 /**
  * Represents the work context for a user. A work context is made of:
@@ -29,7 +49,7 @@ import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
-public class ActiveWorkContext
+public class ActiveWorkContext implements ITaskExecutionAuthority
 {
   private final static Logger logger = Logger.getLogger( ActiveWorkContext.class.getName() );
 
@@ -42,6 +62,10 @@ public class ActiveWorkContext
   }
 
   private static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis";
+
+  private static final String MEMENTO_PROJECT = "project";
+
+  private static final String MEMENTO_SCENARIO = "scenario";
 
   private ScenarioManager m_scenarioManager;
 
@@ -61,10 +85,9 @@ public class ActiveWorkContext
 
   private final PerspectiveWatcher m_perspectiveWatcher = new PerspectiveWatcher();
 
-  public ActiveWorkContext( )
+  public ActiveWorkContext( final Properties properties )
   {
     addActiveContextChangeListener( m_perspectiveWatcher );
-
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     if( window != null )
@@ -77,6 +100,36 @@ public class ActiveWorkContext
     m_simModelProvider = new SzenarioSourceProvider( this );
     handlerService.addSourceProvider( m_simModelProvider );
     m_registries.add( handlerService );
+    
+    restoreState( properties );
+  }
+
+  private void restoreState( final Properties properties )
+  {
+    final String projectString = properties.getProperty( MEMENTO_PROJECT );
+    if( projectString != null )
+    {
+      final IPath projectPath = Path.fromPortableString( projectString );
+      final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
+      if( resource != null && resource.getType() == IResource.PROJECT )
+      {
+        final IProject project = (IProject) resource;
+        setActiveProject( project );
+
+        final String scenarioString = properties.getProperty( MEMENTO_SCENARIO );
+        if( scenarioString != null )
+        {
+          final IScenarioManager scenarioManager = getScenarioManager();
+          final Scenario scenario = scenarioManager.getScenario( scenarioString );
+          setCurrentSzenario( scenario );
+        }
+      }
+    }
+  }
+
+  public SzenarioDataProvider getDataProvider( )
+  {
+    return (SzenarioDataProvider) m_simModelProvider.getCurrentState().get( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
 
   public void dispose( )
@@ -241,5 +294,84 @@ public class ActiveWorkContext
       m_scenarioManager.setCurrentScenario( scenario );
       fireActiveProjectChanged( m_activeProject, scenario );
     }
+  }
+
+  /**
+   * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
+   */
+  public boolean canStopTask( final Task task )
+  {
+    final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+    final MessageDialog confirmDialog = new MessageDialog( activeShell, "Ungespeicherte Änderungen", null, "Es gibt ungespeicherte Änderungen. Möchten Sie die Änderungen speichern?", MessageDialog.QUESTION, new String[] {
+        "Ja", "Nein", "Abbrechen" }, 1 );
+    final boolean result;
+    final int decision = confirmDialog.open();
+    if( decision == 0 )
+    {
+      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_simModelProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+      try
+      {
+        final IRunnableWithProgress op = new IRunnableWithProgress()
+        {
+          public void run( final IProgressMonitor monitor ) throws InvocationTargetException
+          {
+            try
+            {
+              dataProvider.saveModel( monitor );
+            }
+            catch( final CoreException e )
+            {
+              throw new InvocationTargetException( e );
+            }
+          }
+        };
+        new ProgressMonitorDialog( activeShell ).run( true, true, op );
+      }
+      catch( final InvocationTargetException e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        ErrorDialog.openError( activeShell, "Fehler beim Speichern der Daten", "Es ist ein Fehler beim Speichern der Daten aufgetreten.", status );
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      }
+      catch( final InterruptedException e )
+      {
+        // TODO handle cancelation
+      }
+      result = true;
+    }
+    else if( decision == 1 )
+    {
+      result = true;
+    }
+    else
+    {
+      result = false;
+    }
+
+    if( result )
+    {
+      final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+      page.closeAllEditors( true );
+      m_perspectiveWatcher.cleanPerspective( page );
+    }
+    return result;
+  }
+
+  public Properties createProperties( )
+  {
+    final Properties properties = new Properties();
+    final IProject activeProject = getCurrentProject();
+    if( activeProject != null )
+    {
+      final String projectPath = activeProject.getName();
+      properties.put( MEMENTO_PROJECT, projectPath );
+    }
+    final Scenario currentScenario = getCurrentScenario();
+    if( currentScenario != null )
+    {
+      final String scenarioString = currentScenario.getURI();
+      properties.put( MEMENTO_SCENARIO, scenarioString );
+    }
+    return properties;
   }
 }

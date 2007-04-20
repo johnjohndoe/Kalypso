@@ -38,9 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.contexts;
 
 import org.eclipse.core.commands.IHandler;
+
+import de.renew.workflow.contexts.ContextType;
+import de.renew.workflow.contexts.EWizardType;
+import de.renew.workflow.contexts.EditorContext;
+import de.renew.workflow.contexts.EditorInputContext;
+import de.renew.workflow.contexts.ExtensionContext;
+import de.renew.workflow.contexts.MultiContext;
+import de.renew.workflow.contexts.PerspectiveContext;
+import de.renew.workflow.contexts.ViewContext;
+import de.renew.workflow.contexts.WizardContext;
 
 /**
  * Creates the context handlers for the basic workflow contexts. These are {@link PerspectiveContext},

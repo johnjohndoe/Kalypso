@@ -38,27 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow;
+package de.renew.workflow.contexts;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.commands.IHandler;
+
+import de.renew.workflow.contexts.ContextType;
 
 /**
- * This command handler does nothing.
+ * An instance of {@link IContextHandlerFactory} can create context handlers for certain subclasses of
+ * {@link ContextType}. These handlers do something to enable the context in the workbench.
  * 
- * @author Gernot Belger
+ * @author Stefan Kurzbach
  */
-public class NullWorkflowCommandHandler extends WorkflowCommandHandler
+public interface IContextHandlerFactory
 {
   /**
-   * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
+   * Returns the handler for the given context or <code>null</code> if the context is not known to this handler.
    */
-  @Override
-  protected IStatus executeInternal( final ExecutionEvent event )
-  {
-    // Nothing is what we do here
-    return Status.OK_STATUS;
-  }
-
+  public IHandler getHandler( final ContextType context );
 }

@@ -1,4 +1,4 @@
-package de.renew.workflow;
+package de.renew.workflow.connector;
 
 import java.io.File;
 import java.util.Vector;

@@ -1,5 +1,6 @@
 package de.renew.workflow;
 
+
 public interface CaseTask extends Task
 {
 

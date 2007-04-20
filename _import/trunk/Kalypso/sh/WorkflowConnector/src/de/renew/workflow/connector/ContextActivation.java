@@ -38,19 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports;
+package de.renew.workflow.connector;
 
-
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.ui.INewWizard;
+import de.renew.workflow.contexts.ContextType;
 
 /**
- * Interface used to forward model information to import wizards of type INewWizard
- * 
- * @author antanas
- *
+ * @author Stefan Kurzbach
  */
-public interface INewWizardKalypsoImport extends INewWizard
+public class ContextActivation
 {
-  public void initModelProperties(IEvaluationContext context);
+  private final ContextActivation m_cause;
+
+  private final ContextType m_context;
+
+  private final Object m_result;
+
+  public ContextActivation( final ContextType context, final Object result )
+  {
+    m_context = context;
+    m_result = result;
+    m_cause = null;
+  }
+
+  public ContextActivation( final ContextType context, final Object result, final ContextActivation cause )
+  {
+    m_context = context;
+    m_result = result;
+    m_cause = cause;
+  }
+
+  public ContextActivation getCause( )
+  {
+    return m_cause;
+  }
+
+  public ContextType getContext( )
+  {
+    return m_context;
+  }
+
+  public Object getResult( )
+  {
+    return m_result;
+  }
 }

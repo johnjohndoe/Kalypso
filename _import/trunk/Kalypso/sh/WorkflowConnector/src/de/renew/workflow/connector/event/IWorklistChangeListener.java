@@ -1,4 +1,4 @@
-package de.renew.workflow.event;
+package de.renew.workflow.connector.event;
 
 public interface IWorklistChangeListener
 {

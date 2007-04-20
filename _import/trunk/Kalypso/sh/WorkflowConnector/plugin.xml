@@ -13,7 +13,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="de.renew.workflow.debug.DebugView"
+            class="de.renew.workflow.connectordebug.DebugView"
             id="WorkflowConnector.debugView"
             name="Debug View"/>
    </extension>
@@ -22,9 +22,9 @@
       <objectContribution
             adaptable="false"
             id="WorkflowConnector.WorkItemContribution"
-            objectClass="de.renew.workflow.WorkItem">
+            objectClass="de.renew.workflow.connector.WorkItem">
          <action
-               class="de.renew.workflow.debug.RequestWorkItemActionDelegate"
+               class="de.renew.workflow.connectordebug.RequestWorkItemActionDelegate"
                id="WorkflowConnector.RequestWorkItemAction"
                label="Request Workitem"/>
       </objectContribution>

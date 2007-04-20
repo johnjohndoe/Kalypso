@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Workflow URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#WF_Kalypso1D2D" xmlns="http://www.kalypso.org/afgui/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Workflow URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#WF_Kalypso1D2D" xmlns="http://www.renew.de/workflow/base" xmlns:con="http://www.renew.de/workflow/contexts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Help>NONE</Help>
 	<Name>Kalypso1D2D-Workflow</Name>
-	<Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing">
+	<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing">
 		<Help>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. &#xa;Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. &#xa;Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</Help>
 		<Name>Preprocessing: Modellaufbau</Name>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DataLoad">
@@ -168,8 +168,8 @@
 				</Task>
 			</TaskGroup>
 		</TaskGroup>
-	</Phase>
-	<Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
+	</TaskGroup>
+	<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
 		<Help>Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung &#xa;und/oder Szenarienrechnung durchgeführt werden.</Help>
 		<Name>Processing: Kalibrieren und Rechnen</Name>
 		<TaskGroup context="CalcParams" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcSet">
@@ -188,16 +188,12 @@
 				<Name>Ausgabeknoten bestimmen</Name>
 			</Task>
 		</TaskGroup>
-		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc">
-			<Help>Starten einer Berechnung zur Kalibrierung oder Szenariensimulation</Help>
-			<Name>Berechnung starten</Name>
-			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation">
-				<Help>Startet die Berechnung unter Verwendung eines Kontrolldisplays</Help>
-				<Name>Berechnung durchführen</Name>
-			</Task>
+		<TaskGroup context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation">
+			<Help>Startet die Berechnung unter Verwendung eines Kontrolldisplays</Help>
+			<Name>Berechnung durchführen</Name>
 		</TaskGroup>
-	</Phase>
-	<Phase URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
+	</TaskGroup>
+	<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
 		<Help>Nach der Druchführung der Strömungsberechungen können die Ergebnisse &#xa;hier ausgewertet und visualisiert werden.</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView">
@@ -232,70 +228,70 @@
 				<Name>Gangliniendarstellung</Name>
 			</Task>
 		</TaskGroup>
-	</Phase>
-	<MultiContext id="root">
-		<PerspectiveContext id="1d2dModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
-			<ViewContext id="FeatureView" viewId="org.kalypso.ui.views.featuretemplateview" parent="1d2dModelling">
-				<ExtensionContext id="RoughnessDatabase" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
-					<Parameter name="type" value="featureViewInputContext" />
-					<Parameter name="input" value="templates/roughness.gft" />
-				</ExtensionContext>
-				<ExtensionContext id="CalcParams" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
-					<Parameter name="type" value="featureViewInputContext" />
-					<Parameter name="input" value="templates/control.gft" />
-				</ExtensionContext>
-			</ViewContext>
-			<MultiContext id="MapContext" parent="1d2dModelling">
-				<ViewContext id="MapOutlineView" viewId="org.kalypso.ui.views.outline" parent="MapContext" />
-				<ViewContext id="MapView" viewId="org.kalypso.ui.views.mapView" parent="MapContext">
-					<ExtensionContext id="BaseMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
-						<Parameter name="type" value="mapViewInputContext" />
-						<Parameter name="input" value="maps/base.gmt" />
-						<WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-						<WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+	</TaskGroup>
+	<con:MultiContext id="root">
+		<con:PerspectiveContext id="1d2dModelling" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+			<con:ViewContext id="FeatureView" viewId="org.kalypso.ui.views.featuretemplateview" parent="1d2dModelling">
+				<con:ExtensionContext id="RoughnessDatabase" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type" value="featureViewInputContext" />
+					<con:Parameter name="input" value="templates/roughness.gft" />
+				</con:ExtensionContext>
+				<con:ExtensionContext id="CalcParams" parent="FeatureView" handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type" value="featureViewInputContext" />
+					<con:Parameter name="input" value="templates/control.gft" />
+				</con:ExtensionContext>
+			</con:ViewContext>
+			<con:MultiContext id="MapContext" parent="1d2dModelling">
+				<con:ViewContext id="MapOutlineView" viewId="org.kalypso.ui.views.outline" parent="MapContext" />
+				<con:ViewContext id="MapView" viewId="org.kalypso.ui.views.mapView" parent="MapContext">
+					<con:ExtensionContext id="BaseMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="maps/base.gmt" />
+						<con:WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						<con:WizardContext id="ImportObservations" wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						<!-- 
 							<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						-->
-					</ExtensionContext>
-					<ExtensionContext id="RoughnessMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
-						<Parameter name="type" value="mapViewInputContext" />
-						<Parameter name="input" value="maps/roughness.gmt" />
-						<WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessMap" />
-					</ExtensionContext>
-					<ExtensionContext id="FenetMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
-						<Parameter name="type" value="mapViewInputContext" />
-						<Parameter name="input" value="maps/fenet.gmt" />
-						<ExtensionContext id="1dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-							<Parameter name="type" value="themeContext" />
-							<Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
-							<!-- <WizardContext id="ImportWSPM" wizardId="???" wizardType="NEW_WIZARD" parent="1dElementTheme"/> -->
-							<!-- <WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />	-->
-						</ExtensionContext>
-						<ExtensionContext id="FlowRelationshipTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-							<Parameter name="type" value="themeContext" />
-							<Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelationship" />
-						</ExtensionContext>
-						<ExtensionContext id="2dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-							<Parameter name="type" value="themeContext" />
-							<Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
-							<WizardContext id="Import2dNet" wizardId="org.kalypso.wizards.import1d2d.ImportWizard" wizardType="NEW_WIZARD" parent="2dElementTheme" />
-						</ExtensionContext>
-						<ExtensionContext id="ContLineTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-							<Parameter name="type" value="themeContext" />
-							<Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine" />
-						</ExtensionContext>
-						<ExtensionContext id="RoughnessTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-							<Parameter name="type" value="themeContext" />
-							<Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}RoughnessPolygon" />
-						</ExtensionContext>
-						<ExtensionContext id="BoundaryConditionTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
-							<Parameter name="type" value="themeContext" />
-							<Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
-						</ExtensionContext>
-					</ExtensionContext>
-				</ViewContext>
-			</MultiContext>
-			<ViewContext id="FeatureSelectionView" viewId="org.kalypso.featureview.views.FeatureView" parent="1d2dModelling" />
-		</PerspectiveContext>
-	</MultiContext>
+					</con:ExtensionContext>
+					<con:ExtensionContext id="RoughnessMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="maps/roughness.gmt" />
+						<con:WizardContext id="ImportRoughness" wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessMap" />
+					</con:ExtensionContext>
+					<con:ExtensionContext id="FenetMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="maps/fenet.gmt" />
+						<con:ExtensionContext id="1dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
+							<!-- <con:WizardContext id="ImportWSPM" wizardId="???" wizardType="NEW_WIZARD" parent="1dElementTheme"/> -->
+							<!-- <con:WizardContext id="ImportElevation" wizardId="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard" wizardType="NEW_WIZARD" parent="BaseMap" />	-->
+						</con:ExtensionContext>
+						<con:ExtensionContext id="FlowRelationshipTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="2dElementTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
+							<con:WizardContext id="Import2dNet" wizardId="org.kalypso.wizards.import1d2d.ImportWizard" wizardType="NEW_WIZARD" parent="2dElementTheme" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="ContLineTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="RoughnessTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}RoughnessPolygon" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="BoundaryConditionTheme" parent="FenetMap" handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
+						</con:ExtensionContext>
+					</con:ExtensionContext>
+				</con:ViewContext>
+			</con:MultiContext>
+			<con:ViewContext id="FeatureSelectionView" viewId="org.kalypso.featureview.views.FeatureView" parent="1d2dModelling" />
+		</con:PerspectiveContext>
+	</con:MultiContext>
 </Workflow>

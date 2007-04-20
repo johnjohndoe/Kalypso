@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.contexts;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,8 +49,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+
+import de.renew.workflow.contexts.ExtensionContext;
 
 /**
  * Helper class to read and cache context handler factories from extension point.
@@ -62,7 +63,7 @@ public class ContextHandlerFactoryExtension
 
   private static Map<String, IContextHandlerFactory> THE_FACTORY_MAP = null;
 
-  private final static String CONTEXT_HANDLER_FACTORY_EXTENSION_POINT = "org.kalypso.afgui.contextHandlerFactories";
+  private final static String CONTEXT_HANDLER_FACTORY_EXTENSION_POINT = "de.renew.workflow.model.contextHandlerFactories";
 
   public static IContextHandlerFactory getFactory( final ExtensionContext multiContext )
   {
@@ -93,7 +94,8 @@ public class ContextHandlerFactoryExtension
         catch( final CoreException e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to create contextHandlerFactory extension for id: " + id );
-          KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+          e.printStackTrace();
+          // TODO log
         }
       }
     }

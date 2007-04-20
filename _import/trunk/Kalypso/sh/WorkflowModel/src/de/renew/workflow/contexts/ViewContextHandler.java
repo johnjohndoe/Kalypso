@@ -1,30 +1,28 @@
 /**
  * 
  */
-package org.kalypso.afgui.workflow;
+package de.renew.workflow.contexts;
 
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-
-import de.renew.workflow.WorkflowCommandHandler;
+import org.eclipse.ui.PartInitException;
 
 /**
  * Opens the map view on a given resource and activates a given layer
  * 
  * @author Stefan Kurzbach
  */
-public class ViewContextHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension
+public class ViewContextHandler extends AbstractHandler implements IExecutableExtension
 {
   public static final String CONTEXT_VIEW_ID = "org.kalypso.afgui.contexts.view"; //$NON-NLS-1$
 
@@ -44,7 +42,7 @@ public class ViewContextHandler extends WorkflowCommandHandler implements IHandl
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -52,7 +50,14 @@ public class ViewContextHandler extends WorkflowCommandHandler implements IHandl
     if( activeWorkbenchWindow != null && m_viewId != null )
     {
       final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-      workbenchPage.showView( m_viewId );
+      try
+      {
+        workbenchPage.showView( m_viewId );
+      }
+      catch( final PartInitException e )
+      {
+        throw new ExecutionException( "Could not show view " + m_viewId, e );
+      }
       return Status.OK_STATUS;
     }
     else
@@ -71,10 +76,6 @@ public class ViewContextHandler extends WorkflowCommandHandler implements IHandl
     {
       final Map parameterMap = (Map) data;
       m_viewId = (String) parameterMap.get( CONTEXT_VIEW_ID );
-    }
-    else
-    {
-      logger.severe( "Could not initialize with data of type " + data.getClass().getName() ); //$NON-NLS-1$
     }
   }
 }

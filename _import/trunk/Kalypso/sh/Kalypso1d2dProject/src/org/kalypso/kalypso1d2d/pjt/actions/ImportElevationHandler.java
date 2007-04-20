@@ -43,11 +43,12 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -64,12 +65,10 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 
-import de.renew.workflow.WorkflowCommandHandler;
-
 /**
  * @author madanago
  */
-public class ImportElevationHandler extends WorkflowCommandHandler
+public class ImportElevationHandler extends AbstractHandler
 {
   private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard";
 
@@ -77,13 +76,13 @@ public class ImportElevationHandler extends WorkflowCommandHandler
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     try
     {
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-      final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
+      final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class );
       final IFolder modelFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
       final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
@@ -101,34 +100,22 @@ public class ImportElevationHandler extends WorkflowCommandHandler
 
       if( wizardDialog.open() == Window.OK )
       {
-        try
-        {
-          final SelectWidgetHandler handler = new SelectWidgetHandler();
-          final Map<String, String> newParameterMap = new HashMap<String, String>();          
-          newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
-          newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
-          handler.setInitializationData( null, null, newParameterMap );
-          final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
-          handler.execute( exc );
-        }
-        catch( final Throwable th )
-        {
-          th.printStackTrace();
-        }
+        final SelectWidgetHandler handler = new SelectWidgetHandler();
+        final Map<String, String> newParameterMap = new HashMap<String, String>();
+        newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
+        newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
+        handler.setInitializationData( null, null, newParameterMap );
+        final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
+        handler.execute( exc );
 
         return Status.OK_STATUS;
       }
-      else
-      {
-        return Status.CANCEL_STATUS;
-      }
     }
-    catch( Throwable th )
+    catch( final CoreException e )
     {
-      th.printStackTrace();
-
-      return Status.CANCEL_STATUS;
+      throw new ExecutionException( "Could not import elevation model." );
     }
 
+    return Status.CANCEL_STATUS;
   }
 }

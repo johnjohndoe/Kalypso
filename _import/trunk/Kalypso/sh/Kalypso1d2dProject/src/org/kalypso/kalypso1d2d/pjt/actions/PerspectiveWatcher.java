@@ -103,14 +103,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
           try
           {
             workbench.showPerspective( Perspective.ID, activeWorkbenchWindow );
-            final IViewReference[] viewReferences = workbenchPage.getViewReferences();
-            for( final IViewReference reference : viewReferences )
-            {
-              if( !shouldKeepView( reference ) )
-              {
-                workbenchPage.hideView( reference );
-              }
-            }
+            cleanPerspective( workbenchPage );
           }
           catch( final Throwable e )
           {
@@ -120,10 +113,23 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
           }
           return Status.OK_STATUS;
         }
+
       };
       job.schedule();
       m_currentProject = newProject;
       m_currentScenario = scenario;
+    }
+  }
+
+  public void cleanPerspective( final IWorkbenchPage workbenchPage )
+  {
+    final IViewReference[] viewReferences = workbenchPage.getViewReferences();
+    for( final IViewReference reference : viewReferences )
+    {
+      if( !shouldKeepView( reference ) )
+      {
+        workbenchPage.hideView( reference );
+      }
     }
   }
 
@@ -169,33 +175,6 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
-   */
-  @Override
-  public void partActivated( final IWorkbenchPart part )
-  {
-    if( part instanceof IViewPart && !shouldKeepView( (IViewPart) part ) )
-    {
-      final IWorkbenchPage page = part.getSite().getPage();
-      final IViewPart[] viewStack = page.getViewStack( (IViewPart) part );
-      for( final IViewPart otherPart : viewStack )
-      {
-        if( otherPart == part )
-        {
-          continue;
-        }
-        else
-        {
-          if( !shouldKeepView( otherPart ) )
-          {
-            page.hideView( otherPart );
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
   @Override
@@ -210,10 +189,6 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
       mapPanel.removeModellListener( m_mapModellContextSwitcher );
       m_mapModellContextSwitcher.removeContextService( contextService );
       mapPanel.getWidgetManager().setActualWidget( null );
-    }
-    else if( part instanceof SimulationModelDBView )
-    {
-      Kalypso1d2dProjectPlugin.getActiveWorkContext().setActiveProject( null );
     }
   }
 
@@ -233,31 +208,9 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     }
   }
 
-  protected boolean shouldKeepView( final IViewReference reference )
+  private boolean shouldKeepView( final IViewReference reference )
   {
     final String viewId = reference.getId();
-    if( shouldKeepView( viewId ) )
-    {
-      return true;
-    }
-    else if( reference.getPartName().equals( "Welcome" ) )
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  protected boolean shouldKeepView( final IViewPart view )
-  {
-    final String viewId = view.getSite().getId();
-    return shouldKeepView( viewId );
-  }
-
-  private boolean shouldKeepView( final String viewId )
-  {
     if( WorkflowView.ID.equals( viewId ) )
     {
       return true;
@@ -267,6 +220,10 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
       return true;
     }
     else if( GisMapOutlineView.ID.equals( viewId ) )
+    {
+      return true;
+    }
+    else if( reference.getPartName().equals( "Welcome" ) )
     {
       return true;
     }

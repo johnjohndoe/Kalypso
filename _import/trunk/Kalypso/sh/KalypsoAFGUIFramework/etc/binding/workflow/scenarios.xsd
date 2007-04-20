@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.kalypso.org/afgui/scenarios" xmlns:scm="http://www.kalypso.org/afgui/scenarios" xmlns:rwf="http://www.renew.de/workflow/cases" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
 
-	<import namespace="http://www.renew.de/workflow/cases" schemaLocation="platform:/resource/WorkflowModel/etc/binding/workflow/workflow.xsd"/>
+	<import namespace="http://www.renew.de/workflow/cases" schemaLocation="platform:/resource/WorkflowModel/etc/binding/workflow/cases.xsd"/>
 
 	<!-- ==============================================================
 		elements and types

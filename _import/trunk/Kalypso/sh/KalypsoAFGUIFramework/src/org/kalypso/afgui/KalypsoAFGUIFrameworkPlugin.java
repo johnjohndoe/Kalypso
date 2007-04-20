@@ -3,11 +3,11 @@ package org.kalypso.afgui;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.afgui.workflow.IWorkflowSystem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
-import de.renew.workflow.WorkflowConnectorPlugin;
+import de.renew.workflow.base.IWorkflowSystem;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * The activator class controls the plug-in life cycle

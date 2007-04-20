@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.renew.de/workflow/base" xmlns:kwf="http://www.renew.de/workflow/base" xmlns:rca="http://www.renew.de/workflow/contexts" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0" xml:lang="en">
+
+	<import namespace="http://www.renew.de/workflow/contexts" schemaLocation="contexts.xsd" />
+
+	<!-- ==============================================================
+		elements and types
+		============================================================== -->
+
+	<simpleType name="EHelpType">
+		<annotation>
+			<appinfo>
+				<jaxb:typesafeEnumClass />
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="PLAIN_TEXT" />
+			<enumeration value="HTML" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EActivityExeState">
+		<annotation>
+			<appinfo>
+				<jaxb:typesafeEnumClass />
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="AVAILABLE" />
+			<enumeration value="UNAVAILABLE" />
+			<enumeration value="RUNNING" />
+			<enumeration value="FINISHED" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EActivityType">
+		<annotation>
+			<appinfo>
+				<jaxb:typesafeEnumClass />
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="SYNCHRONOUS" />
+			<enumeration value="ASYNCHRONOUS" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="Activity">
+		<sequence>
+			<element name="Help" maxOccurs="1">
+				<complexType>
+					<simpleContent>
+						<extension base="string">
+							<attribute name="type" type="kwf:EHelpType" />
+						</extension>
+					</simpleContent>
+				</complexType>
+			</element>
+			<element name="Name" type="string" maxOccurs="1" minOccurs="1" />
+		</sequence>
+		<attribute name="context" type="IDREF">
+			<annotation>
+				<appinfo>
+					<jaxb:property>
+						<jaxb:baseType name="de.renew.workflow.contexts.ContextType" />
+					</jaxb:property>
+				</appinfo>
+			</annotation>
+		</attribute>
+		<attribute name="type" type="kwf:EActivityType" default="SYNCHRONOUS" />
+		<attribute name="state" type="kwf:EActivityExeState" default="AVAILABLE" />
+		<attribute name="URI" type="ID" use="required" />
+	</complexType>
+
+	<complexType name="Task">
+		<complexContent>
+			<extension base="kwf:Activity">
+				<sequence>
+					<element name="activity" type="kwf:Activity" maxOccurs="unbounded">
+						<annotation>
+							<appinfo>
+								<jaxb:property name="Activities" />
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TaskGroup">
+		<complexContent>
+			<extension base="kwf:Task">
+				<choice maxOccurs="unbounded">
+					<annotation>
+						<appinfo>
+							<jaxb:property name="Tasks" />
+						</appinfo>
+					</annotation>
+					<element name="Task" type="kwf:Task" />
+					<element name="TaskGroup" type="kwf:TaskGroup" />
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Workflow">
+		<complexType>
+			<complexContent>
+				<extension base="kwf:TaskGroup">
+					<sequence>
+						<element ref="rca:MultiContext" minOccurs="0" maxOccurs="1" />
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+</schema>

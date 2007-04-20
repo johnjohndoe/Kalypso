@@ -1,4 +1,4 @@
-package de.renew.workflow;
+package de.renew.workflow.connector;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
