@@ -1017,7 +1017,7 @@
             categoryId="org.kalypso.ogc.gml.map.category"
             description="Move left"
             id="org.kalypso.ogc.gml.map.MoveLeftCommand"
-            name="Move left"/>  
+            name="Move left"/>                                     
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             description="Zoom to active layer"
@@ -1029,6 +1029,20 @@
     <viewContribution
           id="org.kalypso.ui.views.mapView.actions"
           targetID="org.kalypso.ui.views.mapView">
+<!-- 
+TODO: unfortunately the save button is always disabled
+
+			<action disabledIcon="icons/map/save_edit_disabled.gif"
+				toolbarPath="karte/actions"
+				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label"
+				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.tooltip"
+				icon="icons/feature/save_GML.gif"
+				class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
+				style="push"
+				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+				id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
+			</action>
+-->			
 			<action
 				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label"
 				icon="icons/map/maximize2.gif" style="push"
@@ -1102,7 +1116,7 @@
           			<parameter name="commandId" 
                      	value="org.kalypso.ogc.gml.map.MoveLeftCommand"/>
        			</class>
-			</action>	
+			</action>																
 			<action
 				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.label"
 				icon="icons/map/zoomactivelayer2.gif" style="push"
@@ -1156,7 +1170,7 @@
              label="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.label"
              style="push"
              toolbarPath="outline/tools"
-             tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.tooltip"/>        
+             tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.tooltip"/>
        <menu
              id="org.kalypso.ui.views.outline.actions.tools"
              label="Tools"
@@ -1182,7 +1196,7 @@
           commandId="org.kalypso.ogc.gml.map.MoveUpCommand"/>
     <handler
           class="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
-          commandId="org.kalypso.ogc.gml.map.MoveDownCommand"/>   
+          commandId="org.kalypso.ogc.gml.map.MoveDownCommand"/>                                               
     <handler
           class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
           commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"/>                                                                
@@ -1218,7 +1232,7 @@
           commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
           contextId="org.eclipse.ui.contexts.window"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1+ARROW_DOWN"/>    
+          sequence="M1+ARROW_DOWN"/>                                                
     <key
           commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
           contextId="org.eclipse.ui.contexts.window"
