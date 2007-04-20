@@ -67,16 +67,21 @@ class TriangleData implements SurfacePatchVisitable
   private static int simple = 0;
 
   public TriangleData( LinearRing ring )
-  {
-    
+  {    
     this.ring = ring;
-    _divider = new TriangleFourDividerAlgorithm(ring);
+    // Choice of the Triangle Division Algoritm
+    /*  1. */_divider = new TriangleFourDividerAlgorithm(ring);
+    /*  2. */ //_divider = new TriangleDivider(ring);
     polygon = new Polygon( ring, null, ring.getFactory() );
     Coordinate[] coords = ring.getCoordinates();
     planeEquation = calculateTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
   }
 
+  /**
+   * Calculate Center Elevatation from an Array of Coordinates 
+   *  representing the GM_Surface
+   */
   private double calculateCenterElevation( Coordinate[] coords )
   {
     double xCenter = (coords[0].x + coords[1].x + coords[2].x) / 3;
@@ -134,7 +139,7 @@ class TriangleData implements SurfacePatchVisitable
     }
 
     Coordinate coord = coords[0];
-
+    
     double x1 = coord.x;
     double y1 = coord.y;
     double z1 = coord.z;

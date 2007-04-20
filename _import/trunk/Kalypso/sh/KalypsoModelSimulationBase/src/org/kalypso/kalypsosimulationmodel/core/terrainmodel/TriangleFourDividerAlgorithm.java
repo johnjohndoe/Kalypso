@@ -56,8 +56,11 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
 
 /**
- * @author madanago
- *
+ * @author Madanagopal
+ * 
+ * Divide the GM_Surface into Four GM_Surfaces using the Middle Points of Each Side of a GM_Surface (Triangle) 
+ * to create an another triangle. This approach would result in more number of Comparisions in dividing the triangle and 
+ * much efficient then the TriangleThreeDividerAlgorithm.java 
  */
 public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfacePatchVisitable
 {
@@ -67,15 +70,23 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfaceP
   {
    this.ring = _ring;
   }  
+  
+  /**
+   * checks if further division of triangles is needed or not.
+   */
   public boolean furtherDivisionNeeded( GM_Position[] coOrds )
   {
-    double max = PlaneUtils.convertToTwoDecimals( SampleColorModelInterval.getInstance().getInterval());
+    double max = PlaneUtils.convertToTwoDecimals( ColorModelIntervalSingleton.getInstance().getInterval());
     System.out.println("max :" +max);    
     double _z1 = coOrds[0].getZ();
     double _z2 = coOrds[1].getZ();
     double _z3 = coOrds[2].getZ();
     
-    GM_Position _center = PlaneUtils.calculateCenterCoOrdinate( coOrds );    
+    GM_Position _center = PlaneUtils.calculateCenterCoOrdinate( coOrds );
+
+    /**
+     * Implementation to check if the three points of a triangle form a Straight Line
+     */ 
 
     double _inX_1 = Math.abs(coOrds[0].getX() - coOrds[1].getX());
     double _inY_1 = Math.abs(coOrds[0].getY() - coOrds[1].getY());
@@ -84,7 +95,14 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfaceP
     double _inX_2 = Math.abs(coOrds[1].getX() - coOrds[2].getX());
     double _inY_2 = Math.abs(coOrds[1].getY() - coOrds[2].getY());
     double _inZ_2 = Math.abs(coOrds[1].getZ() - coOrds[2].getZ());
-    
+
+    /**
+     * Represents  -         -2
+     *            | |x1| |x2| |
+     *            | |y1| |y2| |
+     *            | |z1| |z1| |
+     *             -         - 
+     */
     double specA = PlaneUtils.convertToTwoDecimals((
                                          (_inX_1 * _inX_2)+
                                          (_inY_1 * _inY_2)+
@@ -96,25 +114,37 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfaceP
                                          (_inZ_1 * _inZ_2))
                                          );
     
+    /**
+     *      Represents x1^2 + y1^2 + z1^2   *
+     *                 x2^2 + y2^2 + z2^2
+     */
     double specB = PlaneUtils.convertToTwoDecimals( 
                                          ((_inX_1 * _inX_1)+(_inY_1 * _inY_1)+(_inZ_1 * _inZ_1))*
                                          ((_inX_2 * _inX_2)+(_inY_2 * _inY_2)+(_inZ_2 * _inZ_2))
                                         );
-        
-    if((Math.abs( _z1 - _center.getZ() ) >= max) || 
+    
+    /**
+     *  Checks if the difference between the elevations of the corners of GM_Surface with
+     *  the elevation of the center is more that the max, which represents the discretisation interval.  
+     */
+    if( (Math.abs( _z1 - _center.getZ() ) >= max) || 
         (Math.abs( _z2 - _center.getZ() ) >= max) ||
         (Math.abs( _z3 - _center.getZ() ) >= max))
-    {
+    {  // Checks if the Triangles form a straight Line
       if (specA != specB)
       return true;
     }
     return false;
   }  
 
+  /**
+   *  Given a GM_Surface, this method returns the List of divided GM_Surfaces that
+   *  each representing an elevation with the variation that should comply with 
+   *  standard Elevation Discretisation  
+   */
   public HashMap<GM_Surface, Double> visitThisDivisionSurface( GM_Surface pos )
   {
     List<GM_Position[]> toSplit = new ArrayList<GM_Position[]>();
-    //List<GM_Surface> notToSplit = new ArrayList<GM_Surface>();
     HashMap<GM_Surface, Double> notToSplit = new HashMap<GM_Surface, Double>();
     toSplit.add( PlaneUtils.getGM_PositionForThisSurface(pos) );
     while( !toSplit.isEmpty() )
@@ -122,10 +152,12 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfaceP
       final GM_Position[] splitCandidate = toSplit.remove( 0 );
 
       System.out.println( "-----------------------------------------" );
+      /**
+       * Checks if a GM_Surface should be divided further
+       */
       if( this.furtherDivisionNeeded( splitCandidate ) )
       {
         System.out.println( "toSp" + Arrays.asList( splitCandidate ) );
-        final GM_Position center = PlaneUtils.calculateCenterCoOrdinate( splitCandidate );
         final GM_Position[] tri1 = new GM_Position[] { 
                                               splitCandidate[0],
                                               PlaneUtils.calculateMidPoint( new GM_Position[] {splitCandidate[0],splitCandidate[1]}),
@@ -154,15 +186,19 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfaceP
         toSplit.add( tri2 );
         toSplit.add( tri3 );
         toSplit.add( tri4 );
-        System.out.println( "tri1" + Arrays.asList( tri1 ) );
-        System.out.println( "tri2" + Arrays.asList( tri2 ) );
-        System.out.println( "tri3" + Arrays.asList( tri3 ) );
-        System.out.println( "tri4" + Arrays.asList( tri4 ) );   
+//        System.out.println( "tri1" + Arrays.asList( tri1 ) );
+//        System.out.println( "tri2" + Arrays.asList( tri2 ) );
+//        System.out.println( "tri3" + Arrays.asList( tri3 ) );
+//        System.out.println( "tri4" + Arrays.asList( tri4 ) );   
       }
       else
       {
         try
         {
+          /**
+           * Creates a GM_Surface using the coordinates and adds it to the 
+           * HashMap along with the center coordinate of GM_Surface.
+           */
           GM_Surface createGM_Surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface
                                        (  splitCandidate,
                                           HMOTerrainElevationModel.NO_INTERIOR_POS,
@@ -195,10 +231,17 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm,SurfaceP
     
     GM_Surface surfacePatch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.
         createGM_Surface( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, IElevationProvider.CRS_GAUSS_KRUEGER );
-
+    
+    /**
+     * toBeVisited HashMap is cached..this prevents from recalculating the Triangles from a 
+     * Given Surface
+     */
     if (toBeVisited.isEmpty()) 
        toBeVisited  = visitThisDivisionSurface( surfacePatch );
 
+    /**
+     * iterates through the complete HashMap and paints all the triangles
+     */ 
     for (Iterator iter = toBeVisited.entrySet().iterator(); iter.hasNext();)
     {
         Map.Entry entry = (Map.Entry)iter.next();        

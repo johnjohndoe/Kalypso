@@ -42,33 +42,33 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 
 /**
- * @author madanago
- *
+ * @author Madanagopal
+ * Singleton - Represents the model to provide Color Interval Stepper's value
  */
-public class SampleColorModelInterval
+public class ColorModelIntervalSingleton
 {
-
   private double interval;
-  private static SampleColorModelInterval instance = null;
+  private static ColorModelIntervalSingleton instance = null;
 
-  private SampleColorModelInterval()
+  // private constructor
+  private ColorModelIntervalSingleton()
   {   
   }
-  
-  
+ 
   public double getInterval( )
   {
     return interval;
   }
 
-  public void setInterval( double interval )
+  public void setInterval( double interval1 )
   {
-    this.interval = interval;
+    this.interval = interval1;
   }   
     
-  public static SampleColorModelInterval getInstance() {
+  // Provides restriction to create another object. 
+  public static ColorModelIntervalSingleton getInstance() {
     if (instance== null) { 
-    instance = new SampleColorModelInterval();
+    instance = new ColorModelIntervalSingleton();
     }
   return instance;
   }

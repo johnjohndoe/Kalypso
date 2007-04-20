@@ -55,10 +55,10 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITriangleAlgorithm;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ListRetriever;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SampleColorModelInterval;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TriangleDivider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TriangleThreeDividerAlgorithm;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -101,7 +101,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
   private GeoTransform projection;
 
   private SurfacePatchVisitable hmoTerrain;
-  private SampleColorModelInterval sampleColorModel;
+  private ColorModelIntervalSingleton sampleColorModel;
   private GM_Position[] ex;
  
 
@@ -126,7 +126,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       ascElevationModel = (SurfacePatchVisitable) elevationProvider;
 
       colorModel = ElevationColorControl.getColorModel( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
-      SampleColorModelInterval.getInstance().setInterval( colorModel.getDiscretisationInterval() );
+      ColorModelIntervalSingleton.getInstance().setInterval( colorModel.getDiscretisationInterval() );
     }
     else
     {

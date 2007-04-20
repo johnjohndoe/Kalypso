@@ -48,6 +48,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.IColorModelPreferenceConstants;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 
 /**
  * @author madanago
@@ -228,7 +229,8 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
   public static void setColorIndex( int colorIndex1 )
   {
     ElevationColorControl.colorIndex = colorIndex1;
-  }
+    ColorModelIntervalSingleton.getInstance().setInterval( ElevationColorControl.colorIndex );
+}
 
   public static boolean getMinMaxStatus( )
   {
@@ -251,6 +253,7 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     ElevationColorControl.transparencyIndex = transparencyIndex1;
   }
   
+  
   public static void setMaxElevation( double max )
   {
     m_maxElevation = max;
@@ -269,8 +272,7 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
   public static double getMinElevation( )
   {
     return m_minElevation;
-  }
-  
+  }  
   
   private static final void setPreferenceColor(String key, Color color)
   {
@@ -279,5 +281,10 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
         preferenceStore, 
         LINE_NO_COLOR,
         rgb );
+  }
+  
+  public double getDiscretisationInterval( )
+  {    
+    return Math.abs((m_maxElevation - m_minElevation))/getColorIndex();
   }
 }

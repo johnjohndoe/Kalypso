@@ -49,11 +49,15 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
- * @author madanago
- *
+ * @author Madanagopal
+ *  API for common methods required in Elevation Model..
  */
 public class PlaneUtils
 {
+  
+  /** 
+   * Converts a double into a double with two decimal places. 
+   */
   public static double convertToTwoDecimals( double r )
   {
     BigDecimal bd = new BigDecimal(r);
@@ -61,6 +65,9 @@ public class PlaneUtils
     return bd.doubleValue();   
   }
   
+  /**
+   * Converts a GM_Surface into an array of GM_Position[] Array.
+   */
   public static GM_Position[] getGM_PositionForThisSurface(GM_Surface surface) {
     
     GM_Position[] pos = null;
@@ -76,6 +83,10 @@ public class PlaneUtils
     }    
     return pos;
   }
+  
+  /**
+   * Calculates the center Co-ordinate from a List of GM_Positions 
+   */
   public static GM_Position calculateCenterCoOrdinate( GM_Position[] coords )
   {
     
@@ -144,7 +155,4 @@ public class PlaneUtils
       return new double[] { -A / C, -B / C, D / C };
     }
   }
-  
-  
-
 }
