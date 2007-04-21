@@ -100,7 +100,7 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     m_simModelProvider = new SzenarioSourceProvider( this );
     handlerService.addSourceProvider( m_simModelProvider );
     m_registries.add( handlerService );
-    
+
     restoreState( properties );
   }
 
@@ -302,13 +302,13 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
   public boolean canStopTask( final Task task )
   {
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final MessageDialog confirmDialog = new MessageDialog( activeShell, "Ungespeicherte Änderungen", null, "Es gibt ungespeicherte Änderungen. Möchten Sie die Änderungen speichern?", MessageDialog.QUESTION, new String[] {
-        "Ja", "Nein", "Abbrechen" }, 1 );
+    final MessageDialog confirmDialog = new MessageDialog( activeShell, "Ungespeicherte Änderungen", null, "Es gibt ungespeicherte Änderungen. Was möchten Sie tun?", MessageDialog.QUESTION, new String[] {
+        "Speichern", "Verwerfen", "Abbrechen" }, 1 );
     final boolean result;
     final int decision = confirmDialog.open();
+    final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_simModelProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     if( decision == 0 )
     {
-      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_simModelProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
       try
       {
         final IRunnableWithProgress op = new IRunnableWithProgress()
@@ -341,6 +341,8 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     }
     else if( decision == 1 )
     {
+      //discard changes, reload model
+      dataProvider.reloadModel();
       result = true;
     }
     else

@@ -8,8 +8,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.management.monitor.MonitorMBean;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -136,7 +134,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       if( szenarioFolder != null )
         szenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
     }
@@ -147,6 +145,26 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       final String gmlLocation = entry.getValue();
 
       resetKeyForProject( szenarioFolder, wrapperClass, gmlLocation );
+    }
+  }
+
+  public void reloadModel( )
+  {
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    for( final KeyPoolListener listener : m_keyMap.values() )
+    {
+      final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
+      if( keyInfo.isDirty() )
+      {
+        try
+        {
+          keyInfo.onLoaderObjectInvalid( keyInfo.getObject(), false );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -274,7 +292,10 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
         final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
         final KeyInfo infoForKey = pool.getInfoForKey( key );
         monitor.worked( 10 );
-        infoForKey.saveObject( new SubProgressMonitor( monitor, 100 ) );
+        if( infoForKey.isDirty() )
+        {
+          infoForKey.saveObject( new SubProgressMonitor( monitor, 100 ) );
+        }
       }
     }
     catch( final LoaderException e )
