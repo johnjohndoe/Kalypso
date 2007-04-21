@@ -68,7 +68,7 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
     if( !project.exists() )
       return;
 
-    final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     final IProject currentProject = activeWorkContext.getCurrentProject();
     // TODO: better the workflow context should be a resource listener and deactivate it himself
     if( project.equals( currentProject ))

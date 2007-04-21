@@ -74,7 +74,7 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     final IIntroManager introManager = workbench.getIntroManager();
     introManager.closeIntro( introManager.getIntro() );
 
-    Kalypso1d2dProjectPlugin.getActiveWorkContext().setActiveProject( project );
+    Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );
 
     // Make sure that sim-view and workflow-view are visible?
 

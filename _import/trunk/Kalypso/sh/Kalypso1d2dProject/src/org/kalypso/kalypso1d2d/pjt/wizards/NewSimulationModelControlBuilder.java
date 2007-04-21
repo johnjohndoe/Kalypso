@@ -209,7 +209,7 @@ public class NewSimulationModelControlBuilder
     {
       String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
-      final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+      final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
       IScenarioManager workflowDB = activeWorkContext.getScenarioManager();
       if( workflowDB == null )
       {

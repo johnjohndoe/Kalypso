@@ -30,9 +30,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
 
-  private static final String LAST_PROJECT = "lastProject";
-
-  private static ActiveWorkContext m_activeWorkContext;
+  private ActiveWorkContext m_activeWorkContext;
 
   /**
    * The constructor
@@ -111,7 +109,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     return getDefault().getImageRegistry().get( key );
   }
 
-  public static ActiveWorkContext getActiveWorkContext( )
+  public ActiveWorkContext getActiveWorkContext( )
   {
     return m_activeWorkContext;
   }
