@@ -73,7 +73,13 @@
              class="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
              icon="icons/nuvola_select/loop.png"
              id="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
-             name="Aktivitäten"/>         
+             name="Aktivitäten"/>
+       <view
+             allowMultiple="false"
+             class="org.eclipse.ui.navigator.CommonNavigator"
+             icon="icons/tree.gif"
+             id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"
+             name="Szenarien"/>         
    </extension>
    
    	
@@ -296,5 +302,80 @@
       <contextHandlerFactory
             class="org.kalypso.kalypso1d2d.pjt.actions.KalypsoContextHandlerFactory"
             id="kalypsoContextHandlerFactory"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
+      <viewerContentBinding viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+         <includes>
+            <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
+            <contentExtension pattern="org.kalypso.kalypso1d2d.pjt.navigator.filters.*"/>
+            <contentExtension pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"/>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <commonFilter
+            activeByDefault="true"
+            description="Nur Kalypso1d2d-Projekte anzeigen"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.filters.Kalypso1d2dProjects"
+            name="Nur Kalypso1d2d-Projekte anzeigen">
+         <filterExpression>
+    	    <and>
+				<instanceof value="org.eclipse.core.resources.IProject"/>        
+				<not>
+					<test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+                </not>
+	        </and>
+         </filterExpression>
+      </commonFilter>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ScenarioContentProvider"
+            icon="icons/nuvola_select/ledblue.png"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"
+            labelProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ScenarioLabelProvider"
+            name="Szenario"
+            priority="normal">
+         <triggerPoints>
+            <or>
+	        	<and>
+					<instanceof value="org.eclipse.core.resources.IProject"/>        
+					<test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+		        </and>
+		        <instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+               <instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
+            </or>
+         </possibleChildren>
+      </navigatorContent>
+      <commonFilter
+            activeByDefault="true"
+            description="Ressourcen ausblenden"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.filters.StarDotStarResources"
+            name="Ressourcen ausblenden">
+         <filterExpression>
+         	<and>
+         		<or>
+					<instanceof value="org.eclipse.core.resources.IFile"/>
+					<instanceof value="org.eclipse.core.resources.IFolder"/>
+         		</or>
+         		<not>
+					<test
+	                    forcePluginActivation="true"
+	                    property="org.eclipse.core.resources.name"
+	                    value="imports"/>
+				</not>
+         	</and>
+         </filterExpression>
+      </commonFilter>
    </extension>
 </plugin>
