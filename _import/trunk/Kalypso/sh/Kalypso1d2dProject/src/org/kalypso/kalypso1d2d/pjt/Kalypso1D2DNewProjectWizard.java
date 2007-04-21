@@ -85,7 +85,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
         Kalypso1D2DProjectNature.addNature( project );
 
         /* Also activate new project */
-        Kalypso1d2dProjectPlugin.getActiveWorkContext().setActiveProject( project );
+        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );
       }
       catch( CoreException e )
       {

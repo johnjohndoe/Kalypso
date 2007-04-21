@@ -58,7 +58,7 @@ public class WorkflowView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_workflowControl.createControl( parent );
-    m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+    m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
     handleContextChanged(m_activeWorkContext.getCurrentScenario());    
   }

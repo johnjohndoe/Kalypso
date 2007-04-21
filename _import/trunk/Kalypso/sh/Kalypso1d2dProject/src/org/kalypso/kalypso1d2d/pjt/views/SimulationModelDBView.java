@@ -106,7 +106,7 @@ public class SimulationModelDBView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_activeWorkContext = Kalypso1d2dProjectPlugin.getActiveWorkContext();
+    m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextChangeListener );
   }
 
