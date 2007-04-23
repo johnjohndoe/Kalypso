@@ -130,7 +130,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
       }
 
-//      getLayerTable().setFocusedFeature( feature, ftp );
+      // getLayerTable().setFocusedFeature( feature, ftp );
     }
   };
 
@@ -384,7 +384,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         {
           public void run( )
           {
-            creator.updateControlSize( true );
+            if( !scrolledComposite.isDisposed() )
+              creator.updateControlSize( true );
           }
         } );
       }
