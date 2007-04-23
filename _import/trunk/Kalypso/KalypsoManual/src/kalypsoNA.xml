@@ -22,8 +22,7 @@
     <mediaobject>
       <imageobject>
         <imagedata align="center"
-                   fileref="img/modelle/kalypso_na/modellkonzept_na.png"
-                   scale="100" />
+                   fileref="img/kalypso_na/modellkonzept_na.png" scale="100" />
       </imageobject>
     </mediaobject>
   </figure>
@@ -114,7 +113,7 @@
 
     <para>Datenaufbereitung:</para>
 
-    <itemizedlist>
+    <orderedlist>
       <listitem>
         <para>Teilgebietsuntergliederung</para>
       </listitem>
@@ -160,10 +159,79 @@
       <listitem>
         <para>Ermittlung der Zeitflächenfunktion je Teilgebiet</para>
       </listitem>
-    </itemizedlist>
+    </orderedlist>
 
     <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
     Basismodelles in der Oberfläche begonnen werden.</para>
+
+    <section id="kalypso_na-Abgrenzung">
+      <title>Abgrenzung der Teilgebiete</title>
+
+      <indexterm>
+        <see>Teilgebietsuntergliederung</see>
+      </indexterm>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title id="kalypso_na-Systemelemente">Verknüpfung der
+      Systemelemente</title>
+
+      <indexterm>
+        <primary>Systemelementverknüpfung</primary>
+      </indexterm>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title></title>
+
+      <para></para>
+    </section>
   </section>
 
   <section id="kalypso_na-Preprozessing">
@@ -179,7 +247,7 @@
       <mediaobject>
         <imageobject>
           <imagedata align="center"
-                     fileref="img/modelle/kalypso_na/arbeitsschritte_na.png"
+                     fileref="img/kalypso_na/arbeitsschritte_na.png"
                      scale="60" />
         </imageobject>
       </mediaobject>
@@ -714,7 +782,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/modelle/kalypso_na/diagrammtypen-na.png"
+                       fileref="img/kalypso_na/diagrammtypen-na.png"
                        scale="100" />
           </imageobject>
         </mediaobject>
@@ -747,7 +815,7 @@
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                           fileref="img/modelle/kalypso_na/diagramm_neu_schritte-na.png"
+                           fileref="img/kalypso_na/diagramm_neu_schritte-na.png"
                            scale="80" />
               </imageobject>
             </mediaobject>
@@ -774,8 +842,8 @@
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                           fileref="img/modelle/kalypso_na/diagramm_import_schritte-na.png"
-                           scale="80" />
+                           fileref="img/kalypso_na/diagramm_import_schritte-na.png"
+                           scale="90" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -2323,7 +2391,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/modelle/kalypso_na/kalinin-dialog-na.png"
+                       fileref="img/kalypso_na/kalinin-dialog-na.png"
                        scale="100" />
           </imageobject>
         </mediaobject>
@@ -3252,7 +3320,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/modelle/kalypso_na/zeitreihen_control-na.png"
+                       fileref="img/kalypso_na/zeitreihen_control-na.png"
                        scale="100" />
           </imageobject>
         </mediaobject>
@@ -3276,7 +3344,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/modelle/kalypso_na/zeitreihenlink-na.png"
+                       fileref="img/kalypso_na/zeitreihenlink-na.png"
                        scale="100" />
           </imageobject>
         </mediaobject>
@@ -3737,7 +3805,7 @@
       <mediaobject>
         <imageobject>
           <imagedata align="center" fileref="img/modelle/navigator.png"
-                     scale="60" />
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
