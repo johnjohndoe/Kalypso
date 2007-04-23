@@ -181,7 +181,6 @@ public class SimMode1D2DCalcJob implements ISimulation
       handl.flush();
       handl.close();
     }
-
   }
 
   private void loadResults( File tmpdir, ISimulationMonitor monitor, Logger logger, ISimulationResultEater resultEater, File tmpDir )
@@ -190,29 +189,27 @@ public class SimMode1D2DCalcJob implements ISimulation
     monitor.setMessage( "loading results..." );
     final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
     outputDir.mkdirs();
-
     FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
     File[] files = tmpDir.listFiles( suffixFileFilter );
     monitor.setProgress( 80 );
     File outputZip2d = new File( tmpdir, "test.zip" );
     monitor.setProgress( 99 );
     try
-    {
-      ZipUtilities.zip( outputZip2d, files, tmpDir );
-    }
+      {
+        ZipUtilities.zip( outputZip2d, files, tmpDir );
+      }
     catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-
+      {
+        e.printStackTrace();
+      }
     try
-    {
-      resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
-    }
+      {
+        resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
+      }
     catch( SimulationException e )
-    {
-      e.printStackTrace();
-    }
+      {
+        e.printStackTrace();
+      }
   }
 
   /**

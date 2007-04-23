@@ -106,6 +106,15 @@ public class RMA10Calculation
       e.printStackTrace();
     }
   }
+  
+  public RMA10Calculation(GMLWorkspace m_disModelWorkspace,
+                          Feature m_controlRoot,
+                          Feature m_roughnessRoot) {
+    this.m_disModelWorkspace = m_disModelWorkspace;
+    this.m_controlRoot = m_controlRoot;
+    this.m_roughnessRoot = m_roughnessRoot;
+    
+  }
 
   public GMLWorkspace getDisModelWorkspace( )
   {
