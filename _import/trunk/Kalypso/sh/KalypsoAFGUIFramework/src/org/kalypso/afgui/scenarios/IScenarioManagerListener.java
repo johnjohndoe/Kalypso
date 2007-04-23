@@ -8,5 +8,7 @@ package org.kalypso.afgui.scenarios;
  */
 public interface IScenarioManagerListener
 {
-  public void scenariosChanged( );
+  public void scenarioAdded( final Scenario scenario );
+
+  public void scenarioRemoved( final Scenario scenario );
 }

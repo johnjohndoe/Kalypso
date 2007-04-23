@@ -6,7 +6,6 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
-import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
@@ -17,6 +16,8 @@ public class Perspective implements IPerspectiveFactory
 {
 
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
+
+  public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView";
 
   public void createInitialLayout( final IPageLayout layout )
   {
@@ -31,7 +32,7 @@ public class Perspective implements IPerspectiveFactory
     final IPlaceholderFolderLayout veryRight = layout.createPlaceholderFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
 
     leftTop.addView( WorkflowView.ID );
-    leftBottom.addView( SimulationModelDBView.ID );
+    leftBottom.addView( SCENARIO_VIEW_ID );
     leftBottom.addView( GisMapOutlineView.ID );
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
@@ -45,8 +46,8 @@ public class Perspective implements IPerspectiveFactory
     layout.getViewLayout( ActionOptionsView.ID ).setMoveable( false );
     layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
     layout.getViewLayout( WorkflowView.ID ).setMoveable( false );
-    layout.getViewLayout( SimulationModelDBView.ID ).setCloseable( false );
-    layout.getViewLayout( SimulationModelDBView.ID ).setMoveable( false );
+    layout.getViewLayout( SCENARIO_VIEW_ID ).setCloseable( false );
+    layout.getViewLayout( SCENARIO_VIEW_ID ).setMoveable( false );
     // TODO: secondary id does not work here: gives assertion failed
     // layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );

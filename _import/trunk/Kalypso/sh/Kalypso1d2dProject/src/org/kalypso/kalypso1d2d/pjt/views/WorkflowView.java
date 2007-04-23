@@ -45,7 +45,7 @@ public class WorkflowView extends ViewPart
      */
     public void activeContextChanged( final IProject newProject, final Scenario scenario )
     {
-      handleContextChanged( scenario );
+      handleContextChanged( newProject, scenario );
     }
   };
 
@@ -60,20 +60,21 @@ public class WorkflowView extends ViewPart
     m_workflowControl.createControl( parent );
     m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
-    handleContextChanged(m_activeWorkContext.getCurrentScenario());    
+    handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentScenario() );
   }
 
-  private void handleContextChanged( final Scenario scenario )
+  private void handleContextChanged( final IProject newProject, final Scenario scenario )
   {
     if( scenario != null )
     {
-      setContentDescription( "Aktives Szenario: " + scenario.getName() );
+      setContentDescription( "Aktives Szenario: " + scenario.getName() + " (" + newProject.getName() + ")" );
+      m_workflowControl.setWorkflow( m_activeWorkContext.getScenarioManager().getCurrentWorkflow() );
     }
     else
     {
       setContentDescription( "Kein Szenario aktiv." );
+      m_workflowControl.setWorkflow( null );
     }
-    m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorkflow() );
     if( m_taskExecutionListener != null )
     {
       m_workflowControl.unsetTaskExecutionListener( m_taskExecutionListener );

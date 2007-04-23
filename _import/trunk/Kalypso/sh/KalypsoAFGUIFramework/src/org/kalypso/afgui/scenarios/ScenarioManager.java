@@ -6,15 +6,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -23,10 +24,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.jwsdp.JaxbUtilities;
+
+import de.renew.workflow.base.IWorkflowSystem;
+import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.WorkflowSystem;
 
 /**
  * This implementation of {@link IScenarioManager} persists the scenario model data in the project workspace.
@@ -39,6 +46,8 @@ public class ScenarioManager implements IScenarioManager
   public static final String METADATA_FOLDER = ".metadata";
 
   public static final String METADATA_FILENAME = "scenarios.xml";
+
+  public static final String SCENARIO_BASE_URI = "scenario://${project}/${scenarioPath}";
 
   private static final Logger logger = Logger.getLogger( ScenarioManager.class.getName() );
 
@@ -54,13 +63,15 @@ public class ScenarioManager implements IScenarioManager
 
   private final List<IScenarioManagerListener> m_listeners = new ArrayList<IScenarioManagerListener>();
 
-  ProjectScenarios m_projectScenarios;
+  private ProjectScenarios m_projectScenarios;
 
   private final IProject m_project;
 
   private final IFile m_metaDataFile;
 
   private Scenario m_currentScenario;
+
+  private IWorkflowSystem m_currentWorkflow;
 
   /**
    * Initializes the {@link ScenarioManager} on the given project
@@ -79,45 +90,77 @@ public class ScenarioManager implements IScenarioManager
     final IFile metadataFile = folder.getFile( METADATA_FILENAME );
     m_project = project;
     m_metaDataFile = metadataFile;
-    final IWorkspaceRunnable action = new IWorkspaceRunnable()
+    final IWorkspaceRunnable runnable = new IWorkspaceRunnable()
     {
-      public void run( final IProgressMonitor monitor ) throws CoreException
+      public void run( IProgressMonitor monitor ) throws CoreException
       {
+        if( monitor == null )
+        {
+          monitor = new NullProgressMonitor();
+        }
         try
         {
-          project.refreshLocal( IResource.DEPTH_INFINITE, null );
+          monitor.beginTask( "Szenarien laden", 40 );
+
+          project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
           if( !folder.exists() )
           {
-            folder.create( false, true, null );
+            folder.create( false, true, new SubProgressMonitor( monitor, 10 ) );
           }
           if( !metadataFile.exists() )
           {
             m_projectScenarios = new org.kalypso.afgui.scenarios.ObjectFactory().createProjectScenarios();
-            persist( null );
+            createBaseScenario( "Basis" );
+            monitor.worked( 10 );
           }
           else
           {
-            m_projectScenarios = loadModel( metadataFile.getRawLocationURI().toURL() );
+            m_projectScenarios = loadModel( metadataFile );
+            monitor.worked( 10 );
           }
+          m_currentWorkflow = new WorkflowSystem( m_project );
+          monitor.worked( 10 );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+
+      /**
+       * Loads the {@link ProjectScenarios} from a file at the given location
+       */
+      private ProjectScenarios loadModel( final IFile file ) throws CoreException
+      {
+        try
+        {
+          final URL url = file.getRawLocationURI().toURL();
+          return (ProjectScenarios) JC.createUnmarshaller().unmarshal( url );
         }
         catch( final Throwable e )
         {
-          // either JAXBException or MalformedURLException or CoreException
-          IStatus status = StatusUtilities.statusFromThrowable( e );
-          KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
           throw new CoreException( status );
         }
       }
     };
-    project.getWorkspace().run( action, null );
-  }
+    final ICoreRunnableWithProgress runnable2 = new ICoreRunnableWithProgress()
+    {
 
-  /**
-   * Loads the {@link ProjectScenarios} from a file at the given location
-   */
-  ProjectScenarios loadModel( final URL url ) throws JAXBException
-  {
-    return (ProjectScenarios) JC.createUnmarshaller().unmarshal( url );
+      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      {
+        try
+        {
+          project.getWorkspace().run( runnable, m_project, IWorkspace.AVOID_UPDATE, monitor );
+        }
+        catch( Throwable t )
+        {
+          throw new CoreException( StatusUtilities.statusFromThrowable( t ) );
+        }
+        return Status.OK_STATUS;
+      }
+    };
+    ProgressUtilitites.busyCursorWhile( runnable2, "Problem beim Laden der Szenarienbeschreibung" );
   }
 
   /**
@@ -137,6 +180,22 @@ public class ScenarioManager implements IScenarioManager
   }
 
   /**
+   * @see org.kalypso.afgui.scenarios.IScenarioManager#createBaseScenario(java.lang.String)
+   */
+  public Scenario createBaseScenario( final String name ) throws CoreException
+  {
+    final Scenario newScenario = new Scenario();
+    final String uri = SCENARIO_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${scenarioPath}" ), name );
+    newScenario.setURI( uri );
+    newScenario.setName( name );
+    m_projectScenarios.getScenarios().add( newScenario );
+
+    persist( null );
+    fireScenarioAdded( newScenario );
+    return newScenario;
+  }
+
+  /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String,
    *      org.kalypso.afgui.scenarios.Scenario)
    */
@@ -146,10 +205,7 @@ public class ScenarioManager implements IScenarioManager
     newScenario.setURI( parentScenario.getURI() + "/" + name );
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
-
-    final IFolder newFolder = m_project.getFolder( getProjectPath( newScenario ) );
-    newFolder.create( false, true, null );
-
+    
     ScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
     if( derivedScenarios == null )
     {
@@ -159,8 +215,43 @@ public class ScenarioManager implements IScenarioManager
     derivedScenarios.getScenarios().add( newScenario );
 
     persist( null );
-    fireWorkflowDBChange();
+    fireScenarioAdded( newScenario );
     return newScenario;
+  }
+
+  public void removeScenario( final Scenario scenario, IProgressMonitor monitor ) throws CoreException
+  {
+    if( monitor == null )
+    {
+      monitor = new NullProgressMonitor();
+    }
+    try
+    {
+      monitor.beginTask( "Szenario löschen", 100 );
+      final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+      // only remove if no derived scenarios
+      if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
+      {
+        throw new CoreException( StatusUtilities.createErrorStatus( "Das Szenario enthält abgeleitete Szenarien und kann nicht gelöscht werden." ) );
+      }
+      final Scenario parentScenario = scenario.getParentScenario();
+      if( parentScenario == null )
+      {
+        // base scenario
+        m_projectScenarios.getScenarios().remove( scenario );
+      }
+      else
+      {
+        parentScenario.getDerivedScenarios().getScenarios().remove( scenario );
+      }
+      monitor.worked( 5 );
+      persist( new SubProgressMonitor( monitor, 15 ) );      
+    }
+    finally
+    {
+      monitor.done();
+    }
+    fireScenarioRemoved( scenario );
   }
 
   /**
@@ -316,11 +407,34 @@ public class ScenarioManager implements IScenarioManager
       return new Path( scenario.getName() );
   }
 
-  void fireWorkflowDBChange( )
+  void fireScenarioAdded( final Scenario scenario )
   {
     for( final IScenarioManagerListener l : m_listeners )
     {
-      l.scenariosChanged();
+      l.scenarioAdded( scenario );
+    }
+  }
+
+  private void fireScenarioRemoved( final Scenario scenario )
+  {
+    for( final IScenarioManagerListener l : m_listeners )
+    {
+      l.scenarioRemoved( scenario );
+    }
+  }
+
+  /**
+   * @see org.kalypso.afgui.scenarios.IScenarioManager#getCurrentWorkflow()
+   */
+  public Workflow getCurrentWorkflow( )
+  {
+    if( m_currentWorkflow == null )
+    {
+      return null;
+    }
+    else
+    {
+      return m_currentWorkflow.getCurrentWorkflow();
     }
   }
 }

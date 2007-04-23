@@ -54,6 +54,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -61,20 +62,20 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.IScenarioManagerListener;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-
-import de.renew.workflow.base.IWorkflowSystem;
-import de.renew.workflow.base.WorkflowSystem;
 
 /**
  * Project Nature for 1d 2d simulation
  * 
  * @author Patrice Congo
  */
-public class Kalypso1D2DProjectNature implements IProjectNature
+public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManagerListener
 {
   private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class.getName() );
 
@@ -89,8 +90,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
 
   private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip";
-
-  private IWorkflowSystem m_workflowSystem;
 
   private ScenarioManager m_scenarioManager;
 
@@ -146,15 +145,14 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     try
     {
       m_scenarioManager = new ScenarioManager( m_project );
-      m_workflowSystem = new WorkflowSystem( m_project );
+      m_scenarioManager.addScenarioManagerListener( this );
     }
     catch( final CoreException e )
     {
-      // this exception has already been logged, only open error dialog
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
       final Display display = PlatformUI.getWorkbench().getDisplay();
-      ErrorDialog.openError( display.getActiveShell(), "Fehler", "Konnte Workflow-Beschreibung nicht lesen.", StatusUtilities.statusFromThrowable( e ) );
+      ErrorDialog.openError( display.getActiveShell(), "Fehler", "Konnte Szenarienbeschreibung nicht lesen.", e.getStatus() );
       m_scenarioManager = null;
-      m_workflowSystem = null;
     }
   }
 
@@ -165,15 +163,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature
       init();
     }
     return m_scenarioManager;
-  }
-
-  synchronized public IWorkflowSystem getWorkflowSystem( )
-  {
-    if( m_workflowSystem == null )
-    {
-      init();
-    }
-    return m_workflowSystem;
   }
 
   public static final boolean isOfThisNature( final IProject project ) throws CoreException
@@ -247,6 +236,58 @@ public class Kalypso1D2DProjectNature implements IProjectNature
   public IFolder getImportFolder( )
   {
     return m_metaDataFolder;
+  }
+
+  /**
+   * @see org.kalypso.afgui.scenarios.IScenarioManagerListener#scenarioAdded(org.kalypso.afgui.scenarios.Scenario)
+   */
+  public void scenarioAdded( final Scenario scenario )
+  {
+    final IFolder newFolder = m_project.getFolder( m_scenarioManager.getProjectPath( scenario ) );
+
+    if( !newFolder.exists() )
+    {
+      try
+      {
+        newFolder.create( false, true, null );
+        final URL resource = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
+        final IPath newLocation = newFolder.getLocation();
+        ZipUtilities.unzip( resource.openStream(), "Basis/**", newLocation.toFile(), false );
+        newFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+        final IFolder basisFolder = newFolder.getFolder( "Basis" );
+        for( final IResource res : basisFolder.members() )
+        {
+          res.move( newFolder.getFullPath().append( res.getName() ), false, null );
+        }
+        basisFolder.delete( false, null );
+      }
+      catch( final Throwable e )
+      {
+        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        ErrorDialog.openError( activeShell, "Problem", "Konnte neue Szenariodaten nicht erzeugen.", status );
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypso.afgui.scenarios.IScenarioManagerListener#scenarioRemoved(org.kalypso.afgui.scenarios.Scenario)
+   */
+  public void scenarioRemoved( final Scenario scenario )
+  {
+    final IFolder folder = m_project.getFolder( m_scenarioManager.getProjectPath( scenario ) );
+    try
+    {
+      folder.delete( true, null );
+    }
+    catch( final CoreException e )
+    {
+      final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      ErrorDialog.openError( activeShell, "Problem", "Konnte Szenario nicht löschen.", status );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+    }
   }
 
 }

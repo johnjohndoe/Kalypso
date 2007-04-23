@@ -1,6 +1,8 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,9 +38,7 @@ import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 
-import de.renew.workflow.base.IWorkflowSystem;
 import de.renew.workflow.base.Task;
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.ITaskExecutionAuthority;
 
 /**
@@ -61,15 +61,11 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
       logger.setUseParentHandlers( false );
   }
 
-  private static final String BASIS_SCENARIO = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test/Basis";
-
   private static final String MEMENTO_PROJECT = "project";
 
   private static final String MEMENTO_SCENARIO = "scenario";
 
   private ScenarioManager m_scenarioManager;
-
-  private IWorkflowSystem m_workflowSystem;
 
   private IProject m_activeProject;
 
@@ -162,9 +158,7 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( activeProject );
         m_activeProject = activeProject;
         m_scenarioManager = nature.getScenarioManager();
-        m_workflowSystem = nature.getWorkflowSystem();
         logger.info( "WorkflowDB=" + m_scenarioManager );
-        logger.info( "WorkflowSystem:" + m_workflowSystem );
       }
       else
       {
@@ -180,8 +174,8 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     }
     finally
     {
-      /* Set base szenarion as current for the newly selected project */
-      final Scenario baseScenario = m_scenarioManager == null ? null : m_scenarioManager.getScenario( BASIS_SCENARIO );
+      /* Set base scenario as current for the newly selected project */
+      final Scenario baseScenario = m_scenarioManager == null ? null : m_scenarioManager.getRootScenarios().get( 0 );
 
       if( m_scenarioManager != null )
         m_scenarioManager.setCurrentScenario( baseScenario );
@@ -216,18 +210,6 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     }
     final Scenario activeScenario = m_scenarioManager.getCurrentScenario();
     return (m_activeProject == null || activeScenario == null) ? null : m_activeProject.getFolder( m_scenarioManager.getProjectPath( activeScenario ) );
-  }
-
-  public Workflow getCurrentWorkflow( )
-  {
-    if( m_workflowSystem == null )
-    {
-      return null;
-    }
-    else
-    {
-      return m_workflowSystem.getCurrentWorkflow();
-    }
   }
 
   synchronized public void addActiveContextChangeListener( IActiveContextChangeListener l )
@@ -291,9 +273,29 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     }
     else
     {
+      ensureProject( scenario );
       m_scenarioManager.setCurrentScenario( scenario );
       fireActiveProjectChanged( m_activeProject, scenario );
     }
+  }
+
+  private void ensureProject( final Scenario scenario )
+  {
+    try
+    {
+      final URI uri = new URI( scenario.getURI() );
+      final String projectName = uri.getHost();
+      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+      if( project.exists() && project.isOpen() )
+      {
+        setActiveProject( project );
+      }
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+
   }
 
   /**
@@ -341,7 +343,7 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     }
     else if( decision == 1 )
     {
-      //discard changes, reload model
+      // discard changes, reload model
       dataProvider.reloadModel();
       result = true;
     }

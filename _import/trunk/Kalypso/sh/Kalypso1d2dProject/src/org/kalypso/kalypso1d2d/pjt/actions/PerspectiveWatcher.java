@@ -64,7 +64,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
-import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
@@ -146,7 +145,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
       IViewPart scenarioView;
       try
       {
-        scenarioView = page.showView( SimulationModelDBView.ID );
+        scenarioView = page.showView( Perspective.SCENARIO_VIEW_ID );
         if( scenarioView != null )
         {
           page.activate( scenarioView );
@@ -215,7 +214,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     {
       return true;
     }
-    else if( SimulationModelDBView.ID.equals( viewId ) )
+    else if( Perspective.SCENARIO_VIEW_ID.equals( viewId ) )
     {
       return true;
     }

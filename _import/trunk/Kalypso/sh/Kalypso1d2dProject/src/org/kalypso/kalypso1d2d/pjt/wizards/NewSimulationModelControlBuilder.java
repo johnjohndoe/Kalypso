@@ -121,7 +121,10 @@ public class NewSimulationModelControlBuilder
 
   private String getParentDataName( )
   {
-    // TODO Auto-generated method stub
+    if( m_scenario == null )
+    {
+      return "<nicht vorhanden>";
+    }
     return m_scenario.getName();
   }
 
@@ -176,10 +179,10 @@ public class NewSimulationModelControlBuilder
     this.updateListener = updateListener;
   }
 
-  public static void startWizard( final Shell shell, final Scenario workflowData )
+  public static void startWizard( final Shell shell, final Scenario scenario )
   {
     logger.info( "starting wizard" ); //$NON-NLS-1$
-    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( "Neues Simulation Model", workflowData );
+    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( "Neues Simulation Model", scenario );
 
     Wizard iWizard = new Wizard()
     {
@@ -220,7 +223,14 @@ public class NewSimulationModelControlBuilder
       {
         try
         {
-          activeWorkContext.setCurrentSzenario( workflowDB.deriveScenario( name, workflowData ) );
+          if( scenario != null )
+          {
+            activeWorkContext.setCurrentSzenario( workflowDB.deriveScenario( name, scenario ) );
+          }
+          else
+          {
+            activeWorkContext.setCurrentSzenario( workflowDB.createBaseScenario( name ) );
+          }
         }
         catch( final CoreException e )
         {

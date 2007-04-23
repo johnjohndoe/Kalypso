@@ -11,7 +11,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 public class ScenarioLabelProvider extends LabelProvider
 {
-  private static final Logger logger = Logger.getLogger( WorkflowDataLabelProvider.class.getName() );
+  private static final Logger logger = Logger.getLogger( ScenarioLabelProvider.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
 

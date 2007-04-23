@@ -102,7 +102,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       reg.put( KEY_ICON_SIM_MODEL, desc.createImage() );
     }
     return;
-  }
+  }  
 
   public static Image getImageDescriptor( String key )
   {

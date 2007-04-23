@@ -8,6 +8,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.renew.workflow.base.Workflow;
+
 /**
  * An {@link IScenarioManager} manages all the scenarios in a project. It provides metadata about the scenarios and
  * organizes the scenario model data in a database. One scenario is considered the current scenario.
@@ -20,6 +22,11 @@ public interface IScenarioManager
    * Returns the current scenario
    */
   public Scenario getCurrentScenario( );
+
+  /**
+   * Returns the workflow for the current scenario
+   */
+  public Workflow getCurrentWorkflow( );
 
   /**
    * Sets the current scenario
@@ -38,6 +45,16 @@ public interface IScenarioManager
    * scenario with the given uri exists, <code>null</code> will be returned.
    */
   public Scenario getScenario( final String uri );
+
+  /**
+   * Removes the scenario and all contained data if the scenario has no derived scenarios.
+   */
+  public void removeScenario( final Scenario scenario, final IProgressMonitor monitor ) throws CoreException;
+
+  /**
+   * Creates a new base scenario with the given name.
+   */
+  public Scenario createBaseScenario( final String name ) throws CoreException;
 
   /**
    * Creates a new scenario with the given name. It is derived from <code>parentScenario</code>. The scenario

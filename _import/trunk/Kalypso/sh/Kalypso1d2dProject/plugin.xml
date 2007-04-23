@@ -62,12 +62,6 @@
    <extension
          name="Workflow Views"
          point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            class="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
-            icon="icons/tree.gif"
-            id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
-            name="Szenarien"/>
        <view
              allowMultiple="false"
              class="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
@@ -83,37 +77,6 @@
    </extension>
    
    	
-   	<extension
-    	point = "org.eclipse.ui.viewActions">
-    	<viewContribution 
-    		id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib" 
-    		targetID="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView">
-    		<action
-	            icon="icons/nuvola_select/edit_add.png"
-	            id="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
-	            label="AddSM"
-	            menubarPath="1d2d"
-	            toolbarPath="1d2d"
-	            tooltip="Add simulation modell"> 
-	            <class class="org.kalypso.ui.GenericCommandActionDelegate">
-	            	<parameter name="commandId" 
-                         value="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
-	            </class>
-             </action>
-             <action	            
-	            icon="icons/nuvola_select/edit_remove.png"
-	            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
-	            label="Remove model Data"
-	            menubarPath="1d2d"
-	            toolbarPath="1d2d"
-	            tooltip="Remove model data"> 
-	            <class class="org.kalypso.ui.GenericCommandActionDelegate">
-	            	<parameter name="commandId" 
-                         value="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>
-	            </class>
-             </action>
-        </viewContribution>
-     </extension>
      
      <extension point="org.eclipse.ui.handlers">
      
@@ -182,11 +145,14 @@
 
  	 <!--*** handlers for scenario management ***-->			   
 	     <handler
-	           class="org.kalypso.kalypso1d2d.pjt.actions.AddScenarioHandler"
-	           commandId="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
+            class="org.kalypso.kalypso1d2d.pjt.actions.AddScenarioHandler"
+            commandId="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>      	 
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenarioHandler"
-	           commandId="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>	     
+	           commandId="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>	 
+	     <handler
+            class="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenarioHandler"
+            commandId="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"/>      	 	               
 
  	 <!--*** import handlers ***-->
 	     <handler
@@ -305,7 +271,10 @@
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
-      <viewer viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
+      <viewer
+            popupMenuId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.menu"
+            viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+      </viewer>
       <viewerContentBinding viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <includes>
             <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
@@ -363,19 +332,71 @@
             id="org.kalypso.kalypso1d2d.pjt.navigator.filters.StarDotStarResources"
             name="Ressourcen ausblenden">
          <filterExpression>
-         	<and>
-         		<or>
-					<instanceof value="org.eclipse.core.resources.IFile"/>
+     		<or>
+ 	        	<and>
 					<instanceof value="org.eclipse.core.resources.IFolder"/>
-         		</or>
-         		<not>
-					<test
-	                    forcePluginActivation="true"
-	                    property="org.eclipse.core.resources.name"
-	                    value="imports"/>
-				</not>
-         	</and>
+    	     		<not>
+						<test
+	        	            forcePluginActivation="true"
+	            	        property="org.eclipse.core.resources.name"
+	                	    value="imports"/>
+					</not>
+    	     	</and>
+ 				<test
+    	            forcePluginActivation="true"
+        	        property="org.eclipse.core.resources.name"
+            	    value=".*"/>    	     	
+     		</or>
          </filterExpression>
       </commonFilter>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.popupActions"
+            targetID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.menu">
+         <action
+               enablesFor="?"
+               icon="icons/nuvola_select/edit_add.png"
+               id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
+               label="Szenario hinzufügen"
+               menubarPath="group.edit"
+               tooltip="Ein neues Szenario hinzufügen">
+           <class class="org.kalypso.ui.GenericCommandActionDelegate">
+        	<parameter name="commandId" 
+                 value="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
+           </class>
+         </action>
+      </viewerContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.actions"
+            objectClass="org.kalypso.afgui.scenarios.Scenario">
+         <action
+               enablesFor="1"
+               helpContextId="org.eclipse.ui.edit.delete"
+               icon="icons/nuvola_select/edit_remove.png"
+               id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"
+               label="Szenario löschen"
+               menubarPath="group.edit"
+               tooltip="Das gewählte Szenario löschen">
+           <class class="org.kalypso.ui.GenericCommandActionDelegate">
+            	<parameter name="commandId" 
+                     value="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>
+           </class>
+         </action>
+         <action
+               enablesFor="1"
+               icon="icons/activate.gif"
+               id="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"
+               label="Szenario aktivieren"
+               menubarPath="group.edit"
+               tooltip="Das gewählte Szenario aktivieren">
+           <class class="org.kalypso.ui.GenericCommandActionDelegate">
+            	<parameter name="commandId" 
+                     value="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"/>
+           </class>
+         </action>
+      </objectContribution>
    </extension>
 </plugin>

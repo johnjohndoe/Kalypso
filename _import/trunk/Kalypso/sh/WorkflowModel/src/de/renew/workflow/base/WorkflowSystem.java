@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -17,8 +16,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
-
-import de.renew.workflow.base.Workflow;
 
 /**
  * This workflow system manages the workflow instance in a description file in the project .metadata folder
@@ -56,25 +53,23 @@ public class WorkflowSystem implements IWorkflowSystem
    */
   public WorkflowSystem( final IProject project ) throws CoreException
   {
+    final IFolder metadataFolder = project.getFolder( METADATA_FOLDER );
+    final IFile workflowFile = metadataFolder.getFile( WORKFLOW_FILENAME );
+    m_currentWorkflow = loadModel( workflowFile );
+  }
+
+  private Workflow loadModel( final IFile file ) throws CoreException
+  {
     try
     {
-      final IFolder metadataFolder = project.getFolder( METADATA_FOLDER );
-      final IFile workflowFile = metadataFolder.getFile( WORKFLOW_FILENAME );
-      final URL url = workflowFile.getRawLocationURI().toURL();
-      m_currentWorkflow = loadModel( url );
+      final URL url = file.getRawLocationURI().toURL();
+      return (Workflow) JC.createUnmarshaller().unmarshal( url );
     }
     catch( final Throwable e )
     {
-      // either JAXBException or MalformedURLException
-      IStatus status = StatusUtilities.statusFromThrowable( e );
-      // TODO log
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
       throw new CoreException( status );
     }
-  }
-
-  private Workflow loadModel( final URL url ) throws JAXBException
-  {
-    return (Workflow) JC.createUnmarshaller().unmarshal( url );
   }
 
   /**
