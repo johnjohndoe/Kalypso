@@ -73,7 +73,7 @@ import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
 
 /**
- * @author kimwerner
+ * @author kimwerner, Thomas Jung
  */
 public class ProfilOverlayLayer extends AbstractProfilChartLayer
 {
@@ -109,23 +109,22 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     return true;
   }
 
-  protected void drawEditLine( final GCWrapper gc, final Point editing )
+  protected void drawVerticalLine( final GCWrapper gc, final Point editing, final Color color, final int lineStyle, final int lineWidth )
   {
-      final int lineWidthBuffer = gc.getLineWidth();
-      final int lineStyleBuffer = gc.getLineStyle();
-      final Color foregroundBuffer = gc.getForeground();
-      gc.setLineStyle( SWT.LINE_DASH );
-      gc.setLineWidth( 1 );
-      gc.setForeground( m_color );
+    final int lineWidthBuffer = gc.getLineWidth();
+    final int lineStyleBuffer = gc.getLineStyle();
+    final Color foregroundBuffer = gc.getForeground();
+    gc.setLineStyle( lineStyle );
+    gc.setLineWidth( lineWidth );
+    gc.setForeground( color );
 
-      // final Point p = logical2screen( m_points.get( index ) );
-      final AxisRange valueRange = getValueRange();
-      final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-      int top = valueRange.getScreenTo() + valueRange.getGapSpace();
-      gc.drawLine( editing.x, bottom, editing.x, top );
-      gc.setLineWidth( lineWidthBuffer );
-      gc.setLineStyle( lineStyleBuffer );
-      gc.setForeground( foregroundBuffer );
+    final AxisRange valueRange = getValueRange();
+    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
+    int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+    gc.drawLine( editing.x, bottom, editing.x, top );
+    gc.setLineWidth( lineWidthBuffer );
+    gc.setLineStyle( lineStyleBuffer );
+    gc.setForeground( foregroundBuffer );
   }
 
   /**
@@ -133,13 +132,66 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data ) // release
+  protected void editProfil( Point currentScreenPoint, Object data ) // release
   {
     final EditData editData = (EditData) data;
     final IProfilPoint profilePoint = m_profile.getPoints().get( editData.getIndex() );
-    final Point2D logPoint = screen2logical( point );
+    final Point2D logPoint = screen2logical( currentScreenPoint );
+    double width;
 
-    double width = logPoint.getX();
+    /* snap behaviour */
+    /* find the nearest profile point and check its distance to the current mouse pointer position */
+    final double currentWidth = logPoint.getX();
+    double widthDifference = Double.NaN;
+    Point nearestProfScreenPoint = null;
+
+    IProfil origProfil = m_data.getProfilEventManager().getProfil();
+    final IProfilPoint nearestProfPoint = ProfilUtil.findNearestPoint( origProfil, currentWidth );
+    if( nearestProfPoint != null )
+    {
+      final double xCoord = nearestProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double yCoord = nearestProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final Point2D point2 = new Point2D.Double( xCoord, yCoord );
+      nearestProfScreenPoint = logical2screen( point2 );
+
+      /*
+       * calculate width difference between the current mouse pointer position and the nearest profile point of the
+       * original profile in screen coordinates
+       */
+      widthDifference = Math.abs( nearestProfScreenPoint.x - currentScreenPoint.x );
+    }
+    if( !Double.isNaN( widthDifference ) && widthDifference < 5 )
+    {
+      /* check, if there is allready a intersection profile point at that position */
+      final IProfilPoint nearestIntersectedProfPoint = ProfilUtil.findNearestPoint( m_profile, nearestProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) );
+      if( nearestIntersectedProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - nearestProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) == 0 )
+      {
+        /* set the drawn point back to start */
+        return;
+      }
+      else
+        /* set the new drawn width to the snapped width position */
+        width = nearestProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    }
+    else
+    {
+      /* check, if the dragged point is lying too near at another intersection point */
+      final Point profScreenPointInters = getNearestProfileScreenPoint( m_profile, currentWidth );
+
+      /*
+       * calculate width difference between the current mouse pointer position and the nearest profile point of the
+       * intersected profile in screen coordinates
+       */
+      final double widthDifferenceInters = Math.abs( profScreenPointInters.x - currentScreenPoint.x );
+      if( widthDifferenceInters < 5 )
+      {
+        /* set the drawn point back to start */
+        return;
+      }
+      else
+        /* set the new drawn width to current width position */
+        width = logPoint.getX();
+    }
 
     /* check that the point is lying inside the orig. profile */
     final double firstProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -150,7 +202,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       width = firstProfileWidth;
     else if( width > lastProfileWidth )
       width = lastProfileWidth;
-    
+
     /* set the initial heigth to the profile height */
     /* and get the geo coordinates for the moved profile point */
     double heigth = 0;
@@ -189,12 +241,12 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     {
       e.printStackTrace();
     }
-    
+
     SegmentData currentSegment = m_data.getCurrentSegment( m_data.m_selectedSegment );
     currentSegment.updateProfileIntersection();
-    
+
     m_data.completationCheck();
-    
+
     CreateChannelData.PROF prof = m_data.getCurrentProfile();
     if( prof == CreateChannelData.PROF.UP )
       m_profile = currentSegment.getProfUpIntersProfile();
@@ -209,8 +261,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   /**
    * checks if the intersection points have been moved and updates them in the data class (also for the neighbour
    * segments).
-   * @param oldStartWdith the width coordinate of the first intersection profile point before user interaction
-   * @param oldEndWdith the width coordinate of the last intersection profile point before user interaction
+   * 
+   * @param oldStartWdith
+   *          the width coordinate of the first intersection profile point before user interaction
+   * @param oldEndWdith
+   *          the width coordinate of the last intersection profile point before user interaction
    */
   @SuppressWarnings("unchecked")
   private void checkIntersectionPoints( double oldStartWdith, double oldEndWdith ) throws Exception
@@ -247,7 +302,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       final WIDTHORDER widthorder2 = CreateChannelData.WIDTHORDER.LAST;
       final double width2 = newEndWidth;
       final GM_Point point2 = WspmProfileHelper.getGeoPosition( width2, m_data.getProfilEventManager().getProfil() );
-      
+
       /* update the last intersection point */
       currentSegment.setIntersPoint( point2, prof, widthorder2, width2 );
       /* intersection points have to have the same heigth as the orig profile */
@@ -256,7 +311,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
       currentSegment.updateProfileIntersection();
-      
+
       /* update the neighbour segment */
       updateNeighbourSegment( prof, currentSegment, neighbourSegments, widthorder1, width1, point1, widthorder2, width2, point2 );
 
@@ -266,16 +321,16 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       widthorder = CreateChannelData.WIDTHORDER.FIRST;
       width = newStartWidth;
       point = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
-      
+
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
       /* intersection points have to have the same heigth as the orig profile */
       m_profile.getPoints().getFirst().setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getZ() );
-      
+
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
       currentSegment.updateProfileIntersection();
-      
+
       /* update the neighbour segment */
       updateNeighbourSegment( point, prof, currentSegment, neighbourSegments, widthorder, width );
     }
@@ -289,11 +344,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       currentSegment.setIntersPoint( point, prof, widthorder, width );
       /* intersection points have to have the same heigth as the orig profile */
       m_profile.getPoints().getLast().setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getZ() );
-      
+
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
       currentSegment.updateProfileIntersection();
-      
+
       /* update the neighbour segment */
       updateNeighbourSegment( point, prof, currentSegment, neighbourSegments, widthorder, width );
     }
@@ -502,23 +557,87 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
+  public void paintDrag( GCWrapper gc, Point currentScreenPoint, Object hoverData )
   {
-//    final EditData editData = (EditData) hoverData;
-    drawEditLine( gc, editing );
+    /* draw the vertical line at the current mouse position */
+    drawVerticalLine( gc, currentScreenPoint, m_color, SWT.LINE_DASH, 1 );
 
-    final Rectangle editRect = RectangleUtils.buffer( editing );
-    
+    /* draw the rectangular buffer around the current mouse position */
+    final Rectangle editRect = RectangleUtils.buffer( currentScreenPoint );
+
     /* snap behaviour */
-    //find the nearest profile point and check its distance to the cursor position */
-    
-//    final IPoint point = ProfilUtil.findPoint( getProfile(), computeIt, wasDuWillst );
-    
-    // TODO: if editRect near point: snap to point
-    // else move height to gelände
-    
+    /* find the nearest original profile point and check its distance to the cursor position */
+    final Point2D logPoint = screen2logical( currentScreenPoint );
+    final double currentWidth = logPoint.getX();
+
+    IProfil origProfil = m_data.getProfilEventManager().getProfil();
+    final IProfilPoint point = ProfilUtil.findNearestPoint( origProfil, currentWidth );
+    final double xCoord = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double yCoord = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final Point2D point2 = new Point2D.Double( xCoord, yCoord );
+    final Point profScreenPoint = logical2screen( point2 );
+
+    if( point != null )
+    {
+      final double widthDifference = Math.abs( profScreenPoint.x - currentScreenPoint.x );
+      if( widthDifference < 5 )
+      {
+        /*
+         * check if there is allready a intersection point on the snapped position. if that is the case, visualize it by
+         * a red line
+         */
+        final IProfilPoint nearestIntersectedProfPoint = ProfilUtil.findNearestPoint( m_profile, xCoord );
+        if( nearestIntersectedProfPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - xCoord == 0 )
+        {
+          final Color color = new Color( null, 255, 70, 70 );
+          final int lineStyle = SWT.LINE_SOLID;
+          final int lineWidth = 2;
+          drawVerticalLine( gc, profScreenPoint, color, lineStyle, lineWidth );
+        }
+        else
+        {
+          final Color color = new Color( null, 70, 255, 70 );
+          final int lineStyle = SWT.LINE_SOLID;
+          final int lineWidth = 2;
+          drawVerticalLine( gc, profScreenPoint, color, lineStyle, lineWidth );
+        }
+      }
+      else
+      {
+        /* check, if the dragged point is lying too near at another intersection point */
+        final Point profScreenPointInters = getNearestProfileScreenPoint( m_profile, currentWidth );
+
+        final double widthDifferenceInters = Math.abs( profScreenPointInters.x - currentScreenPoint.x );
+        if( widthDifferenceInters < 5 )
+        {
+          {
+            final Color color = new Color( null, 255, 70, 70 );
+            final int lineStyle = SWT.LINE_SOLID;
+            final int lineWidth = 2;
+            drawVerticalLine( gc, profScreenPointInters, color, lineStyle, lineWidth );
+          }
+        }
+      }
+    }
+
     gc.drawFocus( editRect.x, editRect.y, editRect.width, editRect.height );
 
+  }
+
+  /**
+   * gets the nearest intersection profile point and returns it in screen coordinates.
+   * 
+   * @param currentWidth
+   *          width coordinate of the current screen point
+   */
+  private Point getNearestProfileScreenPoint( final IProfil profile, final double currentWidth )
+  {
+    final IProfilPoint intersectedPoint = ProfilUtil.findNearestPoint( profile, currentWidth );
+    final double xCoordInters = intersectedPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double yCoordInters = intersectedPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final Point2D point2Inters = new Point2D.Double( xCoordInters, yCoordInters );
+    final Point profScreenPointInters = logical2screen( point2Inters );
+    return profScreenPointInters;
   }
 
   /**
