@@ -46,6 +46,10 @@
 				<Name>Import von Shapedateien</Name>
 				</Task>
 			-->
+			<Task context="ImportProfile" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfileImport">
+				<Help>Einladen von ASCII-Profildaten (Station, Rechtswert, Hochwert, Höhe)</Help>
+				<Name>Import von Profildaten (Trippel)</Name>
+			</Task>			
 		</TaskGroup>
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
 			<Help>Bereitstellung aller Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes.</Help>
