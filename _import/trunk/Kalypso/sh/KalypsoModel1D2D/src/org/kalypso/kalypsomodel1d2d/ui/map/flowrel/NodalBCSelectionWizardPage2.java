@@ -45,16 +45,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -67,6 +71,10 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
   private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" );
 
   private static final String DEFAULTSTEP = "60";
+
+  private Date m_dateFrom = new Date();
+
+  private Date m_dateTo = new Date();
 
   private Text m_dateTimeFrom;
 
@@ -109,7 +117,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
       @SuppressWarnings("synthetic-access")
       public void modifyText( ModifyEvent e )
       {
-        updatePageComplete();
+        updatePageState();
       }
     } );
     m_dateTimeFrom.setText( DATEFORMAT.format( new Date() ) );
@@ -124,7 +132,23 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     // }
     // } );
     buttonDateTimeFrom.setText( "..." );
-    buttonDateTimeFrom.setEnabled( false );
+//    buttonDateTimeFrom.setEnabled( false );
+    buttonDateTimeFrom.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateFrom );
+        if( calendarDialog.open() == Window.OK )
+        {
+          m_dateFrom = calendarDialog.getDate();
+          m_dateTimeFrom.setText( DATEFORMAT.format( m_dateFrom) );
+        }
+      }
+    } );
 
     final Label label_2 = new Label( container, SWT.NONE );
     label_2.setLayoutData( gridBeginning );
@@ -136,7 +160,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
       @SuppressWarnings("synthetic-access")
       public void modifyText( ModifyEvent e )
       {
-        updatePageComplete();
+        updatePageState();
       }
     } );
     m_dateTimeTo.setText( DATETIMEFORMAT.format( new Date() ) );
@@ -151,7 +175,23 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     // }
     // } );
     buttonDateTimeTo.setText( "..." );
-    buttonDateTimeTo.setEnabled( false );
+//    buttonDateTimeTo.setEnabled( false );
+    buttonDateTimeTo.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateTo );
+        if( calendarDialog.open() == Window.OK )
+        {
+          m_dateTo = calendarDialog.getDate();
+          m_dateTimeTo.setText( DATEFORMAT.format( m_dateTo) );
+        }
+      }
+    } );
 
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( gridBeginning );
@@ -163,7 +203,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
       @SuppressWarnings("synthetic-access")
       public void modifyText( ModifyEvent e )
       {
-        updatePageComplete();
+        updatePageState();
       }
     } );
     m_dateTimeStep.setText( DEFAULTSTEP );
@@ -182,7 +222,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
       @SuppressWarnings("synthetic-access")
       public void modifyText( ModifyEvent e )
       {
-        updatePageComplete();
+        updatePageState();
       }
     } );
     m_defaultValue.setText( "20.0" );
@@ -193,26 +233,27 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     
     parent.pack();
     parent.layout();
+    updatePageState();
   }
 
-  private void updatePageComplete( )
+  private void updatePageState( )
   {
     if( isCurrentPage() )
-      setPageComplete( checkValues() );
+      setPageComplete( setValues() );
     else
       setPageComplete( true );
   }
 
-  private boolean checkValues( )
+  private boolean setValues( )
   {
     try
     {
-      final Date fromDate = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
-      final Date toDate = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
+      m_dateFrom = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
+      m_dateTo = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
       final int stepValues = Integer.parseInt( m_dateTimeStep.getText() );
       final double value = Double.parseDouble( m_defaultValue.getText() );
 
-      if( fromDate.after( toDate ) )
+      if( m_dateFrom.after( m_dateTo ) )
         return false;
     }
     catch( ParseException e )
@@ -226,33 +267,15 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     return true;
   }
 
-  private Date getDateTime( Text text )
-  {
-    try
-    {
-      return DATETIMEFORMAT.parse( text.getText() );
-    }
-    catch( ParseException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
   public Date getFromDate( )
   {
-    return getDateTime( m_dateTimeFrom );
+    return m_dateFrom;
   }
 
   public Date getToDate( )
   {
-    return getDateTime( m_dateTimeTo );
+    return m_dateTo;
   }
-
-//  public Date getStep( )
-//  {
-//    return getDateTime( m_dateTimeStep );
-//  }
 
   public double getDefaultValue( )
   {

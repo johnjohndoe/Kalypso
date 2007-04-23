@@ -11,6 +11,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:common="org.kalypso.gml.common" 
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
@@ -20,6 +21,7 @@
 	</xs:annotation>
 	<xs:import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+	<xs:import namespace="org.kalypso.gml.common" />
 	<!-- =================================================================
 		RoughnessCollection
 		================================================================== -->
@@ -187,6 +189,7 @@
 					<xs:element name="ks" type="xs:double" />
 					<xs:element name="axay" type="xs:double" />
 					<xs:element name="dp" type="xs:double" />
+					<xs:element name="colorStyle" type="common:color"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 			</xs:extension>

@@ -119,7 +119,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_page1.init( initialSelection );
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
-    m_page3 = new WizardPageZmlChooser( );
+    m_page3 = new WizardPageZmlChooser();
     m_page3.init( m_repositoryPath.toOSString() );
     m_page3.setPreviousPage( m_page1 );
     addPage( m_page3 );
@@ -161,10 +161,14 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   {
     switch( getSelectedPage() )
     {
+      case 1:
+        return false;
       case 2:
         return m_page2.isPageComplete();
       case 3:
         return m_page3.isPageComplete();
+
+        // default is not used, but...
       default:
         return m_page1.isChoiceTimeseries() ? m_page3.isPageComplete() : m_page2.isPageComplete();
     }
@@ -176,7 +180,21 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
+    switch( getSelectedPage() )
+    {
+      case 1:
+      default:
+        return false;
+      case 2:
+        return performFinishCreateObservation();
+      case 3:
+        return performFinishLinkObservation();
+    }
 
+  }
+
+  private boolean performFinishCreateObservation( )
+  {
     final TimeserieTypeDescription choosenDesc = getDescription();
 
     // TODO
@@ -236,6 +254,11 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
     m_boundaryCondition = bc;
 
+    return true;
+  }
+
+  private boolean performFinishLinkObservation( )
+  {
     return true;
   }
 
