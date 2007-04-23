@@ -1022,7 +1022,32 @@
             categoryId="org.kalypso.ogc.gml.map.category"
             description="Zoom to active layer"
             id="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
-            name="Zoom to active layer"/>                                                          
+            name="Zoom to active layer"/>
+      <category
+            description="Commands for the SWTTable View"
+            id="org.kalypso.model.wspm.ui.view.table.swt.category"
+            name="SWTTable Commands"/>
+      <command
+            category="SWTTable Commands"
+            categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+            id="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
+            name="Move up">
+      </command>
+      <context
+            id="org.kalypso.model.wspm.ui.view.table.swt.context"
+            name="Table View"
+            parent="org.eclipse.ui.contexts.window"
+            parentId="org.eclipse.ui.contexts.window"/>
+      <context
+            id="org.kalypso.ogc.gml.map.context"
+            name="Map View"
+            parent="org.eclipse.ui.contexts.window"
+            parentId="org.eclipse.ui.contexts.window"/>
+      <command
+            category="SWTTable Commands"
+            categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+            id="Move down"
+            name="Move down"/>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1193,13 +1218,21 @@ TODO: unfortunately the save button is always disabled
           commandId="org.kalypso.ogc.gml.map.MoveRightCommand"/>
     <handler
           class="org.kalypso.ogc.gml.map.handlers.MoveUpHandler"
-          commandId="org.kalypso.ogc.gml.map.MoveUpCommand"/>
+          commandId="org.kalypso.ogc.gml.map.MoveUpCommand">
+    </handler>
     <handler
           class="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
           commandId="org.kalypso.ogc.gml.map.MoveDownCommand"/>                                               
     <handler
           class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
-          commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"/>                                                                
+          commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"/>
+    <handler
+          class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveUpHandler"
+          commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand">
+    </handler>
+    <handler
+          class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveDownHandler"
+          commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"/>                                                                
  </extension>
  <extension
        point="org.eclipse.ui.bindings">
@@ -1237,6 +1270,16 @@ TODO: unfortunately the save button is always disabled
           commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
           contextId="org.eclipse.ui.contexts.window"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1+L"/>                                                                   
+          sequence="M1+L"/>
+    <key
+          commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
+          contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="M1+ARROW_UP"/>
+    <key
+          commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"
+          contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="M1+ARROW_DOWN"/>                                                                   
  </extension>
 </plugin>
