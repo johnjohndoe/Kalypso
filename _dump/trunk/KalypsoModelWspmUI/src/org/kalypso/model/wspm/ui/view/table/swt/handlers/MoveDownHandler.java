@@ -45,9 +45,15 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.model.wspm.core.profil.changes.PointMove;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.view.table.TableView;
+import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 
 /**
  * @author kimwerner
@@ -58,19 +64,30 @@ public class MoveDownHandler extends AbstractHandler implements IHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( "No active part." );
+    {
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+      if( part == null )
+        throw new ExecutionException( "No active part." );
 
-    final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
-    if( mapPanel == null )
-      throw new ExecutionException( "Active part has no MapPanel." );
-//  TODO: KIM
-    return null;
+      final Object adapterObject = part.getAdapter(TableView.class );
+      if( adapterObject instanceof TableView )
+      {
+        final ProfilSWTTableView tableView = ((TableView)adapterObject).getTableView();
+        final IStructuredSelection selection = (IStructuredSelection) tableView.getSelectionProvider().getSelection();
+        
+        final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(),selection.toList(), 1 ), true );
+        new ProfilOperationJob( operation ).schedule();
+      return Status.OK_STATUS;
+      }
+      else 
+        throw new ExecutionException( "Active part has no Table." );
+      
+      
+    }
   }
-
 }

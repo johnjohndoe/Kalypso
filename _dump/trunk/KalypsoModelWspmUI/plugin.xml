@@ -401,5 +401,49 @@
             class="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"
             id="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"/>
    </extension>
+      <extension
+            point="org.eclipse.ui.commands">
+         <context
+               id="org.kalypso.model.wspm.ui.view.table.swt.context"
+               name="Table View"
+               parent="org.eclipse.ui.contexts.window"
+               parentId="org.eclipse.ui.contexts.window"/>
+         <category
+               description="Commands for the SWTTable View"
+               id="org.kalypso.model.wspm.ui.view.table.swt.category"
+               name="SWTTable Commands"/>
+         <command
+               category="SWTTable Commands"
+               categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+               id="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
+               name="Move up"/>
+         <command
+               category="SWTTable Commands"
+               categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+               id="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"
+               name="Move down"/>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+         <handler
+               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveUpHandler"
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"/>
+         <handler
+               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveDownHandler"
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"/>
+      </extension>
+      <extension
+            point="org.eclipse.ui.bindings">
+         <key
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
+               contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
+               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+               sequence="M1+ARROW_UP"/>
+         <key
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"
+               contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
+               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+               sequence="M1+ARROW_DOWN"/>
+      </extension>
    
 </plugin>

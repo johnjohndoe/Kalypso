@@ -54,6 +54,8 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
@@ -138,6 +140,11 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   @Override
   public void createPartControl( final Composite parent )
   {
+    IContextService contextService = (IContextService) getSite()
+    .getService(IContextService.class);
+  contextService.activateContext("org.kalypso.model.wspm.ui.view.table.swt.context");
+
+    
     m_control = new Composite( parent, SWT.NONE );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 0;
