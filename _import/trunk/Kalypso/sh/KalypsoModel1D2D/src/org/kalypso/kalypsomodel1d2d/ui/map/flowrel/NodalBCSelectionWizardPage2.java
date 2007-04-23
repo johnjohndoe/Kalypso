@@ -233,7 +233,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     
     parent.pack();
     parent.layout();
-    updatePageState();
+    setValues();
   }
 
   private void updatePageState( )

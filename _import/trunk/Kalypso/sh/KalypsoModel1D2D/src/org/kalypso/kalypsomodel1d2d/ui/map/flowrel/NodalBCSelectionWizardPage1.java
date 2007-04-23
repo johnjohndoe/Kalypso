@@ -70,7 +70,7 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
 
   public void init( ISelection selection )
   {
-    m_radioBtnGroup = new Button[m_descriptions.length + 1];
+    m_radioBtnGroup = new Button[m_descriptions.length];
   }
 
   /**
@@ -84,7 +84,7 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    for( int i = 0; i < m_radioBtnGroup.length - 1; i++ )
+    for( int i = 0; i < m_radioBtnGroup.length; i++ )
     {
       final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
       gridData.horizontalSpan = 3;
@@ -92,8 +92,6 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
       m_radioBtnGroup[i].setText( m_descriptions[i].getName() );
       m_radioBtnGroup[i].setLayoutData( gridData );
     }
-    m_radioBtnGroup[m_radioBtnGroup.length - 1] = new Button( container, SWT.RADIO );
-    m_radioBtnGroup[m_radioBtnGroup.length - 1].setText( "Zeitreihe aus Repository" );
     m_radioBtnGroup[m_radioBtnGroup.length - 1].addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -102,25 +100,6 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
         getWizard().getContainer().updateButtons();
       }
     } );
-
-    final GridData gridData2 = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    gridData2.horizontalSpan = 2;
-    m_radioBtnGroup[m_radioBtnGroup.length - 1].setLayoutData( gridData2 );
-    // Button button = new Button( container, SWT.PUSH );
-    // button.setText( "Durchsuchen..." );
-    // button.addSelectionListener( new SelectionAdapter()
-    // {
-    // @Override
-    // public void widgetSelected( SelectionEvent e )
-    // {
-    // for(int i=0; i<m_radioBtnGroup.length - 1; i++)
-    // m_radioBtnGroup[i].setSelection( false );
-    // m_radioBtnGroup[m_radioBtnGroup.length - 1].setSelection( true );
-    // blahBlah();
-    //        
-    // }
-    // } );
-
     m_radioBtnGroup[0].setFocus();
   }
 
@@ -132,7 +111,7 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
         return i;
     }
     // TODO what if nothing is selected (if possible)
-    return 0;
+    return -1;
   }
 
   public boolean isChoiceTimeseries( )

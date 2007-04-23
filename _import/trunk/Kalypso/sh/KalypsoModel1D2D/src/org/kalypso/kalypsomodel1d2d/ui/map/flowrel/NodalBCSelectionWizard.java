@@ -65,6 +65,9 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
@@ -97,6 +100,8 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   private IBoundaryCondition m_boundaryCondition;
 
   private IPath m_repositoryPath;
+  
+  private IFolder m_currentSzenario;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
@@ -108,7 +113,8 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     setWindowTitle( "Randbedinung definieren" );
-    m_repositoryPath = currentScenarioFolder.getProject().getLocation().append( "/imports/timeseries" );
+    m_currentSzenario = currentScenarioFolder;
+    m_repositoryPath = m_currentSzenario.getProject().getLocation().append( "/imports/timeseries" );
   }
 
   @Override
@@ -120,7 +126,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
     m_page3 = new WizardPageZmlChooser();
-    m_page3.init( m_repositoryPath.toOSString() );
+    m_page3.init( m_currentSzenario, m_repositoryPath.toOSString() );
     m_page3.setPreviousPage( m_page1 );
     addPage( m_page3 );
   }
@@ -180,26 +186,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
-    switch( getSelectedPage() )
-    {
-      case 1:
-      default:
-        return false;
-      case 2:
-        return performFinishCreateObservation();
-      case 3:
-        return performFinishLinkObservation();
-    }
-
-  }
-
-  private boolean performFinishCreateObservation( )
-  {
     final TimeserieTypeDescription choosenDesc = getDescription();
-
-    // TODO
-    // - get time intervall
-    // - get source-uri
 
     /* Create new feature */
     final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
@@ -211,7 +198,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     /* Initialize observation with components */
     final Feature obsFeature = bc.getTimeserieFeature();
 
-    final String[] componentUrns = choosenDesc.getComponentUrns();
+    final String[] componentUrns = m_page1.isChoiceTimeseries() ? m_page3.getComponentUrns() : choosenDesc.getComponentUrns();
     final IComponent[] components = new IComponent[componentUrns.length];
 
     for( int i = 0; i < components.length; i++ )
@@ -225,40 +212,77 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     for( final IComponent component : components )
       result.addComponent( component );
 
-    final BigDecimal value = new BigDecimal( m_page2.getDefaultValue() );
-
-    GregorianCalendar calendarCurrent = new GregorianCalendar();
-    calendarCurrent.setTime( m_page2.getFromDate() );
-
-    GregorianCalendar calendarTo = new GregorianCalendar();
-    calendarTo.setTime( m_page2.getToDate() );
-
     // TODO: Refaktor in order to let different types of observations to be created
     final IComponent domainComponent = components[0];
     final IComponent valueComponent = components[1];
 
-    do
+    GregorianCalendar calendarFrom = new GregorianCalendar();
+    GregorianCalendar calendarTo = new GregorianCalendar();
+    BigDecimal value = null;
+    if( !m_page1.isChoiceTimeseries() )
     {
-      final IRecord record = result.createRecord();
-
-      record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarCurrent ) );
-      record.setValue( valueComponent, value );
-
-      result.add( record );
-
-      calendarCurrent.add( Calendar.MINUTE, m_page2.getStep() );
+      value = new BigDecimal( m_page2.getDefaultValue() );
+      calendarFrom.setTime( m_page2.getFromDate() );
+      calendarTo.setTime( m_page2.getToDate() );
+      do
+      {
+        final IRecord record = result.createRecord();
+        record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
+        record.setValue( valueComponent, value );
+        result.add( record );
+        calendarFrom.add( Calendar.MINUTE, m_page2.getStep() );
+      }
+      while( !calendarFrom.after( calendarTo ) );
     }
-    while( !calendarCurrent.after( calendarTo ) );
-
+    else
+    {
+      ITuppleModel model = m_page3.getTuppleModel();
+      IAxis dateAxis = model.getAxisList()[0];
+      IAxis valueAxis = model.getAxisList()[1];
+      int cntFrom;
+      int cntTo;
+      try
+      {
+        for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
+        {
+          Date date = (Date) model.getElement( cntFrom, dateAxis );
+          if( m_page3.getFromDate().before( date ) )
+            break;
+        }
+        for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
+        {
+          Date date = (Date) model.getElement( cntTo, dateAxis );
+          if( m_page3.getToDate().before( date ) )
+          {
+            cntTo--;
+            break;
+          }
+        }
+        for( int i = cntFrom; i < cntTo; i++ )
+        {
+          Double doubleValue = (Double) model.getElement( cntFrom, valueAxis );
+          value = BigDecimal.valueOf( doubleValue );
+          final IRecord record = result.createRecord();
+          GregorianCalendar calendar = new GregorianCalendar();
+          calendar.setTime( (Date) model.getElement( i, dateAxis ) );
+          record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendar ) );
+          record.setValue( valueComponent, value );
+          result.add( record );
+        }
+      }
+      catch( SensorException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      // TODO
+      // - get time intervall
+      // - get source-uri
+    }
     ObservationFeatureFactory.toFeature( obs, obsFeature );
 
     m_boundaryCondition = bc;
 
-    return true;
-  }
-
-  private boolean performFinishLinkObservation( )
-  {
     return true;
   }
 

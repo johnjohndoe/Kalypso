@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -16,6 +17,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -45,6 +47,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.wizards.imports.observation.ImportObservationWizard;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
@@ -78,6 +81,8 @@ public class WizardPageZmlChooser extends WizardPage
   protected TextTitle m_subTitle;
 
   private String m_parentFolder = "";
+  
+  private IFolder m_currentSzenario;
 
   private Text m_dateFromTxt;
 
@@ -99,15 +104,16 @@ public class WizardPageZmlChooser extends WizardPage
     setDescription( "Some subtitle that should be changed." );
   }
 
-  public void init( String parentFolder )
+  public void init( IFolder currentSzenario, String parentFolder )
   {
+    m_currentSzenario = currentSzenario;
     m_parentFolder = parentFolder;
     setPageComplete( false );
   }
 
   public void createControl( Composite parent )
   {
-    Composite topComposite = new Composite( parent, SWT.NONE );
+    final Composite topComposite = new Composite( parent, SWT.NONE );
     GridLayout gridLayout = new GridLayout ();
     gridLayout.numColumns = 4;
     gridLayout.makeColumnsEqualWidth = true;
@@ -122,16 +128,39 @@ public class WizardPageZmlChooser extends WizardPage
     data.grabExcessVerticalSpace = true;
     innerComposite.setLayoutData (data);
 
-    TreeViewer treeViewer = new TreeViewer( innerComposite );
+    final TreeViewer treeViewer = new TreeViewer( innerComposite );
     treeViewer.setContentProvider( new FileTreeContentProvider() );
     treeViewer.setLabelProvider( new FileTreeLabelProvider() );
     treeViewer.setInput( new File( m_parentFolder ) );
     treeViewer.addFilter( new ZmlFilter() );
+    
+    Button loadZmlBtn = new Button(topComposite, SWT.PUSH);
+    data = new GridData ();
+    data.horizontalAlignment = GridData.FILL;
+    data.horizontalSpan = 1;
+    data.grabExcessHorizontalSpace = false;
+    loadZmlBtn.setText( "Importieren" );
+    loadZmlBtn.setLayoutData( data );
+    loadZmlBtn.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final ImportObservationWizard wizard = new ImportObservationWizard();
+        wizard.setProject( m_currentSzenario.getProject() );
+        final WizardDialog dialog = new WizardDialog( topComposite.getShell(), wizard );
+        dialog.open();
+        treeViewer.refresh();
+      }
+    } );
 
     Label vonLbl = new Label(topComposite, SWT.NONE);
     data = new GridData ();
     data.horizontalAlignment = GridData.FILL;
-    data.horizontalSpan = 2;
+    data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = true;
     vonLbl.setText( "Von:" );
     vonLbl.setAlignment( SWT.RIGHT );
@@ -260,9 +289,9 @@ public class WizardPageZmlChooser extends WizardPage
     
     
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( innerComposite, SWT.RIGHT | SWT.BORDER | SWT.EMBEDDED | SWT.Paint ) );
-
+    
     vFrame.add( ChartFactory.createChartPanel( m_chart ) );
-
+    
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
@@ -347,4 +376,35 @@ public class WizardPageZmlChooser extends WizardPage
     m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
   }
   
+  public Date getFromDate() {
+    return m_dateFrom;
+  }
+  
+  public Date getToDate() {
+    return m_dateTo;
+  }
+  
+  public ITuppleModel getTuppleModel() {
+    try
+    {
+      return m_observation.getValues( null );
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  
+  public String[] getComponentUrns() {
+    String[] res = new String[2];
+    res[0] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
+    res[1] = "";
+    String type = m_observation.getAxisList()[1].getType();
+    if(type.equals( "W" ))
+      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
+    if(type.equals( "Q" ))
+      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
+    return res;
+  }
 }

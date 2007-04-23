@@ -122,6 +122,11 @@ public class ImportObservationWizard extends Wizard implements IWithContext
   {
     m_project = ((IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME )).getProject();
   }
+  
+  public final void setProject( IProject project )
+  {
+    m_project = project;
+  }
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
