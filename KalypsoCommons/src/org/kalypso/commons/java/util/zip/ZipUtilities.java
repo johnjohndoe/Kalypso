@@ -48,7 +48,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -56,6 +58,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.zip.ZipFile;
 import org.kalypso.commons.java.io.FileUtilities;
 
@@ -169,6 +172,47 @@ public class ZipUtilities
   public static void unzip( final InputStream inputStream, final File targetdir ) throws IOException
   {
     unzip( inputStream, targetdir, true );
+  }
+
+  public static void unzip( final InputStream inputStream, final String pattern, final File targetdir, final boolean overwriteExisting ) throws IOException
+  {
+    final ZipInputStream zis = new ZipInputStream( inputStream );
+    while( true )
+    {
+      final ZipEntry entry = zis.getNextEntry();
+      if( entry == null )
+        break;
+
+      final String name = entry.getName();
+
+      if( !SelectorUtils.matchPath( pattern, name ) )
+        continue;
+
+      final File newfile = new File( targetdir, name );
+
+      if( entry.isDirectory() )
+        newfile.mkdirs();
+      else
+      {
+        if( !newfile.getParentFile().exists() )
+          newfile.getParentFile().mkdirs();
+
+        OutputStream os = null;
+        try
+        {
+          if( !overwriteExisting && newfile.exists() )
+            os = new NullOutputStream();
+          else
+            os = new BufferedOutputStream( new FileOutputStream( newfile ) );
+
+          IOUtils.copy( zis, os );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( os );
+        }
+      }
+    }
   }
 
   /**
