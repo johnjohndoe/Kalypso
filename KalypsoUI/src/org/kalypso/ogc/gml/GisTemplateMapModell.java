@@ -41,13 +41,20 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
@@ -149,7 +156,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
       final CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
       return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs, this );
     }
-    else if( ArrayUtils.contains( arrImgTypes, layerType.getLinktype().toLowerCase() ) ) 
+    else if( ArrayUtils.contains( arrImgTypes, layerType.getLinktype().toLowerCase() ) )
     {
       return KalypsoPictureTheme.getPictureTheme( layerType, context, this, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
     }
@@ -165,85 +172,121 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   }
 
   // Helper
-  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName )
+  public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final String customName, IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    final ObjectFactory maptemplateFactory = new ObjectFactory();
-    final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory();
-    //
-    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-    final Gismapview gismapview = maptemplateFactory.createGismapview();
-    final Layers layersType = maptemplateFactory.createGismapviewLayers();
-    if( bbox != null )
+    if( monitor == null )
     {
-      final ExtentType extentType = extentFac.createExtentType();
-
-      extentType.setTop( bbox.getMax().getY() );
-      extentType.setBottom( bbox.getMin().getY() );
-      extentType.setLeft( bbox.getMin().getX() );
-      extentType.setRight( bbox.getMax().getX() );
-      extentType.setSrs( srsName );
-      gismapview.setExtent( extentType );
+      monitor = new NullProgressMonitor();
     }
-
-    final List<StyledLayerType> layerList = layersType.getLayer();
-
-    gismapview.setLayers( layersType );
-
-    // Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
-    // final List layerList = (List)gismapview.getLayers(); //CK
-    final IKalypsoTheme[] themes = m_modell.getAllThemes();
-    for( int i = 0; i < themes.length; i++ )
+    ByteArrayInputStream bis = null;
+    try
     {
-      final StyledLayerType layer = templateFactory.createStyledLayerType();
-      if( layer == null )
+      final IKalypsoTheme[] themes = m_modell.getAllThemes();
+      monitor.beginTask( "Kartenvorlage speichern", themes.length * 1000 + 1000 );
+
+      final ObjectFactory maptemplateFactory = new ObjectFactory();
+      final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory();
+      //
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final Gismapview gismapview = maptemplateFactory.createGismapview();
+      final Layers layersType = maptemplateFactory.createGismapviewLayers();
+      if( customName != null )
       {
-        continue;
+        gismapview.setName( customName );
+      }
+      if( bbox != null )
+      {
+        final ExtentType extentType = extentFac.createExtentType();
+
+        extentType.setTop( bbox.getMax().getY() );
+        extentType.setBottom( bbox.getMin().getY() );
+        extentType.setLeft( bbox.getMin().getX() );
+        extentType.setRight( bbox.getMax().getX() );
+        extentType.setSrs( srsName );
+        gismapview.setExtent( extentType );
       }
 
-      final IKalypsoTheme kalypsoTheme = themes[i];
-      if( kalypsoTheme instanceof GisTemplateFeatureTheme )
+      final List<StyledLayerType> layerList = layersType.getLayer();
+
+      gismapview.setLayers( layersType );
+
+      monitor.worked( 100 );
+      // Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
+      // final List layerList = (List)gismapview.getLayers(); //CK
+      for( int i = 0; i < themes.length; i++ )
       {
-        ((GisTemplateFeatureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
-        .isThemeEnabled( kalypsoTheme ) );
-        layerList.add( layer );
+        final StyledLayerType layer = templateFactory.createStyledLayerType();
+        if( layer == null )
+        {
+          continue;
+        }
+
+        final IKalypsoTheme kalypsoTheme = themes[i];
+        if( kalypsoTheme instanceof GisTemplateFeatureTheme )
+        {
+          ((GisTemplateFeatureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
+          .isThemeEnabled( kalypsoTheme ) );
+          layerList.add( layer );
+          monitor.worked( 1000 );
+        }
+        else if( kalypsoTheme instanceof KalypsoWMSTheme )
+        {
+          final String name = kalypsoTheme.getName();
+          GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), //$NON-NLS-1$
+          (KalypsoWMSTheme) kalypsoTheme );
+          layerList.add( layer );
+          monitor.worked( 1000 );
+        }
+        else if( kalypsoTheme instanceof KalypsoPictureTheme )
+        {
+          ((KalypsoPictureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) ); //$NON-NLS-1$
+          layerList.add( layer );
+          monitor.worked( 1000 );
+        }
+        else if( kalypsoTheme instanceof CascadingKalypsoTheme )
+        {
+          final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) kalypsoTheme);
+          cascadingKalypsoTheme.fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
+          .isThemeEnabled( kalypsoTheme ) );
+          layerList.add( layer );
+          
+          cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
+        }
+        
+        if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
+        {
+          layersType.setActive( layer );
+        }
       }
-      else if( kalypsoTheme instanceof KalypsoWMSTheme )
-      {
-        final String name = kalypsoTheme.getName();
-        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), //$NON-NLS-1$
-        (KalypsoWMSTheme) kalypsoTheme );
-        layerList.add( layer );
-      }
-      else if( kalypsoTheme instanceof KalypsoPictureTheme )
-      {
-        ((KalypsoPictureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) ); //$NON-NLS-1$
-        layerList.add( layer );
-      }
-      else if( kalypsoTheme instanceof CascadingKalypsoTheme )
-      {
-        ((CascadingKalypsoTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
-        .isThemeEnabled( kalypsoTheme ) );
-        layerList.add( layer );
-      }
-      if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
-      {
-        layersType.setActive( layer );
-      }
+     
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      GisTemplateHelper.saveGisMapView( gismapview, bos, file.getCharset() );
+      bos.close();
+      bis = new ByteArrayInputStream( bos.toByteArray() );
+      if( file.exists() )
+        file.setContents( bis, false, true, new SubProgressMonitor( monitor, 900 ) );
+      else
+        file.create( bis, false, new SubProgressMonitor( monitor, 900 ) );
     }
-    // try
-    // {
-    // // is this code still used?
-    // // GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
-    // /* GM_Envelope env = */
-    // // gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
-    // // System.out.println( env );
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // }
+    catch( final Throwable e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+    }
+    finally
+    {
+      monitor.done();
 
-    return gismapview;
+      if( bis != null )
+        try
+        {
+          bis.close();
+        }
+        catch( final IOException e1 )
+        {
+          // never occurs with a byteinputstream
+          e1.printStackTrace();
+        }
+    }
   }
 
   public void activateTheme( final IKalypsoTheme theme )

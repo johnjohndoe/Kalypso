@@ -69,7 +69,12 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof IKalypsoFeatureTheme )
+    if( parentElement instanceof IMapModell )
+    {
+      final IMapModell mapModell = (IMapModell) parentElement;
+      return mapModell.getAllThemes();
+    }
+    else if( parentElement instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) parentElement;
       final UserStyle[] styles = theme.getStyles();
@@ -90,7 +95,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
         return null;
 
       final KalypsoUserStyle userStyle = obj.getStyle();
-      
+
       final Rule[] rules = userStyle.getFeatureTypeStyles()[0].getRules();
 
       // need to parse all rules as some might belong to a filter-rule-pattern
@@ -121,17 +126,22 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof ThemeStyleTreeObject )
+    if( element instanceof IMapModell )
+    {
+      final IMapModell mapModell = (IMapModell) element;
+      return mapModell.getAllThemes().length > 0;
+    }
+    else if( element instanceof ThemeStyleTreeObject )
     {
       final ThemeStyleTreeObject obj = (ThemeStyleTreeObject) element;
       final UserStyle userStyle = obj.getStyle();
       final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
       if( featureTypeStyles.length == 0 )
         return false;
-      
+
       if( featureTypeStyles[0].getRules().length > 0 )
         return true;
-    }
+    }    
     return (element instanceof IKalypsoTheme);
   }
 

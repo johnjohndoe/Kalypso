@@ -41,9 +41,6 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Rectangle;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
@@ -492,29 +489,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       return;
 
     m_saving = true;
-    ByteArrayInputStream bis = null;
     try
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
       final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
       final String customName = getCustomName();
-      if( customName != null )
-      {
-        modellTemplate.setName( customName );
-      }
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
-      bos.close();
-
-      bis = new ByteArrayInputStream( bos.toByteArray() );
-      monitor.worked( 1000 );
-
-      if( file.exists() )
-        file.setContents( bis, false, true, monitor );
-      else
-        file.create( bis, false, monitor );
+      m_mapModell.createGismapTemplate( boundingBox, srsName, customName, monitor, file );
     }
     catch( final CoreException e )
     {
@@ -525,21 +506,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       m_saving = false;
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
-    }
-    finally
-    {
-      monitor.done();
-
-      if( bis != null )
-        try
-        {
-          bis.close();
-        }
-        catch( IOException e1 )
-        {
-          // never occurs with a byteinputstream
-          e1.printStackTrace();
-        }
     }
     m_saving = false;
 
