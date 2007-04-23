@@ -40,53 +40,57 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
 /**
  * @author kimwerner
  */
-public class PointRemove implements IProfilChange
+public class PointMove implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IProfilPoint m_point;
+  private final List<IProfilPoint> m_points = new ArrayList<IProfilPoint>();
 
-  private IProfilPoint m_pointBefore;
-  
-  private String m_info = null;
+  private int m_direction;
 
-  public PointRemove( final IProfil profil, final IProfilPoint point )
+  public PointMove( final IProfil profil, final IProfilPoint point, final int direction )
   {
     m_profil = profil;
-    m_point = point;
+    m_points.add( point );
+    m_direction = direction;
+  }
+
+  public PointMove( final IProfil profil, final List<IProfilPoint> points, final int direction )
+  {
+    m_profil = profil;
+    m_points.addAll( points );
+    m_direction = direction;
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
     {
       hint.setPointsChanged();
     }
-    m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
-
-    if( m_profil.removePoint( m_point ) )
-    {
-      return new PointAdd( m_profil, m_pointBefore, m_point );
-    }
-    else
-    {
-      m_profil.setActivePoint( m_point );
-      m_info = "Breite: " + String.format( "%.4f", m_point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ));
-      throw new IllegalProfileOperationException( "Punkt kann nicht gelöscht werden", this );
-    }
+    if( m_direction == 0 )
+      return new PointMove( m_profil, m_points, 0 );
+    final List<IProfilPoint> points = m_profil.getPoints();
+    final int index = points.indexOf( m_points.get( 0 ) );
+    final int newPosition = index + m_direction;
+    if( newPosition < 0 || newPosition >= points.size() )
+      return new PointMove( m_profil, m_points, 0 );
+    points.removeAll( m_points );
+    points.addAll( newPosition, m_points );
+    return new PointMove( m_profil, m_points, -m_direction );
   }
 
   /**
@@ -94,7 +98,7 @@ public class PointRemove implements IProfilChange
    */
   public Object getObject( )
   {
-    return m_point;
+    return m_points;
   }
 
   /**
@@ -102,7 +106,7 @@ public class PointRemove implements IProfilChange
    */
   public String getInfo( )
   {
-    return m_info;
+    return "Punkte in der Liste verschieben";
   }
 
   /**
@@ -110,7 +114,7 @@ public class PointRemove implements IProfilChange
    */
   public Double getValue( )
   {
-    return null;
+    return new Double( m_direction );
   }
 
 }

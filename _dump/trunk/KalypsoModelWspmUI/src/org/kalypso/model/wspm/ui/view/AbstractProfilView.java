@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -100,6 +102,12 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
     m_control = doCreateControl( parent, style );
     return m_control;
+//  KIM 
+//    IContextService contextService = (IContextService) parent.getSite()
+//    .getService(IContextService.class);
+//  IContextActivation contextActivation = contextService.activateContext("org.kalypso.model.wspm.ui.view.table.swt.context");
+   //KIM 
+    
   }
 
   public final Control getControl( )

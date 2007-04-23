@@ -38,27 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil;
+package org.kalypso.model.wspm.ui.view.table;
 
-/**
- * @author kimwerner
-  */
-public class IllegalProfileOperationException extends Exception
+import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
+
+public class OrderPointDownDelegate extends TableViewDelegate
 {
-  private final IProfilChange m_operation;
-  public IllegalProfileOperationException( final String msg, IProfilChange profilChange )
+  public OrderPointDownDelegate(  )
   {
-    super( msg );
-    m_operation = profilChange;
-  }
-
-  public IllegalProfileOperationException( final String msg, final Throwable t, IProfilChange profilChange )
-  {
-    super( msg, t );
-    m_operation = profilChange;
-  }
-  public final IProfilChange getProfilChange()
-  {
-    return m_operation;
+    super( ProfilSWTTableView.ACTION_ORDERPOINT_DOWN );
   }
 }

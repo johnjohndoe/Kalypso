@@ -316,6 +316,18 @@
                  label="%com.bce.profil.eclipse.view.table.fillvalues"
                  menubarPath="additions"
                  tooltip="%com.bce.profil.eclipse.view.table.fillvalues.tooltip"/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.OrderPointUpDelegate"
+                 enablesFor="+"
+                 id="org.kalypso.model.wspm.ui.view.table.movepointup"
+                 label="nach oben"
+                 menubarPath="additions"/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.OrderPointDownDelegate"
+                 enablesFor="+"
+                 id="org.kalypso.model.wspm.ui.view.table.movepointdown"
+                 label="nach unten"
+                 menubarPath="additions"/>
         </viewerContribution>
         <objectContribution
               adaptable="true"

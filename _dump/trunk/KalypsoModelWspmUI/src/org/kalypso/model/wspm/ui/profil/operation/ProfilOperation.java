@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.operation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.runtime.IAdaptable;
@@ -51,13 +50,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 public final class ProfilOperation extends AbstractOperation
 {
@@ -120,7 +119,8 @@ public final class ProfilOperation extends AbstractOperation
     return doit( monitor, info, m_undoChanges, m_changes );
   }
 
-  private IStatus doit( final IProgressMonitor monitor, final IAdaptable info, final List<IProfilChange> undoChanges, List<IProfilChange> changes )
+  private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")
+  final IAdaptable info, final List<IProfilChange> undoChanges, List<IProfilChange> changes )
   {
     monitor.beginTask( "Profil wird geändert", changes.size() );
     final ProfilChangeHint hint = new ProfilChangeHint();
@@ -129,35 +129,52 @@ public final class ProfilOperation extends AbstractOperation
     {
       for( final IProfilChange change : changes )
       {
-        try
+
         {
           final IProfilChange undoChange = change.doChange( hint );
           if( undoChange instanceof IllegalChange )
           {
-            handleIllegalChanges( info, doneChanges, (String) undoChange.getObject() );
+            throw new IllegalProfileOperationException( undoChange.getInfo(), change );
           }
-          else
-          {
-            doneChanges.add( change );
-            undoChanges.add( 0, undoChange );
-            monitor.worked( 1 );
-          }
+          doneChanges.add( change );
+          undoChanges.add( 0, undoChange );
+          monitor.worked( 1 );
         }
-        catch( final IllegalProfileOperationException e )
-        {
-          rollback( undoChanges );
-          doneChanges.clear();
-          return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, "Fehler beim Ändern des Profils", e );
-        }
+
       }
+    }
+    catch( final IllegalProfileOperationException e )
+    {
+      if( m_rollbackAll )
+      {
+        rollback( undoChanges );
+        doneChanges.clear();
+      }
+      final Display d = PlatformUI.getWorkbench().getDisplay();
+      d.asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          if( !d.isDisposed() )
+          {
+            final IProfilChange change = e.getProfilChange();
+            if( change == null || change.getInfo() == null )
+              MessageDialog.openWarning( d.getActiveShell(), "Unvollständige Ausführung", e.getMessage() );
+            else
+              MessageDialog.openWarning( d.getActiveShell(), e.getMessage(), change.getInfo() );
+          }
+        }
+      } );
     }
     finally
     {
       // auf jeden Fall monitor beenden und
       // einen fire auf allen changes absetzen (zuviel ist nicht schlimm)
+      m_canUndo = undoChanges.size() > 0;
       monitor.done();
       m_pem.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );
     }
+    // auf jeden Fall OK zurückgeben da sonst die UNDO-Liste nicht gefüllt wird
     return Status.OK_STATUS;
   }
 
@@ -176,34 +193,6 @@ public final class ProfilOperation extends AbstractOperation
         e.printStackTrace();
       }
     }
-  }
-
-  private void handleIllegalChanges( final IAdaptable info, final List<IProfilChange> undoChanges, final String msg )
-  {
-    if( m_rollbackAll )
-    {
-      rollback( undoChanges );
-      undoChanges.clear();
-    }
-    else
-    {
-      if( info != null )
-      {
-        final Shell shell = (Shell) info.getAdapter( Shell.class );
-        shell.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            MessageDialog.openWarning( shell, "Unvollständige Ausführung", msg );
-          }
-        } );
-      }
-      else
-      {
-        Logger.getLogger( getClass().getName() ).warning( "Message-Dialog konnte nicht geöffnet werden. Ürsprungliche Nachricht: " + msg );
-      }
-    }
-    m_canUndo = undoChanges.size() > 0;
   }
 
   /**

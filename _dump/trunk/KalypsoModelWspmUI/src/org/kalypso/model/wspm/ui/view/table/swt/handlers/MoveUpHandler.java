@@ -38,27 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil;
+package org.kalypso.model.wspm.ui.view.table.swt.handlers;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 
 /**
  * @author kimwerner
-  */
-public class IllegalProfileOperationException extends Exception
+ */
+public class MoveUpHandler extends AbstractHandler implements IHandler
 {
-  private final IProfilChange m_operation;
-  public IllegalProfileOperationException( final String msg, IProfilChange profilChange )
+
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
+  @Override
+  public Object execute( ExecutionEvent arg0 ) throws ExecutionException
   {
-    super( msg );
-    m_operation = profilChange;
+    throw new ExecutionException("hgsh");
+   // return null;
   }
 
-  public IllegalProfileOperationException( final String msg, final Throwable t, IProfilChange profilChange )
-  {
-    super( msg, t );
-    m_operation = profilChange;
-  }
-  public final IProfilChange getProfilChange()
-  {
-    return m_operation;
-  }
 }

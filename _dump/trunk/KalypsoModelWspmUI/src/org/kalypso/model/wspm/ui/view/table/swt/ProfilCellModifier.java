@@ -71,7 +71,7 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
     if( pem == null )
       return false;
 
-    return pem.getProfil().hasPointProperty( property);
+    return pem.getProfil().hasPointProperty( property );
   }
 
   /**
@@ -99,10 +99,9 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
     else
       point = null;
 
-
     try
     {
-      final double oldValue = point.getValueFor( property);
+      final double oldValue = point.getValueFor( property );
       /* Null values are not allowed for the profile. */
       if( value == null || isValid( value ) != null )
         return;
@@ -111,7 +110,7 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
 
       if( Double.compare( oldValue, newValue ) != 0 )
       {
-        final PointPropertyEdit[] profilChanges = new PointPropertyEdit[] { new PointPropertyEdit( point,property, newValue ) };
+        final PointPropertyEdit[] profilChanges = new PointPropertyEdit[] { new PointPropertyEdit( point, property, newValue ) };
         final ProfilOperation operation = new ProfilOperation( "", pem, profilChanges, true );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -131,37 +130,24 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
     return new Double( value.toString().replace( ',', '.' ) );
   }
 
-//  public static IProfilPointProperty propertyForID( final IProfil profil, final String idstr )
-//  {
-//    final IProfilPointProperty[] columnKeys = profil.getPointProperties();
-//    for( final IProfilPointProperty key : columnKeys )
-//    {
-//      final IProfilPointProperty pointProperty = key;
-//      final String id = pointProperty.toString();
-//      if( id.equals( idstr ) )
-//        return pointProperty;
-//    }
-//
-//    return null;
-//  }
+  // public static IProfilPointProperty propertyForID( final IProfil profil, final String idstr )
+  // {
+  // final IProfilPointProperty[] columnKeys = profil.getPointProperties();
+  // for( final IProfilPointProperty key : columnKeys )
+  // {
+  // final IProfilPointProperty pointProperty = key;
+  // final String id = pointProperty.toString();
+  // if( id.equals( idstr ) )
+  // return pointProperty;
+  // }
+  //
+  // return null;
+  // }
 
   public double getValueAsDouble( final Object element, final String property )
   {
     final IProfilPoint row = (IProfilPoint) element;
-//    final IProfilEventManager pem = (IProfilEventManager) m_viewer.getInput();
-//    final IProfilPointProperty col = propertyForID( pem.getProfil(), property );
-
-    try
-    {
-      return row.getValueFor( property );
-    }
-    catch( final Exception e )
-    {
-      // should never happen
-      e.printStackTrace();
-
-      return Double.NaN;
-    }
+    return row.getValueFor( property );
   }
 
   /**

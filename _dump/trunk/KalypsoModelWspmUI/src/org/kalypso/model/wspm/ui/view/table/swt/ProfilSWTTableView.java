@@ -91,6 +91,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
+import org.kalypso.model.wspm.core.profil.changes.PointMove;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -141,6 +142,10 @@ public class ProfilSWTTableView extends AbstractProfilView
   public static final String ACTION_SELECTALL = "protfiltable.action.selectall";
 
   public static final String ACTION_FILLVALUES = "protfiltable.action.fillvalues";
+
+  public static final String ACTION_ORDERPOINT_UP = "protfiltable.action.orderpoint_up";
+
+  public static final String ACTION_ORDERPOINT_DOWN = "protfiltable.action.orderpoint_down";
 
   protected final static class ColumnStruct
   {
@@ -492,7 +497,7 @@ public class ProfilSWTTableView extends AbstractProfilView
           changes[i] = new PointRemove( getProfil(), point );
         }
         changes[pointsToDelete.length] = new ActiveObjectEdit( getProfil(), thePointBefore, IWspmConstants.POINT_PROPERTY_BREITE );
-        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, false );
+        final ProfilOperation operation = new ProfilOperation( "Punkte löschen", getProfilEventManager(), changes, false );
         new ProfilOperationJob( operation ).schedule();
       }
     } );
@@ -545,7 +550,7 @@ public class ProfilSWTTableView extends AbstractProfilView
       @Override
       public void run( )
       {
-        // TODO: das Verhalten ist im Moment zu strange....
+        // TODO KIM: das Verhalten ist im Moment zu strange....
         // besser wäre ein separater Dialog fürs einfügen von Punkten aus der Zwischenablage
         // ausserdem sollte es eine atomare operation sein, d.h. undo macht alles wieder rückgangig
         final ExcelClipboardAdapter adapter = new ExcelClipboardAdapter( getViewer() );
@@ -557,6 +562,36 @@ public class ProfilSWTTableView extends AbstractProfilView
 
         // wird wissen, dass das einfügen einen refresh auslöst, deswegen: false
         adapter.doPaste( row, column, false );
+      }
+    } );
+    m_actions.put( ACTION_ORDERPOINT_UP, new ProfilTableAction( this )
+    {
+      @SuppressWarnings("unchecked")
+      @Override
+      public void run( )
+      {
+        //final Object selected = getCursor().getRow().getData();
+        final TableViewer viewer = getViewer();
+        if( viewer == null )
+          return;
+        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        
+          final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(),selection.toList(), -1 ), true );
+          new ProfilOperationJob( operation ).schedule();
+
+      }
+    } );
+    m_actions.put( ACTION_ORDERPOINT_DOWN, new ProfilTableAction( this )
+    {
+      @Override
+      public void run( )
+      {
+        final Object selected = getCursor().getRow().getData();
+        if( selected instanceof IProfilPoint )
+        {
+          final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(), (IProfilPoint) selected, 1 ), true );
+          new ProfilOperationJob( operation ).schedule();
+        }
       }
     } );
     m_actions.put( ACTION_FILLVALUES, new ProfilTableAction( this )
@@ -573,23 +608,32 @@ public class ProfilSWTTableView extends AbstractProfilView
 
         final ProfilCellModifier cellModifier = (ProfilCellModifier) viewer.getCellModifier();
         final Object aktiveElement = row.getData();
-        final double value = cellModifier.getValueAsDouble( aktiveElement, property );
 
-        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-
-        final List<PointPropertyEdit> changes = new ArrayList<PointPropertyEdit>( selection.size() );
-
-        for( final Iterator iter = selection.iterator(); iter.hasNext(); )
+        try
         {
-          @SuppressWarnings("unchecked")
-          final Object element = iter.next();
-          if( element != aktiveElement )
-            changes.add( new PointPropertyEdit( (IProfilPoint) element, property, value ) );
-        }
+          final double value = cellModifier.getValueAsDouble( aktiveElement, property );
 
-        final PointPropertyEdit[] profilChanges = changes.toArray( new PointPropertyEdit[changes.size()] );
-        final ProfilOperation operation = new ProfilOperation( "Werte setzen", getProfilEventManager(), profilChanges, true );
-        new ProfilOperationJob( operation ).schedule();
+          final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+
+          final List<PointPropertyEdit> changes = new ArrayList<PointPropertyEdit>( selection.size() );
+
+          for( final Iterator iter = selection.iterator(); iter.hasNext(); )
+          {
+            @SuppressWarnings("unchecked")
+            final Object element = iter.next();
+            if( element != aktiveElement )
+              changes.add( new PointPropertyEdit( (IProfilPoint) element, property, value ) );
+          }
+
+          final PointPropertyEdit[] profilChanges = changes.toArray( new PointPropertyEdit[changes.size()] );
+          final ProfilOperation operation = new ProfilOperation( "Werte setzen", getProfilEventManager(), profilChanges, true );
+          new ProfilOperationJob( operation ).schedule();
+        }
+        catch( IllegalArgumentException e )
+        {
+          // do nothing
+          e.printStackTrace();
+        }
       }
     } );
   }

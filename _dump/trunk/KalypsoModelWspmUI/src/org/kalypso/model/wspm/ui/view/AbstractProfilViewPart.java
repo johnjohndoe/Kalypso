@@ -50,6 +50,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -120,6 +122,10 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
     final IEditorPart activeEditor = getSite().getPage().getActiveEditor();
     if( activeEditor instanceof ProfilchartEditor )
       setProfilchartEditor( (ProfilchartEditor)activeEditor );
+ 
+    
+    
+    
   }
 
   public final ProfilViewData getViewData( )

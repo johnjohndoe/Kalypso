@@ -80,7 +80,7 @@ public class BuildingWehr extends AbstractProfilBuilding
     for( final IProfilPointMarker devider : deviders )
     {
       if( profil.removePointMarker( devider ) == null )
-        throw new IllegalProfileOperationException( devider.getValueFor( "label" ) + " kann nicht entfernt werden." );
+        throw new IllegalProfileOperationException( devider.getValueFor( "label" ) + " kann nicht entfernt werden.", null );
     }
   }
 
