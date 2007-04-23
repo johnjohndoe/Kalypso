@@ -52,9 +52,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-public class FlowRelationshipCollection extends FeatureWrapperCollection<IFlowRelationship> implements IFlowRelationshipCollection
+public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelationship> implements IFlowRelationshipModel
 {
-  public FlowRelationshipCollection( final Feature featureCol )
+  public FlowRelationshipModel( final Feature featureCol )
   {
     super( featureCol, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
   }
@@ -62,7 +62,7 @@ public class FlowRelationshipCollection extends FeatureWrapperCollection<IFlowRe
   /**
    * TODO: make this method common to all FeatureWrapperCollections?
    * 
-   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth )
   {

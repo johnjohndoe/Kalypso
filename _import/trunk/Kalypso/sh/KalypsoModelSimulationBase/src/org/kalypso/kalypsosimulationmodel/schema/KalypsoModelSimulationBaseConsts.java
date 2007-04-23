@@ -116,5 +116,48 @@ public class KalypsoModelSimulationBaseConsts
               UrlCatalogModelSimulationBase.GML_IMITATIONS_NS_PREFIX,
               "pointCoverage");
   
-
+    
+    public static final QName SIM_BASE_F_FLOW_RESISTANCE_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "FlowResistanceModel");
+    
+    public static final QName SIM_BASE_P_FLOW_RESISTANCE_CONCEPT =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "flowResistanceConcept");
+    
+    public static final QName SIM_BASE_P_APPLICATION_ZONE =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "applicationZone");
+    
+    public static final QName SIM_BASE_P_STATIC_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "staticModel");
+    public static final QName SIM_BASE_P_OPERATIONAL_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "operationalModel");
+    public static final QName sIM_BASE_P_CONTROL_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "controlModel");
+    public static final QName SIM_BASE_P_RESULT_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "resultModel");
+    public static final QName SIM_BASE_P_EVALUATION_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "evaluationModel");
+    public static final QName SIM_BASE_P_OVERRIDING_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "overridingModel");
+    public static final QName SIM_BASE_P_ADDITIONAL_MODEL_PROPS =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "additionalModelProperties");
 }

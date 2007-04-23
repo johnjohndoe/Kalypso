@@ -57,7 +57,7 @@ import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
@@ -89,7 +89,7 @@ public class ImportWSPMHandler extends AbstractHandler
     {
       terrainModel = modelProvider.getModel( ITerrainModel.class );
       final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
-      final IFlowRelationshipCollection flowRelationModel = modelProvider.getModel( IFlowRelationshipCollection.class );
+      final IFlowRelationshipModel flowRelationModel = modelProvider.getModel( IFlowRelationshipModel.class );
 
       /* Import Reach into Terrain-Model */
       final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();

@@ -38,21 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.flowrel;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Position;
+package org.kalypso.kalypsosimulationmodel.core.modeling;
 
 /**
- * @author Gernot Belger
+ * Interace for classes representing a simBase:OperationalModel
+ * feature
+ * 
+ * @author Patrice Congo
+ *
  */
-public interface IFlowRelationshipCollection extends IFeatureWrapperCollection<IFlowRelationship>, IFeatureWrapper2
+public interface IOperationalModel extends IModel
 {
-  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
 
-  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
 }

@@ -21,7 +21,7 @@
 		/>
 	
 	<!-- **************************INCLUDES********************************** -->
-	<!-- xs:include schemaLocation="simulation_model.xsd"/ -->
+	<xs:include schemaLocation="simulation_model.xsd"/>
 	<xs:include 
 		schemaLocation="simulation_model_finite_elements_discretisation.xsd"/>
 	

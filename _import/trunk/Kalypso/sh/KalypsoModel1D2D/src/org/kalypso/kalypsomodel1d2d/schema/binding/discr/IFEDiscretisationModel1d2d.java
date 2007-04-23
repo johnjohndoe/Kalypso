@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  */
-public interface IFEDiscretisationModel1d2d extends IFeatureWrapper2
+public interface IFEDiscretisationModel1d2d extends IModel
 {
 
   /**

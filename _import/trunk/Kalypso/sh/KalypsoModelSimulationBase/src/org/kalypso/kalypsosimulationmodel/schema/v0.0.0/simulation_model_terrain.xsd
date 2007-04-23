@@ -24,6 +24,8 @@
 		</xs:appinfo>
 	</xs:annotation>
 
+	<xs:include schemaLocation="simulation_model.xsd"/>
+	
 	<xs:import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<xs:import
@@ -31,9 +33,9 @@
 		schemaLocation="roughness_model.xsd" />
 	<xs:import namespace="org.kalypso.model.wspmprofile"
 		schemaLocation="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/profile.xsd" />
-	<xs:import
+	<!--xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"
-		schemaLocation="gml_imitations.xsd" />
+		schemaLocation="gml_imitations.xsd" /-->
 
 
 	<!-- =================================================================
@@ -60,7 +62,7 @@
 		Terrain Model
 		================================================================== -->
 	<xs:element name="TerrainModel" type="simBase:TerrainModelType"
-		substitutionGroup="gml:_Feature">
+		substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Terrain model element with one terrain elevation element
@@ -77,7 +79,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="simBase:AbstractModelType">
 				<xs:sequence>
 					<xs:element
 						ref="simBase:terrainElevationModelSystem" minOccurs="1"

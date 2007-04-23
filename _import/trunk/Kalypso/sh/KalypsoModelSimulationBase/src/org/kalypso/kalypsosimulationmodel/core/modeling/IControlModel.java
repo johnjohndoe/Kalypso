@@ -38,27 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.flowresistance;
+package org.kalypso.kalypsosimulationmodel.core.modeling;
 
-import java.util.List;
-
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
 
 /**
- * Interface  for classes representing a simBase:FlowResistanceModel
- * feature 
+ * Interface representing a simBase:ControlModel
  * 
  * @author Patrice Congo
+ *
  */
-public interface IFlowResistanceModel extends IModel
+public interface IControlModel extends IModel
 {
-  
-  public IFeatureWrapperCollection<IFlowResistanceConcept> getFlowResistanceConcepts();
-  
-  
-  public List<IFlowResistanceConcept> getApplicableFlowResistanceConcepts(GM_Primitive zone);
-  
-  
+
 }

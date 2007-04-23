@@ -66,7 +66,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -108,7 +108,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 {
   private final int m_grabRadius = 20;
 
-  private IFlowRelationshipCollection m_flowRelCollection = null;
+  private IFlowRelationshipModel m_flowRelCollection = null;
 
   private IKalypsoFeatureTheme m_flowTheme = null;
 
@@ -159,7 +159,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
-    m_flowRelCollection = (IFlowRelationshipCollection) parentFeature.getAdapter( IFlowRelationshipCollection.class );
+    m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
   }
 
   /**

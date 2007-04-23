@@ -67,4 +67,16 @@ public interface IFlowResistanceConcept extends IFeatureWrapper2
    *            apply as gm primitive
    */
   public GM_Primitive getApplicationZone();
+  
+  /**
+   * Sets the application zone for this flow resistance concept
+   * @param zone to zone to be set
+   * @throws IllegalArgumentException if 
+   *    <ul>
+   *        <li/>zone is null
+   *        <li/>zone is not a point or a surface
+   *    </ul>
+   */
+  public void setApplicationZone( GM_Primitive zone );
+  
 }

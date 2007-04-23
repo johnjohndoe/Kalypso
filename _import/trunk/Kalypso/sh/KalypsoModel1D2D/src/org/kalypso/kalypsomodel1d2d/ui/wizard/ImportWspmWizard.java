@@ -79,7 +79,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -124,9 +124,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private final IFlowRelationshipCollection m_flowRelationCollection;
+  private final IFlowRelationshipModel m_flowRelationCollection;
 
-  public ImportWspmWizard( final IFEDiscretisationModel1d2d discretisationModel, final IRiverProfileNetworkCollection networkModel, final IFlowRelationshipCollection flowRelationCollection )
+  public ImportWspmWizard( final IFEDiscretisationModel1d2d discretisationModel, final IRiverProfileNetworkCollection networkModel, final IFlowRelationshipModel flowRelationCollection )
   {
     m_discretisationModel = discretisationModel;
     m_networkModel = networkModel;
@@ -166,7 +166,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IRiverProfileNetworkCollection profNetworkColl = m_networkModel;
     final IFEDiscretisationModel1d2d discModel = m_discretisationModel;
-    final IFlowRelationshipCollection flowRelModel = m_flowRelationCollection;
+    final IFlowRelationshipModel flowRelModel = m_flowRelationCollection;
 
     final List<Feature> discModelAdds = m_discModelAdds;
     final List<Feature> terrainModelAdds = m_terrainModelAdds;
@@ -238,7 +238,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return !status.matches( IStatus.ERROR );
   }
 
-  protected static IStatus doReadResults( final TuhhCalculation calculation, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipCollection flowRelModel ) throws MalformedURLException, Exception
+  protected static IStatus doReadResults( final TuhhCalculation calculation, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel ) throws MalformedURLException, Exception
   {
     try
     {

@@ -191,7 +191,9 @@
 	<!-- =====================================================================
 		operationalModel Property Type
 		================================================================== -->
-	<xs:element name="operationalModel" type="simBase:OperationalModelPropertyType">
+	<xs:element 
+			name="operationalModel" 
+			type="simBase:OperationalModelPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Use to associate an operational model to a simmulation model.
@@ -207,21 +209,27 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:_OperationalModel"/>
+			<xs:element ref="simBase:OperationalModel"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	<!-- =================================================================
 	OperationalModel
 	================================================================== -->
-	<xs:element name="_OperationalModel" type="simBase:AbstractOperationalModelType" abstract="true" substitutionGroup="simBase:_Model">
+	<xs:element 
+		name="OperationalModel" 
+		type="simBase:AbstractOperationalModelType" 
+		abstract="true" 
+		substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for all concrete OperationalModel element
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType name="AbstractOperationalModelType" abstract="true">
+	<xs:complexType 
+		name="AbstractOperationalModelType" 
+		abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for operational models.
@@ -259,14 +267,21 @@
 	<!-- ======================================================================
 		Control Model 
 	========================================================================-->
-	<xs:element name="ControlModel" type="simBase:AbstractControlModelType" abstract="true" substitutionGroup="simBase:_Model">
+	<xs:element 
+			name="ControlModel" 
+			type="simBase:AbstractControlModelType" 
+			abstract="true" 
+			substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head  for all concrete model types
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType name="AbstractControlModelType" abstract="true">
+
+	<xs:complexType 
+			name="AbstractControlModelType" 
+			abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for control models.
@@ -282,7 +297,10 @@
 	<!-- =====================================================================
 		resultModel property element 
 		===================================================================-->
-	<xs:element name="resultModel" type="simBase:ResultModelPropertyType" abstract="true">
+	<xs:element 
+			name="resultModel" 
+			type="simBase:ResultModelPropertyType" 
+			abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Use to associate a result model to a simmulation model.
@@ -291,28 +309,36 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType name="ResultModelPropertyType" abstract="true">
+	<xs:complexType 
+		name="ResultModelPropertyType" 
+		abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete result model property type.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element ref="simBase:ResultModel" minOccurs="0"/>
+			<xs:element 
+				ref="simBase:ResultModel" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	<!-- =================================================================
 		ResultModel
 	================================================================== -->
-	<xs:element name="ResultModel" type="simBase:AbstractResultModelType" substitutionGroup="simBase:_Model">
+	<xs:element 
+			name="ResultModel" 
+			type="simBase:AbstractResultModelType" 
+			substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for relt model
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType name="AbstractResultModelType" abstract="true">
+	<xs:complexType 
+			name="AbstractResultModelType" 
+			abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for result models.
@@ -392,7 +418,11 @@
 	<!-- =================================================================
 		OverridingModel 
 	================================================================== -->
-	<xs:element name="OverridingModel" type="simBase:AbstractOverridingModelType" abstract="true" substitutionGroup="simBase:_Model">
+	<xs:element 
+			name="OverridingModel" 
+			type="simBase:AbstractOverridingModelType" 
+			abstract="true" 
+			substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for overriding models

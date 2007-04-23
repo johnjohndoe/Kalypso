@@ -9,8 +9,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipCollection;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
@@ -277,7 +277,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
         };
         cMap.put(ITerrainModel.class, cTor);
         
-        // IFlowRelationshipCollection
+        // IFlowRelationshipModel
         cTor= new AdapterConstructor()
         {
             public Object constructAdapter(
@@ -285,10 +285,10 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
               Class cls) 
           throws IllegalArgumentException
           {
-            return new FlowRelationshipCollection(feature);
+            return new FlowRelationshipModel(feature);
           }
         };
-        cMap.put(IFlowRelationshipCollection.class, cTor);
+        cMap.put(IFlowRelationshipModel.class, cTor);
 
 		return Collections.unmodifiableMap(cMap);
 	}

@@ -49,10 +49,31 @@
 			<xs:extension 
 				base="simBase:AbstractModelType">
 				<xs:sequence>
-					
+					<xs:element
+						ref="simBase:flowResistanceConcept"
+						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>		
+	</xs:complexType>
+	
+	
+	<xs:element 
+		name="flowResistanceModel"
+		type="simBase:FlowResistanceModelPropertyType"/>
+	<xs:complexType name="FlowResistanceModelPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property to hold a _FlowResistanceConcept 
+				element, or a substitute
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:FlowResistanceModel"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	<!-- =========================================================

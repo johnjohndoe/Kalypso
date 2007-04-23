@@ -38,27 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.flowresistance;
+package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
-import java.util.List;
+import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * Interface  for classes representing a simBase:FlowResistanceModel
- * feature 
- * 
- * @author Patrice Congo
+ * @author Gernot Belger
  */
-public interface IFlowResistanceModel extends IModel
+public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IFeatureWrapper2
 {
-  
-  public IFeatureWrapperCollection<IFlowResistanceConcept> getFlowResistanceConcepts();
-  
-  
-  public List<IFlowResistanceConcept> getApplicableFlowResistanceConcepts(GM_Primitive zone);
-  
-  
+  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
+
+  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
 }

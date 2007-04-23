@@ -21,8 +21,9 @@ Require-Bundle:
  org.kalypso.ui.addlayer,
  de.renew.workflow.model
 Export-Package: org.kalypso.kalypsosimulationmodel.core,
- org.kalypso.kalypsosimulationmodel.core.flowrel,
  org.kalypso.kalypsosimulationmodel.core.discr,
+ org.kalypso.kalypsosimulationmodel.core.flowrel,
+ org.kalypso.kalypsosimulationmodel.core.modeling,
  org.kalypso.kalypsosimulationmodel.core.roughness,
  org.kalypso.kalypsosimulationmodel.core.terrainmodel,
  org.kalypso.kalypsosimulationmodel.schema,
