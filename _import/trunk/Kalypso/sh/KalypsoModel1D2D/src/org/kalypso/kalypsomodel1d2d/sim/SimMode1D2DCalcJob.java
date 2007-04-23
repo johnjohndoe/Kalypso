@@ -68,7 +68,7 @@ import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;

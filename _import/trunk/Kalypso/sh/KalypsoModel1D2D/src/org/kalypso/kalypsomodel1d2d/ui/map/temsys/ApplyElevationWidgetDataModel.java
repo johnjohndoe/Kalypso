@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;

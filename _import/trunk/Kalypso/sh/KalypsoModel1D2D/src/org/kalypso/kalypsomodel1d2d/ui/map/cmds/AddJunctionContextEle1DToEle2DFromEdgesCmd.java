@@ -42,10 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 
 import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DTo2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 

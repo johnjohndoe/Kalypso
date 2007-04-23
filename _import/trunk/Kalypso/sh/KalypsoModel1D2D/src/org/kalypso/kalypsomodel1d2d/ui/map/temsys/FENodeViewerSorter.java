@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.TableColumn;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;

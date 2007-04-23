@@ -3,8 +3,8 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;

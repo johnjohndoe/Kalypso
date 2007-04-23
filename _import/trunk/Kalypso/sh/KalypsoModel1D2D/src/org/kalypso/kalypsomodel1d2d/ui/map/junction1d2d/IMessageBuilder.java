@@ -43,8 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 import java.util.Collection;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

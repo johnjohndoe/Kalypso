@@ -3,7 +3,7 @@ package org.kalypso.wizards.import1d2d;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 

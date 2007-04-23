@@ -49,7 +49,7 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
