@@ -281,7 +281,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     m_listeners.remove( l );
   }
 
-  private Feature[] collectReferencableFeatures( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt )
+  public static Feature[] collectReferencableFeatures( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt )
   {
     final IFeatureType targetFeatureType = rt.getTargetFeatureType();
 
