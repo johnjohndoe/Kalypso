@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -73,7 +72,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -190,7 +190,7 @@ public class FeatureTemplateView extends ViewPart
             {
               partName = fileName;
             }
-            setCustomName(partName);
+            setCustomName( partName );
           }
           return Status.OK_STATUS;
         }
@@ -220,7 +220,7 @@ public class FeatureTemplateView extends ViewPart
     // m_templateviewer.dispose();
     // }
   }
-  
+
   public void setCustomName( final String name )
   {
     m_partName = name;
@@ -255,30 +255,14 @@ public class FeatureTemplateView extends ViewPart
    */
   private void saveFeature( )
   {
-    final Display display = m_templateviewer.getControl().getDisplay();
-    final UIJob job = new UIJob( display, "Feature speichern" )
+    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
-      /**
-       * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-       */
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
+      public IStatus execute( final IProgressMonitor monitor )
       {
-        IStatus status;
-        try
-        {
-          status = m_templateviewer.saveGML( monitor );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-          status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten", status );
-        }
-        return status;
+        return m_templateviewer.saveGML( monitor );
       }
     };
-    job.schedule();
+    ProgressUtilitites.busyCursorWhile( runnable, "Fehler beim Speichern der Daten" );
   }
 
   /**
