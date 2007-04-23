@@ -46,7 +46,7 @@
 				<Name>Import von Shapedateien</Name>
 				</Task>
 			-->
-			<Task context="ImportProfile" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfileImport">
+			<Task context="FenetMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfileImport">
 				<Help>Einladen von ASCII-Profildaten (Station, Rechtswert, Hochwert, Höhe)</Help>
 				<Name>Import von Profildaten (Trippel)</Name>
 			</Task>			
