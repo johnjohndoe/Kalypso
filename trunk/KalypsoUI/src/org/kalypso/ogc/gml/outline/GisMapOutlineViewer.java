@@ -159,9 +159,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
     // den Checkstate setzen!
     if( m_viewer != null )
     {
-      final IMapModell mm = getMapModell();
-      if( mm == null )
-        return;
+      // final IMapModell mm = getMapModell();
+      // if( mm == null )
+      // return;
 
       final StructuredViewer viewer = m_viewer;
       final Tree tt = m_viewer.getTree();
@@ -177,13 +177,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
           try
           {
             final TreeItem[] items = tt.getItems();
-            for( int i = 0; i < items.length; i++ )
-            {
-              final TreeItem item = items[i];
-
-              if( !item.isDisposed() )
-                item.setChecked( mm.isThemeEnabled( (IKalypsoTheme) item.getData() ) );
-            }
+            processItems( items );
 
             // und die ganze view refreshen!
             if( !viewer.getControl().isDisposed() )
@@ -192,6 +186,26 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
           catch( final RuntimeException e )
           {
             e.printStackTrace();
+          }
+        }
+
+        private void processItems( final TreeItem[] items )
+        {
+          for( int i = 0; i < items.length; i++ )
+          {
+            final TreeItem item = items[i];
+
+            if( !item.isDisposed() )
+            {
+              final Object data = item.getData();
+              if( data instanceof IKalypsoTheme )
+              {
+                final IKalypsoTheme theme = (IKalypsoTheme) data;
+                final IMapModell mm = theme.getMapModell();
+                item.setChecked( mm.isThemeEnabled( theme ) );
+              }
+              processItems( item.getItems() );
+            }
           }
         }
       } );
@@ -220,7 +234,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
     {
       if( data instanceof IKalypsoTheme )
       {
-        final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme) data, ti.getChecked() );
+        final IKalypsoTheme theme = (IKalypsoTheme) data;
+        final IMapModell mm = theme.getMapModell();
+        final ICommand command = new EnableThemeCommand( mm, theme, ti.getChecked() );
         postCommand( command, null );
       }
     }
