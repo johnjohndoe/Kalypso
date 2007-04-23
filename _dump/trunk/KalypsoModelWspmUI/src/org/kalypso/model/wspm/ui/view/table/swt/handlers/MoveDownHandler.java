@@ -49,11 +49,10 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.gml.map.MapPanel;
 
-
 /**
  * @author kimwerner
  */
-public class MoveUpHandler extends AbstractHandler implements IHandler
+public class MoveDownHandler extends AbstractHandler implements IHandler
 {
 
   /**
@@ -70,7 +69,7 @@ public class MoveUpHandler extends AbstractHandler implements IHandler
     final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
       throw new ExecutionException( "Active part has no MapPanel." );
-//    TODO: KIM
+//  TODO: KIM
     return null;
   }
 
