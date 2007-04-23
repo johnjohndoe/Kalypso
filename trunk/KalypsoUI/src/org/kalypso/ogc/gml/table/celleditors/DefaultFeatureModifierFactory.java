@@ -46,6 +46,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
+import org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -68,7 +69,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      if( vpt.isGeometry() || ( !vpt.getQName().equals( NamedFeatureHelper.GML_NAME ) && vpt.isList() ) )
+      if( vpt.isGeometry() || (!vpt.getQName().equals( NamedFeatureHelper.GML_NAME ) && vpt.isList()) )
         return new ButtonModifier( vpt, fcl );
 
       final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
@@ -76,11 +77,15 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
         return typeHandler.createFeatureModifier( ftp, selectionManager, fcl );
       return new StringModifier( vpt );
     }
-
     if( ftp instanceof IRelationType )
     {
       IRelationType rpt = (IRelationType) ftp;
-      return new ButtonModifier( rpt, fcl );
+//      if( rpt.isList() )
+//      {
+        return new ComboBoxModifier( rpt );
+//      }
+//      else
+//        return new ButtonModifier( rpt, fcl );
     }
     throw new UnsupportedOperationException();
   }
