@@ -46,13 +46,14 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.ColorFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
-import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
+import org.kalypso.ogc.gml.featureview.modfier.ColorModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
@@ -178,8 +179,10 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
 
     final Class valueClass = getValueClass();
 
-    if( Boolean.class == valueClass )
-      return new BooleanModifier( vpt );
+    if( RGB.class == valueClass )
+    {
+      return new ColorModifier( vpt );
+    }
 
     return new StringModifier( vpt );
   }
