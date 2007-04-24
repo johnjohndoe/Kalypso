@@ -24,10 +24,87 @@
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 
-	<!-- ================================================
-		
-		================================================== -->
 
+	<!-- ======================================================== 
+		Flow Resistance Model
+	==========================================================-->	
+	<xs:element 
+			name="OperationalModel"
+			type="op1d2d:OperationalModelType"
+			substitutionGroup="simBase:OperationalModel">
+		</xs:element>
+	<xs:complexType 
+		name="OperationalModelType">
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractOperationalModelType">
+				<xs:sequence>
+					<xs:element
+						ref="op1d2d:boundaryCondition"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element
+						ref="op1d2d:initialCondition"
+						minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>		
+	</xs:complexType>
+	
+	
+	<!-- =======================================================
+		Initial condition
+	======================================================== -->
+	<xs:element 
+		name="initialCondition"
+		type="op1d2d:InitialConditionPropertyType"/>
+	<xs:complexType name="InitialConditionPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property to hold an InitialCondition
+				element, or a substitute
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="op1d2d:InitialCondition"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:element 
+			name="InitialCondition"
+			type="op1d2d:InitialConditionType"
+			substitutionGroup="gml:_Feature">
+		</xs:element>
+	<xs:complexType 
+		name="InitialConditionType">
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+			</xs:extension>
+		</xs:complexContent>		
+	</xs:complexType>
+	
+	<!-- ================================================
+		Boundary conditions
+		================================================== -->
+	<xs:element 
+		name="boundaryCondition"
+		type="op1d2d:BoundaryConditionPropertyType"/>
+	<xs:complexType name="BoundaryConditionPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="op1d2d:BoundaryCondition"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
 	<xs:element name="BoundaryCondition" type="op1d2d:BoundaryConditionType"
 		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>

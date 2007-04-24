@@ -38,36 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IEvaluationModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IResultModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.SimulationModel;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * This is the root element of the terain-model.
+ * 1D 2D spcific iplementation of {@link org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel}
  * 
- * @author Gernot Belger
+ * @author Patric Congo
  */
-public interface ITerrainModel extends IModel
+public class SimulationModel1D2D 
+                extends SimulationModel<
+                IStaticModel1D2D,IOperationalModel1D2D,
+                IControlModel, IResultModel,
+                IEvaluationModel, IFeatureWrapper2, IFeatureWrapper2>
 {
-  public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
 
-  public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
+  public SimulationModel1D2D( Feature featureToBind )
+  {
+    super(
+        featureToBind,
+        Kalypso1D2DSchemaConstants.SIMULATION_MODEL1D2D,
+        IStaticModel1D2D.class,
+        IOperationalModel1D2D.class,
+        IControlModel.class,//TODO Patrice check for 1d2d specific model
+        IResultModel.class,
+        IEvaluationModel.class,
+        IFeatureWrapper2.class,
+        IFeatureWrapper2.class
+      );
+  }
+ 
 
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerPolynomCollection" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
-
-  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
-
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
-  
-  /**
-   * Return the terrain elevation system of this terrain model
-   * @return the terrain elevation system of this model
-   */
-  public ITerrainElevationModelSystem getTerrainElevationModelSystem();
-  
 }

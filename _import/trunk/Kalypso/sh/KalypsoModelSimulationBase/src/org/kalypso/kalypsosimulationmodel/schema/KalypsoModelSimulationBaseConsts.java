@@ -86,6 +86,11 @@ public class KalypsoModelSimulationBaseConsts
               UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
               "TerrainElevationModel");
     
+    public static final QName SIM_BASE_P_TERRAIN_MODEL = 
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+              "terrainModel");
+    
     public static final QName SIM_BASE_F_BASE_TERRAIN_ELE_MODEL = 
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
@@ -121,6 +126,16 @@ public class KalypsoModelSimulationBaseConsts
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS,
               "FlowResistanceModel");
+    
+    public static final QName SIM_BASE_P_FLOW_RESISTANCE_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "flowResistanceModel");
+    
+    public static final QName SIM_BASE_P_FLOW_RELATIONSHIP_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "flowRelationshipModel");
     
     public static final QName SIM_BASE_P_FLOW_RESISTANCE_CONCEPT =
       new QName(
@@ -160,4 +175,8 @@ public class KalypsoModelSimulationBaseConsts
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS,
               "additionalModelProperties");
+    public static final QName SIM_BASE_P_DICRRETISATION_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "feDiscretisationModel");
 }
