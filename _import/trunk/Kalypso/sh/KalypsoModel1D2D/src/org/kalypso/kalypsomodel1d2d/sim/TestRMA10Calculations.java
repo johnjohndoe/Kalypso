@@ -39,69 +39,86 @@
  *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
+
 import junit.framework.TestCase;
 
 /**
  * @author madanago
  *
  */
-public class TestRMA10Calculation extends TestCase
+
+public class TestRMA10Calculations extends TestCase
 {
 
-  TestRMA10Calculation(){
+  private URL test_dis_URL;
+  private URL test_control_URL;
+  private URL test_terrain_URL;
+  private GMLWorkspace w_dis;
+  private Feature w_control;
+  private Feature w_terrain;
+
+  public TestRMA10Calculations( )
+  {
+   
+  }
+  
+  private void init( ) throws MalformedURLException
+  {
+    test_dis_URL = new URL( "file:/F:/_ECLIPSE/Test/discretisation.gml" );
+    test_control_URL = new URL( "file:/F:/_ECLIPSE/Test/control.gml" );
+    test_terrain_URL = new URL ("file:/F:/_ECLIPSE/Test/terrain.gml");
     
   }
   
-  TestRMA10Calculation(String name){
-    super(name);    
-  }
-  private static final IFEDiscretisationModel1d2d createTestRMA100Calculation()
+  public final void createTestRMA100Calculation()
   {
-    File tmpFile=null;
-    GMLWorkspace workspace =null;
-    InputStream aggerStream=null;
-    
     try
     {
-      String tempFileName = 
-        "test_discretisation_model"+System.currentTimeMillis();
-      tmpFile=File.createTempFile( tempFileName, "gml" );
+      init();
     }
-    catch( IOException e )
+    catch( MalformedURLException e1 )
     {
-      fail( TestUtils.getStackTraceAsString( e ) );
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
     }
+  try
+  {
+    w_dis = GmlSerializer.createGMLWorkspace( test_dis_URL, null );
+    w_control = GmlSerializer.createGMLWorkspace( test_control_URL, null ).getRootFeature();
+    w_terrain = GmlSerializer.createGMLWorkspace( test_terrain_URL, null ).getRootFeature();
     
-    try
-    {
-      workspace =
-          FeatureFactory.createGMLWorkspace(
-              Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel, 
-              tmpFile.toURL(), 
-              GmlSerializer.DEFAULT_FACTORY);
-      
-    }
-    catch( Exception e )
-    {
-      fail( TestUtils.getStackTraceAsString( e ));
-    }
+    RMA10Calculation m_calculation  = new RMA10Calculation(w_dis, w_control, w_terrain);
     
+    PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( "F://_ECLIPSE//", RMA10SimModelConstants.R10_File ) ) ) );
+    Control1D2DConverter.writeR10File( m_calculation, pw );    
     
-    
-    FE1D2DDiscretisationModel targetModel=
-        new FE1D2DDiscretisationModel(workspace.getRootFeature());
-    return targetModel;
   }
+  catch( MalformedURLException e )
+  {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+  }
+  catch( Exception e )
+  {
+    // TODO Auto-generated catch block
+    fail( TestUtils.getStackTraceAsString( e ) );
+  } 
+           
+  }
+
 }
