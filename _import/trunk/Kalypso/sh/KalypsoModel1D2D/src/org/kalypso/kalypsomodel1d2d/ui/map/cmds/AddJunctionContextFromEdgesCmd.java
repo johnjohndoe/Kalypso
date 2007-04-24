@@ -42,20 +42,13 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 
 import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Add junction context from 1D and 2D edge
@@ -205,9 +198,9 @@ class AddJunctionContextFromEdgesCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{addedJunction};
+    return new IFeatureWrapper2[]{addedJunction};
   }
   
   /**

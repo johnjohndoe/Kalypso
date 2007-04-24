@@ -19,7 +19,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-
+//TODO Patrice use AbstractFeatureBinder as parent
 /**
  * @author Dejan Antanaskovic, Patrice Congo
  */
@@ -340,6 +340,42 @@ public class RoughnessPolygon implements IRoughnessPolygon
   public String getGmlID( )
   {
     return feature.getId();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  public String getDescription( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( String desc )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    // TODO Auto-generated method stub
+    
   }
 
 }

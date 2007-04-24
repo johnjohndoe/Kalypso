@@ -52,7 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEJunction1D2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -272,9 +272,9 @@ public class AddJunctionElementFromClAndElement1DCmd implements IDiscrModel1d2dC
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{addedJunction};
+    return new IFeatureWrapper2[]{addedJunction};
   }
   
   /**

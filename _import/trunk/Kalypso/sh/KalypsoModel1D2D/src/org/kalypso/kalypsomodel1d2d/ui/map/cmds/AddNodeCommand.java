@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -132,7 +132,9 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     // PERFORMANCE-BUGFIX: first search for all nodes, then add it
     addedNode = model.findNode( nodePoint, searchRectWidth );
     if( addedNode != null )
+    {
       notCreated[0] = true;
+    }
   }
 
   /**
@@ -151,7 +153,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     return true;
   }
 
-  public static boolean[] dummyNotCreated = new boolean[1];
+//  public static boolean[] dummyNotCreated = new boolean[1];
 
   /**
    * @see org.kalypso.commons.command.ICommand#process()
@@ -159,8 +161,11 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   public void process( ) throws Exception
   {
     if( addedNode == null )
-      addedNode = discretisationModel.createNode( m_nodePoint, -1, dummyNotCreated );
-    System.out.println( "Adding node from command:" + addedNode + " " + notCreated[0] );
+    {
+      addedNode = discretisationModel.createNode( 
+                      m_nodePoint, -1, notCreated/*dummyNotCreated*/ );
+      System.out.println( "Adding node from command:" + addedNode + " " + notCreated[0] );
+    }
   }
 
   /**
@@ -210,9 +215,9 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper[] { addedNode };
+    return new IFeatureWrapper2[] { addedNode };
   }
 
   /**

@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Interface for an {@link ICommand} that can return the feature
@@ -55,6 +55,6 @@ public interface IFeatureChangeCommand extends ICommand
    * Get the feature which is being edited od changed
    * @return the created or modified feature
    */
-  public IFeatureWrapper[] getChangedFeature();
+  public IFeatureWrapper2[] getChangedFeature();
   
 }

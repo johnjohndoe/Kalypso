@@ -12,7 +12,8 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+//import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -24,7 +25,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * 
  * @author Patrice Congo
  */
-public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends AbstractFeatureBinder
+public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends AbstractFeatureBinder
             implements IFeatureWrapperCollection<FWCls> 
 {
 	/**
@@ -303,7 +304,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	}
 
 	public int indexOf(Object o) {
-		if (o instanceof IFeatureWrapper) {
+		if (o instanceof IFeatureWrapper2) {
 			// The following line does not work, because the feature list
 			// may
 			// contain strings (i.e. references to features)
@@ -363,8 +364,8 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	}
 
 	public int lastIndexOf(Object o) {
-		if (o instanceof IFeatureWrapper) {
-			return featureList.lastIndexOf(((IFeatureWrapper) o)
+		if (o instanceof IFeatureWrapper2) {
+			return featureList.lastIndexOf(((IFeatureWrapper2) o)
 					.getWrappedFeature());
 		} else {
 			return -1;
@@ -430,14 +431,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	@SuppressWarnings("unchecked")
 	public FWCls remove(int index) {
 		Feature f = (Feature) featureList.remove(index);
-		IFeatureWrapper wrapper = (IFeatureWrapper) f.getAdapter(fwClass);
+		IFeatureWrapper2 wrapper = (IFeatureWrapper2) f.getAdapter(fwClass);
 		return (FWCls) wrapper;
 	}
 
 	public boolean remove(Object o) {
-		if (o instanceof IFeatureWrapper) {
+		if (o instanceof IFeatureWrapper2) {
 			return featureList
-					.remove(((IFeatureWrapper) o).getWrappedFeature());
+					.remove(((IFeatureWrapper2) o).getWrappedFeature());
 		}
         else if(o instanceof String)
         {

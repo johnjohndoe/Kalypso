@@ -16,7 +16,7 @@ import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -317,7 +317,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     // edges
     IFeatureWrapperCollection<IFE1D2DEdge> edges = getContainers();
     buf.append( "{Edges=" );
-    for( IFeatureWrapper edge : edges )
+    for( IFeatureWrapper2 edge : edges )
     {
       buf.append( edge.getGmlID() );
     }

@@ -45,12 +45,11 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -130,10 +129,10 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
       try
       {
         command.process();
-        IFeatureWrapper[] changedFeatures2= command.getChangedFeature();
+        IFeatureWrapper2[] changedFeatures2= command.getChangedFeature();
         if(changedFeatures2!=null)
         {
-          for(IFeatureWrapper changedFeature :changedFeatures2)
+          for(IFeatureWrapper2 changedFeature :changedFeatures2)
           {
             if(changedFeature!=null)
             {

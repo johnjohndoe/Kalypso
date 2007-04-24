@@ -43,14 +43,16 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
+ * Interface for classes representing a simBase:FlowRelationshipModel
+ * 
  * @author Gernot Belger
  */
-public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IFeatureWrapper2
+public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IModel
 {
   public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
 

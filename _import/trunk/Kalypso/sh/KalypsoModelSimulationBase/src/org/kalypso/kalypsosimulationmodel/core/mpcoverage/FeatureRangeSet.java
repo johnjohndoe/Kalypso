@@ -14,7 +14,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -25,7 +25,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Patrice Congo
  */
-public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper> 
+public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper2> 
 				implements IFeatureRangeSet<RangeSetCls>
 {
 	/**
@@ -145,10 +145,10 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 
 	public boolean contains(Object o)
 	{
-		if(o instanceof IFeatureWrapper)
+		if(o instanceof IFeatureWrapper2)
 		{
 			return rsFeatureList.contains(
-						((IFeatureWrapper)o).getWrappedFeature());
+						((IFeatureWrapper2)o).getWrappedFeature());
 		}
 		else
 		{
@@ -172,10 +172,10 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 
 	public int indexOf(Object o)
 	{
-		if(o instanceof IFeatureWrapper)
+		if(o instanceof IFeatureWrapper2)
 		{
 			return rsFeatureList.indexOf(
-						((IFeatureWrapper)o).getWrappedFeature());
+						((IFeatureWrapper2)o).getWrappedFeature());
 		}
 		else
 		{
@@ -222,10 +222,10 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 
 	public int lastIndexOf(Object o)
 	{
-		if(o instanceof IFeatureWrapper)
+		if(o instanceof IFeatureWrapper2)
 		{
 			return rsFeatureList.lastIndexOf(
-					((IFeatureWrapper)o).getWrappedFeature());
+					((IFeatureWrapper2)o).getWrappedFeature());
 		}
 		else
 		{
@@ -303,17 +303,17 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 	public RangeSetCls remove(int index)
 	{
 		Feature f= (Feature)rsFeatureList.remove(index);
-		IFeatureWrapper wrapper=
-				(IFeatureWrapper)f.getAdapter(rangeSetClass);
+		IFeatureWrapper2 wrapper=
+				(IFeatureWrapper2)f.getAdapter(rangeSetClass);
 		return (RangeSetCls)wrapper;
 	}
 
 	public boolean remove(Object o)
 	{
-		if(o instanceof IFeatureWrapper)
+		if(o instanceof IFeatureWrapper2)
 		{
 			return rsFeatureList.remove(
-					((IFeatureWrapper)o).getWrappedFeature());
+					((IFeatureWrapper2)o).getWrappedFeature());
 		}
 		else
 		{
@@ -439,5 +439,41 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
     public String getGmlID( )
     {
       return rsFeature.getId();
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+     */
+    public String getDescription( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+     */
+    public String getName( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+     */
+    public void setDescription( String desc )
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+     */
+    public void setName( String name )
+    {
+      // TODO Auto-generated method stub
+      
     }
 }

@@ -51,7 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToEdgeJunction1D
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -236,9 +236,9 @@ public class AddJunctionElementFromEdgesCmd implements IDiscrModel1d2dChangeComm
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{addedJunction};
+    return new IFeatureWrapper2[]{addedJunction};
   }
   
   /**

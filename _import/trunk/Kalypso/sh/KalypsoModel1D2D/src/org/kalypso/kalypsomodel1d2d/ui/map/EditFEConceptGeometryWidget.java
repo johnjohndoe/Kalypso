@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
@@ -82,6 +83,10 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
 {
   /** workspace, initialised during activation using the node layer */
   private CommandableWorkspace workspace;
+  private IKalypsoFeatureTheme nodeTheme;
+  private IKalypsoFeatureTheme polyElementTheme;
+  private IKalypsoFeatureTheme edgeTheme;
+  
   
   public EditFEConceptGeometryWidget( )
   {
@@ -97,10 +102,19 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
     super.activate(commandPoster, mapPanel);
     
     //find the node layer and get the working workspace from it
-    IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( 
+    nodeTheme = UtilMap.findEditableTheme( 
         mapPanel.getMapModell(), 
         Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    workspace = theme.getWorkspace();
+    
+    polyElementTheme = UtilMap.findEditableTheme( 
+        mapPanel.getMapModell(), 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    
+    edgeTheme = UtilMap.findEditableTheme( 
+        mapPanel.getMapModell(), 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    
+    workspace = nodeTheme.getWorkspace();
   }
   
   /**
@@ -125,6 +139,8 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
   @Override
   protected Collection<Feature> perform( )
   {
+    invalidateLists();
+    
     Collection<Feature> list = super.perform();
     Set<Feature> affectedFeatures= new HashSet<Feature>();//ArrayList<Feature>();
     
@@ -136,9 +152,29 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
                                   changedFeature, affectedFeatures );
     }
     
+    
+    
     fireModelChangedEvent( workspace, affectedFeatures );
     
     return list;
+  }
+  
+  
+  private final void invalidateLists()
+  {
+    IKalypsoFeatureTheme[] themes = 
+                  { nodeTheme, edgeTheme, polyElementTheme };
+    for(IKalypsoFeatureTheme theme : themes)
+    {
+      if( theme != null )
+      {
+       FeatureList featureList = theme.getFeatureList();
+        if( featureList != null )
+        {
+          featureList.invalidate();
+        }
+      }
+    }
   }
   
   private static final void fireModelChangedEvent(

@@ -15,7 +15,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -364,7 +364,7 @@ public class PolyElement extends AbstractFeatureBinder
   {
     StringBuffer buf= new StringBuffer(128);
     buf.append( "FE1D2D_Element[" );
-    for(IFeatureWrapper featureWrapper:edges)
+    for(IFeatureWrapper2 featureWrapper:edges)
     {
       buf.append( featureWrapper );
     }

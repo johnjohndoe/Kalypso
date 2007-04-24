@@ -5,7 +5,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
@@ -13,7 +13,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper> extends IFeatureWrapper, List<FWCls>
+public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends IFeatureWrapper2, List<FWCls>
 {
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the end of the feature

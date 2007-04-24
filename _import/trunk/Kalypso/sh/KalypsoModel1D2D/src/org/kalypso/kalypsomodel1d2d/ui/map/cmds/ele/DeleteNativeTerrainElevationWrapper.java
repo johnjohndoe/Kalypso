@@ -45,13 +45,9 @@ import java.net.URL;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Command for deleting a native terrain elevation model wrapper
@@ -86,11 +82,11 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     if(done)
     {
-      return new IFeatureWrapper[]{elevationModel};
+      return new IFeatureWrapper2[]{elevationModel};
     }
     return null;
   }

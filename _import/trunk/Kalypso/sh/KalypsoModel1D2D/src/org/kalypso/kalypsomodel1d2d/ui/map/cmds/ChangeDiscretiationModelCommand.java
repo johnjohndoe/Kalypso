@@ -50,7 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -134,7 +134,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
       try
       {
         command.process();
-        for(IFeatureWrapper changedFeature :command.getChangedFeature())
+        for(IFeatureWrapper2 changedFeature :command.getChangedFeature())
         {
           if(changedFeature!=null)
           {
@@ -162,7 +162,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
       try
       {
         command.process();
-        for(IFeatureWrapper changedFeature :command.getChangedFeature())
+        for(IFeatureWrapper2 changedFeature :command.getChangedFeature())
         {
           if(changedFeature!=null)
           {

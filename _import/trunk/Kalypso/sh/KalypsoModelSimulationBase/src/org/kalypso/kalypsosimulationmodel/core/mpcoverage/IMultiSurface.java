@@ -2,7 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
@@ -11,7 +11,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * 
  * @author Patrice Congo
  */
-public interface IMultiSurface extends List<GM_Surface>, IFeatureWrapper
+public interface IMultiSurface extends List<GM_Surface>, IFeatureWrapper2
 {
 	
 }

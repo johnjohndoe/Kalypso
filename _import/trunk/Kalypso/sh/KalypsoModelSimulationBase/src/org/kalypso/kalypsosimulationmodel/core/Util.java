@@ -18,7 +18,7 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -57,13 +57,13 @@ public class Util
 	}
 	
 	public static final List<Feature> toFeatureList(
-									Collection<? extends IFeatureWrapper> c)
+									Collection<? extends IFeatureWrapper2> c)
 	{
 		List<Feature> fl= new ArrayList<Feature>();
 		if(c!=null)
 		{
 			Feature f;
-			for(IFeatureWrapper fw:c)
+			for(IFeatureWrapper2 fw:c)
 			{
 				f=fw.getWrappedFeature();
 				if(f==null)

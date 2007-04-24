@@ -1,7 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -10,7 +10,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * 
  * @author Dejan Antanaskovic, Patrice Congo
  */
-public interface IRoughnessPolygon extends IFeatureWrapper
+public interface IRoughnessPolygon extends IFeatureWrapper2
 {
   /**
    * Returns the rougthness ID for this polynom

@@ -46,7 +46,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Patrice Congo
@@ -176,7 +176,7 @@ public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
    *             
    * 
    */
-  public static final  <T extends IFeatureWrapper> IFeatureWrapperCollection<T> 
+  public static final  <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> 
                               get(
                                     Feature feature,
                                     QName featureQName,

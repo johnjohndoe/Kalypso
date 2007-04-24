@@ -1,6 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Interface for klasses representing the roughness feature
@@ -9,7 +9,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * @author Patrice Congo
  *
  */
-public interface IRoughnessCls extends IFeatureWrapper
+public interface IRoughnessCls extends IFeatureWrapper2
 {
 	public static  enum RoughnessConfigConsistency
 	{

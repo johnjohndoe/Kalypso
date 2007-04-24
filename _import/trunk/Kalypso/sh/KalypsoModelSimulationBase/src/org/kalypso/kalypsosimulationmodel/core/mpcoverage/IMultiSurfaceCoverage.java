@@ -2,7 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -16,8 +16,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  */
-public interface IMultiSurfaceCoverage<RangeCls extends IFeatureWrapper> 
-			extends IFeatureWrapper
+public interface IMultiSurfaceCoverage<RangeCls extends IFeatureWrapper2> 
+			extends IFeatureWrapper2
 {
 	public IMultiSurface getDomain();
 	

@@ -47,7 +47,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Add junction context from 1D and 2D edge
@@ -154,11 +154,11 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     final IFE1D2DContinuityLine continuityLine = 
                             addedJunction.getContinuityLine();    
-    return new IFeatureWrapper[]{addedJunction, continuityLine};
+    return new IFeatureWrapper2[]{addedJunction, continuityLine};
   }
   
   /**

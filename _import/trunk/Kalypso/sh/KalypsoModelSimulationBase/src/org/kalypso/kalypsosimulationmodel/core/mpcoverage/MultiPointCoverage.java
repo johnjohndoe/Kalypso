@@ -3,19 +3,19 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * 
  * @author Patrice Congo
  */
-public class MultiPointCoverage<RangSetCls extends IFeatureWrapper> 
+public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2> 
 						implements IMultipointCoverage<RangSetCls>
 {
 
@@ -79,7 +79,8 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper>
 		rangeSet.add(rangeValue);
 		domainSet.add(position);
 	}
-
+    
+	
 	public List<GM_Point> getApplicablePosition(
 									RangSetCls rangeValue) 
 									throws IllegalArgumentException
@@ -154,7 +155,7 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper>
 				}
 			}
 	}
-
+	
 	public void removeRangeValue(
 						RangSetCls rangeValue) throws IllegalArgumentException
 	{
@@ -186,4 +187,41 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper>
       return mpFeature.getId();
     }
 
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+     */
+    public String getDescription( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+     */
+    public String getName( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+     */
+    public void setDescription( String desc )
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+     */
+    public void setName( String name )
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+    
 }

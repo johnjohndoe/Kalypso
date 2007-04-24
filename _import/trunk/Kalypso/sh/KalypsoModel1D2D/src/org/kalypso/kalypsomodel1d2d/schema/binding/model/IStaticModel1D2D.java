@@ -38,28 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IStaticModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 
 /**
- * A command that changed the discretisation model
+ * Interface for classes representing a wb1d2d:StaticModel1D2D
  * 
  * @author Patrice Congo
+ *
  */
-public interface IDiscrModel1d2dChangeCommand extends IFeatureChangeCommand//ICommand
+public interface IStaticModel1D2D extends IStaticModel
 {
   /**
-   * Gets the discretisation model edited by this command
+   * To get the discretisation sunb-model of this static model
+   * @return the discretisation of this static model
    */
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d();
+  public IFEDiscretisationModel1d2d getDiscretisationModel();
   
   /**
-   * Get the feature which is being edited od changed
-   * @return I
+   * To get the flow relationship sub-model of this static model
+   * 
+   * @return the flow relationship sub-model of this static model
    */
-  public IFeatureWrapper2[] getChangedFeature();
+  public IFlowRelationshipModel getFlowRelationshipModel();
   
-//  public List<IFeatureWrapper> getDeletedFeature();
+  /**
+   *To get the flow resistance sub-model of this static model
+   *
+   *@return the flow resistance sub-model of this static model 
+   */
+  public IFlowResistanceModel getFlowResistanceModel();
+  
+  /**
+   * To get the terrain sub-model of this static model
+   * 
+   * @return the terrain model of this static model 
+   */
+  public ITerrainModel getTerrainModel();
+  
 }

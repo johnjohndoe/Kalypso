@@ -44,12 +44,11 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import java.util.Collection;
 
 import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Add junction element from 1D and 2D edge
@@ -208,9 +207,9 @@ public class AddJunctionContext1DToCLineFromEdgesCmd implements IDiscrModel1d2dC
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper[]{addedJunction};
+    return new IFeatureWrapper2[]{addedJunction};
   }
   
   /**

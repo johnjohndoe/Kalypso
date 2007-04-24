@@ -13,7 +13,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Provide the default implementation for 
@@ -298,7 +298,7 @@ public abstract class Element2D<
   {
     StringBuffer buf= new StringBuffer(128);
     buf.append( "Element2D[" );
-    for(IFeatureWrapper featureWrapper:edges)
+    for(IFeatureWrapper2 featureWrapper:edges)
     {
       buf.append( featureWrapper );
     }

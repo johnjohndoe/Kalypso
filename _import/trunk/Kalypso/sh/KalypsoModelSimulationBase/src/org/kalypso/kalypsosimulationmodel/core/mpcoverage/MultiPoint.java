@@ -24,6 +24,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * @author Patrice Congo
  *
  */
+//TODO Patrice Use Abstract feature binder Exception
 public class MultiPoint implements IMultiPoint
 {
 	/**
@@ -370,5 +371,45 @@ public class MultiPoint implements IMultiPoint
     public String getGmlID( )
     {
       return multiPointFeature.getId();
+    }
+
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+     */
+    public String getDescription( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+     */
+    public String getName( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+     */
+    public void setDescription( String desc )
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+
+    /**
+     * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+     */
+    public void setName( String name )
+    {
+      // TODO Auto-generated method stub
+      
     }
 }

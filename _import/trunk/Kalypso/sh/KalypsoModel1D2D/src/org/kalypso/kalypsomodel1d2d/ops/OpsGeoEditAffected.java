@@ -89,8 +89,10 @@ public class OpsGeoEditAffected
     List<IFE1D2DNode> nodes = polyElement.getNodes();
     for(IFE1D2DNode node: nodes)
     {
+      Feature wrappedFeature = node.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
       addAffectedFeaturesByNodeGeomChange( 
-                              node.getWrappedFeature(), 
+                              wrappedFeature, 
                               affectedFeature );
     }
     
@@ -98,7 +100,7 @@ public class OpsGeoEditAffected
 
   private static final void addAffectedFeaturesByNodeGeomChange( 
                                           Feature feature, 
-                                          Set<Feature> targetFeature )
+                                          Set<Feature> affectedFeatures )
   {
     Assert.throwIAEOnNullParam( feature, "feature" );
     IFE1D2DNode<IFE1D2DEdge> node = 
@@ -116,14 +118,18 @@ public class OpsGeoEditAffected
       new ArrayList<IFE1D2DElement<IFE1D2DComplexElement,IFE1D2DEdge>>();
     for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
     {
-      targetFeature.add(edge.getWrappedFeature());
+      Feature wrappedFeature = edge.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
+      affectedFeatures.add(wrappedFeature);
       elements.addAll( 
             (Collection< ? extends IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>) edge.getContainers());
     }
     
     for(IFE1D2DElement element:elements)
     {
-      targetFeature.add( element.getWrappedFeature() );
+      Feature wrappedFeature = element.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
+      affectedFeatures.add( wrappedFeature );
     }
     
     
@@ -185,8 +191,10 @@ public class OpsGeoEditAffected
     List<IFE1D2DNode> nodes = cLine.getNodes();
     for(IFE1D2DNode node: nodes)
     {
+      Feature wrappedFeature = node.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
       addAffectedFeaturesByNodeGeomChange( 
-                              node.getWrappedFeature(), 
+                              wrappedFeature, 
                               affectedFeatures );
     }
     
@@ -209,8 +217,11 @@ public class OpsGeoEditAffected
     List<IFE1D2DNode> nodes = element1D.getNodes();
     for(IFE1D2DNode node: nodes)
     {
+      
+      Feature wrappedFeature = node.getWrappedFeature();
+      wrappedFeature.invalidEnvelope();
       addAffectedFeaturesByNodeGeomChange( 
-                              node.getWrappedFeature(), 
+                              wrappedFeature, 
                               affectedFeatures );
     }
   }
