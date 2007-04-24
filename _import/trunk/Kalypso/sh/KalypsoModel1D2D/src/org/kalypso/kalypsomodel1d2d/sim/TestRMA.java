@@ -62,12 +62,12 @@ import junit.framework.TestCase;
 public class TestRMA extends TestCase
 {
 
-  private URL test_dis_URL;
-  private URL test_control_URL;
-  private URL test_terrain_URL;
-  private GMLWorkspace w_dis;
-  private Feature w_control;
-  private Feature w_terrain;
+  private URL test_dis_URL = null;
+  private URL test_control_URL = null;
+  private URL test_terrain_URL = null;
+  private GMLWorkspace w_dis = null; 
+  private Feature w_control = null;
+  private Feature w_terrain = null;
 
   public TestRMA( )
   {
@@ -77,7 +77,7 @@ public class TestRMA extends TestCase
   private void init( ) throws MalformedURLException
   {
     test_dis_URL = new URL( "file:/F:/_ECLIPSE/Test/discretisation.gml" );
-    test_control_URL = new URL( "file:/F:/_ECLIPSE/Test/simulation.gml" );
+    test_control_URL = new URL( "file:/F:/_ECLIPSE/Test/control.gml" );
     test_terrain_URL = new URL ("file:/F:/_ECLIPSE/Test/terrain.gml");
     
   }

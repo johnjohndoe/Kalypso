@@ -62,9 +62,9 @@ public class Control1D2DConverter
   public static void writeR10File( final RMA10Calculation calculation, final PrintWriter pw )
   {
     writeR10ControlDataBlock( calculation, pw );
-    writeR10PropertiesDataBlock( calculation, pw );
-//    writeR10ContinuityLineDataBlock( calculation, pw );
-//    writeR10TimeStepDataBlock( calculation, pw );
+   // writeR10PropertiesDataBlock( calculation, pw );
+   // writeR10ContinuityLineDataBlock( calculation, pw );
+    writeR10TimeStepDataBlock( calculation, pw );
 
   }
 
@@ -74,58 +74,58 @@ public class Control1D2DConverter
   public static void writeR10ControlDataBlock( final RMA10Calculation calculation, final PrintWriter pw )
   {
     Locale l = Locale.US;
-    pw.println( "OUTFIL  result\\Output" );
+    System.out.println( "OUTFIL  result\\Output" );
     // TODO: add hydrograph files if ready and necessary - ask Jessica
     // pw.println( "INELTFL " ); // Inflow Hydrograph Q
     // pw.println( "INELEV " ); // Tidalgraph Data H
     // pw.println( "INHYD " ); // Hydrograph Q
     // pw.println( "INCSTR " ); // Structures (later)
     // pw.println( "INTIMS " ); // Structures time series(later)
-    pw.println( "INKALYPSmodel.2d" );
-    pw.println( "CONTROL A " + calculation.getIaccyc() + " 2d 0" );
+    System.out.println( "INKALYPSmodel.2d" );
+   /// System.out.println( "CONTROL A " + calculation.getIaccyc() + " 2d 0" );
     if( calculation.getRestart() )
-      pw.println( "RESTART" );
+      System.out.println( "RESTART" );
 
-    pw.println( "ENDFIL" );
-    pw.println( "TI Projekt Name" ); // write Project name
+    System.out.println( "ENDFIL" );
+    System.out.println( "TI Projekt Name" ); // write Project name
 
-    // C0
-    String formatC0 = "C0             0%8d%8d%8d%8.3f%8d%8.3f%8.2f       0";
-    Object[] c0Props = new Object[] { calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
-        calculation.getTBFACT(), calculation.getTBMIN() };
-    pw.printf( l, formatC0 + "\n", c0Props );
+//    // C0
+//    String formatC0 = "C0             0%8d%8d%8d%8.3f%8d%8.3f%8.2f       0";
+//    Object[] c0Props = new Object[] { calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
+//        calculation.getTBFACT(), calculation.getTBMIN() };
+//    System.out.printf( l, formatC0 + "\n", c0Props );
 
     // C1
-    pw.println( "C1             0       1       1       0       0       0       0       0       0" ); // fixed
+    System.out.println( "C1             0       1       1       0       0       0       0       0       0" ); // fixed
 
     // C2
     String formatC1 = "C2      %8.2f%8.3f     1.0     1.0     1.0       1";
     Object[] c1Props = new Object[] { calculation.getOMEGA(), calculation.getELEV() };
-    pw.printf( l, formatC1 + "\n", c1Props );
+    System.out.printf( l, formatC1 + "\n", c1Props );
 
     // C3
     String formatC3 = "C3         1.000   1.000   0.100%8.1f%8.3f%8.3f%8.3f";
     Object[] c3Props = new Object[] { calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() };
-    pw.printf( l, formatC3+ "\n", c3Props );
+    System.out.printf( l, formatC3+ "\n", c3Props );
 
     // C4
-    pw.println( "C4          00.0    20.0     0.0" ); // fixed values
+    System.out.println( "C4          00.0    20.0     0.0" ); // fixed values
 
     // C5
     String formatC5 = "C5      %8d%8d        %8d       0       1       1       0       1       1";
     Object[] c5Props = new Object[] { calculation.getNITI(), calculation.getNITN(), calculation.getNCYC() };
-    pw.printf( l, formatC5+ "\n", c5Props );
+    System.out.printf( l, formatC5+ "\n", c5Props );
 
     // CV
     String formatCV = "CV      %8.2f%8.2f%8.2f   0.050   0.050        %8d%8.2f";
     Object[] cvProps = new Object[] { calculation.getCONV_1(), calculation.getCONV_2(), calculation.getCONV_3(), calculation.getIDRPT(), calculation.getDRFACT() };
-    pw.printf( l, formatCV+ "\n", cvProps );
+    System.out.printf( l, formatCV+ "\n", cvProps );
 
     // VEGETA
     if( calculation.getVegeta() )
-      pw.println( "VEGETA" );
+      System.out.println( "VEGETA" );
 
-    pw.println( "KAL_BC" );
+    System.out.println( "KAL_BC" );
   }
 
   /**
@@ -147,15 +147,15 @@ public class Control1D2DConverter
       
       Double eddy = calculation.getViskosity( roughnessFE );
       Object[] ed1Props = new Object[] { counter, eddy, eddy, eddy, eddy };
-      pw.printf( l, formatED1+ "\n", ed1Props );
+      System.out.printf( l, formatED1+ "\n", ed1Props );
 
       // ED2
-      pw.println( "ED2                  0.6     0.6   0.001             20.        " );// fixed values
+      System.out.println( "ED2                  0.6     0.6   0.001             20.        " );// fixed values
 
       // ED4
       String formatED4 = "ED4             %8.2f%8.1f%8.2f";
       Object[] ed4Props = new Object[] { calculation.getKs( roughnessFE ), calculation.getAxAy( roughnessFE ), calculation.getDp( roughnessFE ) };
-      pw.printf( l, formatED4+ "\n", ed4Props );
+      System.out.printf( l, formatED4+ "\n", ed4Props );
     }
 
   }
@@ -171,27 +171,27 @@ public class Control1D2DConverter
     // SCL
     String formatSCL = "SCL     %4d";
     Object[] sclProps = new Object[] { list.size() };
-    pw.printf( l, formatSCL, sclProps );
+    System.out.printf( l, formatSCL, sclProps );
 
     Iterator iter = list.iterator();
     while( iter.hasNext() )
       // CC1
       // CC2
-      pw.println( "ECL" );
+      System.out.println( "ECL" );
     String formatMP = "MP             %8.2f%8.2f%8.2f";
     Object[] mpProps = new Object[] { calculation.getAC1(), calculation.getAC2(), calculation.getAC3() };
-    pw.printf( l, formatMP, mpProps );
-    pw.println( "ENDGEO" );
+    System.out.printf( l, formatMP, mpProps );
+    System.out.println( "ENDGEO" );
   }
 
   /**
    * writes the Timestep Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-
   private static void writeR10TimeStepDataBlock( RMA10Calculation calculation, PrintWriter pw )
   {
     Locale l = Locale.US;
-    pw.print( "com -----------------------\n" + "com steady state input data\n" + "com -----------------------" );
+    System.out.print( "com -----------------------\n" + "com steady state input data\n" + "com -----------------------" );
+    
     // sb.append( "DT " );// add DELTA
     // // TODO ask Nico about BC-Lines (equal values for all Lines???)
     // // TODO add continuity Lines inflow here (QC,HC)
