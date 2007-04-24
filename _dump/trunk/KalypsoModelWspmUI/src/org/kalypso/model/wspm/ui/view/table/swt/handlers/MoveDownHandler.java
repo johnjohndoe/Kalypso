@@ -74,20 +74,20 @@ public class MoveDownHandler extends AbstractHandler implements IHandler
       if( part == null )
         throw new ExecutionException( "No active part." );
 
-      final Object adapterObject = part.getAdapter(TableView.class );
+      final Object adapterObject = part.getAdapter( TableView.class );
       if( adapterObject instanceof TableView )
       {
-        final ProfilSWTTableView tableView = ((TableView)adapterObject).getTableView();
-        final IStructuredSelection selection = (IStructuredSelection) tableView.getSelectionProvider().getSelection();
-        
-        final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(),selection.toList(), 1 ), true );
-        new ProfilOperationJob( operation ).schedule();
-      return Status.OK_STATUS;
+        final ProfilSWTTableView tableView = ((TableView) adapterObject).getTableView();
+        if( tableView != null )
+        {
+          final IStructuredSelection selection = (IStructuredSelection) tableView.getSelectionProvider().getSelection();
+          final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection.toList(), 1 ), true );
+          new ProfilOperationJob( operation ).schedule();
+          return Status.OK_STATUS;
+        }
       }
-      else 
-        throw new ExecutionException( "Active part has no Table." );
-      
-      
+      throw new ExecutionException( "Active part has no Table." );
+
     }
   }
 }
