@@ -36,6 +36,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -817,7 +818,48 @@ public class FeatureHelper
       }
     }
   }
-
+  
+  /**
+   * Resolves and adapts the linked feature
+   * @param feature the link property holder
+   * @param propertyQName the q-name of the link property
+   * @param adapterTargetClass the class the link feature is to 
+   *        be adapted to
+   * @throws IllegalArgumentException if any of the parameter 
+   *            is null 
+   * @return an adapter if the link feature or null
+   *            if no linked feature is found or if the linked
+   *            feature is not adaptable to the specified class
+   */
+  public static final <T> T resolveLink(
+                                  Feature feature,
+                                  QName propertyQName,
+                                  Class<T> adapterTargetClass
+                                   )
+{
+  if( feature == null ||
+      propertyQName == null||
+      adapterTargetClass == null)
+  {
+    String message = 
+        String.format( 
+            "Arguments must not be null : \n\tfeature = %s " +
+              "\n\tpropertyQName = %s \n\tadapterTargetClass = %s\n\t", 
+             feature, propertyQName, adapterTargetClass );
+    throw new IllegalArgumentException(message);
+  }
+  final Feature propFeature = FeatureHelper.resolveLink( feature, propertyQName );
+  if( propFeature == null )
+  {
+    return null;
+  }
+  else
+  {
+    T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
+    return adaptedFeature;
+  }
+}
+  
   public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
   {
     if( rt.isList() )

@@ -45,14 +45,14 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Abstract helper class to implement 'binding' classes for specific feature (types).
  * 
  * @author Gernot Belger
  */
-public class AbstractFeatureBinder implements IFeatureWrapper
+public class AbstractFeatureBinder implements IFeatureWrapper2
 {
   /**
    * Check if this feature is suitable for the given qname. If true, the constructor wont complain.

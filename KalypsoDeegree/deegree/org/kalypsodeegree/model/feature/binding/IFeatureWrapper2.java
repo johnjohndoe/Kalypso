@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.binding;
 
+import org.kalypsodeegree.model.feature.Feature;
+
 /**
  * The better feature wrapper. Use instead of IFeatureWrapper.
  * 
@@ -55,5 +57,9 @@ public interface IFeatureWrapper2 extends IFeatureWrapper
   public String getDescription( );
   
   public void setDescription( final String desc );  
+  
+  public Feature getWrappedFeature( );
+  
+  public String getGmlID( );
   
 }
