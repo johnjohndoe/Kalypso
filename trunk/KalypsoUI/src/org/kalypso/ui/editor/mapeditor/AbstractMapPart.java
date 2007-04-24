@@ -76,6 +76,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -292,6 +293,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       setMapModellView( (GisMapOutlineView) outlineView );
     }
+
+    // activate MapView Context
+    IContextService contextService = (IContextService) site.getService( IContextService.class );
+    if( contextService != null )
+      contextService.activateContext( "org.kalypso.ogc.gml.map.context" );
   }
 
   /**

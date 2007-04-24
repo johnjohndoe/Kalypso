@@ -1211,37 +1211,37 @@ TODO: unfortunately the save button is always disabled
        point="org.eclipse.ui.bindings">
     <key
           commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+-"/>
     <key
           commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1++"/>   
     <key
           commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+ARROW_LEFT"/> 
     <key
           commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+ARROW_RIGHT"/> 
     <key
           commandId="org.kalypso.ogc.gml.map.MoveUpCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+ARROW_UP"/> 
     <key
           commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+ARROW_DOWN"/>                                                
     <key
           commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
-          contextId="org.eclipse.ui.contexts.window"
+          contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+L"/>
  </extension>
