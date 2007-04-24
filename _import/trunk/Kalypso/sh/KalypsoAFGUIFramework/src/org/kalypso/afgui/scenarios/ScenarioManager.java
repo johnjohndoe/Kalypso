@@ -84,7 +84,7 @@ public class ScenarioManager implements IScenarioManager
    *              <li> The metadata folder is not accessible.</li>
    *              <li> There is a problem loading the database.</li>
    */
-  public ScenarioManager( final IProject project ) throws CoreException
+  public ScenarioManager( final IProject project )
   {
     final IFolder folder = project.getFolder( METADATA_FOLDER );
     final IFile metadataFile = folder.getFile( METADATA_FILENAME );
@@ -144,6 +144,7 @@ public class ScenarioManager implements IScenarioManager
         }
       }
     };
+
     final ICoreRunnableWithProgress runnable2 = new ICoreRunnableWithProgress()
     {
 
@@ -205,7 +206,7 @@ public class ScenarioManager implements IScenarioManager
     newScenario.setURI( parentScenario.getURI() + "/" + name );
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
-    
+
     ScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
     if( derivedScenarios == null )
     {
@@ -245,7 +246,7 @@ public class ScenarioManager implements IScenarioManager
         parentScenario.getDerivedScenarios().getScenarios().remove( scenario );
       }
       monitor.worked( 5 );
-      persist( new SubProgressMonitor( monitor, 15 ) );      
+      persist( new SubProgressMonitor( monitor, 15 ) );
     }
     finally
     {

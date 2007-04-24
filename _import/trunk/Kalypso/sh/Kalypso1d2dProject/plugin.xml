@@ -399,4 +399,17 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            category="de.renew.workflow.tasks.category"
+            categoryId="de.renew.workflow.tasks.category"
+            id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
+            name="Szenario hinzufügen"/>
+      <command
+            category="de.renew.workflow.tasks.category"
+            categoryId="de.renew.workflow.tasks.category"
+            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"
+            name="Szenario löschen"/>
+   </extension>
 </plugin>

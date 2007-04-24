@@ -61,7 +61,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.IScenarioManagerListener;
@@ -142,18 +141,8 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
   private void init( )
   {
     m_metaDataFolder = m_project.getFolder( ScenarioManager.METADATA_FOLDER );
-    try
-    {
-      m_scenarioManager = new ScenarioManager( m_project );
-      m_scenarioManager.addScenarioManagerListener( this );
-    }
-    catch( final CoreException e )
-    {
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      final Display display = PlatformUI.getWorkbench().getDisplay();
-      ErrorDialog.openError( display.getActiveShell(), "Fehler", "Konnte Szenarienbeschreibung nicht lesen.", e.getStatus() );
-      m_scenarioManager = null;
-    }
+    m_scenarioManager = new ScenarioManager( m_project );
+    m_scenarioManager.addScenarioManagerListener( this );
   }
 
   synchronized public ScenarioManager getScenarioManager( )

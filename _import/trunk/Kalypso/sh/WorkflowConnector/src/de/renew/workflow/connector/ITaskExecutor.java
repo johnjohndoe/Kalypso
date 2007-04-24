@@ -38,14 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.cases;
+package de.renew.workflow.connector;
 
 import de.renew.workflow.base.Task;
+import de.renew.workflow.cases.TaskExecutionException;
 
 /**
  * @author Stefan Kurzbach
+ *
  */
-public interface ITaskExecutionListener
+public interface ITaskExecutor
 {
-  public void taskStarted( final Task task ) throws TaskExecutionException;
+
+  public void execute( final Task task ) throws TaskExecutionException;
+
 }

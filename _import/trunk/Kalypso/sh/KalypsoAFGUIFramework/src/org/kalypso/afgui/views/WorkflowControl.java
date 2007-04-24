@@ -43,8 +43,8 @@ import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.Activity.Help;
-import de.renew.workflow.cases.ITaskExecutionListener;
 import de.renew.workflow.cases.TaskExecutionException;
+import de.renew.workflow.connector.ITaskExecutor;
 import de.renew.workflow.connector.event.IWorklistChangeListener;
 
 /**
@@ -70,7 +70,12 @@ public class WorkflowControl implements IWorklistChangeListener
 
   private String m_selectionFromMemento;
 
-  private ITaskExecutionListener m_taskExecutionListener;
+  private final ITaskExecutor m_taskExecutor;
+
+  public WorkflowControl( final ITaskExecutor taskExecutor )
+  {
+    m_taskExecutor = taskExecutor;
+  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -252,14 +257,7 @@ public class WorkflowControl implements IWorklistChangeListener
   {
     try
     {
-      if( m_taskExecutionListener != null )
-      {
-        m_taskExecutionListener.taskStarted( task );
-      }
-      else
-      {
-        throw new TaskExecutionException( "No task execution listener available." );
-      }
+      m_taskExecutor.execute( task );
     }
     catch( final TaskExecutionException e )
     {
@@ -272,19 +270,6 @@ public class WorkflowControl implements IWorklistChangeListener
     finally
     {
       m_treeViewer.refresh();
-    }
-  }
-
-  public void setTaskExecutionListener( final ITaskExecutionListener taskExecutionListener )
-  {
-    m_taskExecutionListener = taskExecutionListener;
-  }
-
-  public void unsetTaskExecutionListener( final ITaskExecutionListener taskExecutionListener )
-  {
-    if( taskExecutionListener == m_taskExecutionListener )
-    {
-      m_taskExecutionListener = null;
     }
   }
 

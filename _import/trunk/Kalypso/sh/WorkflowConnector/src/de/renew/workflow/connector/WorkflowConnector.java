@@ -331,14 +331,15 @@ public class WorkflowConnector
   /**
    * Confirms an activity that was previously requested
    */
-  public void confirm( String id, final Object result )
+  public void confirm( final String id )
   {
     if( isActive( id ) )
     {
       try
       {
         final Activity activity = getActivity( id );
-        final boolean confirmed = activity.confirm( m_login, m_client, result );
+        // TODO result
+        final boolean confirmed = activity.confirm( m_login, m_client, null );
         if( confirmed )
         {
           logger.info( "confirmed " + activity.getWorkItem().getTask().getName() );

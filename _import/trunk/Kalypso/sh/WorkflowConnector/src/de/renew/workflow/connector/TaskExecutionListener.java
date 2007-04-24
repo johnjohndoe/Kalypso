@@ -42,34 +42,24 @@ package de.renew.workflow.connector;
 
 import java.util.logging.Logger;
 
-import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
-
-import de.renew.workflow.base.EActivityExeState;
-import de.renew.workflow.base.Task;
-import de.renew.workflow.cases.CaseData;
-import de.renew.workflow.cases.ICaseDataProvider;
-import de.renew.workflow.cases.ITaskExecutionListener;
-import de.renew.workflow.cases.TaskExecutionException;
-import de.renew.workflow.contexts.ContextType;
-import de.renew.workflow.contexts.IContextHandlerFactory;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
- * A {@link TaskExecutionListener} is a special command handler that handles requesting and confirming work items for
- * commands. This {@link ITaskExecutionListener} requests a work item from the workflow system before the command it is
- * executed and confirms it after its execution has finished successfully and if the activity requires confirmation. If
- * there is a problem in the internal execution or if the command is cancelled, the work item is cancelled.
+ * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
+ * {@link ITaskExecutionListener} requests a work item from the workflow system after the command has been executed and
+ * confirms it before the execution of the next command.
  * 
  * @author Stefan Kurzbach
  */
-public class TaskExecutionListener implements ITaskExecutionListener
+public class TaskExecutionListener implements IExecutionListener
 {
 
   public static Logger logger = Logger.getLogger( TaskExecutionListener.class.getName() );
@@ -82,162 +72,110 @@ public class TaskExecutionListener implements ITaskExecutionListener
       logger.setUseParentHandlers( false );
   }
 
-  private static final boolean m_isWorkflowMode = false;
+  public static final String CATEGORY_CONTEXT = "de.renew.workflow.contexts.category";//$NON-NLS-1$
 
-  private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands"; //$NON-NLS-1$
+  public static final String CATEGORY_TASK = "de.renew.workflow.tasks.category";//$NON-NLS-1$O
+
+  private static final boolean m_isWorkflowMode = false;
 
   private WorkflowConnector m_connector;
 
-  private Task m_activeTask;
-
-  protected final IContextHandlerFactory m_contextHandlerFactory;
-
   private final ICommandService m_commandService;
 
-  private final IHandlerService m_handlerService;
-
-  private final ICaseDataProvider m_dataProvider;
-
-  private final ITaskExecutionAuthority m_authority;
-
-  public TaskExecutionListener( final IContextHandlerFactory contextHandlerFactory, final ITaskExecutionAuthority authority, final ICaseDataProvider dataProvider )
+  public TaskExecutionListener( final ICommandService commandService )
   {
-    m_contextHandlerFactory = contextHandlerFactory;
-    m_authority = authority;
-    m_dataProvider = dataProvider;
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    m_commandService = (ICommandService) workbench.getService( ICommandService.class );
-    m_handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    commandService.addExecutionListener( this );
+    m_commandService = commandService;
   }
 
   /**
-   * @see de.renew.workflow.cases.ITaskExecutionListener#taskStarted(de.renew.workflow.base.Task)
+   * @see org.eclipse.core.commands.IExecutionListener#notHandled(java.lang.String,
+   *      org.eclipse.core.commands.NotHandledException)
    */
-  public void taskStarted( final Task task ) throws TaskExecutionException
+  public void notHandled( final String commandId, final NotHandledException exception )
   {
-    if( m_activeTask != null )
-    {
-      if( !stopTask( m_activeTask ) )
-        return;
-    }
-    final String name = task.getURI();
-    final Command command = getCommand( m_commandService, name );
-    final ContextType context = task.getContext();
-    if( context != null )
-    {
-      activateContext( context );
-    }
-    try
-    {
-      m_handlerService.executeCommand( command.getId(), null );
-    }
-    catch( final NotHandledException e )
-    {
-      // ignore not handled
-    }
-    catch( final Throwable e )
-    {
-      throw new TaskExecutionException( e );
-    }
-
-    task.setState( EActivityExeState.RUNNING );
-    m_activeTask = task;
-    final String commandId = task.getURI();
-    if( m_isWorkflowMode )
-    {
-      if( m_connector.canRequest( commandId ) )
-      {
-        m_connector.request( commandId );
-        logger.info( "requested work item for " + commandId );
-      }
-      else
-      {
-        logger.info( "no work item available for " + commandId );
-      }
-    }
-  }
-
-  private ContextActivation activateContext( final ContextType context ) throws ContextActivationException
-  {
-    final ContextType parentContext = context.getParent();
-    final IHandler handler = m_contextHandlerFactory.getHandler( context );
-    final Command contextCommand = getCommand( m_commandService, context.getId() );
-    contextCommand.setHandler( handler );
-    ContextActivation parentActivation = null;
-    if( parentContext != null )
-    {
-      parentActivation = activateContext( parentContext );
-    }
-
-    Object commandResult;
-    try
-    {
-      commandResult = m_handlerService.executeCommand( context.getId(), null );
-    }
-    catch( final Throwable e )
-    {
-      throw new ContextActivationException( e );
-    }
-
-    if( parentActivation == null )
-    {
-      return new ContextActivation( context, commandResult );
-    }
-    else
-    {
-      return new ContextActivation( context, commandResult, parentActivation );
-    }
-  }
-
-  private Command getCommand( final ICommandService commandService, final String commandId )
-  {
-    final Command command = commandService.getCommand( commandId );
-    if( !command.isDefined() )
-    {
-      final Category category = commandService.getCategory( "org.kalypso.afgui.tasks" ); //$NON-NLS-1$
-      if( !category.isDefined() )
-      {
-        category.define( TASKS_COMMANDS_CATEGORY, null );
-      }
-      command.define( commandId, null, category );
-    }
-    return command;
+    final Command command = m_commandService.getCommand( commandId );
+    logger.info( "command not handled " + command );
   }
 
   /**
-   * @see de.renew.workflow.cases.ITaskExecutionListener#taskCompleted(de.renew.workflow.base.Task)
+   * @see org.eclipse.core.commands.IExecutionListener#postExecuteFailure(java.lang.String,
+   *      org.eclipse.core.commands.ExecutionException)
    */
-  private boolean stopTask( final Task task )
+  public void postExecuteFailure( final String commandId, final ExecutionException exception )
   {
-    final String commandId = task.getURI();
-    if( m_authority.canStopTask( task ) )
+    final Command command = m_commandService.getCommand( commandId );
+    try
     {
-      final CaseData caseData = m_dataProvider.getCaseData();
-      if( isRequiredDataAvailable( task, caseData ) && m_isWorkflowMode )
+      if( CATEGORY_TASK.equals( command.getCategory().getId() ) )
       {
-        // confirm
-        m_connector.confirm( commandId, caseData );
-        logger.info( "confirmed activity for " + commandId );
+        logger.info( "execution failed for " + command );
+        WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( exception ) );
       }
-      else if( m_isWorkflowMode ) // && !isRequiredDataAvailable( task ))
-      {
-        // cancel
-        m_connector.cancel( commandId );
-        logger.info( "cancelled activity for " + commandId );
-      }
-      m_activeTask.setState( EActivityExeState.AVAILABLE );
-      m_activeTask = null;
-      return true;
     }
-    else
+    catch( final NotDefinedException e )
     {
-      return false;
+      // the command should always be defined
+      e.printStackTrace();
     }
   }
 
-  private boolean isRequiredDataAvailable( final Task task, final CaseData caseData )
+  /**
+   * @see org.eclipse.core.commands.IExecutionListener#postExecuteSuccess(java.lang.String, java.lang.Object)
+   */
+  public void postExecuteSuccess( final String commandId, final Object returnValue )
   {
-    // TODO check required case data
-    return true;
+    final Command command = m_commandService.getCommand( commandId );
+    try
+    {
+      if( CATEGORY_TASK.equals( command.getCategory().getId() ) )
+      {
+        logger.info( "execution successful for " + command );
+        if( m_isWorkflowMode )
+        {
+          if( m_connector.canRequest( commandId ) )
+          {
+            m_connector.request( commandId );
+            logger.info( "requested work item " + commandId );
+          }
+          else
+          {
+            logger.info( "no work item available for " + commandId );
+          }
+        }
+      }
+    }
+    catch( final NotDefinedException e )
+    {
+      // the command should always be defined
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @see org.eclipse.core.commands.IExecutionListener#preExecute(java.lang.String,
+   *      org.eclipse.core.commands.ExecutionEvent)
+   */
+  public void preExecute( final String commandId, final ExecutionEvent event )
+  {
+    final Command command = m_commandService.getCommand( commandId );
+    try
+    {
+      if( CATEGORY_TASK.equals( command.getCategory().getId() ) )
+      {
+        logger.info( "execution successful for " + command );
+        if( m_isWorkflowMode )
+        {
+          // confirm
+          m_connector.confirm( commandId );
+          logger.info( "confirmed activity " + commandId );
+        }
+      }
+    }
+    catch( final NotDefinedException e )
+    {
+      // the command should always be defined
+      e.printStackTrace();
+    }
   }
 }

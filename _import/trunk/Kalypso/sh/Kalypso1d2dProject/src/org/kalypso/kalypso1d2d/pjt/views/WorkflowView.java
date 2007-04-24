@@ -7,7 +7,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
@@ -15,11 +18,12 @@ import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.connector.ITaskExecutor;
 import de.renew.workflow.connector.TaskExecutionListener;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
- * @author Patrice Congo
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public class WorkflowView extends ViewPart
 {
@@ -49,17 +53,13 @@ public class WorkflowView extends ViewPart
     }
   };
 
-  private TaskExecutionListener m_taskExecutionListener;
-
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_workflowControl.createControl( parent );
-    m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
-    m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
+    m_workflowControl.createControl( parent );    
     handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentScenario() );
   }
 
@@ -75,12 +75,6 @@ public class WorkflowView extends ViewPart
       setContentDescription( "Kein Szenario aktiv." );
       m_workflowControl.setWorkflow( null );
     }
-    if( m_taskExecutionListener != null )
-    {
-      m_workflowControl.unsetTaskExecutionListener( m_taskExecutionListener );
-    }
-    m_taskExecutionListener = new TaskExecutionListener( new WorkflowContextHandlerFactory(), m_activeWorkContext, m_activeWorkContext.getDataProvider() );
-    m_workflowControl.setTaskExecutionListener( m_taskExecutionListener );
   }
 
   /**
@@ -100,7 +94,15 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_workflowControl = new WorkflowControl();
+    m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
+    m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
+    final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
+    final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
+    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final TaskExecutionListener taskExecutionListener = new TaskExecutionListener( commandService);
+    final ITaskExecutor taskExecutor = new TaskExecutor(workflowContextHandlerFactory, m_activeWorkContext, commandService, handlerService ); 
+    m_workflowControl = new WorkflowControl( taskExecutor );
     m_workflowControl.restoreState( memento );
   }
 
