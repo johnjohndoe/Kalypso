@@ -11,9 +11,9 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  */
 @Deprecated
-public interface IFeatureWrapper
+/*public*/ interface IFeatureWrapper
 {
-  public Feature getWrappedFeature( );
+//  public Feature getWrappedFeature( );
 
-  public String getGmlID( );
+//  public String getGmlID( );
 }
