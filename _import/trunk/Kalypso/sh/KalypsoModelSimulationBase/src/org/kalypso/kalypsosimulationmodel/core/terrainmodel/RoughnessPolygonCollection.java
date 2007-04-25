@@ -7,11 +7,15 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -126,38 +130,45 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   @SuppressWarnings("unchecked")
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
-    List<Feature> srcPolygonsList = getWrappedList();
-    List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
-    Iterator<Feature> iterator = srcPolygonsList.listIterator();
-    while( iterator.hasNext() )
-    {
-      dstPolygonsList.add( new RoughnessPolygon( iterator.next() ) );
-    }
+//    List<Feature> srcPolygonsList = getWrappedList();
+//    List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+//    Iterator<Feature> iterator = srcPolygonsList.listIterator();
+//    while( iterator.hasNext() )
+//    {
+//      dstPolygonsList.add( new RoughnessPolygon( iterator.next() ) );
+//    }
+//    return dstPolygonsList;
+    final List<IRoughnessPolygon> dstPolygonsList = 
+                                  new ArrayList<IRoughnessPolygon>(this);
     return dstPolygonsList;
   }
+  
+  
 
   @SuppressWarnings("unchecked")
-  public IRoughnessPolygon[] getSelectedPolygons( GM_Point location )
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Point location )
   {
-    List<Feature> srcPolygonsList = getWrappedList();
-    List<Feature> dstPolygonsList = new ArrayList<Feature>();
-    Iterator<Feature> iterator = srcPolygonsList.listIterator();
-    Feature polygon = null;
-    while( iterator.hasNext() )
-    {
-      polygon = iterator.next();
-      if( polygon.getDefaultGeometryProperty().contains( location ) )
-        dstPolygonsList.add( polygon );
-    }
-    if( dstPolygonsList.size() > 0 )
-    {
-      IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[dstPolygonsList.size()];
-      for( int i = 0; i < dstPolygonsList.size(); i++ )
-        dstPolygonsArray[i] = new RoughnessPolygon( dstPolygonsList.get( i ) );
-      return dstPolygonsArray;
-    }
-    else
-      return null;
+    return query( location.getPosition() );
+    
+//    List<Feature> srcPolygonsList = getWrappedList();
+//    List<Feature> dstPolygonsList = new ArrayList<Feature>();
+//    Iterator<Feature> iterator = srcPolygonsList.listIterator();
+//    Feature polygon = null;
+//    while( iterator.hasNext() )
+//    {
+//      polygon = iterator.next();
+//      if( polygon.getDefaultGeometryProperty().contains( location ) )
+//        dstPolygonsList.add( polygon );
+//    }
+//    if( dstPolygonsList.size() > 0 )
+//    {
+//      IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[dstPolygonsList.size()];
+//      for( int i = 0; i < dstPolygonsList.size(); i++ )
+//        dstPolygonsArray[i] = new RoughnessPolygon( dstPolygonsList.get( i ) );
+//      return dstPolygonsArray;
+//    }
+//    else
+//      return null;
 
     // /*
     // * Mark from Dejan: The following code does not work correctly,
@@ -173,6 +184,17 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     // }
     // return dstPolygonsArray;
 
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#selectRoughnessPolygons(org.kalypsodeegree.model.geometry.GM_Polygon)
+   */
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface selectionZone )
+  {
+    return query( 
+              selectionZone, 
+              false, 
+              KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
   }
   
   private int[] getEmptyList(int size)
@@ -211,4 +233,6 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return null;
   }
 
+  
+  
 }

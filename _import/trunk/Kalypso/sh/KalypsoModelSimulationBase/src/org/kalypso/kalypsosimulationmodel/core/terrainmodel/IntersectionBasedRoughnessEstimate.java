@@ -38,39 +38,76 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
- * @author madanago
- *
+ * Implementation of roughness estimate based on the
+ * Intersection {@link org.kalypsodeegree.model.geometry.GM_Object#intersection(org.kalypsodeegree.model.geometry.GM_Object)} 
+ * 
+ * @author Patrice Congo
  */
-public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
+public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpec
 {
-
-  private GM_Polygon gPolygon;
-  private ColorOnFEDataModel dataModel;
-
-  MakeRoughnessEstimate(GM_Polygon gp,ColorOnFEDataModel feDataModel ){
-    this.gPolygon = gp;
-    this.dataModel = feDataModel;
+  /**
+   * List of roughness polygones that contributes to this estimate
+   */
+  final private List<IRoughnessPolygon> contributingRP;
+  final private GM_Surface estimateZone; 
+  final private Map<IRoughnessCls, Double> histogram = 
+                        new HashMap<IRoughnessCls, Double>();
+  
+  public IntersectionBasedRoughnessEstimate(
+                    IRoughnessPolygonCollection roughnessPolygonCollection, 
+                    GM_Surface estimateZone )
+  {
+    Assert.throwIAEOnNullParam( roughnessPolygonCollection, "roughnessPolygonCollection" );
+    Assert.throwIAEOnNullParam( estimateZone, "estimateZone" );
+    this.estimateZone = estimateZone;
+    contributingRP = 
+      roughnessPolygonCollection.selectRoughnessPolygons( estimateZone );
     
   }
+  
+  private final void makeHistrogram( )
+  {
+    for( IRoughnessPolygon roughnessPolygon : contributingRP )
+    {
+      GM_Object areaGmObject = estimateZone.intersection( roughnessPolygon.getSurface() );
+      if( areaGmObject == null )
+      {
+        incrementHistogramValue( 
+            roughnessPolygon.getRoughnessCls() , 
+            areaGmObject);
+      }
+    }
+  }
+  
+  private final void incrementHistogramValue( 
+                            IRoughnessCls roughnessCls, 
+                            GM_Object areaGmObject )
+  {
+    
+  }
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#getAreaRatio()
    */
   public double getAreaRatio( )
   {
-    
-    return 0;
+    return Double.NaN;
   }
 
   /**
@@ -78,7 +115,6 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public GM_Envelope[] getCells( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -87,8 +123,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public List<IRoughnessPolygon> getContributingRoughnessPolygons( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return contributingRP;
   }
 
   /**
@@ -96,8 +131,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public Map<IRoughnessCls, Double> getHistogramm( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return histogram;
   }
 
   /**
@@ -105,8 +139,28 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public IRoughnessCls[] mostSpreadRoughness( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    List<IRoughnessCls> mostSpreads =  new ArrayList<IRoughnessCls>();
+    Double max = Double.MAX_VALUE;
+    Set<Entry<IRoughnessCls, Double>> entries = histogram.entrySet();
+    for( Entry<IRoughnessCls, Double> entry : entries )
+    {
+      final double area = entry.getValue();
+      if( area == max )
+      {
+        mostSpreads.add(  entry.getKey() );
+      }
+      else if( area > max )
+      {
+        max = area;
+        mostSpreads.clear();
+        mostSpreads.add( entry.getKey() );
+      }
+      else //area<max
+      {
+        //nothing to do
+      }
+    }
+    return mostSpreads.toArray( new IRoughnessCls[]{} );
   }
 
   /**
@@ -114,7 +168,6 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public IRoughnessCls mostSpreadRoughness( ERoughnessSelectionMechanism rsm )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -123,8 +176,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public IRoughnessCls[] possibleRoughnesses( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return histogram.keySet().toArray( new IRoughnessCls[]{} );
   }
 
   /**
@@ -132,8 +184,7 @@ public class MakeRoughnessEstimate implements IRoughnessEstimateSpec
    */
   public void setRatio( double ratio )
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
 }

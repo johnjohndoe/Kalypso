@@ -115,38 +115,38 @@ public interface IRoughnessCls extends IFeatureWrapper2
 	 */
 	public RoughnessConfigConsistency validate();
 	
-	/**
-	 * Use the method to get the name of this roughness
-	 * Note that the name is not the identifying token for
-	 * a roughness but the URI {@link #getURI()} 
-	 * 
-	 * @return the name of the roughness as string 
-	 */
-	public String getName();
+//	/**
+//	 * Use the method to get the name of this roughness
+//	 * Note that the name is not the identifying token for
+//	 * a roughness but the URI {@link #getURI()} 
+//	 * 
+//	 * @return the name of the roughness as string 
+//	 */
+//	public String getName();
 	
-	/**
-	 * Sets a new name for the roughness
-	 * 
-	 * @param name -- the new roughness name
-	 * 
-	 * @throws IllegalArgumentException
-	 * 			if name is null or an empty string
-	 */
-	public void setName(
-					String name) 
-					throws IllegalArgumentException;
+//	/**
+//	 * Sets a new name for the roughness
+//	 * 
+//	 * @param name -- the new roughness name
+//	 * 
+//	 * @throws IllegalArgumentException
+//	 * 			if name is null or an empty string
+//	 */
+//	public void setName(
+//					String name) 
+//					throws IllegalArgumentException;
+//	
+//	/**
+//	 * To get the description for this roughness
+//	 * 
+//	 * @return the roughness description as string
+//	 */
+//	public String getDescription();
 	
-	/**
-	 * To get the description for this roughness
-	 * 
-	 * @return the roughness description as string
-	 */
-	public String getDescription();
-	
-	/**
-	 * Sets the description of the roughness class
-	 * 
-	 * @param descriptionText the new description text  
-	 */
-	public void setDescription(String descriptionText);
+//	/**
+//	 * Sets the description of the roughness class
+//	 * 
+//	 * @param descriptionText the new description text  
+//	 */
+//	public void setDescription(String descriptionText);
 }

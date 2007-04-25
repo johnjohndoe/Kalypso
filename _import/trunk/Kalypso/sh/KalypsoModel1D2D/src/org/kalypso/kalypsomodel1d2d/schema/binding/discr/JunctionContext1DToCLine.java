@@ -56,8 +56,11 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
@@ -433,92 +436,92 @@ public class JunctionContext1DToCLine
 
       public IFE1D2DElement addNew( QName newChildType )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public <T extends IFE1D2DElement> T addNew( QName newChildType, Class<T> classToAdapt )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public IFE1D2DElement addNew( QName newChildType, String newFeatureId )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public <T extends IFE1D2DElement> T addNew( QName newChildType, String newFeatureId, Class<T> classToAdapt )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public IFE1D2DElement addNew( int index, QName newChildType )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public <T extends IFE1D2DElement> T addNew( int index, QName newChildType, Class<T> classToAdapt )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public boolean addRef( IFE1D2DElement toAdd ) throws IllegalArgumentException
       {
-        // TODO Auto-generated method stub
         return false;
       }
 
       public FeatureList getWrappedList( )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public boolean removeAllRefs( IFE1D2DElement toRemove ) throws IllegalArgumentException
       {
-        // TODO Auto-generated method stub
         return false;
       }
 
       public String getDescription( )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public String getGmlID( )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public String getName( )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public Feature getWrappedFeature( )
       {
-        // TODO Auto-generated method stub
         return null;
       }
 
       public void setDescription( String desc )
       {
-        // TODO Auto-generated method stub
         
       }
 
       public void setName( String name )
       {
-        // TODO Auto-generated method stub
         
+      }
+
+      public List<IFE1D2DElement> query( GM_Surface selectionSurface, boolean containedOnly, QName checkedGeometryPropertyName )
+      {
+        return null;
+      }
+
+      public List<IFE1D2DElement> query( GM_Envelope envelope )
+      {
+        return null;
+      }
+
+      public List<IFE1D2DElement> query( GM_Position position )
+      {
+        return null;
       }
       
     };

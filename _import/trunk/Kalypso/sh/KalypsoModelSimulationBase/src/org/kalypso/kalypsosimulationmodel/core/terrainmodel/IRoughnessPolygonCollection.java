@@ -6,6 +6,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * The interface implemented by classes representing simBase:RoughnessCollectionElement
@@ -20,9 +21,18 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * Since the point may be on the border, there might be several polygons as a result.
    * 
    * @param point the location where to find the roughness polygon
-   * @return array if rougness polygons containing given point
+   * @return a list of roughness polygons that contain the given point
    */
-  public IRoughnessPolygon[] getSelectedPolygons( GM_Point point );
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Point point );
+  
+  /**
+   * Selects all roughness polygons overlapping the provided polygon.
+   *  
+   * 
+   * @param selectionZone the area where to select the roughness polygon
+   * @return a set of rougness polygons overlaping the given zone.
+   */
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface selectionZone );
 
   /**
    * Gets all roughness polygons in this collection

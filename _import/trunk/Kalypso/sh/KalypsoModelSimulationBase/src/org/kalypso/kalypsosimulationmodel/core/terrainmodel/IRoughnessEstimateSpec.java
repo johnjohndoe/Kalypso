@@ -3,6 +3,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -46,9 +47,9 @@ public interface IRoughnessEstimateSpec
 	 *  
 	 * 
 	 */
-	public Map<String , Double> getHistogramm();	
+	public Map<IRoughnessCls, Double> getHistogramm();	
 	
-	public String[] possibleRoughnesses();
+	public IRoughnessCls[] possibleRoughnesses();
 	
 	public GM_Envelope[] getCells();
 	
@@ -56,7 +57,7 @@ public interface IRoughnessEstimateSpec
 	 * returns the most spread rougthness in the  
 	 * @return
 	 */
-	public String[] mostSpreadRoughness();
+	public IRoughnessCls[] mostSpreadRoughness();
 	
 	/**
 	 * returns the most spread roughness using the specified selection
@@ -65,7 +66,7 @@ public interface IRoughnessEstimateSpec
 	 * @param rsm the sellection mechanism to use
 	 * @return the mostpread roughness 
 	 */
-	public String mostSpreadRoughness(ERoughnessSelectionMechanism rsm);
+	public IRoughnessCls mostSpreadRoughness(ERoughnessSelectionMechanism rsm);
 	
 	/**
 	 * Get all rougthness polygons that contribute roughnesses to this

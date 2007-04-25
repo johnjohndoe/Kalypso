@@ -6,6 +6,8 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -17,128 +19,135 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-//TODO Patrice use AbstractFeatureBinder as parent
+
 /**
+ * {@link AbstractFeatureBinder}  based, default implementation
+ * of {@link IRoughnessPolygon}
+ * 
  * @author Dejan Antanaskovic, Patrice Congo
  */
-public class RoughnessPolygon implements IRoughnessPolygon
+public class RoughnessPolygon 
+                      extends AbstractFeatureBinder 
+                      implements IRoughnessPolygon
 {
-  // TODO: please comment! What is the reason for that implementation here?
-  // Why are you not just using GM_PolygonImpl?
-  class GM_PolygonImpl implements GM_Polygon
-  {
-    private final GM_SurfacePatch surfacePatch;
+//  // TODO: please comment! What is the reason for that implementation here?
+//  // Why are you not just using GM_PolygonImpl?
+//  class GM_PolygonImpl implements GM_Polygon
+//  {
+//    private final GM_SurfacePatch surfacePatch;
+//
+//    public GM_PolygonImpl( GM_SurfacePatch gmSurfacePatch )
+//    {
+//      this.surfacePatch = gmSurfacePatch;
+//    }
+//
+//    /**
+//     * @param gmo
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#contains(org.kalypsodeegree.model.geometry.GM_Object)
+//     */
+//    public boolean contains( GM_Object gmo )
+//    {
+//      return surfacePatch.contains( gmo );
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getArea()
+//     */
+//    public double getArea( )
+//    {
+//      return surfacePatch.getArea();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getCentroid()
+//     */
+//    public GM_Point getCentroid( )
+//    {
+//      return surfacePatch.getCentroid();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getCoordinateSystem()
+//     */
+//    public CS_CoordinateSystem getCoordinateSystem( )
+//    {
+//      return surfacePatch.getCoordinateSystem();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getEnvelope()
+//     */
+//    public GM_Envelope getEnvelope( )
+//    {
+//      return surfacePatch.getEnvelope();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getExteriorRing()
+//     */
+//    public GM_Position[] getExteriorRing( )
+//    {
+//      return surfacePatch.getExteriorRing();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getInteriorRings()
+//     */
+//    public GM_Position[][] getInteriorRings( )
+//    {
+//      return surfacePatch.getInteriorRings();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getInterpolation()
+//     */
+//    public GM_SurfaceInterpolation getInterpolation( )
+//    {
+//      return surfacePatch.getInterpolation();
+//    }
+//
+//    /**
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getPerimeter()
+//     */
+//    public double getPerimeter( )
+//    {
+//      return surfacePatch.getPerimeter();
+//    }
+//
+//    /**
+//     * @param gmo
+//     * @return
+//     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#intersects(org.kalypsodeegree.model.geometry.GM_Object)
+//     */
+//    public boolean intersects( GM_Object gmo )
+//    {
+//      return surfacePatch.intersects( gmo );
+//    }
+//
+//    /**
+//     * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#invalidate()
+//     */
+//    public void invalidate( )
+//    {
+//      surfacePatch.invalidate();
+//    }
+//
+//  }
 
-    public GM_PolygonImpl( GM_SurfacePatch gmSurfacePatch )
-    {
-      this.surfacePatch = gmSurfacePatch;
-    }
-
-    /**
-     * @param gmo
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#contains(org.kalypsodeegree.model.geometry.GM_Object)
-     */
-    public boolean contains( GM_Object gmo )
-    {
-      return surfacePatch.contains( gmo );
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getArea()
-     */
-    public double getArea( )
-    {
-      return surfacePatch.getArea();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getCentroid()
-     */
-    public GM_Point getCentroid( )
-    {
-      return surfacePatch.getCentroid();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getCoordinateSystem()
-     */
-    public CS_CoordinateSystem getCoordinateSystem( )
-    {
-      return surfacePatch.getCoordinateSystem();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getEnvelope()
-     */
-    public GM_Envelope getEnvelope( )
-    {
-      return surfacePatch.getEnvelope();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getExteriorRing()
-     */
-    public GM_Position[] getExteriorRing( )
-    {
-      return surfacePatch.getExteriorRing();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getInteriorRings()
-     */
-    public GM_Position[][] getInteriorRings( )
-    {
-      return surfacePatch.getInteriorRings();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getInterpolation()
-     */
-    public GM_SurfaceInterpolation getInterpolation( )
-    {
-      return surfacePatch.getInterpolation();
-    }
-
-    /**
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getPerimeter()
-     */
-    public double getPerimeter( )
-    {
-      return surfacePatch.getPerimeter();
-    }
-
-    /**
-     * @param gmo
-     * @return
-     * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#intersects(org.kalypsodeegree.model.geometry.GM_Object)
-     */
-    public boolean intersects( GM_Object gmo )
-    {
-      return surfacePatch.intersects( gmo );
-    }
-
-    /**
-     * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#invalidate()
-     */
-    public void invalidate( )
-    {
-      surfacePatch.invalidate();
-    }
-
-  }
-
-  private final Feature feature;
+//  private final Feature feature;
 
   /**
    * Create a RoughnessPolygon object base on an existing feature
@@ -147,11 +156,13 @@ public class RoughnessPolygon implements IRoughnessPolygon
    * @throws IllegalArgumentException
    *           if feature is null and not of the appopriate type
    */
-  public RoughnessPolygon( Feature aFeature )
+  public RoughnessPolygon( Feature featureToBind )
   {
-    Assert.throwIAEOnNull( aFeature, "Param feature must not be null" );
-    Assert.throwIAEOnNotDirectInstanceOf( aFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
-    this.feature = aFeature;
+//    Assert.throwIAEOnNull( aFeature, "Param feature must not be null" );
+//    Assert.throwIAEOnNotDirectInstanceOf( aFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
+//    this.feature = aFeature;
+    super(  featureToBind,
+            KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
   }
 
   /**
@@ -163,9 +174,12 @@ public class RoughnessPolygon implements IRoughnessPolygon
    */
   public RoughnessPolygon( Feature parentFeature, QName linkPropQName )
   {
-    Assert.throwIAEOnNull( parentFeature, "Param parentFeature must not be null" );
-    Assert.throwIAEOnNull( linkPropQName, "Parameter linkPropQName must not be null" );
-    this.feature = (Feature) parentFeature.getProperty( linkPropQName );
+//    Assert.throwIAEOnNull( parentFeature, "Param parentFeature must not be null" );
+//    Assert.throwIAEOnNull( linkPropQName, "Parameter linkPropQName must not be null" );
+//    this.feature = (Feature) parentFeature.getProperty( linkPropQName );
+    super( 
+        FeatureHelper.resolveLink( parentFeature, linkPropQName ),
+        KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON);
   }
 
   /*
@@ -175,7 +189,8 @@ public class RoughnessPolygon implements IRoughnessPolygon
    */
   public GM_MultiSurface getSurface( )
   {
-    Object object = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
+    final Feature feature = getFeature();
+    final Object object = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
     if( object instanceof GM_MultiSurface )
     {
       return (GM_MultiSurface) object;
@@ -211,7 +226,8 @@ public class RoughnessPolygon implements IRoughnessPolygon
    */
   public String getRoughnessStyle( )
   {
-    Object style = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_STYLE );
+    final Feature feature = getFeature();
+    final Object style = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_STYLE );
     if( style instanceof String )
     {
       return (String) style;
@@ -229,6 +245,7 @@ public class RoughnessPolygon implements IRoughnessPolygon
   public void setSurface( GM_MultiSurface polygon )
   {
     Assert.throwIAEOnNull( polygon, "Parameter cannot be null." );
+    final Feature feature = getFeature();
     feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, polygon );
   }
 
@@ -236,7 +253,9 @@ public class RoughnessPolygon implements IRoughnessPolygon
   {
     Assert.throwIAEOnNull( object, "Parameter cannot be null." );
     if( object instanceof GM_MultiSurface )
+    {
       setSurface( (GM_MultiSurface) object );
+    }
     else if( object instanceof GM_Surface )
     {
       final GM_Surface surface = (GM_Surface) object;
@@ -244,20 +263,39 @@ public class RoughnessPolygon implements IRoughnessPolygon
       setSurface( GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() ) );
     }
     else
+    {
       throw new IllegalArgumentException( "Type not supported: " + object.getClass().getName() );
+    }
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessCls()
+   */
+  public IRoughnessCls getRoughnessCls( )
+  {
+    final IRoughnessCls rCls = FeatureHelper.resolveLink( 
+        getFeature(), 
+        KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER,
+        IRoughnessCls.class );
+    
+    return rCls;
+  }
+  
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRoughnessClassMember(org.kalypso.gmlschema.property.relation.RelationType)
    */
   public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException
   {
-    feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
+    final Feature feature = getFeature();
+    feature.setProperty( 
+          KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, 
+          linkedFeature );
   }
 
   @Override
   public String toString( )
   {
+    final Feature feature = getFeature();
     StringBuffer buf = new StringBuffer( 128 );
     buf.append( "RoughnessPolygon" );
     String id = feature.getId();
@@ -329,53 +367,53 @@ public class RoughnessPolygon implements IRoughnessPolygon
     }
   }
 
-  public Feature getWrappedFeature( )
-  {
-    return feature;
-  }
+//  public Feature getWrappedFeature( )
+//  {
+//    return getFeature();
+//  }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
-   */
-  public String getGmlID( )
-  {
-    return feature.getId();
-  }
+//  /**
+//   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+//   */
+//  public String getGmlID( )
+//  {
+//    return feature.getId();
+//  }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
-   */
-  public String getDescription( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+//  /**
+//   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+//   */
+//  public String getDescription( )
+//  {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-   */
-  public String getName( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+//  /**
+//   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+//   */
+//  public String getName( )
+//  {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
-   */
-  public void setDescription( String desc )
-  {
-    // TODO Auto-generated method stub
-    
-  }
+//  /**
+//   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+//   */
+//  public void setDescription( String desc )
+//  {
+//    // TODO Auto-generated method stub
+//    
+//  }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
-   */
-  public void setName( String name )
-  {
-    // TODO Auto-generated method stub
-    
-  }
+//  /**
+//   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+//   */
+//  public void setName( String name )
+//  {
+//    // TODO Auto-generated method stub
+//    
+//  }
 
 }

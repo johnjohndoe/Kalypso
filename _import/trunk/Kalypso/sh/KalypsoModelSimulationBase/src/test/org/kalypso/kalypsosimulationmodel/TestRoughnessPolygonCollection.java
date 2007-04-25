@@ -80,10 +80,12 @@ public class TestRoughnessPolygonCollection extends TestCase
     workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION, null );
     final Feature feature = (Feature) workspace.getRootFeature().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
     if( feature == null )
+    {
       fail( "aaa" );
+    }
 
     m_polygonCollection = new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
-    IRoughnessPolygon[] polygons = m_polygonCollection.getSelectedPolygons( point );
+    List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point );
     System.out.println( "" );
     System.out.println( "******************************************************************" );
     System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION);
@@ -93,10 +95,16 @@ public class TestRoughnessPolygonCollection extends TestCase
     System.out.println( "******************************************************************" );
     System.out.println( "Point (x,y): (" + point.getX() + ", " + point.getY() + ")" );
     System.out.println( "is contained in:" );
-    for( int i = 0; i < polygons.length; i++ )
-      System.out.println( (i + 1) + ". - " + polygons[i].getGmlID() );
-    if(polygons.length == 0)
+    for( int i = 0; i < polygons.size(); i++ )
+    {
+      System.out.println( (i + 1) + ". - " + polygons.get( i ).getGmlID() );
+    }
+    
+    if(polygons.size() == 0)
+    {
       System.out.println( " - no polygons contains this point" );
+    }
+    
     System.out.println( "******************************************************************" );
     System.out.println( "" );
 
@@ -106,9 +114,14 @@ public class TestRoughnessPolygonCollection extends TestCase
     System.out.println( "******************************************************************" );
     System.out.println( "Overlapping polygons:" );
     for( int i = 0; i < polygonsList.size(); i++ )
+    {
       System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getGmlID() );
+    }
+    
     if(polygonsList.size() == 0)
+    {
       System.out.println( " - no overlapping" );
+    }
     System.out.println( "******************************************************************" );
     System.out.println( "" );
   }

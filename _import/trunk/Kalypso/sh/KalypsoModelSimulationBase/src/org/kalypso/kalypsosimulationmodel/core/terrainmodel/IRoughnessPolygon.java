@@ -1,5 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -19,6 +20,16 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
    */
   public String getRoughnessStyle( );
 
+  /**
+   * Answer the roughness class associated with this roughness polynom
+   * 
+   * @return the roughness class of this roughness polynom
+   */
+  public IRoughnessCls getRoughnessCls();
+  
+  /**
+   * 
+   */
   public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException;
 
   /**

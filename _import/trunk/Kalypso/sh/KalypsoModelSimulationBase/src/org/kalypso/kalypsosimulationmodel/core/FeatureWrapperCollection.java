@@ -1,6 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -8,12 +9,16 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
+
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-//import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -602,4 +607,87 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       }
       return featureList.add(gmlID);
     }
+
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Surface, boolean, javax.xml.namespace.QName)
+     */
+    public List<FWCls> query( GM_Surface selectionSurface, boolean containedOnly, QName checkedGeometryPropertyName )
+    {
+      final List selectedFeature = featureList.query( selectionSurface.getEnvelope() , null );
+      final List<FWCls> selFW = new ArrayList<FWCls>(selectedFeature.size());
+      final GMLWorkspace workspace = featureCol.getWorkspace();
+      
+      for( Object linkOrFeature: selectedFeature )
+      {
+        final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
+        if( feature != null )
+        {
+          final Object prop= 
+            feature.getWrappedFeature().getProperty( checkedGeometryPropertyName );
+          if( prop instanceof GM_Object )
+          {
+            if( containedOnly )
+            {
+              if( selectionSurface.contains( (GM_Object) prop ) )
+              {
+                  selFW.add( feature );
+              }
+              
+            }
+            else
+            {
+              if( selectionSurface.intersects( (GM_Object) prop ) )
+              {
+                  selFW.add( feature );
+              }
+            }
+          }
+        }
+      }
+      
+      return selFW;
+    }
+
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Envelope)
+     */
+    public List<FWCls> query( GM_Envelope envelope )
+    {
+      final List selectedFeature = featureList.query( envelope , null );
+      final List<FWCls> selFW = new ArrayList<FWCls>(selectedFeature.size());
+      final GMLWorkspace workspace = featureCol.getWorkspace();
+      
+      for( Object linkOrFeature: selectedFeature )
+      {
+        final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
+        if( feature != null )
+        {
+          selFW.add( feature );
+        }
+      }      
+      return selFW;
+    }
+
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Position)
+     */
+    public List<FWCls> query( GM_Position position )
+    {
+      final List selectedFeature = featureList.query( position , null );
+      final List<FWCls> selFW = new ArrayList<FWCls>(selectedFeature.size());
+      final GMLWorkspace workspace = featureCol.getWorkspace();
+      
+      for( Object linkOrFeature: selectedFeature )
+      {
+        final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
+        if( feature != null )
+        {
+          selFW.add( feature );
+        }
+      }
+      
+      return selFW;
+    }
+    
+    
 }

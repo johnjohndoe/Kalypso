@@ -1,11 +1,15 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
@@ -96,4 +100,48 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    * @throws IllegalArgumentException if the argument toAdd is null
    */
   public boolean addRef(FWCls toAdd)throws IllegalArgumentException;
+  
+  
+//  public Collection<FWCls> query(GM_Envelope envelope);
+  
+  /**
+   * Answer all feature wrappers overlaping the selected zone
+   * @param selectionSurface the selection surface
+   * @param containedOnly control the selection of feature according to 
+   *            whether a feature (limited to a geometry specified 
+   *            by checkedGeometryPropertyName ) are contained in the 
+   *            selectionSurface or not:
+   *            <ul>
+   *                <li/> true to select only features that are contains 
+   *                    in the area
+   *                <li/> false to allow selection of all overlapping feature 
+   *            </ul>
+   * @param checkedGeometryPropertyName the q-name of the feature property to check 
+   * @return a list of feature overlaping the given surface
+   * @thorws {@link IllegalArgumentException} if selectionSurface is null
+   */
+  public List<FWCls> query( 
+                  final GM_Surface selectionSurface, 
+                  final boolean containedOnly, 
+                  final QName checkedGeometryPropertyName );
+  
+  
+  /**
+   * Answer all feature wrappers overlaping the given envelope
+   * 
+   * @param envelope the envelope specifying the selection area
+   * @return a list of feature overlaping the given surface
+   * @thorws {@link IllegalArgumentException} if envelope is null
+   */
+  public List<FWCls> query( final GM_Envelope envelope );
+
+  /**
+   * Answer all feature wrappers containing the given position
+   * 
+   * @param selectionSurface the selection surface
+   * @return a list of feature overlaping the given surface
+   * @thorws {@link IllegalArgumentException} if position is null
+   */
+  public List<FWCls> query( final GM_Position position ); 
+  
 }
