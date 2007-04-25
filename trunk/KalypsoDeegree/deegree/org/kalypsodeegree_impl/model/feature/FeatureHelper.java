@@ -990,6 +990,29 @@ public class FeatureHelper
     return null;
   }
 
+  @SuppressWarnings("unchecked")
+  public static final <T> T getFeature( 
+                          final GMLWorkspace workspace, 
+                          final Object linkOrFeature,
+                          final Class<T> targetAdapterClass)
+  {
+    if( workspace == null ||
+        linkOrFeature == null||
+        targetAdapterClass == null )
+    {
+      String message = null;
+      throw new IllegalArgumentException(message);
+    }
+    final Feature feature = getFeature( workspace, linkOrFeature );
+    if( feature == null )
+    {
+      return null;
+    }
+    else
+    {
+      return (T) feature.getAdapter( targetAdapterClass );
+    }
+  }
   /**
    * Returns the label of a feature.
    * <p>
