@@ -422,6 +422,16 @@
                categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
                id="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"
                name="Move down"/>
+         <command
+               category="SWTTable Commands"
+               categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+               id="org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboardCommand"
+               name="Copy to Clipboard"/>
+         <command
+               category="SWTTable Commands"
+               categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+               id="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboardCommand"
+               name="Paste from Clipboard"/>
       </extension>
       <extension
             point="org.eclipse.ui.handlers">
@@ -431,6 +441,13 @@
          <handler
                class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveDownHandler"
                commandId="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"/>
+         <handler
+               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.CopyToClipboardHandler"
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboardCommand">
+         </handler>
+         <handler
+               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.PasteFromClipboardHandler"
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboardCommand"/>
       </extension>
       <extension
             point="org.eclipse.ui.bindings">
@@ -444,6 +461,16 @@
                contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
                schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
                sequence="M1+ARROW_DOWN"/>
+         <key
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboardCommand"
+               contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
+               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+               sequence="M1+C"/>
+         <key
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboardCommand"
+               contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
+               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+               sequence="M1+V"/>
       </extension>
    
 </plugin>

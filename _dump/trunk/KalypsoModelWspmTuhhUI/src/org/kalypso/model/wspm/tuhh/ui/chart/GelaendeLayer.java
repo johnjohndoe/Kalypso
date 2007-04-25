@@ -116,25 +116,26 @@ public class GelaendeLayer extends AbstractPolyLineLayer
     {
       if( (change instanceof PointPropertyEdit) || (change instanceof PointAdd) )
       {
-        final IProfilPoint point = (IProfilPoint) change.getObject();
-        try
+        for( final IProfilPoint point : (IProfilPoint[]) change.getObject() )
         {
-          final double breite = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-          final double hoehe = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-
-          if( (breite > right) || (breite < left) || (hoehe > top) || (hoehe < bottom) )
+          try
           {
-            valueRange.setLogicalRange( new LogicalRange( Math.min( hoehe, bottom ), Math.max( hoehe, top ) ) );
-            domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
+            final double breite = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+            final double hoehe = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+
+            if( (breite > right) || (breite < left) || (hoehe > top) || (hoehe < bottom) )
+            {
+              valueRange.setLogicalRange( new LogicalRange( Math.min( hoehe, bottom ), Math.max( hoehe, top ) ) );
+              domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
+            }
           }
-        }
-        catch( Exception e )
-        {
-          return;
+          catch( Exception e )
+          {
+            return;
+          }
         }
       }
     }
-
   }
 
   @Override

@@ -305,12 +305,12 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     {
       public void run( )
       {
-        if( hint.isPointPropertiesChanged() || hint.isObjectChanged() )
+        if( hint.isObjectChanged() )
         {
           createLayer();
           return;
         }
-        if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
+        if(  hint.isPointPropertiesChanged() ||hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
         {
           for( final IChartLayer layer : chart.getLayers() )
           {
@@ -387,22 +387,23 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         case MAXIMIZE:
           m_chart.maximize();
           break;
-        case FIX_RATIO_0:
-          m_chart.setFixAspectRatio( null );
-          m_chart.repaint();
-          break;
-        case FIX_RATIO_1:
-          m_chart.setFixAspectRatio( 1.0 );
-          m_chart.repaint();
-          break;
-        case FIX_RATIO_2:
-          m_chart.setFixAspectRatio( 2.0 );
-          m_chart.repaint();
-          break;
-        case FIX_RATIO_3:
-          m_chart.setFixAspectRatio( 10.0 );
-          m_chart.repaint();
-          break;
+//        TODO: KIM Ansicht Seitenverhältnis überarbeiten          
+//        case FIX_RATIO_0:
+//          m_chart.setFixAspectRatio( null );
+//          m_chart.repaint();
+//          break;
+//        case FIX_RATIO_1:
+//          m_chart.setFixAspectRatio( 1.0 );
+//          m_chart.repaint();
+//          break;
+//        case FIX_RATIO_2:
+//          m_chart.setFixAspectRatio( 2.0 );
+//          m_chart.repaint();
+//          break;
+//        case FIX_RATIO_3:
+//          m_chart.setFixAspectRatio( 10.0 );
+//          m_chart.repaint();
+//          break;
 
         case ZOOM_IN:
           m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );
@@ -425,8 +426,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           saveChartAsImage( m_chart );
           break;
 
-        case FIX_RATIO:
-          break;
       }
     }
   }

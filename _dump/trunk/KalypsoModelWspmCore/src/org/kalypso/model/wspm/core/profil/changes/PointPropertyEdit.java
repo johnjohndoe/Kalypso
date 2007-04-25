@@ -45,31 +45,46 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 
 public final class PointPropertyEdit implements IProfilChange
 {
-  private final IProfilPoint m_point;
+  private final IProfilPoint[] m_points;
 
   private final String m_property;
 
-  private final Double m_newValue;
+  private final Double[] m_newValues;
 
   public PointPropertyEdit( final IProfilPoint p, final String property, final Double newValue )
   {
-    m_point = p;
+    m_points = new IProfilPoint[] { p };
     m_property = property;
-    m_newValue = newValue;
+    m_newValues = new Double[] { newValue };
+  }
+
+  public PointPropertyEdit( final IProfilPoint[] points, final String property, final Double[] newValues )
+  {
+    m_points = points;
+    m_property = property;
+    m_newValues = newValues;
   }
 
   /**
    * @throws IllegalProfileOperationException
    * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) 
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setPointValuesChanged();
-    
-    final Double oldValue = m_point.getValueFor( m_property );
-    m_point.setValueFor( m_property, m_newValue );
-
-    return new PointPropertyEdit( m_point, m_property, oldValue );
+    if( hint != null )
+      hint.setPointValuesChanged();
+    final Double[] oldValues = new Double[m_points.length];
+    int i = 0;
+    for( final IProfilPoint point : m_points )
+    {
+      if( i < oldValues.length )
+      {
+        oldValues[i] = point.getValueFor( m_property );
+        point.setValueFor( m_property, i < m_newValues.length ? m_newValues[i] : Double.NaN );
+      }
+      i++;
+    }
+    return new PointPropertyEdit( m_points, m_property, oldValues );
   }
 
   /**
@@ -77,7 +92,7 @@ public final class PointPropertyEdit implements IProfilChange
    */
   public Object getObject( )
   {
-        return m_point;
+    return m_points;
   }
 
   /**
@@ -85,7 +100,7 @@ public final class PointPropertyEdit implements IProfilChange
    */
   public String getInfo( )
   {
-        return m_property;
+    return m_property;
   }
 
   /**
@@ -93,8 +108,7 @@ public final class PointPropertyEdit implements IProfilChange
    */
   public Double getValue( )
   {
-       return m_newValue;
+    return Double.NaN;
   }
 
- 
 }

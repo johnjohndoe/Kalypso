@@ -458,7 +458,10 @@ public class ProfilSWTTableView extends AbstractProfilView
 
     m_viewer.setSorter( sorter );
   }
-
+public void closeCellEditor()
+{
+   getViewer().cancelEditing() ;
+}
   public void setAdvanceMode( final String string )
   {
     m_cursor.setAdvanceMode( ExcelTableCursor.ADVANCE_MODE.valueOf( string ) );
@@ -570,14 +573,14 @@ public class ProfilSWTTableView extends AbstractProfilView
       @Override
       public void run( )
       {
-        //final Object selected = getCursor().getRow().getData();
+        // final Object selected = getCursor().getRow().getData();
         final TableViewer viewer = getViewer();
         if( viewer == null )
           return;
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        
-          final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(),selection.toList(), -1 ), true );
-          new ProfilOperationJob( operation ).schedule();
+
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(), selection.toList(), -1 ), true );
+        new ProfilOperationJob( operation ).schedule();
 
       }
     } );
@@ -662,6 +665,33 @@ public class ProfilSWTTableView extends AbstractProfilView
         }
       } );
     }
+  }
+/**
+ * @return a keyValuePair Object[2](String,Double)
+ */
+  
+  public final Object[] getActiveCell( )
+  {
+    if( m_viewer.isCellEditorActive() )
+    {
+      try
+      {
+        final TableCursor cursor = getCursor();
+        final TableItem row = cursor.getRow();
+        final int column = cursor.getColumn();
+        final TableViewer viewer = getViewer();
+        final String property = "" + viewer.getColumnProperties()[column];
+        final ProfilCellModifier cellModifier = (ProfilCellModifier) viewer.getCellModifier();
+        final Object aktiveElement = row.getData();
+        final Double value = cellModifier.getValueAsDouble( aktiveElement, property );
+        return new Object[]{  property ,value};
+      }
+      catch( final Exception e )
+      {
+        return new Object[]{"",Double.NaN};
+      }
+    }
+    return new Object[]{"",Double.NaN};
   }
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )

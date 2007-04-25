@@ -102,12 +102,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
     m_control = doCreateControl( parent, style );
     return m_control;
-//  KIM 
-//    IContextService contextService = (IContextService) parent.getSite()
-//    .getService(IContextService.class);
-//  IContextActivation contextActivation = contextService.activateContext("org.kalypso.model.wspm.ui.view.table.swt.context");
-   //KIM 
-    
   }
 
   public final Control getControl( )
