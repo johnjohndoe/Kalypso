@@ -281,7 +281,7 @@ public class WspmProfileHelper
   }
 
   /**
-   * returns the corresponding heigth for an giben width coordinate. Input: width coordinate (double), profile (Iprofil)
+   * returns the corresponding heigth for an given width coordinate. Input: width coordinate (double), profile (Iprofil)
    * Output: heigth (Double)
    * <p>
    * if the width is outside of the profile points, the first / last point heigth is returned.
