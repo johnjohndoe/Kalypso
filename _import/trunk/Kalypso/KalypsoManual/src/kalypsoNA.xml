@@ -168,67 +168,219 @@
       <title>Abgrenzung der Teilgebiete</title>
 
       <indexterm>
-        <see>Teilgebietsuntergliederung</see>
+        <primary>Teilgebietsuntergliederung</primary>
       </indexterm>
 
+      <para>Zur Abgrenzung von Teilgebieten dienen diverse Datenquellen. Der
+      Hintergrund sind die verschiedenen Ursachen, die den Fließweg des
+      Wassers bestimmen. Grundsätzlich fließt das Wasser entlang des stärksten
+      Gefälles. Als Datengrundlage ist deswegen ein Höhenmodell unabdingbar.
+      Optimal ist die Verwendung von Höhenlinien, da hier auch weitere
+      Informationen direkt sichtbar bleiben. Es gibt zwar verschiedene
+      automatisierte Möglichkeiten z.B. auf der Grundlage von Rasterdaten
+      (GRID) Teileinzugsgebiete abzugrenzen, doch werden hier andere
+      Gegebenheiten als die Höhe nicht beachtet. Auch die Auswahl bestimmter
+      Pegelpunkte als Kalibrierungspunkte (Zwangspunkte), durch welche die
+      Gebietsgrenzen verlaufen sollen, werden nicht berücksichtigt. Weiterhin
+      können Wasserscheidenpläne und Kanalisationsdaten hinzu gezogen
+      werden.</para>
+
+      <figure>
+        <title>Einzugsgebiet nach DIN 4049</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/kalypso_na/Einzugsgebiet-na.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Das Einzugsgebiet (A<literal>E</literal>) ist in Deutschland nach
+      DIN 4049 definiert und bezeichnet in der Horizontalprojektion das
+      jeniege Gebiet, aus dem das an einem Punkt x im Flussverlauf abfließende
+      Wasser stammt. In der Abbildung bedeuten (A<literal>EO</literal>) das
+      oberirdische oder topografische Einzugsgebiet und
+      (A<literal>EU</literal>) das unterirdische Einzugsgebiet. Eine
+      Unterscheidung zwischen A<literal>EO</literal> und
+      A<literal>EU</literal> wird in Kalypso nicht vorgenommen. Bei der
+      Eingrenzung des unterirdischen Einzugsgebietes erfolgt die Bilanzierung
+      über oberirdische Teileinzugsgebiete. Die Aufteilung des
+      Grundwasserabflusses erfolgt anteilig auf die projezierte Fläche. Ebenso
+      wird die Quantifizierung des Zustromes von außen vollzogen.
+      Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
+      Tiefengrundwasserleiter.</para>
+    </section>
+
+    <section>
+      <title>Landnutzungsverteilung und Ableitung der
+      Flächennutzungsparameter</title>
+
       <para></para>
     </section>
 
     <section>
-      <title></title>
+      <title>Gebietscharakteristika und Ableitung der Bodenschichtung</title>
 
       <para></para>
     </section>
 
     <section>
-      <title></title>
+      <title>Bildung von Hydrotopen</title>
 
       <para></para>
     </section>
 
-    <section>
-      <title></title>
-
-      <para></para>
-    </section>
-
-    <section>
-      <title id="kalypso_na-Systemelemente">Verknüpfung der
-      Systemelemente</title>
+    <section id="kalypso_na-Systemelemente">
+      <title>Verknüpfung der Systemelemente</title>
 
       <indexterm>
         <primary>Systemelementverknüpfung</primary>
       </indexterm>
 
+      <para>Die räumliche Diskretisierung des zu untersuchenden
+      Einzugsgebietes erfolgt durch die Unterteilung des gebietes in
+      Teileinzugsgebiete. Das Gerinnenetz wird in einzelne Knoten und die
+      Knoten verbindenden Gerinnestränge gegliedert. In die Gerinnestränge
+      entwässern die angeschlossenen Teileinzugsgebiete, wie in der Abbildung
+      zu sehen. </para>
+
+      <figure>
+        <title>Darstellung eines Netzplans</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Netzplan-na.png" scale="70" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Das Einzugsgebiet muss vollständig in Teilgebiete unterteilt
+      werden. Jedes Teilgebiet ist einem Gerinnestrang zugeordnet, in welchen
+      die oberflächennahe Entwässerung des Gebietes erfolgt. Dadurch bilden
+      die Wasserscheiden notwendige Grenzen der Teilgebiete. Weiterhin ist es
+      angebracht, falls möglich, Nutzungsgrenzen als Teilgebietsgrenzen zu
+      wählen. Dies gilt insbesondere für stark versiegelte Gebiete, deren
+      Kanalnetz an einen Gewässerknoten in das natürliche Gewässer abschlagen
+      soll.</para>
+
+      <para>Die räumliche Vernetzung der Teilgebiete erfolgte durch die
+      Anbindung an Gewässerstränge. Über die Stränge wird das Gewässernetz als
+      Struktur eines gerichteten Baumes wiedergegeben. Jeder Strang besitzt
+      einen Anfangs- und Endknoten. Jeder Endknoten ist Anfangsknoten des
+      nachfolgenden Strangs. Die Fließbewegung erfolgt vom Anfang- zum
+      Endknoten. Für jeden Quellknoten sollte ein eindeutiger Pfad bis zum
+      Zielknoten, dem Abschlußpunkt des Untersuchungsgebietes,
+      existieren.</para>
+
+      <para>Die Zeitreihen der Abflüsse werden am Endknoten des
+      Gerinnestranges zu einem Gesamtabfluß aufaddiert. Als einzelne
+      Abflußwellen treten sowohl die Zuflüsse aus dem Gerinne als auch die
+      Zuflüsse unterschiedlicher Abflusskomponenten der von dem Gerinnestrang
+      durchflossenen Teilgebiete auf. An Gewässermündungen werden auch die
+      Abflusskomponenten mehrerer Stränge aufaddiert. Dabei können beliebig
+      viele Stränge an einem Knoten zusammenfallen. Der Gesamtabfluss eines
+      Endknoten stellt den Zufluss für den folgenden Gerinnestrang dar. Der
+      Addition der Teilabflüsse folgend muss die Reihenfolge der Stränge dem
+      Fließweg im Gewässernetz entsprechen, d. h. die Vernetzung der
+      Teilgebiete mit dem Gerinnenetz erfolgt entsprechend den Fließvorgängen
+      des oberflächennahen Abflusses. Jedoch können in KALYPSO auch
+      Fließvorgänge über die topographische Wasserscheide hinweg simuliert
+      werden. Dies gilt sowohl für den Grundwasserspeicher als auch für den
+      Tiefengrundwasserspeicher. So kann der GW-Abfluss eines
+      Grundwasserspeichers bis zu 3 anderen Speichern beliebiger Teilgebiete
+      zugeschlagen werden.</para>
+
+      <para>Des weiteren kann die Abflußkomponente des
+      Tiefengrundwasserleiters eines Teilgebietes einem beliebigem Knoten
+      zugeschlagen werden. Hierfür läßt sich auch ein imaginärer Knoten
+      wählen, der über ebenfalls imaginäre Stränge an das Oberflächennetz
+      angeschlossen werden kann. Auf diese Weise lassen sich Fließvorgänge
+      z.B. eines Karstgrundwasserleiters in einem eigenständigen Netz in das
+      Modell einbauen.</para>
+
+      <para>Der Gesamtabfluß am oberen Knoten eines Stranges wird ohne
+      Verluste dem unteren Knoten zugeführt. In speziell gekennzeichneten
+      Fällen können allerdings Abschläge in beliebiger Art und Höhe aus einem
+      Gerinnestrang einem anderen, beliebigen Knoten zugeführt werden. Es ist
+      entweder möglich, lediglich einen festen Anteil oder einen konstanten
+      Wert eines Gerinneabschnittes anderen Knoten zuzuführen (z.B.
+      Karstquellen). Diese Modelloption dient zur Berücksichtigung von
+      Sickerverlusten aus dem Gerinne (z.B. ins Tiefengrundwasser).</para>
+
+      <figure>
+        <title>Komponenten eines Netzplans</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Komponenten_Netzplan-na.png"
+                       scale="70" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis role="bold">Zusammenfassung der Netzplan
+      Regeln</emphasis></para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Gewässernetz als Struktur eines gerichteten Baumes</para>
+        </listitem>
+
+        <listitem>
+          <para>jeder Strang besitzt einen Anfangs- und Endknoten</para>
+        </listitem>
+
+        <listitem>
+          <para>angeschlossenen Teileinzugsgebiete entwässern in
+          Gerinnestränge </para>
+        </listitem>
+
+        <listitem>
+          <para>maximal 6 Teileinzugsgebiete an einen Strang</para>
+        </listitem>
+
+        <listitem>
+          <para>erster Strang = virtueller Strang</para>
+        </listitem>
+
+        <listitem>
+          <para></para>
+        </listitem>
+
+        <listitem>
+          <para></para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Aufbereitung der Zeitreihen</title>
+
       <para></para>
     </section>
 
     <section>
-      <title></title>
+      <title>Hydraulische Berechnung</title>
 
       <para></para>
     </section>
 
     <section>
-      <title></title>
+      <title>Ermittlung der Teilgebiets- und Strangdaten</title>
 
       <para></para>
     </section>
 
     <section>
-      <title></title>
+      <title>Ermittlung der Retentionskonstanten</title>
 
       <para></para>
     </section>
 
     <section>
-      <title></title>
-
-      <para></para>
-    </section>
-
-    <section>
-      <title></title>
+      <title>Ermittlung der Zeitflächenfunktion je Teilgebiet</title>
 
       <para></para>
     </section>
@@ -248,7 +400,7 @@
         <imageobject>
           <imagedata align="center"
                      fileref="img/kalypso_na/arbeitsschritte_na.png"
-                     scale="60" />
+                     scale="100" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -2081,7 +2233,7 @@
               <entry></entry>
 
               <entry>Abfluss. Es sollten mindestens 5 verschiedene
-              Abfluessfälle angegeben werden.</entry>
+              Abflussfälle angegeben werden.</entry>
 
               <entry>double</entry>
             </row>
@@ -3399,7 +3551,7 @@
           <imageobject>
             <imagedata align="center"
                        fileref="img/modelle/navigator_rechenvariante.png"
-                       scale="80" />
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -3805,7 +3957,7 @@
       <mediaobject>
         <imageobject>
           <imagedata align="center" fileref="img/modelle/navigator.png"
-                     scale="70" />
+                     scale="100" />
         </imageobject>
       </mediaobject>
     </figure>
