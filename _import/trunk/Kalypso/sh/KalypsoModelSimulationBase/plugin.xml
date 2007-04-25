@@ -77,6 +77,17 @@
             class="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
             id="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
             name="ComputeMergedRougnessProperties"/>
+      <function
+            class="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            id="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+            name="RougnessValuesPropertyFunction"/>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.gmlWorkspaceListener">
+      <listener
+            class="org.kalypso.ui.wizards.imports.roughness.RoughnessStyleUpdater"
+            id="org.kalypso.ui.wizards.imports.roughness.RoughnessStyleUpdater"
+            name="RoughnessStyleUpdater"/>
    </extension>
 
 </plugin>

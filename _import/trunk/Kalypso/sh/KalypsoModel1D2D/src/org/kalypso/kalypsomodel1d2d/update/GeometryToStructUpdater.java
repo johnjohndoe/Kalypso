@@ -49,7 +49,6 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -166,6 +165,7 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
               else
               {
                 System.out.println("changedFeature1="+feature);
+                System.out.println(feature.getWorkspace());
 //                workspace.fireModellEvent(  
 //                    new FeatureStructureChangeModellEvent(
 //                        workspace,

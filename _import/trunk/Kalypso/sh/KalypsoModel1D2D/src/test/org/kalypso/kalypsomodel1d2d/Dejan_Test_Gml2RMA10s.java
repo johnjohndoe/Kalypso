@@ -72,7 +72,7 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
   private void init( ) throws MalformedURLException
   {
     test_RMA10sModelURL = new URL( "file:/D:/working/modell1D_OUTPUT.2d" );
-    test_discretisationModelURL = new URL( "file:/D:/working/modell1D.gml" );
+    test_discretisationModelURL = new URL( "file:/D:/working/discretisation.gml" );
   }
 
   /**

@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 {
@@ -65,6 +65,8 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
   private final static QName m_groundTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "groundTypeName" );
 
   private final static QName m_vegetationTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "vegetationTypeName" );
+
+//  private final static QName m_colorStyle = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -83,7 +85,12 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
   {
     QName ptQName = pt.getQName();
     Feature member = null;
-    if( ptQName.equals( m_groundTypeName ) )
+//    if( ptQName.equals( m_colorStyle ) )
+//    {
+//      return currentValue;
+//    }
+//    else 
+      if( ptQName.equals( m_groundTypeName ) )
     {
       member = (Feature) feature.getProperty( m_groundClsMember );
       if( member == null )
@@ -124,9 +131,27 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
    */
   public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {
+//    QName ptQName = pt.getQName();
+//    if( !ptQName.equals( m_colorStyle ) )
+//      return null;
+//    Object existingValue = feature.getProperty( m_colorStyle );
+//    if( !valueToSet.equals( existingValue ) )
+//    {
+//      // TODO: modify roughness sld!!!
+//      IDocumentReference[] documentReferences = feature.getParentRelation().getDocumentReferences();
+//      String reference = documentReferences[0].getReference();
+//      
+////      final URL styleURL = feature.getWorkspace().getContext();
+////      System.out.println(styleURL);
+//      System.out.println( "Feature: " + feature.getProperty( m_name ) );
+//      System.out.println( "Old color: " + existingValue );
+//      System.out.println( "New color: " + valueToSet.toString() );
+//    }
+//    return valueToSet;
     return null;
   }
 
+  @SuppressWarnings("unchecked")
   private Object getValue( Object object )
   {
     if( object == null )

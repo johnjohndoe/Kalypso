@@ -11,7 +11,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:common="org.kalypso.gml.common" 
+	xmlns:common="org.kalypso.gml.common"
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
@@ -160,12 +160,6 @@
 				<xs:sequence>
 					<xs:element name="roughness_GroundLink"
 						type="wbr:RoughnessGroundLinkType">
-					</xs:element>
-					<xs:element name="roughness_VegetationLink"
-						type="wbr:RoughnessVegetationLinkType">
-					</xs:element>
-					<xs:element name="groundTypeName"
-						type="xs:string">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Rauheitsklasse</xs:label>
@@ -175,8 +169,8 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="vegetationTypeName"
-						type="xs:string">
+					<xs:element name="roughness_VegetationLink"
+						type="wbr:RoughnessVegetationLinkType">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Vegetationsklasse</xs:label>
@@ -186,10 +180,16 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="groundTypeName"
+						type="xs:string">
+					</xs:element>
+					<xs:element name="vegetationTypeName"
+						type="xs:string">
+					</xs:element>
 					<xs:element name="ks" type="xs:double" />
 					<xs:element name="axay" type="xs:double" />
 					<xs:element name="dp" type="xs:double" />
-					<xs:element name="colorStyle" type="common:color"/>
+					<xs:element name="colorStyle" type="common:color" />
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 			</xs:extension>
@@ -260,7 +260,8 @@
 							<xs:documentation xml:lang="en">
 								<xs:label>dp [m]</xs:label>
 								<xs:tooltip>
-									Diameter of the vegetation elements [m]
+									Diameter of the vegetation elements
+									[m]
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>

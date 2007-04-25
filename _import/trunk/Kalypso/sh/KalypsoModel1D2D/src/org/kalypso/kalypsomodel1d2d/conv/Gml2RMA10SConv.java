@@ -265,12 +265,12 @@ public class Gml2RMA10SConv
     }
 
     Iterator<IFE1D2DEdge> edgesIterator = edges.iterator();
-    while( edgesIterator.hasNext() )
-    {
-      IFE1D2DEdge edge = edgesIterator.next();
-      edge.getNodes();
-      // TODO prosess it
-    }
+//    while( edgesIterator.hasNext() )
+//    {
+//      IFE1D2DEdge edge = edgesIterator.next();
+////      edge.getNodes();
+//      // TODO prosess it
+//    }
   }
 
   private GM_Point correctPosition( GM_Point point )
