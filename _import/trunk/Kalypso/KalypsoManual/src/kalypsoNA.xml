@@ -240,11 +240,11 @@
       </indexterm>
 
       <para>Die räumliche Diskretisierung des zu untersuchenden
-      Einzugsgebietes erfolgt durch die Unterteilung des gebietes in
+      Einzugsgebietes erfolgt durch die Unterteilung des Gebietes in
       Teileinzugsgebiete. Das Gerinnenetz wird in einzelne Knoten und die
       Knoten verbindenden Gerinnestränge gegliedert. In die Gerinnestränge
       entwässern die angeschlossenen Teileinzugsgebiete, wie in der Abbildung
-      zu sehen. </para>
+      zu sehen.</para>
 
       <figure>
         <title>Darstellung eines Netzplans</title>
@@ -265,7 +265,7 @@
       Kanalnetz an einen Gewässerknoten in das natürliche Gewässer abschlagen
       soll.</para>
 
-      <para>Die räumliche Vernetzung der Teilgebiete erfolgte durch die
+      <para>Die räumliche Vernetzung der Teilgebiete erfolgt durch die
       Anbindung an Gewässerstränge. Über die Stränge wird das Gewässernetz als
       Struktur eines gerichteten Baumes wiedergegeben. Jeder Strang besitzt
       einen Anfangs- und Endknoten. Jeder Endknoten ist Anfangsknoten des
@@ -333,12 +333,12 @@
         </listitem>
 
         <listitem>
-          <para>angeschlossenen Teileinzugsgebiete entwässern in
-          Gerinnestränge </para>
+          <para>angeschlossene Teileinzugsgebiete entwässern in
+          Gerinnestränge</para>
         </listitem>
 
         <listitem>
-          <para>maximal 6 Teileinzugsgebiete an einen Strang</para>
+          <para>maximal 6 Teileinzugsgebiete an einem Strang</para>
         </listitem>
 
         <listitem>
@@ -346,11 +346,14 @@
         </listitem>
 
         <listitem>
-          <para></para>
+          <para>Speicherstränge haben einen Eingangs- und
+          Ausgangsknoten</para>
         </listitem>
 
         <listitem>
-          <para></para>
+          <para>verbinde verschiedene Flüsse in einem Knoten und füge einen
+          virtuellen Strang hinzu, bevor der Zufluss in den Hauptstrom
+          stattfindet</para>
         </listitem>
       </itemizedlist>
     </section>
