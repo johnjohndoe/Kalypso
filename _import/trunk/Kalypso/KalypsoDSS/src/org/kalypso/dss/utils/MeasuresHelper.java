@@ -48,7 +48,6 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
@@ -145,7 +144,7 @@ public class MeasuresHelper
       for( Iterator iter = catchmentInENV.iterator(); iter.hasNext(); )
       {
         Feature catchment = (Feature) iter.next();
-        GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
+        GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         if( catchmentGEOM.contains( measureRhbGEOM ) )
         {
           boolean succseeded = addRHBinCatchment( modelWorkspace, catchment, storageChannelList, measureRhbFE );
@@ -203,27 +202,26 @@ public class MeasuresHelper
       final Feature channelColFe = storageChannelList.getParentFeature();
       final Feature rhbFE = (Feature) storageChannelList.iterator().next();
       final IFeatureType channelCollectionFT = channelColFe.getFeatureType();
-      final IRelationType linkChannelCollectionChannelMember = (IRelationType) channelCollectionFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CHANNEL_MEMBER_PROP ) );
+      final IRelationType linkChannelCollectionChannelMember = (IRelationType) channelCollectionFT.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
       final Feature newRhbFe = modelworkspace.createFeature( channelColFe, linkChannelCollectionChannelMember, rhbFE.getFeatureType() );
       /** Add new storage channel to the channel collection */
       modelworkspace.addFeatureAsComposition( channelColFe, linkChannelCollectionChannelMember, storageChannelList.size() + 1, newRhbFe );
       // generate water stage/volume to discharge relationship for the new storage channel. The basis is the law of
       // toricelli and set all properties from the measure file.
       generateWaterstageVolumeDischargeRealation( measureRhbFE, newRhbFe );
-      newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_VMIN_PROP ), new Double( 0 ) );
-      newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_SV_PROP ), new Double( 0 ) );
-      newRhbFe.setProperty( new QName( NS.GML2, NaModelConstants.GML_FEATURE_NAME_PROP ), new String( "Rhb-Measure_" + newRhbFe.getId() ) );
-      newRhbFe.setProperty( new QName( NS.GML2, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), new String( "automatically generated storage channel-associated with catchmentID= "
-          + catchment.getId() ) );
+      newRhbFe.setProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP, new Double( 0 ) );
+      newRhbFe.setProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP, new Double( 0 ) );
+      newRhbFe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, new String( "Rhb-Measure_" + newRhbFe.getId() ) );
+      newRhbFe.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, new String( "automatically generated storage channel-associated with catchmentID= " + catchment.getId() ) );
       // get property of inflowTyp to distingish between option one and two
       final String inflowType = (String) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_INFLOWTYP_PROP ) );
       // get common FeatureTyp's and RelationType's to do the inserting business
       final IFeatureType catchmentFt = catchment.getFeatureType();
-      final IRelationType catchmentChannelLink = (IRelationType) catchmentFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CATCHMENT_CHANNEL ) );
-      final IFeatureType nodeFt = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
-      final IFeatureType channelFt = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CHANNEL_ABSTRACT_FT ) );
-      final IRelationType channelLinkdownStreamNodeMember = (IRelationType) channelFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE ) );
-      final IRelationType nodeLinkDownStreamChannelMember = (IRelationType) nodeFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL ) );
+      final IRelationType catchmentChannelLink = (IRelationType) catchmentFt.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+      final IFeatureType nodeFt = rrmSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+      final IFeatureType channelFt = rrmSchema.getFeatureType( NaModelConstants.CHANNEL_ABSTRACT_FT );
+      final IRelationType channelLinkdownStreamNodeMember = (IRelationType) channelFt.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+      final IRelationType nodeLinkDownStreamChannelMember = (IRelationType) nodeFt.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
       /**
        * insert new storage channel following option one
        */
@@ -233,7 +231,7 @@ public class MeasuresHelper
         final Feature originalDischargChannel = modelworkspace.resolveLink( catchment, catchmentChannelLink );
         modelworkspace.removeLinkedAsAggregationFeature( catchment, catchmentChannelLink, originalDischargChannel.getId() );
         // create new vChannel
-        final IFeatureType vChannelFt = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.V_CHANNEL_ELEMENT_FT ) );
+        final IFeatureType vChannelFt = rrmSchema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
         final Feature vChannelFE = modelworkspace.createFeature( channelColFe, linkChannelCollectionChannelMember, vChannelFt );
         modelworkspace.addFeatureAsComposition( channelColFe, linkChannelCollectionChannelMember, 0, vChannelFE );
         // oldCatchment -> newVChannel ( add new link )
@@ -292,7 +290,7 @@ public class MeasuresHelper
     final double lu = lo - 2 * slope.doubleValue() * depth.doubleValue();
     final double maxVol = depth.doubleValue() / 3 * (Math.pow( lo, 2d ) + Math.pow( lu, 2d ) + Math.sqrt( Math.pow( lo, 2d ) * Math.pow( lu, 2d ) ));
     // set max volume of retension basion
-    newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_VMAX_PROP ), new Double( maxVol ) );
+    newRhbFe.setProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP, new Double( maxVol ) );
     // generate observation with the discharge-volume-waterstage function for the new storage channel
     final ZmlInlineTypeHandler typeHandler = (ZmlInlineTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( "inline.zml.kalypso.org", "ZmlInlineWVQType" ) );
     final IAxis[] axis = TimeserieUtils.createDefaultAxes( typeHandler.getAxisTypes(), true );
@@ -309,7 +307,7 @@ public class MeasuresHelper
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
     final IObservation obs = new SimpleObservation( null, null, "automatisch generierte WVQ-Bezeihung: rhb measure", true, null, new MetadataList(), axis, model );
-    newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_ZMLINLINE_PROP ), obs );
+    newRhbFe.setProperty( NaModelConstants.STORAGE_CHANNEL_ZMLINLINE_PROP, obs );
   }
 
   /**
@@ -335,13 +333,15 @@ public class MeasuresHelper
   private static Feature createNewNode( final GMLWorkspace modelworkspace, final boolean generateResults ) throws Exception
   {
     final IGMLSchema rrmSchema = modelworkspace.getGMLSchema();
-    final IFeatureType nodeColFT = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_COLLECTION_FT ) );
-    final IRelationType linkNodeToNodeCol = (IRelationType) nodeColFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_MEMBER_PROP ) );
-    final Feature nodeColFE = (Feature) modelworkspace.getFeatureFromPath( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
-    final IFeatureType nodeFT = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
+    final IFeatureType nodeColFT = rrmSchema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
+    final IRelationType linkNodeToNodeCol = (IRelationType) nodeColFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+    final Feature nodeColFE = (Feature) modelworkspace.getRootFeature().getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+    // final Feature nodeColFE = (Feature) modelworkspace.getFeatureFromPath(
+    // NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+    final IFeatureType nodeFT = rrmSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature newNodeFe = modelworkspace.createFeature( nodeColFE, linkNodeToNodeCol, nodeFT );
     modelworkspace.addFeatureAsComposition( nodeColFE, linkNodeToNodeCol, 0, newNodeFe );
-    newNodeFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( generateResults ) );
+    newNodeFe.setProperty( NaModelConstants.GENERATE_RESULT_PROP, new Boolean( generateResults ) );
     return newNodeFe;
   }
 
@@ -354,7 +354,8 @@ public class MeasuresHelper
     final QName qNameGeom = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEOM_PROP );
     final QName qNameGRZ = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRZ_PROP );
     // get all hydros in the model
-    FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+
+    FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
     // transform planning workspace coordinate system to match coordinate system of hydrotop files
     if( hydroList.size() > 0 )
     {
@@ -438,23 +439,22 @@ public class MeasuresHelper
     int c_error = 0;
     // find Landuse for measure
     final IGMLSchema parameterSchema = paraWorkspace.getGMLSchema();
-    final IFeatureType landUseFT = parameterSchema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_NAME ) );
+    final IFeatureType landUseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_LANDUSE_NAME );
     final Feature[] landUseFEs = paraWorkspace.getFeatures( landUseFT );
-    final QName qNameLandUse = new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP );
     Feature landUseFE = null;
     for( int i = 0; i < landUseFEs.length; i++ )
     {
       landUseFE = landUseFEs[i];
-      final Object property = landUseFE.getProperty( qNameLandUse );
+      final Object property = landUseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
       if( landUseProp.equals( property ) )
         break;
     }
     // get all hydrotopes in workspace
-    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
     // do the intersecting business
     final GM_Object measureGEOM = (GM_Object) planningMeasureFE.getProperty( sealingGeom );
     final Geometry jtsMeasureGEOM = JTSAdapter.export( measureGEOM );
-    final QName qNameHydroGeom = new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM );
+    // final QName qNameHydroGeom = NaModelConstants.HYDRO_PROP_GEOM ;
     final List query = hydroList.query( measureGEOM.getEnvelope(), null );
     final Iterator iter = query.iterator();
     while( iter.hasNext() )
@@ -462,7 +462,7 @@ public class MeasuresHelper
       final Feature hydroFE = (Feature) iter.next();
       if( hydroFE == null )// the list can contain elementData = null
         continue;
-      final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( qNameHydroGeom );
+      final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( NaModelConstants.HYDRO_PROP_GEOM );
       final CS_CoordinateSystem storedCrs = hydroGEOM.getCoordinateSystem();
       final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
       Geometry intersection = null;
@@ -474,7 +474,7 @@ public class MeasuresHelper
         if( !intersects )
           continue;
         intersection = jtsMeasureGEOM.intersection( jtsHydroGEOM );
-        if( !GeometryUtilities.isPolygonGeometry( intersection ))
+        if( !GeometryUtilities.isPolygonGeometry( intersection ) )
           continue;
         // keep the diffrence from the original hydrotop
         difference = jtsHydroGEOM.difference( jtsMeasureGEOM );
@@ -493,8 +493,8 @@ public class MeasuresHelper
       {
         final Feature hydroRootFeature = hydrotopWorkspace.getRootFeature();
         final IFeatureType rootFT = hydroRootFeature.getFeatureType();
-        final IRelationType linkPropHydro = (IRelationType) rootFT.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_MEMBER ) );
-        final IFeatureType hydroFT = hydrotopWorkspace.getFeatureTypeFromPath( NaModelConstants.HYDRO_MEMBER );
+        final IRelationType linkPropHydro = (IRelationType) rootFT.getProperty( NaModelConstants.HYDRO_MEMBER );
+        final IFeatureType hydroFT = hydrotopWorkspace.getFeatureType( NaModelConstants.HYDRO_MEMBER );
         newHydroFE = hydrotopWorkspace.createFeature( hydroRootFeature, linkPropHydro, hydroFT );
         hydrotopWorkspace.addFeatureAsComposition( hydroRootFeature, linkPropHydro, 0, newHydroFE );
         // copy all propterties from the intersected hydrotop to the newly created hydrotop
@@ -503,7 +503,7 @@ public class MeasuresHelper
         // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
         geomWithOldParam.setCoordinateSystem( storedCrs );
         // set the inverse Geometry of the intersection at the old hydrotop FE
-        hydroFE.setProperty( qNameHydroGeom, GeometryUtilities.ensureIsMultiPolygon( geomWithOldParam ) );
+        hydroFE.setProperty( NaModelConstants.HYDRO_PROP_GEOM, GeometryUtilities.ensureIsMultiPolygon( geomWithOldParam ) );
       }
       else
         continue;
@@ -517,9 +517,9 @@ public class MeasuresHelper
        * factors has been used to calibrate the model, hence we have to incorporate the change of sealing and the old
        * correction factor into an new correction factor. Now do the business!
        */
-      final IRelationType linkSealing = (IRelationType) landUseFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
+      final IRelationType linkSealing = (IRelationType) landUseFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
       final Feature landuseSealingFE = paraWorkspace.resolveLink( landUseFE, linkSealing );
-      final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 0.5d );
+      final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, NaModelConstants.PARA_LANDUSE_PROP_SEALING, 0.5d );
       double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, landuseSealingFactor );
       // TODO: implement the Kappungsgrenze
       // determine the 50% additional area für Nebenflächen und Stellplätze (Regel in Hamburg)
@@ -538,13 +538,13 @@ public class MeasuresHelper
       // else
       // measureSealingFactor = 0.8d;
       // }
-      final double originalCorrFactor = FeatureHelper.getAsDouble( hydroFE, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
+      final double originalCorrFactor = FeatureHelper.getAsDouble( hydroFE, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, 1.0d );
       final double newCorrectionFactor = originalCorrFactor * measureSealingFactor / landuseSealingFactor;
-      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ), GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
-      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( newCorrectionFactor ) );
-      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_AREA ), new Double( intersection.getArea() ) );
-      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ), landUseFE.getProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP ) ) );
-      newHydroFE.setProperty( new QName( NS.GML2, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), "automatically generated hydrotop cloned from hydrotopID=" + hydroFE.getId() );
+      newHydroFE.setProperty( NaModelConstants.HYDRO_PROP_GEOM, GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
+      newHydroFE.setProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, new Double( newCorrectionFactor ) );
+      newHydroFE.setProperty( NaModelConstants.HYDRO_PROP_AREA, new Double( intersection.getArea() ) );
+      newHydroFE.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, landUseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) );
+      newHydroFE.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, "automatically generated hydrotop cloned from hydrotopID=" + hydroFE.getId() );
       setInitialValues( newHydroFE, hydroFE, initValuesWorkspace );
     }
     if( c_error > 0 )
@@ -556,8 +556,8 @@ public class MeasuresHelper
   private static void setInitialValues( final Feature newHydroFE, final Feature hydroFE, final GMLWorkspace initValuesWorkspace ) throws Exception
   {
     final IGMLSchema initalValuesSchema = initValuesWorkspace.getGMLSchema();
-    final IFeatureType hydIniFT = initalValuesSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_MEMBER_PROP ) );
-    final IPropertyType featureIdPT = hydIniFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ) );
+    final IFeatureType hydIniFT = initalValuesSchema.getFeatureType( NaModelConstants.INI_HYD_MEMBER_PROP );
+    final IPropertyType featureIdPT = hydIniFT.getProperty( NaModelConstants.INI_HYD_FEATUREID_PROP );
     final Feature[] hydIniFEs = initValuesWorkspace.getFeatures( hydIniFT );
     final String hydFEId = hydroFE.getId();
     boolean foundMatch = false;
@@ -568,11 +568,11 @@ public class MeasuresHelper
       if( hydFEId.equals( hydIniFEId ) )
       {
         final Feature catchementIniFE = hydIniFE.getParent();
-        final IRelationType linkCatchmentHydIni = (IRelationType) catchementIniFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
+        final IRelationType linkCatchmentHydIni = (IRelationType) catchementIniFE.getFeatureType().getProperty( NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP );
         final Feature newHydIniFE = initValuesWorkspace.createFeature( catchementIniFE, linkCatchmentHydIni, hydIniFT );
         FeatureHelper.copyNoRelationPropterty( hydIniFE, newHydIniFE );
-        newHydIniFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ), newHydroFE.getId() );
-        newHydIniFE.setProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), "automatically generated inital value for hydrotopID=" + newHydroFE.getId() );
+        newHydIniFE.setProperty( NaModelConstants.INI_HYD_FEATUREID_PROP, newHydroFE.getId() );
+        newHydIniFE.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, "automatically generated inital value for hydrotopID=" + newHydroFE.getId() );
         initValuesWorkspace.addFeatureAsComposition( catchementIniFE, linkCatchmentHydIni, 0, newHydIniFE );
         // there is only one match for hydIni.featureID to hydroFE.getId() -> leave the loop now
         foundMatch = true;
@@ -610,7 +610,7 @@ public class MeasuresHelper
       return;
     }
     final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( parameterURL, null );
-    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
 
     // for geometry operations hydroworkspace and measureworkspace must use the same coordinatessystem,
     // so let measure transform to the one hydo uses. (less work than other way)
@@ -639,7 +639,7 @@ public class MeasuresHelper
         final double originalSealingFactor = getSealingFactorForHydrotop( hydroFE, paraWorkspace ); // TODO abfangen
         // wenn
 
-        final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ) );
+        final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( NaModelConstants.HYDRO_PROP_GEOM );
         final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
         Geometry intersection = null;
         try
@@ -653,7 +653,7 @@ public class MeasuresHelper
         {
           c_error++;
         }
-        final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydroFE, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
+        final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydroFE, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, 1.0d );
         final double areaIntersection = intersection.getArea();
         final double areaHydro = jtsHydroGEOM.getArea();
         // TODO check for numerical best order, and account for corrFactor from hydrotop element
@@ -675,7 +675,7 @@ public class MeasuresHelper
           corrSealingHydroNew = corrSealingHydroOld;
         }
 
-        hydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( corrSealingHydroNew ) );
+        hydroFE.setProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, new Double( corrSealingHydroNew ) );
       }
       logger.info( "Fehler Entsiegelungs-Measure: " + c_error + "/" + (c_success + c_error) + "\n" );
     }
@@ -692,21 +692,21 @@ public class MeasuresHelper
    */
   private static double getSealingFactorForHydrotop( final Feature hydroFE, final GMLWorkspace paramWorkspace )
   {
-    final Object property = hydroFE.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) );
-    final FeatureList features = (FeatureList) paramWorkspace.getFeatureFromPath( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+    final Object property = hydroFE.getProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME );
+    final FeatureList features = (FeatureList) paramWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     Feature landuseFE = null;
     Iterator it = features.iterator();
     while( it.hasNext() )
     {
       landuseFE = (Feature) it.next();
-      final Object paramProperty = landuseFE.getProperty( new QName( NS.GML2, NaModelConstants.GML_FEATURE_NAME_PROP ) );
+      final Object paramProperty = landuseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
       if( paramProperty.equals( property ) )
         break;
     }
     final IFeatureType featureType = landuseFE.getFeatureType();
-    final IPropertyType linkProp = featureType.getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
+    final IPropertyType linkProp = featureType.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
     final Feature sealingFE = paramWorkspace.resolveLink( landuseFE, (IRelationType) linkProp );
-    return FeatureHelper.getAsDouble( sealingFE, new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 1.0d );
+    return FeatureHelper.getAsDouble( sealingFE, NaModelConstants.PARA_LANDUSE_PROP_SEALING, 1.0d );
   }
 
   public static void insertSwaleTrenchMeasure( final URL measuresMrsURL, final GMLWorkspace naModelWorkspace, final GMLWorkspace hydrotopWorkspace, final URL designAreaURL, final Logger logger ) throws Exception
@@ -726,18 +726,18 @@ public class MeasuresHelper
       final IGMLSchema naModelSchema = naModelWorkspace.getGMLSchema();
       final Feature naModelRoot = naModelWorkspace.getRootFeature();
       final IFeatureType naModelRootFt = naModelRoot.getFeatureType();
-      Feature swaleTrenchCollection = (Feature) naModelWorkspace.getFeatureFromPath( NaModelConstants.MRS_COLLECTION_MEMBER_PROP );
+      Feature swaleTrenchCollection = (Feature) naModelWorkspace.getRootFeature().getProperty( NaModelConstants.MRS_COLLECTION_MEMBER_PROP );
       if( swaleTrenchCollection == null )
       {
-        final IFeatureType swaleTrenchColFt = naModelSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_COLLECTION_FT ) );
-        final IRelationType linkPropertyCol = (IRelationType) naModelRootFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_COLLECTION_MEMBER_PROP ) );
+        final IFeatureType swaleTrenchColFt = naModelSchema.getFeatureType( NaModelConstants.MRS_COLLECTION_FT );
+        final IRelationType linkPropertyCol = (IRelationType) naModelRootFt.getProperty( NaModelConstants.MRS_COLLECTION_MEMBER_PROP );
         swaleTrenchCollection = naModelWorkspace.createFeature( naModelRoot, linkPropertyCol, swaleTrenchColFt );
         naModelWorkspace.addFeatureAsComposition( naModelRoot, linkPropertyCol, 0, swaleTrenchCollection );
       }
       // get the necessary featureTypes and proptertyTypes for the swale and trench element
       final IFeatureType swaleTrenchCollectionFT = swaleTrenchCollection.getFeatureType();
-      final IRelationType linkPropertyStMemeber = (IRelationType) swaleTrenchCollectionFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_MEMBER_PROP ) );
-      final IFeatureType mrsFt = naModelSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_FT ) );
+      final IRelationType linkPropertyStMemeber = (IRelationType) swaleTrenchCollectionFT.getProperty( NaModelConstants.MRS_MEMBER_PROP );
+      final IFeatureType mrsFt = naModelSchema.getFeatureType( NaModelConstants.MRS_FT );
 
       /** Start inserting bussines */
       final GMLWorkspace designAreaWorkspace = GmlSerializer.createGMLWorkspace( designAreaURL, null );
@@ -746,7 +746,7 @@ public class MeasuresHelper
       {
         // assure that the measures and designArea geometries have the same coordinate system like the model data
         final Feature catchment = (Feature) catchementList.iterator().next();
-        final GM_Object targetGeom = (GM_Object) catchment.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
+        final GM_Object targetGeom = (GM_Object) catchment.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         final CS_CoordinateSystem targetCS = targetGeom.getCoordinateSystem();
         final TransformVisitor visitor = new TransformVisitor( targetCS );
         mrsMeasureWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
@@ -765,7 +765,7 @@ public class MeasuresHelper
         for( Iterator iter = queriedCatchmentList.iterator(); iter.hasNext(); )
         {
           final Feature catchmentInEnv = (Feature) iter.next();
-          final GM_Object catchmentGEOM = (GM_Object) catchmentInEnv.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
+          final GM_Object catchmentGEOM = (GM_Object) catchmentInEnv.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
           try
           {
             final Geometry catchmentJTS = JTSAdapter.export( catchmentGEOM );
@@ -778,17 +778,17 @@ public class MeasuresHelper
               final Double diameter = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_DIAMETER ), 250 );
               final Double width = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_WIDTH ), 1.50 );
               final Feature swaleTrenchFE = naModelWorkspace.createFeature( swaleTrenchCollection, linkPropertyStMemeber, mrsFt );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_DIAMETER_PIPE_PROP ), diameter );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_WIDTH_PROP ), width );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_GEOM_PROP ), mrsSubMeasure );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_DIAMETER_PIPE_PROP, diameter );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_WIDTH_PROP, width );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_GEOM_PROP, mrsSubMeasure );
               // this parameter is not used at the moment left in for
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_KF_PIPE_PROP ), new Double( 0 ) );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_SLOPE_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_SLOPE_PROP ) );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_ROUGHNESS_PIPE_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_ROUGHNESS_PIPE_PROP ) );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_INFLOW_GW_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_INFLOW_GW_PROP ) );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_MAX_PERK_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_MAX_PERK_PROP ) );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_LANDUSE_TYPE_PROP ), NaModelConstants.DEFAULT_MRS_LANDUSE_PROP );
-              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_SOIL_PROFIL_TYPE_PROP ), NaModelConstants.DEFAULT_MRS_SOIL_PROFIL_PROP );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_KF_PIPE_PROP, new Double( 0 ) );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_SLOPE_PROP, new Double( MeasuresConstants.MRS_DEFAULT_SLOPE_PROP ) );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_ROUGHNESS_PIPE_PROP, new Double( MeasuresConstants.MRS_DEFAULT_ROUGHNESS_PIPE_PROP ) );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_INFLOW_GW_PROP, new Double( MeasuresConstants.MRS_DEFAULT_INFLOW_GW_PROP ) );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_MAX_PERK_PROP, new Double( MeasuresConstants.MRS_DEFAULT_MAX_PERK_PROP ) );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_LANDUSE_TYPE_PROP, NaModelConstants.DEFAULT_MRS_LANDUSE_PROP );
+              swaleTrenchFE.setProperty( NaModelConstants.MRS_SOIL_PROFIL_TYPE_PROP, NaModelConstants.DEFAULT_MRS_SOIL_PROFIL_PROP );
               naModelWorkspace.addFeatureAsComposition( swaleTrenchCollection, linkPropertyStMemeber, 0, swaleTrenchFE );
               // add catchment that intersects with mrs-Element for later handling
               c_success++;
@@ -833,15 +833,15 @@ public class MeasuresHelper
     final Geometry bufferedArea = mrsJTS.buffer( bufferWidth );
     final GM_Object geomBufferdArea = JTSAdapter.wrap( bufferedArea );
 
-    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
     final List queriedHydroList = hydroList.query( geomBufferdArea.getEnvelope(), null );
     for( Iterator iter = queriedHydroList.iterator(); iter.hasNext(); )
     {
       final Feature hydFe = (Feature) iter.next();
-      final GM_Object hydGeom = (GM_Object) hydFe.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ) );
+      final GM_Object hydGeom = (GM_Object) hydFe.getProperty( NaModelConstants.HYDRO_PROP_GEOM );
       final Geometry hydGeomInEnv = JTSAdapter.export( hydGeom );
       if( hydGeomInEnv.intersects( bufferedArea ) )
-        hydFe.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_HYDTYPE ), NaModelConstants.HYDRO_ENUM_HYDTYPE_SWALETRENCH );
+        hydFe.setProperty( NaModelConstants.HYDRO_PROP_HYDTYPE, NaModelConstants.HYDRO_ENUM_HYDTYPE_SWALETRENCH );
     }
   }
 }

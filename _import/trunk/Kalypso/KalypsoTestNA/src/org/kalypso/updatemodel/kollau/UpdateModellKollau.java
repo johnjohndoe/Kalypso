@@ -51,6 +51,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.convert.update.WeisseElsterConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -66,8 +67,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -137,7 +136,7 @@ public class UpdateModellKollau extends TestCase
     // final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
     // final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
     // updateNodes( nodeFEs );
-    final IFeatureType RHBchannelFT = workspace.getFeatureType( "StorageChannel" );
+    final IFeatureType RHBchannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
     final Feature[] rhbChannelFEs = workspace.getFeatures( RHBchannelFT );
     updateRHBCHannels( rhbChannelFEs );
 
@@ -154,10 +153,10 @@ public class UpdateModellKollau extends TestCase
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      Double sv = ((Double) feature.getProperty( "sv" )) * 1000000;
-      Double vmax = ((Double) feature.getProperty( "vmax" )) * 1000000;
-      Double vmin = ((Double) feature.getProperty( "vmin" )) * 1000000;
-      IObservation observation = (IObservation) feature.getProperty( "hvvsqd" );
+      Double sv = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP )) * 1000000;
+      Double vmax = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP )) * 1000000;
+      Double vmin = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP )) * 1000000;
+      IObservation observation = (IObservation) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP );
 
       IAxis[] axisList = observation.getAxisList();
       IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_NORMNULL );
@@ -176,12 +175,12 @@ public class UpdateModellKollau extends TestCase
         newValues[row][2] = q;
       }
 
-      feature.setProperty( "sv", sv );
-      feature.setProperty( "vmax", vmax );
-      feature.setProperty( "vmin", vmin );
+      feature.setProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP, sv );
+      feature.setProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP, vmax );
+      feature.setProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP, vmin );
       final ITuppleModel model = new SimpleTuppleModel( axisList, newValues );
       final SimpleObservation newObservation = new SimpleObservation( null, null, null, true, null, new MetadataList(), axisList, model );
-      feature.setProperty( "hvvsqd", newObservation );
+      feature.setProperty( NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP, newObservation );
     }
   }
 
@@ -204,7 +203,7 @@ public class UpdateModellKollau extends TestCase
       final Feature feature = features[i];
 
       // Niederschlag Lokale Zeitreihen setzen
-      Object idObj = feature.getProperty( "inum" );
+      Object idObj = feature.getProperty( "inum" ); // inum is not used any more in the schema
       int id = Integer.parseInt( idObj.toString() );
       // Station wasserwerk.kz
       if( (id >= 100 && id <= 106) || (id >= 200 && id <= 202) || id == 408 || id == 410 || id == 504 )
@@ -266,18 +265,18 @@ public class UpdateModellKollau extends TestCase
     // insertGeometries
 
     System.out.println( "inserting geometries: catchments" );
-    Feature catchmentCollection = (Feature) modelFeature.getProperty( "CatchmentCollectionMember" );
-    List catchmentList = (List) catchmentCollection.getProperty( "catchmentMember" );
+    Feature catchmentCollection = (Feature) modelFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    List catchmentList = (List) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
     copyProperties( catchmentFeatures, "GEOM", "SUBC_NR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: channels" );
-    Feature channelCollection = (Feature) modelFeature.getProperty( "ChannelCollectionMember" );
-    List channelList = (List) channelCollection.getProperty( "channelMember" );
+    Feature channelCollection = (Feature) modelFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
+    List channelList = (List) channelCollection.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
     copyProperties( channelFeatures, "GEOM", "STRAND_NR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: nodes" );
-    Feature nodeCollection = (Feature) modelFeature.getProperty( "NodeCollectionMember" );
-    List nodeList = (List) nodeCollection.getProperty( "nodeMember" );
+    Feature nodeCollection = (Feature) modelFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+    List nodeList = (List) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
     copyProperties( nodeFeatures, "GEOM", "NODE_NR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "num" );
 
   }
@@ -304,13 +303,13 @@ public class UpdateModellKollau extends TestCase
           System.out.println( "copyvalue is null: id=" + id );
         // FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
         destFeature.setProperty( destGeomPropName, value );
-        Object GEOMProperty = destFeature.getProperty( "Ort" );
+        Object GEOMProperty = destFeature.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         if( GEOMProperty instanceof GM_Surface )
         {
 
           Long area = new Long( (long) ((GM_Surface) value).getArea() );
           // FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", area );
-          destFeature.setProperty( "flaech", area );
+          destFeature.setProperty( NaModelConstants.NA_MODEL_FLAECH_PROP, area );
         }
 
       }
@@ -372,7 +371,7 @@ public class UpdateModellKollau extends TestCase
       setTSLink( fe, "zuflussZRRepository", null );
       setTSLink( fe, "zuflussZRRepositoryVorhersage", null );
       // FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name", null );
-      fe.setProperty( "name", null );
+      fe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, null );
     }
   }
 

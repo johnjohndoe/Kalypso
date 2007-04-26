@@ -38,6 +38,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -62,11 +63,11 @@ public class Num2nameTest extends TestCase
   {
     final URL modellURL = getClass().getResource( "resource/modell.gml" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, null );
-    updateName( workspace, "inum", workspace.getFeatureType( "Catchment" ) );
-    updateName( workspace, "inum", workspace.getFeatureType( "VirtualChannel" ) );
-    updateName( workspace, "inum", workspace.getFeatureType( "KMChannel" ) );
-    updateName( workspace, "inum", workspace.getFeatureType( "StorageChannel" ) );
-    updateName( workspace, "num", workspace.getFeatureType( "Node" ) );
+    updateName( workspace, "inum", workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ) );
+    updateName( workspace, "inum", workspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT ) );
+    updateName( workspace, "inum", workspace.getGMLSchema().getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT ) );
+    updateName( workspace, "inum", workspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT ) );
+    updateName( workspace, "num", workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT ) );
     final Writer writer = new FileWriter( new File( "C:\\TMP\\modell_name.gml" ) );
     GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
     IOUtils.closeQuietly( writer );
@@ -86,13 +87,13 @@ public class Num2nameTest extends TestCase
       final Object value = feature.getProperty( propName );
       if( value != null )
       {
-        final String orgName = (String) feature.getProperty( "name" );
+        final String orgName = (String) feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
         final String addName = feature.getProperty( propName ).toString();
         final String newName = orgName + "_" + addName;
         if( orgName == null || orgName.length() == 0 )
-          feature.setProperty( "name", addName );
+          feature.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, addName );
         else
-          feature.setProperty( "name", newName );
+          feature.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, newName );
       }
     }
   }

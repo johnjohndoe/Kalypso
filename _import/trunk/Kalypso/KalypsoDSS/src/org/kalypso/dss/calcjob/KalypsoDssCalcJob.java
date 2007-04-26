@@ -339,9 +339,9 @@ public class KalypsoDssCalcJob implements ISimulation
       final Feature[] affectedChannels = getAffectedChannels( modelWorkspace, designAreaURL );
       for( final Feature channelFE : affectedChannels )
       {
-        final IRelationType nodelinkRT = (IRelationType) channelFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE ) );
+        final IRelationType nodelinkRT = (IRelationType) channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
         final Feature nodeFE = modelWorkspace.resolveLink( channelFE, nodelinkRT );
-        nodeFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), Boolean.TRUE );
+        nodeFE.setProperty( NaModelConstants.GENERATE_RESULT_PROP, Boolean.TRUE );
         if( !resultNodes.contains( nodeFE ) )
           resultNodes.add( nodeFE );
       }
@@ -416,7 +416,7 @@ public class KalypsoDssCalcJob implements ISimulation
     {
       final Feature f = (Feature) iter.next();
       final IFeatureType featureType = f.getFeatureType();
-      final IRelationType linkCatchmentChannel = (IRelationType) featureType.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CATCHMENT_CHANNEL ) );
+      final IRelationType linkCatchmentChannel = (IRelationType) featureType.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
       final Feature resolvedLink = modelWorkspace.resolveLink( f, linkCatchmentChannel );
       if( resolvedLink != null )
         channelCollector.add( resolvedLink );
@@ -457,9 +457,9 @@ public class KalypsoDssCalcJob implements ISimulation
   {
     final Feature rootFeature = modelWorkspace.getRootFeature();
     final IGMLSchema naSchema = modelWorkspace.getGMLSchema();
-    final IFeatureType nodeFT = naSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
-    final IPropertyType genResultPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ) );
-    final IPropertyType timeSeriesLinkPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP ) );
+    final IFeatureType nodeFT = naSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    final IPropertyType genResultPT = nodeFT.getProperty( NaModelConstants.GENERATE_RESULT_PROP );
+    final IPropertyType timeSeriesLinkPT = nodeFT.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
     final HashMap<IPropertyType, Object> map = new HashMap<IPropertyType, Object>();
     map.put( genResultPT, new Boolean( state ) );
     map.put( timeSeriesLinkPT, null );
@@ -501,8 +501,8 @@ public class KalypsoDssCalcJob implements ISimulation
 
     ResultFileFilter( final List<String> toMatch )
     {
-      for( Iterator iter = toMatch.iterator(); iter.hasNext(); )
-        m_hashtable.add( (String) iter.next() );
+      for( Iterator<String> iter = toMatch.iterator(); iter.hasNext(); )
+        m_hashtable.add( iter.next() );
     }
 
     /**

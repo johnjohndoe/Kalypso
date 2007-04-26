@@ -41,6 +41,7 @@ import javax.xml.bind.Marshaller;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.dwd.DWDRaster;
 import org.kalypso.dwd.DWDRasterGeoLayer;
 import org.kalypso.dwd.DWDRasterHelper;
@@ -150,7 +151,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
       conf.setNumberOfCells( geoRaster.getNumberOfCells() );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass().getResource(
           "resources/modell_epsg31469.gml" ), null );
-      final IFeatureType featureType = workspace.getFeatureType( "Catchment" );
+      final IFeatureType featureType = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
       final Feature[] features = workspace.getFeatures( featureType );
       final List<Target> targetList = conf.getTarget();
       for( int i = 0; i < features.length; i++ )
@@ -159,7 +160,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
         final Target target = dwdOF.createDwdzmlConfTarget();
         target.setTargetZR( targetZmlPrefix + feature.getId() + ".zml" );
         final List<Map> mapList = target.getMap();
-        GM_Surface surface = (GM_Surface)feature.getProperty( "Ort" );
+        GM_Surface surface = (GM_Surface)feature.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         double modellArea = GeometryUtilities.calcArea( surface );
         RasterPart[] positions = geoRaster.getPositions( surface );
         System.out.println( "Feature: " + feature.getId() + " : " + positions.length );

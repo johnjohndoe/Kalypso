@@ -49,6 +49,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -80,14 +81,14 @@ public class WeisseElsterUpdateModelTest extends TestCase
     final URL inputModel = getClass().getResource( "resources/modell.gml" );
     final File outputFile = new File( "C:\\TMP\\modell.gml" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel, null );
-    final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    final IFeatureType catchmentFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( catchmentFT );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       final TimeseriesLinkType link = m_zmlLinkFac.createTimeseriesLinkType();
       link.setHref( "Temperatur/Temperatur_" + feature.getId() + ".zml" );
-      feature.setProperty( "temperaturZR", link );
+      feature.setProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR, link );
     }
     updateGMLTemperaturMapping( workspace );
     final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( outputFile ), "UTF-8" );
@@ -103,7 +104,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
     final GMLWorkspace mapWorkspace = GmlSerializer.createGMLWorkspace( inputMappingURL, null );
     final IFeatureType mapFT = mapWorkspace.getFeatureType( "MappingObservation" );
     final Feature mapRootFeature = mapWorkspace.getRootFeature();
-    final IFeatureType catchmentFT = modelWorkspace.getFeatureType( "Catchment" );
+    final IFeatureType catchmentFT = modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] features = modelWorkspace.getFeatures( catchmentFT );
     for( int i = 0; i < features.length; i++ )
     {
@@ -112,18 +113,18 @@ public class WeisseElsterUpdateModelTest extends TestCase
       final TimeseriesLinkType srcLink = m_zmlLinkFac.createTimeseriesLinkType();
       srcLink.setHref( "Ombrometer/T_virtuell.zml" );
       // targetProp
-      final Object targetLink = modelFeature.getProperty( "temperaturZR" );
+      final Object targetLink = modelFeature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR );
       // nameProp
       final Object nameValue = modelFeature.getProperty( "inum" );
       // geoProp
-      final Object geoValue = modelFeature.getProperty( "Ort" );
+      final Object geoValue = modelFeature.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
 
       // createFeature
       final IRelationType linkFT = (IRelationType) mapRootFeature.getFeatureType().getProperty( "mappingMember" );
       final Feature mapFeature = mapWorkspace.createFeature( mapRootFeature, linkFT, mapFT );
       mapWorkspace.addFeatureAsComposition( mapRootFeature, linkFT, 0, mapFeature );
       // set props
-      mapFeature.setProperty( "name", nameValue );
+      mapFeature.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, nameValue );
       mapFeature.setProperty( "polygon", geoValue );
       mapFeature.setProperty( "inObservationLink", srcLink );
       mapFeature.setProperty( "outObservationLink", targetLink );

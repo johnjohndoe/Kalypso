@@ -112,7 +112,7 @@ public class CheckNewNAVersionTest extends TestCase
   public void testResults( ) throws Exception
   {
     readControl();
-    boolean fileChecked = false;
+//    boolean fileChecked = false;
     final StringBuffer sb = new StringBuffer();
     DiffLogger diffLogger = new DiffLogger( logger );
     File dirOld = new File( BASE_DIR_OLD );

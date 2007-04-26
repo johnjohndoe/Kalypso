@@ -116,7 +116,7 @@ public class CombineModells extends TestCase
     for( Iterator iter = ChangeIDCollection.iterator(); iter.hasNext(); )
     {
       String oldID = (String) iter.next();
-      String FTName = additiveWorkspace.getFeature( oldID ).getFeatureType().getName();
+      String FTName = additiveWorkspace.getFeature( oldID ).getFeatureType().getQName().getLocalPart();
       int i = 1;
       String newID = FTName + Integer.toString( i );
       while( mapAdditive.containsValue( newID ) || mapBase.containsValue( newID ) || IDMap.containsValue( newID ) )
@@ -147,7 +147,7 @@ public class CombineModells extends TestCase
 
   private void getNewID( GMLWorkspace baseWorkspace, HashMap<String, String> mapBase, GMLWorkspace additiveWorkspace, HashMap<String, String> mapAdditive, String checkID )
   {
-    String FTName = (additiveWorkspace.getFeature( checkID )).getFeatureType().getName();
+    String FTName = (additiveWorkspace.getFeature( checkID )).getFeatureType().getQName().getLocalPart();
     int i = 1;
     while( mapBase.containsKey( checkID ) || mapAdditive.containsKey( checkID ) )
     {

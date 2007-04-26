@@ -65,8 +65,8 @@ public class ImportNA extends TestCase
     final File gmlBaseDir = new File( "C:\\TMP\\import" );
     if( !gmlBaseDir.exists() )
       gmlBaseDir.mkdirs();
-//    importParameter( gmlBaseDir, asciiBaseDir );
-    NAModellConverter.completeascii2gml(gmlBaseDir, asciiBaseDir );
+    importParameter( gmlBaseDir, asciiBaseDir );
+//    NAModellConverter.completeascii2gml(gmlBaseDir, asciiBaseDir );
   }
 
   public void importParameter( File gmlBaseDir, File asciiBaseDir ) throws Exception

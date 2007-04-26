@@ -64,7 +64,6 @@ import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.dss.KalypsoDSSPlugin;
 import org.kalypso.dss.utils.MeasuresConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.util.ZMLUtilities;
@@ -345,7 +344,7 @@ public class FlowsDSSResultGenerator
     final String nodeName = "Knoten " + (String) nodeFE.getProperty( new QName( NS.GML2, "name" ) );
     try
     {
-      final GM_Object position = (GM_Object) nodeFE.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_GEOM_PROP ) );
+      final GM_Object position = (GM_Object) nodeFE.getProperty( NaModelConstants.NODE_GEOM_PROP );
       final GM_Point centroid = position.getCentroid();
       double x = centroid.getPosition().getX();
       double y = centroid.getPosition().getY();
