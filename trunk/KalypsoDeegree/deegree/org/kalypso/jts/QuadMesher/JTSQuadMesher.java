@@ -179,7 +179,7 @@ public class JTSQuadMesher
 
         double x = coordinatesNewLeft[i].x + dxLeftToRight * relativeSegmentDistance / relativeDistance;
         double y = coordinatesNewLeft[i].y + dyLeftToRight * relativeSegmentDistance / relativeDistance;
-        double z = 0;
+        double z = Double.NaN;
 
         if( i == 0 )
         {
