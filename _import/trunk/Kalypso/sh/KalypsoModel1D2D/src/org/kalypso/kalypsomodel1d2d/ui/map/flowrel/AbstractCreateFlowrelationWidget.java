@@ -353,6 +353,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     if( m_existingFlowRelation == null )
     {
+      final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
       /* Create flow relation at position */
       display.asyncExec( new Runnable()
       {
@@ -367,7 +368,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
             return;
           }
 
-          final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
           final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
           flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
 

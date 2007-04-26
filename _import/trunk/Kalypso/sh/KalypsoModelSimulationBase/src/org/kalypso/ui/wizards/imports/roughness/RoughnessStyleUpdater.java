@@ -42,12 +42,13 @@ package org.kalypso.ui.wizards.imports.roughness;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.OutputStream;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
@@ -58,12 +59,15 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
@@ -80,6 +84,10 @@ import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.Literal;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.w3c.dom.Document;
@@ -144,7 +152,7 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
               if( feature.getFeatureType().getQName().equals( m_roughnessCls ) )
               {
                 final URL url = new URL( "file:/"
-                    + ResourcesPlugin.getWorkspace().getRoot().getLocation().append( m_workspace.getContext().getPath().replaceFirst( "/resource/", "/" ) ).removeFileExtension().addFileExtension( "sld" ) );
+                    + ResourcesPlugin.getWorkspace().getRoot().getLocation().append( m_workspace.getContext().getPath().replaceFirst( "/resource/", "/" ) ).removeLastSegments( 1 ).append( "/roughness.sld" ) );
                 final IUrlResolver2 resolver = new IUrlResolver2()
                 {
                   public URL resolveURL( String href ) throws MalformedURLException
@@ -162,53 +170,74 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
                     for( FeatureTypeStyle featureTypeStyle : ((UserStyle) style).getFeatureTypeStyles() )
                     {
                       boolean ruleFound = false;
-                      if( featureTypeStyle.getName().equals( feature.getProperty( m_name ) ) )
+                      for( Rule rule : featureTypeStyle.getRules() )
                       {
-                        for( Rule rule : featureTypeStyle.getRules() )
+                        if( rule.getFilter() != null && rule.getFilter().evaluate( feature ) )
                         {
-                          if( rule.getFilter().evaluate( feature ) )
+                          ruleFound = true;
+                          for( Symbolizer symbolizer : rule.getSymbolizers() )
                           {
-                            ruleFound = true;
-                            for( Symbolizer symbolizer : rule.getSymbolizers() )
+                            if( symbolizer instanceof PolygonSymbolizer )
                             {
-                              if( symbolizer instanceof PolygonSymbolizer )
-                              {
-                                RGB rgb = (RGB) feature.getProperty( m_colorStyle );
-                                ((PolygonSymbolizer) symbolizer).getFill().setFill( new Color( rgb.red, rgb.green, rgb.blue ) );
-                              }
-                              break;
+                              RGB rgb = (RGB) feature.getProperty( m_colorStyle );
+                              ((PolygonSymbolizer) symbolizer).getFill().setFill( new Color( rgb.red, rgb.green, rgb.blue ) );
                             }
                             break;
                           }
+                          break;
                         }
-                        if( !ruleFound )
-                        {
-                          final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
-                          final Fill fill = StyleFactory.createFill( (Color) feature.getProperty( m_colorStyle ), 0.5 );
-                          final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, "polygonProperty" );
-                          final Rule newRule = StyleFactory.createRule( newSymbolizer, 0.0, 1.0E15 );
-                          featureTypeStyle.addRule( newRule );
-                        }
+                      }
+                      if( !ruleFound )
+                      {
+                        final RGB rgb = (RGB) feature.getProperty( m_colorStyle );
+                        final Color color = new Color( rgb.red, rgb.green, rgb.blue );
+                        final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
+                        final Fill fill = StyleFactory.createFill( color, 0.5 );
+                        final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, "polygonProperty" );
+                        final Rule newRule = StyleFactory.createRule( newSymbolizer, 0.0, 1.0E15 );
+                        final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle" ), new Literal( ((ArrayList<String>) feature.getProperty( m_name )).get( 0 ) ), '*', '$', '/' );
+                        final Filter filter = new ComplexFilter( operation );
+                        newRule.setFilter( filter );
+                        featureTypeStyle.addRule( newRule );
                       }
                     }
                   }
                 }
                 final Document doc = XMLTools.parse( new StringReader( descriptor.exportAsXML() ) );
                 final Source source = new DOMSource( doc );
-                OutputStream os = null;
+                OutputStreamWriter os = null;
                 try
                 {
-                  os = new FileOutputStream( file );
+                  os = new FileWriter( file );
                   StreamResult result = new StreamResult( os );
-                  Transformer t = TransformerFactory.newInstance().newTransformer();
-                  t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
-                  t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-                  t.transform( source, result );
+                  TransformerFactory factory = TransformerFactory.newInstance();
+
+                  // Dejan: this works only with Java 1.5, in 1.4 it throws IllegalArgumentException
+                  // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
+                  try
+                  {
+                    factory.setAttribute( "indent-number", new Integer( 4 ) );
+                  }
+                  catch( IllegalArgumentException e )
+                  {
+                  }
+
+                  Transformer transformer = factory.newTransformer();
+                  transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
+                  transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+
+                  // transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$
+                  // //$NON-NLS-2$
+                  // transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+                  // transformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml"); //$NON-NLS-1$ //$NON-NLS-2$
+
+                  transformer.transform( source, result );
                 }
                 finally
                 {
                   IOUtils.closeQuietly( os );
                 }
+                ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
               }
             }
           }

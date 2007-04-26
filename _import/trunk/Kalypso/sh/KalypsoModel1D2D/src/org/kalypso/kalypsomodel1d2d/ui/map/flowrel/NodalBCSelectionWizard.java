@@ -237,14 +237,27 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     else
     {
       ITuppleModel model = m_page3.getTuppleModel();
-      IAxis dateAxis = model.getAxisList()[0];
-      IAxis valueAxis = model.getAxisList()[1];
+      IAxis dateAxis;
+      IAxis valueAxis;
+//      System.out.println(model.getAxisList()[0].getDataClass());
+//      System.out.println(model.getAxisList()[1].getDataClass());
+      if(model.getAxisList()[0].getDataClass().equals( Date.class ))
+      {
+        dateAxis = model.getAxisList()[0];
+        valueAxis = model.getAxisList()[1];
+      }
+      else
+      {
+        dateAxis = model.getAxisList()[1];
+        valueAxis = model.getAxisList()[0];
+      }
       int cntFrom;
       int cntTo;
       try
       {
         for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
         {
+          Object element = model.getElement( cntFrom, dateAxis );
           Date date = (Date) model.getElement( cntFrom, dateAxis );
           if( m_page3.getFromDate().before( date ) )
             break;
@@ -260,7 +273,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
         }
         for( int i = cntFrom; i < cntTo; i++ )
         {
-          Double doubleValue = (Double) model.getElement( cntFrom, valueAxis );
+          Double doubleValue = (Double) model.getElement( i, valueAxis );
           value = BigDecimal.valueOf( doubleValue );
           final IRecord record = result.createRecord();
           GregorianCalendar calendar = new GregorianCalendar();
@@ -270,7 +283,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           result.add( record );
         }
       }
-      catch( SensorException e )
+      catch( Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
