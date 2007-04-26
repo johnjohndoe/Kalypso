@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Apr 2007    4:09 pm
+!     Last change:  MD   26 Apr 2007    3:28 pm
 !--------------------------------------------------------------------------
 ! This code, wspow.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -91,7 +91,7 @@ REAL :: henow
 REAL :: strbr
 REAL :: q
 REAL :: q1
-REAL :: hrow
+REAL :: hrow, hvow
 REAL :: hv
 REAL :: rg
 INTEGER :: indmax
@@ -155,8 +155,9 @@ IF (iwehr.eq.'w') hukmax = hokwmin
 dx = 0.05
 itmax_ow = 20
 
+
 hranf = henow - 0.05
-!MD  hranf = henow -.15
+! hranf = henow
 
 hrow = hranf
                                                                         
@@ -213,6 +214,9 @@ DO 10 i = 1, itmax_ow
   ENDIF
 
   hrowa = hr + dx
+  if (hrowa.gt.henow) then
+    hrowa = henow - dx
+  end if
   !MD  hrowa = hrow - dx
 
   CALL wspanf (hrowa, strbr, q, q1, hra, hva, rg, indmax, hvst,   &
@@ -224,19 +228,46 @@ DO 10 i = 1, itmax_ow
   df = (hea - he1) / (hra - hr)
   !MD  df = (hea - he1) / (hrowa - hrow)
 
-  IF (df.lt.1.e-04) then
-    !JK      SCHREIBEN IN KONTROLLFILE
-    WRITE (UNIT_OUT_LOG, '(''keine loesung fuer oberwasser hrow = henow!'')')
 
-    hrow = henow
-    CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-     & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+  if (ABS(df).lt.0.0001) then
+    df = (hea - he1) / (hva - hv)
+    if (ABS(df).lt.0.0001) then
+      hrow = (hr + hra)/2.
+    else
+      hvow = hv + (henow - he1) / df
+      hrow = henow - hvow
+    endif
+  else
+    hrow = hr + (henow - he1) / df
+    !MD  hrow = hrow + (henow - he1) / df
+  end if
 
-    RETURN
+  !MD  Kontrolle der neuen Wassertiefe
+  !------------------------------------
+  if (hrow.le.0. .or. hrow.gt.henow) then
+    hrow = (hr + hra)/2.
+  end if
 
-  ENDIF
+  if (hrow .le. (2./3. * henow)) then
+    hrow = (2./3. * henow) + 2.*dx
+  end if
 
-  hrow = hrow + (henow - he1) / df
+
+!MD  Deaktiviert am 24.04.2007
+!------------------------------------
+!  IF (df.lt.1.e-04) then
+!    !JK      SCHREIBEN IN KONTROLLFILE
+!    WRITE (UNIT_OUT_LOG, '(''keine loesung fuer oberwasser hrow = henow!'')')
+!
+!    hrow = henow
+!    CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, &
+!     & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+!
+!    RETURN
+!
+!  ENDIF
+
+
 
   !JK      SCHREIBEN IN KONTROLLFILE
   WRITE (UNIT_OUT_LOG, 9810) hea, df, hrow
