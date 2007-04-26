@@ -86,7 +86,7 @@ public class NaModelCalcJob implements ISimulation
       // NaModelConstants.IN_CONTROL_ID ) );
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
       final Feature rootFeature = controlWorkspace.getRootFeature();
-      final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
+      final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_AUTOCALI_PROP, false );
 
       if( dataProvider.hasID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID ) )
         m_calcJob = new NaModelParameterAnalyseSimulation( logger );

@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel.manager;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -91,7 +90,7 @@ public class LzsimManager
 
   private static final int STATUS_READ_QGS = 4;
 
-  public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, NAConfiguration conf ) throws Exception
+  public void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, NAConfiguration conf ) throws Exception
   {
     final DateFormat formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd(HH)" ) );
     // 19960521 00 h 125 bodf
@@ -116,10 +115,10 @@ public class LzsimManager
       final IFeatureType lzChannelFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Channel" ) );
       final IFeatureType lzrootFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) );
 
-      final IRelationType lzCatchmentMemberRT = (IRelationType) lzrootFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_MEMBER_PROP ) );
-      final IRelationType lzChannelMemberRT = (IRelationType) lzrootFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CHANNEL_MEMBER_PROP ) );
+      final IRelationType lzCatchmentMemberRT = (IRelationType) lzrootFT.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
+      final IRelationType lzChannelMemberRT = (IRelationType) lzrootFT.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
 
-      final IRelationType lzinitHydMemberRT = (IRelationType) lzCatchmentFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
+      final IRelationType lzinitHydMemberRT = (IRelationType) lzCatchmentFT.getProperty( NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP );
       final List<Feature> CatchmentFEs = idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
       final List<Feature> ChannelFEs = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
 
@@ -128,7 +127,7 @@ public class LzsimManager
       {
         final Feature lzCatchmentFE = lzWorkspace.createFeature( lzRootFE, lzCatchmentMemberRT, lzCatchmentFT );
         lzWorkspace.addFeatureAsComposition( lzRootFE, lzCatchmentMemberRT, 0, lzCatchmentFE );
-        lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ), feature.getId() );
+        lzCatchmentFE.setProperty( NaModelConstants.INI_HYD_FEATUREID_PROP, feature.getId() );
 
         final int asciiID = idManager.getAsciiID( feature );
         lzCatchmentFE.setProperty( new QName( "http://www.opengis.net/gml", "name" ), Integer.toString( asciiID ) );
@@ -260,7 +259,7 @@ public class LzsimManager
     }
   }
 
-  public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace ) throws IOException
+  public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace )
   {
     IDManager idManager = conf.getIdManager();
 
@@ -283,7 +282,7 @@ public class LzsimManager
 
     // write initial conditions for the strands
     // TODO:write only for strands of the actual calculation
-    List channelList = (List) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.CHANNEL_MEMBER_PROP ) );
+    List channelList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
     for( int i = 0; i < channelList.size(); i++ )
     {
       Feature channelFE = (Feature) channelList.get( i );
@@ -315,7 +314,7 @@ public class LzsimManager
     }
 
     // for all catchments in the calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
-    List catchmentList = (List) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.CATCHMENT_MEMBER_PROP ) );
+    List catchmentList = (List) iniValuesRootFeature.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
     Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
     for( final String catchmentID : catchmentIdsFromLzsim )
     {

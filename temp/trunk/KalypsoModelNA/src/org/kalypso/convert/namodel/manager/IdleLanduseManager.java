@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.sensor.IAxis;
@@ -75,21 +76,22 @@ public class IdleLanduseManager extends AbstractManager
 
   private IFeatureType m_sealingFT;
 
-  final Hashtable m_idleLanduseTable = new Hashtable();
+  final Hashtable<String, Integer> m_idleLanduseTable = new Hashtable<String, Integer>();
 
   private int m_idCounter = 0;
 
   public IdleLanduseManager( org.kalypso.gmlschema.GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
-    m_IdleLanduseFT = parameterSchema.getFeatureType( "IdealLandUse" );
-    m_landuseFT = parameterSchema.getFeatureType( "Landuse" );
-    m_sealingFT = parameterSchema.getFeatureType( "Sealing" );
+    m_IdleLanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_IDEAL_LANDUSE );
+    m_landuseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_LANDUSE );
+    m_sealingFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SEALING );
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
     return null;
@@ -98,15 +100,16 @@ public class IdleLanduseManager extends AbstractManager
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
 
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
@@ -172,7 +175,7 @@ public class IdleLanduseManager extends AbstractManager
 
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
     SimpleObservation observation = new SimpleObservation( null, null, fileDescription, true, null, new MetadataList(), axis, model );
-    feature.setProperty( "idealLandUseZML", observation );
+    feature.setProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML, observation );
 
     line = reader.readLine();
     // continue reading
@@ -183,12 +186,12 @@ public class IdleLanduseManager extends AbstractManager
 
   public Feature[] parseFilecsv( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextcsvFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
 
   }
 
@@ -210,11 +213,11 @@ public class IdleLanduseManager extends AbstractManager
     String sealinglink = strings[2];
     final Feature sealingFE = getFeature( sealinglink, m_sealingFT );
     landusePropCollector.put( "sealingLink", sealingFE.getId() );
-    feature.setProperty( "sealingLink", sealingFE.getId());
+    feature.setProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK, sealingFE.getId() );
     String landuseperiodlink = strings[3];
     final Feature idleLanduseFE = getFeature( landuseperiodlink, m_IdleLanduseFT );
     landusePropCollector.put( "idealLandUsePeriodLink", idleLanduseFE.getId() );
-    feature.setProperty( "idealLandUsePeriodLink", idleLanduseFE.getId() );
+    feature.setProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK, idleLanduseFE.getId() );
 
     setParsedProperties( feature, landusePropCollector, null );
     return feature;
@@ -222,12 +225,12 @@ public class IdleLanduseManager extends AbstractManager
 
   public Feature[] parseSealingFilecsv( URL url ) throws IOException
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextsealingFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
 
   }
 
@@ -243,7 +246,7 @@ public class IdleLanduseManager extends AbstractManager
     System.out.println( line );
     String sealing = strings[0];
     final Feature feature = getFeature( sealing, m_sealingFT );
-    sealingPropCollector.put( "name", "Klasse_"+sealing );
+    sealingPropCollector.put( "name", "Klasse_" + sealing );
     String description = strings[1];
     sealingPropCollector.put( "description", description );
     String vers = strings[2];

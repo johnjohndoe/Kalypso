@@ -83,14 +83,14 @@ public class BlockTimeSeries
 
   // private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
 
-  private final Hashtable m_blocks;
+  private final Hashtable<String, SortedMap> m_blocks;
 
   public BlockTimeSeries( final TimeZone timeZone )
   {
     SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" );
     format.setTimeZone( timeZone );
     m_dateFormat = format;
-    m_blocks = new Hashtable();
+    m_blocks = new Hashtable<String, SortedMap>();
   }
 
   /**
@@ -120,7 +120,7 @@ public class BlockTimeSeries
     int valueIndex = 0;
     int valueOffset = 0;
 
-    SortedMap timeSeries = null;
+    SortedMap<Date, String> timeSeries = null;
     try
     {
       LineNumberReader reader = new LineNumberReader( new FileReader( blockFile ) );
@@ -164,7 +164,7 @@ public class BlockTimeSeries
                   timeStep = ((long) (Float.parseFloat( sStep ) * 1000f)) * 3600l;
                 }
 
-                Date testDate = new Date( startDate );
+//                Date testDate = new Date( startDate );
 //                System.out.println( "startdate: " + testDate + "  step:" + sStep );
                 step++;
               }
@@ -196,7 +196,7 @@ public class BlockTimeSeries
                   timeStep = ((long) (Float.parseFloat( sStep ) * 1000f)) * 3600l;
                 }
 
-                Date testDate = new Date( startDate );
+//                Date testDate = new Date( startDate );
 //                System.out.println( "startdate: " + testDate + "  step:" + sStep );
                 step++;
               }              
@@ -211,10 +211,10 @@ public class BlockTimeSeries
                 if( allowedKeys == null || allowedKeys.contains( key ) )
                 {
                   if( m_blocks.containsKey( key ) )
-                    timeSeries = (TreeMap) m_blocks.get( key );
+                    timeSeries = (TreeMap<Date, String>) m_blocks.get( key );
                   else
                   {
-                    timeSeries = new TreeMap();
+                    timeSeries = new TreeMap<Date, String>();
                     m_blocks.put( key, timeSeries );
                   }
                   step++;
@@ -252,7 +252,7 @@ public class BlockTimeSeries
     }
   }
 
-  public Enumeration getKeys( )
+  public Enumeration<String> getKeys( )
   {
     return m_blocks.keys();
   }
@@ -261,7 +261,7 @@ public class BlockTimeSeries
   {
     if( m_blocks.containsKey( key ) )
     {
-      SortedMap map = (SortedMap) m_blocks.get( key );
+      SortedMap map = m_blocks.get( key );
 
       FileWriter writer = new FileWriter( exportFile );
       String line;

@@ -48,7 +48,6 @@ package org.kalypso.ui.rrm.wizards;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashMap;
 
 import org.apache.commons.io.IOUtils;
@@ -66,10 +65,8 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -101,7 +98,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard
 
   private GMLSchema m_parameterSchema;
 
-  private GMLWorkspace m_parameterWS = null;
+//  private GMLWorkspace m_parameterWS = null;
 
   final File asciiBaseDir = new File( "C:\\TMP\\na" ); // TODO:change by wizard
 

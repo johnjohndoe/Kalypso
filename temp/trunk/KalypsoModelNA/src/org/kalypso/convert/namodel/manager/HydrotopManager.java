@@ -1,32 +1,3 @@
-package org.kalypso.convert.namodel.manager;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeSet;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
-import com.vividsolutions.jts.geom.Geometry;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -68,6 +39,32 @@ import com.vividsolutions.jts.geom.Geometry;
  *   
  *  ---------------------------------------------------------------------------*/
 
+package org.kalypso.convert.namodel.manager;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+
+import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * @author huebsch
  */
@@ -86,6 +83,7 @@ public class HydrotopManager extends AbstractManager
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
     return null;
@@ -106,20 +104,20 @@ public class HydrotopManager extends AbstractManager
     final IDManager idManager = m_conf.getIdManager();
     // Catchment
     Feature modelRootFeature = modelWorkspace.getRootFeature();
-    Feature modelCol = (Feature) modelRootFeature.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP ) );
-    List catchmentList = (List) modelCol.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_MEMBER_PROP ) );
+    Feature modelCol = (Feature) modelRootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    List catchmentList = (List) modelCol.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
 
     Feature parameterRootFeature = parameterWorkspace.getRootFeature();
-    List landuseList = (List) parameterRootFeature.getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_PROP_LANDUSE_MEMBER ) );
+    List landuseList = (List) parameterRootFeature.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     Iterator landuseIter = landuseList.iterator();
     while( landuseIter.hasNext() )
     {
       Feature landuseFE = (Feature) landuseIter.next();
-      String landuseName = (String) landuseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) );
+      String landuseName = (String) landuseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
 
-      final IRelationType rt = (IRelationType) landuseFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
+      final IRelationType rt = (IRelationType) landuseFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
       Feature linkedSealingFE = parameterWorkspace.resolveLink( landuseFE, rt );
-      Double SealingRate = (Double) linkedSealingFE.getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ) );
+      Double SealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
       if( !m_landuseMap.containsKey( landuseName ) )
         m_landuseMap.put( landuseName, SealingRate );
       // TODO: Errormassages in logger
@@ -130,7 +128,7 @@ public class HydrotopManager extends AbstractManager
     Iterator catchmentIter = catchmentList.iterator();
     // vollständige HydrotopList
     Feature rootFeature = hydWorkspace.getRootFeature();
-    FeatureList hydList = (FeatureList) rootFeature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_MEMBER ) );
+    FeatureList hydList = (FeatureList) rootFeature.getProperty( NaModelConstants.HYDRO_MEMBER );
     asciiBuffer.getHydBuffer().append( "Hydrotope aus GML\n" );
 
     while( catchmentIter.hasNext() )
@@ -153,7 +151,7 @@ public class HydrotopManager extends AbstractManager
         double versFlaeche = 0.0;
         double natFlaeche = 0.0;
         double gesFlaeche = 0.0;
-        final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
+        final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
 
         // Hydrotope im TeilgebietsEnvelope
         final List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
@@ -161,7 +159,7 @@ public class HydrotopManager extends AbstractManager
         while( hydInEnvIter.hasNext() )
         {
           final Feature hydFeature = (Feature) hydInEnvIter.next();
-          final GM_Object hydGeomProp = (GM_Object) hydFeature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ) );
+          final GM_Object hydGeomProp = (GM_Object) hydFeature.getProperty( NaModelConstants.HYDRO_PROP_GEOM );
           // Hint: JavaTopologySuite has no Coordinate System (here: all geometries
           // are in the same cs - see NaModelInnerCalcJob)
           final Geometry jtsTG = JTSAdapter.export( tGGeomProp );
@@ -170,9 +168,9 @@ public class HydrotopManager extends AbstractManager
           {
             hydWriteSet.add( hydFeature );
             double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
-            String landuse = (String) hydFeature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) );
+            String landuse = (String) hydFeature.getProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME );
             double versGrad = m_landuseMap.get( landuse ).doubleValue();
-            double korVersGrad = ((Double) hydFeature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ) )).doubleValue();
+            double korVersGrad = ((Double) hydFeature.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR )).doubleValue();
             double gesVersGrad = (versGrad * korVersGrad);
             versFlaeche += (hydGesFlaeche * gesVersGrad);
             natFlaeche += (hydGesFlaeche - (hydGesFlaeche * gesVersGrad));
@@ -187,7 +185,6 @@ public class HydrotopManager extends AbstractManager
         // TODO: throw exception (to the user), if writing of hydrotope file is checked (testing!!!)
         double fehler = (tGArea - gesFlaeche);
         int fehlerinProzent = (int) Math.abs( fehler / gesFlaeche * 100d );
-        // if( (int)tGArea != (int)gesFlaeche )
         if( fehlerinProzent > 1 )
         {
           System.out.println( "Fehler in den Hydrotopen!" );
@@ -196,9 +193,9 @@ public class HydrotopManager extends AbstractManager
           // TODO report error to user or log file
         }
         asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i4" ) );
-        asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + (long) versFlaeche + " " + (long) natFlaeche + " " + (long) gesFlaeche + "\n" );
+        asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + versFlaeche + " " + natFlaeche + " " + gesFlaeche + "\n" );
 
-        Iterator hydIter = hydWriteSet.iterator();
+        Iterator<Object> hydIter = hydWriteSet.iterator();
         int anzHydrotope = 0;
         final List<String> hydIdList = new ArrayList<String>();
         while( hydIter.hasNext() )
@@ -215,45 +212,38 @@ public class HydrotopManager extends AbstractManager
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope ) throws Exception
   {
-    double HGesFlaeche = ((Double) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_AREA ) )).doubleValue();
-    Double SealingRate = m_landuseMap.get( feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) ) );
+    double HGesFlaeche = ((Double) feature.getProperty( NaModelConstants.HYDRO_PROP_AREA )).doubleValue();
+    Double SealingRate = m_landuseMap.get( feature.getProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) );
     double HVersGrad = (SealingRate).doubleValue();
     double HKorVersGrad = 1;
     try
     {
-      HKorVersGrad = ((Double) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ) )).doubleValue();
+      HKorVersGrad = ((Double) feature.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR )).doubleValue();
     }
     catch( Exception e )
     {
       System.out.println( "Der Korrekturfaktor des Versiegelungsgrades im Hydrotop (ID=" + feature.getId() + ") 0.0, er wird daher auf 1.0 gesetzt" );
     }
-    long natHFlaeche = (long) (HGesFlaeche - (HGesFlaeche * HVersGrad * HKorVersGrad));
+    double natHFlaeche = (HGesFlaeche - (HGesFlaeche * HVersGrad * HKorVersGrad));
     // 3
     // (flaech4,a10)(nutz,a10)_(boden,a10)(m_perkm,*)_(m_f1gws,*)_(n_hydid,*)_(m_versGes,*)_(m_hydTyp,*)
     StringBuffer b = new StringBuffer();
-    b.append( FortranFormatHelper.printf( Long.toString( natHFlaeche ), "a10" ) );
+    b.append( FortranFormatHelper.printf( natHFlaeche, "f9.1" ).trim() + " " );
     b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "landuse" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "soiltype" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) );
-    // b.append( " " + "0.000" );
-    // b.append( " " + "10.000" );
-    // b.append( " " + "0.27" );
-    // b.append( " " + "0.000" );
     b.append( " " + anzHydrotope );
     // INFO: the sealing rate and the correction factor was not needed in fortran code version 2.0.4. after
     // implementation of
     // swale and trench the sealing rate is needed in fortran. we had to change the hydrotop format and put the real
     // sealing rate (= sealing rate * correction factor).
-    double versGrad = m_landuseMap.get( feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) ) ).doubleValue();
-    double korVersGrad = ((Double) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ) )).doubleValue();
+    double versGrad = m_landuseMap.get( feature.getProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) ).doubleValue();
+    double korVersGrad = ((Double) feature.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR )).doubleValue();
     double gesVersGrad = (versGrad * korVersGrad);
     b.append( " " + FortranFormatHelper.printf( gesVersGrad, "*" ) );
-    // b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
-    // final String corrFactAsString = FeatureHelper.getAsString( feature, "corrSealing" );
-    // b.append( " " + FortranFormatHelper.printf( corrFactAsString, "*" ) );
 
-    final String hydType = (String) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_HYDTYPE ) );
+    final String hydType = (String) feature.getProperty( NaModelConstants.HYDRO_PROP_HYDTYPE );
     int hydTypeNumber = 0;
     if( hydType == null || hydType.equals( NaModelConstants.HYDRO_ENUM_HYDTYPE_REGULAR ) )
       hydTypeNumber = 0;

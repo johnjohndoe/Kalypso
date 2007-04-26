@@ -107,31 +107,33 @@ public class NAModellConverter
   private final SchneeManager m_schneeManager;
 
   private final SwaleAndTrenchManager m_swaleAndTrenchManager;
+
   private final IdleLanduseManager m_idleLanduseManager;
 
+  // public static void main( String[] args )
+  // {
+  // final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() }
+  // );
+  // GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
+  // try
+  // {
+  // // general
+  // final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+  // registry.registerTypeHandler( new ObservationLinkHandler() );
+  // registry.registerTypeHandler( new DiagramTypeHandler() );
+  // completeascii2gml();
+  // }
+  // catch( Exception e )
+  // {
+  // e.printStackTrace();
+  // }
+  // }
 
-//  public static void main( String[] args )
-//  {
-//    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() } );
-//    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-//    try
-//    {
-//      // general
-//      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-//      registry.registerTypeHandler( new ObservationLinkHandler() );
-//      registry.registerTypeHandler( new DiagramTypeHandler() );
-//      completeascii2gml();
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//    }
-//  }
-
-  public static void completeascii2gml(final File gmlBaseDir, final File asciiBaseDir ) throws Exception
+  public static void completeascii2gml( final File gmlBaseDir, final File asciiBaseDir ) throws Exception
   {
-//    final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
-//    File asciiBaseDir = new File( "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
+    // final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
+    // File asciiBaseDir = new File(
+    // "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
 
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     Feature modelRootFeature = modelAsciiToFeature( conf );
@@ -141,7 +143,7 @@ public class NAModellConverter
 
     File modelGmlFile = new File( gmlBaseDir, "modell.gml" );
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema modelGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
+    final GMLSchema modelGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
     // final Document modelSchema = modelGmlSchema.getSchema();
 
     // IFeatureType[] featureTypes = GMLSchemaUtil.getAllFeatureTypesFromSchema( modelGmlSchema );
@@ -172,24 +174,24 @@ public class NAModellConverter
     // insertGeometries
 
     System.out.println( "inserting geometries: catchments" );
-    Feature catchmentCollection = (Feature) modelFeature.getProperty( "CatchmentCollectionMember" );
-    List catchmentList = (List) catchmentCollection.getProperty( "catchmentMember" );
+    Feature catchmentCollection = (Feature) modelFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    List catchmentList = (List) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
     copyProperties( catchmentFeatures, "GEOM", "TGNR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "name" );
 
     System.out.println( "inserting geometries: channels" );
-    Feature channelCollection = (Feature) modelFeature.getProperty( "ChannelCollectionMember" );
-    List channelList = (List) channelCollection.getProperty( "channelMember" );
+    Feature channelCollection = (Feature) modelFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
+    List channelList = (List) channelCollection.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
     copyProperties( channelFeatures, "GEOM", "STRNR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "name" );
 
     System.out.println( "inserting geometries: nodes" );
-    Feature nodeCollection = (Feature) modelFeature.getProperty( "NodeCollectionMember" );
-    List nodeList = (List) nodeCollection.getProperty( "nodeMember" );
+    Feature nodeCollection = (Feature) modelFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+    List nodeList = (List) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
     copyProperties( nodeFeatures, "GEOM", "KTNR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "name" );
   }
 
   private static void copyProperties( final List catchmentFeatures, String orgGeomPropName, String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
   {
-    HashMap orgHash = new HashMap();
+    HashMap<String, Feature> orgHash = new HashMap<String, Feature>();
     for( Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
     {
       final Feature f = (Feature) iter.next();
@@ -201,7 +203,7 @@ public class NAModellConverter
       Feature destFeature = destFE[i];
       String id = destFeature.getProperty( destIdPropName ).toString();
       // System.out.println("processing id=" + id);
-      Feature orgFeaure = (Feature) orgHash.get( id );
+      Feature orgFeaure = orgHash.get( id );
       if( orgFeaure != null )
       {
         Object value = orgFeaure.getProperty( orgGeomPropName );
@@ -220,8 +222,8 @@ public class NAModellConverter
     m_conf = conf;
 
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    m_modelSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
-    GMLSchema m_parameterSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
+    m_modelSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
+    GMLSchema m_parameterSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
@@ -263,7 +265,7 @@ public class NAModellConverter
     Writer writer2 = new FileWriter( m_conf.getChannelFile() );
     writer2.write( asciiBuffer.getChannelBuffer().toString() );
     writer2.close();
-    
+
     Writer writer10 = new FileWriter( m_conf.getSwaleAndTrenchFile() );
     writer10.write( asciiBuffer.getSwaleTrenchBuffer().toString() );
     writer10.close();

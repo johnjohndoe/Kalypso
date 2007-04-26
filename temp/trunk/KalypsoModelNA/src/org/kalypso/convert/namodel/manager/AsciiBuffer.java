@@ -66,7 +66,7 @@ public class AsciiBuffer
 
   private final StringBuffer m_snowBuffer = new StringBuffer();
 
-  private final List m_featuresToWrite = new ArrayList();
+  private final List<Feature> m_featuresToWrite = new ArrayList<Feature>();
 
   private final StringBuffer m_zftBuffer= new StringBuffer();
   private final StringBuffer m_swaleTrenchBuffer= new StringBuffer();

@@ -42,17 +42,11 @@ package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -108,10 +102,10 @@ public class ParseManager
   {
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
-    IFeatureType naModellFT = m_schema.getFeatureType( "NaModell" );
-    IFeatureType catchmentCollectionFT = m_schema.getFeatureType( "CatchmentCollection" );
-    IFeatureType channelCollectionFT = m_schema.getFeatureType( "ChannelCollection" );
-    IFeatureType nodeCollectionFT = m_schema.getFeatureType( "NodeCollection" );
+    IFeatureType naModellFT = m_schema.getFeatureType( NaModelConstants.NA_MODEL_ROOT_FT );
+    IFeatureType catchmentCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CATCHMENT_COLLECTION_FT );
+    IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT);
+    IFeatureType nodeCollectionFT = m_schema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
 
     // create all Features (and FeatureCollections)
     Feature naModellFe = modelManager.createFeature( naModellFT );
@@ -121,30 +115,26 @@ public class ParseManager
 
     // complete Feature NaModell
 
-    // final FeatureProperty prop = FeatureFactory.createFeatureProperty( "CatchmentCollectionMember",
-    // catchmentCollectionFe );
-    naModellFe.setProperty( "CatchmentCollectionMember", catchmentCollectionFe );
+    naModellFe.setProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP, catchmentCollectionFe );
 
-    // prop = FeatureFactory.createFeatureProperty( "ChannelCollectionMember", channelCollectionFe );
-    naModellFe.setProperty( "ChannelCollectionMember", channelCollectionFe );
+    naModellFe.setProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP, channelCollectionFe );
 
-    // prop = FeatureFactory.createFeatureProperty( "NodeCollectionMember", nodeCollectionFe );
-    naModellFe.setProperty( "NodeCollectionMember", nodeCollectionFe );
+    naModellFe.setProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP, nodeCollectionFe );
 
     // complete Feature CatchmentCollection
-    final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( "catchmentMember" );
+    final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
     Feature[] features = m_catchmentManager.parseFile( m_conf.getCatchmentFile().toURL() );
     for( int i = 0; i < features.length; i++ )
       FeatureHelper.addProperty( catchmentCollectionFe, catchmentMemberPT, features[i] );
 
     // complete Features of ChannelCollections
-    final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( "channelMember" );
+    final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
     features = m_channelManager.parseFile( m_conf.getChannelFile().toURL() );
     for( int i = 0; i < features.length; i++ )
       FeatureHelper.addProperty( channelCollectionFe, channelMemberPT, features[i] );
 
     // complete Feature NodeCollection
-    final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( "nodeMember" );
+    final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
     features = m_nodeManager.parseFile( m_conf.getNetFile().toURL() );
     for( int i = 0; i < features.length; i++ )
       FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, features[i] );
@@ -160,14 +150,14 @@ public class ParseManager
   {
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
-    IFeatureType naParaFT = m_paraSchema.getFeatureType( "Parameter" );
+    IFeatureType naParaFT = m_paraSchema.getFeatureType( NaModelConstants.PARA_ROOT_FT );
     
 
     // create all Features (and FeatureCollections)
     Feature naParaFe = modelManager.createFeature( naParaFT );
     Feature[] features;
-    IPropertyType soilLayerMemberPT = naParaFT.getProperty( "soilLayerMember" );
-    IPropertyType soiltypeMemberPT = naParaFT.getProperty( "soiltypeMember" );
+    IPropertyType soilLayerMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
+    IPropertyType soiltypeMemberPT = naParaFT.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
 
     // complete Feature soilLayerMember
     try
@@ -190,7 +180,7 @@ public class ParseManager
     File nutzungDir = m_conf.getNutzungDir();
     FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" );
     File nutzFiles[] = nutzungDir.listFiles( filter );
-    final IPropertyType idealLandUseMemberRT = naParaFT.getProperty( "idealLandUseMember" );
+    final IPropertyType idealLandUseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_MEMBER );
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
@@ -199,7 +189,7 @@ public class ParseManager
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, features[f] );
     }
-    final IPropertyType landuseMemberRT = naParaFT.getProperty( "landuseMember" );
+    final IPropertyType landuseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     // complete Feature landuseMember
     for( int i = 0; i < nutzFiles.length; i++ )
     {
@@ -212,7 +202,7 @@ public class ParseManager
     System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
     
     
-    final IPropertyType sealingMemberRT = naParaFT.getProperty( "sealingMember" );
+    final IPropertyType sealingMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SEALING_MEMBER );
     URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL();
     features=m_idleLanduseManager.parseSealingFilecsv(csvsealingURL);
     for( int f = 0; f < features.length; f++ )
@@ -224,7 +214,7 @@ public class ParseManager
     for( int f = 0; f < features.length; f++ )
       FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     
-    final IPropertyType snowMemberRT = naParaFT.getProperty( "snowMember" );
+    final IPropertyType snowMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
     // complete Feature snowMember
     try
     {

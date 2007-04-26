@@ -66,7 +66,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.model.km.ProfileData;
 import org.kalypso.model.km.ProfileDataSet;
 import org.kalypso.model.km.ProfileFactory;

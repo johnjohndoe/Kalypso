@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming
- *  
  */
 public class ModelManager extends AbstractManager
 {
@@ -62,14 +61,15 @@ public class ModelManager extends AbstractManager
    * 
    * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public ModelManager() throws IOException
+  public ModelManager( ) throws IOException
   {
     super( null );
   }
 
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getName() + id;
+    return ft.getQName().getLocalPart() + id;
   }
 
   /*
@@ -77,6 +77,7 @@ public class ModelManager extends AbstractManager
    * 
    * @see org.kalypso.convert.AbstractManager#parseFile(java.io.File)
    */
+  @Override
   public Feature[] parseFile( URL url )
   {
     // nothing to do

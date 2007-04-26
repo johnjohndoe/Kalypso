@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.job;
 
-import java.util.List;
-
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation.FeaturePropertyToProcess;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;

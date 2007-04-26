@@ -52,6 +52,7 @@ import java.util.List;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -71,30 +72,33 @@ public class BodentypManager extends AbstractManager
 
   private final IFeatureType m_bodenartFT;
 
-  private static final String BodArtParameterPropName = "soilLayerParameterMember";
+  // private static final String BodArtParameterPropName = "soilLayerParameterMember";
 
   public BodentypManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     m_conf = conf;
-    m_bodentypFT = parameterSchema.getFeatureType( "Soiltype" );
-    m_bodenartFT = parameterSchema.getFeatureType( "SoilLayerParameter" );
+    m_bodentypFT = parameterSchema.getFeatureType( NaModelConstants.PARA_Soiltype_FT );
+    m_bodenartFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SoilLayerParameter_FT );
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getName() + id;
+    // return ft.getName() + id;
+    return ft.getQName().getLocalPart() + id;
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     // Kommentarzeilen
@@ -109,7 +113,7 @@ public class BodentypManager extends AbstractManager
     }
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
 
   }
 
@@ -143,12 +147,12 @@ public class BodentypManager extends AbstractManager
       final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
 
       bodArtPropCollector.put( "soilLayerLink", BodArtFE.getId() );
-      bodArtParameterFeature.setProperty( "soilLayerLink", BodArtFE.getId() );
+      bodArtParameterFeature.setProperty( NaModelConstants.PARA_SOIL_LAYER_LINK, BodArtFE.getId() );
 
       // Collection collection = bodArtPropCollector.values();
       setParsedProperties( bodArtParameterFeature, bodArtPropCollector, null );
 
-      final IPropertyType pt = m_bodentypFT.getProperty( BodArtParameterPropName );
+      final IPropertyType pt = m_bodentypFT.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
       FeatureHelper.addProperty( feature, pt, bodArtParameterFeature );
     }
 
@@ -161,7 +165,7 @@ public class BodentypManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( "soiltypeMember" );
+    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     asciiBuffer.getBodtypBuffer().append( "/Bodentypen:\n" );
     asciiBuffer.getBodtypBuffer().append( "/\n" );
     asciiBuffer.getBodtypBuffer().append( "/Typ       Tiefe[dm]\n" );
@@ -179,7 +183,7 @@ public class BodentypManager extends AbstractManager
   private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature ) throws Exception
   {
     // 1
-    List bodartList = (List) feature.getProperty( BodArtParameterPropName );
+    List bodartList = (List) feature.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
     asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "a10" ) + FortranFormatHelper.printf( Integer.toString( bodartList.size() ), "i4" )
         + "\n" );
     // 2
@@ -188,10 +192,10 @@ public class BodentypManager extends AbstractManager
     {
       Feature fe = (Feature) iter.next();
 
-      Feature BodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( "soilLayerLink" ) );
+      Feature BodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
       if( BodArtLink != null )
       {
-        Boolean xretProp = (Boolean) fe.getProperty("xret");
+        Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
         if( xretProp )
         {
           asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
@@ -206,7 +210,7 @@ public class BodentypManager extends AbstractManager
       else
       {
         // TODO use logger
-        System.out.println( "Fehler in der Bodentypdatei zu Bodentyp " + feature.getId() + " (Link zu Bodenart " + fe.getProperty( "soilLayerLink" ) + " nicht vorhanden)" );
+        System.out.println( "Fehler in der Bodentypdatei zu Bodentyp " + feature.getId() + " (Link zu Bodenart " + fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) + " nicht vorhanden)" );
       }
     }
 

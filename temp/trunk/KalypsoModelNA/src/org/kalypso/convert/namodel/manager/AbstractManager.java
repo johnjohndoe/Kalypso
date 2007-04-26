@@ -98,7 +98,7 @@ public abstract class AbstractManager
    */
   private String mapID( String asciiStringId, IFeatureType ft )
   {
-    return ft.getName() + "_" + asciiStringId;
+    return ft.getQName().getLocalPart() + "_" + asciiStringId;
   }
 
   public Feature getFeature( int asciiID, IFeatureType ft )
@@ -284,9 +284,9 @@ public abstract class AbstractManager
       IntID other = (IntID) object;
       if( !(other.getID() == getID()) )
         return false;
-      if( !other.getFeatureType().getNamespace().equals( getFeatureType().getNamespace() ) )
+      if( !other.getFeatureType().getQName().equals( getFeatureType().getQName() ) )
         return false;
-      if( !other.getFeatureType().getName().equals( getFeatureType().getName() ) )
+      if( !other.getFeatureType().getQName().getLocalPart().equals( getFeatureType().getQName().getLocalPart() ) )
         return false;
       return true;
     }
@@ -297,7 +297,7 @@ public abstract class AbstractManager
     @Override
     public int hashCode( )
     {
-      return (Integer.toString( m_intID ) + m_ft.getName() + m_ft.getNamespace()).hashCode();
+      return (Integer.toString( m_intID ) + m_ft.getQName().getLocalPart() + m_ft.getQName()).hashCode();
     }
 
   }

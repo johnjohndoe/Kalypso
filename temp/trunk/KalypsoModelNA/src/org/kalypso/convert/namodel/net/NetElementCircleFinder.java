@@ -54,21 +54,21 @@ public class NetElementCircleFinder
 
   public List[] findCircle()
   {
-    return findCircle( m_testNetElement, new ArrayList() );
+    return findCircle( m_testNetElement, new ArrayList<NetElement>() );
   }
 
-  private List[] findCircle( NetElement netElement, final List listToHere )
+  private List[] findCircle( NetElement netElement, final List<NetElement> listToHere )
   {
-    final List result = new ArrayList();
+    final List<Object> result = new ArrayList<Object>();
     listToHere.add( netElement );
     final List downStreamNetElements = netElement.getDownStreamNetElements();
     final NetElement[] downStreamElements = (NetElement[])downStreamNetElements
         .toArray( new NetElement[downStreamNetElements.size()] );
     for( int i = 0; i < downStreamElements.length; i++ )
     {
-      final List copyOfListToHere = new ArrayList();
+      final List<NetElement> copyOfListToHere = new ArrayList<NetElement>();
       // make copy
-      for( Iterator iter = listToHere.iterator(); iter.hasNext(); )
+      for( Iterator<NetElement> iter = listToHere.iterator(); iter.hasNext(); )
         copyOfListToHere.add( iter.next() );
 
       final NetElement linkNetElement = downStreamElements[i];
@@ -89,7 +89,7 @@ public class NetElementCircleFinder
           result.addAll( Arrays.asList( lists ) );
       }
     }
-    return (List[])result.toArray( new List[result.size()] );
+    return result.toArray( new List[result.size()] );
   }
 
 }

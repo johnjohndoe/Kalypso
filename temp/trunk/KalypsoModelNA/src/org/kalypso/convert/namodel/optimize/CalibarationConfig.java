@@ -53,11 +53,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class CalibarationConfig
 {
 
-  private final List m_contexts;
+  private final List<ParameterOptimizeContext> m_contexts;
 
   public CalibarationConfig()
   {
-    m_contexts = new ArrayList();
+    m_contexts = new ArrayList<ParameterOptimizeContext>();
   }
 
   public void addFromNAControl( Feature rootFeatureControl )
@@ -116,7 +116,7 @@ public class CalibarationConfig
 
   public ParameterOptimizeContext[] getCalContexts()
   {
-    return (ParameterOptimizeContext[])m_contexts.toArray( new ParameterOptimizeContext[m_contexts.size()] );
+    return m_contexts.toArray( new ParameterOptimizeContext[m_contexts.size()] );
   }
 
   public void addContext( ParameterOptimizeContext context )

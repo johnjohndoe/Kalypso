@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.kmupdate;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -60,7 +61,7 @@ public class KMUpdateContentProvider implements IStructuredContentProvider
     if( inputElement instanceof GMLWorkspace )
     {
       final GMLWorkspace workspace = (GMLWorkspace) inputElement;
-      final IFeatureType ft = workspace.getFeatureType( KMUpdateConstants.QNAME_KMCHANNEL );
+      final IFeatureType ft = workspace.getGMLSchema().getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT);
       final Feature[] features = workspace.getFeatures( ft );
       return features;
     }

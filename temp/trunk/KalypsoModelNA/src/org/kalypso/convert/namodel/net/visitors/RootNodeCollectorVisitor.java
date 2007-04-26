@@ -43,8 +43,6 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -88,14 +86,14 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
       return true;
     if( m_singleResultNode == null )
     {
-      if( FeatureHelper.booleanIsTrue( nodeFE, new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), false ) )
+      if( FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
         m_rootNetElements.add( netElement );
     }
     else
     {
       // final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
       // nodeFE == m_singleResultNode ) );
-      nodeFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( nodeFE == m_singleResultNode ) );
+      nodeFE.setProperty( NaModelConstants.GENERATE_RESULT_PROP, new Boolean( nodeFE == m_singleResultNode ) );
       if( m_singleResultNode == nodeFE )
         m_rootNetElements.add( netElement );
     }

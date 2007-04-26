@@ -40,7 +40,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -88,15 +91,15 @@ public class IDManager
       m_featureIDMap.put( feature, idMap );
       m_idMapFeature.put( idMap, feature );
     }
-    return ((IDMap) m_featureIDMap.get( feature )).getAsciiID();
+    return m_featureIDMap.get( feature ).getAsciiID();
   }
-  
+
   /**
    * @param feature
    */
   private int getType( Feature feature )
   {
-    String name = feature.getFeatureType().getName();
+    String name = feature.getFeatureType().getQName().getLocalPart();
     if( name.equals( "Catchment" ) )
       return CATCHMENT;
     if( name.endsWith( "Channel" ) )
@@ -111,7 +114,7 @@ public class IDManager
    */
   private IDMap generateAsciiID( Feature feature )
   {
-    final String idProp = "name";
+    final QName idProp = NaModelConstants.GML_FEATURE_NAME_PROP;
     int type = getType( feature );
     // switch( type )
     // {
@@ -164,7 +167,7 @@ public class IDManager
 
   public void dump( final Writer writer ) throws IOException
   {
-    final TreeSet sort = new TreeSet( new Comparator()
+    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator()
     {
       public boolean equals( Object obj )
       {
@@ -182,9 +185,9 @@ public class IDManager
       }
     } );
     sort.addAll( m_idMapFeature.keySet() );
-    for( Iterator iter = sort.iterator(); iter.hasNext(); )
+    for( Iterator<IDMap> iter = sort.iterator(); iter.hasNext(); )
     {
-      IDMap idmap = (IDMap) iter.next();
+      IDMap idmap = iter.next();
       writer.write( idmap.toString() );
       writer.write( "\t" );
       final Object value = m_idMapFeature.get( idmap );
@@ -232,6 +235,7 @@ public class IDManager
       return type;
     }
 
+    @Override
     public String toString( )
     {
       return asciiID + "\t" + type;
@@ -240,6 +244,7 @@ public class IDManager
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals( Object other )
     {
       if( !(other instanceof IDMap) )
@@ -251,6 +256,7 @@ public class IDManager
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode( )
     {
       return asciiID + type * 100000;

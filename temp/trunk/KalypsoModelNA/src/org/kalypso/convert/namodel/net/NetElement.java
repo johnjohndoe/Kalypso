@@ -52,6 +52,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
@@ -140,7 +141,7 @@ public class NetElement
 
   public Feature getDownStreamNode( )
   {
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.DOWNSTREAM_NODE_MEMBER_PROP );
     return m_workspace.resolveLink( m_channelFE, rt );
   }
 
@@ -178,7 +179,7 @@ public class NetElement
   public void generateTimeSeries( ) throws IOException, Exception
   {
     final IFeatureType catchmentFT = m_manager.m_conf.getCatchemtFT();
-    final IRelationType rt = (IRelationType) catchmentFT.getProperty( "entwaesserungsStrangMember" );
+    final IRelationType rt = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
     final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchmentFT, rt );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
@@ -202,7 +203,7 @@ public class NetElement
         // N
         if( !targetFileN.exists() )
         {
-          final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( "niederschlagZR" );
+          final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG );
 
           // final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
           final URL linkURLN = m_urlUtils.resolveURL( conf.getZMLContext(), linkN.getHref() );
@@ -214,7 +215,7 @@ public class NetElement
         // T
         if( !targetFileT.exists() )
         {
-          final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( "temperaturZR" );
+          final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR );
           if( linkT != null )
           {
             final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
@@ -229,7 +230,7 @@ public class NetElement
         // V
         if( !targetFileV.exists() )
         {
-          final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( "verdunstungZR" );
+          final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_VERDUNSTUNG );
           if( linkV != null )
           {
             final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
@@ -254,7 +255,7 @@ public class NetElement
   public Feature getChannelsBelowDownStreamNode( )
   {
     final Feature downStreamNode = getDownStreamNode();
-    final IRelationType rt = (IRelationType) downStreamNode.getFeatureType().getProperty( "downStreamChannelMember" );
+    final IRelationType rt = (IRelationType) downStreamNode.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
     return m_workspace.resolveLink( downStreamNode, rt );
   }
 
@@ -279,7 +280,7 @@ public class NetElement
   {
     final IDManager idManager = m_conf.getIdManager();
 
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
     final Feature knotu = m_workspace.resolveLink( m_channelFE, rt );
     if( knotu == null )
       System.out.println( "knotU=null" );
@@ -302,7 +303,7 @@ public class NetElement
     final IDManager idManager = m_conf.getIdManager();
     asciiBuffer.addFeatureToWrite( getChannel() );
 
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
     final Feature knotU = m_workspace.resolveLink( m_channelFE, rt );
 
     // append channel:
@@ -310,7 +311,7 @@ public class NetElement
 
     final IFeatureType nodeFT = m_manager.m_conf.getNodeFT();
     final Feature[] features = m_workspace.getFeatures( nodeFT );
-    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( "downStreamChannelMember" );
+    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
     Feature knotO = null;
     for( int i = 0; i < features.length; i++ )
     {
@@ -326,7 +327,7 @@ public class NetElement
     final IFeatureType catchemtFT = m_manager.m_conf.getCatchemtFT();
     final Feature[] Cfeatures = m_workspace.getFeatures( catchemtFT );
 
-    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchemtFT.getProperty( "entwaesserungsStrangMember" );
+    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchemtFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
     for( int i = 0; i < Cfeatures.length; i++ )
     {
       if( m_channelFE == m_workspace.resolveLink( Cfeatures[i], entwaesserungsStrangMemberRT ) )

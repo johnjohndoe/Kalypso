@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,20 +67,21 @@ public class RHBManager extends AbstractManager
   {
     super( conf.getRHBFormatURL() );
     m_conf = conf;
-    m_storageChannelFT = schema.getFeatureType( "StorageChannel" );
+    m_storageChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
@@ -102,9 +104,9 @@ public class RHBManager extends AbstractManager
     if( iknotNr > 0 )
     {
       final Feature knotFE = getFeature( iknotNr, m_conf.getNodeFT() );
-      rhbStrangFE.setProperty( "iknotNodeMember", knotFE.getId() );
+      rhbStrangFE.setProperty( NaModelConstants.IKNOT_MEMBER_PROP, knotFE.getId() );
     }
-    int jev = Integer.parseInt( propCollector.get( "jev" ) );
+//    int jev = Integer.parseInt( propCollector.get( "jev" ) );
     // TODO: old Code - remove diagramm and add handling with new zmlinline typehandler
     // final DiagramProperty diagram = new DiagramProperty();
     // for( int i = 0; i < jev; i++ )
@@ -128,8 +130,9 @@ public class RHBManager extends AbstractManager
     return feature;
   }
 
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getName() + id;
+    return ft.getQName().getLocalPart() + id;
   }
 }

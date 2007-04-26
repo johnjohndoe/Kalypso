@@ -144,16 +144,16 @@ public class NAOptimizingJob implements IOptimizingJob
     // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
-    m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( "pegelZR" );
-    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
+    m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
+    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
 
     // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final Date measuredStartDate = (Date) metaFE.getProperty( "startsimulation" );
-    final Date measuredEndDate = (Date) metaFE.getProperty( "startforecast" );
+    final Date measuredStartDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION );
+    final Date measuredEndDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_FORECAST );
 
     // todo: einmal static erzeugen
     final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );

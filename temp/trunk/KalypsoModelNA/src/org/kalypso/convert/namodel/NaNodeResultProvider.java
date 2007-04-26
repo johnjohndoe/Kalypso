@@ -69,8 +69,8 @@ public class NaNodeResultProvider
   {
     m_context = context;
     final Feature controlFE = controlWorkspace.getRootFeature();
-    m_useResults = FeatureHelper.booleanIsTrue( controlFE, "useResults", true );
-    final String resultNodeID = (String) controlFE.getProperty( "rootNode" );
+    m_useResults = FeatureHelper.booleanIsTrue( controlFE, NaModelConstants.NACONTROL_USE_RESULTS_PROP, true );
+    final String resultNodeID = (String) controlFE.getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP );
     // exclude some node from providing results
     if( resultNodeID != null )
     {
@@ -78,12 +78,12 @@ public class NaNodeResultProvider
     }
     else
     {
-      final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+      final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
       final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature nodeFE = nodeFEs[i];
-        if( FeatureHelper.booleanIsTrue( nodeFE, "generateResult", false ) )
+        if( FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
           removeResult( nodeFE );
       }
     }
@@ -91,7 +91,7 @@ public class NaNodeResultProvider
 
   private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( "qberechnetZR" );
+    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
     if( link == null )
       return null;
     // optionen loeschen
@@ -102,7 +102,7 @@ public class NaNodeResultProvider
 
   public URL getMeasuredURL( final Feature nodeFE ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( "pegelZR" );
+    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
     if( link == null )
       return null;
     // optionen loeschen

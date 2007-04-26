@@ -50,8 +50,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -77,7 +80,7 @@ public class ChannelManager extends AbstractManager
 
   private static final int STORAGECHANNEL = 2;
 
-  private static final String KMParameterpropName = "KMParameterMember";
+  private static final QName KMParameterpropName = NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER;
 
   private final IFeatureType m_virtualChannelFT;
 
@@ -93,18 +96,19 @@ public class ChannelManager extends AbstractManager
   {
     super( conf.getChannelFormatURL() );
     m_conf = conf;
-    m_virtualChannelFT = schema.getFeatureType( "VirtualChannel" );
-    m_storageChannelFT = schema.getFeatureType( "StorageChannel" );
-    m_kmChannelFT = schema.getFeatureType( "KMChannel" );
-    m_kmParameterFT = schema.getFeatureType( "KMParameter" );
+    m_virtualChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT);
+    m_storageChannelFT = schema.getFeatureType(  NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT);
+    m_kmChannelFT = schema.getFeatureType(  NaModelConstants.KM_CHANNEL_ELEMENT_FT);
+    m_kmParameterFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_PARAMETER_FT);
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     // FileReader(
     // file
@@ -112,7 +116,7 @@ public class ChannelManager extends AbstractManager
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
@@ -172,14 +176,14 @@ public class ChannelManager extends AbstractManager
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
-    final List channelList = new ArrayList();
+    final List<Feature> channelList = new ArrayList<Feature>();
     channelList.addAll( Arrays.asList( workspace.getFeatures( m_virtualChannelFT ) ) );
     channelList.addAll( Arrays.asList( workspace.getFeatures( m_kmChannelFT ) ) );
     channelList.addAll( Arrays.asList( workspace.getFeatures( m_storageChannelFT ) ) );
-    final Iterator iter = channelList.iterator();
+    final Iterator<Feature> iter = channelList.iterator();
     while( iter.hasNext() )
     {
-      final Feature channelFE = (Feature) iter.next();
+      final Feature channelFE = iter.next();
       if( asciiBuffer.writeFeature( channelFE ) )
         writeFeature( asciiBuffer, channelFE, workspace );
     }
@@ -191,9 +195,9 @@ public class ChannelManager extends AbstractManager
     asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature ) + "\n" );
     // asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     IFeatureType ft = feature.getFeatureType();
-    if( "VirtualChannel".equals( ft.getName() ) )
+    if( "VirtualChannel".equals( ft.getQName().getLocalPart() ) )
       asciiBuffer.getChannelBuffer().append( VIRTUALCHANNEL + "\n" );
-    else if( "KMChannel".equals( ft.getName() ) )
+    else if( "KMChannel".equals( ft.getQName().getLocalPart() ) )
     {
       asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" );
       List kmFeatures = (List) feature.getProperty( KMParameterpropName );
@@ -205,7 +209,7 @@ public class ChannelManager extends AbstractManager
       }
 
     }
-    else if( "StorageChannel".equals( ft.getName() ) )
+    else if( "StorageChannel".equals( ft.getQName().getLocalPart() ) )
     {
       asciiBuffer.getChannelBuffer().append( STORAGECHANNEL + "\n" );
 
@@ -213,9 +217,9 @@ public class ChannelManager extends AbstractManager
       // RHB 5-7
       asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
       // Ueberlaufknoten optional
-      final IRelationType rt2 = (IRelationType) feature.getFeatureType().getProperty( "iknotNodeMember" );
+      final IRelationType rt2 = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.IKNOT_MEMBER_PROP );
       Feature nodeFE = workspace.resolveLink( feature, rt2 );
-      final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "downStreamNodeMember" );
+      final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.DOWNSTREAM_NODE_MEMBER_PROP );
       final Feature dnodeFE = workspace.resolveLink( feature, rt );
       if( nodeFE == null || nodeFE == dnodeFE )
         asciiBuffer.getRhbBuffer().append( "       0" );
@@ -228,14 +232,14 @@ public class ChannelManager extends AbstractManager
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
       asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
-      Double sv = ((Double) feature.getProperty( "sv" )) / 1000000;
-      Double vmax = ((Double) feature.getProperty( "vmax" )) / 1000000;
-      Double vmin = ((Double) feature.getProperty( "vmin" )) / 1000000;
+      Double sv = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP )) / 1000000;
+      Double vmax = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP )) / 1000000;
+      Double vmin = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP)) / 1000000;
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + FortranFormatHelper.printf( sv, "f9.6" ) + " " + FortranFormatHelper.printf( vmax, "f9.6" ) + " "
           + FortranFormatHelper.printf( vmin, "f9.6" ) );
       // asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
-      Object wvqProp = feature.getProperty( "hvvsqd" );
+      Object wvqProp = feature.getProperty(NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP  );
       if( wvqProp instanceof IObservation )
       {
         int size = (((IObservation) wvqProp).getValues( null )).getCount();
@@ -283,8 +287,9 @@ public class ChannelManager extends AbstractManager
     }
   }
 
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getName() + id;
+    return ft.getQName().getLocalPart() + id;
   }
 }

@@ -8,9 +8,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ui.rrm.kmupdate.KMUpdateConstants;
 import org.kalypso.ui.rrm.kmupdate.KMUpdateWizard;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -48,7 +48,7 @@ public class KMUpdateAction implements IActionDelegate
       m_selection = (IFeatureSelection) selection;
       final Feature feature = (Feature) m_selection.getFirstElement();
       final QName qName = feature.getFeatureType().getQName();
-      if( KMUpdateConstants.QNAME_KMCHANNEL.equals( qName ) )
+      if( NaModelConstants.KM_CHANNEL_ELEMENT_FT.equals( qName ) )
         action.setEnabled( true );
     }
   }

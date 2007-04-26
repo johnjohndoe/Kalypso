@@ -40,6 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
+
 /**
  * @author doemming
  */
@@ -112,153 +116,391 @@ public interface NaModelConstants
   public static final String LOG_INFO_ID = "LOG_INFO";
 
   /** GML property constants */
-  public static final String GML_FEATURE_NAME_PROP = "name";
+  public static final QName GML_FEATURE_NAME_PROP = new QName( NS.GML2, "name" );
 
-  public static final String GML_FEATURE_DESCRIPTION_PROP = "description";
+  public static final QName GML_FEATURE_DESCRIPTION_PROP = new QName( NS.GML2, "description" );
 
   /** hydrotop.xsd */
-  public static final String HYDRO_MEMBER = "hydrotopMember";
+  public static final QName HYDRO_MEMBER = new QName( NS_NAHYDROTOP, "hydrotopMember" );
 
-  public static final String HYDRO_FT = "HydrotopFeatureType";
+  public static final QName HYDRO_ELEMENT_FT = new QName( NS_NAHYDROTOP, "Hydrotop" );
 
-  public static final String HYDRO_PROP_SEAL_CORR_FACTOR = "corrSealing";
+  public static final QName HYDRO_FT = new QName( NS_NAHYDROTOP, "HydrotopFeatureType" );
 
-  public static final String HYDRO_PROP_GEOM = "position";
+  public static final QName HYDRO_PROP_SEAL_CORR_FACTOR = new QName( NS_NAHYDROTOP, "corrSealing" );
 
-  public static final String HYDRO_PROP_AREA = "area";
+  public static final QName HYDRO_PROP_GEOM = new QName( NS_NAHYDROTOP, "position" );
 
-  public static final String HYDRO_PROP_LANDUSE_NAME = "landuse";
+  public static final QName HYDRO_PROP_AREA = new QName( NS_NAHYDROTOP, "area" );
 
-  public static final String HYDRO_PROP_HYDTYPE = "hydType";
+  public static final QName HYDRO_PROP_LANDUSE_NAME = new QName( NS_NAHYDROTOP, "landuse" );
 
-  public static final String HYDRO_PROP_DAINAGETYPE = "drainageType";
+  public static final QName HYDRO_PROP_HYDTYPE = new QName( NS_NAHYDROTOP, "hydType" );
 
-  public static final String HYDRO_ENUM_HYDTYPE_SWALETRENCH = "MuldenRigole";
+  public static final QName HYDRO_PROP_DAINAGETYPE = new QName( NS_NAHYDROTOP, "drainageType" );
 
-  public static final String HYDRO_ENUM_HYDTYPE_GREENROOF = "Dachbegruenung";
+  public static final QName HYDRO_ENUM_HYDTYPE_SWALETRENCH = new QName( NS_NAHYDROTOP, "MuldenRigole" );
 
-  public static final String HYDRO_ENUM_HYDTYPE_REGULAR = "Bodenspeicher";
+  public static final QName HYDRO_ENUM_HYDTYPE_GREENROOF = new QName( NS_NAHYDROTOP, "Dachbegruenung" );
+
+  public static final QName HYDRO_ENUM_HYDTYPE_REGULAR = new QName( NS_NAHYDROTOP, "Bodenspeicher" );
 
   /** namodell.xsd */
   // channels
-  public static final String CHANNEL_COLLECTION_MEMBER_PROP = "ChannelCollectionMember";
+  public static final QName CHANNEL_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "ChannelCollectionMember" );
 
-  public static final String CHANNEL_MEMBER_PROP = "channelMember";
+  public static final QName CHANNEL_MEMBER_PROP = new QName( NS_NAMODELL, "channelMember" );
 
-  public static final String CHANNEL_ABSTRACT_FT = "_Channel";
+  public static final QName CHANNEL_ABSTRACT_FT = new QName( NS_NAMODELL, "_Channel" );
 
-  public static final String CHANNEL_GEOM_PROP = "Ort";
+  public static final QName CHANNEL_GEOM_PROP = new QName( NS_NAMODELL, "Ort" );
 
-  public static final String STORAGE_CHANNEL_ZMLINLINE_PROP = "hvvsqd";
+  public static final QName STORAGE_CHANNEL_ZMLINLINE_PROP = new QName( NS_NAMODELL, "hvvsqd" );
 
-  public static final String STORAGE_CHANNEL_VMAX_PROP = "vmax";
+  public static final QName STORAGE_CHANNEL_VMAX_PROP = new QName( NS_NAMODELL, "vmax" );
 
-  public static final String STORAGE_CHANNEL_VMIN_PROP = "vmin";
+  public static final QName STORAGE_CHANNEL_VMIN_PROP = new QName( NS_NAMODELL, "vmin" );
 
-  public static final String STORAGE_CHANNEL_SV_PROP = "sv";
+  public static final QName STORAGE_CHANNEL_SV_PROP = new QName( NS_NAMODELL, "sv" );
 
-  public static final String STORAGE_CHANNEL_ELEMENT_FT = "StorageChannel";
+  public static final QName STORAGE_CHANNEL_HVVSQD_PROP = new QName( NS_NAMODELL, "hvvsqd" );
 
-  public static final String KM_CHANNEL_ELEMENT_FT = "KMChannel";
+  public static final QName STORAGE_CHANNEL_ELEMENT_FT = new QName( NS_NAMODELL, "StorageChannel" );
 
-  public static final String V_CHANNEL_ELEMENT_FT = "VirtualChannel";
+  public static final QName KM_CHANNEL_ELEMENT_FT = new QName( NS_NAMODELL, "KMChannel" );
+
+  public static final QName V_CHANNEL_ELEMENT_FT = new QName( NS_NAMODELL, "VirtualChannel" );
+
+  public static final QName KM_CHANNEL_PARAMETER_FT = new QName( NS_NAMODELL, "KMParameter" );
+
+  public static final QName KM_CHANNEL_PARAMETER_MEMBER = new QName( NS_NAMODELL, "KMParameterMember" );
+
+  public static final QName KM_CHANNEL_FAKTOR_RKF_PROP = new QName( NS_NAMODELL, "faktorRkf" );
+
+  public static QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" );
+
+  public static final QName KM_CHANNEL_RKF_PROP = new QName( NS_NAMODELL, "rkf" );
+
+  public static final QName KM_CHANNEL_RKV_PROP = new QName( NS_NAMODELL, "rkv" );
+
+  public static final QName KM_CHANNEL_C_PROP = new QName( NS_NAMODELL, "c" );
+
+  public static final QName KM_CHANNEL_FAKTOR_RNF_PROP = new QName( NS_NAMODELL, "faktorRnf" );
+
+  public static final QName KM_CHANNEL_RNF_PROP = new QName( NS_NAMODELL, "rnf" );
+
+  public static final QName KM_CHANNEL_RNV_PROP = new QName( NS_NAMODELL, "rnv" );
+
+  public static QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" );
+
+  public static QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" );
+
+  public static final QName IKNOT_MEMBER_PROP = new QName( NS_NAMODELL, "iknotNodeMember" );
+
+  public static final QName DOWNSTREAM_NODE_MEMBER_PROP = new QName( NS_NAMODELL, "downStreamNodeMember" );
 
   // nodes
-  public static final String NODE_GEOM_PROP = "Ort";
+  public static final QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" );
 
-  public static final String NODE_ELEMENT_FT = "Node";
+  public static final QName NODE_ELEMENT_FT = new QName( NS_NAMODELL, "Node" );
 
-  public static final String NODE_MEMBER_PROP = "nodeMember";
+  public static final QName NODE_MEMBER_PROP = new QName( NS_NAMODELL, "nodeMember" );
 
-  public static final String NODE_COLLECTION_FT = "NodeCollection";
+  public static final QName NODE_BRANCHING_MEMBER_PROP = new QName( NS_NAMODELL, "branchingMember" );
 
-  public static final String NODE_COLLECTION_MEMBER_PROP = "NodeCollectionMember";
+  public static final QName NODE_BRANCHING_NODE_MEMBER_PROP = new QName( NS_NAMODELL, "branchingNodeMember" );
 
-  public static final String NODE_RESULT_TIMESERIESLINK_PROP = "qberechnetZR";
+  public static final QName NODE_VERZW_MEMBER_PROP = new QName( NS_NAMODELL, "verzweigungNodeMember" );
+
+  public static final QName NODE_VERZW_ENTNAHME = new QName( NS_NAMODELL, "KontEntnahme" );
+
+  public static final QName NODE_VERZW_ZUFLUSS = new QName( NS_NAMODELL, "KontZufluss" );
+
+  public static final QName NODE_VERZW_UEBERLAUF = new QName( NS_NAMODELL, "Ueberlauf" );
+
+  public static final QName NODE_VERZW_VERZWEIGUNG = new QName( NS_NAMODELL, "Verzweigung" );
+
+  public static final QName NODE_VERZW_QZUG_PROP = new QName( NS_NAMODELL, "qzug" );
+
+  public static final QName NODE_VERZW_ZPROZ_PROP = new QName( NS_NAMODELL, "zproz" );
+
+  public static final QName NODE_VERZW_QABG_PROP = new QName( NS_NAMODELL, "qabg" );
+
+  public static final QName NODE_VERZW_QUEB_PROP = new QName( NS_NAMODELL, "queb" );
+
+  public static final QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" );
+
+  public static final QName NODE_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "NodeCollectionMember" );
+
+  public static final QName NODE_RESULT_TIMESERIESLINK_PROP = new QName( NS_NAMODELL, "qberechnetZR" );
+
+  public static final QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" );
+
+  public static final QName NODE_ZUFLUSS_ZR_PROP = new QName( NS_NAMODELL, "zuflussZR" );
+
+  public static final QName NODE_PEGEL_ZR_PROP = new QName( NS_NAMODELL, "pegelZR" );
 
   // catchments
-  public static final String CATCHMENT_ELEMENT_FT = "Catchment";
+  public static final QName CATCHMENT_ELEMENT_FT = new QName( NS_NAMODELL, "Catchment" );
 
-  public static final String CATCHMENT_GEOM_PROP = "Ort";
+  public static final QName CATCHMENT_GEOM_PROP = new QName( NS_NAMODELL, "Ort" );
 
-  public static final String CATCHMENT_COLLECTION_MEMBER_PROP = "CatchmentCollectionMember";
+  public static final QName CATCHMENT_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "CatchmentCollectionMember" );
 
-  public static final String CATCHMENT_MEMBER_PROP = "catchmentMember";
+  public static final QName CATCHMENT_MEMBER_PROP = new QName( NS_NAMODELL, "catchmentMember" );
+
+  public static final QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" );
+
+  public static final QName GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" );
+
+  public static final QName STATNPARA_MEMBER = new QName( NS_NAMODELL, "statNParameterMember" );
+
+  public static final QName CATCHMENT_PROP_NGWZU = new QName( NS_NAMODELL, "ngwzu" );
+
+  public static final QName CATCHMENT_PROP_GWWI = new QName( NS_NAMODELL, "gwwi" );
+
+  public static final QName CATCHMENT_PROP_ZFT = new QName( NS_NAMODELL, "zft" );
+
+  public static final QName CATCHMENT_PROP_STATN_DIAG = new QName( NS_NAMODELL, "statNDiag" );
+
+  public static final QName CATCHMENT_PROP_RETBAS = new QName( NS_NAMODELL, "retbas" );
+
+  public static final QName CATCHMENT_PROP_RETINT = new QName( NS_NAMODELL, "retint" );
+
+  public static final QName CATCHMENT_PROP_RETOB = new QName( NS_NAMODELL, "retob" );
+
+  public static final QName CATCHMENT_PROP_RETVS = new QName( NS_NAMODELL, "retvs" );
+
+  public static final QName CATCHMENT_PROP_RETGW = new QName( NS_NAMODELL, "retgw" );
+
+  public static final QName CATCHMENT_PROP_RETKLU = new QName( NS_NAMODELL, "retklu" );
+
+  public static final QName CATCHMENT_PROP_XJAH = new QName( NS_NAMODELL, "xjah" );
+
+  public static final QName CATCHMENT_PROP_FAKTOR_RETBAS = new QName( NS_NAMODELL, "faktorRetbas" );
+
+  public static final QName CATCHMENT_PROP_FAKTOR_RETINT = new QName( NS_NAMODELL, "faktorRetint" );
+
+  public static final QName CATCHMENT_PROP_FAKTOR_RETOB = new QName( NS_NAMODELL, "faktorRetob" );
+
+  public static final QName CATCHMENT_PROP_FAKTOR_RETVS = new QName( NS_NAMODELL, "faktorRetvs" );
+
+  public static final QName CATCHMENT_PROP_FAKTOR_RETGW = new QName( NS_NAMODELL, "faktorRetgw" );
+
+  public static final QName CATCHMENT_PROP_FAKTOR_RETKLU = new QName( NS_NAMODELL, "faktorRetklu" );
+
+  public static final QName CATCHMENT_PROP_IZKN_VERS = new QName( NS_NAMODELL, "izkn_vers" );
+
+  public static final QName CATCHMENT_PROP_IZKN = new QName( NS_NAMODELL, "izkn" );
+
+  public static final QName CATCHMENT_PROP_ZR_NIEDERSCHLAG = new QName( NS_NAMODELL, "niederschlagZR" );
+
+  public static final QName CATCHMENT_PROP_ZR_TEMPERATUR = new QName( NS_NAMODELL, "temperaturZR" );
+
+  public static final QName CATCHMENT_PROP_ZR_VERDUNSTUNG = new QName( NS_NAMODELL, "verdunstungZR" );
+
+  public static final QName CATCHMENT_PROP_ZR_SYNTH = new QName( NS_NAMODELL, "synthZR" );
 
   // swale and trench
 
-  public static final String MRS_FT = "SwaleAndTrench";
+  public static final QName MRS_FT = new QName( NS_NAMODELL, "SwaleAndTrench" );
 
-  public static final String MRS_COLLECTION_FT = "SwaleAndTrenchCollection";
+  public static final QName MRS_COLLECTION_FT = new QName( NS_NAMODELL, "SwaleAndTrenchCollection" );
 
-  public static final String MRS_COLLECTION_MEMBER_PROP = "SwaleAndTrenchCollectionMember";
+  public static final QName MRS_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "SwaleAndTrenchCollectionMember" );
 
-  public static final String MRS_MEMBER_PROP = "swaleTrenchMember";
+  public static final QName MRS_MEMBER_PROP = new QName( NS_NAMODELL, "swaleTrenchMember" );
 
-  public static final String MRS_GEOM_PROP = "position";
+  public static final QName MRS_GEOM_PROP = new QName( NS_NAMODELL, "position" );
 
-  public static final String MRS_LENGTH_PROP = "length";
+  public static final QName MRS_LENGTH_PROP = new QName( NS_NAMODELL, "length" );
 
-  public static final String MRS_WIDTH_PROP = "widthTrench";
+  public static final QName MRS_WIDTH_PROP = new QName( NS_NAMODELL, "widthTrench" );
 
-  public static final String MRS_SLOPE_PROP = "drainPipeSlope";
+  public static final QName MRS_SLOPE_PROP = new QName( NS_NAMODELL, "drainPipeSlope" );
 
-  public static final String MRS_KF_PIPE_PROP = "kfPipe";
+  public static final QName MRS_KF_PIPE_PROP = new QName( NS_NAMODELL, "kfPipe" );
 
-  public static final String MRS_DIAMETER_PIPE_PROP = "diameterPipe";
+  public static final QName MRS_DIAMETER_PIPE_PROP = new QName( NS_NAMODELL, "diameterPipe" );
 
-  public static final String MRS_ROUGHNESS_PIPE_PROP = "roughnessPipe";
+  public static final QName MRS_ROUGHNESS_PIPE_PROP = new QName( NS_NAMODELL, "roughnessPipe" );
 
-  public static final String MRS_LANDUSE_TYPE_PROP = "nutzung";
+  public static final QName MRS_LANDUSE_TYPE_PROP = new QName( NS_NAMODELL, "nutzung" );
 
-  public static final String MRS_SOIL_PROFIL_TYPE_PROP = "boden";
+  public static final QName MRS_SOIL_PROFIL_TYPE_PROP = new QName( NS_NAMODELL, "boden" );
 
-  public static final String MRS_MAX_PERK_PROP = "maxPerk";
+  public static final QName MRS_MAX_PERK_PROP = new QName( NS_NAMODELL, "maxPerk" );
 
-  public static final String MRS_INFLOW_GW_PROP = "InflowGW";
+  public static final QName MRS_INFLOW_GW_PROP = new QName( NS_NAMODELL, "InflowGW" );
 
   // link Properties
-  public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
+  public static final QName LINK_CATCHMENT_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" );
 
-  public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember";
+  public static final QName LINK_CHANNEL_DOWNSTREAMNODE = new QName( NS_NAMODELL, "downStreamNodeMember" );
 
-  public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember";
+  public static final QName LINK_NODE_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" );
 
-  public static final String LINK_MRS_DISCHARGE_NODE_PROP = "dischargeNode";
+  public static final QName LINK_MRS_DISCHARGE_NODE_PROP = new QName( NS_NAMODELL, "dischargeNode" );
 
   // default values
-  public static final String DEFAULT_MRS_SOIL_PROFIL_PROP = "mrsp";
+  public static final QName DEFAULT_MRS_SOIL_PROFIL_PROP = new QName( NS_NAMODELL, "mrsp" );
 
   // misc
-  public static final String GENERATE_RESULT_PROP = "generateResult";
+  public static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" );
+
+  public static final QName NA_MODEL_FLAECH_PROP = new QName( NS_NAMODELL, "flaech" );
+
+  public static final QName NA_MODEL_ROOT_FT = new QName( NS_NAMODELL, "NaModell" );
+
+  public static final QName NA_CATCHMENT_COLLECTION_FT = new QName( NS_NAMODELL, "CatchmentCollection" );
+
+  public static final QName NA_CHANNEL_COLLECTION_FT = new QName( NS_NAMODELL, "ChannelCollection" );
 
   /** parameter.xsd */
-  public static final String PARA_LANDUSE_FT = "LanduseType";
+  public static final QName PARA_ROOT_FT = new QName( NS_NAPARAMETER, "Parameter" );
 
-  public static final String PARA_LANDUSE_NAME = "Landuse";
+  public static final QName PARA_LANDUSE_FT = new QName( NS_NAPARAMETER, "LanduseType" );
 
-  public static final String PARA_PROP_SEALING_MEMBER = "sealingMember";
+  public static final QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" );
 
-  public static final String PARA_PROP_LANDUSE_MEMBER = "landuseMember";
+  public static final QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" );
 
-  public static final String PARA_LANDUSE_PROP_SEALING = "m_vers";
+  public static final QName PARA_Soiltype_FT = new QName( NS_NAPARAMETER, "Soiltype" );
 
-  public static final String PARA_LANDUSE_PROP_SEALING_LINK = "sealingLink";
+  public static final QName PARA_SoilLayerParameter_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" );
 
-  public static final String PARA_LANDUSE_PROP_LANDUSE_LINK = "idealLandUsePeriodLink";
+  public static final QName PARA_SOIL_LAYER_PARAMETER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerParameterMember" );
+
+  public static final QName PARA_LANDUSE_NAME = new QName( NS_NAPARAMETER, "Landuse" );
+
+  public static final QName PARA_SNOW_NAME = new QName( NS_NAPARAMETER, "Snow" );
+
+  public static final QName PARA_SoilLayer_FT = new QName( NS_NAPARAMETER, "SoilLayer" );
+
+  public static final QName PARA_PROP_SEALING_MEMBER = new QName( NS_NAPARAMETER, "sealingMember" );
+
+  public static final QName PARA_PROP_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "landuseMember" );
+
+  public static final QName PARA_PROP_SNOW_MEMBER = new QName( NS_NAPARAMETER, "snowMember" );
+
+  public static final QName PARA_IDEAL_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "idealLandUseMember" );
+
+  public static final QName PARA_IDEAL_LANDUSE = new QName( NS_NAPARAMETER, "IdealLandUse" );
+
+  public static final QName PARA_IDEAL_LANDUSE_ZML = new QName( NS_NAPARAMETER, "idealLandUseZML" );
+
+  public static final QName PARA_SOILTYPE_MEMBER = new QName( NS_NAPARAMETER, "soiltypeMember" );
+
+  public static final QName PARA_LANDUSE_PROP_SEALING = new QName( NS_NAPARAMETER, "m_vers" );
+
+  public static final QName PARA_LANDUSE_PROP_SEALING_LINK = new QName( NS_NAPARAMETER, "sealingLink" );
+
+  public static final QName PARA_LANDUSE_PROP_LANDUSE_LINK = new QName( NS_NAPARAMETER, "idealLandUsePeriodLink" );
+
+  public static final QName PARA_SOIL_LAYER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerMember" );
+
+  public static final QName PARA_SOIL_LAYER_LINK = new QName( NS_NAPARAMETER, "soilLayerLink" );
+
+  public static final QName PARA_PROP_XRET = new QName( NS_NAPARAMETER, "xret" );
 
   // default values
-  public static final String DEFAULT_MRS_LANDUSE_PROP = "15"; // Nutzung Grünland
+  public static final QName DEFAULT_MRS_LANDUSE_PROP = new QName( NS_NAPARAMETER, "15" ); // Nutzung Grünland
 
   /** initalValues.xsd */
-  public static final String INI_CATCHMENT_MEMBER_PROP = "catchmentMember";
+  public static final QName INI_CATCHMENT_MEMBER_PROP = new QName( NS_INIVALUES, "catchmentMember" );
 
-  public static final String INI_CHANNEL_MEMBER_PROP = "channelMember";
+  public static final QName INI_CHANNEL_MEMBER_PROP = new QName( NS_INIVALUES, "channelMember" );
 
-  public static final String INI_HYD_MEMBER_PROP = "IniHyd";
+  public static final QName INI_HYD_MEMBER_PROP = new QName( NS_INIVALUES, "IniHyd" );
 
-  public static final String INI_HYD_FEATUREID_PROP = "featureId";
+  public static final QName INI_HYD_FEATUREID_PROP = new QName( NS_INIVALUES, "featureId" );
 
-  public static final String INI_CATCHMENT_LINK_HYD_PROP = "hyd";
+  public static final QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" );
 
+  /** control.xsd */
+  public static final QName CONTROL_STARTSIMULATION = new QName( NS_NAMETA, "startsimulation" );
+
+  public static final QName CONTROL_FORECAST = new QName( NS_NAMETA, "startforecast" );
+
+  public static final QName CONTROL_SCENARIO_ID_PROP = new QName( NS_NAMETA, "scenarioId" );
+
+  public static final QName CONTROL_HOURS_FORECAST_PROP = new QName( NS_NAMETA, "hoursforecast" );
+
+  public static final QName CONTROL_MINUTES_TIMESTEP_PROP = new QName( NS_NAMETA, "minutesTimestep" );
+
+  public static final QName CONTROL_VERSION_KALYPSONA_PROP = new QName( NS_NAMETA, "versionKalypsoNA" );
+
+  public static final QName CONTROL_PNS_PROP = new QName( NS_NAMETA, "pns" );
+
+  public static final QName CONTROL_XJAH_PROP = new QName( NS_NAMETA, "xjah" );
+
+  public static final QName CONTROL_XWAHL2_PROP = new QName( NS_NAMETA, "xwahl2" );
+
+  public static final QName CONTROL_IPVER_PROP = new QName( NS_NAMETA, "ipver" );
+
+  /** synthN.xsd */
+  public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
+
+  /** nacontrol.xsd */
+  public static final QName NACONTROL_INITIALVALUEDATE_PROP = new QName( NS_NACONTROL, "InitialValueDate" );
+
+  public static final QName NACONTROL_WRITE_PROP = new QName( NS_NACONTROL, "write" );
+
+  public static final QName NACONTROL_INITIALDATE_PROP = new QName( NS_NACONTROL, "initialDate" );
+
+  public static final QName NACONTROL_TMP_PROP = new QName( NS_NACONTROL, "tmp" );
+
+  public static final QName NACONTROL_PRE_PROP = new QName( NS_NACONTROL, "pre" );
+
+  public static final QName NACONTROL_SCH_PROP = new QName( NS_NACONTROL, "sch" );
+
+  public static final QName NACONTROL_BOF_PROP = new QName( NS_NACONTROL, "bof" );
+
+  public static final QName NACONTROL_BSP_PROP = new QName( NS_NACONTROL, "bsp" );
+
+  public static final QName NACONTROL_GWS_PROP = new QName( NS_NACONTROL, "gws" );
+
+  public static final QName NACONTROL_QGS_PROP = new QName( NS_NACONTROL, "qgs" );
+
+  public static final QName NACONTROL_QGG_PROP = new QName( NS_NACONTROL, "qgg" );
+
+  public static final QName NACONTROL_QNA_PROP = new QName( NS_NACONTROL, "qna" );
+
+  public static final QName NACONTROL_QIF_PROP = new QName( NS_NACONTROL, "qif" );
+
+  public static final QName NACONTROL_QVS_PROP = new QName( NS_NACONTROL, "qvs" );
+
+  public static final QName NACONTROL_QBS_PROP = new QName( NS_NACONTROL, "qbs" );
+
+  public static final QName NACONTROL_QT1_PROP = new QName( NS_NACONTROL, "qt1" );
+
+  public static final QName NACONTROL_QTG_PROP = new QName( NS_NACONTROL, "qtg" );
+
+  public static final QName NACONTROL_QGW_PROP = new QName( NS_NACONTROL, "qgw" );
+
+  public static final QName NACONTROL_VET_PROP = new QName( NS_NACONTROL, "vet" );
+
+  public static final QName NACONTROL_QMR_PROP = new QName( NS_NACONTROL, "qmr" );
+
+  public static final QName NACONTROL_HYD_PROP = new QName( NS_NACONTROL, "hyd" );
+
+  public static final QName NACONTROL_BIL_PROP = new QName( NS_NACONTROL, "bil" );
+
+  public static final QName NACONTROL_NMQ_PROP = new QName( NS_NACONTROL, "nmq" );
+
+  public static final QName NACONTROL_SPI_PROP = new QName( NS_NACONTROL, "spi" );
+
+  public static final QName NACONTROL_SUP_PROP = new QName( NS_NACONTROL, "sup" );
+
+  public static final QName NACONTROL_ROOTNODE_PROP = new QName( NS_NACONTROL, "rootNode" );
+
+  public static final QName NACONTROL_AUTOCALI_PROP = new QName( NS_NACONTROL, "automaticCallibration" );
+
+  public static final QName NACONTROL_ACCPRED_PROP = new QName( NS_NACONTROL, "accuracyPrediction" );
+
+  public static final QName NACONTROL_USEOFFSTARTPRED_PROP = new QName( NS_NACONTROL, "useOffsetStartPrediction" );
+
+  public static final QName NACONTROL_USEOFFENDPRED_PROP = new QName( NS_NACONTROL, "useOffsetEndPrediction" );
+
+  public static final QName NACONTROL_USE_RESULTS_PROP = new QName( NS_NACONTROL, "useResults" );
 }

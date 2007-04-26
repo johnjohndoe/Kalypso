@@ -14,7 +14,6 @@ import java.util.TreeMap;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
@@ -81,7 +80,8 @@ public class BlockTimeSeriesTest extends TestCase
     final File tmpFile = File.createTempFile( "block", "txt" );
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     final FileWriter fileWriter = new FileWriter( tmpFile );
-    CopyUtils.copy( resourceAsStream, fileWriter );
+    IOUtils.copy( resourceAsStream, fileWriter );
+//    CopyUtils.copy( resourceAsStream, fileWriter );
     IOUtils.closeQuietly( fileWriter );
     block.importBlockFile( tmpFile );
     final TreeMap map = block.getTimeSerie( key );

@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -100,7 +101,7 @@ public class ImportShapeFile
       registry.registerTypeHandler( new ObservationLinkHandler() );
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
       final GMLSchema gmlSchema = schemaCatalog.getSchema( null, schemaURL );
-      final IFeatureType targetFT = gmlSchema.getFeatureType( "Node" );
+      final IFeatureType targetFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( targetFT );
       String label = annotation.getLabel();
       String tooltip = annotation.getTooltip();
@@ -110,7 +111,7 @@ public class ImportShapeFile
       // schemaURL);
       // GMLWorkspace gmlModel = GmlSerializer.createGMLWorkspace(modelURL, new UrlResolver());
 
-      IFeatureType catchmentFt = gmlSchema.getFeatureType( "Catchment" );
+      IFeatureType catchmentFt = gmlSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
       // Featurefeature = FeatureFactory.createFeature("c1",
       // catchmentFt);
       // FeatureProperty fpNum = FeatureFactory.createFeatureProperty(
@@ -161,7 +162,7 @@ public class ImportShapeFile
       for( int j = 0; j < targetFtp.length; j++ )
       {
         Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
-        combo.setData( "target", targetFtp[j].getName() );
+        combo.setData( "target", targetFtp[j].getQName().getLocalPart() );
         combo.setLayoutData( new GridData( GridData.CENTER ) );
         combo.redraw();
         combo.addSelectionListener( new SelectionAdapter()
@@ -182,7 +183,7 @@ public class ImportShapeFile
         {
           if( i == 0 )
             combo.add( "-NULL-" );
-          combo.add( sourceFtp[i].getName() );
+          combo.add( sourceFtp[i].getQName().getLocalPart() );
         }
         combo.select( 0 );
       }
@@ -202,7 +203,7 @@ public class ImportShapeFile
       for( int i = 0; i < targetFtp.length; i++ )
       {
         IPropertyType featureTypeProperty = targetFtp[i];
-        String name = featureTypeProperty.getName();
+        String name = featureTypeProperty.getQName().getLocalPart();
         // table0.setLinesVisible (true);
         // TableItem tableItem1 = new TableItem (table0, SWT.NONE);
         // tableItem1.setText (name);

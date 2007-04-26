@@ -64,6 +64,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -88,7 +89,7 @@ public class NutzungManager extends AbstractManager
 
   private final IFeatureType m_IdleLanduseFT;
 
-  final Hashtable m_LTable = new Hashtable();
+  final Hashtable<String, Integer> m_LTable = new Hashtable<String, Integer>();
 
   private int m_idCounter = 0;
 
@@ -97,8 +98,8 @@ public class NutzungManager extends AbstractManager
     super( conf.getParameterFormatURL() );
     // m_crs = crs;
     m_conf = conf;
-    m_LanduseFT = parameterSchema.getFeatureType( "Landuse" );
-    m_IdleLanduseFT = parameterSchema.getFeatureType( "IdealLandUse" );
+    m_LanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_LANDUSE );
+    m_IdleLanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_IDEAL_LANDUSE );
 
   }
 
@@ -164,7 +165,7 @@ public class NutzungManager extends AbstractManager
     }
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
-    final IPropertyType pt = feature.getFeatureType().getProperty( "idealLandUsePeriodLink" );
+    final IPropertyType pt = feature.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
     fePropMap.put( pt, idleLanduseFE.getId() );
     line = reader.readLine();
 
@@ -177,14 +178,14 @@ public class NutzungManager extends AbstractManager
   public void writeFile( GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( "landuseMember" );
+    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     Iterator iter = list.iterator();
 
     while( iter.hasNext() )
     {
 
       final Feature nutzungFE = (Feature) iter.next();
-      final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( "idealLandUsePeriodLink" );
+      final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
       final Feature linkedIdealLanduseFE = paraWorkspace.resolveLink( nutzungFE, rt );
       writeFeature( nutzungFE, linkedIdealLanduseFE );
     }
@@ -200,7 +201,7 @@ public class NutzungManager extends AbstractManager
     String name;
     try
     {
-      name = linkedIdealLanduseFE.getProperty( "name" ).toString();
+      name = linkedIdealLanduseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString();
     }
     catch( Exception e )
     {
@@ -209,7 +210,7 @@ public class NutzungManager extends AbstractManager
     writer.write( name );
     writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung!
     writer.write( "xxdatum     F EVA    We    BIMAX\n" );
-    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( "idealLandUseZML" );
+    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML );
     writeIdealLanduse( (IObservation) idealLanduseProp, writer );
     writer.write( "993456789012345678901234567890" );
     IOUtils.closeQuietly( writer );

@@ -22,7 +22,7 @@ public class KMValueFromQinterpolation extends AbstractKMValue
 
   private final AbstractKMValue m_km1;
 
-  private boolean m_changed;
+//  private boolean m_changed;
 
   public KMValueFromQinterpolation( double q, AbstractKMValue km1, AbstractKMValue km2 ) throws SameXValuesException
   {
@@ -48,16 +48,19 @@ public class KMValueFromQinterpolation extends AbstractKMValue
     System.out.println( "Ergebnis:" + this );
   }
 
+  @Override
   public double getLength( )
   {
     return m_km1.getLength();
   }
 
+  @Override
   public double getAlpha( )
   {
     return m_aplha;
   }
 
+  @Override
   public double getK( )
   {
     return m_k;
@@ -112,9 +115,9 @@ public class KMValueFromQinterpolation extends AbstractKMValue
     m_nf = nf;
   }
 
-  public void setMaxNReached( boolean isChanged )
-  {
-    m_changed = isChanged;
-  }
+//  public void setMaxNReached( boolean isChanged )
+//  {
+//    m_changed = isChanged;
+//  }
 
 }

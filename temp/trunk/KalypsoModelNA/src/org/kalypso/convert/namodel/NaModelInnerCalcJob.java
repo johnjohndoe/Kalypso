@@ -48,10 +48,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -80,7 +78,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -148,13 +145,11 @@ public class NaModelInnerCalcJob implements ISimulation
 
   // private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
-  // private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
-
-  // private final String EXE_FILE_2_04beta = "start/kalypso_2.0.4beta.exe";
-
   private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";
 
   private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe";
+
+  private final String EXE_FILE_2_07 = "start/kalypso_2.0.7.exe";
 
   private final String EXE_FILE_TEST = "start/kalypso_test.exe";
 
@@ -194,16 +189,7 @@ public class NaModelInnerCalcJob implements ISimulation
     try
     {
       File loggerFile = new File( tmpdir, "infoLog.txt" );
-      // try
-      // {
-      // Writer logWriter = new FileWriter( loggerFile );
-      // logWriter.write( getLogHeader() );
-      // logWriter.close();
-      // }
-      // catch( IOException e )
-      // {
-      // e.printStackTrace();
-      // }
+
       h = new StreamHandler( new FileOutputStream( loggerFile ), f );
       logger.addHandler( h );
       h.flush();
@@ -285,7 +271,7 @@ public class NaModelInnerCalcJob implements ISimulation
       copyExecutable( tmpdir );
 
       // starte berechnung
-      monitor.setMessage( "starte Simulationskern" );
+      monitor.setMessage( "Berechnung wird durchgeführt..." );
       if( monitor.isCanceled() )
         return;
       startCalculation( tmpdir, monitor );
@@ -311,18 +297,20 @@ public class NaModelInnerCalcJob implements ISimulation
 
   }
 
-  private String getLogHeader( )
-  {
-    return ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        + "\n"
-        + "<LogMessage xmlns=\"http://www.tuhh.de/NAFortranLog\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:zmlinline=\"inline.zml.kalypso.org\" xmlns:obslink=\"obslink.zml.kalypso.org\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
-        + "\n" + "<log>" + "\n");
-  }
-
-  private String getLogFooter( )
-  {
-    return ("</log>" + "\n" + "</LogMessage>");
-  }
+  // private String getLogHeader( )
+  // {
+  // return ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+  // + "\n"
+  // + "<LogMessage xmlns=\"http://www.tuhh.de/NAFortranLog\" xmlns:gml=\"http://www.opengis.net/gml\"
+  // xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:zmlinline=\"inline.zml.kalypso.org\"
+  // xmlns:obslink=\"obslink.zml.kalypso.org\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+  // + "\n" + "<log>" + "\n");
+  // }
+  //
+  // private String getLogFooter( )
+  // {
+  // return ("</log>" + "\n" + "</LogMessage>");
+  // }
 
   /**
    * @param naControlWorkspace
@@ -335,11 +323,11 @@ public class NaModelInnerCalcJob implements ISimulation
   {
     final Feature rootFeature = naControlWorkspace.getRootFeature();
     // final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
-    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
+    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
     double accuracyPrediction = 5d;
     try
     {
-      accuracyPrediction = ((Double) rootFeature.getProperty( "accuracyPrediction" )).doubleValue();
+      accuracyPrediction = ((Double) rootFeature.getProperty( NaModelConstants.NACONTROL_ACCPRED_PROP )).doubleValue();
     }
     catch( Exception e )
     {
@@ -402,25 +390,6 @@ public class NaModelInnerCalcJob implements ISimulation
     final Calendar calBegin = timeSettings.getCalendar( startPrediction );
     final Calendar calEnd = timeSettings.getCalendar( endPrediction );
 
-    // test
-    // final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
-    // observationType.setName( "orginal-ergebnis" );
-    // final Marshaller m = ZmlFactory.getMarshaller();
-    // m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    // FileOutputStream stream = null;
-    // OutputStreamWriter writer = null;
-    // try
-    // {
-    // stream = new FileOutputStream( new File( "C://TMP/2-test-org.zml" ) );
-    // writer = new OutputStreamWriter( stream, "UTF-8" );
-    // m.marshal( observationType, writer );
-    // }
-    // finally
-    // {
-    // IOUtils.closeQuietly( writer );
-    // IOUtils.closeQuietly( stream );
-    // }
-    // test
     final File[] result = new File[] { getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ), getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ),
         getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" ) };
     // accuracyPrediction // cm/day
@@ -429,11 +398,11 @@ public class NaModelInnerCalcJob implements ISimulation
 
     final double offsetStartPrediction;
     final double offsetEndPrediction;
-    if( FeatureHelper.booleanIsTrue( rootFeature, "useOffsetStartPrediction", false ) )
+    if( FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_USEOFFSTARTPRED_PROP, false ) )
       offsetStartPrediction = deltaMeasureCalculation;
     else
       offsetStartPrediction = 0;
-    if( FeatureHelper.booleanIsTrue( rootFeature, "useOffsetEndPrediction", false ) )
+    if( FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_USEOFFENDPRED_PROP, false ) )
       offsetEndPrediction = deltaMeasureCalculation;
     else
       offsetEndPrediction = 0;
@@ -537,11 +506,11 @@ public class NaModelInnerCalcJob implements ISimulation
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
       hydrotopWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID ), null );
-      final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
+      final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT ) );
       CS_CoordinateSystem targetCS = null;
       for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
       {
-        final GM_Object geom = (GM_Object) hydroFES[i].getProperty( "position" );
+        final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
         if( geom != null && geom.getCoordinateSystem() != null )
           targetCS = geom.getCoordinateSystem();
       }
@@ -556,18 +525,16 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // setting duration of simulation...
     // start
-    // conf.setSimulationStart( (Date) metaFE.getProperty( "startsimulation" ) );
-    final Date start = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( "startsimulation" ) );
+    final Date start = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION ) );
     conf.setSimulationStart( start );
-    conf.setSzenarioID( (String) metaFE.getProperty( "scenarioId" ) );
+    conf.setSzenarioID( (String) metaFE.getProperty( NaModelConstants.CONTROL_SCENARIO_ID_PROP ) );
     // start forecast
 
-    // final Date startForecastDate = (Date) metaFE.getProperty( "startforecast" );
-    final Date startForecastDate = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( "startforecast" ) );
+    final Date startForecastDate = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( NaModelConstants.CONTROL_FORECAST ) );
     conf.setSimulationForecasetStart( startForecastDate );
     // end of simulation
     int hoursForecast = 0; // default length of forecast hours
-    final Integer hoursOfForecast = (Integer) metaFE.getProperty( "hoursforecast" );
+    final Integer hoursOfForecast = (Integer) metaFE.getProperty( NaModelConstants.CONTROL_HOURS_FORECAST_PROP );
     if( hoursOfForecast != null )
       hoursForecast = hoursOfForecast.intValue();
     final Calendar c = Calendar.getInstance();
@@ -578,29 +545,29 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // calculate timestep
     int minutesTimeStep = 60;
-    final Integer minutesOfTimeStep = (Integer) metaFE.getProperty( "minutesTimestep" );
+    final Integer minutesOfTimeStep = (Integer) metaFE.getProperty( NaModelConstants.CONTROL_MINUTES_TIMESTEP_PROP );
     if( minutesOfTimeStep != null )
       minutesTimeStep = minutesOfTimeStep.intValue() != 0 ? minutesOfTimeStep.intValue() : 60;
     conf.setMinutesOfTimeStep( minutesTimeStep );
 
     // choose simulation kernel
-    chooseSimulationExe( (String) metaFE.getProperty( "versionKalypsoNA" ) );
+    chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ) );
 
     // choose precipitation form and parameters
-    final Boolean pns = (Boolean) metaFE.getProperty( "pns" );
+    final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
     conf.setUsePrecipitationForm( pns == null ? false : pns );
     if( conf.isUsePrecipitationForm().equals( true ) )
     {
       // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
-      conf.setAnnuality( 1d / (Double) metaFE.getProperty( "xjah" ) );
-      Double durationMinutes = (Double) metaFE.getProperty( "xwahl2" );
+      conf.setAnnuality( 1d / (Double) metaFE.getProperty( NaModelConstants.CONTROL_XJAH_PROP ) );
+      Double durationMinutes = (Double) metaFE.getProperty( NaModelConstants.CONTROL_XWAHL2_PROP );
       Double durationHours = durationMinutes / 60d;
       conf.setDuration( durationHours );
-      conf.setForm( (String) metaFE.getProperty( "ipver" ) );
+      conf.setForm( (String) metaFE.getProperty( NaModelConstants.CONTROL_IPVER_PROP ) );
     }
 
     // set rootnode
-    conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
+    conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP ) );
 
     // generate control files
     NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
@@ -611,23 +578,6 @@ public class NaModelInnerCalcJob implements ISimulation
     // generate modell files
     NAModellConverter main = new NAModellConverter( conf );
     main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
-
-    // TODO: wird das hier noch benötigt (Weisse Elster)?
-    // create temperatur und verdunstung timeseries
-    // final File klimaDir = new File( tmpDir, "klima.dat" );
-    // final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
-    // final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
-    // final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(),
-    // conf.getSimulationEnd() );
-
-    // if( !tempFile.exists() )
-    // {
-    // writer.writeTmpFile( tempFile );
-    // }
-    // if( !verdFile.exists() )
-    // {
-    // writer.writeVerdFile( verdFile );
-    // }
 
     // dump idmapping to file
     final IDManager idManager = conf.getIdManager();
@@ -679,12 +629,12 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void updateNode2NodeNet( final GMLWorkspace workspace ) throws Exception
   {
-    final IFeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
-    final IFeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
-    final IFeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
-    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
+    final IFeatureType ueberlaufFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
+    final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
+    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( nodeFT );
-    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( "branchingMember" );
+    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature nodeFE = features[i];
@@ -692,7 +642,7 @@ public class NaModelInnerCalcJob implements ISimulation
       if( branchingFE != null )
       {
         final IFeatureType branchFT = branchingFE.getFeatureType();
-        final IRelationType branchingNodeMemberRT = (IRelationType) branchFT.getProperty( "branchingNodeMember" );
+        final IRelationType branchingNodeMemberRT = (IRelationType) branchFT.getProperty( NaModelConstants.NODE_BRANCHING_NODE_MEMBER_PROP );
         if( branchFT == kontEntnahmeFT || branchFT == ueberlaufFT || branchFT == verzweigungFT )
         {
           final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
@@ -713,17 +663,17 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void updateResultAsZuflussNet( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultprovider ) throws Exception
   {
-    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
-    final IFeatureType abstractChannelFT = workspace.getFeatureType( "_Channel" );
+    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    final IFeatureType abstractChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CHANNEL_ABSTRACT_FT );
     final Feature[] features = workspace.getFeatures( nodeFT );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature nodeFE = features[i];
       if( nodeResultprovider.resultExists( nodeFE ) )
       {
-        final Object resultValue = nodeFE.getProperty( "qberechnetZR" );
+        final Object resultValue = nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
         // disconnect everything upstream (channel -> node)
-        final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( "downStreamNodeMember" );
+        final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
         final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
         for( int j = 0; j < channelFEs.length; j++ )
         {
@@ -733,7 +683,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // add as zufluss
         final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
         // final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
-        newNodeFE.setProperty( "zuflussZR", resultValue );
+        newNodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, resultValue );
       }
     }
   }
@@ -766,14 +716,14 @@ public class NaModelInnerCalcJob implements ISimulation
   private void updateZuflussNet( final GMLWorkspace workspace ) throws Exception
   {
 
-    final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
-    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IFeatureType kontZuflussFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ZUFLUSS );
+    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( nodeFT );
-    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( "branchingMember" );
+    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature nodeFE = features[i];
-      final Object zuflussValue = nodeFE.getProperty( "zuflussZR" );
+      final Object zuflussValue = nodeFE.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
       if( zuflussValue != null )
       {
         // update zufluss
@@ -781,8 +731,8 @@ public class NaModelInnerCalcJob implements ISimulation
         // nove zufluss-property to new node
         // nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
         // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
-        nodeFE.setProperty( "zuflussZR", null );
-        newNode.setProperty( "zuflussZR", zuflussValue );
+        nodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
+        newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
       }
       final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
@@ -818,15 +768,15 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
   {
-    final IFeatureType nodeColFT = workspace.getFeatureType( "NodeCollection" );
-    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
-    final IRelationType nodeMemberRT = (IRelationType) nodeColFT.getProperty( "nodeMember" );
-    final IFeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
+    final IFeatureType nodeColFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
+    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    final IRelationType nodeMemberRT = (IRelationType) nodeColFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+    final IFeatureType vChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
 
-    final IFeatureType channelColFT = workspace.getFeatureType( "ChannelCollection" );
-    final IRelationType channelMemberRT = (IRelationType) channelColFT.getProperty( "channelMember" );
+    final IFeatureType channelColFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
+    final IRelationType channelMemberRT = (IRelationType) channelColFT.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
     final Feature channelColFE = workspace.getFeatures( channelColFT )[0];
-    final Feature nodeColFE = workspace.getFeatures( workspace.getFeatureType( "NodeCollection" ) )[0];
+    final Feature nodeColFE = workspace.getFeatures( workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_COLLECTION_FT ) )[0];
 
     // add to collections:
     final Feature newChannelFE1 = workspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
@@ -835,16 +785,16 @@ public class NaModelInnerCalcJob implements ISimulation
     workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE3 );
     final Feature newNodeFE2 = workspace.createFeature( nodeColFE, nodeMemberRT, nodeFT );
     workspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
-    final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
+    final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
 
     // 3 -> 2
     workspace.setFeatureAsAggregation( newChannelFE3, downStreamNodeMemberRT, newNodeFE2.getId(), true );
     // 2 -> 1
-    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( "downStreamChannelMember" );
+    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
     workspace.setFeatureAsAggregation( newNodeFE2, downStreamChannelMemberRT, newChannelFE1.getId(), true );
     // 1 -> existing
 
-    final IRelationType downStreamNodeMemberRT1 = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
+    // final IRelationType downStreamNodeMemberRT1 = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
     workspace.setFeatureAsAggregation( newChannelFE1, downStreamNodeMemberRT, existingNode.getId(), true );
     return newNodeFE2;
   }
@@ -857,10 +807,10 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void updateGWNet( final GMLWorkspace workspace )
   {
-    final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
-    final IFeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
+    final IFeatureType catchmentFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    final IFeatureType vChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( catchmentFT );
-    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchmentFT.getProperty( "entwaesserungsStrangMember" );
+    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature catchmentFE = features[i];
@@ -868,7 +818,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
       if( orgChannelFE == null )
         continue;
-      final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
+      final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
       final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
       final Feature newChannelFE = workspace.createFeature( catchmentFE, entwaesserungsStrangMemberRT, vChannelFT );
       // set new relation: catchment -> new V-channel
@@ -883,7 +833,7 @@ public class NaModelInnerCalcJob implements ISimulation
       // set new relation: new V-channel -> downstream node
       try
       {
-        final IRelationType downStreamNodeMemberRT2 = (IRelationType) newChannelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+        final IRelationType downStreamNodeMemberRT2 = (IRelationType) newChannelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
         workspace.addFeatureAsAggregation( newChannelFE, downStreamNodeMemberRT2, 1, nodeFE.getId() );
       }
       catch( Exception e )
@@ -904,21 +854,19 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_TEST;
     // else if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
     // m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
-    // else if( kalypsoNAVersion.equals( "v2.0.2" ) )
-    // m_kalypsoKernelPath = EXE_FILE_2_02;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_06;
-    // else if( kalypsoNAVersion.equals( "v2.0.4" ) )
-    // m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "v2.0.5" ) )
       m_kalypsoKernelPath = EXE_FILE_2_05beta;
     else if( kalypsoNAVersion.equals( "v2.0.6" ) )
       m_kalypsoKernelPath = EXE_FILE_2_06;
+    else if( kalypsoNAVersion.equals( "v2.0.7" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_07;
+    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_07;
     else
     {
       System.out.println( "Sie haben keine Version des Fortran Codes angegeben oder \n" + " die von Ihnen angegebene Version wird nicht weiter unterstützt.\n"
           + " Es wird mit der neuesten version gerechnet." );
-      m_kalypsoKernelPath = EXE_FILE_2_06;
+      m_kalypsoKernelPath = EXE_FILE_2_07;
     }
   }
 
@@ -975,29 +923,29 @@ public class NaModelInnerCalcJob implements ISimulation
   private void updateFactorParameter( GMLWorkspace modellWorkspace )
   {
     // Catchments
-    final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace.getFeatureType( "Catchment" ) );
+    final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ) );
     update( catchmentFEs, m_catchmentFactorParameterTarget, m_catchmentFactorsParameter );
 
     // KMChannels
-    final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace.getFeatureType( "KMChannel" ) );
+    final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT ) );
     for( int i = 0; i < kmChanneFEs.length; i++ )
     {
       Feature feature = kmChanneFEs[i];
-      double rkfFactor = FeatureHelper.getAsDouble( feature, "faktorRkf", 1.0 );
-      double rnfFactor = FeatureHelper.getAsDouble( feature, "faktorRnf", 1.0 );
-      List kmParameter = (List) feature.getProperty( "KMParameterMember" );
+      double rkfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RKF_PROP, 1.0 );
+      double rnfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RNF_PROP, 1.0 );
+      List kmParameter = (List) feature.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
       Iterator iterator = kmParameter.iterator();
       while( iterator.hasNext() )
       {
         final Feature kmParameterFE = (Feature) iterator.next();
         // rnf
-        final double _rnf = rnfFactor * FeatureHelper.getAsDouble( kmParameterFE, "rnf", 1.0 );
+        final double _rnf = rnfFactor * FeatureHelper.getAsDouble( kmParameterFE, NaModelConstants.KM_CHANNEL_RNF_PROP, 1.0 );
         // FeatureProperty rnfProp = FeatureFactory.createFeatureProperty( "rnf", new Double( _rnf ) );
-        kmParameterFE.setProperty( "rnf", new Double( _rnf ) );
+        kmParameterFE.setProperty( NaModelConstants.KM_CHANNEL_RNF_PROP, new Double( _rnf ) );
         // rkf
-        final double _rkf = rkfFactor * FeatureHelper.getAsDouble( kmParameterFE, "rkf", 1.0 );
+        final double _rkf = rkfFactor * FeatureHelper.getAsDouble( kmParameterFE, NaModelConstants.KM_CHANNEL_RKF_PROP, 1.0 );
         // FeatureProperty rkfProp = FeatureFactory.createFeatureProperty( "rkf", new Double( _rkf ) );
-        kmParameterFE.setProperty( "rkf", new Double( _rkf ) );
+        kmParameterFE.setProperty( NaModelConstants.KM_CHANNEL_RKF_PROP, new Double( _rkf ) );
       }
     }
   }
@@ -1057,11 +1005,11 @@ public class NaModelInnerCalcJob implements ISimulation
   private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
   {
     // j Gesamtabfluss Knoten .qgs
-    final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+    final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
 
-    final IFeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
-    final IFeatureType rhbChannelFT = modellWorkspace.getFeatureType( "StorageChannel" );
+    final IFeatureType catchmentFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    final IFeatureType rhbChannelFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
     // j Niederschlag .pre
     loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
     // j Temperatur .tmp
@@ -1139,9 +1087,10 @@ public class NaModelInnerCalcJob implements ISimulation
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( resultFT == (modellWorkspace.getFeatureType( "Node" )) || resultFT == (modellWorkspace.getFeatureType( "Catchment" )) || resultFT == (modellWorkspace.getFeatureType( "StorageChannel" )) )
+        if( resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT )) || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ))
+            || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT )) )
         {
-          if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
+          if( !FeatureHelper.booleanIsTrue( feature, NaModelConstants.GENERATE_RESULT_PROP, false ) )
             continue; // should not generate results
         }
         // FIXME @huebsch das geht so nicht, wie soll der server auf die eingestellte sprache beim client zugreifen
@@ -1150,7 +1099,7 @@ public class NaModelInnerCalcJob implements ISimulation
         //        
         // final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
         // IKalypsoPreferences.LANGUAGE );
-        final String lang = "de";
+        // final String lang = "de";
         // hm, so gehts auch nicht
         // final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
         // final String annotationLabel = annotation != null ? annotation.getLabel() :
@@ -1178,7 +1127,7 @@ public class NaModelInnerCalcJob implements ISimulation
         while( iter.hasNext() )
         {
           Map.Entry entry = (Map.Entry) iter.next();
-          tupelData[pos][0] = (Date) entry.getKey();
+          tupelData[pos][0] = entry.getKey();
           tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
           tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );
           pos++;
@@ -1534,21 +1483,32 @@ public class NaModelInnerCalcJob implements ISimulation
       String element = elementString.substring( 0, i );
       String fortranID = elementString.substring( i ).trim();
       Integer asciiID = 0;
+      String asciiType = null;
       int type = 0;
       if( !fortranID.equals( "" ) )
         asciiID = NumberUtils.toInteger( fortranID );
       if( (elementString.contains( "Teilgebiet" )) )
+      {
         type = IDManager.CATCHMENT;
+        asciiType = "Teilgebiet";
+      }
       if( (elementString.contains( "Knoten" )) )
+      {
         type = IDManager.NODE;
+        asciiType = "Knoten";
+      }
       if( (elementString.contains( "Strang" )) )
+      {
         type = IDManager.CHANNEL;
+        asciiType = "Strang";
+      }
       try
       {
-        String gmlName = (String) (idManager.getFeature( asciiID, type )).getProperty( new QName( "http://www.opengis.net/gml", NaModelConstants.GML_FEATURE_NAME_PROP ) );
-        String FeatureID = idManager.getFeature( asciiID, type ).getId();
-        feature.setProperty( new QName( "http://www.opengis.net/gml", NaModelConstants.GML_FEATURE_NAME_PROP ), gmlName );
-        feature.setProperty( new QName( "http://www.opengis.net/gml", NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), ("FeatureID: " + gmlName) );
+        String gmlName = (String) (idManager.getFeature( asciiID, type )).getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
+
+        // String FeatureID = idManager.getFeature( asciiID, type ).getId();
+        feature.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, asciiType + " " + gmlName.trim() );
+        feature.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, ("FeatureID: " + gmlName.trim()) );
       }
       catch( Exception e )
       {
@@ -1599,15 +1559,10 @@ public class NaModelInnerCalcJob implements ISimulation
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
     long timeOut = 1000l * 60l * 60l; // max 60 minutes
-    // PrintWriter logWriter = null;
-    // PrintWriter errorWriter = null;
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
     try
     {
-      // logWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
-      // errorWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
-
       logOS = new FileOutputStream( new File( basedir, "exe.log" ) );
       errorOS = new FileOutputStream( new File( basedir, "exe.err" ) );
       ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, timeOut, logOS, errorOS, null );
@@ -1620,88 +1575,86 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     finally
     {
-      // IOUtils.closeQuietly( logWriter );
-      // IOUtils.closeQuietly( errorWriter );
       IOUtils.closeQuietly( logOS );
       IOUtils.closeQuietly( errorOS );
     }
   }
 
-  private void startCalculationOld( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
-  {
-    InputStreamReader inStream = null;
-    InputStreamReader errStream = null;
-    PrintWriter outwriter = null;
-    PrintWriter errwriter = null;
-
-    try
-    {
-      final File exeFile = new File( basedir, m_kalypsoKernelPath );
-      final File exeDir = exeFile.getParentFile();
-      final String commandString = exeFile.getAbsolutePath();
-
-      final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
-
-      outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
-      errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
-
-      inStream = new InputStreamReader( process.getInputStream() );
-      errStream = new InputStreamReader( process.getErrorStream() );
-      while( true )
-      {
-        CopyUtils.copy( inStream, outwriter );
-        CopyUtils.copy( errStream, errwriter );
-
-        try
-        {
-          process.exitValue();
-          return;
-        }
-        catch( IllegalThreadStateException e )
-        {
-          // noch nicht fertig
-        }
-
-        if( monitor.isCanceled() )
-        {
-          process.destroy();
-          return;
-        }
-        Thread.sleep( 100 );
-      }
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausfuehren", e );
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausfuehren", e );
-    }
-    finally
-    {
-      try
-      {
-        if( outwriter != null )
-          outwriter.close();
-
-        if( errwriter != null )
-          errwriter.close();
-
-        if( inStream != null )
-          inStream.close();
-
-        if( errStream != null )
-          errStream.close();
-      }
-      catch( final IOException e1 )
-      {
-        e1.printStackTrace();
-      }
-    }
-  }
+  // private void startCalculationOld( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
+  // {
+  // InputStreamReader inStream = null;
+  // InputStreamReader errStream = null;
+  // PrintWriter outwriter = null;
+  // PrintWriter errwriter = null;
+  //
+  // try
+  // {
+  // final File exeFile = new File( basedir, m_kalypsoKernelPath );
+  // final File exeDir = exeFile.getParentFile();
+  // final String commandString = exeFile.getAbsolutePath();
+  //
+  // final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
+  //
+  // outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
+  // errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
+  //
+  // inStream = new InputStreamReader( process.getInputStream() );
+  // errStream = new InputStreamReader( process.getErrorStream() );
+  // while( true )
+  // {
+  // CopyUtils.copy( inStream, outwriter );
+  // CopyUtils.copy( errStream, errwriter );
+  //
+  // try
+  // {
+  // process.exitValue();
+  // return;
+  // }
+  // catch( IllegalThreadStateException e )
+  // {
+  // // noch nicht fertig
+  // }
+  //
+  // if( monitor.isCanceled() )
+  // {
+  // process.destroy();
+  // return;
+  // }
+  // Thread.sleep( 100 );
+  // }
+  // }
+  // catch( final IOException e )
+  // {
+  // e.printStackTrace();
+  // throw new SimulationException( "Fehler beim Ausfuehren", e );
+  // }
+  // catch( final InterruptedException e )
+  // {
+  // e.printStackTrace();
+  // throw new SimulationException( "Fehler beim Ausfuehren", e );
+  // }
+  // finally
+  // {
+  // try
+  // {
+  // if( outwriter != null )
+  // outwriter.close();
+  //
+  // if( errwriter != null )
+  // errwriter.close();
+  //
+  // if( inStream != null )
+  // inStream.close();
+  //
+  // if( errStream != null )
+  // errStream.close();
+  // }
+  // catch( final IOException e1 )
+  // {
+  // e1.printStackTrace();
+  // }
+  // }
+  // }
 
   public boolean isSucceeded( )
   {

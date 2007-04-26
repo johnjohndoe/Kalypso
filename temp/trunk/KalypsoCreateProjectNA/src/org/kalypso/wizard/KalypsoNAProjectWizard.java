@@ -74,6 +74,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -121,27 +122,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
 
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
-
-  // static final IFeatureType m_dummyFeatureType = FeatureFactory.createFeatureType( "Gewässer", "wizard.kalypso.na",
-  // //$NON-NLS-1$ //$NON-NLS-2$
-
-  // new IPropertyType[]{
-  // FeatureFactory.createFeatureTypeProperty( new QName( "wizard.kalypso.na", "Ort" ),
-  // GeometryUtilities.getLineStringClass(),
-  // false, null ),
-  // FeatureFactory.createFeatureTypeProperty( new QName( "wizard.kalypso.na", "name" ), String.class, false,
-  // //$NON-NLS-1$ //$NON-NLS-2$
-  // null ),
-  // FeatureFactory.createFeatureTypeProperty( new QName( "wizard.kalypso.na", "description" ), String.class,
-  // //$NON-NLS-1$ //$NON-NLS-2$
-  // false, null ),
-
-  // FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false,
-  // //$NON-NLS-1$
-  // //$NON-NLS-2$
-  // null ),
-
-  // static final IFeatureType m_dummyFeatureType;
 
   private IFeatureType createGewaesserFT( )
   {
@@ -199,8 +179,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     try
     {
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      schema = schemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA", (String) null ); //$NON-NLS-1$
-      m_hydrotopSchema = schemaCatalog.getSchema( "http://www.tuhh.de/hydrotop", (String) null ); //$NON-NLS-1$
+      schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null ); //$NON-NLS-1$
+      m_hydrotopSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP, (String) null ); //$NON-NLS-1$
       setNeedsProgressMonitor( true );
     }
     catch( Exception e1 )
@@ -250,9 +230,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   private IFeatureType getFeatureType( String featureName )
   {
     IFeatureType ft = null;
-    ft = m_modelSchema.getFeatureType( featureName );
+    ft = m_modelSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL,featureName ));
     if( ft == null )
-      ft = m_hydrotopSchema.getFeatureType( featureName );
+      ft = m_hydrotopSchema.getFeatureType( new QName(NaModelConstants.NS_NAHYDROTOP,featureName) );
     return ft;
 
   }
@@ -392,15 +372,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     Feature rootFeature = m_hydWS.getRootFeature();
     IFeatureType hydFT = getFeatureType( "Hydrotop" ); //$NON-NLS-1$
 
-    final FeatureList hydList = (FeatureList) rootFeature.getProperty( "hydrotopMember" ); //$NON-NLS-1$
+    final FeatureList hydList = (FeatureList) rootFeature.getProperty( NaModelConstants.HYDRO_MEMBER ); //$NON-NLS-1$
     final IRelationType targetRelation = hydList.getParentFeatureTypeProperty();
 
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       Feature targetFeature = FeatureFactory.createFeature( rootFeature, targetRelation, sourceFeature.getId(), hydFT, true );
-      final IPropertyType flaechPT = hydFT.getProperty( "area" );
-      final IPropertyType fakVersPT = hydFT.getProperty( "corrSealing" );
+      final IPropertyType flaechPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_AREA );
+      final IPropertyType fakVersPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -526,8 +506,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     Feature rootFeature = m_modelWS.getRootFeature();
     IFeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
-    Feature catchmentCollectionFE = (Feature) rootFeature.getProperty( "CatchmentCollectionMember" ); //$NON-NLS-1$
-    final FeatureList catchmentList = (FeatureList) catchmentCollectionFE.getProperty( "catchmentMember" ); //$NON-NLS-1$
+    Feature catchmentCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    final FeatureList catchmentList = (FeatureList) catchmentCollectionFE.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
     final IRelationType targetRelation = catchmentList.getParentFeatureTypeProperty();
 
     // find column for id
@@ -543,13 +523,13 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       final String fid = getId( idColKey, sourceFeature, "TG" );
       final Feature targetFeature = FeatureFactory.createFeature( catchmentCollectionFE, targetRelation, fid, modelFT, true );
-      final IPropertyType flaechPT = modelFT.getProperty( "flaech" );
-      final IRelationType bodenkorrekturMemberRT = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" );
+      final IPropertyType flaechPT = modelFT.getProperty( NaModelConstants.NA_MODEL_FLAECH_PROP );
+      final IRelationType bodenkorrekturMemberRT = (IRelationType) modelFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         final String targetkey = (String) it.next();
-        final IPropertyType targetPT = modelFT.getProperty( targetkey );
+//        final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
         final Object so = sourceFeature.getProperty( sourcekey );
         IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
@@ -581,11 +561,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
       // Bodenkorrekturparameter erstellen
       final List list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
-      targetFeature.setProperty( "bodenkorrekturmember", list ); //$NON-NLS-1$
+      targetFeature.setProperty( NaModelConstants.BODENKORREKTUR_MEMBER, list ); //$NON-NLS-1$
       int soilLayerNo = Integer.parseInt( m_createPreferencePage.getSoilLayerNo() );
       for( int j = 0; j < soilLayerNo; j++ )
       {
-        final IRelationType bodFtProp = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" ); //$NON-NLS-1$
+        final IRelationType bodFtProp = (IRelationType) modelFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ); //$NON-NLS-1$
         final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureType();
         Feature newFeature = m_modelWS.createFeature( targetFeature, bodenkorrekturMemberRT, bodenKorrekturFT );
         try
@@ -606,8 +586,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     Feature rootFeature = m_modelWS.getRootFeature();
     IFeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
-    Feature nodeCollectionFE = (Feature) rootFeature.getProperty( "NodeCollectionMember" ); //$NON-NLS-1$
-    final FeatureList nodeList = (FeatureList) nodeCollectionFE.getProperty( "nodeMember" ); //$NON-NLS-1$
+    Feature nodeCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP ); //$NON-NLS-1$
+    final FeatureList nodeList = (FeatureList) nodeCollectionFE.getProperty( NaModelConstants.NODE_MEMBER_PROP ); //$NON-NLS-1$
     final IRelationType targetRelation = nodeList.getParentFeatureTypeProperty();
 
     // find column for id
@@ -663,8 +643,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     Feature rootFeature = m_modelWS.getRootFeature();
 
-    Feature channelCollectionFE = (Feature) rootFeature.getProperty( "ChannelCollectionMember" ); //$NON-NLS-1$
-    final FeatureList channelList = (FeatureList) channelCollectionFE.getProperty( "channelMember" ); //$NON-NLS-1$
+    Feature channelCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP ); //$NON-NLS-1$
+    final FeatureList channelList = (FeatureList) channelCollectionFE.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP ); //$NON-NLS-1$
     final IRelationType targetRelation = channelList.getParentFeatureTypeProperty();
 
     // find column for id
@@ -713,7 +693,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( channelCollectionFE, targetRelation, fid, kmFT, true );
 
-          IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( "KMParameterMember" );
+          IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
           final List list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
           targetFeature.setProperty( parameterMemberRT, list ); //$NON-NLS-1$
           int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );

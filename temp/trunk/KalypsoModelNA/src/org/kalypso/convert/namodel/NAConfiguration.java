@@ -169,13 +169,13 @@ public class NAConfiguration
     final GMLSchema synthNSchema = schemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
 
     // featuretypes
-    m_nodeFT = schema.getFeatureType( "Node" );
-    m_vChannelFT = schema.getFeatureType( "VirtualChannel" );
-    m_stChannelFT = schema.getFeatureType( "StorageChannel" );
-    m_kmChannelFT = schema.getFeatureType( "KMChannel" );
-    m_catchmentFT = schema.getFeatureType( "Catchment" );
-    m_bodartFT = paraSchema.getFeatureType( "SoilLayer" );
-    m_statNFT = synthNSchema.getFeatureType( "StatN" );
+    m_nodeFT = schema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    m_vChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+    m_stChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
+    m_kmChannelFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    m_catchmentFT = schema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
+    m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:

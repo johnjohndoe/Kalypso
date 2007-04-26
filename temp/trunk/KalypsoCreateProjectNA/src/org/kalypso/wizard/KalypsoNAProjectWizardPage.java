@@ -371,7 +371,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     for( int j = 0; j < targetFtp.length; j++ )
     {
       Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
-      combo.setData( TARGET_KEY, targetFtp[j].getName() );
+      combo.setData( TARGET_KEY, targetFtp[j].getQName().getLocalPart() );
       combo.addSelectionListener( new SelectionAdapter()
       {
         @Override
@@ -509,7 +509,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     for( int i = 0; i < ftp.length; i++ )
     {
       IPropertyType propertyType = ftp[i];
-      int length = propertyType.getName().length();
+      int length = propertyType.getQName().getLocalPart().length();
       if( length > max )
         max = length;
     }
@@ -607,7 +607,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
           final IValuePropertyType fromPT = (IValuePropertyType) ftp[j];
           final IValuePropertyType toPT = (IValuePropertyType) targetFTP[i];
           if( SpecialPropertyMapper.isValidMapping( fromPT.getValueClass(), toPT.getValueClass() ) )
-            combo.add( ftp[j].getName() );
+            combo.add( ftp[j].getQName().getLocalPart() );
         }
       }// for j
       combo.select( 0 );
@@ -702,7 +702,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       else if( type == DESCRIPTION )
         return annotation.getDescription();
     }
-    return ftp.getName();
+    return ftp.getQName().getLocalPart();
   }
 
   /**

@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,23 +67,25 @@ public class SchneeManager extends AbstractManager
   public SchneeManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
-    m_snowFT = parameterSchema.getFeatureType( "Snow" );
+    m_snowFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SNOW_NAME );
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
-    return ft.getName() + id;
+    return ft.getQName().getLocalPart() + id;
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     // FileReader(
     // file
@@ -99,7 +102,7 @@ public class SchneeManager extends AbstractManager
     }
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
@@ -128,7 +131,7 @@ public class SchneeManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    List list = (List) rootFeature.getProperty( "snowMember" );
+    List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
     asciiBuffer.getSnowBuffer().append( "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
     asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
     asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" );

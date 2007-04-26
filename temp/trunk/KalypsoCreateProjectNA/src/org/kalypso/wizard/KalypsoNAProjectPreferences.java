@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.ImageProvider;
@@ -54,17 +55,9 @@ public class KalypsoNAProjectPreferences extends WizardPage
 
   private final GMLSchema m_modelSchema;
 
-  private static final String SOIL_FT_NAME = "bodenkorrekturmember"; //$NON-NLS-1$
-
-  private static final String CATCHMENT = "Catchment"; //$NON-NLS-1$
-
   String m_soilLayerNo = null;
 
   String m_kmChannelNo = null;
-
-  private static final String KM_CHANNEL = "KMChannel"; //$NON-NLS-1$
-
-  private String KMCHANNEL_MEMBER = "KMParameterMember"; //$NON-NLS-1$
 
   private Combo m_channelCombo;
 
@@ -107,8 +100,8 @@ public class KalypsoNAProjectPreferences extends WizardPage
     Label soilLabel = new Label( soil, SWT.NONE );
     soilLabel.setText( WizardMessages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
-    IFeatureType catchmentFT = m_modelSchema.getFeatureType( CATCHMENT );
-    int maxOccursSoil = catchmentFT.getProperty( SOIL_FT_NAME ).getMaxOccurs();
+    IFeatureType catchmentFT = m_modelSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
     ArrayList<String> noSoilLayer = new ArrayList<String>();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
       noSoilLayer.add( String.valueOf( i ) );
@@ -143,8 +136,8 @@ public class KalypsoNAProjectPreferences extends WizardPage
     channelLabel.setText( WizardMessages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
     m_channelCombo.setLayout( new GridLayout() );
-    IFeatureType kmChannelFT = m_modelSchema.getFeatureType( KM_CHANNEL );
-    int maxOccursKM = kmChannelFT.getProperty( KMCHANNEL_MEMBER ).getMaxOccurs();
+    IFeatureType kmChannelFT = m_modelSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    int maxOccursKM = kmChannelFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER ).getMaxOccurs();
     ArrayList<String> noKMDischarge = new ArrayList<String>();
     for( int i = 0; i < maxOccursKM + 1; i++ )
       noKMDischarge.add( String.valueOf( i ) );

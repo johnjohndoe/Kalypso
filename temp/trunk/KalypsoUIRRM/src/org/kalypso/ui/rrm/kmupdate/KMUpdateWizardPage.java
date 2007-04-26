@@ -78,6 +78,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.dialog.ScrolledTextInformationDialog;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -261,7 +262,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   protected void createNewKMGroup( )
   {
-    final IFeatureType kmFT = m_workspace.getFeatureType( KMUpdateConstants.QNAME_KMCHANNEL );
+    final IFeatureType kmFT = m_workspace.getFeatureType(NaModelConstants.KM_CHANNEL_ELEMENT_FT);
     final Feature[] features = m_workspace.getFeatures( kmFT );
 
     KalininMiljukovGroupType kmGroup = m_factory.createKalininMiljukovGroupType();
@@ -286,8 +287,8 @@ public class KMUpdateWizardPage extends WizardPage
     km.setFilePattern( "*km" );
     km.setPath( "" );
 
-    final Object propStart = feature.getProperty( KMUpdateConstants.QNAME_KMSTART );
-    final Object propEnd = feature.getProperty( KMUpdateConstants.QNAME_KMEND );
+    final Object propStart = feature.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
+    final Object propEnd = feature.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
 
     if( propStart != null )
       km.setKmStart( (Double) propStart );
@@ -525,20 +526,20 @@ public class KMUpdateWizardPage extends WizardPage
       result = changeList;
 
     final KalininMiljukovType km = getForID( feature.getId() );
-    final IFeatureType kmFT = m_workspace.getFeatureType( KMUpdateConstants.QNAME_KMCHANNEL );
-    final IFeatureType kmPaFT = m_workspace.getFeatureType( KMUpdateConstants.QNAME_KMParameter );
+    final IFeatureType kmFT = m_workspace.getFeatureType(NaModelConstants.KM_CHANNEL_ELEMENT_FT);
+    final IFeatureType kmPaFT = m_workspace.getFeatureType(NaModelConstants.KM_CHANNEL_PARAMETER_FT);
 
-    final IRelationType kmRT = (IRelationType) kmFT.getProperty( KMUpdateConstants.QNAME_KMParameterMember );
+    final IRelationType kmRT = (IRelationType) kmFT.getProperty(NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER);
 
-    final IPropertyType kmKMStartPT = kmFT.getProperty( KMUpdateConstants.QNAME_KMSTART );
-    final IPropertyType kmKMEndPT = kmFT.getProperty( KMUpdateConstants.QNAME_KMEND );
+    final IPropertyType kmKMStartPT = kmFT.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
+    final IPropertyType kmKMEndPT = kmFT.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
 
-    final IPropertyType qrkPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_qrk );
-    final IPropertyType rkfPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rkf );
-    final IPropertyType rkvT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rkv );
-    final IPropertyType rnfPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rnf );
-    final IPropertyType rnvPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rnv );
-    final IPropertyType cPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_c );
+    final IPropertyType qrkPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_QRK_PROP);
+    final IPropertyType rkfPT = kmPaFT.getProperty(NaModelConstants.KM_CHANNEL_RKF_PROP);
+    final IPropertyType rkvT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RKV_PROP );
+    final IPropertyType rnfPT = kmPaFT.getProperty(NaModelConstants.KM_CHANNEL_RNF_PROP );
+    final IPropertyType rnvPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RNV_PROP  );
+    final IPropertyType cPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_C_PROP );
 
     if( km == null )
     {

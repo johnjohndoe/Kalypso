@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -99,11 +100,11 @@ public class UpdateModell
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, null );
 
     // Catchments...
-    final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    final IFeatureType catchmentFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
     updateCatchments( catchmentFEs );
     // Nodes
-    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
     updateNodes( nodeFEs );
 
@@ -235,7 +236,7 @@ public class UpdateModell
         available = false;
 
       final Feature fe = workspace.getFeature( fId );
-      fe.setProperty( "name", name );
+      fe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, name );
       if( type.indexOf( "Z" ) > -1 )
       {
         // zuflussRep
@@ -327,7 +328,7 @@ public class UpdateModell
       setTSLink( fe, "zuflussZRRepository", null );
       setTSLink( fe, "zuflussZRRepositoryVorhersage", null );
       // FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name", null );
-      fe.setProperty( "name", null );
+      fe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, null );
     }
   }
 
