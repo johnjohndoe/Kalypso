@@ -61,7 +61,6 @@
 
 package org.kalypsodeegree.filterencoding;
 
-import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

@@ -67,7 +67,6 @@ import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
