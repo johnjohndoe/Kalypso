@@ -1,4 +1,4 @@
-!     Last change:  MD   30 Mar 2007    4:44 pm
+!     Last change:  MD   26 Apr 2007    2:52 pm
 !--------------------------------------------------------------------------
 ! This code, beiwert.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 !***********************************************************************
 
 
-SUBROUTINE beiwert (huew, ii, wh, h_v, h_uw, iueart, cq, cm)
+SUBROUTINE beiwert (huew, ii, wh, h_v, h_uw_w, iueart, cq, cm)
 !MD SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm)
 
 
@@ -80,7 +80,7 @@ SUBROUTINE beiwert (huew, ii, wh, h_v, h_uw, iueart, cq, cm)
 !**   g2      --      Wurzel aus 2*Erdbeschleunigung                    
 !**   how     --      Wasserspiegelhöhe im Oberwasser                   
 !**   huew    --      Überfallhöhe = OW-Wasserhoehe - WehrkronenHöhe
-!**   h_uw    --      Wasserspiegelhöhe im Unterwasser (INPUT)
+!**   h_uw     --     Wasserspiegelhöhe im Unterwasser (INPUT)
 !**   iueart  --      Art des Überfalls am Wehr                         
 !**   lw      --      Länge des Wehres in Fließrichtung
 !**   phi     --      Parameter zur Berechnung des Überfallbeiwertes    
@@ -146,7 +146,7 @@ ELSEIF (wart.eq.'sk') then
 
   ELSE ! lineare Interpolation fuer Werte zwischen 1/6 und 0.06
   !MD cq = 1.15
-   cq = 1.09 * ((d2 -(1/6)) / (0.06 - (1/6)) * (1.157 - 1.090))
+    cq = 1.09 * ((d2 -(1./6.)) / (0.06 - (1./6.)) * (1.157 - 1.090))
   ENDIF
 
 !HW   rundkroniges Wehr
@@ -189,9 +189,9 @@ ELSEIF (wart.eq.'rk') then
     phi2 = phi * phi
 
     !HW  Bedingungsgleichung für den Druckbeiwert beta
-    beta = (1./phi2) * ((1.+phi) -(1.+2.*phi) * phi1) / ((1.+phi) +(2.+phi) * phi1)
-    y01 = huew * (1.-phi2) / (1. - phi2 * beta)
-    r01 = huew * (phi * (1.+phi) / (1. - phi2 * beta) )
+    beta = (1./phi2) * ((1.+phi) -(1.+ 2.*phi) * phi1) / ((1.+phi) + (2.+phi) *phi1)
+    y01 = (huew + h_v) * (1.-phi2) / (1. - phi2 * beta)
+    r01 = (huew + h_v) * phi * (1.+phi) / (1. - phi2 * beta)
 
     ! Berechnen y011 aus y01
     ! -------------------------
@@ -202,9 +202,9 @@ ELSEIF (wart.eq.'rk') then
     phi1 = log (1. / phi)
     phi2 = phi * phi
 
-    beta = (1./phi2) * ((1.+phi) -(1.+2.*phi) * phi1) / ((1.+phi) +(2.+phi) * phi1)
-    y011 = huew * (1.-phi2) / (1. - phi2 * beta)
-    r011 = huew * (phi * (1.+phi) / (1. - phi2 * beta) )
+    beta = (1./phi2) * ((1.+phi) -(1.+ 2.*phi) * phi1) / ((1.+phi) + (2.+phi) *phi1)
+    y011 = (huew + h_v) * (1.-phi2) / (1. - phi2 * beta)
+    r011 = (huew + h_v) * phi * (1.+phi) / (1. - phi2 * beta)
 
     df = (y01 - y011) / (r01 - r011)
 
@@ -224,7 +224,7 @@ ELSEIF (wart.eq.'rk') then
   !HW Überfallbeiwert für rundkronige Wehre nach Knapp, S. 232
   !MD Formel korregiert
   !cq = (3./2.)*phi*( (1.+phi) * (1.-beta)**0.5) / (1. - beta*phi2) ** (3./2.) * phi1
-  cq = sqrt(2.*g) *phi *(1.+phi) *((1.-beta)**0.5) / ((1. -beta*phi2) **(3./2.)) * phi1
+  cq = (sqrt (2.*g)) *phi *(1.+phi) *((1.-beta)**0.5) / ((1. -(beta*phi2)) **(3./2.)) * phi1
 
 
 ELSE  !HW breitkroniges Wehr
@@ -250,8 +250,10 @@ IF (iueart.eq.1) then
   !   Berechnen des Minderungsfaktors
   !HW für den Abfluss ueber das Wehr
 
-  how = huew
-  dh = h_uw / how
+  dh = h_uw_w / huew
+  if (h_uw_w .gt. huew) then
+    dh = 1.0
+  end if
 
   !JK  FUER SCHARFKANTIGES WEHR
   !HW  Abminderungsfaktoren nach Press/Schroeder
@@ -276,17 +278,19 @@ IF (iueart.eq.1) then
   !   FUER rundkronig Wehre oder anderen Faelle
   !HW Abminderungsfaktoren nach Press/Schroeder
   !HW Annaeherung der nichtlinearen Funktion mittels Polygonzug
+
+  !MD Korrektur der Funktionen fuer stetige Uebergaenge
   ELSE
     IF (dh.le.0.25) then
       cm = 1.0
     ELSEIF (dh.gt.0.25.and.dh.le.0.78) then
-      cm = 1.05 - 0.19 * dh
+      cm = (1.+ (0.1/2.12)) - (0.1/0.53) * dh
     ELSEIF (dh.gt.0.78.and.dh.le.0.90) then
-      cm = 2.20 - 1.67 * dh
+      cm = 2.2 - (0.2/0.12)* dh
     ELSEIF (dh.gt.0.90.and.dh.le.0.95) then
       cm = 4.30 - 4.0 * dh
     ELSEIF (dh.gt.0.95.and.dh.le.1.00) then
-      cm = 5.20 - 5.0 * dh
+      cm = 6.20 - 6.0 * dh
     ELSE
       !JK          SCHREIBEN IN KONTROLLFILE
       write (UNIT_OUT_LOG, '(''Widerspruch! dh=huw/how='',f8.4,'' >1.0 '')') dh
