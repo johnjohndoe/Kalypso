@@ -355,9 +355,14 @@ public class ApplyElevationWidget
       if(elevationProvider!=null)
       {
         double elevation = elevationProvider.getElevation( nodePoint );
-        modelEleText.append( "DGM-Höhe = " );
-        modelEleText.append(String.format( "%.3f",elevation));
-        modelEleText.append(" m");
+        if( !Double.isNaN( elevation ) )
+        {
+          modelEleText.append( "DGM-Höhe = " );
+          modelEleText.append(String.format( "%.3f",elevation));
+          modelEleText.append(" m");          
+        }
+        else
+          modelEleText.append("Keine Geländehöhen vorhanden");
       }
       else
       {
