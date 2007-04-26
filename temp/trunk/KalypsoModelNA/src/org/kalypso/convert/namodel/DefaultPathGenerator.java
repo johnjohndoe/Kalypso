@@ -58,19 +58,17 @@ public class DefaultPathGenerator
     else
       extraString = extra;
     final String observationTitle = getObservationTitle( feature, titleProperty );
-    final String annotationLabel = getAnnotationLabel( feature );
-    // final String result = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" +
-    // getTitleForSuffix( suffix ) + ".zml";
-    final String result = "Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
-    // hack: the pathes are generated different, depending on language and runtime (IAdaptable and AdaptableFactory),
-    // this hack will generate same pathes, for test and eclipse-run
-    return result.replaceAll( "Node", "Knoten" );
+    
+    final String annotationName = getAnnotationName( feature );
+    final String result = "Berechnet/" + annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
+//    return result.replaceAll( "Node", "Knoten" );
+    return result;
   }
 
-  private static String getAnnotationLabel( final Feature feature )
+  private static String getAnnotationName( final Feature feature )
   {
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-    return annotation != null ? annotation.getLabel() : feature.getFeatureType().getQName().getLocalPart();
+    return annotation != null ? annotation.getValue(IAnnotation.ANNO_NAME) : feature.getFeatureType().getQName().getLocalPart();
   }
 
   private static String getObservationTitle( final Feature feature, final String titleProperty )
@@ -85,8 +83,8 @@ public class DefaultPathGenerator
   public static String generateTitleForObservation( final Feature feature, final String titleProperty, final String suffix )
   {
     final String observationTitle = getObservationTitle( feature, titleProperty );
-    final String annotationLabel = getAnnotationLabel( feature );
-    return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationLabel;
+    final String annotationName = getAnnotationName( feature );
+    return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationName;
   }
 
   public static String getTitleForSuffix( String suffix )

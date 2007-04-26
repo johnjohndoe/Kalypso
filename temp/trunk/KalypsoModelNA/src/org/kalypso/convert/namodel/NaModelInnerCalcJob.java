@@ -1036,7 +1036,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // n Kluftgrundw .qtg
     loadTSResults( "qtg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
     // n Evapotranspiration .vet [mm]
-    loadTSResults( "vet", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir, 0.1d, conf );
+    loadTSResults( "vet", catchmentFT, "name", TimeserieConstants.TYPE_EVAPORATION, null, null, inputDir, modellWorkspace, logger, outputDir, 0.1d, conf );
 
     // TODO: Zeitreihe als mittlere Bodenfeuchte aus Fortran übernehmen, daher bisher nicht zu übertragen (Zur zeit wird
     // die Bodenfeuchte des ersten Hydrotopes in allen Schichten ausgegeben)
@@ -1087,30 +1087,14 @@ public class NaModelInnerCalcJob implements ISimulation
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT )) || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ))
+        if( resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT ))
+            || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ))
             || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT )) )
         {
           if( !FeatureHelper.booleanIsTrue( feature, NaModelConstants.GENERATE_RESULT_PROP, false ) )
             continue; // should not generate results
         }
-        // FIXME @huebsch das geht so nicht, wie soll der server auf die eingestellte sprache beim client zugreifen
-        // ????, ich machs erstmal deutsch, evt. brauchen wir ein allgemeines konzept, dass der calcjob die sprache mit
-        // bekommt, askme (doemming)
-        //        
-        // final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
-        // IKalypsoPreferences.LANGUAGE );
-        // final String lang = "de";
-        // hm, so gehts auch nicht
-        // final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-        // final String annotationLabel = annotation != null ? annotation.getLabel() :
-        // feature.getFeatureType().getQName().getLocalPart();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
-        // final String feName = (String) feature.getProperty( titlePropName );
-        // final String observationTitle;
-        // if( feName != null && feName.length() > 0 )
-        // observationTitle = feName;
-        // else
-        // observationTitle = feature.getId();
 
         final String axisTitle = getAxisTitleForSuffix( suffix );
 
@@ -1406,8 +1390,6 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     try
     {
-      // @JESSICA: naFortranworkspace is currently null, bceause it is no valid gml!
-      // The next line prevents termination of the calc job
       if( naFortranLogWorkspace != null )
       {
         GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
@@ -1416,17 +1398,14 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     catch( IOException e1 )
     {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
     catch( GmlSerializeException e1 )
     {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
     catch( ParseException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     try
@@ -1450,17 +1429,6 @@ public class NaModelInnerCalcJob implements ISimulation
     {
 
       File loggerFile = new File( tmpDir, "infoLog.txt" );
-      // try
-      // {
-      // Writer logWriter = new FileWriter( loggerFile );
-      // logWriter.write( getLogFooter() );
-      // logWriter.close();
-      // }
-      // catch( IOException e )
-      // {
-      // e.printStackTrace();
-      // }
-
       resultEater.addResult( NaModelConstants.LOG_INFO_ID, loggerFile );
     }
     catch( SimulationException e )
@@ -1579,82 +1547,6 @@ public class NaModelInnerCalcJob implements ISimulation
       IOUtils.closeQuietly( errorOS );
     }
   }
-
-  // private void startCalculationOld( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
-  // {
-  // InputStreamReader inStream = null;
-  // InputStreamReader errStream = null;
-  // PrintWriter outwriter = null;
-  // PrintWriter errwriter = null;
-  //
-  // try
-  // {
-  // final File exeFile = new File( basedir, m_kalypsoKernelPath );
-  // final File exeDir = exeFile.getParentFile();
-  // final String commandString = exeFile.getAbsolutePath();
-  //
-  // final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
-  //
-  // outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
-  // errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
-  //
-  // inStream = new InputStreamReader( process.getInputStream() );
-  // errStream = new InputStreamReader( process.getErrorStream() );
-  // while( true )
-  // {
-  // CopyUtils.copy( inStream, outwriter );
-  // CopyUtils.copy( errStream, errwriter );
-  //
-  // try
-  // {
-  // process.exitValue();
-  // return;
-  // }
-  // catch( IllegalThreadStateException e )
-  // {
-  // // noch nicht fertig
-  // }
-  //
-  // if( monitor.isCanceled() )
-  // {
-  // process.destroy();
-  // return;
-  // }
-  // Thread.sleep( 100 );
-  // }
-  // }
-  // catch( final IOException e )
-  // {
-  // e.printStackTrace();
-  // throw new SimulationException( "Fehler beim Ausfuehren", e );
-  // }
-  // catch( final InterruptedException e )
-  // {
-  // e.printStackTrace();
-  // throw new SimulationException( "Fehler beim Ausfuehren", e );
-  // }
-  // finally
-  // {
-  // try
-  // {
-  // if( outwriter != null )
-  // outwriter.close();
-  //
-  // if( errwriter != null )
-  // errwriter.close();
-  //
-  // if( inStream != null )
-  // inStream.close();
-  //
-  // if( errStream != null )
-  // errStream.close();
-  // }
-  // catch( final IOException e1 )
-  // {
-  // e1.printStackTrace();
-  // }
-  // }
-  // }
 
   public boolean isSucceeded( )
   {
