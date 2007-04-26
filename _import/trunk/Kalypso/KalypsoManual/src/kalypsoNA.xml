@@ -171,6 +171,8 @@
         <primary>Teilgebietsuntergliederung</primary>
       </indexterm>
 
+      <para><emphasis role="bold">Oberirdisches Teilgebiet</emphasis></para>
+
       <para>Zur Abgrenzung von Teilgebieten dienen diverse Datenquellen. Der
       Hintergrund sind die verschiedenen Ursachen, die den Fließweg des
       Wassers bestimmen. Grundsätzlich fließt das Wasser entlang des stärksten
@@ -204,9 +206,12 @@
       oberirdische oder topografische Einzugsgebiet und
       (A<literal>EU</literal>) das unterirdische Einzugsgebiet. Eine
       Unterscheidung zwischen A<literal>EO</literal> und
-      A<literal>EU</literal> wird in Kalypso nicht vorgenommen. Bei der
-      Eingrenzung des unterirdischen Einzugsgebietes erfolgt die Bilanzierung
-      über oberirdische Teileinzugsgebiete. Die Aufteilung des
+      A<literal>EU</literal> wird in Kalypso nicht vorgenommen.</para>
+
+      <para><emphasis role="bold">Unterirdisches Teilgebiet</emphasis></para>
+
+      <para>Bei der Eingrenzung des unterirdischen Einzugsgebietes erfolgt die
+      Bilanzierung über oberirdische Teileinzugsgebiete. Die Aufteilung des
       Grundwasserabflusses erfolgt anteilig auf die projezierte Fläche. Ebenso
       wird die Quantifizierung des Zustromes von außen vollzogen.
       Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
@@ -217,7 +222,36 @@
       <title>Landnutzungsverteilung und Ableitung der
       Flächennutzungsparameter</title>
 
-      <para></para>
+      <para>Die Landnutzung im Einzugsgebiet ist entscheidend zur Ableitung
+      der Parameter des Versiegelungsgrades und der Vegetationsdaten. Sie kann
+      aus Flächennutzungsplänen, topographischen Karten, Luftbildaufnahmen
+      oder änlichem entnommen werden. Ziel ist es ein Parameterkatalog
+      aufzustellen, welcher einer dem Hydrotop zugeordneten Landnutzung
+      (Angabe eines Keys von maximal 10 Zeichen) die weiteren Eigenschaften
+      zuweist. Hierzu sind zunächst Versiegelungsklassen zu bilden, welche die
+      im Modellgebiet vorhandenen Landnutzungen zu Klassen gleicher
+      Versiegelung gruppieren (z.B. Wald, Industrie, Einzelhausbebauung,...).
+      Weiterhin sind die auftretenden Landnutzungen nach natürlichen
+      Nutzungsklassen der auftretenden Vegetation zu untergliedern (z.B.
+      Nadelwald, Laubwald, Wiese, Acker, Bebauung,...). Teilweise ist die
+      Versiegelungsklasse und Bewuchsklasse identisch, es ergeben sich jedoch
+      bei sehr detaillierten Daten auch Unterschiede (z.B. kann bei Bebauungen
+      die Versiegelungsklasse differenziert werden – Industrie – Hochhaus -
+      Einzelhaus, wohingegen die Bewuchsklasse identisch bleibt). Sind die
+      Nutzungsdaten weniger detailliert, so kann auf diese Untergliederung
+      verzichtet werden und dem Hydrotop direkt eine identische Versiegelungs-
+      und Vegetationsklasse zugeordnet werden. Dies erleichtert die Erstellung
+      des Parameterkataloges.</para>
+
+      <figure>
+        <title>Beispiel der Vegetationsklassen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Vegetationsklassen.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
 
     <section>
