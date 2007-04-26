@@ -75,7 +75,8 @@ public class RasterTools
     GridGeometryHelper.controlGridGeometries( grid1.getGridDomain(), grid2.getGridDomain() );
 
     RectifiedGridDomain resultGridDomain = new RectifiedGridDomain( grid1.getGridDomain().getOrigin( null ), grid1
-        .getGridDomain().getOffset(), grid1.getGridDomain().getGridRange() );
+        .getGridDomain().getOffsetX(), grid1
+        .getGridDomain().getOffsetY(), grid1.getGridDomain().getGridRange() );
     Vector<Vector<Double>> resultRangeSetData = new Vector<Vector<Double>>();
     Vector grid1RangeSetData = null;//grid1.getRangeSet().getRangeSetData();
     Vector grid2RangeSetData = null;//grid2.getRangeSet().getRangeSetData();

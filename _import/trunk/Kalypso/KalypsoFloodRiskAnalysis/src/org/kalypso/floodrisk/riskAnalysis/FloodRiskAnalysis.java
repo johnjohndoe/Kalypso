@@ -55,7 +55,6 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
  * Class holds methods for creating FloodRiskMaps
  * 
  * @author N. Peiler
- *  
  */
 public class FloodRiskAnalysis
 {
@@ -73,37 +72,35 @@ public class FloodRiskAnalysis
    * @return floodRiskGrid(RectifiedGridCoverage)
    * @throws Exception
    */
-  public static RectifiedGridCoverage2 defineRisk( RectifiedGridCoverage2 annualDamageGrid,
-      RectifiedGridCoverage2 landuseGrid, Hashtable riskClassTable ) throws Exception
+  public static RectifiedGridCoverage2 defineRisk( RectifiedGridCoverage2 annualDamageGrid, RectifiedGridCoverage2 landuseGrid, Hashtable riskClassTable ) throws Exception
   {
-    System.out.println( Messages.getString("riskAnalysis.FloodRiskAnalysis.CalculatingFloodRiskGrid")+"..." ); //$NON-NLS-1$ //$NON-NLS-2$
+    System.out.println( Messages.getString( "riskAnalysis.FloodRiskAnalysis.CalculatingFloodRiskGrid" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
     RectifiedGridCoverage2 floodRiskGrid = null;
     GridGeometryHelper.controlGridGeometries( annualDamageGrid.getGridDomain(), landuseGrid.getGridDomain() );
-    RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid.getGridDomain().getOrigin(
-        null ), annualDamageGrid.getGridDomain().getOffset(), annualDamageGrid.getGridDomain().getGridRange() );
-    Vector annualDamage_rangeSetData = null;//annualDamageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+    RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid.getGridDomain().getOrigin( null ), annualDamageGrid.getGridDomain().getOffsetX(), annualDamageGrid.getGridDomain().getOffsetY(), annualDamageGrid.getGridDomain().getGridRange() );
+    Vector annualDamage_rangeSetData = null;// annualDamageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;// landuseGrid.getRangeSet().getRangeSetData();
     Vector<Vector<Double>> floodRisk_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < annualDamage_rangeSetData.size(); i++ )
     {
-      Vector annualDamage_rowData = (Vector)annualDamage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
+      Vector annualDamage_rowData = (Vector) annualDamage_rangeSetData.get( i );
+      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
       Vector<Double> floodRisk_rowData = new Vector<Double>();
       for( int j = 0; j < annualDamage_rowData.size(); j++ )
       {
         if( annualDamage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
         {
-          Integer landuseKey = new Integer( ( (Double)landuse_rowData.get( j ) ).intValue() );
-          double annualDamage = ( (Double)annualDamage_rowData.get( j ) ).doubleValue();
+          Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+          double annualDamage = ((Double) annualDamage_rowData.get( j )).doubleValue();
           Integer riskClass = null;
           if( riskClassTable.containsKey( landuseKey ) )
           {
-            Hashtable intervals = (Hashtable)riskClassTable.get( landuseKey );
+            Hashtable intervals = (Hashtable) riskClassTable.get( landuseKey );
             final Enumeration keys = intervals.keys();
             while( keys.hasMoreElements() )
             {
-              final Integer key = (Integer)keys.nextElement();
-              final Interval interval = (Interval)intervals.get( key );
+              final Integer key = (Integer) keys.nextElement();
+              final Interval interval = (Interval) intervals.get( key );
               if( interval.contains( annualDamage ) )
               {
                 riskClass = key;
@@ -124,14 +121,14 @@ public class FloodRiskAnalysis
         {
           floodRisk_rowData.addElement( null );
         }
-      }//for j
+      }// for j
       floodRisk_rangeSetData.addElement( floodRisk_rowData );
       /*
        * System.out.println(i + " rows of " + annualDamage_rangeSetData.size() + " calculated");
        */
-    }//for i
+    }// for i
     RangeSet floodRisk_rangeSet = new RangeSet( floodRisk_rangeSetData, null );
-    floodRiskGrid = null;//new RectifiedGridCoverage2( floodRisk_gridDomain, floodRisk_rangeSet );
+    floodRiskGrid = null;// new RectifiedGridCoverage2( floodRisk_gridDomain, floodRisk_rangeSet );
     return floodRiskGrid;
   }
 

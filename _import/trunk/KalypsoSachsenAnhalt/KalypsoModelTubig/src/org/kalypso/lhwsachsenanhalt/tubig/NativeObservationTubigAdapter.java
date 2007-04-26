@@ -67,6 +67,15 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
     return m_title;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File, boolean)
+   */
+  public IObservation createObservationFromSource( File file, boolean continueWithErrors ) throws Exception
+  {
+    return createObservationFromSource( file );
+  }
+
+  
   public IObservation createObservationFromSource( final File file ) throws Exception
   {
     final InputStreamReader reader;

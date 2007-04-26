@@ -63,7 +63,6 @@ import javax.media.jai.TiledImage;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
@@ -80,7 +79,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -89,9 +87,10 @@ import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 
 /**
  * 
@@ -210,29 +209,30 @@ public class ExportThemeAction implements PluginMapOutlineAction
   {
     try
     {
-      BufferedWriter bw = new BufferedWriter( new FileWriter( worldFile ) );
+      final BufferedWriter bw = new BufferedWriter( new FileWriter( worldFile ) );
+      
+      final OffsetVector offsetX = rgDomain.getOffsetX();
+      final OffsetVector offsetY = rgDomain.getOffsetX();
+      
+      final GM_Point origin = rgDomain.getOrigin( null );
+
       //dx
-      double dx = rgDomain.getOffsetX( rgDomain.getOrigin( null ).getCoordinateSystem() );
-      bw.write( "" + dx ); //$NON-NLS-1$
+      bw.write( "" + offsetX.getGeoX() ); //$NON-NLS-1$
       bw.newLine();
       //phi x
-      bw.write( "0.0" ); //$NON-NLS-1$
+      bw.write( "" + offsetX.getGeoY() ); //$NON-NLS-1$
       bw.newLine();
       //phi y
-      bw.write( "0.0" ); //$NON-NLS-1$
+      bw.write( "" + offsetY.getGeoX() ); //$NON-NLS-1$
       bw.newLine();
       //dy
-      double dY = rgDomain.getOffsetY( rgDomain.getOrigin( null ).getCoordinateSystem() );
-      bw.write( "-" + dY ); //$NON-NLS-1$
+      bw.write( "" + offsetY.getGeoY() ); //$NON-NLS-1$
       bw.newLine();
       //origin x (upper left corner)
-      double originX = rgDomain.getOrigin( null ).getX();
-      bw.write( "" + originX ); //$NON-NLS-1$
+      bw.write( "" + origin.getX() ); //$NON-NLS-1$
       bw.newLine();
       //origin y (upper left corner)
-      GM_Envelope envelope = rgDomain.getGM_Envelope( rgDomain.getOrigin( null ).getCoordinateSystem() );
-      double originY = envelope.getMax().getY();
-      bw.write( "" + originY ); //$NON-NLS-1$
+      bw.write( "" + origin.getY() ); //$NON-NLS-1$
       bw.close();
     }
     catch( IOException e )
