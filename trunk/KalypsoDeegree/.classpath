@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="deegree"/>
 	<classpathentry kind="src" path="srcbind"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jtsio-1.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xtiff-jai/xtiff-jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/geotiff-jai/geotiff-jai.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.7.2.jar" sourcepath="lib/jts/jts-1.7.2_src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jtsio-1.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
