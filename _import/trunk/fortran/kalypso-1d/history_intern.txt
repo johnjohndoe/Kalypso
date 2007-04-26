@@ -891,31 +891,97 @@ Kalypso 1.3.1      04. April 2007
      - Korrektur der Hilfsfunktion: phi1 = LN (1/phi) fuer rundkronige Wehre
 	 - Korrektur des Ueberfallbeiwert für rundkronige Wehre nach Knapp
 
-	 Änderung in der Berechnung des Wehrabflusse (w_ber):
-	 - bislang wurde die Energiehöhen-Iteration im Oberwasser immer mit
-	   der Energiehöhe im Unterwasser gestart, dies fuehrte zu Problemen: 
-	   Deswegen Start mit einer 10cm hoeheren Energiehöhe 
-	   (siehe erster Aufruf von wspow)
-	 - die Geometrie am Wehr und die Ueberfallhoehe wurde bislang immer
-	   fälschlicher Weise mit der Enenergiehoehe statt der Wasserhöhe 
-	   im Oberwasser berechnet (siehe alle Aufrufe von g_wehr)
-	 - die Iteration fuer den Abfluss uebers Wehr wurde auf Basis von
-	   drei Stuetzstellen (he_q, hea_q und heb_q )vorgenommen. Dadurch 
-	   sprang das Programm oft zwischen verschiedenen Abflussszuständen
-	   (z.B.: unvollk. und Uberstroemen). 
-	   Die neue Iteration berechnet nur zwei Stuetzstellen und guckt 
-	   vorher schon mal wo der Ziel Wert "q_wehr" liegt.
-	   (Details siehe DOC zur Wehrberechnung)
-	 - in den Formeln fuer die Wehrabfluss-Berechnung waren mehrere Fehler
-	 - vorzeitige Auswertung vor Abschluss der Iteration wurde entfernt
-	 - Fuer den Problemfall (nach wie vor!!) 
-	   "Engergiehoehe Unterwasser = Energiehoehe Oberwasser" und 
-	   "Zufluss aus dem OW kleiner Abfluss uebers Wehr" wird jetzt die 
-	   Impulsbilanz gelöst. Da sie Energiebilanz den Abfluss am Wehr
-	   manchmal ueberschätzt. Dies macht die Iteration stabiler; kann 
-	   aber im Grenzfall wieder zu einem Wechsel zwischen verschiedenen 
-	   Abflussszustaenden fuehren.
-	 --> genaue Beschreibung zur "neuen" Wehrberechnung siehe DOC  
+     Änderung in der Berechnung des Wehrabflusse (w_ber):
+     - bislang wurde die Energiehöhen-Iteration im Oberwasser immer mit
+       der Energiehöhe im Unterwasser gestart, dies fuehrte zu Problemen: 
+       Deswegen Start mit einer 10cm hoeheren Energiehöhe 
+       (siehe erster Aufruf von wspow)
+     - die Geometrie am Wehr und die Ueberfallhoehe wurde bislang immer
+       fälschlicher Weise mit der Enenergiehoehe statt der Wasserhöhe 
+       im Oberwasser berechnet (siehe alle Aufrufe von g_wehr)
+     - die Iteration fuer den Abfluss uebers Wehr wurde auf Basis von
+       drei Stuetzstellen (he_q, hea_q und heb_q )vorgenommen. Dadurch 
+       sprang das Programm oft zwischen verschiedenen Abflussszuständen
+       (z.B.: unvollk. und Uberstroemen). 
+       Die neue Iteration berechnet nur zwei Stuetzstellen und guckt 
+       vorher schon mal wo der Ziel Wert "q_wehr" liegt.
+       (Details siehe DOC zur Wehrberechnung)
+     - in den Formeln fuer die Wehrabfluss-Berechnung waren mehrere Fehler
+     - vorzeitige Auswertung vor Abschluss der Iteration wurde entfernt
+     - Fuer den Problemfall (nach wie vor!!) 
+       "Engergiehoehe Unterwasser = Energiehoehe Oberwasser" und 
+       "Zufluss aus dem OW kleiner Abfluss uebers Wehr" wird jetzt die 
+       Impulsbilanz gelöst. Da sie Energiebilanz den Abfluss am Wehr
+       manchmal ueberschätzt. Dies macht die Iteration stabiler; kann 
+       aber im Grenzfall wieder zu einem Wechsel zwischen verschiedenen 
+       Abflussszustaenden fuehren.
+       --> genaue Beschreibung zur "neuen" Wehrberechnung siehe DOC  
 	                                                  
- 													Monika Donner, 04.04.2007
+ 						Monika Donner, 04.04.2007
+
+
+Kalypso 1.3.1.1      25. April 2007
+-----------------------------------
+
+1.)  Ueberarbeitung der Wehrberechnung in w_ber, beiwert und wspow für scharf- und runndkronige Wehre:
+	
+  A) Änderung in der Berechnung des Abminderungsfaktors des Ueberfall-Beiwertes
+     rundkronige fuer Wehre (beiwert):
+     - Korrektur der fünf Geraden-Gleichungen für cm auf stetige Übergänge
+       (details siehe DOC zur WehrBerechnung)
+     - Fehler für die UW-Hoehe korrigiert: h_uw_w = h_ow - Wehrkrone
+
+  B) Änderung in der Berechnung des Wehrabflusse (w_ber):
+     - Wenn die Energiehöhen-Iteration keine Konvergenz zeigt (= Schleife 1000)
+       wird der "optimalste Wert" (=he_opt) mit einer Abweichung kleiner 0.0001 m
+       während der ganzen iterativen Berechnung zur Bestimmung des Wehrabflusses 
+       verwendet.
+        - Dieser Wert he_opt wurde bislang nicht richtig an die Ergebnisberechnung 
+          und an das Oberwasser-Profil übergeben.
+        - Die Varainte, dass es keinen "optimalen Wert" gibt, wurde vergessen 
+          und daher wurde die optimale Energiehöhe aus der letzten Berechnung
+          (z.B. fürs ein geringeres Q) genommen. Wenn jetzt kein he_opt gefunden
+          wird, schließt das Programm mit der letzten Iteration und gibt die
+          Ergebnisse aus.     
+      - Für rundkronige Wehre kann folgender Fall eintreten: Die Energiehöhen-
+        iteration im Oberwasser führt nach den maximal 20 Schritten nicht zum Ziel.
+        Falls dies eintritt, wird derzeit die Energiehöhe im OW gleich dem Wasserstand 
+        im OW gesetzt und alle Werte einschließlich des Abflusses übers Wehr in der 
+        Routinen wspanf und ff. berechnet.    
+        Für diese Varainte, ist in der Wehrroutine (w-ber) die richtige Energiehöhe
+        rückwirkend aus dem Wasserstand und Geschwindigkeitshoehe zu bestimmen. 
+        Dies fehlte bisher.
+      - Die Schätzung der neuen Energiehöhe im Oberwasser beeinflusst das Ergebnis im
+        Oberwasser maßgeblich. Daher wird der Sohlhoehenanstieg zwischen UW und OW ermittelt,
+        um ein annähernd richtiges "DELTA" für die die Energiehöhe im OW zu bestimmen. Der 
+        minimale Antieg der Energiehöhe ist auf 0.1 m begrenzt.
+        
+   C) Änderung in der Berechnung des Energiehoehe, Wasserstand und Geschwindigkeits-
+      hoehe im Oberwasser (wspow): 
+      - Bei der Bestimmung der richtigen Wassertiefe zur Energiehöhe im OW wird zunächst 
+        eine Tangente durch zwei berechete Wertepaare aus Energiehöhe und Wassertiefe 
+        ermittelt. Ist die Steigung dieser Tangenten nahe null, so befindet man sich nahe
+        dem Grenzzustand (Strömen <-> Schießen). Daher wurde die Steigung der Tangenten 
+        begrenzt (0.001) und die aus der Steigung berechnete neue Eingangs-Wassertiefe (wsanf) 
+        wird kontrolliert:
+         - ob kleiner null
+         - ob größer der gewünschten Energiehoehe
+         - ob kleiner 2/3 der gewünschten Energiehoehe
+        Trifft eines der Fälle zu, so wird als Wassertiefe korrigiert.
+      - Für rundkronige Wehre ohne Konvergenz in der Energiehöhen-Iteration. Tritt meist
+        genau dasselbe Problem im Oberwasser des Wehres auf: Bei der abschließenden 
+        Energiehöheniteration wird wieder (Energiehöhe im OW = Wasserstand im OW) gesetzt.
+        Daher ist die Energiehöhe im Wehr und mit der Wasserhöhe(!) im OW identisch, aber
+        nicht die Abflüsse. 
+       		
+        --> genaue Beschreibung zur Wehrberechnung siehe DOC  
+      
+
+      BUG(??):
+      ---------
+      Die Berechnung ausgehend von der WSPOW sollte geprüft werden, Wertepaare sind oft unplausibel:
+      Obwohl die Werte im Strömenden Bereich liegen, weisen sie negative Steigungen auf.
+      Nach Theorie sollte die Steigung aber im strömenden Bereich zwischen 1 und 0 liegen!!
+                                                 
+ 							Monika Donner, 25.04.2007
                                                     
