@@ -44,8 +44,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import ogc31.www.opengis.net.gml.RangeSetType;
-
 import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.Feature;
@@ -55,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Class for converting Vectordata (featureList (Properties: "GEOM" and "RasterProperty")) to Rasterdata
@@ -81,14 +78,12 @@ public class VectorToGridConverter
   public static RectifiedGridCoverage2 toGrid( List featureList, Hashtable propertyTable, RectifiedGridCoverage2 baseGrid, ISimulationMonitor monitor ) throws Exception
   {
     String propertyName = "RasterProperty"; //$NON-NLS-1$
-    GM_Point origin = baseGrid.getGridDomain().getOrigin( null );
-    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( origin, baseGrid.getGridDomain().getOffset(), baseGrid.getGridDomain().getGridRange() );
-    double originX = origin.getX();
-    double originY = origin.getY();
+    final RectifiedGridDomain gridDomain = baseGrid.getGridDomain();
+    GM_Point origin = gridDomain.getOrigin( null );
+    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( origin, gridDomain.getOffsetX(), gridDomain.getOffsetY(), gridDomain.getGridRange() );
     Vector<Vector<Double>> newRangeSetData = new Vector<Vector<Double>>();
     
     // ovde treba da iscitam fajl
-    RangeSetType rangeSet = baseGrid.getRangeSet();
     Vector rangeSetData = null;//baseGrid.getRangeSet().getRangeSetData();
     
     for( int i = 0; i < rangeSetData.size(); i++ )
@@ -97,9 +92,8 @@ public class VectorToGridConverter
       Vector<Double> newRowData = new Vector<Double>();
       for( int j = 0; j < rowData.size(); j++ )
       {
-        double x = originX + j * baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() ) + 0.5 * baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
-        double y = originY + (rangeSetData.size() - i) * baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() ) - 0.5 * baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
-        GM_Position position = GeometryFactory.createGM_Position( x, y );
+        final GM_Position position = gridDomain.getPositionAt( j, i );
+        
         Feature actualFeature = null;
         if( rowData.get( j ) != null )
         {
