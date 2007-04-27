@@ -65,6 +65,20 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
                     int previousRoughnessClassID,
                     int eleminationNumber);
       
+
+      //    LineID, ID
+      /**
+       * Invoqued by the reader to signal that a result (VA) 
+       * has been read and parsed
+       */
+      public void handleResult(
+          String lineString,
+          int id,
+          double vx,
+          double vy,
+          double depth,
+          double waterlevel);
+      
       /**
        * Handle a line that the reader cannot interprete
        * @param lineString the line that cannot be interpreted

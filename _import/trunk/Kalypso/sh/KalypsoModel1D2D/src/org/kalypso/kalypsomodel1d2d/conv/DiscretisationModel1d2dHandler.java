@@ -417,4 +417,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     return createdFeature;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double, double, double, double)
+   */
+  public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel )
+  {
+    //do nothing, because here just the model is beeing read.
+    
+  }
+
 }

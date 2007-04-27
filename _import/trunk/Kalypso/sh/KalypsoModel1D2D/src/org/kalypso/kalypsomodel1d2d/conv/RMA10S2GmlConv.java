@@ -120,6 +120,11 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         {
 
         }
+        else if( char0 == 'V' && char1 == 'A' )
+        {
+//        result LINEID, ID, vx, vy, depth, waterlevel
+          interpreteResultLine( line, handler );
+        }
         else
         {
           if( verboseMode )
@@ -179,6 +184,30 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         double northing = Double.parseDouble( matcher.group( 3 ) );
         double elevation = Double.parseDouble( matcher.group( 4 ) );
         handler.handleNode( line, id, easting, northing, elevation );
+      }
+      catch( NumberFormatException e )
+      {
+        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      }
+    }
+    else
+      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+  }
+  
+  private static final void interpreteResultLine( final String line, final IRMA10SModelElementHandler handler )
+  {
+    final Pattern linePattern = Pattern.compile( "VA\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*).*" );
+    final Matcher matcher = linePattern.matcher( line );
+    if( matcher.matches() )
+    {
+      try
+      {
+        int id = Integer.parseInt( matcher.group( 1 ) );
+        double vx = Double.parseDouble( matcher.group( 2 ) );
+        double vy = Double.parseDouble( matcher.group( 3 ) );
+        double depth = Double.parseDouble( matcher.group( 4 ) );
+        double waterlevel = Double.parseDouble( matcher.group( 5 ) );
+        handler.handleResult( line, id, vx, vy, depth, waterlevel );
       }
       catch( NumberFormatException e )
       {
