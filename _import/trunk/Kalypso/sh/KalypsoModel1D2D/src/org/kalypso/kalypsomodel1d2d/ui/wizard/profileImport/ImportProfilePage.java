@@ -46,6 +46,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
+import java.rmi.RemoteException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -68,6 +69,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.ui.wizards.imports.roughness.DataContainer;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -87,6 +94,8 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
   private Composite m_topComposite;
 
+  private Combo m_checkCRS;
+
   private Button m_browseButton;
 
   private String m_fileName;
@@ -94,6 +103,8 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   private File m_file;
 
   private String m_filePath;
+  
+  private String m_crs;
 
   /**
    * @param pageName
@@ -133,9 +144,49 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     // build wizard page
-    //TODO: some nice text...
+    // TODO: some nice text...
     createFileGroup( m_topComposite );
+
+    Label crsLabel = new Label( m_group, SWT.NONE );
+    crsLabel.setText( "Koordinaten System: " );
+
+    m_checkCRS = new Combo( m_group, SWT.NONE );
+
+    availableCoordinateSystems( m_checkCRS );
+    try
+    {
+      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
+    }
+    catch( RemoteException e1 )
+    {
+      e1.printStackTrace();
+    }
+
+    m_checkCRS.setToolTipText( "Koordinatensystem der Profil Datei" );
+    GridData data = new GridData( SWT.FILL, SWT.FILL, false, false );
+    m_checkCRS.setLayoutData( data );
+    m_checkCRS.addSelectionListener( this );
+    m_checkCRS.addKeyListener( this );
+
     setControl( m_topComposite );
+  }
+
+  private void availableCoordinateSystems( Combo checkCRS )
+  {
+    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
+    checkCRS.setItems( factory.getKnownCS() );
+  }
+
+  private boolean checkCRS( String customCRS )
+  {
+    boolean result = false;
+    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( customCRS );
+    if( cs != null )
+    {
+      result = true;
+    }
+    return result;
   }
 
   private void createFileGroup( Composite parent )
@@ -184,6 +235,17 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
       setErrorMessage( "Bitte eine Profil-Datei auswählen!" );
       pageComplete = false;
     }
+    
+    // CoordinateSystem
+    if( checkCRS( m_checkCRS.getText() ) )
+    {
+      m_crs = m_checkCRS.getText();
+    }
+    else
+    {
+      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" );
+      pageComplete = false;
+    }
 
     setPageComplete( pageComplete );
   }
@@ -195,6 +257,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   public void widgetSelected( SelectionEvent e )
   {
     Button b;
+    Combo c;
     if( e.widget instanceof Button )
     {
       b = (Button) e.widget;
@@ -220,6 +283,17 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
           m_filePath = filterPath;
         }
       }
+      if( e.widget instanceof Combo )
+      {
+        if( e.widget == m_checkCRS )
+        {
+          c = (Combo) e.widget;
+          if( c == m_checkCRS )
+          {
+            setPageComplete( true );
+          }
+        }
+      }
     }
     validate();
   }
@@ -228,7 +302,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   {
     return m_file;
   }
-  
+
   public String getFileName( )
   {
     return m_fileName;
@@ -238,7 +312,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   {
     return m_filePath;
   }
-  
+
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
@@ -280,5 +354,10 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   public void removeListeners( )
   {
     m_browseButton.removeSelectionListener( this );
+  }
+
+  public CS_CoordinateSystem getCoordinateSystem( )
+  {
+    return ConvenienceCSFactory.getInstance().getOGCCSByName( m_crs );
   }
 }

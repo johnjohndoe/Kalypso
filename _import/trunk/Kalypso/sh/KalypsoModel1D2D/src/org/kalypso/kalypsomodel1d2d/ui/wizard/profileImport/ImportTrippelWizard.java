@@ -71,14 +71,20 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -335,10 +341,10 @@ public class ImportTrippelWizard extends Wizard implements IWizard
   {
     double distance = 0;
     GeometryFactory factory = new GeometryFactory();
-    
+
     /* get the segment length of the allready imported profile points */
     distance = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    
+
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
     double x1 = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     double y1 = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
@@ -352,7 +358,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     Point point2 = factory.createPoint( coordinates2 );
 
     distance = distance + point1.distance( point2 );
-    
+
     return distance;
   }
 
@@ -380,7 +386,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
           try
           {
             final IStatus status = importTrippelData();
-            if ( status != Status.OK_STATUS)
+            if( status != Status.OK_STATUS )
             {
               return status;
             }
@@ -440,16 +446,37 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     final String desc = String.format( "Importiert aus Trippel-Profil-Datei: %s\nImportiert am %s aus %s", m_ProfilePage.getFileName(), DF.format( new Date() ), m_ProfilePage.getFilePath() );
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
+    CS_CoordinateSystem crs = m_ProfilePage.getCoordinateSystem();
+
+    GMLWorkspace workspace = networkFeature.getWorkspace();
+
+    CS_CoordinateSystem coordinatesSystem = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+    CS_CoordinateSystem targetCRS = coordinatesSystem;
+    if( crs != coordinatesSystem )
+    {
+      targetCRS = crs;
+    }
+    workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
 
     for( IProfil profile : m_profiles )
     {
+      
+      profile.getPointProperty( desc );
       final Feature profileFeature = FeatureHelper.addFeature( network.getWrappedFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) );
       ProfileFeatureFactory.toFeature( profile, profileFeature );
+      //profileFeature.getDefaultGeometryProperty().getCoordinateDimension();
+      GM_Curve property = (GM_Curve) profileFeature.getProperty( WspmProfile.QNAME_LINE );
+//      profileFeature.setProperty( propertyType, property )
+      property.setCoordinateSystem( targetCRS );
+      profileFeature.setProperty(  WspmProfile.QNAME_LINE , property );
       addedFeatures.add( profileFeature );
+//      property.setCoordinateSystem( targetCRS );
+      // profileFeature.setProperty( WspmProfile.QNAME_LINE, newProperty );
+
     }
 
-    final GMLWorkspace workspace = network.getWrappedFeature().getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network.getWrappedFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final GMLWorkspace workspace2 = network.getWrappedFeature().getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace2, network.getWrappedFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     m_network = network;
 
