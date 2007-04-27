@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -93,7 +94,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-    final IEditorPart activeEditor = activePage.getActiveEditor();
+    final IWorkbenchPart activeEditor = activePage.getActivePart();    
     if( activeEditor != null )
     {
       m_viewer.setMenu( menuManager );
