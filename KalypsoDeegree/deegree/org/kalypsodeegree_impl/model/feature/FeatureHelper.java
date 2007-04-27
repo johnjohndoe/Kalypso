@@ -807,7 +807,7 @@ public class FeatureHelper
         final String href = xlinkedFeature.getUri() + "#" + value;
         return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
       }
-      else if(value == null )
+      else if( value == null )
       {
         return null;
       }
@@ -817,10 +817,14 @@ public class FeatureHelper
         return feature.getWorkspace().getFeature( (String) value );
       }
     }
+   
   }
   
   /**
-   * Resolves and adapts the linked feature
+   * Resolves and adapts the linked feature.
+   * Note that the real feature is wrapped and return not the
+   * xlinked feature.
+   * 
    * @param feature the link property holder
    * @param propertyQName the q-name of the link property
    * @param adapterTargetClass the class the link feature is to 
@@ -848,13 +852,18 @@ public class FeatureHelper
              feature, propertyQName, adapterTargetClass );
     throw new IllegalArgumentException(message);
   }
-  final Feature propFeature = FeatureHelper.resolveLink( feature, propertyQName );
+  Feature propFeature = 
+     FeatureHelper.resolveLink( feature, propertyQName );
   if( propFeature == null )
   {
     return null;
   }
   else
-  {
+  {    
+    if( propFeature instanceof XLinkedFeature_Impl )
+    {
+      propFeature = ((XLinkedFeature_Impl)propFeature).getFeature();
+    }
     T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
     return adaptedFeature;
   }
