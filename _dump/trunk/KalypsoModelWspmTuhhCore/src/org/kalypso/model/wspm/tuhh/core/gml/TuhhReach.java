@@ -118,9 +118,14 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     final List<TuhhReachProfileSegment> profilesegments = new ArrayList<TuhhReachProfileSegment>();
     for( final Object object : reachSegmentList )
     {
-      final Feature segment = (Feature) object;
-      if( GMLSchemaUtilities.substitutes( segment.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) )
-        profilesegments.add( new TuhhReachProfileSegment( segment ) );
+      final Feature segmentFeature = (Feature) object;
+      if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) )
+      {
+        final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( segmentFeature );
+        final WspmProfile profileMember = segment.getProfileMember();
+        if( profileMember != null )
+          profilesegments.add( segment );
+      }
     }
 
     return profilesegments.toArray( new TuhhReachProfileSegment[profilesegments.size()] );
