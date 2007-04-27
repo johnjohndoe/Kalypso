@@ -122,5 +122,9 @@
           id="org.kalypso.ogc.gml.FeatureThemeQNameActionFilter"
           targetType="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
  </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer class="org.kalypso.core.preferences.KalypsoCorePreferenceInitializer"/>
+ </extension>
 
 </plugin>

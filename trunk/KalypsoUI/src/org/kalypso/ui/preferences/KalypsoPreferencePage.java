@@ -49,6 +49,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -61,6 +63,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class KalypsoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
+  private StringFieldEditor m_sfeCrs;
+
   public KalypsoPreferencePage( )
   {
     super( GRID );
@@ -88,9 +92,9 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
-    final StringFieldEditor sfeCrs = new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() );
-    addField( sfeCrs );
-    sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben
+    m_sfeCrs = new StringFieldEditor( IKalypsoCorePreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() );
+    addField( m_sfeCrs );
+    m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben
 
     // fetch list of timezone names and sort it
     final String[] ids = TimeZone.getAvailableIDs();
@@ -100,6 +104,18 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     addField( timeZoneFieldEditor );
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditorPreferencePage#initialize()
+   */
+  @Override
+  protected void initialize( )
+  {
+    super.initialize();
+    
+    m_sfeCrs.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
+    m_sfeCrs.load();
+  }
+  
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
