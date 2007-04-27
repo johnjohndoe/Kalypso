@@ -350,7 +350,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
    */
   public void paint( final GCWrapper gc )
   {
-
     gc.setLineWidth( 3 );
     gc.setLineStyle( SWT.LINE_SOLID );
     final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();

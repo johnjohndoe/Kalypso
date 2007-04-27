@@ -113,7 +113,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       addableLayer.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT );
-    if( (profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ).length == 0) && !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
+    if( !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_DEVIDER );
     if( (view.getResults().length > 0) && !existingLayers.contains( IWspmTuhhConstants.LAYER_WASSERSPIEGEL ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
@@ -268,8 +268,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
         layerToAdd.add( IWspmTuhhConstants.LAYER_MAUL );
     }
 
-    if( (profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ).length > 0) )
-      layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
+    /* We always have a trenner layer, even if no trenner is defined. */
+    layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
+    
     if( profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( view.getResults().length > 0 )

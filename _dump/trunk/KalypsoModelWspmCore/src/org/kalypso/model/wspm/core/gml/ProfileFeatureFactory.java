@@ -325,8 +325,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     // observation.getMetadataList().add( new Metadataobject(name, type, value) );
 
-    
-    profil.setName(observation.getName());
+    profil.setName( observation.getName() );
     profil.setComment( observation.getDescription() );
     final BigDecimal station = getProfileStation( profileFeature );
     profil.setStation( station == null ? Double.NaN : station.doubleValue() );
@@ -337,7 +336,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     // REMARK: handle buildings before table, because the setBuilding method resets the
     // corresponding table properties.
     final Feature buildingFeature = (Feature) FeatureHelper.getFirstProperty( profileFeature, new QName( NS_WSPMPROF, "member" ) );
-    
+
     final IProfileObject po = buildingFromFeature( profil, buildingFeature );
     if( po != null )
       profil.setProfileObject( po );
@@ -354,14 +353,14 @@ public class ProfileFeatureFactory implements IWspmConstants
       /* Test, if this component describes a pointProperty, if yes add it to the profile. */
       if( profil.getPropertyProviderFor( pp ) != null )
       {
-        // TODO: Kim muss weg, besser wären zwie verschiedene Rauheits-Componenten bzw. Point-Properties
-        // if( pp == IWspmConstants.POINT_PROPERTY_RAUHEIT )
-        // {
-        // if( "ks".equals( component.getUnit() ) )
-        // profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KS );
-        // else
-        // profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KST );
-        // }
+        // TODO: Kim muss weg, besser wären zwei verschiedene Rauheits-Componenten bzw. Point-Properties
+//        if( pp == IWspmConstants.POINT_PROPERTY_RAUHEIT )
+//        {
+//          if( "ks".equals( component.getUnit() ) )
+//            profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KS );
+//          else
+//            profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KST );
+//        }
 
         profil.addPointProperty( pp );
       }
@@ -370,6 +369,9 @@ public class ProfileFeatureFactory implements IWspmConstants
     for( final IRecord record : result )
     {
       final IProfilPoint point = profil.createProfilPoint();
+
+      /* Add the profile point immediately, else the markers don't get added to the profile. */
+      profil.addPoint( point );
 
       for( final IComponent component : components )
       {
@@ -398,7 +400,6 @@ public class ProfileFeatureFactory implements IWspmConstants
           KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
         }
       }
-      profil.addPoint( point );
     }
     return profil;
   }
@@ -416,7 +417,7 @@ public class ProfileFeatureFactory implements IWspmConstants
   private static IProfileObject buildingFromFeature( final IProfil profil, final Feature buildingFeature )
   {
     final IObservation<TupleResult> buildingObs = buildingFeature == null ? null : ObservationFeatureFactory.toObservation( buildingFeature );
-    
+
     final IPhenomenon phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
     if( phenomenon == null )
       return null;
@@ -430,7 +431,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     if( result.isEmpty() )
       return building;
-    
+
     /* transfrom building properties */
     final IRecord record = result.get( 0 );
     for( final IComponent component : result.getComponents() )
