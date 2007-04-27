@@ -45,15 +45,16 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -108,11 +109,11 @@ public class ImportProfileHandler extends AbstractHandler
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
-    /* post empty command(s) in order to make pool dirty. */
-    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     try
     {
-      modelProvider.saveModel( ITerrainModel.class, new NullProgressMonitor() );
+      /* post empty command(s) in order to make pool dirty. */
+      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( "Profile importieren", false ) );
+      // modelProvider.saveModel( ITerrainModel.class, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {
@@ -121,6 +122,7 @@ public class ImportProfileHandler extends AbstractHandler
     }
 
     /* Add new layer to profile-collection-map */
+    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView != null )
     {
       final Feature[] newFEFeatures = importWizard.getTerrainModelAdds();
