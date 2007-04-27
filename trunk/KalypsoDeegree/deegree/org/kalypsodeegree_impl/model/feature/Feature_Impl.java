@@ -351,7 +351,12 @@ public class Feature_Impl extends AbstractFeature implements Feature
 //      pt = m_featureType.getVirtualProperty(propQName);
 //      if(pt==null)
 //      {
-        throw new IllegalArgumentException( "Unknown property: " + propQName );
+        final String message = 
+          String.format( 
+              "Unknow property:\n\tfeatureType=%s\n\tprop QName=%s", 
+              getFeatureType().getQName(), 
+              propQName );
+        throw new IllegalArgumentException( message );
 //      }
     }
     return getProperty( pt );

@@ -95,7 +95,7 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   }
 
   /** Returns the linked feature. */
-  private final Feature getFeature( )
+  public final Feature getFeature( )
   {
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
     if( workspace == null || m_featureId == null )
