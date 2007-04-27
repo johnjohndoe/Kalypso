@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -58,10 +58,9 @@ public class WspmGeometryUtilities
 
   static
   {
-    // TODO: get crs from global settings
-    final CS_CoordinateSystem targetCRS = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
     try
     {
+      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       GEO_TRANSFORMER = new GeoTransformer( targetCRS );
     }
     catch( final Exception e )
