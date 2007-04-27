@@ -38,28 +38,22 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.preferences;
+package org.kalypso.core.preferences;
+
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.kalypso.core.KalypsoCorePlugin;
 
 /**
- * Constants.
- * 
- * @author schlienger
+ * @author Gernot Belger
  */
-public interface IKalypsoPreferences
+public class KalypsoCorePreferenceInitializer extends AbstractPreferenceInitializer
 {
-  /** name of the property where the client conf files can be found */
-  public static final String CLIENT_CONF_URLS = "kalypso.client.conf";
-
-  public static final String HTTP_PROXY_USE = "kalypso.http.proxy.use";
-
-  public static final String HTTP_PROXY_HOST = "kalypso.http.proxy.host";
-
-  public static final String HTTP_PROXY_PORT = "kalypso.http.proxy.port";
-
-  public static final String HTTP_PROXY_USER = "kalypso.http.proxy.user";
-
-  public static final String HTTP_PROXY_PASS = "kalypso.http.proxy.pass";
-
-  public static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone";
-
+  /**
+   * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+   */
+  @Override
+  public void initializeDefaultPreferences( )
+  {
+    KalypsoCorePlugin.getDefault().getPluginPreferences().setDefault( IKalypsoCorePreferences.GLOBAL_CRS, IKalypsoCorePreferences.DEFAULT_CRS );
+  }
 }

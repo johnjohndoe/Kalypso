@@ -44,8 +44,6 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TODO: Developper: set your default preferences here.
- * 
  * @author schlienger
  */
 public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
@@ -63,6 +61,5 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     // If someone needs an initial value for a certain configuration, put an option into the
     // config.ini file.
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS, "" );
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31467" );
   }
 }

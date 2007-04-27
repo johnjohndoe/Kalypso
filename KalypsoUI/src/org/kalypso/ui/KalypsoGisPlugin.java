@@ -72,6 +72,7 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.loader.DefaultLoaderFactory;
@@ -95,8 +96,6 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
@@ -122,8 +121,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private ResourceBundle m_resourceBundle = null;
 
-  private CS_CoordinateSystem m_coordinateSystem = null;
-
   /** Manages the list of repositories. */
   private IRepositoryContainer m_tsRepositoryContainer = null;
 
@@ -143,9 +140,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private ILoaderFactory m_loaderFactory;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
-
-  // private static final String DEFAULT_CRS = "EPSG:4326";
-  private static final String DEFAULT_CRS = "EPSG:31469";
 
   private static DefaultStyleFactory m_defaultStyleFactory;
 
@@ -556,22 +550,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
+  /**
+   * @deprecated Use {@link KalypsoCorePlugin#getCoordinatesSystem()}} instead.
+   */
+  @Deprecated
   public CS_CoordinateSystem getCoordinatesSystem( )
   {
-    if( m_coordinateSystem == null )
-    {
-      String crsName = getPluginPreferences().getString( IKalypsoPreferences.GLOBAL_CRS );
-
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      if( crsName == null || !csFac.isKnownCS( crsName ) )
-      {
-        getPluginPreferences().setValue( IKalypsoPreferences.GLOBAL_CRS, DEFAULT_CRS );
-        System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \"" + DEFAULT_CRS + "\"" );
-        crsName = DEFAULT_CRS;
-      }
-      m_coordinateSystem = Adapters.getDefault().export( csFac.getCSByName( crsName ) );
-    }
-    return m_coordinateSystem;
+    return KalypsoCorePlugin.getDefault().getCoordinatesSystem();
   }
 
   public IRepositoryContainer getRepositoryContainer( )

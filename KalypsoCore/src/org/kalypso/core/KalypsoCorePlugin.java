@@ -44,10 +44,14 @@ package org.kalypso.core;
 import java.io.File;
 
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -56,6 +60,9 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree.model.TypeHandlerUtilities;
+import org.kalypsodeegree_impl.model.cs.Adapters;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -65,11 +72,18 @@ public class KalypsoCorePlugin extends Plugin
 {
   private static KalypsoCorePlugin m_default;
 
+  /**
+   * Storage for preferences.
+   */
+  private ScopedPreferenceStore m_preferenceStore;
+
   private IFeatureSelectionManager m_selectionManager = null;
 
   private CatalogManager m_catalogManager = null;
 
   private CatalogSLD m_sldCatalog = null;
+
+  private CS_CoordinateSystem m_coordinateSystem = null;
 
   public static String getID( )
   {
@@ -140,6 +154,8 @@ public class KalypsoCorePlugin extends Plugin
     m_sldCatalog = null;
     m_selectionManager = null;
 
+    savePluginPreferences();
+    
     super.stop( context );
   }
 
@@ -157,7 +173,7 @@ public class KalypsoCorePlugin extends Plugin
     return m_catalogManager;
   }
 
-  public CatalogSLD getSLDCatalog( )    
+  public CatalogSLD getSLDCatalog( )
   {
     if( m_sldCatalog == null )
     {
@@ -177,4 +193,51 @@ public class KalypsoCorePlugin extends Plugin
 
     return m_selectionManager;
   }
+
+  public CS_CoordinateSystem getCoordinatesSystem( )
+  {
+    if( m_coordinateSystem == null )
+    {
+      String crsName = getPluginPreferences().getString( IKalypsoCorePreferences.GLOBAL_CRS );
+
+      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+      if( crsName == null || !csFac.isKnownCS( crsName ) )
+      {
+        getPluginPreferences().setValue( IKalypsoCorePreferences.GLOBAL_CRS, IKalypsoCorePreferences.DEFAULT_CRS );
+        System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \"" + IKalypsoCorePreferences.DEFAULT_CRS + "\"" );
+        crsName = IKalypsoCorePreferences.DEFAULT_CRS;
+      }
+      m_coordinateSystem = Adapters.getDefault().export( csFac.getCSByName( crsName ) );
+    }
+    return m_coordinateSystem;
+  }
+
+  /**
+   * Copied from {@link org.eclipse.ui.plugin.AbstractUIPlugin}.
+   * <p>
+   * Returns the preference store for this UI plug-in. This preference store is used to hold persistent settings for
+   * this plug-in in the context of a workbench. Some of these settings will be user controlled, whereas others may be
+   * internal setting that are never exposed to the user.
+   * <p>
+   * If an error occurs reading the preference store, an empty preference store is quietly created, initialized with
+   * defaults, and returned.
+   * </p>
+   * <p>
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility
+   * layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
+   * themselves.
+   * </p>
+   * 
+   * @return the preference store
+   */
+  public IPreferenceStore getPreferenceStore( )
+  {
+    // Create the preference store lazily.
+    if( m_preferenceStore == null )
+    {
+      m_preferenceStore = new ScopedPreferenceStore( new InstanceScope(), getBundle().getSymbolicName() );
+    }
+    return m_preferenceStore;
+  }
+
 }
