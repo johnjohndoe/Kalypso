@@ -208,17 +208,22 @@ public class SimulationModel<
                                           Class<T> adapterTargetClass,
                                           QName propertyQName )
   {
-     final Feature feature = getFeature();
-     final Feature propFeature = FeatureHelper.resolveLink( feature, propertyQName );
-     if( propFeature == null )
-     {
-       return null;
-     }
-     else
-     {
-       T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
-       return adaptedFeature;
-     }
+//     final Feature feature = getFeature();
+//     final Feature propFeature = FeatureHelper.resolveLink( feature, propertyQName );
+//     if( propFeature == null )
+//     {
+//       return null;
+//     }
+//     else
+//     {
+//       T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
+//       return adaptedFeature;
+//     }
+    
+    return FeatureHelper.resolveLink( 
+              getFeature(), 
+              propertyQName, 
+              adapterTargetClass );
        
   }
   

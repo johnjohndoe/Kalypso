@@ -140,19 +140,39 @@
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:groundTypeName" />
+					kapp:property="wbr:groundTypeName" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:string"/>
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:vegetationTypeName" />
+					kapp:property="wbr:vegetationTypeName" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:string"/>
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:ks" />
+					kapp:property="wbr:ks" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:double"/>
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:axay" />
+					kapp:property="wbr:axay" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:double"/>
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:dp" />
+					kapp:property="wbr:dp" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:double"/>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+					kapp:property="wbr:eddy" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:double"/>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+					kapp:property="wbr:charactV" 
+					kapp:isVirtual = "true" 
+					kapp:valueType="xs:double"/>
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -180,15 +200,16 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="groundTypeName"
+					<!--xs:element name="groundTypeName"
 						type="xs:string">
 					</xs:element>
 					<xs:element name="vegetationTypeName"
 						type="xs:string">
-					</xs:element>
-					<xs:element name="ks" type="xs:double" />
-					<xs:element name="axay" type="xs:double" />
-					<xs:element name="dp" type="xs:double" />
+					</xs:element-->
+					<!--xs:element name="ks" type="xs:double" / -->
+					<!--xs:element name="axay" type="xs:double" / -->
+					<!--xs:element name="dp" type="xs:double" / -->
+					
 					<xs:element name="colorStyle" type="common:color" />
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />

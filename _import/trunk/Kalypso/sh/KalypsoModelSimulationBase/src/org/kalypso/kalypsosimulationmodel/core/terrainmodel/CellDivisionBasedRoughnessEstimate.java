@@ -48,13 +48,13 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.ICellDivisionControl;
+import org.kalypso.kalypsosimulationmodel.core.SurfaceCellDivision;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Implementation of roughness estimate based on the
@@ -62,7 +62,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Patrice Congo
  */
-public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpec
+public class CellDivisionBasedRoughnessEstimate implements IRoughnessEstimateSpec
 {
   /**
    * List of roughness polygones that contributes to this estimate
@@ -74,48 +74,116 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   final private Map<IRoughnessCls, Double> histogram = 
                         new HashMap<IRoughnessCls, Double>();
   
-  public IntersectionBasedRoughnessEstimate(
-                    IRoughnessPolygonCollection roughnessPolygonCollection, 
-                    GM_Surface estimateZone ) throws GM_Exception
+  class AreaRatioBaseDivisionControl implements ICellDivisionControl
+  {
+
+    final double maxAreaRatio;
+    final double area;
+    final double areaDivMaxAreaRatio;
+    final GM_Surface surface;
+    
+    public AreaRatioBaseDivisionControl( 
+                                    final double maxAreaRatio, 
+                                    final GM_Surface surface )
+    {
+      this.surface = surface;
+      this.area = surface.getArea();      
+      this.maxAreaRatio = maxAreaRatio;
+      this.areaDivMaxAreaRatio = area / maxAreaRatio;
+    }
+    
+    public int needDivision( GM_Position[] positions )
+    {
+      boolean containsLL = surface.contains( positions[0] );
+      boolean containsLR = surface.contains( positions[1] );
+      boolean containsUL = surface.contains( positions[3] );
+      boolean containsUR = surface.contains( positions[2] );
+//      if( containsLL & containsLR && containsUL && containsUR )
+//      {
+//        return DIVISION_TO_BE_STOPED;
+//      }
+      if( !containsLL  && !containsLR && !containsUL && !containsUR )
+      {
+        return REMOVE_FROM_PROCESSING;
+      }
+      else
+      {
+
+        double cellArea = SurfaceCellDivision.getCellArea( positions );
+        
+        if( cellArea > areaDivMaxAreaRatio ) 
+        {
+          return DIVISION_TO_BE_CONTINUED;
+        }
+        else
+        {
+          return DIVISION_TO_BE_STOPED;
+        }
+      }
+      
+    }
+    
+  };
+  
+  public CellDivisionBasedRoughnessEstimate(
+                    final IRoughnessPolygonCollection roughnessPolygonCollection, 
+                    final GM_Surface estimateZone,
+                    final double maxAreaRatio)
   {
     Assert.throwIAEOnNullParam( roughnessPolygonCollection, "roughnessPolygonCollection" );
     Assert.throwIAEOnNullParam( estimateZone, "estimateZone" );
     this.estimateZone = estimateZone;
     contributingRP = 
       roughnessPolygonCollection.selectRoughnessPolygons( estimateZone );
-    makeHistrogram();
+    ICellDivisionControl cellDivisionControl =
+      new AreaRatioBaseDivisionControl(maxAreaRatio, estimateZone );
+    List<GM_Position[]> cells = 
+          SurfaceCellDivision.toCells( estimateZone, cellDivisionControl );
+    makeHistrogram( cells, roughnessPolygonCollection );
   }
   
-  private final void makeHistrogram( ) throws GM_Exception
+  private final void makeHistrogram( 
+                final List<GM_Position[]> cells,
+                final IRoughnessPolygonCollection roughnessPolygonCollection )
   {
-    Geometry jtsEstimateZone = JTSAdapter.export( estimateZone );
-    final double areaOfEstimateZone = jtsEstimateZone.getArea();
-    for( IRoughnessPolygon roughnessPolygon : contributingRP )
+    
+//    GM_Position center;
+//    double areaToAdd;
+    double area = 0 ;
+    for( GM_Position[] cell : cells )
     {
-      
-      final Geometry rpolygone = JTSAdapter.export( roughnessPolygon.getSurface() );
-      final Geometry jtsIntersect = jtsEstimateZone.intersection( rpolygone );
-      if(jtsIntersect != null )
+      final GM_Position center = 
+            SurfaceCellDivision.getCellCenter( cell );
+      List<IRoughnessPolygon> rps = 
+        roughnessPolygonCollection.selectRoughnessPolygons( center );
+      final double areaToAdd = SurfaceCellDivision.getCellArea( cell );
+      if( !rps.isEmpty() )
       {
-        IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
-        Double currentArea = histogram.get(  roughnessCls );
-        double areaToAdd = jtsIntersect.getArea( );
-        if( areaToAdd == 0 )
+        area = area + areaToAdd;
+        for( IRoughnessPolygon rp : rps )
         {
-          //skip
-        }
-        else if( currentArea == null )
-        {
-          histogram.put( roughnessCls, areaToAdd/areaOfEstimateZone );
-        }
-        else
-        {
-          histogram.put( roughnessCls, currentArea + areaToAdd/areaOfEstimateZone );
+          IRoughnessCls roughnessCls = rp.getRoughnessCls();
+          Double double1 = histogram.get( roughnessCls );
+          if( double1 == null )
+          {
+            histogram.put( roughnessCls, areaToAdd );
+            
+          }
+          else
+          {
+            histogram.put( roughnessCls, double1 + areaToAdd );
+          }
         }
       }
-
+    }
+    System.out.println("TOTAL CELL AREA="+area);
+    //normalize
+    for( Entry<IRoughnessCls, Double> entry : histogram.entrySet())
+    {
+      entry.setValue( entry.getValue()/area );
     }
   }
+  
   
 
   /**
@@ -154,12 +222,6 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#mostSpreadRoughness()
    */
   public IRoughnessCls[] mostSpreadRoughness( )
-  {
-    return mostSpreadRoughness( histogram );
-  }
-  
-  public static final IRoughnessCls[] mostSpreadRoughness( 
-                                        Map <IRoughnessCls, Double> histogram)
   {
     List<IRoughnessCls> mostSpreads =  new ArrayList<IRoughnessCls>();
     Double max = Double.MIN_VALUE;

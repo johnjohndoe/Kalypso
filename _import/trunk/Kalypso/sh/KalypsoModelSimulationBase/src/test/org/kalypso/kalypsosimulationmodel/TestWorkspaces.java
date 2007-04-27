@@ -68,7 +68,7 @@ public class TestWorkspaces
 //			Logger.getLogger(TestWorkspaces.class);
 	
 	public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
-	
+    public static final double[][] NO_INTERIOR = {};
 //	public static final URL URL_POLYNOMIAL1D;
 //	public static final String REL_RES_POLYNOMIAL1D="data/polynomial1d.xml";
 	
@@ -103,6 +103,10 @@ public class TestWorkspaces
     public static final URL URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST;
     public static final String REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST=
                                   "data/roughness_cls_collection.xml";
+    
+    public static final URL URL_ROUGHNESS_DB;
+    public static final String REL_RES_ROUGHNESS_DB=
+                                  "data/roughness_db.xml";
 	
 	public static final URL URL_ROUGHNESS_POLYGON;
 	public static final String REL_RES_ROUGHNESS_POLYGON=
@@ -111,6 +115,10 @@ public class TestWorkspaces
     public static final URL URL_ROUGHNESS_POLYGON_COLLECTION;
     public static final String REL_RES_ROUGHNESS_POLYGON_COLLECTION =
                             "data/terrain.gml";
+    
+    public static final URL URL_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE;
+    public static final String REL_RES_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE =
+                            "data/roughness_polygon_collection_estimate.xml";
     
 	public static final URL URL_COL_ROUGHNESS_CLS_COR;
 	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
@@ -182,6 +190,11 @@ public class TestWorkspaces
 					REL_RES_ROUGHNESS_CLS,
 					TestWorkspaces.class.getResource(
 								REL_RES_ROUGHNESS_CLS));
+            urlMap.put(
+                REL_RES_ROUGHNESS_DB,
+                TestWorkspaces.class.getResource(
+                            REL_RES_ROUGHNESS_DB));
+            
 			urlMap.put(
 					REL_RES_ROUGHNESS_CLS_COR,
 					TestWorkspaces.class.getResource(
@@ -202,6 +215,11 @@ public class TestWorkspaces
                 REL_RES_ROUGHNESS_POLYGON_COLLECTION,
                 TestWorkspaces.class.getResource(
                             REL_RES_ROUGHNESS_POLYGON_COLLECTION));
+            urlMap.put(
+                REL_RES_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE,
+                TestWorkspaces.class.getResource(
+                            REL_RES_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE));
+            
 			urlMap.put(
 					REL_RES_SHAPE_2_ROUGHNESS_POLYGON,
 					TestWorkspaces.class.getResource(
@@ -266,26 +284,39 @@ public class TestWorkspaces
             
 			URL_COL_ROUGHNESS_CLS_COR=
 					urlMap.get(REL_RES_COL_ROUGHNESS_CLS_COR);
+            
+            URL_ROUGHNESS_DB=
+                urlMap.get( REL_RES_ROUGHNESS_DB );
 			
 			URL_ROUGHNESS_POLYGON=
 				urlMap.get(REL_RES_ROUGHNESS_POLYGON);
             URL_ROUGHNESS_POLYGON_COLLECTION=
-                urlMap.get(REL_RES_ROUGHNESS_POLYGON_COLLECTION);
+                urlMap.get( REL_RES_ROUGHNESS_POLYGON_COLLECTION );
+            
+            URL_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE=
+              urlMap.get( REL_RES_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE );
+            
 			URL_SHAPE_2_ROUGHNESS_POLYGON=
-                urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
+                urlMap.get( REL_RES_SHAPE_2_ROUGHNESS_POLYGON );
+            
             URL_SMALL_ASC=
-              urlMap.get(REL_RES_SMALL_ASC);
+              urlMap.get( REL_RES_SMALL_ASC );
+            
             URL_GC_SMALL_ASC=
-              urlMap.get(REL_RES_GC_SMALL_ASC);
+              urlMap.get( REL_RES_GC_SMALL_ASC );
             
             URL_NATIVE_TEM_WRAPPER=
-              urlMap.get(REL_RES_NATIVE_TEM_WRAPPER);
+              urlMap.get( REL_RES_NATIVE_TEM_WRAPPER );
+            
             URL_TEM_SYSREM=
-              urlMap.get(REL_RES_TEM_SYSTEM);
+              urlMap.get( REL_RES_TEM_SYSTEM );
+            
             URL_TEM_EMPTY_TER_MODEL=
-              urlMap.get(REL_RES_TEM_EMPTY_TER_MODEL);
+              urlMap.get( REL_RES_TEM_EMPTY_TER_MODEL );
+            
             URL_SIMPLE_OPERATIONAL_MODEL=
-              urlMap.get(REL_RES_SIMPLE_OPERATIONAL_MODEL);
+              urlMap.get( REL_RES_SIMPLE_OPERATIONAL_MODEL );
+            
             URL_TEST_HMO_3_TRI=
                urlMap.get( REL_RES_TEST_HMO_3_TRI );
         }

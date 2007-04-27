@@ -128,7 +128,7 @@ public class TestRoughnessPolygon extends TestCase
 		RoughnessPolygon rp= 
 			new RoughnessPolygon((Feature)list.get(0));
 		assertEquals(
-				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
+				"Sand und Schilf", 
 				rp.getRoughnessStyle());
 //		GM_Polygon pol=rp.getPolygon();
 //		GM_Position[] positions=pol.getExteriorRing();

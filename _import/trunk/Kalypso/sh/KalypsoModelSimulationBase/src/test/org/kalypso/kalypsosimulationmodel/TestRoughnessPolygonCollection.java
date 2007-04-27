@@ -85,7 +85,7 @@ public class TestRoughnessPolygonCollection extends TestCase
     }
 
     m_polygonCollection = new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
-    List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point );
+    List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point.getPosition() );
     System.out.println( "" );
     System.out.println( "******************************************************************" );
     System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION);

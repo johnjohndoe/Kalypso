@@ -18,6 +18,7 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -25,6 +26,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevati
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -165,6 +167,20 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 			}
 		};
 		cMap.put(IRoughnessPolygon.class, cTor);
+        
+//      IRoughnessLayerPolygonCollection
+        cTor= new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+                
+                return new RoughnessPolygonCollection(feature);
+            }
+        };
+        cMap.put(IRoughnessPolygonCollection.class, cTor);
 
         //IRiverProfileNetworkCollection
 		cTor= new AdapterConstructor()

@@ -1,20 +1,17 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -31,6 +28,14 @@ import com.vividsolutions.jts.geom.Polygon;
 public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughnessPolygon> implements IRoughnessPolygonCollection
 {
 
+  public RoughnessPolygonCollection(Feature featureToBind)
+  {
+    this(
+        featureToBind,
+        IRoughnessPolygon.class, 
+        KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
+  }
+  
   public RoughnessPolygonCollection( Feature featureCol, Class<IRoughnessPolygon> fwClass, QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
@@ -43,8 +48,6 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
 
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon polygon )
   {
-    
-  // System.out.println("Polygon : "+polygon.); 
     return null;
   }
   
@@ -146,9 +149,9 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   
 
   @SuppressWarnings("unchecked")
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Point location )
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position location )
   {
-    return query( location.getPosition() );
+    return query( location );
     
 //    List<Feature> srcPolygonsList = getWrappedList();
 //    List<Feature> dstPolygonsList = new ArrayList<Feature>();
@@ -225,11 +228,16 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
    */
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Object object )
   {
-    object.getCoordinateDimension();
-    
-    
-    GM_Polygon ex =(GM_Polygon)object;
-    System.out.println(" Area "+ex.getArea());
+//    return new CellDivisionBasedRoughnessEstimate(this, (GM_Surface)object, 100 );
+    try
+    {
+      return 
+        new IntersectionBasedRoughnessEstimate( this, ( GM_Surface )object );
+    }
+    catch (Exception e) 
+    {
+      e.printStackTrace();
+    }
     return null;
   }
 

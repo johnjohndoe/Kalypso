@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
@@ -23,7 +23,7 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * @param point the location where to find the roughness polygon
    * @return a list of roughness polygons that contain the given point
    */
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Point point );
+  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position point );
   
   /**
    * Selects all roughness polygons overlapping the provided polygon.

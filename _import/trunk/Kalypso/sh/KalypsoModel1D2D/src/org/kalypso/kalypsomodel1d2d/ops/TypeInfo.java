@@ -77,7 +77,7 @@ public class TypeInfo
       return false;
     }
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
-    for(IFE1D2DElement element:containers)
+    for( IFE1D2DElement element : containers )
     {
       if(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D.equals( 
                   element.getWrappedFeature().getFeatureType().getQName()))
@@ -114,7 +114,7 @@ public class TypeInfo
    * @return true if the given edge is an 1d edge otherwise false
    * 
    */
-  public static final boolean is2DEdge(IFE1D2DEdge edge)
+  public static final boolean is2DEdge( IFE1D2DEdge edge )
   {
     if(edge==null)
     {
