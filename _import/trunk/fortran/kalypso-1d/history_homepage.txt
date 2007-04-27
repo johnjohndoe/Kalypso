@@ -272,13 +272,13 @@ Kalypso 1.3.1      04. April 2007
      Berechnung (=Abfluss-Steigergung):      
 
 2.)  Ueberarbeitung und BUG-Fix der Wehrberechnung	 
-	   					Monika Donner, 04.04.2007
+	   					                            Monika Donner, 04.04.2007
                                                
- 													Monika Donner, 04.04.2007                                                    
-Kalypso 1.3.1.1     25. April 2007
+                                                   
+Kalypso 1.3.1.2     26. April 2007
 -----------------------------------    
-1.)  Ueberarbeitung und BUG-Fix der Wehrberechnung für rund- & scharfekronige Wehre
-						Monika Donner, 25.04.2007
+1.)  Ueberarbeitung und BUG-Fix der Wehrberechnung für rund- & scharfkronige Wehre
+						                            Monika Donner, 26.04.2007
 
 	 
 	                                                 
