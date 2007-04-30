@@ -84,8 +84,6 @@ public class SplitSort implements FeatureList
 
 //    m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
      m_index = new QuadTreeIndex( m_envelopeProvider );
-
-    System.out.println( m_index );
   }
 
   public boolean add( final Object object )
