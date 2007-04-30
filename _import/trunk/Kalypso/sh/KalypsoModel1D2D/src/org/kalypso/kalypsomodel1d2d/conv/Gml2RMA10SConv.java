@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -82,13 +83,30 @@ public class Gml2RMA10SConv
 
   private final LinkedHashMap<String, String> lines_CS = new LinkedHashMap<String, String>();
 
-  private final LinkedHashMap<String, String> m_nodesIDProvider = new LinkedHashMap<String, String>();
+  
+  //private final LinkedHashMap<String, String> m_nodesIDProvider = new LinkedHashMap<String, String>();
+  
+  private final ArrayList<String> m_nodesIDProvider_ = new ArrayList<String>();
+  private final ArrayList<Integer> m_nodesValueProvider_ = new ArrayList<Integer>();
 
-  private final LinkedHashMap<String, String> m_elementsIDProvider = new LinkedHashMap<String, String>();
+  //private final LinkedHashMap<String, String> m_elementsIDProvider = new LinkedHashMap<String, String>();
+  
+  private final ArrayList<String> m_elementsIDProvider_ = new ArrayList<String>();
+  private final ArrayList<Integer> m_elementsValueProvider_ = new ArrayList<Integer>();
+  
+  //private final LinkedHashMap<String, String> m_complexElementsIDProvider = new LinkedHashMap<String, String>();
 
-  private final LinkedHashMap<String, String> m_complexElementsIDProvider = new LinkedHashMap<String, String>();
+  private final ArrayList<String> m_complexElementsIDProvider_ = new ArrayList<String>();
+  private final ArrayList<Integer> m_complexElementsValueProvider_ = new ArrayList<Integer>();
+  
+  //private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>();
 
-  private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>();
+  private final ArrayList<String> m_edgesIDProvider_ = new ArrayList<String>();
+  private final ArrayList<Integer> m_edgesValueProvider_ = new ArrayList<Integer>();
+  
+  
+
+
 
   private double m_offsetX;
 
@@ -116,23 +134,47 @@ public class Gml2RMA10SConv
       return 0;
     final String id = i1d2dObject.getGmlID();
     if( i1d2dObject instanceof IFE1D2DNode )
-      return getID( m_nodesIDProvider, id );
+      return getID( m_nodesIDProvider_, m_nodesValueProvider_, id );
+     // return getID( m_nodesIDProvider,id );
     else if( i1d2dObject instanceof IFE1D2DEdge )
-      return getID( m_edgesIDProvider, id );
+      return getID( m_edgesIDProvider_,m_edgesValueProvider_, id );
     else if( i1d2dObject instanceof IFE1D2DElement )
-      return getID( m_elementsIDProvider, id );
+      return getID( m_elementsIDProvider_,m_elementsValueProvider_, id );
     else if( i1d2dObject instanceof IFE1D2DComplexElement )
-      return getID( m_complexElementsIDProvider, id );
+      return getID( m_complexElementsIDProvider_,m_complexElementsValueProvider_, id );
     else
       return 0;
   }
 
+  /*
   private int getID( final LinkedHashMap<String, String> map, final String gmlID )
   {
-    if( !map.containsKey( gmlID ) )
+    if( !map.containsKey( gmlID ) ) {
       map.put( gmlID, Integer.toString( map.size() + 1 ) );
+    }
     return Integer.parseInt( map.get( gmlID ) );
+  }*/
+  
+ private int getID( final ArrayList<String> aID,
+                           ArrayList<Integer> aValue, 
+                           final String gmlID )
+  {
+    if (!aID.contains( gmlID )) 
+    {
+      aID.add( gmlID );
+      aValue.add( ( aValue.size() + 1 ) );     
+    }    
+    
+    //Integer[] arr =  (Integer[]) aValue.toArray();
+    //return arr[aID.indexOf( gmlID )]; 
+    
+    return aValue.get( aID.indexOf( gmlID ));
+//    if( !map.containsKey( gmlID ) ) {
+//      map.put( gmlID, Integer.toString( map.size() + 1 ) );
+//    }
+//    return Integer.parseInt( map.get( gmlID ) );
   }
+
 
   public Gml2RMA10SConv( IFEDiscretisationModel1d2d sourceModel, URL rma10sOutputURL, IPositionProvider positionProvider )
   {
