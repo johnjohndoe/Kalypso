@@ -216,6 +216,21 @@
       wird die Quantifizierung des Zustromes von außen vollzogen.
       Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
       Tiefengrundwasserleiter.</para>
+
+      <figure>
+        <title>Teileinzugsgebiete</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Teileinzugsgebiet.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <note>
+        <para>die Tabelle aus Arc View ist nicht
+        vollständig!!!!!!!!!!!!!!!!!!!!!!!!</para>
+      </note>
     </section>
 
     <section>
@@ -252,18 +267,92 @@
           </imageobject>
         </mediaobject>
       </figure>
+
+      <figure>
+        <title>Beispiel der Versiegelungsklassen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Versiegelungsklassen-na.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Landnutzung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Landnutzung-na.png" scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
 
     <section>
       <title>Gebietscharakteristika und Ableitung der Bodenschichtung</title>
 
-      <para></para>
+      <para>Zunächst eine generelle Unterscheidung bzw. Definition: Man
+      unterscheidet zwischen Bodenart und Boden, bzw. Horizonttyp. Für die
+      Hydrologie ist die Bodenart entscheidend. Sie beschreibt die
+      Korngrößen-zusammensetzung des Bodens und damit die Porenverteilung im
+      Boden. Ungeeignet für die Hydrologie sind die Horizonttypen wie Bv, Ae
+      und die Bodentypen wie Braunerde, Parabraunerde. Hier wird nur ein
+      chemischer Prozess beschrieben, z. B. Verbraunung, Auswaschung. Es
+      bleibt jedoch unklar, welche Kornfraktionen vorliegen. Aus diesem Grund
+      ist es dann nicht möglich die Bodenwasserhaushaltsgrößen kf-Wert,
+      Welkepunkt, Feldkapazität und maximale Bodenfeuchte zu bestimmen. Zur
+      Bodenwasserhaushaltsmodellierung ist die Angabe des Bodenaufbaus und die
+      Ermittlung der Schichtenparameter erforderlich. Die für die Modellierung
+      benötigten Bodendaten beschreiben i.d.R. nur den obersten Meter des
+      Bodens (maximal die obersten zwei Meter) und den Übergangsbereich zum
+      Grundwasser (Hydrogeologie). Für die Bezeichnung der Bodenschichten
+      sollten ADV-gerechte Bezeichnungen gewählt werden (Sl2, Hn,
+      Lu3...).</para>
+
+      <para>Für das Modell KalypsoNA ist es empfehlenswert, dass für alle
+      Modellböden die gleiche Anzahl von Schichten angesetzt wird. Es wird
+      zudem dringend empfohlen, die oberste Schicht (1-2 Meter) nicht durch
+      mehr als zwei Schichten darzustellen, da sonst die Kalibrierung
+      verkompliziert würde. Je nach Datenverfügbarkeit ist es sinnvoll eine
+      weitere Schicht für den Übergang zum Grundwasserleiter zur Verfügung zu
+      stellen (z.B. Sperrschicht). Für das Modell sind zunächst die
+      verwendeten Bodenhorizonte und deren Parameter (kf-Wert, Welkepunkt,
+      Feldkapazität und maximale Bodenfeuchte) zusammenzustellen. Außerdem ist
+      der Bodenaufbau mit den verwendeten Schichten und Schichtdicken zu
+      definieren und durch ein Key, welcher in den Hydrotopen referenziert
+      wird zu bezeichnen.</para>
+
+      <figure>
+        <title>Bodenaufbau</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Bodenaufbau-na.png" scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
 
     <section>
       <title>Bildung von Hydrotopen</title>
 
-      <para></para>
+      <para>Es erfolgt die Verschneidung der Daten aus Landnutzung, des Bodens
+      und den Teilgebieten zu Hydrotopen.</para>
+
+      <figure>
+        <title>Hydrotopbildung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Hydrotopbildung-na.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Nach der Verschneidung können Hydrotope identischer Eigenschaften
+      in einem Teilgebiet zusammengefast werden. Hierdurch kann die Rechenzeit
+      des späteren Modells erheblich verringert werden.</para>
     </section>
 
     <section id="kalypso_na-Systemelemente">
