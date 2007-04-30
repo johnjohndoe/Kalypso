@@ -858,7 +858,7 @@
 			enabled="false"
 			tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.tooltip"
 			icon="icons/full/elcl16/prev_nav.gif"
-			class="org.kalypso.ogc.gml.outline.MoveThemeUpAction2" />
+			class="org.kalypso.ogc.gml.outline.MoveThemeUpAction2" />		
 		<MapviewAction
 			title="%org.kalypso.ogc.gml.outline.RemoveThemeAction2.label"
 			enabled="false"
@@ -1160,6 +1160,14 @@ TODO: unfortunately the save button is always disabled
     <viewContribution
           id="org.kalypso.ui.views.outline.actions"
           targetID="org.kalypso.ui.views.outline">
+      	<action
+             class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"
+             icon="icons/full/elcl16/impl_co.gif"
+             id="org.kalypso.ui.views.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"
+             label="%org.kalypso.ogc.gml.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label"
+             style="push"
+             toolbarPath="outline/tools"
+             tooltip="%org.kalypso.ogc.gml.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"/>
        <action
              class="org.kalypso.ogc.gml.outline.MoveThemeUpAction3"
              icon="icons/full/elcl16/prev_nav.gif"
