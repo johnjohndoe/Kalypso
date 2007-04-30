@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -74,6 +75,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
@@ -96,7 +98,6 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class JTSAdapter
 {
-
   // precision model that is used for all JTS-Geometries
   private static PrecisionModel pm = new PrecisionModel();
 
@@ -163,8 +164,6 @@ public class JTSAdapter
     return geometry;
   }
 
-  
-  
   /**
    * Converts a JTS- <tt>Geometry</tt> object to a corresponding <tt>GM_Object</tt>.
    * <p>
@@ -252,7 +251,7 @@ public class JTSAdapter
       return new Coordinate( asArray[0], asArray[1], asArray[2] );
     return new Coordinate( asArray[0], asArray[1] );
   }
-  
+
   public static GM_Position wrap( final Coordinate coord )
   {
     if( Double.isNaN( coord.z ) )
@@ -260,7 +259,6 @@ public class JTSAdapter
 
     return new GM_Position_Impl( coord.x, coord.y, coord.z );
   }
-
 
   /**
    * Converts a <tt>GM_MultiPoint</tt> to a <tt>MultiPoint</tt>.
@@ -575,4 +573,28 @@ public class JTSAdapter
     }
     return positions;
   }
+
+  public static GM_Envelope wrap( final Envelope env )
+  {
+    if( env.isNull() )
+      return new GM_Envelope_Impl();
+
+    final Coordinate crdMin = new Coordinate( env.getMinX(), env.getMinY() );
+    final Coordinate crdMax = new Coordinate( env.getMaxX(), env.getMaxY() );
+
+    final GM_Position min = wrap( crdMin );
+    final GM_Position max = wrap( crdMax );
+    return new GM_Envelope_Impl( min, max );
+  }
+
+  public static Envelope export( final GM_Envelope env )
+  {
+    final GM_Position posMin = env.getMin();
+    final GM_Position posMax = env.getMax();
+
+    final Coordinate min = export( posMin );
+    final Coordinate max = export( posMax );
+    return new Envelope( min, max );
+  }
+
 }
