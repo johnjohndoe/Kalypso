@@ -10,7 +10,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class SplitSortContainer
 {
-  private static final int MAX_OBJECTS = 100;
+  private static final int MAX_OBJECTS = 500;
 
   private SplitSortContainer[] mySubContainer = { null, null, null, null };
 
@@ -118,9 +118,6 @@ public class SplitSortContainer
     }
   }
 
-  /*
-   * public boolean contains(GM_Envelope env) { return myEnvelope.contains(env); }
-   */
   public boolean intersects( GM_Envelope env )
   {
     return myEnvelope.intersects( env );
@@ -128,7 +125,6 @@ public class SplitSortContainer
 
   public void createSubContainers( SplitSortContainer container )
   {
-
     double midX = 0d;
     double midY = 0d;
     boolean midXset = false;

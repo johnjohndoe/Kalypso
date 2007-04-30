@@ -17,6 +17,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Envelope;
 
 public class SplitSort implements FeatureList
 {
@@ -48,19 +51,13 @@ public class SplitSort implements FeatureList
 
   public static boolean showIndexEnv = false;
 
-  private SplitSortContainer m_rootContainer = null;
+  private final SpatialIndexExt m_index;
 
   private final List<Object> m_objects = new ArrayList<Object>();
 
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
-
-  /**
-   * A flag indicating if the spacial index is upd-to-date (if false). If not, the next call to 'query' will first
-   * recalculate the index.
-   */
-  private boolean m_invalid = true;
 
   private final IEnvelopeProvider m_envelopeProvider;
 
@@ -82,74 +79,40 @@ public class SplitSort implements FeatureList
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env, final IEnvelopeProvider envelopeProvider )
   {
     m_parentFeature = parentFeature;
-
-    if( parentFeature == null )
-    {
-      System.out.println( "vfbr" );
-    }
-
     m_parentFeatureTypeProperty = parentFTP;
-
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
-    if( env != null )
-      m_rootContainer = new SplitSortContainer( null, env, m_envelopeProvider );
+
+//    m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
+     m_index = new QuadTreeIndex( m_envelopeProvider );
+
+    System.out.println( m_index );
   }
 
   public boolean add( final Object object )
   {
-    /* Only update index if we are valid. Else we do not need to because we get a resort at the next query. */
-    if( !m_invalid )
-    {
-      final GM_Envelope env = getEnvelope( object );
-      spacialAdd( env, object );
-    }
+    final GM_Envelope env = getEnvelope( object );
+    spacialAdd( env, object );
 
     return m_objects.add( object );
   }
 
   private void spacialAdd( final GM_Envelope env, final Object object )
   {
-    if( env == null )
-      return;
-
-    if( m_rootContainer == null )
-      m_rootContainer = new SplitSortContainer( null, env, m_envelopeProvider );
-
-    if( m_rootContainer.getEnvelope().contains( env ) )
-      m_rootContainer.add( env, object );
-    else
-    {
-      double maxX = env.getMax().getX();
-      double maxY = env.getMax().getY();
-      double minX = env.getMin().getX();
-      double minY = env.getMin().getY();
-
-      GM_Envelope envRoot = m_rootContainer.getEnvelope();
-
-      double maxXroot = envRoot.getMax().getX();
-      double maxYroot = envRoot.getMax().getY();
-      double minXroot = envRoot.getMin().getX();
-      double minYroot = envRoot.getMin().getY();
-      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY : minYroot, maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY
-          : maxYroot );
-
-      SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv, m_envelopeProvider );
-      m_rootContainer.setParent( newRootContainer );
-      newRootContainer.createSubContainers( m_rootContainer );
-      m_rootContainer = newRootContainer;
-      m_rootContainer.add( env, object );
-    }
+    final Envelope itemEnv = env == null ? new Envelope() : JTSAdapter.export( env );
+    m_index.insert( itemEnv, object );
   }
 
   public List query( final GM_Envelope queryEnv, List result )
   {
-    resort();
-
     if( result == null )
       result = new ArrayList();
 
-    if( m_rootContainer != null )
-      result = m_rootContainer.query( queryEnv, result );
+    final Envelope env = JTSAdapter.export( queryEnv );
+
+    final List list = m_index.query( env );
+    for( final Object object : list )
+      result.add( object );
+
     return result;
   }
 
@@ -169,15 +132,10 @@ public class SplitSort implements FeatureList
     return result;
   }
 
-  private void remove( GM_Envelope env, Object object )
+  private void remove( final GM_Envelope env, final Object object )
   {
-    if( m_rootContainer != null )
-    {
-      if( env != null )
-        m_rootContainer.remove( env, object );
-      else
-        m_rootContainer.remove( object );
-    }
+    final Envelope itemEnv = JTSAdapter.export( env );
+    m_index.remove( itemEnv, object );
   }
 
   public boolean remove( final Object object )
@@ -194,61 +152,22 @@ public class SplitSort implements FeatureList
     return m_envelopeProvider.getEnvelope( object );
   }
 
-  public void paint( Graphics g, GeoTransform geoTransform )
+  public void paint( final Graphics g, final GeoTransform geoTransform )
   {
-    if( m_rootContainer != null )
-      m_rootContainer.paint( g, geoTransform );
+    m_index.paint( g, geoTransform );
   }
 
   public int rsize( )
   {
-    if( m_rootContainer != null )
-      return m_rootContainer.rsize();
     return 0;
   }
 
   public GM_Envelope getBoundingBox( )
   {
-    if( m_invalid )
-      resort();
-
-    if( m_rootContainer != null )
-      return m_rootContainer.getEnvelope();
-
-    return null;
-  }
-
-  private void resort( )
-  {
-    if( m_invalid == false )
-      return;
-
-    m_rootContainer = null;
-
-    GM_Envelope bbox = null;
-
-    for( final Object f : m_objects )
-    {
-      final GM_Envelope envelope = getEnvelope( f );
-      if( bbox == null )
-        bbox = envelope;
-      else
-        bbox = bbox.getMerged( envelope );
-    }
-
-    if( bbox != null )
-    {
-      m_rootContainer = new SplitSortContainer( null, bbox, m_envelopeProvider );
-      for( final Object next : m_objects )
-      {
-        GM_Envelope envelope = getEnvelope( next );
-        spacialAdd( envelope, next );
-      }
-    }
-    else
-      m_rootContainer = null;
-
-    m_invalid = false;
+    final Envelope bbox = m_index.getBoundingBox();
+    if( bbox.isNull() )
+      return null;
+    return JTSAdapter.wrap( bbox );
   }
 
   /**
@@ -256,7 +175,7 @@ public class SplitSort implements FeatureList
    */
   public int size( )
   {
-    return m_objects.size();
+    return m_index.size();
   }
 
   /**
@@ -264,7 +183,7 @@ public class SplitSort implements FeatureList
    */
   public void clear( )
   {
-    m_rootContainer = null;
+    m_index.clear();
 
     m_objects.clear();
   }
@@ -288,7 +207,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#get(int)
    */
-  public Object get( int index )
+  public Object get( final int index )
   {
     return m_objects.get( index );
   }
@@ -296,7 +215,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#remove(int)
    */
-  public Object remove( int index )
+  public Object remove( final int index )
   {
     final Object object = get( index );
     remove( object );
@@ -308,11 +227,8 @@ public class SplitSort implements FeatureList
    */
   public void add( int index, Object object )
   {
-    if( !m_invalid )
-    {
-      final GM_Envelope env = getEnvelope( object );
-      spacialAdd( env, object );
-    }
+    final GM_Envelope env = getEnvelope( object );
+    spacialAdd( env, object );
 
     m_objects.add( index, object );
   }
@@ -442,8 +358,7 @@ public class SplitSort implements FeatureList
     remove( env, element );
 
     /* Only update index if we are valid. Else we do not need to because we get a resort at the next query. */
-    if( !m_invalid )
-      spacialAdd( env, element );
+    spacialAdd( env, element );
 
     return m_objects.set( index, element );
   }
@@ -451,6 +366,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#toArray(java.lang.Object[])
    */
+  @SuppressWarnings("unchecked")
   public Object[] toArray( Object[] a )
   {
     return m_objects.toArray( a );
@@ -499,7 +415,7 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( )
   {
-    m_invalid = true;
+    m_index.invalidate();
   }
 
   /**
@@ -507,14 +423,7 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( final Object o )
   {
-    invalidate();
-    // if( !contains( o ) )
-    // return;
-    // if( m_rootContainer != null )
-    // m_rootContainer.remove( o );
-    // final GM_Envelope envelope = getEnvelope( o );
-    //
-    // spacialAdd( envelope, o );
+    m_index.invalidate( o );
   }
 
 }
