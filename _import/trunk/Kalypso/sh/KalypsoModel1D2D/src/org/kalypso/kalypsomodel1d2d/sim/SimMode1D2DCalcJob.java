@@ -137,7 +137,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
       final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
       IPositionProvider positionProvider = new XYZOffsetPositionProvider( ConvenienceCSFactory.getInstance().getOGCCSByName( TestWorkspaces.CS_KEY_GAUSS_KRUEGER ), 35 * 100000, 35 * 100000, 0 );
-      Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider, null );
+      Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider );
       // converter.toRMA10sModel();
 
       /** convert control/resistance stuff... */

@@ -72,7 +72,8 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
   private void init( ) throws MalformedURLException
   {
     test_RMA10sModelURL = new URL( "file:/D:/working/modell1D_OUTPUT.2d" );
-    test_discretisationModelURL = new URL( "file:/D:/working/discretisation.gml" );
+//    test_discretisationModelURL = new URL( "file:/D:/working/discretisation.gml" );
+    test_discretisationModelURL = new URL( "file:/D:/Eclipse/runtime-KalypsoEnterprise3/New08/Basis/models/discretisation.gml" );
   }
 
   /**
@@ -98,8 +99,9 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
     try
     {
       IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
-      Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider, null);
+      Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
       converter.toRMA10sModel();
+//      converter.sysout();
       converter.write();
     }
     catch( Throwable th )
