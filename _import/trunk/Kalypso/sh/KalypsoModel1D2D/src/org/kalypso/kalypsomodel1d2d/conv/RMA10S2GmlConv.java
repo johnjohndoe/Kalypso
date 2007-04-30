@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,17 +59,14 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
  */
 public class RMA10S2GmlConv implements IRMA10SModelReader
 {
+  private IRMA10SModelElementHandler m_handler;
 
-  // private IModelElementIDProvider idProvider;
-
-  private IRMA10SModelElementHandler handler;
-
-  public static boolean verboseMode = true;
+  public static boolean verboseMode = false;
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStream)
    */
-  public void parse( InputStream inputStream ) throws IllegalStateException, IOException
+  public void parse( final InputStream inputStream ) throws IllegalStateException, IOException
   {
     Assert.throwIAEOnNullParam( inputStream, "inputStream" );
     this.parse( new InputStreamReader( inputStream ) );
@@ -77,68 +75,58 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStreamReader)
    */
-  public void parse( InputStreamReader inputStreamReader ) throws IllegalStateException, IOException
+  public void parse( final Reader reader ) throws IllegalStateException, IOException
   {
-    Assert.throwIAEOnNullParam( inputStreamReader, "inputStreamReader" );
-    LineNumberReader reader = new LineNumberReader( inputStreamReader );
-    try
+    Assert.throwIAEOnNullParam( reader, "inputStreamReader" );
+    LineNumberReader lnr = new LineNumberReader( reader );
+    char char0, char1;
+
+    // signal parsing start
+    m_handler.start();
+
+    for( String line = lnr.readLine(); line != null; line = lnr.readLine() )
     {
-      char char0, char1;
-      int length;
-
-      // signal parsing start
-      handler.start();
-
-      for( String line = reader.readLine(); line != null; line = reader.readLine() )
+      if( line.length() < 2 )
       {
-        // if(verboseMode) System.out.println(line);
-        length = line.length();
-        if( line.length() < 2 )
-        {
-          continue;
-        }
-
-        char0 = line.charAt( 0 );
-        char1 = line.charAt( 1 );
-
-        if( char0 == 'F' && char1 == 'P' )
-        {
-          interpreteNodeLine( line, handler );
-
-        }
-        else if( char0 == 'F' && char1 == 'E' )
-        {
-          // LineID, ID
-          interpreteElementLine( line, handler );
-        }
-        else if( char0 == 'A' && char1 == 'R' )
-        {
-          // edge LINEID, ID, node1, node2, ellinks, elrechts
-          interpreteArcLine( line, handler );
-        }
-        else if( char0 == 'R' && char1 == 'K' )
-        {
-
-        }
-        else if( char0 == 'V' && char1 == 'A' )
-        {
-//        result LINEID, ID, vx, vy, depth, waterlevel
-          interpreteResultLine( line, handler );
-        }
-        else
-        {
-          if( verboseMode )
-            System.out.println( "Unsupported section:" + line );
-        }
+        continue;
       }
 
-      // signal parsing stop
-      handler.end();
+      char0 = line.charAt( 0 );
+      char1 = line.charAt( 1 );
+
+      if( char0 == 'F' && char1 == 'P' )
+      {
+        interpreteNodeLine( line, m_handler );
+
+      }
+      else if( char0 == 'F' && char1 == 'E' )
+      {
+        // LineID, ID
+        interpreteElementLine( line, m_handler );
+      }
+      else if( char0 == 'A' && char1 == 'R' )
+      {
+        // edge LINEID, ID, node1, node2, ellinks, elrechts
+        interpreteArcLine( line, m_handler );
+      }
+      else if( char0 == 'R' && char1 == 'K' )
+      {
+
+      }
+      else if( char0 == 'V' && char1 == 'A' )
+      {
+        // result LINEID, ID, vx, vy, depth, waterlevel
+        interpreteResultLine( line, m_handler );
+      }
+      else
+      {
+        if( verboseMode )
+          System.out.println( "Unsupported section:" + line );
+      }
     }
-    catch( IOException e )
-    {
-      throw new IOException();
-    }
+
+    // signal parsing stop
+    m_handler.end();
 
   }
 
@@ -155,12 +143,11 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
    */
   public void setRMA10SModelElementHandler( IRMA10SModelElementHandler handler ) throws IllegalArgumentException
   {
-    this.handler = handler;
+    m_handler = handler;
   }
 
   static public void toDiscretisationModel( InputStream rma10sModelInput, IFEDiscretisationModel1d2d targetModel, IPositionProvider positionProvider, IModelElementIDProvider idProvider ) throws IllegalStateException, IOException
   {
-
     IRMA10SModelReader reader = new RMA10S2GmlConv();
 
     IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( targetModel, positionProvider, idProvider );
@@ -193,20 +180,19 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     else
       handler.handlerError( line, EReadError.ILLEGAL_SECTION );
   }
-  
+
   private static final void interpreteResultLine( final String line, final IRMA10SModelElementHandler handler )
   {
-    final Pattern linePattern = Pattern.compile( "VA\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*).*" );
-    final Matcher matcher = linePattern.matcher( line );
-    if( matcher.matches() )
+    final String[] strings = line.split( "\\s" );
+    if( strings.length == 6 )
     {
       try
       {
-        int id = Integer.parseInt( matcher.group( 1 ) );
-        double vx = Double.parseDouble( matcher.group( 2 ) );
-        double vy = Double.parseDouble( matcher.group( 3 ) );
-        double depth = Double.parseDouble( matcher.group( 4 ) );
-        double waterlevel = Double.parseDouble( matcher.group( 5 ) );
+        int id = Integer.parseInt( strings[1] );
+        double vx = Double.parseDouble( strings[2] );
+        double vy = Double.parseDouble( strings[3] );
+        double depth = Double.parseDouble( strings[4] );
+        double waterlevel = Double.parseDouble( strings[5] );
         handler.handleResult( line, id, vx, vy, depth, waterlevel );
       }
       catch( NumberFormatException e )
@@ -314,5 +300,4 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     }
   }
 
-  
 }

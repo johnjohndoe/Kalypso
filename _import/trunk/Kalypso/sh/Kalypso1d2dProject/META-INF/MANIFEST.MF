@@ -22,5 +22,6 @@ Require-Bundle: org.junit4,
  de.renew.workflow.model,
  de.renew.workflow.connector,
  org.eclipse.ui.navigator,
- org.eclipse.ui.navigator.resources
+ org.eclipse.ui.navigator.resources,
+ org.kalypso.simulation.ui
 Eclipse-LazyStart: true

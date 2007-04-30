@@ -40,17 +40,20 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Calendar;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -59,22 +62,33 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.logging.XMLFormatter;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
+import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
+import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
 
@@ -88,8 +102,6 @@ public class SimMode1D2DCalcJob implements ISimulation
 {
   private RMA10Calculation m_calculation;
 
-  private boolean m_succeeded = false;
-
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
@@ -98,42 +110,41 @@ public class SimMode1D2DCalcJob implements ISimulation
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final Logger logger = Logger.getAnonymousLogger();
-    Formatter f = new XMLFormatter();
+    final Formatter f = new XMLFormatter();
+
     Handler h = null;
     try
     {
-      File loggerFile = new File( tmpDir, "infoLog.txt" );
+      final File loggerFile = new File( tmpDir, "simulation.log" );
 
-      h = new StreamHandler( new FileOutputStream( loggerFile ), f );
+      h = new StreamHandler( new BufferedOutputStream( new FileOutputStream( loggerFile ) ), f );
       logger.addHandler( h );
+      // why flush??
       h.flush();
     }
-    catch( FileNotFoundException e1 )
+    catch( final FileNotFoundException e1 )
     {
       e1.printStackTrace();
       logger.fine( e1.getLocalizedMessage() );
     }
-    logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + (new Date( Calendar.getInstance().getTimeInMillis() )).toString() + " (Serverzeit)\n" );
+
+    final String nowString = DateFormat.getDateTimeInstance().format( new Date() );
+    logger.log( Level.INFO, "Starte Berechnung: " + nowString + " (Serverzeit)\n" );
 
     try
     {
-      monitor.setMessage( "richte Berechnungsverzeichnis ein..." );
-      if( monitor.isCanceled() )
-        return;
-      final File logDir = new File( tmpDir, RMA10SimModelConstants.LOG_DIR_NAME );
-      logDir.mkdirs();
-
       monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
       if( monitor.isCanceled() )
         return;
 
       m_calculation = new RMA10Calculation( inputProvider );
 
-      /** convert descretisation model stuff... */
+      /** convert discretisation model stuff... */
       // TODO write merged *.2d file for calc core / Dejan starts like this I (Jessica) think
       monitor.setMessage( "Generiere 2D Netz..." );
       if( monitor.isCanceled() )
         return;
+
       final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
       final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
       IPositionProvider positionProvider = new XYZOffsetPositionProvider( ConvenienceCSFactory.getInstance().getOGCCSByName( TestWorkspaces.CS_KEY_GAUSS_KRUEGER ), 35 * 100000, 35 * 100000, 0 );
@@ -150,7 +161,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       pw.close();
 
       /** start calculation... */
-      monitor.setMessage( "starting 2D simulation..." );
+      monitor.setMessage( "Starte Rechenkern..." );
       if( monitor.isCanceled() )
         return;
       monitor.setProgress( 20 );
@@ -159,57 +170,118 @@ public class SimMode1D2DCalcJob implements ISimulation
       startCalculation( tmpDir, monitor );
 
       /** check succeeded and load results */
-      checkSucceeded( tmpDir );
-      if( isSucceeded() )
+
+      // unpack a demo-.2d-file in order to test result loading
+      // TODO: remove thios as soon as we do the real calculation
+      InputStream resultStream = null;
+      try
+      {
+        resultStream = getClass().getResourceAsStream( RMA10SimModelConstants.RESOURCEBASE + "pseudoResult.zip" );
+        ZipUtilities.unzip( resultStream, tmpDir );
+        resultStream.close();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( resultStream );
+      }
+
+      // Commented in order to test result-reading
+      // comment in, if calculatino works
+      // if( isSucceeded( tmpDir ) )
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse..." );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
         loadResults( tmpDir, monitor, logger, resultEater, tmpDir );
       }
-      else
-        logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich beendet werden!" );
+      // else
+      // {
+      // monitor.setFinishInfo( IStatus.WARNING, "Simulation konnte nicht erfolgreich beendet werden, sehen Sie die
+      // Log-Dateien ein." );
+      // logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich beendet werden!" );
+      // }
     }
-    catch( Exception e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
       throw new SimulationException( "Simulation couldn't be finished", e );
     }
-    Handler[] handlers = logger.getHandlers();
-    for( int i = 0; i < handlers.length; i++ )
-    {
-      Handler handl = handlers[i];
-      handl.flush();
+    final Handler[] handlers = logger.getHandlers();
+    for( final Handler handl : handlers )
       handl.close();
+  }
+
+  private void loadResults( File tmpdir, ISimulationMonitor monitor, final Logger logger, ISimulationResultEater resultEater, File tmpDir ) throws SimulationException
+  {
+    // TODO: check this here and add more handling, if result model is ready (Jessica)
+    monitor.setMessage( "Lese Ergebnisse..." );
+
+    final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
+    outputDir.mkdirs();
+
+    final FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
+    final File[] files = tmpDir.listFiles( suffixFileFilter );
+
+    monitor.setProgress( 80 );
+
+    try
+    {
+      /* zip all .2d files */
+      final File outputZip2d = new File( tmpdir, "test.zip" );
+      monitor.setProgress( 99 );
+
+      ZipUtilities.zip( outputZip2d, files, outputDir );
+      resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
+
+      /* Read all .2d files into NodeResults */
+      final File result2dFile = files[0];
+      final File gmlResultfile = read2DIntoNodeResult( result2dFile, outputDir );
+      resultEater.addResult( "NodeResultModel", gmlResultfile );
+    }
+    catch( final Throwable e )
+    {
+      throw new SimulationException( "Fehler beim Lesen der Ergebnisdaten", e );
     }
   }
 
-  private void loadResults( File tmpdir, ISimulationMonitor monitor, Logger logger, ISimulationResultEater resultEater, File tmpDir )
+  private File read2DIntoNodeResult( final File result2dFile, final File outputDir ) throws IOException, InvocationTargetException, GmlSerializeException
   {
-    // TODO: check this here and add more handling, if result model is ready (Jessica)
-    monitor.setMessage( "loading results..." );
-    final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
-    outputDir.mkdirs();
-    FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
-    File[] files = tmpDir.listFiles( suffixFileFilter );
-    monitor.setProgress( 80 );
-    File outputZip2d = new File( tmpdir, "test.zip" );
-    monitor.setProgress( 99 );
+    final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
+
+    final File gmlResultFile = new File( outputDir, "results.gml" );
+
+    InputStream is = null;
     try
-      {
-        ZipUtilities.zip( outputZip2d, files, tmpDir );
-      }
-    catch( IOException e )
-      {
-        e.printStackTrace();
-      }
-    try
-      {
-        resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
-      }
-    catch( SimulationException e )
-      {
-        e.printStackTrace();
-      }
+    {
+      is = new FileInputStream( result2dFile );
+
+      /* GMLWorkspace für Ergebnisse anlegen */
+
+      final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), gmlResultFile.toURL(), null );
+
+      /* .2d Datei lesen und GML füllen */
+      final RMA10S2GmlConv conv = new RMA10S2GmlConv();
+      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace );
+      conv.setRMA10SModelElementHandler( handler );
+
+      conv.parse( is );
+
+      is.close();
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Fertig mit Lesen in : " );
+
+      /* GML in Datei schreiben */
+      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
+      
+      return gmlResultFile;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Fertig mit Schreiben in : " );
+    }
   }
 
   /**
@@ -221,16 +293,22 @@ public class SimMode1D2DCalcJob implements ISimulation
     final File destFile = new File( tmpdir, simulationExeName );
     if( !destFile.exists() )
     {
+      InputStream inputStream = null;
       try
       {
-        final InputStream inputStream = getClass().getResourceAsStream( exeResource );
+        inputStream = getClass().getResourceAsStream( exeResource );
         FileUtilities.makeFileFromStream( false, destFile, inputStream );
+        inputStream.close();
         System.out.println( " ...copied" );
       }
       catch( Exception e )
       {
         e.printStackTrace();
         System.out.println( "ERR: " + exeResource + " may not exist" );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( inputStream );
       }
     }
   }
@@ -272,20 +350,11 @@ public class SimMode1D2DCalcJob implements ISimulation
   }
 
   /**
-   * @return true if the job was succesfully executed otherwise false
-   */
-  public boolean isSucceeded( )
-  {
-    return m_succeeded;
-  }
-
-  /**
    * checks if calculation of simulations is succeeded
    */
-  public void checkSucceeded( final File baseDir )
+  public boolean isSucceeded( final File baseDir )
   {
     final File finalResultFile = new File( baseDir, "steady.2d" );
-    if( finalResultFile.exists() )
-      m_succeeded = true;
+    return finalResultFile.exists();
   }
 }

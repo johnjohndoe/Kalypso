@@ -48,8 +48,6 @@ public interface RMA10SimModelConstants
 
   public static final long PROCESS_TIMEOUT = 1000l * 60l * 60l * 24l; // max 60 * 24 minutes = 1 day
 
-  public static final String LOG_DIR_NAME = "result";
-
   public static final String OUTPUT_DIR_NAME = "Ergebnisse";
 
   public static final String CALCJOB_SPEC = "resource/1D2Dcalcjob_spec.xml";

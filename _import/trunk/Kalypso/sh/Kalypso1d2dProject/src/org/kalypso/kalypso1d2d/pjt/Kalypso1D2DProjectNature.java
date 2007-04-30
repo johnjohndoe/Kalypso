@@ -46,8 +46,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -68,6 +72,11 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.ui.calccase.CalcJobHandler;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * Project Nature for 1d 2d simulation
@@ -279,4 +288,50 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
     }
   }
 
+  public static Kalypso1D2DProjectNature getNature( final IProject project ) throws CoreException
+  {
+    return (Kalypso1D2DProjectNature) project.getNature( ID );
+  }
+
+  public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
+
+    try
+    {
+      final Modeldata modelspec = loadModelspec(  );
+      final String typeID = modelspec.getTypeID();
+      final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+      monitor.worked( 1 );
+      final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
+      return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+  
+  private Modeldata loadModelspec(  ) throws CoreException
+  {
+    try
+    {
+      final IFolder modelFolder = m_project.getFolder( ModelNature.MODELLTYP_FOLDER );
+      final IFile file = modelFolder.getFile( ModelNature.MODELLTYP_MODELSPEC_XML );
+      if( !file.exists() )
+        return null;
+
+      final Unmarshaller unmarshaller = ModelNature.JC_SPEC.createUnmarshaller();
+      return (Modeldata) unmarshaller.unmarshal( file.getContents() );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Modell-Spezifikation" ) );
+    }
+  }
+
+  
+  
 }

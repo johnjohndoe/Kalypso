@@ -40,28 +40,51 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
-import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.NodeResult;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
- *
  */
 public class NodeResultsHandler implements IRMA10SModelElementHandler
 {
+  private final Map<Integer, NodeResult> m_nodeIndex = new HashMap<Integer, NodeResult>();
+  
+  private final GMLWorkspace m_resultWorkspace;
+  private final FeatureList m_resultList;
+
+  private final CS_CoordinateSystem m_crs;
+
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace )
+  {
+    m_resultWorkspace = resultWorkspace;
+    m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
+    
+    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#end()
    */
   public void end( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -69,7 +92,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public List<IFeatureWrapper2> getCreatedFeatures( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -78,8 +100,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -87,8 +107,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -96,7 +114,32 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleNode( String lineString, int id, double easting, double northing, double elevation )
   {
-    // TODO Auto-generated method stub
+    final Feature parentFeature = m_resultList.getParentFeature();
+    final IRelationType parentRelation = m_resultList.getParentFeatureTypeProperty();
+    
+    try
+    {
+      /* Create ne Node-Result*/
+      final Feature feature = m_resultWorkspace.createFeature( parentFeature, parentRelation, parentRelation.getTargetFeatureType() );
+      m_resultWorkspace.addFeatureAsComposition( parentFeature, parentRelation, -1, feature );
+      
+      
+      /* Remember node result for additional result data */
+      final NodeResult result = new NodeResult(feature);
+      m_nodeIndex.put( id, result );
+      
+      /* Fill node result with data */
+      result.setName( "" + id );
+      // TODO: description: beschriebt, welche rechenvariante und so weiter... oder noch besser an fder collection
+//      result.setDescription( "" + id );
+      
+      result.setCalcId( id );
+      result.setLocation( easting, northing, elevation, m_crs );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
   }
 
@@ -141,15 +184,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void start( )
   {
-    // TODO Auto-generated method stub
-
-  }
-
-  public static void main( String[] args )
-  {
-    RMA10S2GmlConv conv = new RMA10S2GmlConv();
-    conv.setRMA10SModelElementHandler( new NodeResultsHandler() );
-    //conv.parse( inputStreamReader );
   }
 
   /**
@@ -157,8 +191,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel )
   {
-
+    final NodeResult result = m_nodeIndex.get( id );
+    if( result == null )
+    {
+      System.out.println( "Result for non-existing node: " + id );
+      return;
+    }
     
+    result.setResultValues( vx, vy, depth, waterlevel );
   }
   
 }

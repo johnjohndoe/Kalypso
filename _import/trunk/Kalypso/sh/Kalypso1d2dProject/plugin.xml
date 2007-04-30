@@ -249,6 +249,9 @@
                   value="org.kalypso.model1d2d"/>
          </class>
       </handler>
+      <handler
+            class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
+            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation"/>
 	     
  	 <!--*** roughness handlers ***-->	     	     	     	     	     	     
 	     

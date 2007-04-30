@@ -60,7 +60,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class RMA10Calculation
 {
-
   private GMLWorkspace m_flowResWS = null;
 
   private GMLWorkspace m_flowRelWS = null;
@@ -77,7 +76,7 @@ public class RMA10Calculation
 
   private String m_kalypso1D2DKernelPath;
 
-  public RMA10Calculation( final ISimulationDataProvider inputProvider)
+  public RMA10Calculation( final ISimulationDataProvider inputProvider )
   {
     try
     {
@@ -92,11 +91,11 @@ public class RMA10Calculation
       // RMA10SimModelConstants.OPERATIONALMODEL_ID ),
       // null );
       m_controlRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), null ).getRootFeature();
-      //m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
+      // m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
+      // RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
       // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
       m_roughnessRoot = null;
-      
 
     }
     catch( SimulationException e )
@@ -108,15 +107,13 @@ public class RMA10Calculation
       e.printStackTrace();
     }
   }
-  
-  public RMA10Calculation(GMLWorkspace m_disModelWorkspace,
-                          Feature m_controlRoot,
-                          Feature m_roughnessRoot) {
-    this.m_disModelWorkspace = m_disModelWorkspace;
-    this.m_controlRoot = m_controlRoot;
-    //this.m_roughnessRoot = m_roughnessRoot;
-    this.m_roughnessRoot = null;
-    
+
+  public RMA10Calculation( GMLWorkspace disModelWorkspace, Feature controlRoot, Feature roughnessRoot )
+  {
+    m_disModelWorkspace = disModelWorkspace;
+    m_controlRoot = controlRoot;
+    m_roughnessRoot = null;
+
   }
 
   public GMLWorkspace getDisModelWorkspace( )
