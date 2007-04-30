@@ -81,6 +81,7 @@
 					</ul>
 				</html>
 			</xs:documentation>
+			
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractStaticModelType">

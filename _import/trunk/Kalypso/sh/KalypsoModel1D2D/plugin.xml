@@ -46,6 +46,12 @@
               class="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
               name="JunctionContextGeometry"/>
+
+         <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
+              name="ModelFiniteElment"/>
+              
      </extension>     
      <extension
            id="editorActions"

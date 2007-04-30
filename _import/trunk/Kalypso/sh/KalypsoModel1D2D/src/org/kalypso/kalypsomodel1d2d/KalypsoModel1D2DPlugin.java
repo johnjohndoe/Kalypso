@@ -15,6 +15,7 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
   // The shared instance.
   private static KalypsoModel1D2DPlugin plugin;
 
+
   public KalypsoModel1D2DPlugin( )
   {
     plugin = this;
@@ -27,6 +28,7 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+    
   }
 
   /**

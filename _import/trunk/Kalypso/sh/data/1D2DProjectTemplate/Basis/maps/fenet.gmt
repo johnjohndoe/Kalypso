@@ -16,6 +16,16 @@
     	<mapv:layer visible="true" name="Rauhigkeiten" id="ID_15" linktype="gmt" xlink:type="simple" xlink:href="roughness.gmt" xlink:actuate="onRequest"/>
     	<mapv:layer visible="true" name="Basiskarten" id="ID_16" linktype="gmt" xlink:type="simple" xlink:href="base.gmt" xlink:actuate="onRequest"/>
     	
+
+		<mapv:layer 
+			visible="true" 
+			name="PolyElement+Roughness" 
+			id="ID_4" featurePath="#fid#root/element[PolyElement]" linktype="gml" 
+			xlink:type="simple" 
+			xlink:href="../models/discretisation.gml" 
+			xlink:actuate="onRequest">
+            <ns1:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
+    	</mapv:layer>
     </mapv:layers>
 </mapv:gismapview>
 
