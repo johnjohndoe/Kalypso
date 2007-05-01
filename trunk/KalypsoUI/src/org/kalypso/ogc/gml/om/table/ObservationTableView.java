@@ -59,7 +59,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class ObservationTableView extends ViewPart implements IFeatureSelectionListener
 {
   protected DefaultTableViewer m_viewer;
+
   private TupleResultContentProvider m_tupleResultContentProvider;
+
   private TupleResultLabelProvider m_tupleResultLabelProvider;
 
   /**
@@ -78,7 +80,7 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_tupleResultLabelProvider = new TupleResultLabelProvider();
     m_viewer.setLabelProvider( m_tupleResultLabelProvider );
     m_viewer.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
-    
+
     selectionChanged( KalypsoCorePlugin.getDefault().getSelectionManager() );
   }
 
@@ -89,10 +91,10 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
   public void dispose( )
   {
     KalypsoCorePlugin.getDefault().getSelectionManager().removeSelectionListener( this );
-    
+
     m_tupleResultContentProvider.dispose();
     m_tupleResultLabelProvider.dispose();
-    
+
     super.dispose();
   }
 
@@ -111,7 +113,7 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
   public void selectionChanged( final IFeatureSelection selection )
   {
     m_viewer.setInput( null );
-    
+
     final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( selection, ObservationFeatureFactory.OM_OBSERVATION );
 
     if( obsFeatures.length > 0 )

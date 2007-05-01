@@ -49,12 +49,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-/*
- * @author doemming
+/**
+ * @author Andreas von Doemming
  */
 public class VirtualVelocityFeatureTypeProperty extends AbstractVirtualPropertyType
 {
-
   private final static String DECORATED_NS = "http://elbe.wb.tu-harburg.de/2dModel";
 
   private final static String PROP_GEOM = DECORATED_NS + ":geometry";
@@ -62,8 +61,6 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractVirtualPropertyT
   private final static String PROP_XVELOCITY = DECORATED_NS + ":xVelocity";
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
-
-  private QName m_qName;
 
   public VirtualVelocityFeatureTypeProperty( )
   {
@@ -87,7 +84,6 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractVirtualPropertyT
     try
     {
       return GeometryUtilities.createArrowLineString( srcP, targetP );
-      // return GeometryUtilities.createArrowLineString( srcP, targetP, 0.6, 0.1 );
     }
     catch( GM_Exception e )
     {

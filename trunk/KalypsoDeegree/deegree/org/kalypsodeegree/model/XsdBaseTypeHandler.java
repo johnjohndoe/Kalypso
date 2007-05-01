@@ -120,7 +120,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
       // REMARK: We had a small performance and memory problem here, because each time the method
       // was called a content handler (and severel other classes) where instantiated.
       // But this method is called quite often!
-      // We now resuse the same content handler. This is safe, because a simle type never contains any other types.
+      // We now reuse the same content handler. This is safe, because a simple type never contains any other types.
       m_contentHandler.setMarshalResultEater( marshalResultEater, true );
 
       xmlReader.setContentHandler( m_contentHandler );

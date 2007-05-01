@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
+import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 public class TupleResultCellModifier implements ICellModifier
@@ -73,11 +74,11 @@ public class TupleResultCellModifier implements ICellModifier
     final IComponent component = m_provider.getComponent( property );
 
     final Object value = record.getValue( component );
-    if( value == null )
-      return "";
     
-    // TODO: use component definition to format string
-    return "" + value;
+    final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
+    final String formatValue = TupleResultLabelProvider.formatValue( value, descriptor );
+    
+    return formatValue == null ? "" : formatValue;
   }
 
   public void modify( final Object element, final String property, final Object value )
@@ -102,13 +103,13 @@ public class TupleResultCellModifier implements ICellModifier
   public IComponent modifyRecord( final IRecord record, final String property, final Object value )
   {
     final IComponent component = m_provider.getComponent( property );
-
-    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
+    final XsdBaseTypeHandler handler = handlerForProperty( component );
     try
     {
-      if( handler instanceof XsdBaseTypeHandler )
+      if( handler != null )
       {
+        
+        // TODO: parse according to column descriptor
         final Object valueToSet = value == null ? null : handler.parseType( value.toString() );
 
         final Object oldValue = record.getValue( component );
@@ -128,5 +129,15 @@ public class TupleResultCellModifier implements ICellModifier
     }
 
     return component;
+  }
+
+  private XsdBaseTypeHandler handlerForProperty( final IComponent component )
+  {
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
+    if( handler instanceof XsdBaseTypeHandler )
+    return (XsdBaseTypeHandler) handler;
+    
+    return null;
   }
 }

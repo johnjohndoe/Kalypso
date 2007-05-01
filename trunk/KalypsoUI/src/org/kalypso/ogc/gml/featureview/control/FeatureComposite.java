@@ -105,6 +105,7 @@ import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.template.featureview.Extensioncontrol.Param;
+import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
@@ -396,7 +397,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final TupleResult editorType = (TupleResult) controlType;
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, vpt/*, editorType.getComponentFormat() */);
+      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, vpt );
+      final List<ColumnDescriptor> columnDescriptors = editorType.getColumnDescriptor();
+      final ColumnDescriptor[] cd = columnDescriptors.toArray( new ColumnDescriptor[columnDescriptors.size()] );
+      tfc.setColumnDescriptors( cd );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
 

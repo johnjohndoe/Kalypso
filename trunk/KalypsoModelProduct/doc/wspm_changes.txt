@@ -1,8 +1,9 @@
 Changelog of Kalypso-WSPM
 =========================
 
-since XX.XX.XXXX
+since 23.03.2007
 ----------------
+- Bugfix: Stations are no longer incorrectly rounded to 4 significant digits while importing from wspwin. Instead, they are now rounded to 4 fraction digits.
 - Bugfix [#95]: After deletion of one profile (without deselecting it from its referencing strands), the calculation now ignores these strands and still runs.
 - Bugfix [#94]: Stations now gets alwas rounded to 4 fraction digits instead of 4 significant digits.  
 
