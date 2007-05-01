@@ -104,7 +104,6 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.gc.GC_GridCoverage;
 
 /**
  * Factory class for the different kinds of <tt>DisplayElement</tt>s.
@@ -146,8 +145,8 @@ public class DisplayElementFactory
           {
             final QName styleFTQName = fts[k].getFeatureTypeName();
             if( styleFTQName == null //
-//                || featureTypeQName.equals( styleFTQName ) //
-                ||  GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
+                // || featureTypeQName.equals( styleFTQName ) //
+                || GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
                 || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
             {
               final Rule[] rules = fts[k].getRules();
@@ -220,16 +219,12 @@ public class DisplayElementFactory
    */
   public static DisplayElement buildDisplayElement( Feature feature, Symbolizer symbolizer, GMLWorkspace workspace ) throws IncompatibleGeometryTypeException
   {
-    DisplayElement displayElement = null;
-
     // determine the geometry property to be used
     GM_Object geoProperty = null;
-    Geometry geometry = symbolizer.getGeometry();
+    final Geometry geometry = symbolizer.getGeometry();
 
     if( geometry != null )
     {
-      // check if virtual property
-      // if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
       final IFeatureType featureType = feature.getFeatureType();
       final String propertyName = geometry.getPropertyName();
       final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( featureType, propertyName );
@@ -251,6 +246,7 @@ public class DisplayElementFactory
       return null;
     }
 
+    DisplayElement displayElement = null;
     // PointSymbolizer
     if( symbolizer instanceof PointSymbolizer )
     {
@@ -305,44 +301,35 @@ public class DisplayElementFactory
 
     DisplayElement displayElement = null;
 
-    if( o instanceof GC_GridCoverage )
+    Feature feature = (Feature) o;
+    // determine the geometry property to be used
+    GM_Object geoProperty = feature.getDefaultGeometryProperty();
+
+    // if the geometry property is null, do not build a DisplayElement
+    if( geoProperty == null )
     {
-      // RasterSymbolizer symbolizer = new RasterSymbolizer_Impl();
-      // displayElement = buildRasterDisplayElement( (GC_GridCoverage)o,
-      // symbolizer );
+      return null;
+    }
+
+    // PointSymbolizer
+    if( geoProperty instanceof GM_Point || geoProperty instanceof GM_MultiPoint )
+    {
+      PointSymbolizer symbolizer = new PointSymbolizer_Impl();
+      displayElement = buildPointDisplayElement( feature, geoProperty, symbolizer );
+    } // LineSymbolizer
+    else if( geoProperty instanceof GM_Curve || geoProperty instanceof GM_MultiCurve )
+    {
+      LineSymbolizer symbolizer = new LineSymbolizer_Impl();
+      displayElement = buildLineStringDisplayElement( feature, geoProperty, symbolizer );
+    } // PolygonSymbolizer
+    else if( geoProperty instanceof GM_Surface || geoProperty instanceof GM_MultiSurface )
+    {
+      PolygonSymbolizer symbolizer = new PolygonSymbolizer_Impl();
+      displayElement = buildPolygonDisplayElement( feature, geoProperty, symbolizer );
     }
     else
     {
-      Feature feature = (Feature) o;
-      // determine the geometry property to be used
-      GM_Object geoProperty = feature.getDefaultGeometryProperty();
-
-      // if the geometry property is null, do not build a DisplayElement
-      if( geoProperty == null )
-      {
-        return null;
-      }
-
-      // PointSymbolizer
-      if( geoProperty instanceof GM_Point || geoProperty instanceof GM_MultiPoint )
-      {
-        PointSymbolizer symbolizer = new PointSymbolizer_Impl();
-        displayElement = buildPointDisplayElement( feature, geoProperty, symbolizer );
-      } // LineSymbolizer
-      else if( geoProperty instanceof GM_Curve || geoProperty instanceof GM_MultiCurve )
-      {
-        LineSymbolizer symbolizer = new LineSymbolizer_Impl();
-        displayElement = buildLineStringDisplayElement( feature, geoProperty, symbolizer );
-      } // PolygonSymbolizer
-      else if( geoProperty instanceof GM_Surface || geoProperty instanceof GM_MultiSurface )
-      {
-        PolygonSymbolizer symbolizer = new PolygonSymbolizer_Impl();
-        displayElement = buildPolygonDisplayElement( feature, geoProperty, symbolizer );
-      }
-      else
-      {
-        throw new IncompatibleGeometryTypeException( "not a valid geometry type" );
-      }
+      throw new IncompatibleGeometryTypeException( "not a valid geometry type" );
     }
 
     Debug.debugMethodEnd();

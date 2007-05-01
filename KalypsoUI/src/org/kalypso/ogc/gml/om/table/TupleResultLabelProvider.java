@@ -40,23 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
 
 /**
- * @author schlienger
+ * @author Marc Schlienger
  */
-public class TupleResultLabelProvider implements ITableLabelProvider
+public class TupleResultLabelProvider extends EventManager implements ITableLabelProvider
 {
+  private final Map<String, ColumnDescriptor> m_columnDescriptors;
+
+  public TupleResultLabelProvider( )
+  {
+    this( new HashMap<String, ColumnDescriptor>() );
+  }
+
+  public TupleResultLabelProvider( final Map<String, ColumnDescriptor> columnDescriptors )
+  {
+    m_columnDescriptors = columnDescriptors;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // empty
+    addListenerObject( listener );
   }
 
   /**
@@ -64,7 +83,7 @@ public class TupleResultLabelProvider implements ITableLabelProvider
    */
   public void dispose( )
   {
-    // empty
+    clearListeners();
   }
 
   /**
@@ -81,7 +100,7 @@ public class TupleResultLabelProvider implements ITableLabelProvider
    */
   public void removeListener( final ILabelProviderListener listener )
   {
-    // empty
+    removeListenerObject( listener );
   }
 
   /**
@@ -107,9 +126,51 @@ public class TupleResultLabelProvider implements ITableLabelProvider
       final IComponent comp = comps[columnIndex];
 
       final Object value = record.getValue( comp );
+
+      /* Use descriptor to render text, if no descriptor is set, just 'toString' the value. */
+      final ColumnDescriptor descriptor = m_columnDescriptors.get( comp.getId() );
+      if( descriptor != null )
+      {
+        try
+        {
+          if( value == null )
+          {
+            final String nullFormat = descriptor.getNullFormat();
+            if( nullFormat != null )
+              return nullFormat;
+          }
+
+          final String formattedValue = formatValue( value, descriptor );
+          if( formattedValue != null )
+            return formattedValue;
+        }
+        catch( final Throwable t )
+        {
+          t.printStackTrace();
+          return "<ERROR>";
+        }
+      }
+
+      /* If no format string is present, just toString'it. */
       return value == null ? "" : value.toString();
     }
 
     return null;
+  }
+
+  public static String formatValue( final Object value, final ColumnDescriptor descriptor )
+  {
+    if( descriptor == null )
+      return null;
+
+    final String format = descriptor.getFormat();
+    if( format == null )
+      return null;
+
+    // HACK: in order to format XMLGregorianCalendars convert them to GregorianCalendars
+    // is there a better place to do this?
+    if( value instanceof XMLGregorianCalendar )
+      return String.format( format, ((XMLGregorianCalendar) value).toGregorianCalendar() );
+    return String.format( format, value );
   }
 }

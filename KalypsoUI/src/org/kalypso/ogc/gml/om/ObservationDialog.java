@@ -84,9 +84,9 @@ public class ObservationDialog extends ResizableDialog
 
     viewer.setLabelProvider( new TupleResultLabelProvider() );
     viewer.setContentProvider( new TupleResultContentProvider() );
-    
+
     viewer.setInput( m_obs.getResult() );
-    
+
     viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return panel;

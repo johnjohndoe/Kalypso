@@ -61,6 +61,8 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
+import org.kalypso.util.swt.SWTUtilities;
 
 /**
  * @author Marc Schlienger
@@ -72,6 +74,18 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   private DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
+
+  private final Map<String, ColumnDescriptor> m_columnDescriptors;
+
+  public TupleResultContentProvider( )
+  {
+    this( new HashMap<String, ColumnDescriptor>() );
+  }
+
+  public TupleResultContentProvider( final Map<String, ColumnDescriptor> columnDescriptors )
+  {
+    m_columnDescriptors = columnDescriptors;
+  }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
@@ -112,8 +126,11 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     final List<CellEditor> cellEditors = new ArrayList<CellEditor>( components.length );
     for( final IComponent component : components )
     {
-      final String id = component.getName();
-      m_tableViewer.addColumn( id, component.getName(), 100, true );
+      final String id = component.getId();
+
+      final int style = styleForComponent( component );
+
+      m_tableViewer.addColumn( id, component.getName(), 100, true, style );
       m_componentMap.put( id, component );
       cellEditors.add( new TextCellEditor( m_tableViewer.getTable(), SWT.NONE )
       {
@@ -143,6 +160,24 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
     m_tableViewer.refreshColumnProperties();
     m_tableViewer.setCellEditors( cellEditors.toArray( new CellEditor[cellEditors.size()] ) );
+  }
+
+  private int styleForComponent( final IComponent component )
+  {
+    final String id = component.getId();
+    final ColumnDescriptor descriptor = m_columnDescriptors.get( id );
+    if( descriptor == null )
+      return SWT.CENTER;
+
+    final String alignment = descriptor.getAlignment();
+    if( alignment == null )
+      return SWT.CENTER;
+
+    final int style = SWTUtilities.createStyleFromString( alignment );
+    if( style == SWT.NONE )
+      return SWT.CENTER;
+
+    return style;
   }
 
   /**
@@ -244,5 +279,10 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   {
     refrehsColumns( getResult() );
     m_tableViewer.refresh();
+  }
+  
+  public Map<String, ColumnDescriptor> getColumnDescriptors( )
+  {
+    return m_columnDescriptors;
   }
 }
