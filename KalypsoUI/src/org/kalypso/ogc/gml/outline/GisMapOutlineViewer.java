@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListener, SelectionListener, ICommandTarget
 {

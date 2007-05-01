@@ -71,6 +71,8 @@ import org.xml.sax.InputSource;
 /**
  * @author Stefan Kurzbach
  */
+// TODO: implementing IMapModell here is an ugly hack to show the layers in the outline view
+// do not do such a thing. Instead let each theme return a content-provider, so the strucutre is delegated to the themes.
 public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKalypsoTheme, ITemplateTheme, IMapModell
 {
   /**

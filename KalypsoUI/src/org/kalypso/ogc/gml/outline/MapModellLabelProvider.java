@@ -93,6 +93,7 @@ public class MapModellLabelProvider implements ILabelProvider
       if( m_mapModell != null && m_mapModell.getActiveTheme() == kalypsoTheme )
         sb.append( " - aktiv" );
 
+      // TODO: this should be managed by the feature-theme itself
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) kalypsoTheme;
