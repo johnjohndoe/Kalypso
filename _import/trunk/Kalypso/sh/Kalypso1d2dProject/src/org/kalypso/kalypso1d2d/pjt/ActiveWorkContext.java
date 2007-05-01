@@ -262,11 +262,8 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
   public void setCurrentSzenario( final Scenario scenario )
   {
     final Scenario currentScenario = m_scenarioManager.getCurrentScenario();
-    // this fixes the bug mentioned below.
     if( currentScenario == null && scenario == null )
-    {
       return;
-    }
     else if( scenario != null && currentScenario != null && currentScenario.getURI().equals( scenario.getURI() ) )
     {
       return;
@@ -274,7 +271,8 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
     else
     {
       ensureProject( scenario );
-      m_scenarioManager.setCurrentScenario( scenario );
+      if( m_scenarioManager != null )
+        m_scenarioManager.setCurrentScenario( scenario );
       fireActiveProjectChanged( m_activeProject, scenario );
     }
   }
@@ -283,12 +281,15 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
   {
     try
     {
-      final URI uri = new URI( scenario.getURI() );
-      final String projectName = uri.getHost();
-      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
-      if( project.exists() && project.isOpen() )
+      if( scenario == null )
+        setActiveProject( null );
+      else
       {
-        setActiveProject( project );
+        final URI uri = new URI( scenario.getURI() );
+        final String projectName = uri.getHost();
+        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+        if( project.exists() && project.isOpen() )
+          setActiveProject( project );
       }
     }
     catch( final URISyntaxException e )
