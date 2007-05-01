@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
@@ -101,7 +100,8 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
 
   public void setStation( final double station )
   {
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "station" ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
+    final BigDecimal bigStation = WspmProfile.stationToBigDecimal( station );
+    getFeature().setProperty( new QName( NS_WSPM_TUHH, "station" ), bigStation );
   }
 
   public void setGeometry( final GM_Curve curve )

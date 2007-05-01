@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -193,8 +194,10 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
     final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" );
     final Feature subReachFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
 
-    subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "startStation" ), new BigDecimal( startStation, STATION_MATH_CONTEXT ) );
-    subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "endStation" ), new BigDecimal( endStation, STATION_MATH_CONTEXT ) );
+    final BigDecimal bigStart = WspmProfile.stationToBigDecimal( startStation );
+    final BigDecimal bigEnd = WspmProfile.stationToBigDecimal( endStation );
+    subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "startStation" ), bigStart );
+    subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "endStation" ), bigEnd );
   }
 
   public BigDecimal getStartStation( )
