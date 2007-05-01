@@ -42,6 +42,7 @@ package org.kalypso.ui.wizard.ocs.idtable;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
@@ -74,8 +75,8 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    addColumn( COL_OBS, "Zeitreihe", 250, true );
-    addColumn( COL_HREF, "Kennzeichen", 400, true );
+    addColumn( COL_OBS, "Zeitreihe", 250, true, SWT.CENTER );
+    addColumn( COL_HREF, "Kennzeichen", 400, true, SWT.CENTER );
 
     //refreshColumnProperties();
   }
