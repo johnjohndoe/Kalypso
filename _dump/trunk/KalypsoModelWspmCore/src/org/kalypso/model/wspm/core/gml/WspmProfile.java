@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.xml.namespace.QName;
 
@@ -68,6 +69,13 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
 
   public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" );
 
+  /**
+   * The scale (i.e. fraction digits) for station values.
+   * 
+   * @see BigDecimal
+   */
+  public static final int STATION_SCALE = 4;
+
   public WspmProfile( final Feature feature )
   {
     super( feature, QNAME_PROFILE );
@@ -89,11 +97,12 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
     return profileStation == null ? Double.NaN : profileStation.doubleValue();
   }
 
-  public void setStation( double station )
+  public void setStation( final double station )
   {
-    ProfileFeatureFactory.setProfileStation( getFeature(), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
+    final BigDecimal bigStation = stationToBigDecimal( station );
+    ProfileFeatureFactory.setProfileStation( getFeature(), bigStation );
   }
-  
+
   public IProfil getProfil( )
   {
     try
@@ -112,6 +121,16 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
   public GM_Curve getLine( )
   {
     return (GM_Curve) getFeature().getProperty( QNAME_LINE );
+  }
+
+  /**
+   * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
+   * 
+   * @see #STATION_SCALE
+   */
+  public static BigDecimal stationToBigDecimal( final double station )
+  {
+    return new BigDecimal( station ).setScale( STATION_SCALE, RoundingMode.HALF_UP );
   }
 
 }

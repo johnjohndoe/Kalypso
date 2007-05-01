@@ -78,10 +78,10 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 public class DA50Importer
 {
   /**
-  * @param bRefFirst
-  *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
-  *          to the point with the breite-coordinate zero.
-  */
+   * @param bRefFirst
+   *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
+   *          to the point with the breite-coordinate zero.
+   */
   public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst ) throws CoreException
   {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
@@ -94,7 +94,7 @@ public class DA50Importer
       final DA50Entry[] entries = readDA50( da50reader );
 
       /* Index features by station */
-      final Map<Double, DA50Entry> entryMap = new TreeMap<Double, DA50Entry>( new DoubleComparator( Math.pow( 10, -IWspmConstants.STATION_MATH_CONTEXT.getPrecision() ) ) );
+      final Map<Double, DA50Entry> entryMap = new TreeMap<Double, DA50Entry>( new DoubleComparator( Math.pow( 10, -WspmProfile.STATION_SCALE ) ) );
       for( final DA50Entry entry : entries )
         entryMap.put( entry.station, entry );
 
@@ -152,17 +152,17 @@ public class DA50Importer
     // den Vektor normieren
     vx /= vl;
     vy /= vl;
-    
+
     /* Only do reference the first and last point */
     final LinkedList<IProfilPoint> points = profil.getPoints();
     if( points.size() < 2 )
       return;
-      
+
     final IProfilPoint firstPP = points.getFirst();
     final IProfilPoint lastPP = points.getLast();
-    final double firstBreite = firstPP.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE);
-    final double lastBreite = lastPP.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE);
-    
+    final double firstBreite = firstPP.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double lastBreite = lastPP.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+
     double yOffset = 0;
     if( bRefFirst )
       yOffset = firstBreite;
@@ -177,7 +177,7 @@ public class DA50Importer
 
     profil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     profil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    
+
     firstPP.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, rwFirst );
     firstPP.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, hwFirst );
     lastPP.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, rwLast );
