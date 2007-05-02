@@ -76,7 +76,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Füllung (VOLUMEN) */
   public static final String TYPE_VOLUME = "V";
 
-  /** Evaporation */
+  /** Evaporation [mm]*/
   public static final String TYPE_EVAPORATION = "E";
 
   /** hours [h] */
