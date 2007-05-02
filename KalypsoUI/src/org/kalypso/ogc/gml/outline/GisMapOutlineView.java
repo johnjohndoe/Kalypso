@@ -54,6 +54,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.ICommand;
@@ -132,9 +133,19 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       @Override
       public void partActivated( final IWorkbenchPart part )
       {
-        if( part instanceof AbstractMapPart && part instanceof IEditorPart && part.getSite().getWorkbenchWindow().getActivePage().isEditorAreaVisible() )
+        if( part instanceof AbstractMapPart && part instanceof IEditorPart )
         {
-          setMapPart( (AbstractMapPart) part );
+          final IWorkbenchPartSite activatedSite = part.getSite();
+          if( activatedSite != null )
+          {
+            final IWorkbenchWindow workbenchWindow = activatedSite.getWorkbenchWindow();
+            if( workbenchWindow != null )
+            {
+              final IWorkbenchPage activePage = workbenchWindow.getActivePage();
+              if( activePage != null && activePage.isEditorAreaVisible() )
+                setMapPart( (AbstractMapPart) part );
+            }
+          }
         }
         else if( part instanceof AbstractMapPart && part instanceof IViewPart )
         {
