@@ -336,7 +336,7 @@ public class ElevationModelSystemEditorComponent
   } ); 
 
   descriptionGroupText = new Group(elevationComposite,SWT.NONE);
-  descriptionGroupText.setText( "Description" );
+  descriptionGroupText.setText( "Beschreibung" );
   elevFormData = new FormData();
   elevFormData.left = new FormAttachment(moveUpBtn,5);
   elevFormData.top = new FormAttachment(terrainModelLabel,10);
@@ -347,7 +347,7 @@ public class ElevationModelSystemEditorComponent
   FormLayout formDescription = new FormLayout();
   descriptionGroupText.setLayout( formDescription);
   descriptionText = new Text(descriptionGroupText,SWT.MULTI|SWT.WRAP);
-  descriptionText.setText( "Select the Elevation Model to view its description. This Continues");
+  descriptionText.setText( "Wählen Sie ein Modell aus.");
   FormData formDescripData = new FormData();
   formDescripData.left = new FormAttachment(0,0);
   formDescripData.right = new FormAttachment(100,0);formDescripData.top = new FormAttachment(0,0);

@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -64,21 +62,16 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -437,15 +430,15 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( infoLabel, 10 );
     //regionFormData.right = new FormAttachment( 100, 0 );
     noElevationGroup = new Group( cComposite, SWT.NONE );
-    noElevationGroup.setText( "Automatisches selectieren von Modell-Knoten" );//Modelle Knoten Suchen    
+    noElevationGroup.setText( "Automatische selektieren von Modell-Knoten" );//Modelle Knoten Suchen    
     noElevationGroup.setLayoutData( regionFormData );
     noElevationGroup.setLayout( new GridLayout(2,false) );
    
     selectNoElevationLabel = new Label( noElevationGroup, SWT.FLAT );
-    selectNoElevationLabel.setText( "Select Nodes with NoElevation" );    
+    selectNoElevationLabel.setText( "Knoten ohne Höhenzuweisung" );    
 
     selectNoElevationButton = new Button( noElevationGroup, SWT.PUSH );
-    selectNoElevationButton.setText( "Nodes" );
+    selectNoElevationButton.setText( "selektieren" );
     selectNoElevationButton.addSelectionListener( new SelectionAdapter()
     {
       @Override

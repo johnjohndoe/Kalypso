@@ -41,9 +41,6 @@
 package org.kalypso.ui.wizards.imports.elevationmodel;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author congo

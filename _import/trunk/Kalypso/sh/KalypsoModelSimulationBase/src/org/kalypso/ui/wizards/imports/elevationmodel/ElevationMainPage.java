@@ -81,7 +81,7 @@ public class ElevationMainPage extends WizardPage
     // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
-    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
+    final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
     label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.2" ) );
 
@@ -108,7 +108,7 @@ public class ElevationMainPage extends WizardPage
     // Coordinate system combo box
     Label coordinateLabel = new Label( container, SWT.NONE );
     coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.12" ) ); //$NON-NLS-1$
-    coordinateLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
+    coordinateLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
 
     coordinateSystem_Combo = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     coordinateSystem_Combo.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
@@ -121,7 +121,7 @@ public class ElevationMainPage extends WizardPage
     coordinateSystem_Combo.setLayoutData( gd );
 
     final Label nameForFile = new Label( container, SWT.NONE );
-    nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
+    nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) );
     nameForFileText = new Text( container, SWT.BORDER );  
 
@@ -137,7 +137,7 @@ public class ElevationMainPage extends WizardPage
     
 
     final Label descriptionForFile = new Label( container, SWT.NONE );
-    descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_BEGINNING ) );
+    descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
     descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
     
     descriptionForFileArea = new Text( container, SWT.BORDER | SWT.MULTI );
