@@ -186,7 +186,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   protected void setMapPart( final AbstractMapPart mapPart )
   {
     m_mapPart = mapPart;
-    String newName = "Outline";
+    String newName = Messages.GisMapOutlineView_1;
     if( m_mapPart != null )
     {
       newName += "(" + mapPart.getPartName() + ")";

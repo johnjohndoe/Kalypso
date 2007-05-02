@@ -144,7 +144,7 @@
         class="org.kalypso.ogc.gml.outline.GisMapOutlineView"
         icon="icons/kalypso_gmt.gif"
         id="org.kalypso.ui.views.outline"
-        name="Outline"/>
+        name="%org.kalypso.ui.views.outline"/>
   <view
         allowMultiple="true"
         category="org.kalypso.ui.kalypso"

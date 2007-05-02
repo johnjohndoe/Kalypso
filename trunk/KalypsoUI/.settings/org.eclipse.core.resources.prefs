@@ -1,4 +1,5 @@
-#Thu Apr 07 18:18:13 CEST 2005
+#Wed May 02 15:49:32 CEST 2007
+eclipse.preferences.version=1
 encoding//src/org/kalypso/ogc/gml/map/widgets/CreateGeometryFeatureWidget.java=UTF-8
 encoding//src/org/kalypso/ogc/gml/map/widgets/ZoomInWidget.java=UTF-8
-eclipse.preferences.version=1
+encoding//src/org/kalypso/ogc/gml/outline/messages.properties=8859_1
