@@ -95,7 +95,7 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
       if( m_oldContext != null )
       {
         logger.info( "Deactivating context: " + m_oldContext.getContextId() );
-        m_contextService.deactivateContext( m_oldContext );
+        m_contextService.deactivateContext( m_oldContext );        
       }
       if( m_theme == null )
       {
