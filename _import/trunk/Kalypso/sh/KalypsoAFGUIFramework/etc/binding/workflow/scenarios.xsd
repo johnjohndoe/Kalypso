@@ -9,7 +9,7 @@
 
 	<complexType name="Scenario">
 		<complexContent>
-			<extension base="rwf:WorkflowCase">
+			<extension base="rwf:Case">
 				<sequence>
 					<element name="Name" type="string" maxOccurs="1" minOccurs="1" />
 					<element name="DerivedScenarios" type="scm:ScenarioList" maxOccurs="1" />

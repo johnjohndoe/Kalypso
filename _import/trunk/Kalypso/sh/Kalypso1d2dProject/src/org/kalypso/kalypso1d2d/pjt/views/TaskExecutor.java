@@ -40,12 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.views;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 
 import de.renew.workflow.base.EActivityExeState;
 import de.renew.workflow.base.Task;
@@ -57,6 +66,8 @@ import de.renew.workflow.connector.ITaskExecutor;
 import de.renew.workflow.connector.TaskExecutionListener;
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.IContextHandlerFactory;
+import de.renew.workflow.contexts.MultiContext;
+import de.renew.workflow.contexts.ViewContext;
 
 /**
  * @author Stefan Kurzbach
@@ -72,6 +83,8 @@ public class TaskExecutor implements ITaskExecutor
   private IHandlerService m_handlerService;
 
   private final IContextHandlerFactory m_contextHandlerFactory;
+
+  private ContextActivation m_contextActivation;
 
   public TaskExecutor( final IContextHandlerFactory contextHandlerFactory, final ITaskExecutionAuthority authority, final ICommandService commandService, final IHandlerService handlerService )
   {
@@ -97,7 +110,9 @@ public class TaskExecutor implements ITaskExecutor
     final ContextType context = task.getContext();
     if( context != null )
     {
-      activateContext( context );
+      m_contextActivation = activateContext( context );
+      final Collection<String> viewsToKeep = collectOpenedViews( context );
+      PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), viewsToKeep );
     }
     try
     {
@@ -115,12 +130,39 @@ public class TaskExecutor implements ITaskExecutor
     m_activeTask = task;
   }
 
+  private Collection<String> collectOpenedViews( final ContextType context )
+  {
+    final ContextType cause = context.getParent();
+    final Collection<String> result;
+    if( cause != null )
+    {
+      result = collectOpenedViews( cause );
+    }
+    else
+    {
+      result = new ArrayList<String>();
+    }
+    if( context instanceof ViewContext )
+      result.add( ((ViewContext) context).getViewId() );
+    else if( context instanceof MultiContext )
+    {
+      final List<JAXBElement< ? extends ContextType>> subContexts = context.getSubContexts();
+      for( JAXBElement< ? extends ContextType> element : subContexts )
+      {
+        final ContextType value = element.getValue();
+        if( value instanceof ViewContext )
+          result.add( ((ViewContext) value).getViewId() );
+      }
+    }
+    return result;
+  }
+
   private ContextActivation activateContext( final ContextType context ) throws ContextActivationException
   {
-    final ContextType parentContext = context.getParent();
     final IHandler handler = m_contextHandlerFactory.getHandler( context );
     final Command contextCommand = getCommand( m_commandService, context.getId(), TaskExecutionListener.CATEGORY_CONTEXT );
     contextCommand.setHandler( handler );
+    final ContextType parentContext = context.getParent();
     ContextActivation parentActivation = null;
     if( parentContext != null )
     {

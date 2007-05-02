@@ -74,17 +74,7 @@
 
 	<complexType name="Task">
 		<complexContent>
-			<extension base="kwf:Activity">
-				<sequence>
-					<element name="activity" type="kwf:Activity" maxOccurs="unbounded">
-						<annotation>
-							<appinfo>
-								<jaxb:property name="Activities" />
-							</appinfo>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
+			<extension base="kwf:Activity" />
 		</complexContent>
 	</complexType>
 

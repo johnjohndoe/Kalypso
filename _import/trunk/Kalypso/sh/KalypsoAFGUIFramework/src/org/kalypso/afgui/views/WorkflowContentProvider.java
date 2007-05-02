@@ -6,7 +6,6 @@ package org.kalypso.afgui.views;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 
 /**
@@ -23,11 +22,7 @@ public class WorkflowContentProvider implements ITreeContentProvider
     {
       final TaskGroup taskGroup = ((TaskGroup) element);
       return taskGroup.getTasks().toArray();
-    }
-    else if( element instanceof Task )
-    {
-      return ((Task) element).getActivities().toArray();
-    }
+    }    
     else
     {
       return null;
@@ -51,10 +46,6 @@ public class WorkflowContentProvider implements ITreeContentProvider
     {
       final TaskGroup taskGroup = ((TaskGroup) element);
       return !taskGroup.getTasks().isEmpty();
-    }
-    else if( element instanceof Task )
-    {
-      return !((Task) element).getActivities().isEmpty();
     }
     else
     {

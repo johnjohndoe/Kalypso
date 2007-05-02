@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -102,7 +105,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
           try
           {
             workbench.showPerspective( Perspective.ID, activeWorkbenchWindow );
-            cleanPerspective( workbenchPage );
+            cleanPerspective( workbenchPage, Collections.EMPTY_LIST );
           }
           catch( final Throwable e )
           {
@@ -120,12 +123,12 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     }
   }
 
-  public void cleanPerspective( final IWorkbenchPage workbenchPage )
+  public static void cleanPerspective( final IWorkbenchPage workbenchPage, final Collection<String> viewsToKeep )
   {
     final IViewReference[] viewReferences = workbenchPage.getViewReferences();
     for( final IViewReference reference : viewReferences )
     {
-      if( !shouldKeepView( reference ) )
+      if( !viewsToKeep.contains( reference.getId() ) && !shouldKeepView( reference ) )
       {
         workbenchPage.hideView( reference );
       }
@@ -207,7 +210,7 @@ public class PerspectiveWatcher extends PartAdapter implements IActiveContextCha
     }
   }
 
-  private boolean shouldKeepView( final IViewReference reference )
+  private static boolean shouldKeepView( final IViewReference reference )
   {
     final String viewId = reference.getId();
     if( WorkflowView.ID.equals( viewId ) )

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.renew.de/workflow/cases" xmlns:rwf="http://www.renew.de/workflow/cases" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" elementFormDefault="qualified" version="1.0.0">
 
-	<complexType name="WorkflowCase">
+	<complexType name="Case">
 		<sequence>
 			<element name="CaseData" type="rwf:CaseData" minOccurs="1" maxOccurs="1" />
 		</sequence>
@@ -20,9 +20,8 @@
 			</appinfo>
 		</annotation>
 		<restriction base="string">
-			<enumeration value="UNAVAILABLE" />
-			<enumeration value="AVAILABLE" />
-			<enumeration value="DIRTY" />
+			<enumeration value="VALID" />
+			<enumeration value="INVALID" />
 		</restriction>
 	</simpleType>
 
