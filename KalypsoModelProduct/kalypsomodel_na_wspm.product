@@ -210,7 +210,7 @@ de_DE
       <plugin id="org.kalypso.ui.addlayer"/>
       <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
-      <plugin id="org.kalypso.wizard"/>
+      <plugin id="org.kalypso.wizard.CreateNAProject"/>
       <plugin id="org.kalypso.wspwin.core"/>
    </plugins>
 
