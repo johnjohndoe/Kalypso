@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
 <wbr:RoughnessClsCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" gml:id="root">
- <gml:name>Rauheit</gml:name> 
+ <gml:name>Rauheit</gml:name>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls11768145593596">
    <gml:name>Sand und Schilf</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls11707777217344"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls11731035633903"/>
-   <wbr:groundTypeName>Sand</wbr:groundTypeName>
-   <wbr:vegetationTypeName>Schilf, dicht</wbr:vegetationTypeName>
   </wbr:RoughnessCls>
- </wbr:roughnessClsMember> 
+ </wbr:roughnessClsMember>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls11707777217344">
    <gml:name>Sand mit Büsche (gleichmäßiger), mittlere Größe</gml:name>
    <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls11707777217344"/>
    <wbr:roughness_VegetationLink xlink:href="project:/.metadata/roughness.gml#Roughness_VegetationCls11731036285780"/>
-   <wbr:groundTypeName>Sand</wbr:groundTypeName>
-   <wbr:vegetationTypeName>Büsche (gleichmäßiger), mittlere Größe</wbr:vegetationTypeName>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
  <wbr:roughness_GroundClsMember>
