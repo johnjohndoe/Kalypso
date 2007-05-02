@@ -54,10 +54,12 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 
 import de.renew.workflow.base.EActivityExeState;
 import de.renew.workflow.base.Task;
+import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.TaskExecutionException;
 import de.renew.workflow.connector.ContextActivation;
 import de.renew.workflow.connector.ContextActivationException;
@@ -98,7 +100,7 @@ public class TaskExecutor implements ITaskExecutor
    * @see de.renew.workflow.connector.ITaskExecutor#execute(de.renew.workflow.base.Task)
    */
   public void execute( final Task task ) throws TaskExecutionException
-  {
+  {    
     if( m_activeTask != null )
     {
       if( !m_authority.canStopTask( m_activeTask ) )

@@ -304,12 +304,15 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
    */
   public boolean canStopTask( final Task task )
   {
+    final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_simModelProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    //check if any model is dirty
+    if( !dataProvider.isDirty() )
+      return true;
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final MessageDialog confirmDialog = new MessageDialog( activeShell, "Ungespeicherte Änderungen", null, "Es gibt ungespeicherte Änderungen. Was möchten Sie tun?", MessageDialog.QUESTION, new String[] {
         "Speichern", "Verwerfen", "Abbrechen" }, 1 );
     final boolean result;
     final int decision = confirmDialog.open();
-    final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_simModelProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     if( decision == 0 )
     {
       try
@@ -353,12 +356,6 @@ public class ActiveWorkContext implements ITaskExecutionAuthority
       result = false;
     }
 
-    if( result )
-    {
-      final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-      page.closeAllEditors( true );
-      m_perspectiveWatcher.cleanPerspective( page );
-    }
     return result;
   }
 

@@ -159,6 +159,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
         try
         {
           keyInfo.onLoaderObjectInvalid( keyInfo.getObject(), false );
+          keyInfo.setDirty( false );
         }
         catch( final Exception e )
         {
@@ -251,6 +252,16 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
     final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
     return workspace;
+  }
+
+  public boolean isDirty( )
+  {
+    for( final Class<IFeatureWrapper2> modelClass : m_keyMap.keySet() )
+    {
+      if( isDirty( modelClass ) )
+        return true;
+    }
+    return false;
   }
 
   /**
