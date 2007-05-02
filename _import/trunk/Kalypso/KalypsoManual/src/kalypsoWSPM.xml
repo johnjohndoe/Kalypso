@@ -108,6 +108,17 @@
   genutzte Programm. Diese Oberfläche WSPWIN wurde deutschlandweit bei einer
   Vielzahl von Projekten eingesetzt.</para>
 
+  <figure>
+    <title>Darstellung zum Rechenkern</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="img/WSPM/Einfuehrung.bmp"
+                   scale="100" />
+      </imageobject>
+    </mediaobject>
+  </figure>
+
   <para>Besonderheiten des Rechenkerns:</para>
 
   <itemizedlist>
@@ -144,9 +155,6 @@
     </listitem>
   </itemizedlist>
 
-  <para><emphasis role="bold">Beschreibung zur
-  Triangulation:</emphasis></para>
-
   <section id="kalypso_wspm-Datenakquisition">
     <title>Datenakquisition</title>
 
@@ -154,99 +162,197 @@
       <primary>Datenakquisition und Aufbereitung KalypsoWSPM</primary>
     </indexterm>
 
-    <para>Für die Erstellung eines eindimensionalen Spiegellinienmodelles sind
-    umfangreiche Vorarbeiten notwendig. Profilvermessung, Bauwerke...</para>
+    <para>Zum Aufbau eines eindimensionalen Strömungsmodells sind zunächst
+    grundlegende Daten zu erheben. Grundsätzlich sind der Datenerhebung immer
+    Vorüberlegungen zur Aufgabenstellung und Ziel der Modellierung
+    voranzustellen.</para>
 
-    <para>Datenakquisition:</para>
+    <para>Der Aufbau des klassischen 1d-Models in WSPM verläuft in drei
+    Teilschritten:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Preprozessing:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Zusammentragen aller Eingangsdaten</para>
+          </listitem>
+
+          <listitem>
+            <para>Konfiguration des 1D-Modells</para>
+          </listitem>
+
+          <listitem>
+            <para>Kalibrieren des 1D-Modells</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Prozessing:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Berechnung/ Simulation für Bemessungshochwasser oder
+            Szenarien</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Postprozessing:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Auswertung und Kontrolle der Ergebnisse</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </orderedlist>
+
+    <para>Beim Zusammentragen aller Eingangsdaten kann auf Karten, Literatur,
+    Vorortbegehungen und Vermessungen zurückgegriffen werden.</para>
 
     <itemizedlist>
       <listitem>
-        <para>Profildaten, Pegeldaten...</para>
+        <para>Anzahl, Lage und Ausdehnung der aufzunehmenden Profile</para>
       </listitem>
-    </itemizedlist>
 
-    <para>Datenaufbereitung:</para>
-
-    <itemizedlist>
       <listitem>
-        <para>Stationierung, Eingangsdateiaufbereitung, D66/ Trippel...</para>
+        <para>Aufnahme der Profil-Geometrie</para>
+      </listitem>
+
+      <listitem>
+        <para>Lage und Pegeldaten von Zuflüssen/ Abflüssen</para>
+      </listitem>
+
+      <listitem>
+        <para>Korngröße und Struktur des Gewässerbettes</para>
+      </listitem>
+
+      <listitem>
+        <para>Struktur und Nutzung des Vorlandes</para>
+      </listitem>
+
+      <listitem>
+        <para>Böschungen, Uferverklammerungen und Besonderheiten</para>
+      </listitem>
+
+      <listitem>
+        <para>Bewuchsdichte, -höhe, -typ und -abstand auf dem Vorland</para>
+      </listitem>
+
+      <listitem>
+        <para>Pegeldaten von HQ, MQ und NQ-Ereignissen mit zugehörigen
+        Wasserständen</para>
+      </listitem>
+
+      <listitem>
+        <para>Geometrie, Lage und Besonderheiten von Brücken, Wehren und
+        Durchlässen</para>
       </listitem>
     </itemizedlist>
 
-    <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
-    Modelles in der Oberfläche begonnen werden.</para>
+    <para>Bei der Konfiguration des 1D-Modells sind alle Eingangsdaten auf das
+    gewünschte Strömungsmodell zu übertragen und ggf. Abschätzungen und
+    Vereinfachungen zu treffen. Hierzu zählt, die Abbildung der Querprofile
+    inkl. der hydraulischen Parameter, die Definition des Gewässerlaufs über
+    die Profile,die Festlegung von Abflussereignissen sowie die Festlegung
+    aller Berechnungseinstellungen wie z. B. Simulationsvariante,
+    Fließ-Widerstands-Gesetz, Parameter, usw.</para>
+
+    <para>Im Rahmen der Kalibrierung, die in der Regel zunächst für das
+    Gewässerbett unter Mittelwasser und später für das Vorland unter
+    Hochwasserereignissen erfolgt, sind die hydraulischen Parameter zu eichen.
+    Hierbei werden zunächst Rauheit, Vegetation und hydraulische Parameter aus
+    Erfahrungswerten oder Literaturangaben gewählt. Nach einer ersten
+    Berechnung lassen sich über einen Vergleich der Berechnungsergebnisse mit
+    den Messergebnissen die hydraulischen Parameter in einem physikalisch
+    sinnvollen Intervall anpassen. Dieser Kalibrierungsprozess wird so lange
+    fortgesetzt, bis die Berechnungsergebnisse die Messergebnisse möglichst
+    genau nachbilden.</para>
+
+    <para>Für die Berechnungen von Szenarien oder
+    Bemessungshochwasserereignissen bildet das kalibrierte 1D-Modell die
+    Grundlage und (meist) als Referenzzustand für Studien. Eine stetige
+    Kontrolle der Ergebnisse und durch überschlägige Handrechnungen oder
+    Plausibilitätskontrollen empfiehlt sich für jede Berechnung. Hierfür
+    eignet sich insbesondere die Visualisierung der Ergebnisse in der Karte
+    und im Längsschnitt. Für detaillierte Informationen zum Berechnungsablauf
+    stehen die Ergebnisse in Listenform und diverse Log-Dateien zur
+    Verfügung.</para>
 
     <section>
-      <title>Was enthält ein Spiegellinien-Modell?</title>
+      <title>Was enthält ein Spiegellinien-Modell? Allgemeine
+      Begriffserläuterungen</title>
 
       <para><emphasis>Was kann WSPM berechnen und welche Daten werden hierfür
       benötigt? Allgemeinen Ablauf erläutern: Preprozessing, Prozessing,
       Postprozessing</emphasis></para>
 
-      <para><emphasis role="bold">Projekt: Projektname und
-      Beschreibung</emphasis></para>
+      <para><emphasis role="bold">Profile</emphasis></para>
 
-      <itemizedlist>
-        <listitem>
-          <para><emphasis role="bold">Gewässer:</emphasis> Gewässername und
-          Beschreibung (ein Projekt kann n Gewässer haben)</para>
+      <para>Ein Profil enthält alle geometrischen und hydraulischen Daten, die
+      ein Querprofil beschreiben. Ihr Inhalt variiert in Abhängigkeit vom
+      Profiltyp (z.B. Normalprofil, Brückenprofil, Wehrprofil). Die
+      Profildatei definiert sich über dem Profilnamen (Stations-km,
+      Profilzustand), über den das Profil referenzierbar ist. Die Profildatei
+      ist sowohl alphanumerisch wie auch grafisch-interaktiv
+      editierbar.</para>
 
-          <itemizedlist>
-            <listitem>
-              <para><emphasis role="bold">Profile:</emphasis> hier finden Sie
-              alle Profile mit: Profil-km und Profil-Nummer. Sie können
-              Profile erstellen und bearbeiten (Ein Gewässer kann m Profile
-              haben)</para>
-            </listitem>
+      <para><emphasis role="bold">Gewässerstrang</emphasis></para>
 
-            <listitem>
-              <para><emphasis role="bold">Gewässerstränge:</emphasis>
-              entspricht einem Gewässerzustand. Hierzu ist zunächst das
-              richtige Gewässer auszuwählen und dann die Profile aus der
-              Profildatenbank, sowie eine Reihenfolge und Abstand der Profile
-              zu wählen.</para>
-            </listitem>
+      <para>Die Aufeinanderfolge der Profile entlang des Gewässers ist durch
+      den Gewässerstrang definiert. Er entspricht auch der Reihenfolge der
+      Abarbeitung bei der Spiegellinienberechnung. Darüber hinaus wird hier
+      der Abstand zwischen den Profilen im Flussschlauch und auf den
+      Vorländern festgelegt. Die Profilabstände werden aus den vom Benutzer
+      eingegebenen Stationswerten besetzt. Bei einer umgekehrten Stationierung
+      ist ein entsprechender Schalter für das Gewässer zu aktivieren, damit
+      die Stationierung absteigend erfolgt. Jedem Gewässerstrang ist auch eine
+      Liste mit sämtlichen zum Zustand gehörenden Profilen hinterlegt mit dem
+      Profilschlüssel und dem zugehörigen Profildateiname. Die Reihenfolge der
+      Profilangabe ist durch die Berechnungsrichtung entgegen der
+      Fließrichtung festgelegt. Dies gilt auch für den schießenden
+      Abflussbereich. Die Stationierungsrichtung ist nicht festgelegt. Es wird
+      jedoch empfohlen, im Sinne des Gewässerverzeichnisses NRW grundsätzlich
+      von der Mündung in Richtung Quelle zu stationieren.</para>
 
-            <listitem>
-              <para><emphasis role="bold">Abflussereignis = Boundary
-              Condition: </emphasis>Ereignisname, Beschreibung und Datum. Hier
-              kann ein konstantes oder über die Fließlänge gestaffeltes
-              Abflussereignis angegeben werden (derzeit noch nicht möglich).
-              Die Angabe ist an das Gewässer, aber noch nicht an den Zustand
-              gebunden.</para>
-            </listitem>
+      <para><emphasis role="bold">Abflussereignisse</emphasis></para>
 
-            <listitem>
-              <para><emphasis role="bold">WSP-Fixierungen:</emphasis>
-              Fixierungsname, Beschreibung und Datum. Hier kann eine
-              Wasserspiegelhöhe aus einer Messung o.ä. angegeben werden. Diese
-              Angabe wird meist für die Kalibrierung verwendet und dient als
-              Referenzwert zur visuellen Kontrolle. Sie ist an das Gewässer,
-              aber noch nicht an den Zustand gebunden.</para>
-            </listitem>
-          </itemizedlist>
-        </listitem>
-      </itemizedlist>
+      <para>Für eine Spiegellinienberechnung ist als Randbedingung der
+      Durchfluss zu definieren. Hierzu dient die Abflussdatei. Eine
+      Abflussdatei ist zunächst unabhängig vom Gewässerstrang und wird diesem
+      erst in der Berechnungsvariante zugewiesen. In dieser Datei kann der
+      Abfluss profilbezogen oder auch zwischen zwei Profilen festgelegt
+      werden. Dabei müssen jedoch nur diejenigen Fließkilometer eine
+      Abflussdefinition erfahren, an denen eine Abflussänderung im Vergleich
+      zum vorherigen Profil stattfindet. Jede Abflussdatei steht für genau ein
+      bestimmtes Abflussereignis. Bei der Spiegellinienberechnung kann der
+      Anwender dann den gewünschten Abflusszustand auswählen.</para>
 
-      <para><emphasis role="bold">Berechnungsvarianten:
-      WSPM-Berechnungen</emphasis></para>
+      <para><emphasis role="bold">Wasserspiegelfixierung</emphasis></para>
 
-      <itemizedlist>
-        <listitem>
-          <para><emphasis role="bold">Berechnungsfall xxx:</emphasis> Name,
-          Beschreibung und Datum. Hier kann eine Kombination aus Zustand,
-          Abflussereignis, Berechnungsparametern und WSP-Fixierung ausgewählt
-          werden. Berechnungsart, Anfang und Ende des Stranges,
-          Widerstandsgesetz, Numerische Parameter, Bedingungen.</para>
-        </listitem>
-      </itemizedlist>
+      <para>In dieser Datei können profilbezogen oder auch zwischen zwei
+      Profilen gemessene Wasserspiegelhöhen eingegeben werden. Die
+      Wasserspiegelfixierungen sollen später im Rahmen der Berechnung in die
+      Längsschnitte eingetragen werden <emphasis role="bold">(derzeit noch
+      nicht verfügbar)</emphasis>.</para>
+
+      <para><emphasis role="bold">Berechnungsvarianten</emphasis></para>
+
+      <para>Beim Aufruf des Spiegellinienprogramms erfolgt die Abfrage der
+      notwendigen Steuerparameter für die Programmausführung. Diese werden in
+      einer separaten Berechnungsvariante gespeichert. Damit hat der Benutzer
+      die Möglichkeit, mehrere Berechnungsvarianten zunächst zu erstellen, zu
+      ändern oder zu löschen und anschließend die Spiegellinienberechnung für
+      diese Berechnungsvarianten im auszuführen.</para>
     </section>
   </section>
 
   <section id="kalypso_wspm-Allgemeines">
-    <title>Allgemeine Einführung</title>
-
-    <para><emphasis>Welcome Dialog</emphasis></para>
+    <title>Kalypso-Startseite und Welcome-Dialog</title>
 
     <para>Wenn man das Programm Kalypso.exe startet erscheint die
     Kalypso-Startseite mit allen Plug-in Modulen:</para>
@@ -255,12 +361,29 @@
       <listitem>
         <para>Wählen Sie den Button für Kalypso-WSPM</para>
       </listitem>
-
-      <listitem>
-        <para><emphasis role="bold">Bild von Startseite und Welcome-Dialog
-        einfügen</emphasis></para>
-      </listitem>
     </itemizedlist>
+
+    <figure>
+      <title>Kalypso-Startseite mit allen Plug-in Modulen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" fileref="img/WSPM/01_Willkommen.bmp"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure>
+      <title>Welcome Dialog</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" fileref="img/WSPM/02_Aktionen.bmp"
+                     scale="80" />
+        </imageobject>
+      </mediaobject>
+    </figure>
 
     <para>Es erscheint ein Welcome-Dialog mit folgenden Elementen:</para>
 
@@ -300,35 +423,154 @@
     </itemizedlist>
 
     <section>
-      <title>Die Default Oberfläche/ Perspektive von WSPM</title>
+      <title>Perspektiven und Views in Kalypso-WSPM</title>
 
-      <para><emphasis>Navigator, Feature View, Gliederung, Karten-Editor
-      Default Struktur/ Wofür sind die gut??</emphasis></para>
-
-      <para>Kalypso1d erstellt eine „Default“-Struktur (eine bestimmte
-      Perspektive) <emphasis role="bold">(BILD!!!)</emphasis></para>
+      <para>Grundsätzlich stehen für die Bearbeitung eines WSPM-Modells zwei
+      vordefinierte Perspektiven dem Nutzer zur Verfügung:</para>
 
       <itemizedlist>
         <listitem>
-          <para>Der Navigator für die Projektverwaltung befindet sich links
-          oben,</para>
+          <para>Spiegellinienberechnung</para>
         </listitem>
 
         <listitem>
-          <para>das Fenster für Daten im Graphik-/ Karten-Editor links
-          unten,</para>
-        </listitem>
-
-        <listitem>
-          <para>das Bäumchen (Gliederung) mit den Projektdaten mittig
-          und</para>
-        </listitem>
-
-        <listitem>
-          <para>der FeatureView zum Einsehen in diverse Eigenschaften rechts
-          auf dem Bildschirm.</para>
+          <para>Profileditor bzw. Profil Manager (nahezu identisch)</para>
         </listitem>
       </itemizedlist>
+
+      <para>Standardgemäß ist zunächst nur die Perspektive
+      „Spiegellinienberechnung“ geöffnet. Über die Menuleiste
+      <guimenuitem>Fenster &gt; Perspektive öffnen &gt; Andere
+      ...</guimenuitem> kann auch die Perspektive
+      <guimenu>Profileditor</guimenu> geöffnet werden. Der Wechsel zwischen
+      den Perspektiven ist über die Reiter am oberen Rand (unterhalb der
+      Menuleiste) möglich. <emphasis role="bold">(BILD!!!)</emphasis></para>
+
+      <section>
+        <title>Perspektive "Spiegellinienberechnung"</title>
+
+        <para>Hier wird standardgemäß die vordefinierte Perspektive
+        „Spiegellinienberechnung“ beschrieben. Mit einer persönlichen
+        Anordnung einzelner Views (=Teilfenstern) und einer Abspeicherung
+        unter der Menuleiste Fenster Perspektive speichern unter... kann jede
+        beliebige Anordnung an Teilfenstern gesichert werden.</para>
+
+        <para>In der Perspektive „Spiegellinienberechnung“ werden folgende
+        Kernaktivitäten zum allgemeinen Handling der Modell-Daten
+        durchgeführt:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Import, Export und Erzeugen von Projekten</para>
+          </listitem>
+
+          <listitem>
+            <para>Allgemeine Projektverwaltung</para>
+          </listitem>
+
+          <listitem>
+            <para>Anlegen neuer Projektinhalte wie Gewässerstränge, Profile,
+            Berechnungsvarianten</para>
+          </listitem>
+
+          <listitem>
+            <para>Ansteuern der Berechnung</para>
+          </listitem>
+
+          <listitem>
+            <para>Ansicht und Verwaltung der Ergebnisse</para>
+          </listitem>
+
+          <listitem>
+            <para>Ansicht und Verwaltung der Kartenansichten</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Die Perspektive „Spiegellinienberechnung“ besteht aus folgenden
+        Views:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Navigator: für Projekt-Verwaltung (links oben)</para>
+          </listitem>
+
+          <listitem>
+            <para>Gliederung: für Themen, die in einer Karte angezeigt werden
+            (links unten)</para>
+          </listitem>
+
+          <listitem>
+            <para>Datenbaum: für Organisation aller Daten eines Projekts
+            (Gewässer, Profile,...) (mittig)</para>
+          </listitem>
+
+          <listitem>
+            <para>FeatureView: für Bearbeitung von Features (Eigenschaften)
+            (rechts) <emphasis role="bold">(BILD!!!)</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Perspektive "Profileditor/ Profil Manager"</title>
+
+        <para>Hier wird standardgemäß die vordefinierte Perspektive
+        „Profileditor“ beschrieben. Mit einer persönlichen Anordnung
+        einzelnern Views (=Teilfenstern) und einer Abspeicherung unter der
+        Menuleiste <guimenuitem>Fenster &gt; Perspektive speichern
+        unter...</guimenuitem> kann jede beliebige Anordnung an Teilfenstern
+        gesichert werden. In der Perspektive „Profileditor/ Profil Manager“
+        werden folgende Kernaktivitäten zur Bearbeitung von Profildaten
+        durchgeführt:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Einfügen, löschen und kopieren von Detail-Profildaten (z. B.
+            Bewuchs, Rauheit, usw)</para>
+          </listitem>
+
+          <listitem>
+            <para>Ansicht des Profils im Querschnitt</para>
+          </listitem>
+
+          <listitem>
+            <para>Bearbeiten des Profilquerschnittes</para>
+          </listitem>
+
+          <listitem>
+            <para>Definition von Bauwerken und hydraulischen Parametern</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Die Perspektive „Profileditor/ Profil Manager“ besteht aus
+        folgenden Views:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Datenbaum: für Selektion des Profils (links oben)</para>
+          </listitem>
+
+          <listitem>
+            <para>Profileditor-Legende: für Daten, die in Diagramm und Tabelle
+            verfügbar sind (links unten)</para>
+          </listitem>
+
+          <listitem>
+            <para>Profileditor-Layeransicht: für besondere Parameter, (z.B.
+            Trennflächen oder Bauwerksparameter) (links unten)</para>
+          </listitem>
+
+          <listitem>
+            <para>Profileditor-Tabelle: tabellarische Eingabe der Geometrie
+            und hydr. Parameter (rechts oben)</para>
+          </listitem>
+
+          <listitem>
+            <para>Profileditor- Diagramm: graphische Darstellung des Profils
+            (rechts unten) <emphasis role="bold">(BILD!!!)</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </section>
     </section>
 
     <section id="kalypso_wspm-neues_projekt">
@@ -338,100 +580,199 @@
         <primary>Neues KalypsoWSPM Projekt erstellen</primary>
       </indexterm>
 
+      <para>Grundsätzlich kann ein WSPM-Projekt beim Programmstart oder in der
+      bereits geöffneten KALYPSOWSPM-Oberfläche über den Navigator neu
+      angelegt werden.</para>
+
+      <para><emphasis role="bold">1. Variante: Neues Projekt erstellen aus der
+      Startseite heraus</emphasis></para>
+
+      <para>Für das Anlegen eines neuen WSPM-Projektes ist der Button
+      <guibutton>Neues Projekt erstellen</guibutton> zu wählen. Es erscheint
+      folgendes Pop-up-window:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Bild einfügen</emphasis></para>
+        </listitem>
+
+        <listitem>
+          <para>Projektname eingeben z.B: FlussXXX</para>
+        </listitem>
+
+        <listitem>
+          <para>Wählen Sie <guibutton>Fertig stellen</guibutton>, um das
+          Projekt zu generieren</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Ein neues leeres Projekt wird im referenzierten Workspace
+      erzeugt.</para>
+
+      <para>Es erscheint ein weiteres Pop-up-window mit der Frage, ob das neue
+      Datenmodell ein Spiegellinienmodell sei. Hier muss
+      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt werden <emphasis
+      role="bold">(BILD!!!!)</emphasis>.</para>
+
+      <para>Kalypso1d hat das Projekt erzeugt und eine „Default“-Struktur
+      angelegt (siehe Perspektive "Spiegellinienberechnung" <emphasis
+      role="bold">VERLINKUNG!!!!!!!</emphasis>)</para>
+
+      <para><emphasis role="bold">2. Variante: Neues Projekt erstellen aus der
+      Startseite heraus</emphasis></para>
+
+      <para>Gehen Sie in den Navigatorbereich, um dort ein neues Projekt
+      anzulegen.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><guimenuitem>Datei &gt; Neu... &gt; TUHH
+          1d-Spiegellinienberechnung &gt; Projekt</guimenuitem></para>
+        </listitem>
+
+        <listitem>
+          <para>Projektname vergeben <guibutton>Fertig
+          stellen</guibutton></para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Es erscheint ein Pop-up-window mit der Frage, ob das neue
+      Datenmodell ein Spiegellinienmodell sei. Hier muss
+      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt werden <emphasis
+      role="bold">(BILD!!!!)</emphasis>.</para>
+
+      <para>Kalypso1d hat das Projekt erzeugt und eine „Default“-Struktur
+      angelegt (siehe Perspektive "Spiegellinienberechnung" <emphasis
+      role="bold">VERLINKUNG!!!!!!!</emphasis>)</para>
+
       <section>
-        <title>Neues Projekt erstellen</title>
+        <title>Definition eines neuen Gewässers im Projekt</title>
 
-        <para>Bei der Wahl ein neues Kalypso-WSPM Projekt anzulegen erscheint
-        folgendes Pop-up-window:</para>
+        <para>Gehen Sie ins Bäumchen:</para>
 
-        <para><itemizedlist>
-            <listitem>
-              <para><emphasis role="bold">Bild einfügen</emphasis></para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Geben Sie dem Projekt einen Namen und ggf eine Beschreibung
+            im FeatureView ein. <emphasis
+            role="bold">(BILD!!!)</emphasis></para>
+          </listitem>
 
-            <listitem>
-              <para>Projektname eingeben z.B: FlussXXX</para>
-            </listitem>
+          <listitem>
+            <para>Öffnen Sie im Bäumchen das Projekt</para>
+          </listitem>
 
-            <listitem>
-              <para>Wählen Sie <guibutton>Fertig stellen</guibutton>, um das
-              Projekt zu generieren</para>
-            </listitem>
-          </itemizedlist></para>
+          <listitem>
+            <para>Gehen Sie mit der rechten Maustaste auf
+            <guimenuitem>Gewässer &gt; Neu &gt; Gewässer</guimenuitem></para>
+          </listitem>
 
-        <para>Ein neues leeres Projekt wird im referenzierten Workspace
-        erzeugt.</para>
+          <listitem>
+            <para>Nun kann ein neues Gewässer angelegt werden (<emphasis
+            role="bold">BILD!!!!)</emphasis></para>
+          </listitem>
 
-        <para>Es erscheint ein weiteres Pop-up-window mit der Frage, ob das
-        neue Datenmodell ein Spiegellinienmodell sei. Hier muss
-        <guibutton>Yes</guibutton> (Fehlermeldung!) gewählt werden <emphasis
-        role="bold">(BILD!!!!)</emphasis>.</para>
+          <listitem>
+            <para>Geben Sie dem Gewässer einen Namen und ggf eine Beschreibung
+            im FeatureView ein</para>
+          </listitem>
+        </itemizedlist>
+      </section>
 
-        <para><itemizedlist>
-            <listitem>
-              <para>Gehen Sie ins Bäumchen (Gliederung) und führen Sie
-              folgende Schritte durch:</para>
+      <section>
+        <title>Einladen von Gewässerprofilen &amp; -strängen in die
+        Karte</title>
 
-              <orderedlist>
-                <listitem>
-                  <para>Dem Projekt einen Namen geben und ggf eine
-                  Beschreibung im FeatureView</para>
-                </listitem>
+        <para>In einer Karte können nur georeferenzierte Profile und Stränge
+        in ihrer tatsächlichen Lage angezeigt werden. Um Gewässerstränge
+        einzuladen, ist es sinnvoll (aber nicht erforderlich) eine Karte neu
+        anzulegen (<emphasis role="bold">VERLINKUNG siehe Kapitel
+        XXX)</emphasis>. Falls dies bereits geschehen ist, kann die angelegte
+        Karte (<filename>karte.gmt</filename>) aus dem Navigator mit einem
+        Doppelklick geöffnet werden.</para>
 
-                <listitem>
-                  <para>Im Bäumchen das Projekt öffnen</para>
-                </listitem>
+        <para>Für das Einladen eines Gewässerstranges:</para>
 
-                <listitem>
-                  <para>Gehen Sie mit der rechten Maustaste auf
-                  <guimenuitem>Gewässer &gt; Neu &gt;
-                  Gewässer</guimenuitem></para>
-                </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie in der Gliederung der Karte auf das grüne
+            „+“</para>
+          </listitem>
 
-                <listitem>
-                  <para>Dem Gewässer einen Namen geben und ggf eine
-                  Beschreibung im FeatureView</para>
-                </listitem>
+          <listitem>
+            <para>Wählen Sie gml im Fenster aus, gehen Sie auf
+            <guibutton>Weiter</guibutton> und selektieren Sie
+            <filename>model.gml</filename></para>
+          </listitem>
 
-                <listitem>
-                  <para>Das Bäumchen weiter öffnen und gehe mit der rechten
-                  Maustaste auf <guimenuitem>Profile &gt; Neu &gt;
-                  Profil</guimenuitem></para>
-                </listitem>
+          <listitem>
+            <para>Im Bäumchen: <guimenuitem>Gewässer &gt; Zustand &gt;
+            Gewässerstrangsegmente</guimenuitem> wählen und anschließen
+            <guibutton>Fertig stellen</guibutton></para>
 
-                <listitem>
-                  <para>geben Sie eine Stationsnummer an <emphasis
-                  role="bold">(BILDER!!!!)</emphasis></para>
-                </listitem>
-              </orderedlist>
-            </listitem>
-          </itemizedlist></para>
+            <para><guibutton>BILD Abbildung 80</guibutton></para>
+          </listitem>
+        </itemizedlist>
+
+        <para><emphasis role="bold">Zur interaktiven Ansicht von Profilen in
+        Karte und Profil-Editor</emphasis></para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie in der Gliederung auf die Profile</para>
+          </listitem>
+
+          <listitem>
+            <para>Aktivieren Sie die Profile mit dem Button <emphasis
+            role="bold">XXX BUTTONBILD</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para>Aktivieren Sie in der Menüleiste der Karte den Auswahl-Modus
+            über die „grüne Raute mit Häkchen“</para>
+          </listitem>
+
+          <listitem>
+            <para>Die Profilauswahl ist nun per Maus möglich</para>
+          </listitem>
+
+          <listitem>
+            <para>Wechseln Sie in die Profil-Editor Ansicht</para>
+          </listitem>
+        </itemizedlist>
       </section>
     </section>
 
     <section>
       <title>Importieren von WspWin-Projekten</title>
 
-      <para>Gehe in den Navigatorbereich um dort ein Projekt zu
-      importieren.</para>
+      <para>Grundsätzlich kann ein WspWin-Projekt beim Programmstart oder in
+      der bereits geöffneten KALYPSO-WSPM Oberfläche über den Navigator
+      importiert werden.</para>
+
+      <para>Wählen Sie auf der Startseite den Button <emphasis
+      role="bold">XXX</emphasis> um ein WspWin-Projekt zu importieren.</para>
 
       <itemizedlist>
         <listitem>
-          <para><guimenuitem>Datei &gt; Neu... &gt; Projekt...</guimenuitem>
-          neues Projekt erstellen markieren auf <guibutton>Weiter</guibutton>
-          klicken und dann einen Projektnamen eingeben</para>
+          <para>Pfad browsen mit Projekt-Ordner (nur Überordner aktivieren) OK
+          Weiter</para>
         </listitem>
 
         <listitem>
-          <para>Anschließend können Sie das Projekt entweder direkt
-          <guibutton>Fertig stellen</guibutton> oder erst auf
-          <guibutton>Weiter</guibutton>, eine Projektabhängigkeit auswählen
-          und dann fertigstellen</para>
+          <para>Projektname vergeben Fertig stellen</para>
         </listitem>
+      </itemizedlist>
 
+      <para><emphasis role="bold">Alternativ:</emphasis></para>
+
+      <para>Wählen Sie auf der Startseite den Button <emphasis role="bold">XXX
+      </emphasis><guibutton>Bereits vorhandene Projekte bearbeiten</guibutton>
+      und gehen Sie anschließend in den Navigatorbereich um dort ein Projekt
+      zu importieren.</para>
+
+      <itemizedlist>
         <listitem>
-          <para>Eine weitere Möglichkeit ein Projekt zu importieren:
-          <guimenuitem>Datei &gt; Neu... &gt; Projekt &gt; Kalypso &gt;
+          <para><guimenuitem>Datei &gt; Neu... &gt; Projekt &gt; Kalypso &gt;
           Spiegellinienberechnung &gt; TUHH ... aus WspWinProjekt &gt;
           Weiter</guimenuitem></para>
         </listitem>
@@ -445,53 +786,35 @@
           <para>Projektname vergeben <guibutton>Fertig
           stellen</guibutton></para>
         </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">BILD!!!!!!!</emphasis></para>
+        </listitem>
       </itemizedlist>
 
-      <para><emphasis role="bold">Probleme?</emphasis></para>
+      <para><emphasis role="bold">Haben Sie Probleme?</emphasis></para>
 
       <itemizedlist>
         <para>Wenn Fehlermeldung zu fehlenden Profilen z.B: „ko000259.prf
         fehlt“:</para>
 
         <listitem>
-          <para>Prüfe unter dem Ordner <filename>/Prof</filename> die
+          <para>Prüfen Sie unter dem Ordner <filename>/Prof</filename> die
           Strangdateien: die <literal>*.str</literal> und
           <literal>profproj.txt</literal> Datei</para>
         </listitem>
 
         <listitem>
-          <para>Ggf. aus profproj.txt Datei das Profil entfernen, wenn nicht
-          im Strang erwähnt UND in der ersten Zeile die erste Zahl um eins
-          verringern (= Anzahl der auszulesenden Zeilen)</para>
+          <para>Entfernen Sie ggf. aus profproj.txt Datei das Profil, wenn
+          nicht im Strang erwähnt UND verringern Sie in der ersten Zeile die
+          erste Zahl um eins (= Anzahl der auszulesenden Zeilen)</para>
         </listitem>
 
         <listitem>
-          <para>Wenn Profil in der Strangdatei, dann WspWin-Pojekt
-          prüfen</para>
+          <para>Wenn Profil in der Strangdatei, dann prüfen Sie das
+          WspWin-Pojekt</para>
         </listitem>
       </itemizedlist>
-
-      <section>
-        <title>Importieren von Daten aus WspWin</title>
-
-        <para><itemizedlist>
-            <listitem>
-              <para><guimenuitem>Datei &gt; Neu &gt; TUHH 1D -
-              Spiegellinienberechnung Projekt aus WspWin
-              Projekt</guimenuitem></para>
-            </listitem>
-
-            <listitem>
-              <para>Wählen Sie den Ordner aus, der das gewünschte Projekt
-              enthält und klicken auf <guibutton>Weiter</guibutton></para>
-            </listitem>
-
-            <listitem>
-              <para>Geben Sie Ihrem Projekt einen Namen und gehen auf
-              <guibutton>Fertig stellen</guibutton></para>
-            </listitem>
-          </itemizedlist></para>
-      </section>
 
       <section>
         <title>Export von Daten in WspWin</title>
@@ -512,8 +835,9 @@
           </listitem>
 
           <listitem>
-            <para>Ordner auswählen, wo das Projekt hin soll und
-            <guibutton>Fertig stellen</guibutton></para>
+            <para>Wählen Sie den Ordner aus, wo das Projekt angelegt werden
+            soll und gehen Sie anschließen auf <guibutton>Fertig
+            stellen</guibutton></para>
           </listitem>
         </itemizedlist>
 
@@ -525,14 +849,15 @@
 
         <itemizedlist>
           <listitem>
-            <para>Gehen Sie im Explorer in den Ordner und wählen Sie im
+            <para>Öffnen Sie im Explorer diesen Ordner und wählen Sie im
             Unterordner den letzten Ordner und kopieren den Dath Ordner heraus
             <emphasis role="bold">?????</emphasis></para>
           </listitem>
 
           <listitem>
-            <para>Kopiere Dein ursprünglich importiertes WspWin-Projekt und
-            füge nur die neuen Profile (unter Prof) ein ?????</para>
+            <para>Kopieren Sie Ihr ursprünglich importiertes WspWin-Projekt
+            und fügen Sie nur die neuen Profile (unter Prof) ein <emphasis
+            role="bold">?????</emphasis></para>
           </listitem>
         </itemizedlist>
 
@@ -542,12 +867,16 @@
         </note>
 
         <para>Neu angelegte Berechnungsfälle, Zustände oder Ergebnisse können
-        nicht in WspWin zurückgeführt werden (bislang</para>
+        nicht in WspWin zurückgeführt werden.</para>
       </section>
     </section>
 
     <section>
       <title>Bereits vorhandene Projekte bearbeiten...</title>
+
+      <para>Wählen Sie auf der Startseite den Button <emphasis
+      role="bold">XXX</emphasis><guibutton>Bereits vorhandene Projekte
+      bearbeiten</guibutton>.</para>
 
       <section>
         <title>Import eines bestehenden Kalypso-WSPM-Projektes aus einem
@@ -617,6 +946,150 @@
             </listitem>
           </itemizedlist></para>
       </section>
+
+      <section>
+        <title>Öffnen eines Projektes aus dem Navigator</title>
+
+        <para>Gehen Sie im Navigator auf das Projekt, welches geöffnet werden
+        soll und markieren Sie <filename>model.gml</filename>. Nun soll eine
+        Ansicht aus der GIS Vorlagenauswahl gewählt werden. Es gibt zwei
+        Möglichkeiten diese zu öffnen:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Doppelklick auf <filename>modell.gml</filename> oder</para>
+          </listitem>
+
+          <listitem>
+            <para>mit der rechten Maustaste auf <guimenuitem>modell.gml
+            &gt;Öffnen mit... &gt; GIS Vorlagenauswahl</guimenuitem></para>
+          </listitem>
+        </orderedlist>
+
+        <para>Jetzt kann die gewünschte Ansicht ausgewählt werden: Baum-,
+        Feature- oder Karten-Ansicht <emphasis
+        role="bold">(BILDER!!!!)</emphasis></para>
+
+        <section>
+          <title>Arbeiten in der Baum-Ansicht</title>
+
+          <itemizedlist>
+            <listitem>
+              <para>Markieren Sie <guimenuitem>Baumansicht</guimenuitem> und
+              klicken sie auf <guibutton>OK</guibutton>, sofort wird der
+              Standard-Baum erzeugt.</para>
+            </listitem>
+
+            <listitem>
+              <para>Hier können neue Features hinzugefügt werden: rechte
+              Maustaste benutzen und <guimenuitem>Neu</guimenuitem>
+              auswählen</para>
+            </listitem>
+
+            <listitem>
+              <para>Ein Bearbeiten ist im Feature View (rechts außen) möglich
+              <emphasis role="bold">(Bilder mit Baumansicht und Feature View
+              einfügen)</emphasis></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Über dem Feature View findest Du (je nach Feature) folgende
+          Symbole:</para>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Symbole im Feature View</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <thead>
+                <row>
+                  <entry>Symbole</entry>
+
+                  <entry>Beschreibung</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry></entry>
+
+                  <entry>Observation als Tabelle visualisieren</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Editiert das ausgewählte Feature als
+                  Observation</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Erstellt ein neues Feature/ neues default Feature
+                  wird eingefügt</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Feature editieren/ bearbeiten</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Feature löschen</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>In die Profileditor-Ansicht wechseln</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Feature duplizieren: markiertes Feature wird
+                  kopiert</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Feature in der Reihe nach oben verschieben</entry>
+                </row>
+
+                <row>
+                  <entry></entry>
+
+                  <entry>Feature in der Reihe nach unten verschieben</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <caution>
+            <itemizedlist>
+              <listitem>
+                <para>Speichern der reinen Ansicht unter <guimenuitem>Datei
+                &gt; Speichern unter...</guimenuitem></para>
+              </listitem>
+
+              <listitem>
+                <para>Speichern des Projektes inklusive Daten: Button mittig
+                unter der Menüleiste</para>
+              </listitem>
+            </itemizedlist>
+          </caution>
+        </section>
+      </section>
     </section>
   </section>
 
@@ -650,130 +1123,41 @@
     </orderedlist>
 
     <section>
-      <title>Öffnen eines Projektes aus dem Navigator</title>
-
-      <para>Links oben in der Perspektive befindet sich der Navigator, der
-      alle Projekte enthält</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>Gehe auf das Projekt, welches geöffnet werden soll und
-          markiere
-          <filename><literal><filename>modell.gml</filename></literal></filename></para>
-        </listitem>
-
-        <listitem>
-          <para>Nun soll eine Ansicht aus der GIS Vorlagenauswahl gewählt
-          werden. Es gibt zwei Möglichkeiten diese zu öffnen:</para>
-        </listitem>
-      </itemizedlist>
-
-      <orderedlist>
-        <listitem>
-          <para>Doppelklick auf <filename>modell.gml</filename> oder</para>
-        </listitem>
-
-        <listitem>
-          <para>mit der rechten Maustaste auf <guimenuitem>modell.gml
-          &gt;Öffnen mit... &gt; GIS Vorlagenauswahl</guimenuitem></para>
-        </listitem>
-      </orderedlist>
-
-      <itemizedlist>
-        <listitem>
-          <para>Jetzt kann die Ansicht ausgewählt werden: Baum-, Feature- oder
-          Karten-Ansicht <emphasis
-          role="bold">(BILDER!!!!!!)</emphasis></para>
-        </listitem>
-      </itemizedlist>
-
-      <section>
-        <title>Arbeiten in der Baum-Ansicht</title>
-
-        <itemizedlist>
-          <listitem>
-            <para>Markieren Sie <guimenuitem>Baumansicht</guimenuitem> und
-            klicken sie auf <guibutton>OK</guibutton>, sofort wird der
-            Standard-Baum erzeugt.</para>
-          </listitem>
-
-          <listitem>
-            <para>Hier können neue Features hinzugefügt werden: rechte
-            Maustaste benutzen und <guimenuitem>Neu</guimenuitem>
-            auswählen</para>
-          </listitem>
-
-          <listitem>
-            <para>Ein Bearbeiten ist im Feature View (rechts außen) möglich
-            <emphasis role="bold">(Bilder mit Baumansicht und Feature View
-            einfügen)</emphasis></para>
-          </listitem>
-        </itemizedlist>
-
-        <para>Über dem Feature View finden Sie (je nach Feature) Symbole
-        zum:</para>
-
-        <para><emphasis role="bold">(Bild der Symbolleiste!!!)</emphasis> von
-        links nach rechts:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Observation als Tabelle visualisieren</para>
-          </listitem>
-
-          <listitem>
-            <para>Editiert das ausgewählte Feature als Observation</para>
-          </listitem>
-
-          <listitem>
-            <para>Erstellt ein neues Feature</para>
-          </listitem>
-
-          <listitem>
-            <para>Feature editieren</para>
-          </listitem>
-
-          <listitem>
-            <para>Feature löschen</para>
-          </listitem>
-
-          <listitem>
-            <para>In die Profileditor-Ansicht wechseln</para>
-          </listitem>
-        </itemizedlist>
-
-        <caution>
-          <itemizedlist>
-            <listitem>
-              <para>Speichern der reinen Ansicht unter <guimenuitem>Datei &gt;
-              Speichern unter...</guimenuitem></para>
-            </listitem>
-
-            <listitem>
-              <para>Speichern des Projektes inklusive Daten: Button mittig
-              unter der Menüleiste</para>
-            </listitem>
-          </itemizedlist>
-        </caution>
-      </section>
-
-      <section>
-        <title>Arbeiten in der Feature-Ansicht</title>
-
-        <para></para>
-      </section>
-
-      <section>
-        <title>Arbeiten in der Karten-Ansicht</title>
-
-        <para></para>
-      </section>
-    </section>
-
-    <section>
       <title>Profile editieren</title>
 
       <indexterm></indexterm>
+
+      <para>Eine Profildatei enthält alle geometrischen und hydraulischen
+      Daten, die ein Querprofil beschreiben. Ihr Inhalt variiert in
+      Abhängigkeit vom Profiltyp (z.B. Normalprofil, Brückenprofil,
+      Wehrprofil). Die Profildatei definiert sich über dem Profilnamen
+      (Stations-km, Profilzustand), über den das Profil referenzierbar ist.
+      Die Profildatei ist sowohl alphanumerisch wie auch grafisch-interaktiv
+      editierbar.</para>
+
+      <para>Um ein neues Profil anzulegen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Gehen Sie in der Perspektive Spiegellinienberechnung in den
+          Datenbaum.</para>
+        </listitem>
+
+        <listitem>
+          <para>Öffnen Sie in dem Datenbaum das gewünschte Gewässer aus</para>
+        </listitem>
+
+        <listitem>
+          <para>Gehen Sie anschließend mit der rechten Maustaste auf
+          <guimenuitem>Profile &gt; Neu &gt; Profil</guimenuitem></para>
+        </listitem>
+
+        <listitem>
+          <para>Markieren Sie das neue Profil und geben Sie im FeatureView
+          eine Stationsnummer und eine Bezeichnung an <emphasis
+          role="bold">(BILD!!!!)</emphasis></para>
+        </listitem>
+      </itemizedlist>
 
       <para>Für die Bearbeitung von Profilen muss die Perspektive "<emphasis
       role="bold">Profileditor</emphasis>" offen sein. Diese besteht aus vier
@@ -797,17 +1181,18 @@
         </listitem>
       </itemizedlist>
 
-      <para>Um diese Perspektive zu aktivieren, gehe in das Hauptmenü:</para>
+      <para>Um diese Perspektive zu aktivieren, gehen Sie in das
+      Hauptmenü:</para>
 
       <itemizedlist>
         <listitem>
-          <para><guimenuitem>Window &gt; Open Perspective &gt;
-          Other...</guimenuitem></para>
+          <para><guimenuitem>Fenster &gt; Perspektive öffnen &gt;
+          Andere...</guimenuitem></para>
         </listitem>
 
         <listitem>
           <para>Markieren Sie den <guimenu>Profileditor</guimenu> und gehen
-          anschließend auf <guibutton>OK</guibutton></para>
+          Sie anschließend auf <guibutton>OK</guibutton></para>
         </listitem>
       </itemizedlist>
 
@@ -821,8 +1206,8 @@
 
       <itemizedlist>
         <listitem>
-          <para>Im Hauptmenü: <guimenuitem>Window &gt; Show View &gt;
-          Other...</guimenuitem></para>
+          <para>Gehen Sie in das Hauptmenü: <guimenuitem>Fenster &gt; Sicht
+          anzeigen &gt; Other...</guimenuitem></para>
         </listitem>
 
         <listitem>
@@ -984,6 +1369,9 @@
             </tbody>
           </tgroup>
         </table>
+
+        <para>Speichern der eingegebenen Profildaten unter: „Speichern der
+        Daten im Baum“</para>
       </section>
 
       <section>
@@ -1009,7 +1397,7 @@
                 einfügen</guimenu> wählen</para>
               </listitem>
             </itemizedlist>Für einen ersten Punkt wird ein Punkt mit (0, 0)
-          angelegt. Ein Editieren der WErte ist jetzt möglich. Der neue PUnkt
+          angelegt. Ein Editieren der Werte ist jetzt möglich. Der neue Punkt
           wird immer unterhalb der markierten Zeile eingefügt.</para>
 
           <para>Wenn ein Punkt zwischen zwei Punkten eingefügt wird, so werden
@@ -1040,8 +1428,8 @@
 
           <para><itemizedlist>
               <listitem>
-                <para>Gehen Sie in den Profileditor Tabelle und selektieren
-                eine Zeile (mit Wert!)</para>
+                <para>Gehen Sie in die Profileditor Tabelle und selektieren
+                Sie eine Zeile (mit Wert!)</para>
               </listitem>
 
               <listitem>
@@ -1054,10 +1442,10 @@
                 <para>Anschließend auf die rechte Maustaste klicken und
                 <guimenuitem>Werte übertragen</guimenuitem> wählen</para>
               </listitem>
-            </itemizedlist><important>
+            </itemizedlist><note>
               <para>Man muss mit der Maus auf der Spalte sein, deren Wert
               übertragen werden soll!</para>
-            </important><itemizedlist>
+            </note><itemizedlist>
               <listitem>
                 <para>Wert aus Zelle wird auf die markierten Zellen
                 übertragen</para>
@@ -1065,10 +1453,7 @@
             </itemizedlist>Ein Übertragen von Werten erfolgt nur auf Basis
           eines Zellenwertes und wird übertragen in die markierten Zeilen der
           gleichen Spalte. Das heißt, es ist nur ein kopieren in der gleichen
-          Spalte möglich, jedoch nicht spaltenübergreifen.<note>
-              <para>Normales Copy &amp; Paste mit strg C und strg V (von
-              Geokoordinaten) führt zum Absturz!</para>
-            </note></para>
+          Spalte möglich, jedoch nicht spaltenübergreifen.</para>
         </section>
       </section>
 
@@ -1153,7 +1538,8 @@
                 (wenn nicht vorhanden ist keine Triangulation und keine
                 Ansicht von Überschwemmungsflächen möglich)</entry>
 
-                <entry>Editieren nur in der Tabelle</entry>
+                <entry>Editieren nur in der Tabelle<para>Einheit in
+                [m]</para></entry>
               </row>
 
               <row>
@@ -1174,8 +1560,8 @@
                 <entry>Bewuchsparameter ax, ay und dp für den Ansatz von
                 Raheit durch Bewuchs nach LINDER/ PASCHE</entry>
 
-                <entry>Editieren nur in der Tabelle<para>Einheit in
-                [m]</para></entry>
+                <entry>Editieren nur in der Tabelle oder Zuweisen über
+                Polygone in der Karte<para>Einheit in [m]</para></entry>
               </row>
 
               <row>
@@ -1250,7 +1636,7 @@
 
           <para>Die y-Koordinaten sind als relative Koordinaten entlang der
           Profillinie zu interpretieren. Die Gewässerachse muss daher nicht
-          bei y= 0 angeordnet sein und zum Beispiel am linken oder rechten
+          bei y = 0 angeordnet sein und zum Beispiel am linken oder rechten
           Rand der Profillinie liegen. Die Profillinien können, wenn die
           Profilpunkte eine Georeferenz aufweisen in einer Karte angezeigt
           werden. Die Karte zeigt eine Aufsicht auf das Gewässer mit den
@@ -1269,7 +1655,7 @@
 
           <note>
             <para>Keine senkrechten Linien eingeben: Alle geometrischen Werte
-            müssen mindestens 0,002 m in y-Richtung voneinander entfert sein.
+            müssen mindestens 0,005 m in y-Richtung voneinander entfert sein.
             Dies gilt auch für Brücken.</para>
           </note>
         </section>
@@ -1341,12 +1727,11 @@
 
           <para><emphasis role="bold">Durchströmter Bereich:</emphasis></para>
 
-          <para>Der durchströmte Bereich kennzeichnet den Bereich, in dem
-          innerhalb der Berechnung der Impulssatz angewandt wird. Alle
-          Bereiche außerhalb des durchströmten Bereiches gehen nicht in die
-          hydraulische Berechnung mit ein.</para>
+          <para>Der durchströmte Bereich kennzeichnet den Bereich in dem der
+          Impulssatz angewandt wird. Alle Bereiche außerhalb des Durchströmten
+          Bereiches gehen nicht in die hydraulische Berechnung mit ein.</para>
 
-          <para>Der druchströmte Bereich ist so zu definieren, dass keine
+          <para>Der durchströmte Bereich ist so zu definieren, dass keine
           Verfälschung der tatsächlich im Gewässer auftretenden
           Strömungskräfte auftritt. So sind beispielsweise an den Flusslauf
           angrenzende Mulden oder Seitenarme nicht in den Bereich mit
@@ -1384,9 +1769,9 @@
 
           <para><emphasis role="bold">Bordvollpunkte:</emphasis></para>
 
-          <para>Beschreiben die Lage der Schnittpunkte Wasserspiegel mit GOK
-          für einen bordvollen Abfluss. In der Regel sind dies die Knickpunkte
-          zwischen Gewässer und Vorland.</para>
+          <para>Bordvollpunkte beschreiben die Lage der Schnittpunkte
+          Wasserspiegel mit GOK für einen bordvollen Abfluss. In der Regel
+          sind dies die Knickpunkte zwischen Gewässer und Vorland.</para>
 
           <itemizedlist>
             <listitem>
@@ -1438,14 +1823,33 @@
         </section>
 
         <section>
-          <title>Rauheit ks</title>
+          <title>Rauheit ks und kst</title>
 
-          <para>Die Rauheit ks nach COLEBROOK-WHITE des Gewässerprofils kann
-          detailliert in der Tabelle für vereinfachte Rauheiten über
-          Layeransicht oder über Polygone und Parameter-Zuweisung in der Karte
-          angegeben werden. Der Wert des ks-Wertes ist in [m] anzugeben. Für
-          die Wahl der richtigen Parameter stellen das BWK-Merkblatt 1, das
-          DVWK-Merkblatt 220/1991 und weitere Literatur Tabellen
+          <para>Grundsätzlich kann in der Rauheitstabelle entweder der ks oder
+          der kst-Wert angegeben werden. Generelle gilt jedoch für beide
+          Auswahlmöglichkeiten, dass sie nicht nur gleich bleibend für ein
+          Profil, sondern für den gesamten Gewässerstrang vorgeführt werden
+          müssen und unter der späteren Berechnungseinstellung ist das
+          richtige zugehörige Fließgesetz zu selektieren.</para>
+
+          <para>Die <emphasis role="bold">Rauheit kst</emphasis> nach
+          MANNING-STRICKLER kann detailliert in der Tabelle, für vereinfachte
+          Rauheiten über Layeransicht oder über Polygone und
+          Parameter-Zuweisung in der Karte angegeben werden. Bei der Wahl für
+          den kst-Wert ist zu beachten, dass Bewuchs angegeben werden darf und
+          unter der späteren Berechnungseinstellung das richtige zugehörige
+          Fließgesetz nach GAUCKLER- MANNING- STRICKLER selektiert wird. Für
+          die Wahl des richtigen Parameters liefern diverse Literaturenquellen
+          Anhaltswerte bereit.</para>
+
+          <para>Die <emphasis role="bold">Rauheit ks</emphasis> nach
+          COLEBROOK-WHITE des Gewässerprofils kann detailliert in der Tabelle,
+          für vereinfachte Rauheiten über Layeransicht oder über Polygone und
+          Parameter-Zuweisung in der Karte angegeben werden. Der ks-Wert ist
+          in [m] anzugeben. Unter der späteren Berechnungseinstellung ist das
+          richtige Fließgesetz nach DARCY-WEISBACH zu selektieren. Für die
+          Wahl der richtigen Parameter stellen das BWK-Merkblatt 1, das
+          DVWK-Merkblatt 220/1991 und weitere Literaturen Tabellen
           bereit.</para>
 
           <para>Folgende Eingabemöglichkeiten stehen dem Nutzer zur
@@ -1510,7 +1914,7 @@
             </listitem>
 
             <listitem>
-              <para>Gehen Sie in die Gliederung der Karte und markieren das
+              <para>Gehen Sie in die Gliederung der Karte und markieren Siedas
               Gewässer</para>
             </listitem>
 
@@ -1521,7 +1925,7 @@
 
             <listitem>
               <para>Selektieren Sie die Profile, für die Rauheiten zugewiesen
-              werden sollen mit einem Häkchen und gehen auf
+              werden sollen mit einem Häkchen und gehen Sie auf
               <guibutton>Weiter</guibutton></para>
             </listitem>
 
@@ -1537,14 +1941,14 @@
             </listitem>
 
             <listitem>
-              <para>Browsen Sie unter <guimenuitem>Zuordnung</guimenuitem> das
-              <filename>Modell.gml</filename> auf dem gearbeitet werden
+              <para>Durchsuchen Sie unter <guimenuitem>Zuordnung</guimenuitem>
+              das <filename>model.gml</filename> auf dem gearbeitet werden
               soll</para>
             </listitem>
 
             <listitem>
-              <para>Den Prozess durchführen mit <guibutton>Fertig</guibutton>
-              stellen</para>
+              <para>Den Prozess durchführen mit <guibutton>Fertig
+              stellen</guibutton></para>
             </listitem>
           </itemizedlist>
 
@@ -1556,11 +1960,6 @@
                 <listitem>
                   <para>Rauheiten mit ks = 0 sind unzulässig und führen zum
                   Abbruch der Berechnung</para>
-                </listitem>
-
-                <listitem>
-                  <para>Zwischen Vorland und Flussschlauch sollte sich die
-                  Rauheit merklich erhöhen</para>
                 </listitem>
 
                 <listitem>
@@ -1576,19 +1975,264 @@
         </section>
 
         <section>
+          <title>Rauheitszuweisung via Polygone</title>
+
+          <para>Für die Rauheitszuweisung via Polygone müssen folgende
+          Eingangsdaten verfügbar sein:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Ein Gewässerstrang mit georeferenzierten Profilen</para>
+            </listitem>
+
+            <listitem>
+              <para>Ein Polygonthema mit Rauheitspolygonen
+              (Shape-Datei)</para>
+            </listitem>
+
+            <listitem>
+              <para>Eine zum Polygonthema gehörige Tabelle mit Rauheitswerten
+              (dbf-Datei zum shape)</para>
+            </listitem>
+
+            <listitem>
+              <para>Eine Zuordnungs-Datei, die ein bestimmtes Polygonattribut
+              mit den gewünschten Parametern (ks, ax, ay, dp usw.)
+              gleichsetzt.</para>
+            </listitem>
+          </itemizedlist>
+
+          <para><emphasis role="bold">Anlegen der
+          Zuordnungsdatei:</emphasis></para>
+
+          <para>Die Zuordnungs-Datei bestimmt die Regel mit der ein bestimmtes
+          Polygonattribut (z.B. Rauheitsklasse; entspricht später der
+          Quell-ID) mit den gewünschten Parametern (ks, ax, ay, dp usw.)
+          gleichsetzt.</para>
+
+          <para><emphasis>Zum Beispiel:</emphasis></para>
+
+          <para>Rauheitsklasse 1: </para>
+
+          <itemizedlist>
+            <listitem>
+              <para>= ks-Wert 0.03</para>
+            </listitem>
+
+            <listitem>
+              <para>= ax-Wert 8.00</para>
+            </listitem>
+
+            <listitem>
+              <para>= ay-Wert 8.00</para>
+            </listitem>
+
+            <listitem>
+              <para>= dp-Wert 0.20</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Zunächst sollte im Navigator ein neuer Ordner (z.B. Rauheit)
+          erstellt werden über:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Gehen Sie mit der rechten Maustaste auf den Navigator und
+              wählen Sie <guimenuitem>Neu &gt; Andere...</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para><guimenuitem>Einfach &gt; Ordner &gt;
+              Weiter</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie den Ordner aus, setzen Sie den Namen (z.B.
+              Rauheit) und klicken Sie auf <guibutton>Fertig
+              stellen</guibutton></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Nun kann eine neu Zustandsdatei angelegt werden:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Klicken Sie im Navigator mit der rechten Maustaste auf den
+              angelegten Ordner und wählen Sie <guimenuitem>Neu &gt; Andere...
+              &gt; GML-Datei &gt; Weiter</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie das Basis-Schema
+              <filename>org.kalypso.model.wspmprofile.assignment</filename>
+              aus und gehen Sie auf <guibutton>Weiter</guibutton></para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie das Basis-Element
+              <filename>AssignmentCollection</filename> aus und gehen Sie auf
+              <guibutton>Fertig stellen</guibutton></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Die GML-Datei wird im markierten Ordner erstellt.</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Ein Pop-up-Window fragt nach der gewünschten Ansicht.
+              Wählen Sie <guilabel>Standard Baumansicht</guilabel></para>
+
+              <para><guilabel>BILD Abbildung 81</guilabel></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>In der neuen Baumansicht</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Öffnen Sie das Bäumchen und klicken Sie mit der rechten
+              Maustaste. Wählen Sie <guimenuitem>Neu &gt;
+              Zuordnung</guimenuitem> (<emphasis role="bold">VERLINKUNG
+              Abbildung 82)</emphasis></para>
+            </listitem>
+
+            <listitem>
+              <para>Setzen Sie die Quell-ID = Wert der Spalte die im
+              Polygonthema die Attribute als Referenz (Polygonattribut, z.B.
+              Nummer der Rauheitsklasse) liefert. <emphasis
+              role="bold">(VERLINKUNG Abbildung 82)</emphasis></para>
+            </listitem>
+
+            <listitem>
+              <para>Gehen Sie im Bäumchen mit der rechten Maustaste auf
+              <guimenuitem>Profil-Attribut</guimenuitem> und wählen Sie
+              <guimenuitem>Neu &gt; Zuordnung</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie im FeatureView das gewünschte Profilattribut
+              aus dem Pull-Down-Menu unter ID (z.B. KS). <emphasis
+              role="bold">(VERLINKUNG Abbildung 83)</emphasis></para>
+            </listitem>
+
+            <listitem>
+              <para>Definieren Sie unter Wert den gewünschten ks-Wert (oder
+              ax, ay, dp, ... usw. je nach Auswahl unter der ID) in [m]
+              <emphasis role="bold">(VERLINKUNG Abbildung
+              83)</emphasis></para>
+
+              <para><emphasis role="bold">BILD Abbildung 82 und
+              83</emphasis></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Für jede Rauheitsklasse (bzw. für jeden Wert den das
+          Profilattribut annimmt) sind die gewünschten Parameter (ks, ax, ay
+          und dp) zu definieren.</para>
+
+          <para><emphasis role="bold">Zuweisung der hydraulischen
+          Parameter</emphasis></para>
+
+          <para>Um die Rauheitszuweisung zu ermöglichen, muss neben der
+          Zuordnungsdatei eine Karte mit den oben genannten Themen
+          (Gewässerstrang und Polygonthema) angelegt werden. In der
+          Kartenansicht kann über die Gliederung der Karte der Gewässerstrang
+          selektiert werden über: rechte Maustaste klicken <guilabel>Rauheiten
+          festlegen</guilabel> (<emphasis role="bold">VERLINKUNG Abbildung
+          84)</emphasis></para>
+
+          <para><emphasis role="bold">BILD Abbildung 84</emphasis></para>
+
+          <para>Die gewünschten Profile sind in der Pulldown-Liste zu
+          selektieren <emphasis role="bold">(VERLINKUNG Abbildung 84,
+          rechts):</emphasis> Wählen Sie einzelne Profile mittels Häkchen aus
+          und gehen Sie auf <guibutton>Weiter</guibutton></para>
+
+          <para>Im neuen Pop-up-Window <emphasis role="bold">(VERLINKUNG
+          Abbildung 85)</emphasis> ist das Polygonthema zu selektieren:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Thema: Polygonthema (shape) selektieren</para>
+            </listitem>
+
+            <listitem>
+              <para>Wert: Polygonattribut (Benennung der Spalte, die oben als
+              Quell-ID zugeordnet wurde)</para>
+            </listitem>
+
+            <listitem>
+              <para>Zuordnung: Hier ist die oben angelegte Zuordnungsdatei
+              anzugeben (z.B. <filename>Zuordnung.gml</filename>)</para>
+            </listitem>
+
+            <listitem>
+              <para>Optional: nur Vorländer oder Vorland und
+              Flussschlauch</para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie <guibutton>Fertig stellen</guibutton></para>
+
+              <para><guibutton>BILD Abbildung 85</guibutton></para>
+            </listitem>
+          </itemizedlist>
+
+          <para><emphasis role="bold">Probleme?</emphasis></para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Der Wert (Ks) im Polygonthema muss als
+              <literal>Number</literal> definiert sein (NICHT als
+              <literal>String</literal>!!). Gehen Sie in ArcView in die
+              Tabelle, auf Tabelle editieren, selektieren Sie die Ks-Spalte
+              und prüfen Sie unter dem Taschenrechner-Symbol die Eigenschaft
+              der Spalte. Wenn die Spalte ein <literal>String</literal> ist,
+              dann legen Sie eine neue Spalte an mit der
+              <literal>Number</literal> Eigenschaft und übernehmen Sie die
+              Werte der alten Spalte mit <literal>AsNumber</literal>.</para>
+            </listitem>
+
+            <listitem>
+              <para>Polygone sollten sich nach Möglichkeit nicht Überlappen
+              oder Lücken aufweisen.</para>
+            </listitem>
+
+            <listitem>
+              <para>Die Polygon-Kanten dürfen nicht absolut deckungsgleich mit
+              den Profillinien sein.</para>
+            </listitem>
+
+            <listitem>
+              <para>Keine verdrehten Polygone (Polygon-Gruppen mit Lücken)
+              oder Multi-Splines im Polygon verwenden. Dies führt zur
+              Fehlermeldung bei der Verschneidung und Abbruch der
+              Rauheitszuweisung</para>
+            </listitem>
+
+            <listitem>
+              <para>Die Werte der Polygonattribute müssen eine vollständige
+              Zuweisung besitzen.</para>
+
+              <para><emphasis role="bold">BILD Abbildung 86</emphasis></para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
           <title>Bewuchs</title>
 
-          <para>Die Bewuchsparameter ax, ay und dp nach LINDER/ Pasche des
-          Gewässerprofils können bislang nur detailliert in der Tabelle
-          angegeben werden <emphasis role="bold">(siehe "Arbeiten in der
-          Profileditor-Tabelle)</emphasis>. Die Werte sind in [m] anzugeben.
-          Dabei sind die Parameter wie folgt definiert: ax = Bewuchsabstand in
-          Fließrichtung; ay = Bewuchsabstand senkrecht zur Fließrichtung; dp =
-          äquivalenter Bewuchsdurchmesser (entspricht bei Bäumen da. dem
-          Stammdurchmesser, bei Büschen jedoch deutlich größer). Für die Wahl
-          der richtigen Parameter stellen das BWK-Merkblatt 1, das
-          DVWK-Merkblatt 220/1991 und weitere Literatur Tabellen
-          bereit.</para>
+          <para>Die Bewuchsparameter ax, ay und dp nach LINDER/PASCHE des
+          Gewässerprofils können detailliert über die Rauheitszuweisung via
+          Shape erfolgen oder in der Tabelle angegeben werden (siehe <emphasis
+          role="bold">Arbeiten in der Profileditor-Tabelle</emphasis>). Der
+          Werte sind in [m] anzugeben. Dabei sind die Parameter wie folgt
+          definiert: ax = Bewuchsabstand in Fließrichtung; ay = Bewuchsabstand
+          senkrecht zur Fließrichtung; dp = äquivalenter Bewuchsdurchmesser
+          (entspricht bei Bäumen ca. dem Stammdurchmesser, bei Büschen jedoch
+          deutlich größer). Für Wahl der richtigen Parameter stellen das
+          BWK-Merkblatt 1, das DVWK-Merkblatt 220/1991 und weitere Literatur
+          Tabellen bereit.</para>
 
           <note>
             <para><itemizedlist>
@@ -1612,7 +2256,7 @@
                 <listitem>
                   <para>Für die Kalibrierung ist zu erwähnen, dass die
                   Verdichtung des Bewuchses zu einer deutlichen Erhöhung des
-                  Wasserstandes von bis zu wenigen dm führen kann. Die
+                  Wasserstandes von cm bis zu wenigen dm führen kann. Die
                   Erhöhung von ks-Werten führt meist zu einer
                   Wasserspiegelerhöhung von wenigen cm.</para>
                 </listitem>
@@ -1704,13 +2348,13 @@
                 </listitem>
 
                 <listitem>
-                  <para>Wehrparameter sind zu definieren, sonst treten Fehler
-                  in der Berechnung auf</para>
+                  <para>Alle Wehrparameter sind zu definieren, sonst treten
+                  Fehler in der Berechnung auf</para>
                 </listitem>
 
                 <listitem>
                   <para>Die Trennflächen müssen an einem Wehrprofil immer an
-                  den Schnittpunkten Wehroberkante = GOK liegen</para>
+                  den zwei Schnittpunkten Wehroberkante = GOK liegen.</para>
                 </listitem>
 
                 <listitem>
@@ -1720,8 +2364,8 @@
                 </listitem>
 
                 <listitem>
-                  <para>Im Wehrkörper ist kein Bewuchs anzuordnen, da er dort
-                  nicht mitberechnet werden kann</para>
+                  <para>Im Wehrkörper darf kein Bewuchs angeordnet werden, da
+                  er dort nicht mitberechnet werden kann</para>
                 </listitem>
               </itemizedlist></para>
           </note>
@@ -1732,35 +2376,20 @@
 
           <para>Es können beliebig komplexe Brückengeometrien angegeben
           werden. Neben der Brückengeometrie, die über eine Oberkante und
-          Unterkannte der Brücke definiert wird, sind auch die hydraulischen
-          Parameter an der Brücke zu definieren. Dies sind die:</para>
-
-          <itemizedlist>
-            <listitem>
-              <para>Brückenbreite in Fließrichtung</para>
-            </listitem>
-
-            <listitem>
-              <para>Unterwasser GOK</para>
-            </listitem>
-
-            <listitem>
-              <para>Formbeiwert</para>
-            </listitem>
-
-            <listitem>
-              <para>Rauheit des Brückenmaterials <emphasis
-              role="bold">(BILD!!!!)</emphasis></para>
-            </listitem>
-          </itemizedlist>
+          Unterkannte der Brücke definieret wird, sind auch die hydraulischen
+          Parameter an der Brücke zu definieren. Dies sind die Brückenbreite
+          in Fließrichtung, die GOK im Unterwasser, der Pfeilerformbeiwert und
+          die Rauheit des Brückenmaterials. <emphasis
+          role="bold">(BILD!!!!)</emphasis></para>
 
           <para>Eingabe der Brückengeometrie:</para>
 
           <itemizedlist>
             <listitem>
               <para>Die Geometrie der Brückenober- und Brückenunterkante kann
-              in der Profileditor-Tabelle erzeugt werden (siehe "Arbeiten in
-              der Profileditor-Tabelle").</para>
+              in der Profileditor-Tabelle erzeugt werden (siehe <emphasis
+              role="bold">"Arbeiten in der
+              Profileditor-Tabelle"</emphasis>).</para>
             </listitem>
           </itemizedlist>
 
@@ -1774,31 +2403,33 @@
             </listitem>
 
             <listitem>
-              <para>In der Profileditor-Layeransicht ist unter Wehrart der
-              Kronentyp auszuwählen</para>
+              <para>In der Profileditor-Layeransicht ist unter
+              <guilabel>Breite in Fließrichtung</guilabel> Ausdehnung des
+              Brückenbauwerkes in Fließrichtung anzugeben in [m]</para>
             </listitem>
 
             <listitem>
-              <para>Die <guimenuitem>Brückenbreite in
-              Fließrichtung</guimenuitem> ist in [m] zu definieren</para>
+              <para>Die GOK-Sohlhöhe im Unterwasser der Brücke ist in [mNN]
+              über den tiefsten Sohlpunkt im Unterwasser der Brücke
+              anzugeben</para>
             </listitem>
 
             <listitem>
-              <para>Die GOK-Sohlhöhe im <guimenuitem>Unterwasser</guimenuitem>
-              der Brücke ist in [mNN] anzugeben</para>
-            </listitem>
-
-            <listitem>
-              <para>Der <guimenuitem>Formbeiwert </guimenuitem>ist nur für die
-              Brückenpfeiler anzugeben und entspricht einem lokalen
-              Fließwiderstand. Dieser Wert kann optional definiert
+              <para>Der Formbeiwert ist nur für die Brückenpfeiler anzugeben
+              und entspricht einem lokalen Pfeilerformbeiwerte nach YARNELL
+              (siehe Anleitung zum Rechnerkern nach PASCHE). Dieser Wert kann
+              optional für Brücken ohne Pfeiler zu 0,00 definiert
               werden.</para>
             </listitem>
 
             <listitem>
-              <para>Die <guimenuitem>Rauheit</guimenuitem> des
-              Brückenmaterials [m] <emphasis role="bold">(siehe
-              ks-Werte)</emphasis> ist vorzugeben</para>
+              <para>Unter Rauheit ist die Rauheit unter dem Brückenquerschnitt
+              anzugeben in [m] (siehe ks- Werte). Dieser rauheitswert ist
+              erforderlich für die Berechnung unter Druckabfluss im
+              Brückenquerschnitt. Für diesen Fall wird die Öffnung zwischen
+              Brückenunterkante und GOK als geschlossenes Profil mit einem
+              konstanten ks-Wert angesetzt. Hier ist jedoch NICHT die Rauheit
+              des Brückenmaterials einzutragen!</para>
             </listitem>
           </itemizedlist>
 
@@ -1810,13 +2441,20 @@
                 </listitem>
 
                 <listitem>
+                  <para>Starke Vertiefungen der GOK in unmittelbarer Nähe
+                  links oder rechts der Brückenwiderlager führt zu Problemen
+                  bei der Berechnung, daher sind derartige Senken zu
+                  entfernen.</para>
+                </listitem>
+
+                <listitem>
                   <para>Brückenparameter sind zu definieren, sonst treten
                   Fehler in der Berechnung auf</para>
                 </listitem>
 
                 <listitem>
                   <para>Die Trennflächen müssen an einem Brückenprofil immer
-                  an den Schnittpunkten Brückenunterkante = GOK liegen</para>
+                  an den Schnittpunkten Brückenunterkante = GOK liegen.</para>
                 </listitem>
 
                 <listitem>
@@ -1825,80 +2463,387 @@
                 </listitem>
 
                 <listitem>
-                  <para>Der durchströmte Bereich ist immer bis zum Profilrand
+                  <para>Der Durchströmte Bereich ist immer bis zum Profilrand
                   zu ziehen, da die Brückengeometrie im Bereich des Geländes
-                  (außerhalb des Bauwerkes) auf der GOK liegt</para>
+                  (außerhalb des Bauwerkes) auf der GOK liegt.</para>
                 </listitem>
 
                 <listitem>
-                  <para>Im Brückenkörper ist kein Bewuchs anzuordnen, da er
-                  dort nicht mit berechnet werden kann.</para>
+                  <para>Im Brückenkörper darf kein Bewuchs angeordnet werden,
+                  da er dort nicht mitberechnet werden kann.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Der anzugebende Sohlpunkt im unmittelbaren Unterwasser
+                  der Brücke sollte (insbesondere für Niedrigwasserereignisse)
+                  nicht unter dem tiefsten Sohlpunkt des Unterwassers
+                  liegen.</para>
                 </listitem>
               </itemizedlist></para>
           </note>
         </section>
 
         <section>
-          <title>Durchlass mit Trapezprofil</title>
+          <title>Durchlass mit Trapezprofil, Maulprofil, Kreisprofil oder mit
+          Eiprofil</title>
 
-          <para></para>
-        </section>
+          <para>Für den Ansatz der Durchlässe ist zu beachten, dass in der
+          hydraulischen Berechnung davon ausgegangen wird, dass der gesamte
+          Abfluss Q des Gewässers durch den definierten Durchlass strömt. Das
+          heißt, ein Einstau oder Abfluss auf der GOK wird nicht
+          berücksichtigt. Je Gewässerprofil kann immer nur ein Durchlass
+          definiert werden.</para>
 
-        <section>
-          <title>Durchlass mit Maulprofil</title>
+          <para>Für Durchlässe auch können auch kreisförmige Rohrquerschnitte
+          angegeben werden. Neben der Durchlassgeometrie, die über eine
+          Vorauswahl der vorhandenen Geometrie erfolgt, sind auch die
+          hydraulischen Parameter im Durchlass zu definieren. Für alle
+          Durchlässe gilt der unterste Punkt des Durchlassquerschnittes als
+          Bezugspunkt für die Lage im Gelände. <emphasis
+          role="bold">BILD!!!!!</emphasis></para>
 
-          <para></para>
-        </section>
+          <para><emphasis role="bold">Durchlass mit
+          Trapezprofil:</emphasis></para>
 
-        <section>
-          <title>Durchlass mit Kreisprofil</title>
+          <para>Für die Definition der hydraulischen Parameter und der
+          Geometrie des Durchlasses:</para>
 
-          <para></para>
-        </section>
+          <itemizedlist>
+            <listitem>
+              <para>Selektieren Sie unter der Profileditor-Legende das
+              <guilabel>Trapezprofil</guilabel> und gehen Sie in die
+              Profileditor-Layeransicht</para>
+            </listitem>
 
-        <section>
-          <title>Durchlass mit Eiprofil</title>
+            <listitem>
+              <para>In der Profileditor-Layeransicht sind unter
+              <guilabel>Bezugpunkt Breite</guilabel> und <guilabel>Bezugpunkt
+              Höhe</guilabel> die Koordinaten des Bezugspunktes nach <emphasis
+              role="bold">Abbildung 39</emphasis> anzugeben.</para>
+            </listitem>
 
-          <para></para>
+            <listitem>
+              <para>Unter <guilabel>lange Seite</guilabel> ist die größte
+              Breite des Trapezes in [m] anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Gesamthöhe</guilabel> ist die größte Höhe
+              des Trapezes in [m] anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Verhältnis der Dreieckseiten</guilabel>
+              ist das Steigungsverhältnis der Trapezseiten anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Sohlgefälle</guilabel> ist die Neigung des
+              Durchlasses in Promille anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Die Länge des Durchlasses erstreckt sich von Mitte
+              zwischen Profil OW und Durchlass bis zur Mitte zwischen Profil
+              UW und Durchlass.</para>
+            </listitem>
+
+            <listitem>
+              <para>Für die <guilabel>Rauheit</guilabel> des Durchlasses ist
+              ein ks-Wert in [m] vorzugeben. <emphasis
+              role="bold">BILD!!!!</emphasis></para>
+            </listitem>
+          </itemizedlist>
+
+          <para><emphasis role="bold">Durchlass mit
+          Maulprofil:</emphasis></para>
+
+          <para>Für die Definition der hydraulischen Parameter und der
+          Geometrie des Durchlasses:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Selektieren Sie unter der Profileditor-Legende das
+              <guilabel>Maulprofil</guilabel> und gehen Sie in die
+              Profileditor-Layeransicht</para>
+            </listitem>
+
+            <listitem>
+              <para>In der Profileditor-Layeransicht sind unter
+              <guilabel>Bezugpunkt Breite</guilabel> und <guilabel>Bezugpunkt
+              Höhe</guilabel> die Koordinaten des Bezugspunktes nach <emphasis
+              role="bold">Abbildung 39 </emphasis>anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Gesamthöhe</guilabel> ist die größte Höhe
+              des Maulprofils in [m] anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>größte Breite/ Durchmesser</guilabel> ist
+              die größte Breite des Maulprofils in [m] anzugeben. Beim
+              Maulprofil ist üblicherweise die Breite &gt; der
+              Gesamthöhe.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Sohlgefälle</guilabel> ist die Neigung des
+              Durchlasses in Promille anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Die Länge des Durchlasses erstreckt sich von Mitte
+              zwischen Profil OW und Durchlass bis zur Mitte zwischen Profil
+              UW und Durchlass.</para>
+            </listitem>
+
+            <listitem>
+              <para>Für die <guilabel>Rauheit</guilabel> des Durchlasses ist
+              ein ks-Wert in [m] ist vorzugeben. <emphasis
+              role="bold">BILD!!!!</emphasis></para>
+            </listitem>
+          </itemizedlist>
+
+          <para><emphasis role="bold">Durchlass mit
+          Eiprofil:</emphasis></para>
+
+          <para>Für die Definition der hydraulischen Parameter und der
+          Geometrie des Durchlasses:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Selektieren Sie unter der Profileditor-Legende das
+              <guilabel>Eiprofil</guilabel> und gehen Sie in die
+              Profileditor-Layeransicht</para>
+            </listitem>
+
+            <listitem>
+              <para>In der Profileditor-Layeransicht sind unter
+              <guilabel>Bezugpunkt Breite</guilabel> und <guilabel>Bezugpunkt
+              Höhe</guilabel> die Koordinaten des Bezugspunktes nach <emphasis
+              role="bold">Abbildung 39</emphasis> anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Gesamthöhe</guilabel> ist die größte Höhe
+              des Eiprofils in [m] anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>größte Breite/ Durchmesser</guilabel> ist
+              die größte Breite des Eiprofils in [m] anzugeben. Beim Eiprofil
+              ist üblicherweise die Breite &lt; der Gesamthöhe.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Sohlgefälle</guilabel> ist die Neigung des
+              Durchlasses in Promille anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Die Länge des Durchlasses erstreckt sich von Mitte
+              zwischen Profil OW und Durchlass bis zur Mitte zwischen Profil
+              UW und Durchlass.</para>
+            </listitem>
+
+            <listitem>
+              <para>Für die <guilabel>Rauheit</guilabel> des Durchlasses ist
+              ein ks-Wert in [m] ist vorzugeben. <emphasis
+              role="bold">BILD!!!!</emphasis></para>
+            </listitem>
+          </itemizedlist>
+
+          <para><emphasis role="bold">Durchlass mit
+          Kreisprofil:</emphasis></para>
+
+          <para>Für die Definition der hydraulischen Parameter und der
+          Geometrie des Durchlasses:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Selektieren Sie unter der Profileditor-Legende das
+              <guilabel>Kreisprofil</guilabel> und gehen Sie in die
+              Profileditor-Layeransicht</para>
+            </listitem>
+
+            <listitem>
+              <para>In der Profileditor-Layeransicht sind unter
+              <guilabel>Bezugpunkt Breite</guilabel> und <guilabel>Bezugpunkt
+              Höhe</guilabel> die Koordinaten des Bezugspunktes nach <emphasis
+              role="bold">Abbildung 39</emphasis> anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Gesamthöhe</guilabel> ist der Durchmesser
+              des Kreisprofils in [m] anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>größte Breite/ Durchmesser</guilabel> ist
+              die größte Breite des Eiprofils in [m] anzugeben. Beim
+              Kreisprofil ist die Breite = der Gesamthöhe.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Sohlgefälle</guilabel> ist die Neigung des
+              Durchlasses in Promille anzugeben.</para>
+            </listitem>
+
+            <listitem>
+              <para>Die Länge des Durchlasses erstreckt sich von Mitte
+              zwischen Profil OW und Durchlass bis zur Mitte zwischen Profil
+              UW und Durchlass.</para>
+            </listitem>
+
+            <listitem>
+              <para>Für die <guilabel>Rauheit</guilabel> des Durchlasses ist
+              ein ks-Wert in [m] ist vorzugeben. <emphasis
+              role="bold">BILD!!!!</emphasis></para>
+            </listitem>
+          </itemizedlist>
+
+          <note>
+            <itemizedlist>
+              <listitem>
+                <para>Die Trennflächen gehen in an einem Durchlassprofil nicht
+                ein und können ganz außen liegen.</para>
+              </listitem>
+
+              <listitem>
+                <para>Der durchströmte Bereich wird automatisch auf den
+                Bereich des Durchlasses begrenzt und kann bis zum Profilrand
+                gezogen werden.</para>
+              </listitem>
+
+              <listitem>
+                <para>Im Durchlassprofil ist kein Bewuchs anzuordnen, da er
+                dort nicht mitberechnet werden kann.</para>
+              </listitem>
+            </itemizedlist>
+          </note>
         </section>
       </section>
     </section>
 
     <section>
-      <title>Anlegen einer neuen Strangdatei</title>
+      <title>Gewässerstrang editieren</title>
 
-      <para><itemizedlist>
+      <para>Die Aufeinanderfolge der Profile entlang des Gewässers ist durch
+      den Gewässerstrang definiert. Er entspricht auch der Reihenfolge der
+      Abarbeitung bei der Spiegellinienberechnung. Darüber hinaus wird hier
+      der Abstand zwischen den Profilen im Flussschlauch und auf den
+      Vorländern festgelegt. Die Profilabstände werden aus den vom Benutzer
+      eingegebenen Stationswerten besetzt. Bei einer umgekehrten Stationierung
+      ist ein entsprechender Schalter für das Gewässer zu aktivieren, damit
+      die Stationierung absteigend erfolgt. Jedem Gewässerstrang ist auch eine
+      Liste mit sämtlichen zum Zustand gehörenden Profilen hinterlegt mit dem
+      Profilschlüssel und dem zugehörigen Profildateiname. Die Reihenfolge der
+      Profilangabe ist durch die Berechnungsrichtung entgegen der
+      Fließrichtung festgelegt. Dies gilt auch für den schießenden
+      Abflussbereich. Die Stationierungsrichtung ist nicht festgelegt. Es wird
+      jedoch empfohlen, im Sinne des Gewässerverzeichnisses NRW grundsätzlich
+      von der Mündung in Richtung Quelle zu stationieren.</para>
+
+      <para>Die Gewässerstrangdatei definiert den Gewässerlauf oder eine
+      Gewässerzustand über die Aufeinanderfolge von Gewässerprofilen. Um eine
+      Strangdatei zu erzeugen sind die zugehörigen Profile in der richtigen
+      Reihenfolge ausgehend vom Unterwasser (Mündung = 0,00 km) bis zum
+      Oberwasser (Quelle = X,XX km).</para>
+
+      <section>
+        <title>Anlegen eines neuen Gewässerstranges</title>
+
+        <para>Um einen neuen Gewässerstrang anzulegen, ist eine Bearbeitung in
+        die Perspektive Spiegellinienberechnung im Datenbaum
+        erforderlich.</para>
+
+        <itemizedlist>
           <listitem>
-            <para>Im Bäumchen mit der rechten Maustaste auf
-            <guimenuitem>Gewässerstränge</guimenuitem> klicken und
-            <guimenuitem>Neu</guimenuitem> auswählen</para>
+            <para>Selektieren Sie Gewässerstränge</para>
           </listitem>
 
           <listitem>
-            <para>Namen vergeben und unter <guimenuitem>Gewässer</guimenuitem>
-            den richtigen Namen auswählen <emphasis
-            role="bold">(BILD!!!)</emphasis></para>
+            <para>Gehen Sie mit der rechten Maustaste auf <guimenuitem>Neu
+            &gt; Gewässerstrang - stationär TUHH</guimenuitem> (<emphasis
+            role="bold">Abbildung 44</emphasis>)</para>
           </listitem>
-        </itemizedlist></para>
 
-      <para>Gewässerstrangsegmente:</para>
+          <listitem>
+            <para>Markieren Sie den neuen Gewässerstrang und gehen Sie in den
+            FeatureView</para>
+          </listitem>
 
-      <itemizedlist>
-        <listitem>
-          <para>Rechte Maustaste klicken <guimenuitem>Neu &gt;
-          Zuflussstragsegmente oder Profilstrangsegmente &gt;
-          Profilstrangsegmente stationär TU-HH</guimenuitem> auswählen</para>
-        </listitem>
+          <listitem>
+            <para>Geben Sie dort einen Namen des Strangs oder Zustandes und
+            den Gewässernamen unter Gewässer an. (Beschreibung
+            optional)</para>
+          </listitem>
 
-        <listitem>
-          <para>Im FeatureView: Profil auswählen - Fluss-km benennen; Datum
-          wählbar</para>
-        </listitem>
-      </itemizedlist>
+          <listitem>
+            <para>In der darunter stehenden Liste werden alle verfügbaren
+            Profile mit ihrer Kilometrierung aufgelistet werden. Beginnend mit
+            dem Unterwasser bei 0,00 km und zum Oberwasser bei xx.xx km.
+            <emphasis role="bold">BILD!!!!!</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para>Um Profile in den Strang aufzunehmen, selektieren Sie das
+            Profil in der Profil-Liste</para>
+          </listitem>
+
+          <listitem>
+            <para>Die Auswahl-Reihenfolge der Profile für den Strang ist zu
+            beachten: Die Reihenfolge der selektierten Profile entspricht der
+            späteren Profilfolge im Gewässerstrang. Also müssen die Profile
+            immer vom Unterwasser 0,00 km und zum Oberwasser xx.xx km
+            ausgewählt werden.</para>
+          </listitem>
+        </itemizedlist>
+
+        <note>
+          <itemizedlist>
+            <listitem>
+              <para>Die Profile müssen in der richtigen Reihenfolge definiert
+              werden: Beginnend mit dem Unterwasser bei 0,00 km und zum
+              Oberwasser bei xx.xx km.</para>
+            </listitem>
+
+            <listitem>
+              <para>Prüfen Sie die Reihenfolge in der Liste unter dem Reiter
+              <guibutton>Gewässerstrang</guibutton></para>
+            </listitem>
+
+            <listitem>
+              <para>Das selektierte Profil wird verlinkt und nicht kopiert.
+              Alle Änderungen die später im Profil vorgenommen werden, gehen
+              automatisch in die Gewässerstränge über!</para>
+            </listitem>
+          </itemizedlist>
+        </note>
+      </section>
     </section>
 
     <section>
-      <title>Anlegen neuer Abflussereignisse</title>
+      <title>Abflussereignisse editieren</title>
+
+      <para>Das Abflussereignis definiert für eine Spiegellinienberechnung die
+      Randbedingungen im Gewässerlauf. Hier zu kann je Profil ein neuer
+      Abflusswert angegeben werden, so dass ein gestaffeltes Abflussereignis
+      berechnet wird. Wenn nur ein Abflusswert vorgegeben wird, so wird von
+      diesem konstanten Abfluss im gesamten Gewässer ausgegangen. Das
+      Abflussereignis ist in der richtigen Reihenfolge ausgehend vom
+      Unterwasser (Mündung = 0,00 km) bis zum Oberwasser (Quelle = X,XX km) zu
+      definieren.</para>
+
+      <para>Eine Abflussdatei ist zunächst unabhängig vom Gewässerstrang und
+      wird diesem erst in der Berechnungsvariante zugewiesen. In dieser Datei
+      kann der Abfluss profilbezogen oder auch zwischen zwei Profilen
+      festgelegt werden. Dabei müssen jedoch nur diejenigen Fließkilometer
+      eine Abflussdefinition erfahren, an denen eine Abflussänderung im
+      Vergleich zum vorherigen Profil stattfindet. Jede Abflussdatei steht für
+      genau ein bestimmtes Abflussereignis. Bei der Spiegellinienberechnung
+      kann der Anwender dann den gewünschten Abflusszustand auswählen.</para>
 
       <para><itemizedlist>
           <listitem>
@@ -1911,6 +2856,53 @@
             einfügen <emphasis role="bold">(BILD!!!!)</emphasis></para>
           </listitem>
         </itemizedlist></para>
+
+      <section>
+        <title>Anlegen neuer Abflussereignisse</title>
+
+        <para>Ein neues Abflussereignis kann in der Perspektive
+        Spiegellinienberechnung im Datenbaum angelegt werden.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie in den Datenbaum und selektieren Sie dort
+            <guibutton>Abflussereignisse</guibutton></para>
+          </listitem>
+
+          <listitem>
+            <para>Gehen Sie anschließend mit der rechten Maustaste
+            <guimenuitem>Neu &gt; Abflussereignis</guimenuitem> <emphasis
+            role="bold">(Abbildung 46)</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para>Im FeatureView ist der Name des Ereignisses zu definieren
+            und in der darunter liegenden Tabelle sind die Abflusswerte in
+            [m³/s] anzugeben. Hierzu muss mindestens ein Wert am
+            Unterwasserrand vorgegeben werden. Für eine Abflussstaffelung
+            entlang des Gewässers ist das Abflussereignis in der richtigen
+            Reihenfolge ausgehend vom Unterwasser (Mündung = 0,00 km) bis zum
+            Oberwasser (Quelle = X,XX km) zu definieren. Eine Beschreibung
+            kann optional angegeben werden. <emphasis
+            role="bold">BILD!!!</emphasis></para>
+          </listitem>
+        </itemizedlist>
+
+        <note>
+          <itemizedlist>
+            <listitem>
+              <para>Die Dezimalzahlen der Stationierung und der Abflusswerte
+              sind mit einem Punkt zu trennen.</para>
+            </listitem>
+
+            <listitem>
+              <para>Wenn nur ein Abflusswert am Unterwasserrand vorgegeben
+              ist, wird von diesem konstanten Abfluss im gesamten Gewässer
+              ausgegangen.</para>
+            </listitem>
+          </itemizedlist>
+        </note>
+      </section>
     </section>
   </section>
 
@@ -1958,28 +2950,58 @@
     </section>
 
     <section>
-      <title>Anlegen einer neuen Berechnungsvariante</title>
+      <title>Berechnungsvariante editieren</title>
 
-      <para><itemizedlist>
+      <para>Unter einer Berechnungsvariante können zahlreiche
+      Berechnungseinstellungen vorgenommen werden. Die Wahl der richtigen
+      Berechnungseinstellung ist vom vorliegenden Gewässermodell und von der
+      gewünschten Berechnung abhängig. Beim Aufruf des Rechenkerns des
+      Spiegellinienprogramms erfolgt die Abfrage der notwendigen
+      Steuerparameter für die Programmausführung. Diese werden in einer
+      separaten Berechnungsvariante gespeichert. Der Benutzer hat die
+      Möglichkeit, mehrere Berechnungsvarianten zunächst zu erstellen, zu
+      ändern oder zu löschen und anschließend die Spiegellinienberechnung für
+      diese Berechnungsvarianten auszuführen.</para>
+
+      <section>
+        <title>Anlegen einer neuen Berechnungsvariante</title>
+
+        <para>Eine neue Berechnungsvariante kann in der Perspektive
+        Spiegellinienberechnung im Datenbaum angelegt werden.</para>
+
+        <itemizedlist>
           <listitem>
-            <para>Im Baum in der Übersicht mit der rechten Maustaste auf
-            <guimenuitem>WSPM-Berechnungen</guimenuitem> klicken</para>
+            <para>Gehen Sie in den Datenbaum <emphasis role="bold">(Abbildung
+            47)</emphasis></para>
           </listitem>
 
           <listitem>
-            <para><guimenuitem>Neu &gt;
-            Berechnungsvarianten</guimenuitem></para>
+            <para>Selektieren Sie
+            <guilabel>Berechnungsvariante</guilabel></para>
           </listitem>
 
           <listitem>
-            <para>Im FeatureView: Namen editieren und Werte in die Tabelle
-            einfügen <emphasis role="bold">(BILD!!!!)</emphasis></para>
+            <para>Gehen Sie mit der rechten Maustaste auf <guimenuitem>Neu
+            &gt; Berechnungsvarianten</guimenuitem></para>
           </listitem>
-        </itemizedlist><itemizedlist>
+
           <listitem>
-            <para>Selektieren Sie Ihren
-            <guimenuitem>Gewässerstrang</guimenuitem> und Ihr
-            <guimenuitem>Abflussereignis</guimenuitem></para>
+            <para>Definieren Sie im FeatureView die Parameter der Berechnung.
+            <emphasis role="bold">BILD!!!!</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Einstellung der Berechnungsparameter</title>
+
+        <para>Folgende Vorgaben sind für eine Berechnungsvariante
+        vorzunehmen:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Selektieren Sie den <guilabel>Gewässerstrang</guilabel> und
+            das gewünschte <guilabel>Abflussereignis</guilabel></para>
           </listitem>
 
           <listitem>
@@ -1988,15 +3010,17 @@
           </listitem>
 
           <listitem>
-            <para>Wählen Sie das Fließgesetz von Darcy Weisbach</para>
+            <para>Wählen Sie ein Fließgesetz: üblicherweise
+            Darcy-Weisbach</para>
           </listitem>
 
           <listitem>
-            <para>Berechnungsart: Wasserspiegellinien-Berechnung</para>
+            <para>Berechnungsart: üblicherweise
+            Wasserspiegellinien-Berechnung</para>
           </listitem>
 
           <listitem>
-            <para>Setzen Sie die numerischen Parameter</para>
+            <para>Setzen Sie nun die numerischen Parameter</para>
           </listitem>
 
           <listitem>
@@ -2004,30 +3028,768 @@
           </listitem>
 
           <listitem>
-            <para>Setzen Sie die Randbedingung am Unterwasser (Gefälle/
-            Grenztiefe)</para>
+            <para>Setzen Sie die Randbedingung am Unterwasser (Gefälle,
+            Grenztiefe oder Wasserstand)</para>
           </listitem>
 
           <listitem>
-            <para>Ungleichförmige Berechnung mit Q -Intervallen <emphasis
-            role="bold">(BILD!!!)</emphasis></para>
+            <para>Ungleichförmige Berechnung mit Q-Intervallen (nur wenn
+            stationär, ungleichförmige Berechnung)</para>
           </listitem>
-        </itemizedlist></para>
+        </itemizedlist>
 
-      <para>Gehen Sie für die Berechnung auf das Symbol mit dem
-      Rechenschieber</para>
+        <section>
+          <title>Wahl des Fließgesetzes</title>
 
-      <itemizedlist>
-        <listitem>
-          <para>Bei der Frage: Daten speichern? <guibutton>Ja</guibutton>
-          anklicken und los geht's</para>
-        </listitem>
+          <para>Das grundlegende Verfahren zur Berechnung des Wasserspiegels
+          mit dem BERNOULLI’schen Energiehöhenvergleich wird im Handbuch zum
+          Rechenkern ausführlich beschrieben. Zur Ermittlung des
+          Energieliniengefälles bietet KALYPSO-WSPM dem Anwender drei
+          Berechnungsvarainten, die auf den Fließgesetzen von
+          GAUCKLER-MANNING-STRICKLER bzw. DARCY-WEISBACH beruhen. <emphasis
+          role="bold">(BILD!!!)</emphasis></para>
 
-        <listitem>
-          <para>Rechts erscheint die Konsole, die die Prozessausgaben
-          angibt</para>
-        </listitem>
-      </itemizedlist>
+          <para><emphasis role="bold">Fließgesetz nach
+          GAUCKLER-MANNING-STRICKLER</emphasis></para>
+
+          <para>Wird die Berechnung der Reibungsverluste nach
+          MANNING-STRICKLER durchgeführt, so wird jeweils nur eine Rauheit für
+          linkes Vorland, Flussbett und rechtes Vorland berücksichtigt. Sind
+          mehr als drei Rauheiten im Profil angegeben, so erfolgen Mittelungen
+          für die Werte in den jeweiligen Teilabflussquerschnitten. Wird diese
+          Berechnungsvariante gewählt, werden die profilbezogenen Werte aus
+          der Spalte Rauheit als kst-Werte ausgelesen. Demzufolge sind in
+          dieser Spalte die richtigen hydraulischen Parameter für eine
+          Berechnung nach MANNING-STRICKLER anzusetzen. Die angegebenen
+          Bewuchsparameter bleiben in der Berechnung unberücksichtigt.</para>
+
+          <para><emphasis role="bold">Fließgesetz nach DARCY-WEISBACH (offene
+          Gerinne)</emphasis></para>
+
+          <para>Wird die Berechnung der Reibungsverluste nach DARCY-WEISBACH
+          für offene Gerinne durchgeführt, so wird der Widerstandsbeiwert für
+          das Fließgesetz von DARCY-WEISBACH nach dem Verfahren nach PASCHE
+          (DVWK-Merkblatt Nr. 220) berechnet. Dazu wird das Gewässerprofil in
+          die Teilquerschnitte Hauptgerinne, Vorland links, Vorland rechts
+          untergliedert. Die einzelnen Bereiche sind durch Trennflächen
+          getrennt. Die Lage der Trennflächen ist abhängig von der
+          Gerinnegeometrie und der Rauheit. Für die Vorländer und die
+          Hauptgerinne wird jeweils ein Widerstandsbeiwert bestimmt.</para>
+
+          <para><emphasis role="bold">Fließgesetz nach DARCY-WEISBACH
+          (Rohrströmung)</emphasis></para>
+
+          <para>Die Berechnung der Reibungsverluste nach DARCY-WEISBACH für
+          Rohrströmung empfiehlt sich für Gewässerstränge die ausschließlich
+          durch geschlossene Profilquerschnitte durchströmt werden. Hierbei
+          ist der alleinige abflusswirksame Querschnitt das definierte
+          Durchlassprofil. Es findet keine Dreiteilung des Querschnittes
+          statt. Formbeiwerte infolge Bewuchs werden nicht
+          berücksichtigt.</para>
+        </section>
+
+        <section>
+          <title>Berechnungsarten und Abflussereignisse</title>
+
+          <para>Je nach gewünschter Berechnung ist eine der drei Optionen
+          auszuwählen.</para>
+
+          <para><emphasis role="bold">Bordvollberechnung für
+          stationär-gleichförmige Abflussverhältnisse:</emphasis></para>
+
+          <para>Diese Berechnungsvariante ist anzusetzen, wenn der
+          Bordvollabfluss bestimmt werden soll. Hierzu sind die Bordvollpunkte
+          je Profil anzugeben. Werde diese nicht definiert, so wird
+          standardgemäß davon ausgegangen, dass die Lage der Trennflächen den
+          Bordvollpunkten identisch ist. Bei dieser Berechnung wird von
+          stationär gleichförmigen Abflussverhältnissen ausgegangen und anhand
+          der gegebenen Bordvollpunkte der gesuchte Abflusswert Qbordvoll
+          bestimmt. Bauwerke wie Wehre und Brücken werden nicht
+          berücksichtigt. Lokale Einschnürungs- oder Aufweitungsverluste
+          werden mitberechnet.</para>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Zulässige Auswahl für eine Bordvoll-Berechnung (stationär
+            gleichförmig)</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <tbody>
+                <row>
+                  <entry>NAME</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>GEWÄSSERSTRANGDATEI</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BERECHNUNGSMODUS</entry>
+
+                  <entry><emphasis role="bold">Bordvoll
+                  gleichförmig</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>FLIESSGESETZ<itemizedlist>
+                      <listitem>
+                        <para>DW mit Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DW ohne Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>MANNING-STRICKLER</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ANFANGSSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ENDSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ART_RANDBEDINGUNG<itemizedlist>
+                      <listitem>
+                        <para>Grenztiefe</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>stationär gleichförmiges Gefälle</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Anfangs-Wasserspiegel</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>VERZÖGERUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>DVWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para><emphasis role="bold">Bjoersen</emphasis></para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DFG = BWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Keiner</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>nach Bjoersen</entry>
+                </row>
+
+                <row>
+                  <entry>ITERATIONSART<itemizedlist>
+                      <listitem>
+                        <para>einfach</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>exakt</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>REIBUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>Trapez</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>geometrisch</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BRÜCKEN</entry>
+
+                  <entry><emphasis role="bold">KEINE</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>WEHRE</entry>
+
+                  <entry><emphasis role="bold">KEINE</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>ABFLUSSEREIGNISS</entry>
+
+                  <entry><emphasis role="bold">KEINES</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MIN_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MAX_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>DELTA_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <para> </para>
+
+          <para><emphasis role="bold">Bordvollberechnung für
+          stationär-ungleichförmige Abflussverhältnisse:</emphasis></para>
+
+          <para>Leider ist hier der Begriff „Bordvoll“ falsch gewählt und hat
+          nichts mit der Berechnung zu tun. Diese Berechnungsvariante ist
+          anzusetzen, wenn eine stetige intervallweise Steigerung des
+          Abflusses entlang des Gewässers untersucht werden soll. Hierzu ist
+          nicht eine spezielles Abflussereignis vorzugeben, sondern ein
+          sogenanntes Abflussintervall. Dabei kann lediglich ein konstanter
+          Abflusswert entlang des gesamten Gewässers definiert werden.
+          Variabel ist der minimale und der maximale Abfluss sowie eine
+          festgelegte Abflussschrittweite <emphasis role="bold">(Abbildung
+          49)</emphasis>.</para>
+
+          <para>Eine stationär-ungleichförmige Berechnung wird üblicherweise
+          für die Berechnung von w-QBeziehungen oder ähnlichen
+          Abflussbeziehungen je Profil angesetzt. Anmerkung: Das
+          darüberstehende Abflussereignis wird nicht berücksichtigt.</para>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Zulässige Auswahl für eine Abflussstaffelung (stationär
+            ungleichförmig)</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <tbody>
+                <row>
+                  <entry>NAME</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>GEWÄSSERSTRANGDATEI</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BERECHNUNGSMODUS</entry>
+
+                  <entry><emphasis role="bold">"Bordvoll" stationär
+                  ungleichförmig</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>FLIESSGESETZ<itemizedlist>
+                      <listitem>
+                        <para>DW mit Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DW ohne Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>MANNING-STRICKLER</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ANFANGSSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ENDSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ART_RANDBEDINGUNG<itemizedlist>
+                      <listitem>
+                        <para>Grenztiefe</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>stationär gleichförmiges Gefälle</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Anfangs-Wasserspiegel</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>VERZÖGERUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>DVWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Bjoersen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DFG = BWK (wird empfohlen)</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Keiner</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ITERATIONSART<itemizedlist>
+                      <listitem>
+                        <para>einfach</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>exakt</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>REIBUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>Trapez</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>geometrisch</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BRÜCKEN</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>WEHRE</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ABFLUSSEREIGNISS</entry>
+
+                  <entry><emphasis role="bold">KEINES</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MIN_Q</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MAX_Q</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>DELTA_Q</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <para><emphasis
+          role="bold">Wasserspiegellagenberechnung</emphasis></para>
+
+          <para>Die Wasserspiegellagenberechnung ist der
+          Standardberechnungsfall, der den Wasserstand eines Gewässers unter
+          Vorgabe eines speziellen Abflussereignisses ermittelt. Wird diese
+          Berechnung ausgewählt, ist auch eine entsprechende Abflussdatei zu
+          referenzieren. Das Abflussereignis kann aus einem Pull-Down-Menu
+          selektiert werden. Über den Button am rechten Rand gelangt der
+          Anwender direkt zurück zum Abflussereignis und kann dort editieren.
+          Anmerkung: Das Abflussintervall wird nicht eingelesen, sollte der
+          Übersichtlichkeit halber aber dennoch mit null belegt sein.
+          <emphasis role="bold">BILD!!!!!</emphasis></para>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Zulässige Auswahl für eine Wasserspiegellagenberechnung
+            (stationär ungleichförmig)</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <tbody>
+                <row>
+                  <entry>NAME</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>GEWÄSSERSTRANGDATEI</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BERECHNUNGSMODUS</entry>
+
+                  <entry><emphasis
+                  role="bold">Wasserspiegellagenberechnung</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>FLIESSGESETZ<itemizedlist>
+                      <listitem>
+                        <para>DW mit Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DW ohne Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>MANNING-STRICKLER</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ANFANGSSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ENDSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ART_RANDBEDINGUNG<itemizedlist>
+                      <listitem>
+                        <para>Grenztiefe</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>stationär gleichförmiges Gefälle</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Anfangs-Wasserspiegel</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>VERZÖGERUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>DVWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Bjoersen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DFG = BWK (wird empfohlen)</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Keiner</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ITERATIONSART<itemizedlist>
+                      <listitem>
+                        <para>einfach</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>exakt</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>REIBUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>Trapez</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>geometrisch</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BRÜCKEN</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>WEHRE</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ABFLUSSEREIGNISS</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MIN_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MAX_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>DELTA_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </section>
+
+        <section>
+          <title>Wahl des Gewässerstrangs und des
+          Berechnungsabschnittes</title>
+
+          <para>Für die Selektion des Gewässerstranges stehen in einem
+          Pull-Down-Menu die bislang definierte und angelegten Gewässerstränge
+          zur Verfügung. Über den Button <emphasis role="bold">(Abbildung
+          51)</emphasis> am rechten Rand gelangt der Anwender direkt zurück
+          zum Gewässerstrang und kann dort editieren.</para>
+
+          <para>Der Berechnungsabschnitt ist händisch vorzugeben. Hierbei ist
+          zu beachten, dass die Anfangsstation der Berechnung kleiner ist als
+          die Endstation, das KALYPSO-WSPM vom Unterwasser zum Oberwasser
+          rechnet.</para>
+        </section>
+
+        <section>
+          <title>Numerische Parameter</title>
+
+          <para>Insgesamt stehen fünf Parameter <emphasis
+          role="bold">(Abbildung 52)</emphasis> zur Verfügung: Die
+          Iterationsgenauigkeit, der Verzögerungsverlust (siehe
+          Ungleichförmigkeitsbeiwert β im Benutzerhandbuch zum Rechenkern),
+          die Berechnung der Reibungsverluste und zwei Zusatzoptionen.</para>
+
+          <para><emphasis role="bold">Wahl der
+          Iterationsgenauigkeit:</emphasis></para>
+
+          <para>Hier steht zum einen die einfach Iteration und die genau
+          Iteration im Einschlussintervall zur Verfügung. Die erste Variante
+          ist für Gewässer ohne zahlreiche Sonderbauwerke wie Brücken und Wehr
+          gut geeignet. Für Gewässer mit Brücken kann sich gelegentlich die
+          zweite Variante besser eignen. Eine Berechnung mit genauer Iteration
+          ist zeitintensiver, kann aber bei Gewässern mit zahlreichen
+          Sonderbauwerke stabiler sein.</para>
+
+          <para><emphasis role="bold">Wahl des
+          Verzögerungsverlustes:</emphasis></para>
+
+          <para>Der Verzögerungsverlust beschreibt die Wahl des
+          Ungleichförmigkeitsbeiwertes β der in die Arbeitsgleichung mit
+          eingeht. Der Ungleichförmigkeitsbeiwert bildet geometrische
+          Einschnürungen und Aufweitungen ab. Hierzu sei auf das
+          Benutzerhandbuch zum Rechenkern verwiesen. Empfohlen wird der
+          Ungleichförmigkeitsbeiwert β nach BWK, der derzeit in der Oberfläche
+          über dem „Ansatz nach DFG“ verfügbar ist.</para>
+
+          <para><emphasis role="bold">Berechnung von
+          Reibungsverlusten:</emphasis></para>
+
+          <para>Der Reibungsverlust stellt einen kontinuierlichen Verlust dar,
+          der durch Integration über den Streckenabschnitt zwischen zwei
+          Profilen gewonnen wird. Hierzu stehen zwei Varianten bereit: der
+          Ansatz nach Trapezformel oder über die geometrische Mittelung. Je
+          nach geometrischer Varianz des Gewässers bietet sich für geringe
+          geometrische Ungleichförmigkeit der Profile der Ansatz nach
+          Trapezformel nach NAUDASCHER an, in dem das Integral für den
+          Reibungsverlust bei nur allmählicher geometrischer Änderung mit
+          Hilfe der Trapezformel in guter Näherung berechnet wird. Bei starker
+          Variation der Geometrie und der Rauheit, insbesondere bei Auftreten
+          einer Diskontinuität, führt die Trapezformel zu einer Überschätzung
+          des Rauheitsverlustes. In diesem Fall erweist sich die Annäherung
+          des Integrals über das geometrische Mittel als genauer.</para>
+
+          <para><emphasis role="bold">Zusatzoptionen:</emphasis></para>
+
+          <para>Hier können über das setzen oder entfernen des Häkchens
+          Brücken und/ oder Wehr in der Berechnung aktiviert oder deaktiviert
+          werden.</para>
+        </section>
+
+        <section>
+          <title>Untere Randbedingung am 1.Profil</title>
+
+          <para>Am ersten Profil ist ein sogenannter Anfangswert für den
+          Berechnungsstart vorzugeben. Hierzu stehen drei Optionen zur
+          Auswahl:</para>
+
+          <para><emphasis role="bold">Bekannte
+          Wasserstand-Abfluss-Beziehung:</emphasis> Die Wasserspiegellage kann
+          direkt in das Feld Anfangswasserspiegel eingegeben werden. Dies kann
+          beispielsweise auf bewegliche Wehre mit einem fest vorgegebenen
+          Stauziel zutreffen. In diesem Fall legen Sie das Anfangsprofil
+          direkt oberhalb des Wehres. Der Anfangswasserstand entspricht dann
+          dem Stauziel.</para>
+
+          <para><emphasis role="bold">Querschnitt oberhalb eines
+          Fließwechsels:</emphasis> An einem Fließwechsel tritt zwangsläufig
+          die Grenztiefe (Übergang Strömen - Schießen) auf. Diese kann mit
+          Hilfe des Extremalprinzips im Anfangsprofil des
+          Berechnungsabschnitts iterativ berechnet werden. Wählen Sie dazu
+          <guilabel>Grenztiefe</guilabel>.</para>
+
+          <para><emphasis role="bold">Querschnitt mit annähernd gleichförmigem
+          Abfluss:</emphasis> Aktivieren Sie den Punkt stationär
+          gleichförmiges Gefälle, wird die Normalwassertiefe iterativ aus dem
+          angegebenen Energieliniengefälle (absolut) im ersten Profil
+          berechnet.</para>
+        </section>
+      </section>
+
+      <section>
+        <title>Starten der Berechnung</title>
+
+        <para>Nachdem alle Berechnungsparameter festlegt wurden, kann die
+        Berechnung gestartet werden. <emphasis role="bold">BILD (Abbildung
+        53)</emphasis></para>
+
+        <para>Für den Start der Berechnung:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie auf das Symbol mit dem Rechenschieber <emphasis
+            role="bold">(SYMBOLBILD!!)</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para>Bei der Frage: Daten speichern? Klicken Sie auf
+            <guibutton>Ja</guibutton> und die Berechnung wird gestartet</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Rechts erscheint die Konsole die Prozessausgaben angibt. In der
+        Konsole sind Details über den Fortschritt der Berechnung zu erfahren.
+        Ist die Berechnung abgeschlossen, so wird dies in der Konsole anzeigt
+        mit:</para>
+
+        <para><literal>BUILD SUCCESSFUL Total time: xxx
+        seconds</literal></para>
+
+        <para>Mit Abschluss einer erfolgreichen Berechnung wurde im Navigator
+        ein Ergebnisse-Ordner erzeugt <emphasis role="bold">(VERLINKUNG
+        5.1)</emphasis>. Während der Berechnung erscheint eine
+        Berechnungsfortschrittsanzeige. Diese darf nicht geschlossen
+        werden!</para>
+      </section>
     </section>
   </section>
 
@@ -2046,41 +3808,444 @@
     <section>
       <title>Ergebnis-Ausgabe</title>
 
-      <para><itemizedlist>
+      <para>Im Navigator wird mit erfolgreichem Abschluss einer Berechnung ein
+      Ordner <filename>Ergebnisse</filename> angelegt. Dieser Ordner enthält
+      alle Ergebnisse die je berechnet wurde. Je nach Rechenvariante wird ein
+      eigener Unterordner, der nach der Berechnungsvariante benannt ist (z.B.
+      <filename>kollau-ist - HQ_100_Risiko_Control</filename>), erzeugt. Dort
+      findet man unter dem Ordner <filename>_aktuell</filename> den zuletzt
+      berechneten Fall und darunter nach Zeit sortiert die älteren
+      Ergebnisordner.</para>
+
+      <para>In jedem Ordner findet man automatisch erzeugte
+      Ergebnisausgaben:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Eine Karte (mit Profilen, Triangulation und
+          Überschwemmungsfläche)</para>
+        </listitem>
+
+        <listitem>
+          <para>Einen Längsschnitt (rot = Abfluss, grün = Sohle, blau =
+          Wasserspiegel)</para>
+        </listitem>
+
+        <listitem>
+          <para>Eine Tabelle (mit Daten je Profil)</para>
+        </listitem>
+
+        <listitem>
+          <para>Ergebnis als Liste (als Textdatei)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">BILD Abbildung 54</emphasis></para>
+
+      <section>
+        <title>Ausgabe der Ergebnisse in der Karte</title>
+
+        <para>Eine Karte mit den enthaltenen Ergebnissen wird nur erzeugt,
+        wenn die Profile georeferenziert sind. Die Karte liegt im Navigator
+        unter dem Ordner <filename>Ergebnisse</filename> &gt; dem Ordner der
+        Berechnungsvariante &gt; dem Ordner <filename>aktuell</filename> &gt;
+        <filename>Karte.gmt</filename>. Folgende Themen werden in der Karte
+        angezeigt:</para>
+
+        <itemizedlist>
           <listitem>
-            <para>Im Navigator wird mit einer Berechnung ein Ordner
-            <filename>Ergebnisse</filename> angelegt:</para>
-
-            <itemizedlist>
-              <listitem>
-                <para>Je Rechenvariante wird ein eigener Ordner erzeugt. Dort
-                findet man unter <filename>aktuell</filename> den zuletzt
-                berechneten Fall und darunter nach Datum sortiert die älteren
-                Fälle</para>
-              </listitem>
-
-              <listitem>
-                <para>In jedem Ordner findet man:</para>
-
-                <itemizedlist>
-                  <listitem>
-                    <para>Eine Karte (mit Profilen, Triangulation und
-                    Überschwemmungsfläche)</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Einen Längsschnitt (rot = Abfluss, grün = Sohle,
-                    blau = Wasserspiegel)</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Eine Tabelle (mit Daten je Profil)</para>
-                  </listitem>
-                </itemizedlist>
-              </listitem>
-            </itemizedlist>
+            <para><emphasis role="bold">Überschwemmungslinienpunkte</emphasis>
+            = Punktthema zeigt alle Schnittpunkte der Profil-Geländeoberkante
+            mit Wasserspiegel an. <emphasis role="bold">(Abbildung
+            55)</emphasis></para>
           </listitem>
-        </itemizedlist></para>
+
+          <listitem>
+            <para><emphasis role="bold">Modellgrenzpunkte</emphasis> =
+            Punktthema zeigt die zwei äußersten Profilendpunkte jedes Profils
+            an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Profile</emphasis> = Linienthema zeigt
+            die Profile des berechneten Gewässerstranges an</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Überschwemmungslinie</emphasis> =
+            Polygonthema beschreibt über den äußersten Rand der
+            Wasserstandslinie die Flutungsfläche und wird über die
+            Schnittpunkte Profil-Geländeoberkante mit Wasserspiegel erzeugt.
+            (Keine Fließtiefe) <emphasis role="bold">(Abbildung
+            55)</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Modellgrenzen</emphasis> = beschreibt
+            den äußersten Rand der Profilenden als Polygon.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Wasserhöhenmodell</emphasis> = Das
+            Wasserhöhenmodell beschriebt die Triangulation der Profilpunkte,
+            um die Überschwemmungslinie zu generieren. Dabei werden alle
+            Profilpunkte über ein Dreiecksnetz vernetzt. <emphasis
+            role="bold">(Abbildung 56)</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Ausgabe der Ergebnisse im Längsschnitt</title>
+
+        <para>Ein Längsschnitt mit den enthaltenen Ergebnissen wird auch
+        erzeugt, wenn die Profile nicht georeferenziert sind. Der Längsschnitt
+        liegt im Navigator unter dem Ordner <filename>Ergebnisse</filename>
+        &gt; dem Ordner der Berechnungsvariante &gt; dem Ordner
+        <filename>aktuell</filename> &gt;
+        <filename>Längsschnitt.kod</filename>. Folgende Themen werden im
+        Längsschnitt angezeigt:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">Sohlhöhe</emphasis> = Die grüne Linie
+            zeigt die Verbindung der tiefsten Profil-Geländepunkte an. Rechts
+            liegt das Unterwasser, links der Oberwasserbereich <emphasis
+            role="bold">(Abbildung 57)</emphasis>. Wenn Durchlässe definiert
+            wurden, liegt in diesen Bereichen evtl. die Geländeoberkante über
+            dem Wasserspiegel.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Abfluss </emphasis>= Die rote Linie
+            zeigt das entlang des Gewässers definierte Abflussereignis an. Ist
+            die Linie horizontal, so wurde ein konstanter Abfluss über das
+            gesamte Gewässer festgelegt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Wasserstand</emphasis> = Die blaue
+            Linie zeigt den Wasserstand entlang des Gewässers an. Im
+            Längsschnitt ist oft die Lage von Bauwerken deutlich durch
+            Rückstau oder einen steilen Abfall des Wasserspiegels zu erkennen.
+            <emphasis role="bold">BILD Abbildung 57</emphasis></para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Über die Gliederung am linken Rand können Themen aktiviert und
+        deaktiviert werden.</para>
+      </section>
+
+      <section>
+        <title>Ausgabe der Ergebnisse in der Tabelle</title>
+
+        <para>Eine Tabelle mit den enthaltenen Ergebnissen wird auch erzeugt,
+        wenn die Profile nicht georeferenziert sind. Die Tabelle liegt im
+        Navigator unter dem Ordner <filename>Ergebnisse</filename> &gt; dem
+        Ordner der Berechnungsvariante &gt; dem Ordner
+        <filename>aktuell</filename> &gt; <filename>Tabelle.gft</filename>.
+        Folgende Themen werden in der Tabelle angezeigt:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">Stationierung</emphasis> = zeigt die
+            einzelnen Profile mit ihrer Stationierung an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Kennung</emphasis> = zeigt die
+            Profilkennung an. Dabei steht n für Normal, i für interpoliert, b
+            für Brücke, w für Wehr, t = Trapezdurchlass, k = Kreisdurchlass,
+            usw.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Abfluss</emphasis> = zeigt je Station
+            des Gewässers das definierte Abflussereignis in [m³/s] an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Wasserstand</emphasis> = Wasserstand
+            je Station des Gewässers in [mNN] an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Sohlhöhe</emphasis> = Geländeoberkante
+            der tiefsten Profil-Geländepunkte in [mNN]</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Energielinie</emphasis> = Energiehöhe
+            am Profil in [mNN]</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Bordvolle Höhe</emphasis> = zeigt die
+            Geländehöhe der geringsten bordvollen Höhe in [mNN] an. Wenn keine
+            Bordvollpunkte definiert, werden die Trennflächen als
+            Bordvollpunkte gewählt. Das heißt, die Bordvolle Höhe ist
+            identisch mit der geringsten Geländeoberkante der Böschung.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Böschung (rechts/links)</emphasis> =
+            Geländeoberkante am Übergang Flussschlauch – Vorland.
+            Höhenkoordinaten der Geländeoberkante an den Trennflächen in
+            [mNN].</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Geschwindigkeit</emphasis> = mittlere
+            Fließgeschwindigkeit im gesamten Profil in [m/s]</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Schubspannung</emphasis> = mittlere
+            Sohlschubspannung im gesamten Profil in [N/m²]. Berechnung erfolgt
+            über das quadratische Widerstandsgesetz.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Lamdba (links/ Flussschlauch/
+            rechts)</emphasis> = Fließwiderstand auf dem linken Vorland,
+            rechten Vorland und im Flussschlauch. Wenn gleich Null, dann ist
+            der jeweilige Bereich noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Fläche (links/ Flussschlauch/
+            rechts)</emphasis> = Durchströmte Fläche auf dem linken Vorland,
+            rechten Vorland und im Flussschlauch in [m²]. Wenn gleich Null,
+            dann ist der jeweilige Bereich noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Breite (links/ Flussschlauch/
+            rechts)</emphasis> = Spiegellinienbreite auf dem linken Vorland,
+            rechten Vorland und im Flussschlauch in [m]. Wenn gleich Null,
+            dann ist der jeweilige Bereich noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Wehr, Brücke,
+            Rohrdurchmesser</emphasis> = die tatsächlichen Parameter sind nur
+            angegeben, wenn ein derartiges Bauwerk vorhanden ist. Wenn nicht
+            kein Bauwerk an der Station, dann werden alle Einträge mit
+            –999,999 belegt.</para>
+
+            <para><emphasis role="bold">BILD Abbildung 58</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Ausgabe der Ergebnisse in der Liste</title>
+
+        <para>Die Ausgabe in der Liste entspricht der Ausgabedatei die bei
+        jeder Berechnung erstellt wird. Die Liste enthält folgende
+        Informationen:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">Stationierung</emphasis> = zeigt die
+            einzelnen Profile mit ihrer Stationierung an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Wasserstand</emphasis> = Wasserstand
+            je Station des Gewässers in [mNN] an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Energielinie </emphasis>= Energiehöhe
+            am Profil in [mNN]</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">IND</emphasis> = Index für den
+            benetzten Bereich. Nummer 2 ist Flussschlauch, 1 ist linkes
+            Vorland, 3 ist rechtes Vorland.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Lamdba (1/ 2/ 3)</emphasis> =
+            Fließwiderstand auf dem linken Vorland, rechten Vorland und im
+            Flussschlauch. Wenn gleich Null, dann ist der jeweilige Bereich
+            noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Formb (1/ 2/ 3)</emphasis> =
+            Formbeiwert auf dem linken Vorland, rechten Vorland und im
+            Flussschlauch. Wenn gleich Null, dann ist der jeweilige Bereich
+            noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Fläche (1/ 2/ 3)</emphasis> =
+            Durchströmte Fläche auf dem linken Vorland, rechten Vorland und im
+            Flussschlauch in [m²]. Wenn gleich Null, dann ist der jeweilige
+            Bereich noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Umfang (1/ 2/ 3)</emphasis> =
+            Benetzter Unfang auf dem linken Vorland, rechten Vorland und im
+            Flussschlauch in [m]. Wenn gleich Null, dann ist der jeweilige
+            Bereich noch nicht benetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Geschwindigkeit (1/ 2/ 3)</emphasis> =
+            mittlere Fließgeschwindigkeit auf dem linken Vorland, rechten
+            Vorland und im Flussschlauch in [m/s]</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Abfluss</emphasis> = zeigt je Station
+            des Gewässers das definierte Abflussereignis in [m³/s] an. Und
+            darunter die Abflussaufteilung auf dem linken Vorland, rechten
+            Vorland und im Flussschlauch.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">hv_m</emphasis> = Verlusthöhe infolge
+            Ungleichförmigkeitsbeiwert β bzw. Verlust hI infolge geometrische
+            Aufweitung und Einschnürung in Fließrichtung.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">hr_m</emphasis> = Verlusthöhe infolge
+            Reibung entlang des Fließweges.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">h_bor</emphasis> = Verlusthöhe infolge
+            Stoßverlust nach Borda-Carnot in Fließrichtung.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">h_ein</emphasis> = Einlaufverlusthöhe,
+            z.B. beim Einlauf in eine Rohrleitung.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">h_ort</emphasis> = Verlusthöhe infolge
+            örtlicher Verluste.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">h_m </emphasis>= Gesamte Verlusthöhe
+            aus Summe aller Verluste.</para>
+
+            <para><emphasis role="bold">BILD Abbildung 59</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>Verschneiden der Fließtiefen</title>
+
+      <para>Für die Verschneidung der Fließtiefen sind folgende Eingangsdaten
+      erforderlich. Es muss ein georeferenzierter Gewässerstrang vorliegen mit
+      den Berechnungsergebnissen aus einem Abflussereignis
+      (Wasserspiegellinienberechnung). Für die Verschneidung werden zwei Daten
+      verschnitten das Wasserhöhenmodell aus der Berechnung mit einem DGM in
+      Form von Rasterdaten. Derzeit wird bei der Verschneidung ein
+      Graustufen-Tif benötigt.</para>
+
+      <section>
+        <title>Einladen des Höhenmodells als TIF</title>
+
+        <para><itemizedlist>
+            <listitem>
+              <para>Legen Sie im Arbeitsbereich einen neuen leeren Ordner an
+              (z.B. <filename>DGM</filename>)</para>
+            </listitem>
+
+            <listitem>
+              <para>Klicken Sie mit der rechten Maustaste auf den Ordner und
+              wählen Sie <guimenuitem>Importieren...</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Wählen Sie <guimenuitem>Kalypso &gt; Rasterdaten &gt;
+              Weiter</guimenuitem></para>
+            </listitem>
+
+            <listitem>
+              <para>Durchsuchen Sie den Dateipfad bis zum tif (in dem gleichen
+              Ordner muss sich auch der worldfile zum tif als
+              <literal>*.tfw</literal> liegen <guibutton>&gt;
+              Weiter</guibutton></para>
+            </listitem>
+
+            <listitem>
+              <para>Selektieren Sie den Ablageordner für das Tif und benennen
+              Sie unter Dateiname das GML, das automatisch erzeugt wird. Gehen
+              Sie anschließen auf <guibutton>Fertig
+              stellen</guibutton>.</para>
+            </listitem>
+          </itemizedlist>In dem selektierten Ordner wird das tif und die
+        zugehörige gml-Datei ablegt.</para>
+
+        <para><emphasis role="bold">BILD Abbildung 62</emphasis></para>
+      </section>
+
+      <section>
+        <title>Die Verschneidung</title>
+
+        <para>Öffnen Sie die Karte mit den gewünschten Ergebnissen, die
+        verschnitten werden sollen.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Die Karte liegt im Navigator unter dem Ordner
+            <filename>Ergebnisse</filename> &gt; dem Ordner der
+            Berechnungsvariante &gt; dem Ordner <filename>aktuell</filename>
+            &gt; <filename>Karte.gmt.</filename></para>
+          </listitem>
+
+          <listitem>
+            <para>Klicken Sie in der Karten-Gliederung mit der rechten
+            Maustaste auf <guilabel>Wasserhöhenmodell</guilabel> und wählen
+            Sie <guimenuitem>mit DGM verschneiden</guimenuitem></para>
+
+            <para><guimenuitem>Bild Abbildung 63</guimenuitem></para>
+          </listitem>
+
+          <listitem>
+            <para>Ein Pop-up-Window öffnet sich: Durchsuchen Sie den Pfad bis
+            zur tif zugehörigen gml-Datei</para>
+          </listitem>
+
+          <listitem>
+            <para>Geben Sie einen Dateinamen für das Ergebnisfile an und gehen
+            anschließen auf <guibutton>Weiter</guibutton></para>
+          </listitem>
+
+          <listitem>
+            <para>Selektieren Sie die Art und die intervallweise Abstufung der
+            Ergebnisse unter <guilabel>Intervall</guilabel> (hier ist die
+            Schrittweite in m anzugeben)</para>
+          </listitem>
+
+          <listitem>
+            <para>Klicken Sie am Ende auf <guibutton>Fertig
+            stellen</guibutton></para>
+
+            <para><guibutton>BILD Abbildung 64</guibutton></para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Das Ergebnis der Verschneidung wird als neues Thema in der Karte
+        angezeigt und kann über den Sytle-Editor in der Farbgebung <emphasis
+        role="bold">(VERLINKUNG nach XXX 4.15.4.1)</emphasis> nachbearbeitet
+        werden.</para>
+
+        <para><emphasis role="bold">BILD Abbildung 65</emphasis></para>
+      </section>
     </section>
 
     <section>
@@ -2090,13 +4255,38 @@
       GisMapView &gt; Weiter &gt; Durchsuchen</guimenuitem> Ihren Projektpfad
       und auf <guibutton>Fertig stellen</guibutton> klicken. Jetzt steht im
       Navigator eine neue <filename>Karte.gmt</filename> zur Verfügung
-      <emphasis role="bold">(BILD!!!)</emphasis></para>
+      <emphasis role="bold">(BILD!!! Abbildung 66)</emphasis></para>
 
       <para>Gehen Sie in dem Fenster Gliederung auf das grüne
       <guibutton>+</guibutton> um ein Objekt hinzuzufügen. Selektieren Sie nun
       eine Option, z.B. WebMapService oder Raster (WebMapService:
       mapservice.geonord.de) <emphasis
       role="bold">(BILD!!!!)</emphasis></para>
+
+      <para>Alternativ kann das Modell eines Gewässers auch wie folgt in einer
+      Karte betrachtet werden. Hierbei wird die Karte nicht gesondert
+      abgelegt, sondern aufgrund der selektierten Auswahl (z.B. der Profile
+      oder die Gewässerstrangsegmente) erzeugt. Das selektierte Thema wird
+      dabei in der Karte angezeigt.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Gehen Sie in das Bäumchen eines Gewässers</para>
+        </listitem>
+
+        <listitem>
+          <para>Öffnen Sie das Fähnchen Gewässer</para>
+        </listitem>
+
+        <listitem>
+          <para>Selektieren Sie mit der rechten Maustaste
+          <guilabel>Profile</guilabel> und wählen Sie <guilabel>Profile in
+          neuer Karte anzeigen</guilabel> <emphasis role="bold">(Abbildung
+          67)</emphasis></para>
+
+          <para><emphasis role="bold">BILD Abbildung 67</emphasis></para>
+        </listitem>
+      </itemizedlist>
 
       <section>
         <title>Arbeiten in der Karte: Symbolleisten</title>
@@ -2223,7 +4413,7 @@
               <row>
                 <entry></entry>
 
-                <entry>Verschieben</entry>
+                <entry>Verschieben des Kartenauschnittes</entry>
 
                 <entry>Blatt anfassen und verschieben (z.B. von links nach
                 rechts)</entry>
@@ -2239,6 +4429,165 @@
             </tbody>
           </tgroup>
         </table>
+      </section>
+
+      <section>
+        <title>Arbeiten in der Gliederung der Karte (Themen einladen)</title>
+
+        <para>Über die Gliederung der Karte können, vergleichbar mit ArcView,
+        Themen eingeladen, gelöscht, sortiert oder visualisiert werden:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">Legende:</emphasis> Die Legende ist
+            immer verfügbar und kann aktiviert oder deaktiviert werden</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Skizzierthema:</emphasis> Das
+            Skizzierthema ist immer verfügbar und kann für das skizzieren von
+            Polygonen, Linien oder Punkten verwendet werden. Ein Speichern der
+            hierin erstellten Features ist derzeit noch nicht möglich.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Images:</emphasis> Werden nur in der
+            Gliederung jedoch nicht in der Legende angezeigt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Shapes:</emphasis> Polygon-, Linien-
+            oder Punktthemen (Shapes), die in ArcView erzeugt wurden, können
+            über die Angabe ihrer Lage (<emphasis role="bold">VERLINKUNG
+            4.15.4) </emphasis>und eines Styles in die Karte hinzugefügt,
+            bearbeiten und verändert werden. Die gewünschten Themen sind
+            vorher in den Arbeitsbereich bzw. Navigator einzuladen.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Raster: </emphasis>Rasterdaten, die
+            z.B. in ArcView erzeugt wurden, können über die Angabe ihrer Lage
+            (<emphasis role="bold">VERLINKUNG 4.15.4)</emphasis> und eines
+            Styles in die Karte hinzugefügt werden. Das gewünschte Raster ist
+            vorher in den Arbeitsbereich bzw. Navigator einzuladen.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">GMLs:</emphasis> Alle im Navigator
+            befindlichen GML-Dateien können einer Karte hinzugefügt und dort
+            bearbeiteten oder verändert werden.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Hinter jedem Thema (außer bei Images oder WebMaps) steht in
+        Klammern eine Zahl und/oder aktiv:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Zahl = Anzahl der Features, die das Thema enthält</para>
+          </listitem>
+
+          <listitem>
+            <para>Aktiv = Thema ist aktiviert und kann editiert werden</para>
+          </listitem>
+        </itemizedlist>
+
+        <table align="center" id="symbolleiste zur kartenbearbeitung wspm">
+          <title>Symbole der Gliederung</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <tbody>
+              <row>
+                <entry><emphasis role="bold">Symbol</emphasis></entry>
+
+                <entry><emphasis role="bold">Beschreibung</emphasis></entry>
+
+                <entry><emphasis role="bold">Details</emphasis></entry>
+              </row>
+
+              <row>
+                <entry><emphasis role="bold"></emphasis></entry>
+
+                <entry>Fügt Themen zur Karte hinzu. Auch Themen aus anderen
+                Projekten oder Unterordnern in im Navigator verfügbar sind,
+                können eingeladen werden.</entry>
+
+                <entry>Einfügen von Shapes, von GML-dateien, von Images, von
+                Rasterdaten, von WebMaps und WebFeatures ist möglich.
+                (<emphasis role="bold">VERLINKUNG siehe Abbildung
+                70</emphasis>)</entry>
+              </row>
+
+              <row>
+                <entry><emphasis role="bold"></emphasis></entry>
+
+                <entry>Aktiviert das markierte Thema. Erst mit der Aktivierung
+                ist eine Bearbeitung in der Karte möglich.</entry>
+
+                <entry>Die in <emphasis role="bold">Tabelle 4 XXX
+                </emphasis>beschriebenen Funktionen werden zum Teil erst nach
+                einer Aktivierung des Themas möglich.</entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry>Verschiebt das markierte Thema um eine Ebene nach
+                unten, bzw. um eine Ebene auf der Karte in den
+                Hintergrund</entry>
+
+                <entry>Hintergrundkarten sollten immer ganz unten angeordnet
+                werden.</entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry>Verschiebt das markierte Thema um eine Ebene nach oben,
+                bzw. um eine Ebene auf der Karte in den Vordergrund</entry>
+
+                <entry>Profile oder die Gewässerachse sollte immer ganz oben
+                angeordnet werden.</entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry>Entfernt ein Thema aus der Karte. Das Thema wird jedoch
+                nicht physisch gelöst!</entry>
+
+                <entry>Markiertes Thema wird aus der Kartenansicht
+                entfernt.</entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry>Style eines Shapes oder einer GML-Datei kann so
+                editiert werden</entry>
+
+                <entry>Zur Bearbeitung ist das Bäumchen des Themas in der
+                Gliederung zu öffnen bis der Reiter Style erscheint.
+                (<emphasis role="bold">VERLINKUNG Abbildung
+                69</emphasis>)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Die immer vorhandene Legende der Gliederung zeigt in der Karte
+        eine Legende zur Benennung und Darstellung an, die den Themen
+        zugeordnet ist. Karten die aus dem WebMapService genutzt werden,
+        werden dabei nicht unterstützt.</para>
+
+        <para><emphasis role="bold">BILDER Abbildung 68 und
+        69</emphasis></para>
       </section>
     </section>
   </section>
