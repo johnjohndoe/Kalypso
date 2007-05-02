@@ -288,9 +288,7 @@ public class Gml2RMA10SConv
 
         formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
         lines_AR.put( edge.getGmlID(), builder.toString() );
-
         // gm surface -> orientation
-
       }
       else
       {
@@ -298,7 +296,6 @@ public class Gml2RMA10SConv
         // element left
         // element right
       }
-
     }
   }
 

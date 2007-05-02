@@ -27,9 +27,7 @@ public class TestRougnessCls extends TestCase
 		try
 		{
 			workspace=
-				GmlSerializer.createGMLWorkspace( 
-								TestWorkspaces.URL_ROUGHNESS_CLS, 
-								null );
+				GmlSerializer.createGMLWorkspace(TestWorkspaces.URL_ROUGHNESS_CLS,null );
 		}
 		catch(Throwable th)
 		{
