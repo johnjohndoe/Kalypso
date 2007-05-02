@@ -13,12 +13,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
 
 /**
@@ -69,7 +73,18 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
       {
         mapView.startLoadJob( file );
       }
-
+      final Job unsetActiveThemeJob = new Job( "" )
+      {
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
+        {
+          IMapModell mapModell = mapPanel.getMapModell();
+          mapModell.activateTheme( null );
+          return Status.OK_STATUS;
+        }
+      };
+      unsetActiveThemeJob.setRule( mapView.getSchedulingRule().getActivateLayerSchedulingRule() );
+      unsetActiveThemeJob.schedule();
       mapPanel.getWidgetManager().setActualWidget( null );
 
       return Status.OK_STATUS;
