@@ -51,6 +51,10 @@
               class="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
               name="ModelFiniteElment"/>
+         <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
+              name="ElementRoughnessStyleFunc"/>
               
      </extension>     
      <extension
@@ -227,6 +231,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel"/>
       </factory>
    </extension>
      

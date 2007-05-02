@@ -47,6 +47,7 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IEvaluationModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IResultModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.SimulationModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -66,7 +67,7 @@ public class SimulationModel1D2D
   {
     super(
         featureToBind,
-        Kalypso1D2DSchemaConstants.SIMULATION_MODEL1D2D,
+        KalypsoModelSimulationBaseConsts.SIM_BASE_F_SIMULATION_MODEL,
         IStaticModel1D2D.class,
         IOperationalModel1D2D.class,
         IControlModel.class,//TODO Patrice check for 1d2d specific model

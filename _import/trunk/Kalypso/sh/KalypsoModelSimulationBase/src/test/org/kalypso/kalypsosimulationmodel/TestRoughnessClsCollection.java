@@ -34,7 +34,7 @@ public class TestRoughnessClsCollection extends TestCase
 
     Feature root = workspace.getRootFeature();
     RoughnessClsCollection rcc = new RoughnessClsCollection( root );
-    assertEquals( "ColName1", rcc.getName() );
+    assertEquals( "ColName1", rcc.getName());
     // assertEquals("r2", rcc.getRoughnessByURI("uri_r2").getName());
     // assertEquals("uri_r2", rcc.getRoughnessByURI("uri_r2").getURI());
     List<IRoughnessCls> rList = rcc.selectRoughnessByName( "Klass 2" );

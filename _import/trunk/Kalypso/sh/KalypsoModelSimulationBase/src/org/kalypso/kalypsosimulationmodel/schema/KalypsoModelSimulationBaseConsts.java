@@ -111,6 +111,11 @@ public class KalypsoModelSimulationBaseConsts
                 UrlCatalogModelSimulationBase.SIM_MODEL_NS,
                 "SimpleOperationalModel");
     
+    public static final QName SIM_BASE_F_SIMULATION_MODEL =
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+              "SimulationModel");
+    
     public static final QName SIM_BASE_P_OPERATIONAL_CONCEPT =
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS,

@@ -21,6 +21,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -60,7 +62,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   {
     // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
     // simulation model gets its own wrapper.
-    LOCATION_MAP.put( IFeatureWrapper2.class, MODELS_FOLDER + "/simulation.gml" );
+    LOCATION_MAP.put( ISimulationModel.class,  MODELS_FOLDER + "/simulation.gml" );
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
     LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );

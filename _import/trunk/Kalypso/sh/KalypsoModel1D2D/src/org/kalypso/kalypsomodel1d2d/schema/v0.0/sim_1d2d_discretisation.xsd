@@ -658,6 +658,18 @@
 				singular edges cannot be used.
 				the edges must build a closed kurve.				
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
+					kapp:property="simBase:roughnessStyle"
+					kapp:isVirtual="true"
+					kapp:valueType="xs:string"/>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="simBase:polygonProperty"
+					kapp:valueType="gml:PolygonPropertyType"
+					kapp:isVirtual="true"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
@@ -695,6 +707,7 @@
 					kapp:property="wb1d2d:geometry"
 					kapp:valueType="gml:PolygonPropertyType"
 					kapp:isVirtual="true"/>
+				
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>

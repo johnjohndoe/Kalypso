@@ -40,21 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.update;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
@@ -78,8 +70,7 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
   
   public GeometryToStructUpdater()
   {
-    // TODO: please use something configurable instead (e.g. tracing)
-//    System.out.println("================GEOM_STRUCT_UPDATER================");
+    
   }
   
   
@@ -100,8 +91,17 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
    */
   public void init( GMLWorkspace workspace )
   {
-//    System.out.println("WorkspaceInit="+workspace);
-    this.workspace=workspace;
+    this.workspace = workspace;
+    final Feature rootFeature = workspace.getRootFeature();
+    final QName rootFeatureQname = rootFeature.getFeatureType().getQName();
+    
+    if( Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL.equals( rootFeatureQname ) )
+    {
+      IStaticModel1D2D staticModel =
+          (IStaticModel1D2D) rootFeature.getAdapter( IStaticModel1D2D.class );
+      ModelMergeService.getInstance().setStaticModel( staticModel );
+    }
+    
   }
 
   /**
@@ -109,104 +109,6 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    // TODO: please use something configurable instead (e.g. tracing)
-
-//    System.out.println("modellEvent="+modellEvent+
-//            "\nSource="+modellEvent.getEventSource());
-    try
-    {
-      if(modellEvent==null)
-      {
-        return;
-      }
-      else if(modellEvent.isType( ModellEvent.FEATURE_CHANGE ))
-      {
-        if(modellEvent instanceof FeaturesChangedModellEvent)
-        {
-          Feature changedFeatures[]=
-              ((FeaturesChangedModellEvent)modellEvent).getFeatures();
-          if(changedFeatures == null)
-          {
-            System.out.println("Changed feature is null");
-            return;
-          }
-          else
-          {
-            List<IFE1D2DElement> eleList= new ArrayList<IFE1D2DElement>();
-            for(Feature feature:changedFeatures)
-            {
-              if(Util.directInstanceOf(  
-                          feature, 
-                          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ))
-              {
-                IFE1D2DNode<IFE1D2DEdge> node=
-                  (IFE1D2DNode)feature.getAdapter( IFE1D2DNode.class );
-                IFeatureWrapperCollection<IFE1D2DEdge> edges=node.getContainers();
-                //IFE1D2DEdge[] edges=node.Edges();
-                GMLWorkspace workspace=
-                  (GMLWorkspace)modellEvent.getEventSource();
-                for(IFE1D2DEdge edge:edges)
-                {
-                    //TODO reset
-//                    ((FE1D2DEdge) edge).resetGeometry();
-//                    eleList.addAll( ((FE1D2DEdge) edge).getContainers());
-                  
-                    System.out.println("setting edge curve");
-//                    workspace.fireModellEvent(  
-//                        new FeatureStructureChangeModellEvent(
-//                            workspace,
-//                            edge.getWrappedFeature().getParent(),
-//                            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE)) ;
-                }
-                //node.getEdges()
-                System.out.println("changedFeature0="+feature);
-//              getMapModell();
-              }
-              else
-              {
-                System.out.println("changedFeature1="+feature);
-                System.out.println(feature.getWorkspace());
-//                workspace.fireModellEvent(  
-//                    new FeatureStructureChangeModellEvent(
-//                        workspace,
-//                        feature.getParent(),
-//                        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE)) ;
-              }
-            }
-            
-//            // TODO: is this really necessary? Probably really an invalidate problem
-//            for(IFE1D2DElement ele:eleList)
-//            {
-//              if(ele instanceof PolyElement)
-//              {
-//                ((PolyElement)ele).resetGeometry();
-//              }
-//              else
-//              {
-//                System.out.println(
-//                    "reset only possible for PolyElement impl:"+
-//                    ele.getClass());
-//              }
-//              
-//            }
-            
-            
-          }
-        }
-        else
-        {
-          System.out.println("ModelEventx0="+modellEvent.getClass());
-        }
-      }
-      else
-      {
-        System.out.println("ModelEventx="+modellEvent.getEventSource());
-      }
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }    
+    //check change on finite element and update 
   } 
 }

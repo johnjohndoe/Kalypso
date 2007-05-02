@@ -47,6 +47,7 @@ import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBa
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceModel;
@@ -65,7 +66,15 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class StaticModel1D2D extends AbstractFeatureBinder implements IStaticModel1D2D
 {
-
+  
+  public StaticModel1D2D(Feature featureToBind )
+  {
+    this( 
+        featureToBind,
+        Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL
+        );
+  }
+  
   public StaticModel1D2D( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );

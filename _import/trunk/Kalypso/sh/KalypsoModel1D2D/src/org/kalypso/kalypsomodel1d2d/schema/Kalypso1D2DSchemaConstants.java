@@ -93,6 +93,8 @@ public class Kalypso1D2DSchemaConstants
   // ///////////////////////////////////////////////////////////////
   public final static QName WB1D2D_F_DiscretisationModel = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" );
 
+  public final static QName WB1D2D_F_STATIC_MODEL = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" );
   /**
    * QName for a property linking a feature to an edge. Use for example in DiscretisationModel feature
    */

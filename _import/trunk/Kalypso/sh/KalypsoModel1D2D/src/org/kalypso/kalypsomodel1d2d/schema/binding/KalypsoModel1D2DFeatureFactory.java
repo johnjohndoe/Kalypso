@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.deegree_impl.clients.wcasclient.configuration.CMapping;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -50,7 +49,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
+import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
@@ -468,6 +471,54 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFEDiscretisationModel1d2d.class, cTor);
+        
+//      StaticModel1D2D  
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL ) )
+                {
+                  return new StaticModel1D2D(feature);     
+                }
+                else
+                {
+                  return null;
+                }
+            }
+        };
+        cMap.put(IStaticModel1D2D.class, cTor);
+//      StaticModel1D2D  
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+              QName featureQName=feature.getFeatureType().getQName();
+              
+              //TODO Patrice Better concept needed, 
+              //because this works only because there is no other 
+              //simulation model than the 1d2d yet
+              if(featureQName.equals( 
+                  KalypsoModelSimulationBaseConsts.SIM_BASE_F_SIMULATION_MODEL ) )
+              {
+                return new SimulationModel1D2D( feature );     
+              }
+              else
+              {
+                return null;
+              }
+            }
+        };
+        cMap.put(ISimulationModel.class, cTor);
         
 //      IDisplayElement
         cTor= new AdapterConstructor()

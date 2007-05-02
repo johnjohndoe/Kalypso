@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -190,7 +191,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
        }
     }
     
-    boolean isNew=false;
+//    boolean isNew=false;
     if(edge==null)
     {
       edge=
@@ -202,7 +203,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       edge.addNode( gmlNode2ID);
       node1.addContainer( edgeID );
       node2.addContainer( edgeID );
-      isNew=true;
+//      isNew=true;
     }
 //    else
 //      // this never happens for existing (valid) .2d files
@@ -212,9 +213,15 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     //TODO set elements
     if(elementLeftID==elementRightID)
     {
+      String gmlID=
+        modelElementIDProvider.rma10sToGmlID( 
+                              ERma10sModelElementKey.FE, 
+                              elementLeftID);
+      IElement1D ele1D = getElement1D(gmlID);
+      ele1D.setEdge( edge );
       //one d element
-      System.out.println("1D elements not supported!");
-      throw new RuntimeException("2d ONLY for now");
+//      System.out.println("1D elements not supported!");
+//      throw new RuntimeException("2d ONLY for now");
     }
     else
     {
@@ -227,13 +234,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
                                   ERma10sModelElementKey.FE, 
                                   elementLeftID);
           IPolyElement eleLeft=getElement2D(gmlID);
-          int size=eleLeft.getEdges().size();
           eleLeft.addEdge( edgeID );
-          if(eleLeft.getEdges().size()-size!=1)
-          {
-            System.out.println("BAd Increment="+gmlID+" AR "+edgeID);
-          }
-          
           edge.addContainer( gmlID );
         }
         catch(Throwable th)
@@ -262,12 +263,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
             inv = new EdgeInv(edge,model);
             createdFeature.add( inv );
           }
-//          int size=eleRight.getEdges().size();
           eleRight.addEdge( inv.getGmlID() );
-//          if(eleRight.getEdges().size()-size!=1)
-//          {
-//            System.out.println("BAd Increment="+gmlID+" AR"+inv.getGmlID());
-//          }
           inv.addContainer( gmlID );
         }
         catch( Throwable th )
@@ -311,6 +307,23 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       return (IPolyElement)eleFeature.getAdapter( IPolyElement.class );
     }
   }
+  private final IElement1D getElement1D(String gmlID)
+  {
+    Feature eleFeature=workspace.getFeature( gmlID );
+    if(eleFeature==null)
+    {
+     IElement1D addNew = modelElements.addNew( 
+                      Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
+                      gmlID, 
+                      IElement1D.class );
+     createdFeature.add( addNew );
+     return  addNew;
+    }
+    else
+    {
+      return (IElement1D)eleFeature.getAdapter( IElement1D.class );
+    }
+  }
   
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int, int)
@@ -348,12 +361,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
                            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
                            gmlID );
        createdFeature.add( node );
-//       node.setPoint( 
-//           GeometryFactory.createGM_Point(
-//                             easting+35*100000,
-//                             northing+35*100000,
-//                             elevation,
-//                             coordinateSystem ));
        GM_Point newLocation =   
              positionProvider.getGMPoint( 
                   easting,//nativeX, 
