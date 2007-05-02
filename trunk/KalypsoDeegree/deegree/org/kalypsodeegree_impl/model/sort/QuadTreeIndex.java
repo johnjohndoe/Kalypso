@@ -140,9 +140,11 @@ public class QuadTreeIndex implements SpatialIndexExt
     revalidate();
 
     final Envelope itemEnv = getEnvelope( item );
-    
     m_index.remove( itemEnv, item );
-    m_index.insert( itemEnv, item );
+    if( itemEnv.isNull() )
+    {
+      m_index.insert( itemEnv, item );
+    }
 
     /* Bounding box must be calculated anew */
     m_boundingBox = null;

@@ -187,7 +187,14 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
       for( final Object next : m_items )
       {
         GM_Envelope envelope = getEnvelope( next );
-        spatialAdd( next, envelope );
+        if( envelope == null )
+        {
+          //beacuse it throws exception
+        }
+        else
+        {
+          spatialAdd( next, envelope );
+        }
       }
     }
     else
