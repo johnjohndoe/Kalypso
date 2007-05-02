@@ -190,7 +190,11 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
                       if( !ruleFound )
                       {
                         final RGB rgb = (RGB) feature.getProperty( m_colorStyle );
-                        final Color color = new Color( rgb.red, rgb.green, rgb.blue );
+                        Color color = null;
+                        if( rgb == null )
+                          color = Color.WHITE;
+                        else
+                          color = new Color( rgb.red, rgb.green, rgb.blue );
                         final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
                         final Fill fill = StyleFactory.createFill( color, 0.5 );
                         final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, "polygonProperty" );

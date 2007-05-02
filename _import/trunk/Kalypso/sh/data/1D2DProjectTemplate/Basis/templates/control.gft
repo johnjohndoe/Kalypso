@@ -138,20 +138,6 @@
            <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
         </gft:subcomposite> 
    
-        <gft:table property="c1d2d:timesteps" style="SWT.NONE">
-            <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" 
-            			  horizontalAlignment="GridData.FILL" 
-            			  heightHint="200" grabExcessVerticalSpace="true" 
-            			  grabExcessHorizontalSpace="true"/>
-            <ns1:gistableview>
-	        	<ns1:layer>
-		            <ns1:column alignment="SWT.LEFT" editable="true" format="" name="date" width="250"/>
-					<ns1:column alignment="SWT.CENTER" editable="true" format="" name="hValue" width="70"/>
-					<ns1:column alignment="SWT.LEFT" editable="true" format="" name="qValue" width="70"/>					
-					<ns1:sort inverse="false" propertyName="name"/>
-		    	</ns1:layer>
-            </ns1:gistableview>
-        </gft:table>            
 		</gft:group>
 <!-- Konvergenz-->
         <gft:group text="Konvergenz" style="0">
