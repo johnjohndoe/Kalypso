@@ -111,6 +111,16 @@
       </listitem>
     </itemizedlist>
 
+    <figure id="kalypso_na_ausgangspunkt_datenaufbereitung">
+      <title>Ausgangspunkt der Datenaufbereitung</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/kalypso_na/Ausgangspunkt-na.png" scale="100" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
     <para>Datenaufbereitung:</para>
 
     <orderedlist>
@@ -176,7 +186,8 @@
       <para>Zur Abgrenzung von Teilgebieten dienen diverse Datenquellen. Der
       Hintergrund sind die verschiedenen Ursachen, die den Fließweg des
       Wassers bestimmen. Grundsätzlich fließt das Wasser entlang des stärksten
-      Gefälles. Als Datengrundlage ist deswegen ein Höhenmodell unabdingbar.
+      Gefälles. Als Datengrundlage ist deswegen ein Höhenmodell (siehe<xref
+      linkend="kalypso_na_ausgangspunkt_datenaufbereitung" />) unabdingbar.
       Optimal ist die Verwendung von Höhenlinien, da hier auch weitere
       Informationen direkt sichtbar bleiben. Es gibt zwar verschiedene
       automatisierte Möglichkeiten z.B. auf der Grundlage von Rasterdaten
@@ -208,6 +219,25 @@
       Unterscheidung zwischen A<literal>EO</literal> und
       A<literal>EU</literal> wird in Kalypso nicht vorgenommen.</para>
 
+      <para><figure>
+          <title>Teileinzugsgebiete</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/kalypso_na/Teileinzugsgebiete.png" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Bei der Aufteilung in Teileinzugsgebiete sind folgende Punkte zu
+      beachten: </para>
+
+      <itemizedlist>
+        <listitem>
+          <para></para>
+        </listitem>
+      </itemizedlist>
+
       <para><emphasis role="bold">Unterirdisches Teilgebiet</emphasis></para>
 
       <para>Bei der Eingrenzung des unterirdischen Einzugsgebietes erfolgt die
@@ -216,21 +246,6 @@
       wird die Quantifizierung des Zustromes von außen vollzogen.
       Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
       Tiefengrundwasserleiter.</para>
-
-      <figure>
-        <title>Teileinzugsgebiete</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/Teileinzugsgebiet.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <note>
-        <para>die Tabelle aus Arc View ist nicht
-        vollständig!!!!!!!!!!!!!!!!!!!!!!!!</para>
-      </note>
     </section>
 
     <section>
