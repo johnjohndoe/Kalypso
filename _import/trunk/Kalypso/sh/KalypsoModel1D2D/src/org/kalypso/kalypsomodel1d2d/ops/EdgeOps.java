@@ -40,11 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 
@@ -181,5 +190,99 @@ public class EdgeOps
     }
     
     return true;
+  }
+  
+  /**
+   * 
+   */
+  public static final IFE1D2DElement getRightElement( IFE1D2DEdge edge )
+  {
+    return getLeftRight( edge, '-' );
+  }
+  
+  /**
+   * 
+   */
+  public static final IFE1D2DElement getLeftElement( IFE1D2DEdge edge )
+  {
+    return getLeftRight( edge, '+' );
+  }
+  
+  /**
+   *  
+   */
+  public static final IFE1D2DElement getLeftRight( IFE1D2DEdge edge, char reqOrientation )
+  {
+    Assert.throwIAEOnNullParam( edge, "edge" );
+    if( edge instanceof EdgeInv )
+    {
+      throw new IllegalArgumentException("Edge inv is not allow as argument");
+    }
+    
+    IFeatureWrapperCollection<IFE1D2DElement> containers = 
+                                          edge.getContainers();
+    final int size = containers.size();
+    if( size>2 || size<1 )
+    {
+      throw new IllegalArgumentException(
+          "Edge must have one or 2 element");
+    }
+    
+    final IEdgeInv edgeInv = edge.getEdgeInv();
+    final IFeatureWrapperCollection<IFE1D2DElement> edgeInvContainers = edgeInv.getContainers();
+    try
+    {
+      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele: containers )
+      {
+        
+          final GM_Object object = ele.recalculateElementGeometry();
+          if( object instanceof GM_Surface )
+          {
+            final char orientation = ((GM_Surface)object).getOrientation();
+            if( orientation == reqOrientation )//+(Conter clock wise) -(CW)
+            {
+              return ele;
+            }
+            else //other orientation -(CCW) +(CW)
+            {
+              if( edgeInvContainers.contains( ele ) )
+              {
+                return ele;
+              }
+            }
+          }
+          else
+          {
+            throw new RuntimeException(
+                "Surface expected as geometrie but found:"+object);
+          }        
+      }
+      
+      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele: edgeInvContainers )
+      {
+        
+          final GM_Object object = ele.recalculateElementGeometry();
+          if( object instanceof GM_Surface )
+          {
+            final char orientation = ( (GM_Surface)object ).getOrientation();
+            if( orientation != reqOrientation )//+(Conter clock wise) -(CW)
+            {
+              return ele;
+            }
+          }
+          else
+          {
+            throw new RuntimeException(
+                "Surface expected as geometrie but found:"+object);
+          }        
+      }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      throw new RuntimeException(
+          "unable to recompute the edge container geometrie");
+    }
+    return null;
   }
 }

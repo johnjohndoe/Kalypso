@@ -238,13 +238,15 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public void setNodes( final FE1D2DNode node0, final FE1D2DNode node1 )
   {
     final Feature feature = getFeature();
-    final List nodeList = 
-      (List) feature.getProperty( 
+    final FeatureList nodeList = 
+      (FeatureList) feature.getProperty( 
           Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE /*QNAME_PROP_DIRECTEDNODE*/ 
           );
     nodeList.clear();
     nodeList.add( node0.getFeature().getId() );
     nodeList.add( node1.getFeature().getId() );
+    nodeList.invalidate();
+    getWrappedFeature().invalidEnvelope();
   }
 
   /**
@@ -351,9 +353,11 @@ public class FE1D2DEdge extends AbstractFeatureBinder
    */
   public void addNode( String nodeID )
   {
-    m_nodes.getWrappedList().add( nodeID );
+    FeatureList wrappedList = m_nodes.getWrappedList();
+    wrappedList.add( nodeID );
     
     // changeing the nodes invalidates my geometry
+    wrappedList.invalidate();
     getWrappedFeature().invalidEnvelope();
   }
   

@@ -197,7 +197,8 @@ public class PolyElement extends AbstractFeatureBinder
   public void setEdges( final IFE1D2DEdge[] edges )
   {
     final Feature feature = getFeature();
-    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    final FeatureList edgeList = (FeatureList) 
+         feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
     edgeList.clear();
    Feature edgeInvFeature;
@@ -208,6 +209,7 @@ public class PolyElement extends AbstractFeatureBinder
     }
     ModelOps.sortElementEdges( this );
     
+    edgeList.invalidate();
     getWrappedFeature().invalidEnvelope();
   }
 
@@ -352,7 +354,7 @@ public class PolyElement extends AbstractFeatureBinder
       return;
     }
     edgeFeatureList.add( edgeID );
-    
+    edgeFeatureList.invalidate();
     getWrappedFeature().invalidEnvelope();
   }
   

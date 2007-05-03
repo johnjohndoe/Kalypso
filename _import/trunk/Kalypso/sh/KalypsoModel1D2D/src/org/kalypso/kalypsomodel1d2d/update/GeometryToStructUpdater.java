@@ -42,20 +42,19 @@ package org.kalypso.kalypsomodel1d2d.update;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
- * Listen to a workspace and given a geometrical change in the 
- * feature of interes (Node, edge and element transform that change 
- * to update the concern structure and there geometry.
- * E.g. if a node location changes update container edges and elements
- * 
- * TODO: please hide system-outs via trace-mechanism, it pollutes the console
+ * Listen to a workspace and given and update the roughness style store
  * 
  * @author Patrice Congo
  *
@@ -95,12 +94,20 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
     final Feature rootFeature = workspace.getRootFeature();
     final QName rootFeatureQname = rootFeature.getFeatureType().getQName();
     
-    if( Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL.equals( rootFeatureQname ) )
+   if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( rootFeatureQname ) )
     {
-      IStaticModel1D2D staticModel =
-          (IStaticModel1D2D) rootFeature.getAdapter( IStaticModel1D2D.class );
-      ModelMergeService.getInstance().setStaticModel( staticModel );
+     System.out.println("Update roughness merge because of ne dicr-model");
+      ElementRoughnessStyleFunc.clear( );
     }
+   else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL.equals( rootFeature ) )
+   {
+     System.out.println("Update roughness merge because of new terrain-model");
+     ElementRoughnessStyleFunc.clear();
+   }
+   else
+   {
+     ///
+   }
     
   }
 
@@ -109,6 +116,29 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    //check change on finite element and update 
+    final Feature[] changedFeatures;
+    if( modellEvent instanceof FeaturesChangedModellEvent )
+    {
+       changedFeatures = 
+           ((FeaturesChangedModellEvent) modellEvent).getFeatures();
+    }
+    else if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    {
+      changedFeatures =
+          ((FeatureStructureChangeModellEvent)modellEvent).getChangedFeatures();
+    }
+    else
+    {
+      changedFeatures = new Feature[]{};
+    }
+    
+    for( Feature feature : changedFeatures )
+    {
+      if( TypeInfo.isPolyElementFeature( feature ) )
+      {
+        ElementRoughnessStyleFunc.removeRoughnessClass( feature );
+      }
+      
+    }
   } 
 }

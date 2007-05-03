@@ -1,6 +1,8 @@
 package org.kalypso.kalypsomodel1d2d.schema.functions;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Platform;
@@ -30,6 +32,8 @@ import de.renew.workflow.cases.ICaseDataProvider;
  */
 public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
 {
+  private static final Map<String, String> roughnessMap = 
+                                    new HashMap<String, String>();
   
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -49,65 +53,158 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
             final IPropertyType pt, 
             final Object currentValue )
   {
+    IPolyElement polyElement = 
+      (IPolyElement) feature.getAdapter( IPolyElement.class );
+    return getElementRoughnessStyle( polyElement );
+//    try
+//    {
+//      IPolyElement polyElement = 
+//          (IPolyElement) feature.getAdapter( IPolyElement.class );
+//      if( polyElement == null )
+//      {
+//        return null;
+//      }
+//      
+//      ITerrainModel terrainModel = getModel( ITerrainModel.class );
+//      if( terrainModel == null )
+//      {
+//        return null;
+//      }
+//      IRoughnessPolygonCollection roughnessPolygonCollection = 
+//                              terrainModel.getRoughnessPolygonCollection();
+//        IRoughnessEstimateSpec roughnessEstimateSpec = 
+//          roughnessPolygonCollection.getRoughnessEstimateSpec( 
+//                                  polyElement.recalculateElementGeometry() );
+//        IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+//        if( classes.length >0 )
+//        {
+//          IRoughnessCls roughnessCls = classes[0];
+//          if( roughnessCls == null )
+//          {
+//            System.out.println("StyleName=_DEFAULT_STYLE_");
+//            return "_DEFAULT_STYLE_";
+//          }
+//          else
+//          {
+//            String name = roughnessCls.getName( );
+//            System.out.println( "StyleName=" + name );
+//            return name;
+//            
+//          }
+//        }
+//        else
+//        {
+//          return null;
+//        }
+//    }
+//    catch( GM_Exception e )
+//    {
+//      e.printStackTrace();
+//      return null;
+//    }
+//    
+////    ISimulationModel simulationModel = getModel( ISimulationModel.class );
+////    if( simulationModel == null )
+////    {
+////      return null;
+////    }
+////    IStaticModel staticModel = simulationModel.getStaticModel();
+////    if( !(staticModel instanceof IStaticModel1D2D ) )
+////    {
+////      ((IStaticModel1D2D)staticModel).getTerrainModel()
+////    }
+  }
+
+  private String getElementRoughnessStyle( IPolyElement polyElement )
+  {
     try
     {
-      IPolyElement polyElement = 
-          (IPolyElement) feature.getAdapter( IPolyElement.class );
       if( polyElement == null )
       {
+        System.out.println( "not a polyelement" );
         return null;
       }
-      
-      ITerrainModel terrainModel = getModel( ITerrainModel.class );
-      if( terrainModel == null )
+      final String polyElementID = polyElement.getGmlID();
+      String clsName = roughnessMap.get( polyElementID );
+      if ( clsName != null )
       {
-        return null;
+        //already computed
+        return clsName;
       }
-      IRoughnessPolygonCollection roughnessPolygonCollection = 
-                              terrainModel.getRoughnessPolygonCollection();
-        IRoughnessEstimateSpec roughnessEstimateSpec = 
-          roughnessPolygonCollection.getRoughnessEstimateSpec( 
-                                  polyElement.recalculateElementGeometry() );
-        IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
-        if( classes.length >0 )
+      else
+      {
+        ITerrainModel terrainModel = getModel( ITerrainModel.class );
+        if( terrainModel == null )
         {
-          IRoughnessCls roughnessCls = classes[0];
-          if( roughnessCls == null )
+          return "_DEFAULT_STYLE_";
+        }
+        IRoughnessPolygonCollection roughnessPolygonCollection = 
+                                terrainModel.getRoughnessPolygonCollection();
+        if( roughnessPolygonCollection.isEmpty())
+        {
+          return "_DEFAULT_STYLE_";
+        }
+        System.out.println("getting style "+polyElementID);
+          IRoughnessEstimateSpec roughnessEstimateSpec = 
+            roughnessPolygonCollection.getRoughnessEstimateSpec( 
+                                    polyElement.recalculateElementGeometry() );
+          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+          if( classes.length >0 )
           {
-            System.out.println("StyleName=_DEFAULT_STYLE_");
-            return "_DEFAULT_STYLE_";
+            IRoughnessCls roughnessCls = classes[0];
+            if( roughnessCls == null )
+            {
+              System.out.println("StyleName=_DEFAULT_STYLE_");
+              clsName = "_DEFAULT_STYLE_";
+            }
+            else
+            {
+              String name = roughnessCls.getName( );
+              System.out.println( "StyleName=" + name );
+              clsName = name;
+              
+            }
+            if( clsName != null )
+            {
+              roughnessMap.put( polyElementID, clsName );
+              return clsName;
+            }
+            else
+            {
+              return "_DEFAULT_STYLE_";
+            }
           }
           else
           {
-            String name = roughnessCls.getName( );
-            System.out.println( "StyleName=" + name );
-            return name;
-            
+            return "_DEFAULT_STYLE_";
           }
-        }
-        else
-        {
-          return null;
-        }
+      }
     }
     catch( GM_Exception e )
     {
       e.printStackTrace();
-      return null;
+      return "_DEFAULT_STYLE_";
     }
     
-//    ISimulationModel simulationModel = getModel( ISimulationModel.class );
-//    if( simulationModel == null )
-//    {
-//      return null;
-//    }
-//    IStaticModel staticModel = simulationModel.getStaticModel();
-//    if( !(staticModel instanceof IStaticModel1D2D ) )
-//    {
-//      ((IStaticModel1D2D)staticModel).getTerrainModel()
-//    }
   }
-
+  
+  public static final void clear(  )
+  {
+    System.out.println("Clear the roughness mapping");
+    synchronized( roughnessMap )
+    {
+      roughnessMap.clear();
+    }
+  }
+  
+  public static final void removeRoughnessClass( Feature polyElementFeature )
+  {
+    synchronized( roughnessMap )
+    {
+      roughnessMap.remove( polyElementFeature.getId() );
+    }
+  }
+  
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
@@ -120,7 +217,7 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
     return null;
   }
 
-  private static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
+  public static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
   {
     try
     {

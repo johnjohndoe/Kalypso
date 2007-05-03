@@ -71,8 +71,8 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   
   final private GM_Surface estimateZone; 
   
-  final private Map<IRoughnessCls, Double> histogram = 
-                        new HashMap<IRoughnessCls, Double>();
+  private Map<IRoughnessCls, Double> histogram = null; 
+                        //new HashMap<IRoughnessCls, Double>();
   
   public IntersectionBasedRoughnessEstimate(
                     IRoughnessPolygonCollection roughnessPolygonCollection, 
@@ -83,7 +83,7 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
     this.estimateZone = estimateZone;
     contributingRP = 
       roughnessPolygonCollection.selectRoughnessPolygons( estimateZone );
-    makeHistrogram();
+//    makeHistrogram();
   }
   
   private final void makeHistrogram( ) throws GM_Exception
@@ -147,6 +147,18 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
    */
   public Map<IRoughnessCls, Double> getHistogramm( )
   {
+    if( histogram == null )
+    {
+      try
+      {
+        makeHistrogram();
+      }
+      catch( GM_Exception e )
+      {
+        e.printStackTrace();
+        throw new RuntimeException(e);
+      }
+    }
     return histogram;
   }
 
@@ -155,7 +167,33 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
    */
   public IRoughnessCls[] mostSpreadRoughness( )
   {
-    return mostSpreadRoughness( histogram );
+    final int size = contributingRP.size();
+    if( size == 1 )
+    {
+      return new IRoughnessCls[]{ 
+                  contributingRP.get( 0 ).getRoughnessCls() };
+    }
+    else if( size == 0 )
+    {
+      return new IRoughnessCls[]{};
+    }
+    else
+    {
+      if( histogram == null )
+      {
+        try
+        {
+          makeHistrogram();
+        }
+        catch( GM_Exception e )
+        {
+          e.printStackTrace();
+          throw new RuntimeException(e);
+        }
+      }
+      return mostSpreadRoughness( histogram );
+    }
+    
   }
   
   public static final IRoughnessCls[] mostSpreadRoughness( 

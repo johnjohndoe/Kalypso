@@ -43,7 +43,23 @@ package org.kalypso.kalypsomodel1d2d.update;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 public class ModelMergeService
 {
@@ -73,6 +89,123 @@ public class ModelMergeService
   public static final ModelMergeService getInstance()
   {
     return modelMergeService;
+  }
+  
+  private String getElementRoughnessStyle( IPolyElement polyElement )
+  {
+    try
+    {
+      if( polyElement == null )
+      {
+        System.out.println( "not a polyelement" );
+        return null;
+      }
+      String clsName = femRoughnessStyleMap.get( polyElement.getGmlID() );
+      System.out.println("getting style");
+      if ( clsName != null )
+      {
+        //already computed
+        return clsName;
+      }
+      else
+      {
+        ITerrainModel terrainModel = getModel( ITerrainModel.class );
+        if( terrainModel == null )
+        {
+          return "_DEFAULT_STYLE_";
+        }
+        IRoughnessPolygonCollection roughnessPolygonCollection = 
+                                terrainModel.getRoughnessPolygonCollection();
+        if( roughnessPolygonCollection.isEmpty())
+        {
+          return "_DEFAULT_STYLE_";
+        }
+          IRoughnessEstimateSpec roughnessEstimateSpec = 
+            roughnessPolygonCollection.getRoughnessEstimateSpec( 
+                                    polyElement.recalculateElementGeometry() );
+          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+          if( classes.length >0 )
+          {
+            IRoughnessCls roughnessCls = classes[0];
+            if( roughnessCls == null )
+            {
+              System.out.println("StyleName=_DEFAULT_STYLE_");
+              clsName = "_DEFAULT_STYLE_";
+            }
+            else
+            {
+              String name = roughnessCls.getName( );
+              System.out.println( "StyleName=" + name );
+              clsName = name;
+              
+            }
+            if( clsName != null )
+            {
+              femRoughnessStyleMap.put( polyElement.getGmlID(), clsName );
+              return clsName;
+            }
+            else
+            {
+              return "_DEFAULT_STYLE_";
+            }
+          }
+          else
+          {
+            return "_DEFAULT_STYLE_";
+          }
+      }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return "_DEFAULT_STYLE_";
+    }
+    
+  }
+  
+  public static final void removeRoughnessClass( Feature polyElementFeature )
+  {
+    String id = polyElementFeature.getId();
+    Map<String, String> map = ModelMergeService.modelMergeService.femRoughnessStyleMap;
+    synchronized( map )
+    {
+      map.remove( id );
+    }
+  }
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object setValue( 
+                final Feature feature, 
+                final IPropertyType pt, 
+                final Object valueToSet )
+  {
+    return null;
+  }
+
+  public static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
+  {
+    try
+    {
+      IWorkbench workbench = PlatformUI.getWorkbench();
+      IHandlerService  service = 
+          (IHandlerService) workbench.getService( IHandlerService.class );
+      IEvaluationContext currentState = service.getCurrentState();
+      ICaseDataProvider<IFeatureWrapper2> caseDataProvider =
+          (ICaseDataProvider<IFeatureWrapper2>) 
+            currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+      T model =
+        caseDataProvider.getModel( modelClass );
+      
+      return model;
+    }
+    catch ( Throwable th ) 
+    {
+      th.printStackTrace();
+      return null;
+    }
   }
   
 }

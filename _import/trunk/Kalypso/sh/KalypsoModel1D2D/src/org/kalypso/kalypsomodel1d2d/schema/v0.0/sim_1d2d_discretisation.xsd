@@ -233,6 +233,9 @@
 					<xs:element
 						ref="wb1d2d:edgeContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
+					<!-- from feature -->
+					<xs:element ref="gml:boundedBy" minOccurs="0"/>
+					<xs:element ref="gml:location" minOccurs="0"/>
 					<xs:group ref="gml:StandardObjectProperties"/>
 				</xs:sequence>
 			</xs:restriction>
