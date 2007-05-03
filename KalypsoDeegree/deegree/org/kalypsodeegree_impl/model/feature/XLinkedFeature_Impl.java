@@ -53,7 +53,6 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
 
   private IFeatureType m_featureType;
 
-
   public XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     m_parentFeature = parentFeature;
@@ -99,7 +98,11 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   {
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
     if( workspace == null || m_featureId == null )
+    {
+      // REMARK: This may happen while loading the gml, so we ignore it and all access to getFeature() should chek for
+      // null
       return null;
+    }
 
     final IFeatureProvider provider = getProvider( workspace );
     final Feature feature = provider == null ? null : provider.getFeature( m_featureId );
@@ -159,7 +162,8 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public Object[] getProperties( )
   {
-    return getFeature().getProperties();
+    final Feature feature = getFeature();
+    return feature.getProperties();
   }
 
   /**
@@ -171,7 +175,11 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public Object getProperty( final IPropertyType pt )
   {
-    return getFeature().getProperty( pt );
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+
+    return feature.getProperty( pt );
   }
 
   /**
@@ -208,7 +216,10 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt, final GMLWorkspace workspace )
   {
-    return getFeature().getVirtuelProperty( vpt, workspace );
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+    return feature.getVirtuelProperty( vpt, workspace );
   }
 
   /**
@@ -216,7 +227,9 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public void setProperty( final IPropertyType pt, final Object value )
   {
-    getFeature().setProperty( pt, value );
+    final Feature feature = getFeature();
+    if( feature != null )
+      feature.setProperty( pt, value );
   }
 
   /**
@@ -226,7 +239,10 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   @Deprecated
   public Object getProperty( final String propNameLocalPart )
   {
-    return getFeature().getProperty( propNameLocalPart );
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+    return feature.getProperty( propNameLocalPart );
   }
 
   /**
@@ -234,7 +250,10 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public Object getProperty( final QName propQName )
   {
-    return getFeature().getProperty( propQName );
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+    return feature.getProperty( propQName );
   }
 
   /**
@@ -244,7 +263,9 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   @Deprecated
   public void setProperty( final String propLocalName, final Object value )
   {
-    getFeature().setProperty( propLocalName, value );
+    final Feature feature = getFeature();
+    if( feature != null )
+      feature.setProperty( propLocalName, value );
   }
 
   /**
@@ -288,15 +309,19 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public void setProperty( final QName propQName, final Object value )
   {
-    getFeature().setProperty( propQName, value );
+    final Feature feature = getFeature();
+    if( feature != null )
+      feature.setProperty( propQName, value );
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
    */
   public void invalidEnvelope( )
   {
-    getFeature().invalidEnvelope();
+    final Feature feature = getFeature();
+    if( feature != null )
+      feature.invalidEnvelope();
   }
 
   public String getHref( )

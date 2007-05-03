@@ -35,6 +35,13 @@ public class SplitSort implements FeatureList
       else if( object instanceof Feature )
       {
         final Feature fe = (Feature) object;
+        
+        // HACK: if the workspace is null, we are probably still loading
+        // so do not access the envelope, whichs may cause problems now
+        final GMLWorkspace workspace = fe.getWorkspace();
+        if( workspace == null )
+          return null;
+        
         return fe.getEnvelope();
       }
       else if( object instanceof String )
