@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:kapp="org.kalypso.appinfo" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:om="http://www.opengis.net/om" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:kapp="org.kalypso.appinfo"
+	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	xmlns:om="http://www.opengis.net/om"
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd"/>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+	<import namespace="http://www.opengis.net/om"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
 	<!-- ==============================================================
 		global element declarations
 		============================================================== -->
-	<element name="Control" type="c1d2d:ControlType"/>
+	<element name="Control" type="c1d2d:ControlType" />
 	<annotation>
 		<documentation xml:lang="de">
 			<label>Control Parameter</label>
@@ -27,7 +35,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Version</label>
-								<tooltip>Version des Rechenkerns RMA 10S</tooltip>
+								<tooltip>
+									Version des Rechenkerns RMA 10S
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -42,66 +52,74 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="Version3.5"/>
-								<enumeration value="test"/>
+								<enumeration value="Version3.5" />
+								<enumeration value="test" />
 							</restriction>
 						</simpleType>
 					</element>
 					<!-- ControlDataBlock-->
-					<element name="VEGETA" type="boolean" default="true">
+					<element name="VEGETA" type="boolean"
+						default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berücksichtigung Bewuchs</label>
-								<tooltip>Berücksichtigung der Bewuchsparameter bei der Berechnung</tooltip>
+								<tooltip>
+									Berücksichtigung der
+									Bewuchsparameter bei der Berechnung
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
 					<!--C0-->
 					<!-- Jessica: Erst einmal fest auf 0 setzen (laut Nico)
-					<element name="IOPTZD" default="0">
+						<element name="IOPTZD" default="0">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>Turbulenzmodell</label>
-							</documentation>
+						<documentation xml:lang="de">
+						<label>Turbulenzmodell</label>
+						</documentation>
 						</annotation>
 						<simpleType>
-							<restriction base="string">
-								<enumeration value="0">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>original RMA-10 Methode</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="1">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Henderson-Sellers</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="2">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Lineare Verteilung</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="3">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Gaussian Mellor-Yamada</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-							</restriction>
+						<restriction base="string">
+						<enumeration value="0">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>original RMA-10 Methode</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						<enumeration value="1">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>Henderson-Sellers</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						<enumeration value="2">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>Lineare Verteilung</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						<enumeration value="3">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>Gaussian Mellor-Yamada</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						</restriction>
 						</simpleType>
-					</element>-->
+						</element>-->
 					<element name="IDNOPT" default="-1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Marsh Algorithmus</label>
-								<tooltip>Art der gesonderten Behandlung von nur teilweise Durchströmten Elementen (Randelemente).</tooltip>
+								<tooltip>
+									Art der gesonderten Behandlung von
+									nur teilweise Durchströmten
+									Elementen (Randelemente).
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -116,15 +134,24 @@
 								<enumeration value="-1">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Default Werte nutzen</label>
-											<tooltip>Default Werte sind: (Deaktivierungstiefe=1.5m; Übergangstiefe=0.67m; Porosität=0.04)</tooltip>
+											<label>
+												Default Werte nutzen
+											</label>
+											<tooltip>
+												Default Werte sind:
+												(Deaktivierungstiefe=1.5m;
+												Übergangstiefe=0.67m;
+												Porosität=0.04)
+											</tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="-2">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Eingabewerte nutzen</label>
+											<label>
+												Eingabewerte nutzen
+											</label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -134,8 +161,15 @@
 					<element name="startsim" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Start der instationären Berechnung</label>
-								<tooltip>Startdatum und Zeit der instationären Berechnung, lediglich zur Information bei stationärer Berechnung.</tooltip>
+								<label>
+									Start der instationären Berechnung
+								</label>
+								<tooltip>
+									Startdatum und Zeit der
+									instationären Berechnung, lediglich
+									zur Information bei stationärer
+									Berechnung.
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -144,65 +178,73 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wirbelviskositätsansatz</label>
-								<tooltip>Wirbelviskositätsansatz</tooltip>
+								<tooltip>
+									Wirbelviskositätsansatz
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-							<!--
-								<enumeration value="0">
+								<!--
+									<enumeration value="0">
 									<annotation>
-										<documentation xml:lang="de">
-											<label>konstante Eingabedaten ohne Skalierung</label>
-										</documentation>
+									<documentation xml:lang="de">
+									<label>konstante Eingabedaten ohne Skalierung</label>
+									</documentation>
 									</annotation>
-								</enumeration>
-								<enumeration value="1">
+									</enumeration>
+									<enumeration value="1">
 									<annotation>
-										<documentation xml:lang="de">
-											<label>Skalierung über Elementlänge</label>
-										</documentation>
+									<documentation xml:lang="de">
+									<label>Skalierung über Elementlänge</label>
+									</documentation>
 									</annotation>
-								</enumeration>-->
+									</enumeration>-->
 								<!--<enumeration value="-1">
 									<annotation>
-										<documentation xml:lang="de">
-											<label>Eingabedaten verwenden Elementtypenabhängig?</label>
-										</documentation>
+									<documentation xml:lang="de">
+									<label>Eingabedaten verwenden Elementtypenabhängig?</label>
+									</documentation>
 									</annotation>
-								</enumeration>
-								<enumeration value="3">
+									</enumeration>
+									<enumeration value="3">
 									<annotation>
-										<documentation xml:lang="de">
-											<label>mit Fliessrichtung?</label>
-										</documentation>
+									<documentation xml:lang="de">
+									<label>mit Fliessrichtung?</label>
+									</documentation>
 									</annotation>
-								</enumeration>
-								<enumeration value="4">
+									</enumeration>
+									<enumeration value="4">
 									<annotation>
-										<documentation xml:lang="de">
-											<label>wie 3 mit 2tem?</label>
-										</documentation>
+									<documentation xml:lang="de">
+									<label>wie 3 mit 2tem?</label>
+									</documentation>
 									</annotation>
-								</enumeration>-->
+									</enumeration>-->
 								<enumeration value="5">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Konstante Wirbelviskosität</label>
+											<label>
+												Konstante Wirbelviskosität
+											</label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="6">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>free shear-layer</label>
+											<label>
+												free shear-layer
+											</label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="2">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Smagorinsky-Ansatz</label>
+											<label>
+												Smagorinsky-Ansatz
+											</label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -212,74 +254,86 @@
 					<element name="TBFACT" default="0.2">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Faktor Smagorinsky-Ansatz [-]</label>
-								<tooltip>Alfa Wert des Smagorinsky Ansatzes [-]</tooltip>
+								<label>
+									Faktor Smagorinsky-Ansatz [-]
+								</label>
+								<tooltip>
+									Alfa Wert des Smagorinsky Ansatzes [-]
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="double">
-								<minInclusive value="0.02"/>
-								<maxExclusive value="0.5"/>
+								<minInclusive value="0.02" />
+								<maxExclusive value="0.5" />
 							</restriction>
 						</simpleType>
 					</element>
 					<element name="TBMIN" type="double" default="2">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Min. Wirbelviskosität [m²/s]</label>
-								<tooltip>Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]</tooltip>
+								<label>
+									Min. Wirbelviskosität [m²/s]
+								</label>
+								<tooltip>
+									Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
 					<!--
-					<element name="IPROJ">
+						<element name="IPROJ">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>Projektion</label>
-								<tooltip>Pojektionsoptionen</tooltip>
-							</documentation>
+						<documentation xml:lang="de">
+						<label>Projektion</label>
+						<tooltip>Pojektionsoptionen</tooltip>
+						</documentation>
 						</annotation>
 						<simpleType>
-							<restriction base="string">
-								<enumeration value="0">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Zeitabweichung</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="1">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>keine Projektion</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="2">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Projektion auf aktuellem und vorherigem Wert</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-							</restriction>
+						<restriction base="string">
+						<enumeration value="0">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>Zeitabweichung</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						<enumeration value="1">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>keine Projektion</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						<enumeration value="2">
+						<annotation>
+						<documentation xml:lang="de">
+						<label>Projektion auf aktuellem und vorherigem Wert</label>
+						</documentation>
+						</annotation>
+						</enumeration>
+						</restriction>
 						</simpleType>
-					</element>
--->
+						</element>
+					-->
 					<!--C2-->
 					<element name="OMEGA" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Breitengrad  [°]</label>
-								<tooltip>Breitengrad zur Ermittlung der Corioliskraft [°]</tooltip>
+								<label>Breitengrad [°]</label>
+								<tooltip>
+									Breitengrad zur Ermittlung der Corioliskraft [°]
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="ELEV" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Anfangswasserspiegel  [m]</label>
-								<tooltip>Anfangswert des Wasserstandes über jeden Knoten [m]</tooltip>
+								<label>Anfangswasserspiegel [m]</label>
+								<tooltip>
+									Anfangswert des Wasserstandes über jeden Knoten [m]
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -287,29 +341,39 @@
 					<element name="UNOM" type="double" default="0.5">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>1D-Anfangsgeschwindigkeit [m/s]</label>
+								<label>
+									1D-Anfangsgeschwindigkeit [m/s]
+								</label>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="UDIR">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Geschwindigkeitsrichtung [°]</label>
-								<tooltip>Ungefähre Fließrichtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [°]</tooltip>
+								<label>
+									Geschwindigkeitsrichtung [°]
+								</label>
+								<tooltip>
+									Ungefähre Fließrichtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [°]
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="double">
-								<minInclusive value="0.0"/>
-								<maxInclusive value="360.0"/>
+								<minInclusive value="0.0" />
+								<maxInclusive value="360.0" />
 							</restriction>
 						</simpleType>
 					</element>
 					<element name="HMIN" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Min. Anfangswassertiefe [m]</label>
-								<tooltip> Minimale Wassertiefe bei Simulationsstart [m]</tooltip>
+								<label>
+									Min. Anfangswassertiefe [m]
+								</label>
+								<tooltip>
+									Minimale Wassertiefe bei Simulationsstart [m]
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -317,7 +381,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Trockenfalltiefe [m]</label>
-								<tooltip>Wassertiefe ab welcher Knoten trocken fällt [m].</tooltip>
+								<tooltip>
+									Wassertiefe ab welcher Knoten trocken fällt [m].
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -325,7 +391,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wiederbenetzungstiefe [m]</label>
-								<tooltip>Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m].</tooltip>
+								<tooltip>
+									Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m].
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -333,62 +401,81 @@
 					<element name="NITI">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Max. Anzahl Interationsschritte (stationär)</label>
-								<tooltip>Maximale Anzahl der Interationen für stationäre Berechnung (0 - ohne stationäre Berechnung).</tooltip>
+								<label>
+									Max. Anzahl Interationsschritte	(stationär)
+								</label>
+								<tooltip>
+									Maximale Anzahl der Interationen für stationäre Berechnung (0 - ohne stationäre Berechnung).
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<minInclusive value="0"/>
-								<maxInclusive value="100"/>
+								<minInclusive value="0" />
+								<maxInclusive value="100" />
 							</restriction>
 						</simpleType>
 					</element>
 					<element name="NCYC" type="int">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Anzahl der Zeitschritte (instationär)</label>
+								<label>
+									Anzahl der Zeitschritte (instationär)
+								</label>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="NITN">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Max. Anzahl Interationsschritte (instationär)</label>
-								<tooltip>Maximale Anzahl der Interationen für instationäre Berechnung.</tooltip>
+								<label>
+									Max. Anzahl Interationsschritte (instationär)
+								</label>
+								<tooltip>
+									Maximale Anzahl der Interationen für instationäre Berechnung.
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<minInclusive value="0"/>
-								<maxInclusive value="50"/>
+								<minInclusive value="0" />
+								<maxInclusive value="50" />
 							</restriction>
 						</simpleType>
 					</element>
 					<!--CV-->
-					<element name="CONV_1" type="double" default="0.01">
+					<element name="CONV_1" type="double"
+						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Konvergenzschranke vx [-]</label>
-								<tooltip>Maximale Änderung der Geschwindigkeit in x-Richtung [-]</tooltip>
+								<tooltip>
+									Maximale Änderung der Geschwindigkeit in x-Richtung [-]
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="CONV_2" type="double" default="0.01">
+					<element name="CONV_2" type="double"
+						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Konvergenzschranke vy [-]</label>
-								<tooltip>Maximale Änderung der Geschwindigkeit in y-Richtung [-]</tooltip>
-								<tooltip/>
+								<tooltip>
+									Maximale Änderung der Geschwindigkeit in y-Richtung [-]
+								</tooltip>
+								<tooltip />
 							</documentation>
 						</annotation>
 					</element>
-					<element name="CONV_3" type="double" default="0.001">
+					<element name="CONV_3" type="double"
+						default="0.001">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Konvergenzschranke h [-]</label>
-								<tooltip>Maximale Änderung der Wassertiefe [-]</tooltip>
-								<tooltip/>
+								<tooltip>
+									Maximale Änderung der Wassertiefe [-]
+								</tooltip>
+								<tooltip />
 							</documentation>
 						</annotation>
 					</element>
@@ -396,7 +483,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gleichungsdeaktivierung</label>
-								<tooltip>Deaktivierung von nicht benötigten Gleichungen (konvergente Freiheitsgrade)</tooltip>
+								<tooltip>
+									Deaktivierung von nicht benötigten Gleichungen (konvergente Freiheitsgrade)
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -404,27 +493,40 @@
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Keine Deaktivierung</label>
-											<tooltip>Alle Gleichungen aktiv</tooltip>
+											<label>
+												Keine Deaktivierung
+											</label>
+											<tooltip>
+												Alle Gleichungen aktiv
+											</tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="1">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Mögliche deaktivieren</label>
-											<tooltip>Gleichungsdeaktivierung nach Deaktivierungskriterium (konvergente Freiheitsgrade)</tooltip>
+											<label>
+												Mögliche deaktivieren
+											</label>
+											<tooltip>
+												Gleichungsdeaktivierung nach Deaktivierungskriterium (konvergente Freiheitsgrade)
+											</tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="DRFACT" type="double" default="0.05">
+					<element name="DRFACT" type="double"
+						default="0.05">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Deaktivierungskriterium [-]</label>
-								<tooltip>Deaktivierungskriterium für Gleichungen [-]</tooltip>
+								<label>
+									Deaktivierungskriterium [-]
+								</label>
+								<tooltip>
+									Deaktivierungskriterium für Gleichungen [-]
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -432,16 +534,20 @@
 					<element name="AC1" type="double" default="1.5">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Deaktivierungstiefe  [m]</label>
-								<label>Tiefe unter der Oberfläche zur deaktivierung von Knoten [m]</label>
+								<label>Deaktivierungstiefe [m]</label>
+								<label>
+									Tiefe unter der Oberfläche zur deaktivierung von Knoten [m]
+								</label>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="AC2" type="double" default="0.67">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Übergangstiefe  [m]</label>
-								<tooltip>Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m].</tooltip>
+								<label>Übergangstiefe [m]</label>
+								<tooltip>
+									Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m].
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -449,7 +555,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Porosität [-]</label>
-								<tooltip>Porosität des Marsh-Bodens [-].</tooltip>
+								<tooltip>
+									Porosität des Marsh-Bodens [-].
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -459,11 +567,14 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Restart</label>
-								<tooltip>Angabe des Restart Zeitschrittes (bei 0 wird eine neue Berechnung gestartet).</tooltip>
+								<tooltip>
+									Angabe des Restart Zeitschrittes (bei 0 wird eine neue Berechnung gestartet).
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="timesteps" type="c1d2d:TimestepPropertyType">
+					<element name="timestepsMember"
+						type="c1d2d:TimestepsObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zeitschritte</label>
@@ -471,26 +582,55 @@
 							</documentation>
 						</annotation>
 					</element>
-				<!-- 
-					<element name="tableTimeStep" type="c1d2d:TableTimeStepPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zeitschrittesssss</label>
-							</documentation>
-						</annotation>
-					</element>
-					-->	
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="TimestepPropertyType">
+	<complexType name="TimestepsObservationPropertyType">
 		<sequence>
-			<element ref="c1d2d:Timesteps" minOccurs="0"/>
+			<element ref="c1d2d:TimestepsObservation" minOccurs="0" />
 		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
 	</complexType>
 
+	<!--quasi Stationär Zeitschrittvorgabe -->
+	<element name="TimestepsObservation" type="om:ObservationType"
+		substitutionGroup="om:Observation">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Zeitschrittvorgabe</label>
+				<tooltip>
+					Zeitschrittvorgabe der quasi stationären Berechnung
+				</tooltip>
+			</documentation>
+		</annotation>
+	</element>
+
+<!-- 
+	<complexType name="TimestepsObservationType">
+		<annotation>
+			<documentation>
+				Observation event. carries a generic "result" properties of type "anyType".
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="om:ObservationType">
+				<sequence>
+					<element name="myResult" type="anyType"
+						nillable="true">
+						<annotation>
+							<documentation>
+								an xsi:type attribute may appear in the instance to indicate the type of the result
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+ -->
+
+<!-- 
 	<element name="Timesteps" 
 					type="c1d2d:TimeserieType" 
 					substitutionGroup="om:Observation"/>
@@ -532,18 +672,7 @@
 			</extension>
 		</complexContent>
 	</complexType>	
-	
-	<!--quasi Stationär Zeitschrittvorgabe-->
-	<!-- 
-	<element name="Timesteps" type="om:ObservationType" substitutionGroup="om:Observation">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Zeitschrittvorgabe</label>
-				<tooltip>Zeitschrittvorgabe der quasi stationären Berechnung</tooltip>
-			</documentation>
-		</annotation>
-	</element>
-	-->
+-->
 <!-- 
 	<xs:element name="Timeserie" type="op1d2d:TimeserieType" substitutionGroup="om:Observation" />
 
@@ -575,7 +704,6 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 	
 	<complexType name="TableTimeStepPropertyType">
 		<sequence>
@@ -597,5 +725,6 @@
 		</complexContent>
 	</complexType>	
 -->	
-</schema>
 
+
+</schema>

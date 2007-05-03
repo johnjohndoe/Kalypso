@@ -4,17 +4,22 @@
 	xmlns:gft="featureview.template.kalypso.org" 
 	xmlns:xlink="http://www.w3.org/1999/xlink">
     <gft:layer id="layer_1" featurePath="#fid#root" linktype="gml" xlink:href="../models/control.gml"/>
-    <gft:view typename="c1d2d:Timesteps" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
+    <gft:view typename="c1d2d:TimestepsObservation" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
-        <gft:gridLayout numColumns="4" horizontalSpacing="10"/>
+        <gft:gridLayout numColumns="3" horizontalSpacing="10"/>
         <gft:label text="Zeitschrittvorgabe" visible="true" tooltip="Zeitschrittvorgabe der quasi stationären Berechnung" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="true"/>
         </gft:label>
         <gft:tupleResult property="om:result" tooltip="Zeitschrittvorgabe" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:om="http://www.opengis.net/om">
             <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         </gft:tupleResult>
+		<gft:extensioncontrol property="om:result" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory" style="SWT.NONE">
+			<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+<!--			<gft:param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />
+			<gft:param name="featureKeyName" value="theResultFeatureKey" />
+-->
+		</gft:extensioncontrol>
     </gft:view>
-    
     
     <gft:view typename="c1d2d:Control" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
@@ -134,7 +139,7 @@
         <gft:validatorlabel property="c1d2d:IACCYC" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:subcomposite property="c1d2d:timesteps" style="SWT.NONE">
+        <gft:subcomposite property="c1d2d:timestepsMember" style="SWT.NONE">
            <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
         </gft:subcomposite> 
    

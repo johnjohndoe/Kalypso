@@ -43,8 +43,8 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -73,40 +73,23 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class Gml2RMA10SConv
 {
-  private final LinkedHashMap<String, String> lines_AR = new LinkedHashMap<String, String>();
+//  private final LinkedHashMap<String, String> lines_AR = new LinkedHashMap<String, String>(100000);
+//
+//  private final LinkedHashMap<String, String> lines_FP = new LinkedHashMap<String, String>(50000);
+//
+//  private final LinkedHashMap<String, String> lines_FE = new LinkedHashMap<String, String>(30000);
+//
+//  private final LinkedHashMap<String, String> lines_RK = new LinkedHashMap<String, String>();
+//
+//  private final LinkedHashMap<String, String> lines_CS = new LinkedHashMap<String, String>(50000);
 
-  private final LinkedHashMap<String, String> lines_FP = new LinkedHashMap<String, String>();
+  private final LinkedHashMap<String, String> m_nodesIDProvider = new LinkedHashMap<String, String>(100000);
 
-  private final LinkedHashMap<String, String> lines_FE = new LinkedHashMap<String, String>();
+  private final LinkedHashMap<String, String> m_elementsIDProvider = new LinkedHashMap<String, String>(50000);
 
-  private final LinkedHashMap<String, String> lines_RK = new LinkedHashMap<String, String>();
+  private final LinkedHashMap<String, String> m_complexElementsIDProvider = new LinkedHashMap<String, String>();
 
-  private final LinkedHashMap<String, String> lines_CS = new LinkedHashMap<String, String>();
-
-  
-  //private final LinkedHashMap<String, String> m_nodesIDProvider = new LinkedHashMap<String, String>();
-  
-  private final ArrayList<String> m_nodesIDProvider_ = new ArrayList<String>();
-  private final ArrayList<Integer> m_nodesValueProvider_ = new ArrayList<Integer>();
-
-  //private final LinkedHashMap<String, String> m_elementsIDProvider = new LinkedHashMap<String, String>();
-  
-  private final ArrayList<String> m_elementsIDProvider_ = new ArrayList<String>();
-  private final ArrayList<Integer> m_elementsValueProvider_ = new ArrayList<Integer>();
-  
-  //private final LinkedHashMap<String, String> m_complexElementsIDProvider = new LinkedHashMap<String, String>();
-
-  private final ArrayList<String> m_complexElementsIDProvider_ = new ArrayList<String>();
-  private final ArrayList<Integer> m_complexElementsValueProvider_ = new ArrayList<Integer>();
-  
-  //private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>();
-
-  private final ArrayList<String> m_edgesIDProvider_ = new ArrayList<String>();
-  private final ArrayList<Integer> m_edgesValueProvider_ = new ArrayList<Integer>();
-  
-  
-
-
+  private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>(100000);
 
   private double m_offsetX;
 
@@ -134,47 +117,23 @@ public class Gml2RMA10SConv
       return 0;
     final String id = i1d2dObject.getGmlID();
     if( i1d2dObject instanceof IFE1D2DNode )
-      return getID( m_nodesIDProvider_, m_nodesValueProvider_, id );
-     // return getID( m_nodesIDProvider,id );
+      return getID( m_nodesIDProvider, id );
     else if( i1d2dObject instanceof IFE1D2DEdge )
-      return getID( m_edgesIDProvider_,m_edgesValueProvider_, id );
+      return getID( m_edgesIDProvider, id );
     else if( i1d2dObject instanceof IFE1D2DElement )
-      return getID( m_elementsIDProvider_,m_elementsValueProvider_, id );
+      return getID( m_elementsIDProvider, id );
     else if( i1d2dObject instanceof IFE1D2DComplexElement )
-      return getID( m_complexElementsIDProvider_,m_complexElementsValueProvider_, id );
+      return getID( m_complexElementsIDProvider, id );
     else
       return 0;
   }
 
-  /*
   private int getID( final LinkedHashMap<String, String> map, final String gmlID )
   {
-    if( !map.containsKey( gmlID ) ) {
+    if( !map.containsKey( gmlID ) )
       map.put( gmlID, Integer.toString( map.size() + 1 ) );
-    }
     return Integer.parseInt( map.get( gmlID ) );
-  }*/
-  
- private int getID( final ArrayList<String> aID,
-                           ArrayList<Integer> aValue, 
-                           final String gmlID )
-  {
-    if (!aID.contains( gmlID )) 
-    {
-      aID.add( gmlID );
-      aValue.add( ( aValue.size() + 1 ) );     
-    }    
-    
-    //Integer[] arr =  (Integer[]) aValue.toArray();
-    //return arr[aID.indexOf( gmlID )]; 
-    
-    return aValue.get( aID.indexOf( gmlID ));
-//    if( !map.containsKey( gmlID ) ) {
-//      map.put( gmlID, Integer.toString( map.size() + 1 ) );
-//    }
-//    return Integer.parseInt( map.get( gmlID ) );
   }
-
 
   public Gml2RMA10SConv( IFEDiscretisationModel1d2d sourceModel, URL rma10sOutputURL, IPositionProvider positionProvider )
   {
@@ -186,8 +145,9 @@ public class Gml2RMA10SConv
     m_offsetZ = -point.getZ();
   }
 
-  public void toRMA10sModel( ) throws IllegalStateException, GM_Exception
+  public void toRMA10sModel( ) throws IllegalStateException, GM_Exception, IOException
   {
+    final PrintWriter stream = new PrintWriter( new File( m_outputURL.getPath() ) );
 //    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
@@ -204,28 +164,31 @@ public class Gml2RMA10SConv
     while( elementsIterator.hasNext() )
     {
       final IFE1D2DElement element = elementsIterator.next();
-      System.out.println( element.getGmlID() + " --> " + getID( element ) );
+//      System.out.println( element.getGmlID() + " --> " + getID( element ) );
       final StringBuilder builder = new StringBuilder();
       final Formatter formatter = new Formatter( builder );
       formatter.format( Locale.US, "FE%10d%10d%10d%10d", getID( element ), 1, 1, 0 );
-      lines_FE.put( element.getGmlID(), builder.toString() );
+      stream.println( builder.toString() );
+//      lines_FE.put( element.getGmlID(), builder.toString() );
     }
 
     final Iterator<IFE1D2DNode> nodesIterator = nodes.iterator();
     while( nodesIterator.hasNext() )
     {
       final IFE1D2DNode node = nodesIterator.next();
-      System.out.println( node.getGmlID() + " --> " + getID( node ) );
+//      System.out.println( node.getGmlID() + " --> " + getID( node ) );
       final String nodeGmlID = node.getGmlID();
       int nodeID = getID( node );
       final GM_Point point = correctPosition( node.getPoint() );
       final StringBuilder builder = new StringBuilder();
       final Formatter formatter = new Formatter( builder );
       formatter.format( Locale.US, "FP%10d%20.7f%20.7f%20.7f", nodeID, point.getX(), point.getY(), point.getZ() );
-      lines_FP.put( nodeGmlID, builder.toString() );
+      stream.println( builder.toString() );
+//      lines_FP.put( nodeGmlID, builder.toString() );
       builder.setLength( 0 );
       formatter.format( Locale.US, "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
-      lines_CS.put( nodeGmlID, builder.toString() );
+      stream.println( builder.toString() );
+//    lines_CS.put( nodeGmlID, builder.toString() );
     }
 
     int cnt = 1;
@@ -240,7 +203,7 @@ public class Gml2RMA10SConv
       int middleNodeID = (edge.getMiddleNode() == null) ? 0 : getID( edge.getMiddleNode() );
       final StringBuilder builder = new StringBuilder();
       final Formatter formatter = new Formatter( builder );
-      System.out.println( edge.getGmlID() + " --> " + getID( edge ) );
+//      System.out.println( edge.getGmlID() + " --> " + getID( edge ) );
       if( TypeInfo.is1DEdge( edge ) )
       {
         int leftRightID = 0;
@@ -252,7 +215,8 @@ public class Gml2RMA10SConv
             leftRightID = getID( ((IElement1D) object) );
         }
         formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
-        lines_AR.put( edge.getGmlID(), builder.toString() );
+        stream.println( builder.toString() );
+//        lines_AR.put( edge.getGmlID(), builder.toString() );
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
@@ -287,16 +251,23 @@ public class Gml2RMA10SConv
         }
 
         formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
-        lines_AR.put( edge.getGmlID(), builder.toString() );
+        stream.println( builder.toString() );
+//        lines_AR.put( edge.getGmlID(), builder.toString() );
+
         // gm surface -> orientation
+
       }
       else
       {
+        stream.println( "**************************************  non 1d/2d edge: " + edge.getGmlID() );
         System.out.println( "non 1d/2d edge: " + edge.getGmlID() );
         // element left
         // element right
       }
+
     }
+    stream.flush();
+    stream.close();
   }
 
   private GM_Point correctPosition( GM_Point point )
@@ -327,28 +298,28 @@ public class Gml2RMA10SConv
 
   private void writeToStream( final PrintStream stream )
   {
-    Iterator<String> iterator;
-
-    iterator = lines_FP.keySet().iterator();
-    while( iterator.hasNext() )
-      stream.println( lines_FP.get( iterator.next() ) );
-
-    iterator = lines_FE.keySet().iterator();
-    while( iterator.hasNext() )
-      stream.println( lines_FE.get( iterator.next() ) );
-
-    iterator = lines_AR.keySet().iterator();
-    while( iterator.hasNext() )
-      stream.println( lines_AR.get( iterator.next() ) );
-
-    iterator = lines_CS.keySet().iterator();
-    while( iterator.hasNext() )
-      stream.println( lines_CS.get( iterator.next() ) );
-
-    iterator = lines_RK.keySet().iterator();
-    while( iterator.hasNext() )
-      stream.println( lines_RK.get( iterator.next() ) );
-
-    stream.flush();
+//    Iterator<String> iterator;
+//
+//    iterator = lines_FP.keySet().iterator();
+//    while( iterator.hasNext() )
+//      stream.println( lines_FP.get( iterator.next() ) );
+//
+//    iterator = lines_FE.keySet().iterator();
+//    while( iterator.hasNext() )
+//      stream.println( lines_FE.get( iterator.next() ) );
+//
+//    iterator = lines_AR.keySet().iterator();
+//    while( iterator.hasNext() )
+//      stream.println( lines_AR.get( iterator.next() ) );
+//
+//    iterator = lines_CS.keySet().iterator();
+//    while( iterator.hasNext() )
+//      stream.println( lines_CS.get( iterator.next() ) );
+//
+//    iterator = lines_RK.keySet().iterator();
+//    while( iterator.hasNext() )
+//      stream.println( lines_RK.get( iterator.next() ) );
+//
+//    stream.flush();
   }
 }

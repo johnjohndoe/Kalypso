@@ -521,4 +521,10 @@
               class="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"
               name="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"/>
      </extension>
+     <extension
+           point="org.kalypso.ui.featureViewExtensionControl">
+        <extensionControl
+              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"/>
+     </extension>
 </plugin>

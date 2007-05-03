@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceConcept;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IOperationalModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Primitive;

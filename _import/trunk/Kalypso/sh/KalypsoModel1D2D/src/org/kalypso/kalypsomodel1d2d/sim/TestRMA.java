@@ -57,66 +57,64 @@ import junit.framework.TestCase;
 
 /**
  * @author madanagopal
- *
  */
 public class TestRMA extends TestCase
 {
 
   private URL test_dis_URL = null;
+
   private URL test_control_URL = null;
+
   private URL test_terrain_URL = null;
-  private GMLWorkspace w_dis = null; 
+
+  private GMLWorkspace w_dis = null;
+
   private Feature w_control = null;
+
   private Feature w_terrain = null;
+
+  private String outputFilePath;
 
   public TestRMA( )
   {
-   
+
   }
 
-  private void init( ) throws MalformedURLException
+  private void init( )
   {
-    test_dis_URL = new URL( "file:/F:/_ECLIPSE/Test/discretisation.gml" );
-    test_control_URL = new URL( "file:/F:/_ECLIPSE/Test/control.gml" );
-    test_terrain_URL = new URL ("file:/F:/_ECLIPSE/Test/terrain.gml");
-    
+    test_dis_URL = TestRMA.class.getResource( "testData/input/discretisation.gml" );
+    test_control_URL = TestRMA.class.getResource( "testData/input/control.gml" );
+    test_terrain_URL = TestRMA.class.getResource( "testData/input/terrain.gml" );
+    outputFilePath = "./testData/output/";
+
   }
-  
-  public final void testRMA100Calculation()
+
+  public final void testRMA100Calculation( )
   {
+    init();
     try
     {
-      init();
+      w_dis = GmlSerializer.createGMLWorkspace( test_dis_URL, null );
+      w_control = GmlSerializer.createGMLWorkspace( test_control_URL, null ).getRootFeature();
+      w_terrain = GmlSerializer.createGMLWorkspace( test_terrain_URL, null ).getRootFeature();
+
+      RMA10Calculation m_calculation = new RMA10Calculation( w_dis, w_control, w_terrain );
+
+      PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( outputFilePath, RMA10SimModelConstants.R10_File ) ) ) );
+      Control1D2DConverter.writeR10File( m_calculation, pw );
+
     }
-    catch( MalformedURLException e1 )
+    catch( MalformedURLException e )
     {
       // TODO Auto-generated catch block
-      e1.printStackTrace();
+      e.printStackTrace();
     }
-  try
-  {
-    w_dis = GmlSerializer.createGMLWorkspace( test_dis_URL, null );
-    w_control = GmlSerializer.createGMLWorkspace( test_control_URL, null ).getRootFeature();
-    w_terrain = GmlSerializer.createGMLWorkspace( test_terrain_URL, null ).getRootFeature();
-    
-    RMA10Calculation m_calculation  = new RMA10Calculation(w_dis, w_control, w_terrain);
-    
-    PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( "F://_ECLIPSE//", RMA10SimModelConstants.R10_File ) ) ) );
-    Control1D2DConverter.writeR10File( m_calculation, pw );    
-    
-  }
-  catch( MalformedURLException e )
-  {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
-  }
-  catch( Exception e )
-  {
-    // TODO Auto-generated catch block
-    fail( TestUtils.getStackTraceAsString( e ) );
-  } 
-           
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      fail( TestUtils.getStackTraceAsString( e ) );
+    }
+
   }
 
-  
 }

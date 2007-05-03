@@ -38,43 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.model;
+package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IEvaluationModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IResultModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.SimulationModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import java.util.Properties;
+
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * 1D 2D spcific iplementation of {@link org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel}
- * 
- * @author Patric Congo
+ * @author antanas
  */
-public class SimulationModel1D2D 
-                extends SimulationModel<
-                IStaticModel1D2D,IOperationalModel1D2D,
-                IControlModel, IResultModel,
-                IEvaluationModel, IFeatureWrapper2, IFeatureWrapper2>
+public class TimestepFillerControlFactory implements IFeatureviewControlFactory
 {
-
-  public SimulationModel1D2D( Feature featureToBind )
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
+   */
+  public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    super(
-        featureToBind,
-        KalypsoModelSimulationBaseConsts.SIM_BASE_F_SIMULATION_MODEL,
-        IStaticModel1D2D.class,
-        IOperationalModel1D2D.class,
-        IControlModel.class,//TODO Patrice check for 1d2d specific model
-        IResultModel.class,
-        IEvaluationModel.class,
-        IFeatureWrapper2.class,
-        IFeatureWrapper2.class
-      );
+    return new TimestepFillerFeatureControl( feature, pt, arguments );
   }
- 
 
 }
