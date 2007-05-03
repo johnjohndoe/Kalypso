@@ -1,4 +1,4 @@
-C     Last change:  EF    3 Apr 2007    4:38 pm
+C     Last change:  K    17 Apr 2007    9:57 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -809,6 +809,7 @@ CIPK MAR01
       ALLOCATE(kmx(maxp))
       ALLOCATE(sfwicht(maxp))
       ALLOCATE(ah(maxp))
+      ALLOCATE(Intah(maxp))
       ALLOCATE(qh(maxp))
       ALLOCATE(hdif(maxp))
       ALLOCATE(dahdh(maxp))
@@ -836,6 +837,7 @@ CIPK MAR01
       ALLOCATE(areaint(maxp,4))
       ALLOCATE(dareaintdh(maxp,4))
       ALLOCATE(d2areaintdh(maxp,4))
+      ALLOCATE(Intareaint(maxp,4))
       ALLOCATE(daintdx(maxp,4))
       ALLOCATE(d2aintdx(maxp,4))
       ALLOCATE(d2aidhdx(maxp,4))
@@ -887,6 +889,7 @@ CIPK MAR01
         kmx(i)        = -1.0
         sfwicht(i)    = 1.0
         ah(i)         = 0.0
+        Intah(i)      = 0.0
         qh(i)         = 0.0
         hdif(i)       = 0.0
         dahdh(i)      = 0.0
@@ -936,6 +939,7 @@ CIPK MAR01
           qqint(i,j)       = 0.0
           qqintdx(i,j)     = 0.0
           areaint(i,j)     = 0.0
+          Intareaint(i,j)  = 0.0
           dareaintdh(i,j)  = 0.0
           d2areaintdh(i,j) = 0.0
           daintdx(i,j)     = 0.0
