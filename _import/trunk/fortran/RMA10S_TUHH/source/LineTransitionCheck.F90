@@ -1,4 +1,4 @@
-!     Last change:  K     2 Mar 2007    6:03 pm
+!     Last change:  K    25 Apr 2007    3:47 pm
 !nis,nov06: This subroutine checks all the 1D-2D-line-Transitions on consistency
 !           That is:
 !           - well definition
@@ -93,7 +93,7 @@ DO J = 1, MaxLT
     linecheck: do i=1,LiLe
       !Overgive the name of the connecting node. Purpose: Direct access to connecting nodes, shorter if-constructions
       !Show, that node is member of a 1D-2D-line-transition
-      if (Line(LiNo,J).eq.CoNode) then
+      if (Line(LiNo,i) .eq. CoNode) then
         TransMember(J) = 1
         EXIT linecheck
       endif

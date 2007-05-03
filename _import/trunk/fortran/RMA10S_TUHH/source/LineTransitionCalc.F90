@@ -1,4 +1,4 @@
-!     Last change:  K    27 Mar 2007   11:09 am
+!     Last change:  K     2 May 2007    1:45 pm
 
 subroutine TransVelDistribution
 
@@ -15,6 +15,7 @@ subroutine TransVelDistribution
 
 USE BLK10MOD
 USE PARAKalyps
+USE paraFlow1dFE
 
 !nis,jan07: Variables for the 1D-2D transition line
 integer            :: TransLi, TransNo
@@ -34,7 +35,7 @@ INTEGER            :: teststat
 
 !nis,jan07: Getting the equation factors for the 1D-2D line transition
 !steps to do:
-!1. jumping over, if it was 1st iteration - Reason:
+!1. jumping over, if it was 1st iteration - Reason: In the first iteration, the water depth values at the coupling are zero, so no calculations are possible
 !2. getting the discharge through transition by usage of the 1D-node's velocity and discharge area
 !3. getting the velocities that should occur at a plane water surface with the subroutine for 2D-BC from Kalypso-2D approach
 !4. calculating each velocity factor (relation between nodal velocity at 2D-part to 1D-velocity)
@@ -42,18 +43,19 @@ INTEGER            :: teststat
 
 !step1: only process, if it was not the 1st iteration
 !******
-if (maxn.ne.1) then
 
   teststat = 0
   WRITE(filename_out,*) 'Transitionoutput',maxn,'.txt'
   OPEN(999,filename_out, IOSTAT=teststat)
   if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
 
+if (maxn /= 1 .or. RESTARTSwitch /= 0) then
   !for every line transition
   transitionloop: do i = 1, MaxLT
 
     !step2: getting the discharge through transition with values from last iteration, differ between King-1D-elements and Teschke-1D-elements
     !******
+
 
     !if transition is empty, cycle loop.
     if (TransLines(i,1).eq.0) CYCLE transitionloop
@@ -74,10 +76,10 @@ if (maxn.ne.1) then
 
     !if width is zero, but the element is 1D it can only be a Teschke element
     else
-!     !polynomial calculation
-!     DO k = 0, 12
-!       CSArea = CSArea + apoly(TransNo,k) * TransVel**(k)
-!     ENDDO
+     !polynomial calculation
+     DO k = 0, 12
+       CSArea = CSArea + apoly(TransNo,k) * TransDep**(k)
+     ENDDO
     end if
 
     !Calculate discharge
@@ -110,7 +112,7 @@ if (maxn.ne.1) then
     !                                                                    'alfa(line(TransLi,3))'
     !QQAL = is a value for the quality constituent;                      here it is a dummy argument: 20 degrees
 
-    !Getting the TransVels of the 1D-2D-line Transition
+    !Getting the TransitionVels of the 1D-2D-line Transition
     call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
     !              (TransLi, TransNo, Discharge, alfa(line(TransLi,3)), TransDep)
 
@@ -118,7 +120,7 @@ if (maxn.ne.1) then
     WRITE(999,*) 'Applying factors'
     WRITE(999,*) '1D-water vel and h'
     WRITE(999,*) TransVel, TransDep
-    WRITE(999,*) 'x-vel-factor, y-vel-factor, h-factor', 'xvel, yvel, h'
+    WRITE(999,*) 'x-vel-factor, y-vel-factor, h-factor, ', 'xvel, yvel, h'
     !-
 
     !step4 and step5: Calculation of the velocity factors and the depth factors
@@ -131,19 +133,20 @@ if (maxn.ne.1) then
       !x-component (parallel component)
       EqScale(line(TransLi,l),1) = TransVel/ localVel
       WRITE(999,*) 'lokale Absolutgeschwindigkeit:',localvel
+      WRITE(*,*) 'Node: ', line(TransLi,l)
       !y-component (perpendicular component) (no value perpendicular to settled flow direction!)
       EqScale(line(TransLi,l),2) = EqScale(line(TransLi,l),1)
       !depth-component
       EqScale(line(TransLi,l),3) = (TransDep + ao(TransNo) - ao(line(TransLi,l)) ) / TransitionVels(3,l)
 
       !nis,jan07: Write testing lines
-      WRITE(999,*) (EqScale(line(Transli,m),n),n=1,3) , (TransitionVels(m,l),m=1,3)
+      WRITE(999,*) Transli, l, line(Transli,l), (EqScale(line(Transli,l),n), n=1,3), (TransitionVels(m,l), m=1, 3)
       !-
     end do
     DEALLOCATE (TransitionVels)
   end do transitionloop
   !-
-end if
+endif
 !-
 !nis,jan07: Close testing file
 close (999,STATUS='keep')
