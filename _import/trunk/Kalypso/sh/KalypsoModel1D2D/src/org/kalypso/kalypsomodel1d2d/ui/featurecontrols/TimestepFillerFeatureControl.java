@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 import java.util.Properties;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -52,6 +53,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -93,7 +95,9 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        MessageDialog.openInformation( parent.getShell(), "Fill Timesteps", "Do it, babe" );
+        IWizard imp = new ImportBaseMapWizard();
+        
+        //MessageDialog.openInformation( parent.getShell(), "Fill Timesteps", "Do it, babe" );
       }
     } );
 

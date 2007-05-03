@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import junit.framework.TestCase;
 
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -53,7 +51,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
-import junit.framework.TestCase;
 
 /**
  * @author madanagopal
@@ -84,8 +81,10 @@ public class TestRMA extends TestCase
   {
     test_dis_URL = TestRMA.class.getResource( "testData/input/discretisation.gml" );
     test_control_URL = TestRMA.class.getResource( "testData/input/control.gml" );
-    test_terrain_URL = TestRMA.class.getResource( "testData/input/terrain.gml" );
-    outputFilePath = "./testData/output/";
+    test_terrain_URL = TestRMA.class.getResource( "testData/input/roughness.gml" );
+    
+    
+    //outputFilePath = "./testData/output/";
 
   }
 
@@ -100,8 +99,8 @@ public class TestRMA extends TestCase
 
       RMA10Calculation m_calculation = new RMA10Calculation( w_dis, w_control, w_terrain );
 
-      PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( outputFilePath, RMA10SimModelConstants.R10_File ) ) ) );
-      Control1D2DConverter.writeR10File( m_calculation, pw );
+      //PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( outputFilePath, RMA10SimModelConstants.R10_File ) ) ) );
+      Control1D2DConverter.writeR10File( m_calculation, null );
 
     }
     catch( MalformedURLException e )

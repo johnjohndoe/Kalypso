@@ -21,6 +21,7 @@
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
  * 
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -95,7 +96,7 @@ public class RMA10Calculation
       // RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
       // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
-      m_roughnessRoot = null;
+      m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
 
     }
     catch( SimulationException e )
@@ -112,7 +113,7 @@ public class RMA10Calculation
   {
     m_disModelWorkspace = disModelWorkspace;
     m_controlRoot = controlRoot;
-    m_roughnessRoot = null;
+    m_roughnessRoot = roughnessRoot;
 
   }
 

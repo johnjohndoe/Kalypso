@@ -41,9 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -53,6 +55,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class Control1D2DConverter
 {
+  static Map<String,String> roughnessIDMap = new HashMap<String,String>();
 
   public Control1D2DConverter( )
   {
@@ -62,7 +65,7 @@ public class Control1D2DConverter
   public static void writeR10File( final RMA10Calculation calculation, final PrintWriter pw )
   {
     writeR10ControlDataBlock( calculation, pw );
-   // writeR10PropertiesDataBlock( calculation, pw );
+    writeR10PropertiesDataBlock( calculation, pw );
    // writeR10ContinuityLineDataBlock( calculation, pw );
     writeR10TimeStepDataBlock( calculation, pw );
 
@@ -135,29 +138,31 @@ public class Control1D2DConverter
   {
     Locale l = Locale.US;
     List list = calculation.getRoughnessClassList();
-    Iterator iter = list.iterator();
-    int counter = 0;
-    while( iter.hasNext() )
+    
+    int roughnessNewID = 1;
+    
+    Iterator iterator = list.iterator();
+    while( iterator.hasNext() )
     {
-      final Feature roughnessFE = (Feature) iter.next();
-      counter = counter + 1;
-
-      // ED1
-      String formatED1 = "ED1     %8d%8.1f%8.1f%8.1f%8.1f    -1.0  1.000   1.000";
+      final Feature roughnessCL = (Feature) iterator.next();
+      RoughnessIDProvider.getInstance().addToList( roughnessCL.getId(), roughnessNewID+"" );
+      //roughnessIDMap.put( roughnessCL.getId(), roughnessNewID+"" );
       
-      Double eddy = calculation.getViskosity( roughnessFE );
-      Object[] ed1Props = new Object[] { counter, eddy, eddy, eddy, eddy };
+      String formatED1 = "ED1     %8d%8.1f%8.1f%8.1f%8.1f    -1.0  1.000   1.000";      
+//      Double eddy = calculation.getViskosity( roughnessCL );
+      Double val = 2900.; 
+      Object[] ed1Props = new Object[] { roughnessNewID, val,   val,   val,   val};
       System.out.printf( l, formatED1+ "\n", ed1Props );
-
       // ED2
-      System.out.println( "ED2                  0.6     0.6   0.001             20.        " );// fixed values
-
+      String formatED2 = "ED2     %8.1f%8.1f%8.3f%16.1f";
+      System.out.printf( l, formatED2+ "\n", new Object[] { new Double(0.5),new Double(0.5),new Double(0.001),new Double(20.)});
+      
       // ED4
       String formatED4 = "ED4             %8.2f%8.1f%8.2f";
-      Object[] ed4Props = new Object[] { calculation.getKs( roughnessFE ), calculation.getAxAy( roughnessFE ), calculation.getDp( roughnessFE ) };
+      Object[] ed4Props = new Object[] { calculation.getKs( roughnessCL ), calculation.getAxAy( roughnessCL ), calculation.getDp( roughnessCL ) };
       System.out.printf( l, formatED4+ "\n", ed4Props );
-    }
-
+      roughnessNewID++;
+   } 
   }
 
   /**

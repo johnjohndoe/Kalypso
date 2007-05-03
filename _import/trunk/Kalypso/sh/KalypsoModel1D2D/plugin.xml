@@ -514,6 +514,10 @@
               class="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardZmlChooser"
               id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardZmlChooser"
               name="ZmlChooser"/>
+        <wizard
+              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ImportBaseMapWizard_1"
+              name="Kalypso"/>
      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">
