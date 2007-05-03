@@ -147,7 +147,6 @@ public class ScenarioManager implements IScenarioManager
 
     final ICoreRunnableWithProgress runnable2 = new ICoreRunnableWithProgress()
     {
-
       public IStatus execute( IProgressMonitor monitor ) throws CoreException
       {
         try
