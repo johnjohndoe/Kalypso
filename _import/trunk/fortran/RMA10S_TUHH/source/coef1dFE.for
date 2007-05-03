@@ -1,4 +1,4 @@
-C     Last change:  EF    4 Apr 2007    1:47 pm
+C     Last change:  EF    3 May 2007    9:55 am
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -204,10 +204,12 @@ C-
       enddo
 
 cipk oct98 update to f90
-!      IMMT=IMAT(NN)
-!      MR=MOD(IMMT,1000)
+      !EFa Apr07, allow again
+      IMMT=IMAT(NN)
+      MR=MOD(IMMT,1000)
 cipk dec00 allow gate type elements
-!      IF(MR .GT. 900  .AND. IGTP(NN) .EQ. 0) GO TO 2000
+      IF(MR .GT. 900  .AND. IGTP(NN) .EQ. 0) GO TO 2000
+      !-
 !
 !      IF(MR .LT. 900) THEN
 !
@@ -301,13 +303,14 @@ C-
 
 
 CIPK MAY04 RESET ELEMENT INFLOW
-      !EFa Nov06, wird eigentlich nicht genutzt
       IF(INOFLOW(NN) .EQ. 0) THEN
         SIDFQ=SIDF(NN)
       ELSE
         SIDFQ=0.
       ENDIF
-      SIDFQQ=SIDF(NN)
+      !EFa Apr07
+      sidft=sidfq
+      !-
 
 
       !nodes and waterdepths
@@ -403,18 +406,18 @@ CIPK MAY04 RESET ELEMENT INFLOW
 
       !nis,feb07,com: unsteady
       if (icyc.gt.0) then
-        if (maxn.eq.1) then
-          dhdtaltzs(nn,1)=dhht(nn,1)
-          dhdtaltzs(nn,2)=dhht(nn,2)
-          !hhalt(nn,1)=vel(3,n1)
-          !hhalt(nn,2)=vel(3,n3)
-          hht(n1)=vel(3,n1)
-          hht(n3)=vel(3,n1)
-        end if
-        dhht(nn,1)=1.6*(vel(3,n1)-hht(n1))/delt+(1-1.6)*
-     +           dhdtaltzs(nn,1)
-        dhht(nn,2)=1.6*(vel(3,n3)-hht(n3))/delt+(1-1.6)*
-     +           dhdtaltzs(nn,2)
+!        if (maxn.eq.1) then
+!          dhdtaltzs(nn,1)=dhht(nn,1)
+!          dhdtaltzs(nn,2)=dhht(nn,2)
+!          hht(n1)=vel(3,n1)
+!          hht(n3)=vel(3,n3)
+!        end if
+        dhht(nn,1)=vdot(3,n1)
+        dhht(nn,2)=vdot(3,n3)
+!        dhht(nn,1)=1.8*(vel(3,n1)-hht(n1))/delt+(1.0 - 1.8)*
+!     +           dhdtaltzs(nn,1)
+!        dhht(nn,2)=1.8*(vel(3,n3)-hht(n3))/delt+(1.0 - 1.8)*
+!     +           dhdtaltzs(nn,2)
       end if
 
       !nis,feb07,com: unsteady
@@ -435,16 +438,18 @@ CIPK MAY04 RESET ELEMENT INFLOW
 
       !EFa Apr07, unsteady
       if (icyc.gt.0) then
-        if (maxn.eq.1) then
-          dvdtaltzs(nn,1)=dvvt(nn,1)
-          dvdtaltzs(nn,2)=dvvt(nn,2)
-          vvt(n1)=vel(1,n1)
-          vvt(n3)=vel(1,n1)
-        end if
-        dvvt(nn,1)=1.6*(vel(1,n1)-vvt(n1))/delt+(1-1.6)*
-     +           dvdtaltzs(nn,1)
-        dvvt(nn,2)=1.6*(vel(1,n3)-vvt(n3))/delt+(1-1.6)*
-     +           dvdtaltzs(nn,2)
+!        if (maxn.eq.1) then
+!          dvdtaltzs(nn,1)=dvvt(nn,1)
+!          dvdtaltzs(nn,2)=dvvt(nn,2)
+!          vvt(n1)=vel_res(1)
+!          vvt(n3)=vel_res(2)
+!        end if
+        dvvt(nn,1) = vdot(1,n1)*COS(alfa(n1)) + vdot(2,n1)*SIN(alfa(n1))
+        dvvt(nn,2) = vdot(1,n3)*COS(alfa(n3)) + vdot(2,n3)*SIN(alfa(n3))
+!        dvvt(nn,1)=1.8*(vel_res(1)-vvt(n1))/delt+(1.0 - 1.8)*
+!     +           dvdtaltzs(nn,1)
+!        dvvt(nn,2)=1.8*(vel_res(2)-vvt(n3))/delt+(1.0 - 1.8)*
+!     +           dvdtaltzs(nn,2)
       end if
 
 
@@ -514,8 +519,8 @@ CIPK MAY04 RESET ELEMENT INFLOW
      +               * dahdh(n1) - ah(n1)**2 * 2 * qh(n1) * dqhdh(n1))
      +               / qh(n1)**4
       dsfnoddh(n3) = qgef(n3) * vel_res(2)**2 * (qh(n3)**2 * 2 * ah(n3)
-     +               * dahdh(n3) - ah(n3)**2 * 2 * qh(n1) * dqhdh(n3))
-     +               / qh(n1)**4
+     +               * dahdh(n3) - ah(n3)**2 * 2 * qh(n3) * dqhdh(n3))
+     +               / qh(n3)**4
 
       !dSf/dQ
       !dsfnoddq(n1) = 2.0 * sfnod(n1) / qhalt(n1)
@@ -772,10 +777,9 @@ cipk nov97
       !-
 
       !nis,feb07: Also the other formulations are different
-      daintdx(nn,i) = dmx(1) * aint1(i)
-     +              + xm(1) * daintdh1(i) * dhhintdx(nn,i)
-     +              + dmx(2) * aint2(i)
-     +              + xm(2) * daintdh2(i) * dhhintdx(nn,i)
+      daintdx(nn,i) = dmx(1) * (aint1(i) + h1 * dareaintdh (nn,i))
+     +              + dmx(2) * (aint2(i) + h3 * dareaintdh (nn,i))
+
       !daintdx(nn,i)     = dmx(1) * ah(n1) + xm(1) * dahdh(n1)
       !+                  * dhhintdx(nn,i) + dmx(2) * ah(n3)
       !+                  + xm(2) * dahdh(n3) * dhhintdx(nn,i)
@@ -786,7 +790,7 @@ cipk nov97
 !     +                  + xm(2) * dahdh(n3)))
 
       d2aintdx(nn,i) = dhhintdx(nn,i) *
-     +                 (2.0 * dmx(1) * daintdh1(i)
+     +                 (2.0 * dmx(1) *   daintdh1(i)
      +               +  xm(1) * d2aintdh1(i) * dhhintdx(nn,i)
      +               +  2.0 * dmx(2) * daintdh2(i)
      +               +  xm(2) * d2aintdh2(i) * dhhintdx(nn,i))
@@ -803,7 +807,7 @@ cipk nov97
       !+                  * dhhintdx(nn,i) + dmx(2) * dahdh(n3)
       !+                  + xm(2)*d2ahdh(n3) * dhhintdx(nn,i)
 
-      daintdt(nn,i)     = (xm(1) * dahdh(n1) + xm(2) * dahdh(n3))
+      daintdt(nn,i)     = (xm(1) * daintdh1(i) + xm(2) * daintdh2(i))
      +                  * dhintdt(nn,i)
 
       !EFa Nov06, flowelem(nn)
@@ -860,10 +864,8 @@ cipk nov97
       !dqsintdx(nn,i)  =
       !+      dmx(1) * qh(n1) + xm(1) * dqhdh(n1) * dhhintdx(nn,i)
       !+    + dmx(2) * qh(n3) + xm(2) * dqhdh(n3) * dhhintdx(nn,i)
-      dqsintdx(nn,i) = dmx(1) * qschint1(i)
-     +               + xm(1) * dqsintdh1(i) * dhhintdx(nn,i)
-     +               + dmx(2) * qschint2(i)
-     +               + xm(2) * dqsintdh2(i) * dhhintdx(nn,i)
+      dqsintdx(nn,i) = dmx(1) * (qschint1(i)+h1*dqsintdh(nn,i))
+     +               + dmx(2) * (qschint2(i)+h3*dqsintdh(nn,i))
 
       !d2qsidhdx(nn,i) =
       !+      dmx(1) * dqhdh(n1) + xm(1)*d2qhdh(n1) * dhhintdx(nn,i)
@@ -878,7 +880,7 @@ cipk nov97
       sfwicint(nn,i)=sfwicht(n1)*xm(1)+sfwicht(n3)*xm(2)
 
       !nis,feb07: Formulation of the friction slope is not correct here
-      !sfint(nn,i)=sfnod(n1)*xm(1)+sfnod(n3)*xm(2)
+!      sfint(nn,i)=sfnod(n1)*xm(1)+sfnod(n3)*xm(2)
 !      sfint(nn,i) = sfwicint(nn,i) * s0schint(nn,i) * qqint(nn,i)
 !     +            * ABS(qqint(nn,i)) / qschint(nn,i)**2
       sfint(nn,i) = sfwicint(nn,i) * s0schint(nn,i) * vflowint(nn,i)
@@ -887,7 +889,8 @@ cipk nov97
       !-
 
 !      dsfintdh1(nn,i) = -2.0
-!     +               * (sfint(nn,i) / qschint(nn,i)**2) * dqsintdh(nn,i)
+!     +               * (sfint(nn,i)*qqint(nn,i)**2 / qschint(nn,i)**3) *
+!     +               dqsintdh(nn,i)
       dsfintdh1(nn,i) = s0schint(nn,i)
      +               * vflowint(nn,i) * ABS(vflowint(nn,i))
      +               * (QSchint(nn,i)**2 * 2 * areaint(nn,i)
@@ -936,34 +939,38 @@ cipk nov97
            !Term f
      +     + grav * areaint(nn,i) * sfint(nn,i)
            !Term g
-     +     - grav * areaint(nn,i) * sbot(nn))
+     +     - grav * areaint(nn,i) * sbot(nn)
+           !Term H
+     +     + sidft * vflowint(nn,i))
 
       !nis,feb07,testing
-      if (nn < -3) then
-        WRITE(*,*) 'Impulsintegral', f(3), f(11)
-       WRITE(*,*) 'Einzelterme Gauß: ', i
-        WRITE(*,*) 'Term A: ', (vflowint(nn,i)*daintdt(nn,i)+
+      if (nn <-10.and.l==1) then
+        WRITE(lout,*) 'Impulsintegral', f(1), f(9)
+       WRITE(lout,*) 'Einzelterme Gauß: ', i
+        WRITE(lout,*) 'Term A: ', (vflowint(nn,i)*daintdt(nn,i)+
      +   areaint(nn,i)*dvintdt(nn,i))
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-        WRITE(*,*) 'Term B: ',
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(lout,*) 'vflowint',vflowint(nn,i),'daintdt',daintdt(nn,i),
+     +                'areaint',areaint(nn,i),'dvintdt',dvintdt(nn,i)
+        WRITE(lout,*) 'Term B: ',
      +   + vflowint(nn,i)**2 * areaint(nn,i) * dbeiintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-        WRITE(*,*) 'Term C: ',
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(lout,*) 'Term C: ',
      +   + beiint(nn,i) * vflowint(nn,i)**2 * daintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-        WRITE(*,*) 'Term D: ',
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(lout,*) 'Term D: ',
      +   + 2 * beiint(nn,i) * vflowint(nn,i) * areaint(nn,i)
      +     * dvintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-        WRITE(*,*) 'Term E: ',
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(lout,*) 'Term E: ',
      +   + grav * areaint(nn,i) * dhhintdx(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-       WRITE(*,*) 'Term F: ',
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+       WRITE(lout,*) 'Term F: ',
      +   + grav * areaint(nn,i) * sfint(nn,i)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
-        WRITE(*,*) 'Term G: ',
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+        WRITE(lout,*) 'Term G: ',
      +   - grav * areaint(nn,i) * sbot(nn)
-!     +    * xm(l)*hfact(i)*ABS(xl(3))/2
+     +    * xm(l)*hfact(i)*ABS(xl(3))/2
         WRITE(*,*) 'Wichtung: ',  xm(l)*hfact(i)*ABS(xl(3))/2
       pause
       endif
@@ -986,7 +993,9 @@ cipk nov97
             !Term B
      +       + areaint(nn,i) * dvintdx(nn,i)
             !Term C
-     +       + vflowint(nn,i) * daintdx(nn,i))
+     +       + vflowint(nn,i) * daintdx(nn,i)
+            !Term D
+     +       -sidft)
 
       enddo
       !-
@@ -1007,13 +1016,14 @@ cipk nov97
      +            + xm(l)*hfact(i)*ABS(xl(3))/2*
 !     +            + xm(l)*hfact(i)*xl(3)/2*
                   !Term A
-     +             (xm(c) * dareaintdh(nn,i) * dvintdt(nn,i)*
+     +             (xm(c) * dareaintdh(nn,i) * dvintdt(nn,i)
                   !Term B
 !     +              (xm(c) * vflowint(nn,i)**2 *
 !     +               (areaint(nn,i)*d2beiintdhdx(nn,i)
 !     +                + dareaintdh(nn,i) * dbeiintdx(nn,i))
-     +              vflowint(nn,i)**2 *
-     +               (dareaintdh(nn,i) * dbeiintdh(nn,i)*xm(c)
+     +           +  vflowint(nn,i)**2 *
+     +               (dareaintdh(nn,i) * dbeiintdx(nn,i)*xm(c)
+!     +               (dareaintdh(nn,i) * dbeiintdh(nn,i)*xm(c)
      +                + areaint(nn,i) *
      +                  (d2beiintdhdx(nn,i) * xm(c)
      +                   + dbeiintdh(nn,i) * dmx(c)))
@@ -1036,7 +1046,7 @@ cipk nov97
      +               + areaint(nn,i) * dmx(c))
                   !Term F
 !     +            + grav * xm(c) *
-!    +              (areaint(nn,i)
+!     +              (areaint(nn,i)
 !     +               * (s0schint(nn,i) * vflowint(nn,i)
 !     +                  * ABS(vflowint(nn,i))
 !     +                  / Qschint(nn,i)**4)
@@ -1047,6 +1057,12 @@ cipk nov97
      +            + grav * xm(c) *
      +              (areaint(nn,i) * dsfintdh1(nn,i)
      +               + sfint(nn,i) * dareaintdh(nn,i))
+                  !EFa Apr07, changed Term F
+!     +            + grav*xm(c)*(dareaintdh(nn,i)*sfint(nn,i)+
+!     +              areaint(nn,i)*s0schint(nn,i)*((2*qschint(nn,i)**2*
+!     +              areaint(nn,i)*dareaintdh(nn,i)-2*areaint(nn,i)**2*
+!     +              qschint(nn,i)*dqsintdh(nn,i))/qschint(nn,i)))
+                  !-
                   !Term G
      +            - grav * xm(c) * sbot(nn) * dareaintdh(nn,i))
 
@@ -1057,24 +1073,27 @@ cipk nov97
      +                  + xm(l) * hfact(i) * ABS(xl(3))/2*
 !     +                  + xm(l) * hfact(i) * xl(3)/2*
                         !Term A
-     +                  xm(c) * vflowint(nn,i) *
-     +                  (d2areaintdh(nn,i) * dhintdt(nn,i)
-     +                   + dareaintdh(nn,i) * 1.6/delt)
+                        !EFa Apr07, changed Term A
+!     +                  xm(c) * vflowint(nn,i) *
+!     +                  (d2areaintdh(nn,i) * dhintdt(nn,i)
+!     +                   + dareaintdh(nn,i) * 1.8/delt)
+     +                  xm(c)*dareaintdh(nn,i)*dhintdt(nn,i)
+                        !-
           end if
 
 
-      if (nn < -3) then
-      WRITE(*,*) '*****************************'
-      WRITE(*,*) '*****************************'
-      WRITE(*,*) 'dF/dh'
-      WRITE(*,*) estifm(ia,ib), ia, ib, i
-      WRITE(*,*) xm(l) * hfact(i)*ABS(xl(3))/2,
+      if (nn <- 10) then
+      WRITE(lout,*) '*****************************'
+      WRITE(lout,*) '*****************************'
+      WRITE(lout,*) 'dF/dh'
+      WRITE(lout,*) estifm(ia,ib), ia, ib, i
+      WRITE(lout,*) xm(l) * hfact(i)*ABS(xl(3))/2,
      +           xm(l), hfact(i), ABS(xl(3))/2, i
 !      WRITE(*,*) xm(l) * hfact(i)*xl(3)/2,
 !     +           xm(l), hfact(i), xl(3)/2, i
-      WRITE(*,*) '*****************************'
+      WRITE(lout,*) '*****************************'
       !Term B
-      WRITE(*,*) 'Term B', i,
+      WRITE(lout,*) 'Term B', i,
 !     +            + xm(c) * vflowint(nn,i)**2 *
 !     +               (areaint(nn,i)*d2beiintdhdx(nn,i)
 !     +                + dareaintdh(nn,i) * dbeiintdx(nn,i))
@@ -1084,7 +1103,7 @@ cipk nov97
      +                  (d2beiintdhdx(nn,i) * xm(c)
      +                   + dbeiintdh(nn,i) * dmx(c)))
       !Term C
-      WRITE(*,*) 'Term C', i,
+      WRITE(lout,*) 'Term C', i,
 !     +            + xm(c) * 2 * vflowint(nn,i)**2 *
 !     +              (dbeiintdh(nn,i) * daintdx(nn,i)
 !     +               + beiint(nn,i) * d2aidhdx(nn,i))
@@ -1094,26 +1113,21 @@ cipk nov97
      +                 (d2aidhdx(nn,i) * xm(c)
      +                  + dareaintdh(nn,i) * dmx(c)))
       !Term D
-      WRITE(*,*) 'Term D', i,
+      WRITE(lout,*) 'Term D', i,
      +            + xm(c) * 2 * vflowint(nn,i) * dvintdx(nn,i) *
      +              (beiint(nn,i) * dareaintdh(nn,i)
      +               + areaint(nn,i) * dbeiintdh(nn,i))
       !Term E
-      WRITE(*,*) 'Term E', i,
+      WRITE(lout,*) 'Term E', i,
      +            + grav*
      +              (xm(c) * dareaintdh(nn,i) * dhhintdx(nn,i)
      +               + areaint(nn,i) * dmx(c))
       !Term F
-      WRITE(*,*) 'Term F', i,
+      WRITE(lout,*) 'Term F', i,
      +            + grav * xm(c) *
-     +              (areaint(nn,i) * (s0schint(nn,i) * vflowint(nn,i)**2
-     +               * (QSchint(nn,i)**2 * 2 * areaint(nn,i)
-     +                  * dareaintdh(nn,i) - areaint(nn,i)**2 * 2
-     +                  * Qschint(nn,i) * dqsintdh(nn,i))
-     +               / Qschint(nn,i)**4)
+     +              (areaint(nn,i) * dsfintdh1(nn,i)
      +               + sfint(nn,i) * dareaintdh(nn,i))
-      !Term G
-      WRITE(*,*) 'Term G', i,
+      WRITE(lout,*) 'Term G', i,
      +            - grav * xm(c) * sbot(nn) * dareaintdh(nn,i)
       endif
 
@@ -1146,33 +1160,35 @@ cipk nov97
      +        * (xm(c) * dvintdx(nn,i) + vflowint(nn,i) * dmx(c))
             !Term F
      +      + xm(c) * 2 * grav * areaint(nn,i) * sfint(nn,i)
-     +        / vflowint(nn,i))
+     +        / vflowint(nn,i)
+            !Term H
+     +      + xm(c) * sidft)
       !add time term for unsteady case
-      if (icyc.gt.0) then
-        estifm(ia,ib)=estifm(ia,ib)+xm(l)*hfact(i)*ABS(xl(3))/2*        !Wichtungsfunktion
+      !if (icyc.gt.0) then
+      !  estifm(ia,ib)=estifm(ia,ib)+xm(l)*hfact(i)*ABS(xl(3))/2*        !Wichtungsfunktion
 !        estifm(ia,ib)=estifm(ia,ib)+xm(l)*hfact(i)*xl(3)/2*
-     +                (xm(c)*areaint(nn,i)*1.6/delt)                     !Term a
-      end if
+    ! +                (xm(c)*areaint(nn,i)*1.8/delt)                     !Term a
+      !end if
 
-      if (nn < -3) then
-      WRITE(*,*) '*****************************'
-      WRITE(*,*) '*****************************'
-      WRITE(*,*) 'dF/ dv'
-      WRITE(*,*) estifm(ia,ib), ia, ib, i
-      WRITE(*,*) xm(l) * hfact(i)*ABS(xl(3))/2, xm(l), hfact(i), i
+      if (nn <-10) then
+      WRITE(lout,*) '*****************************'
+      WRITE(lout,*) '*****************************'
+      WRITE(lout,*) 'dF/ dv'
+      WRITE(lout,*) estifm(ia,ib), ia, ib, i
+      WRITE(lout,*) xm(l) * hfact(i)*ABS(xl(3))/2, xm(l), hfact(i), i
 !      WRITE(*,*) xm(l) * hfact(i)*xl(3)/2, xm(l), hfact(i), i
-      WRITE(*,*) '*****************************'
+      WRITE(lout,*) '*****************************'
       !Term B
-      WRITE(*,*) 'Term B', i, xm(c) * 2 * areaint(nn,i) *
+      WRITE(lout,*) 'Term B', i, xm(c) * 2 * areaint(nn,i) *
      +           vflowint(nn,i) * dbeiintdx(nn,i)
       !Term C
-      WRITE(*,*) 'Term C', i, xm(c) * 2 * vflowint(nn,i) *
+      WRITE(lout,*) 'Term C', i, xm(c) * 2 * vflowint(nn,i) *
      +           beiint(nn,i) * daintdx(nn,i)
       !Term D
-      WRITE(*,*) 'Term D', i, + 2 * beiint(nn,i) * areaint(nn,i)
+      WRITE(lout,*) 'Term D', i, + 2 * beiint(nn,i) * areaint(nn,i)
      +           * (xm(c) * dvintdx(nn,i) + vflowint(nn,i) * dmx(c))
       !Term F
-      WRITE(*,*) 'Term F', i,
+      WRITE(lout,*) 'Term F', i,
      +           xm(c) * 2 * grav * areaint(nn,i) * sfint(nn,i)
      +           / vflowint(nn,i)
       endif
@@ -1208,9 +1224,13 @@ cipk nov97
      +                  + xm(l) * hfact(i) * ABS(xl(3))/2*
 !     +                  + xm(l) * hfact(i) * xl(3)/2*
                         !Term A
-     +                  xm(c) *
-     +                  (d2areaintdh(nn,i) * dhintdt(nn,i)
-     +                   + dareaintdh(nn,i) * 1.6/delt)
+                        !EFa Apr07, changed Term A
+!     +                  xm(c) *
+!     +                  (d2areaintdh(nn,i) * dhintdt(nn,i)
+!     +                   + dareaintdh(nn,i) * 1.8/delt)
+     +                  xm(c)*dareaintdh(nn,i)*dhintdt(nn,i)
+                        !-
+
           end if
         end do
       end do
@@ -1265,7 +1285,15 @@ cipk nov97
           estifm(na, na + 2) = 1.0
           f(na)              = 0.0
 
+      ELSEIF(IBN(N1) .GE. 3) THEN
+        IF(NREF(N1) .EQ. 0) THEN
+          NA=(L-1)*NDF+1
+          DO KK=1,NEF
+            ESTIFM(NA,KK)=0.
+          END do
+          F(NA)=0.
         ENDIF
+      ENDIF
       ENDDO HBCAssign
 
       !nis,mar07: Boundary conditions - DISCHARGE Q
@@ -1276,7 +1304,7 @@ cipk nov97
         IF(NFIX(M)/1000.LT.13) CYCLE QBCAssign
 
         !line of degree of freedom (velocity)
-        IRW = (N-1)*NDF + 1
+        IRW = (N-1)*NDF + 3
         !line of degree of freedom (depth)
         IRH = IRW + 2
 
@@ -1293,13 +1321,11 @@ cipk nov97
         ENDDO
 
         !install new boundary condition values
-        ESTIFM(IRW,IRW) = ah(m)
-        ESTIFM(IRW,IRH) = dahdh(m) * vt
+        ESTIFM(IRW,IRW-2) = ah(m)
+        ESTIFM(IRW,IRH-2) = dahdh(m) * vt
         F(IRW)          = (SPEC(M,1) - VT * ah(m))
      +                    * xl(3)/ ABS(xl(3)) * dirfact
 
-!        WRITE(*,*) 'RB: ',spec(m,1), vt, ah(m), vt * ah(m)
-!        WRITE(*,*) vel(1,m), vel(2,m), cx, sa, vel(3,m)
 
       ENDDO QBCAssign
       !-
@@ -1423,19 +1449,18 @@ cipk nov97
       !-
 
       !nis,mar07,testing
-      if (nn < 2) then
-      write (*,*) 'Element: ', nn
-      WRITE(*,9898) estifm(1,1), estifm(1,3),
+      if (nn <-30) then
+      write (lout,*) 'Element: ', nn
+      WRITE(lout,9898) estifm(1,1), estifm(1,3),
      + estifm(1,9),estifm(1,11), f(1)
-      WRITE(*,9898) estifm(3,1), estifm(3,3),
+      WRITE(lout,9898) estifm(3,1), estifm(3,3),
      + estifm(3,9),estifm(3,11), f(3)
-      WRITE(*,9898) estifm(9,1), estifm(9,3),
+      WRITE(lout,9898) estifm(9,1), estifm(9,3),
      + estifm(9,9),estifm(9,11), f(9)
-      WRITE(*,9898) estifm(11,1), estifm(11,3),
+      WRITE(lout,9898) estifm(11,1), estifm(11,3),
      + estifm(11,9), estifm(11,11), f(11)
 
  9898 format (10(1x,f14.8))
-      pause
       end if
       !-
 
@@ -1449,7 +1474,37 @@ C-
 C...... Special cases for control structures or junction sources
 C-
       IF(IMAT(NN) .GT. 903) THEN
+      !init A(h)
+      ah(n1) = 0.0
+      ah(n3) = 0.0
+      !init Q(h)
+      qh(n1) = 0.0
+      qh(n3) = 0.0
+      do k=0, 12
+        !A(h)
+        ah(n1) = ah(n1) + apoly(n1,k) * vel(3,n1)**(k)
+        ah(n3) = ah(n3) + apoly(n3,k) * vel(3,n3)**(k)
+      end do
+      !init dA(h)/dh
+      dahdh(n1) = 0.0
+      dahdh(n3) = 0.0
+      do k=1,12
+        !dA(h)/dh
+        dahdh(n1) = dahdh(n1) + (k) * apoly(n1,k) * h1**(k-1)
+        dahdh(n3) = dahdh(n3) + (k) * apoly(n3,k) * h3**(k-1)
+      end do
         CALL CSTRC(NN)
+      !EFa Apr07, testing
+      write (lout,*) 'Element: ', nn
+      WRITE(lout,9898) estifm(1,1), estifm(1,3),
+     + estifm(1,9),estifm(1,11), f(1)
+      WRITE(lout,9898) estifm(3,1), estifm(3,3),
+     + estifm(3,9),estifm(3,11), f(3)
+      WRITE(lout,9898) estifm(9,1), estifm(9,3),
+     + estifm(9,9),estifm(9,11), f(9)
+      WRITE(lout,9898) estifm(11,1), estifm(11,3),
+     + estifm(11,9), estifm(11,11), f(11)
+      !-
         GO TO 1320
       ENDIF
 
