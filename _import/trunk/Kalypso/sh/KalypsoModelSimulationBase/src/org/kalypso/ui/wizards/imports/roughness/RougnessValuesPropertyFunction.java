@@ -50,7 +50,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -108,10 +107,6 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
         return getValue( member.getProperty( m_name ) );
     }
     member = (Feature) feature.getProperty( m_vegetationClsMember );
-    if( member instanceof XLinkedFeature_Impl )
-    {
-      member = ((XLinkedFeature_Impl)member).getFeature();
-    }
     try
     {
      
