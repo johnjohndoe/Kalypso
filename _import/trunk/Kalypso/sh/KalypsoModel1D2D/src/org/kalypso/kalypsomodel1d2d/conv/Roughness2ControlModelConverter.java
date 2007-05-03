@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;

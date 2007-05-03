@@ -50,17 +50,20 @@ import junit.framework.TestCase;
 
 /**
  * @author madanago
- *
  */
 public class Test_Roughness2ControlModelConverter extends TestCase
 {
 
-  public void testConverter() {
-    
-    try {
-      new Roughness2ControlModelConverter(new URL( "file:/F:/_ECLIPSE/roughness.gml" ));
+  public void testConverter( )
+  {
+
+    try
+    {
+      URL resource = Test_Roughness2ControlModelConverter.class.getResource( "data/roughness.gml" );
+      new Roughness2ControlModelConverter( resource );
     }
-    catch(Throwable th) {
+    catch( Throwable th )
+    {
       fail( TestUtils.getStackTraceAsString( th ) );
     }
   }
