@@ -22,3 +22,4 @@ wms26=http://ibpm.bjoernsen.de/cgi-bin/mapserv?map\=/var/www/localhost/htdocs/hw
 wms27=http://columbo.nrlssc.navy.mil/ogcwms/servlet/WMSServlet/Hamburg_MI_Maps.wms
 wms28=http://mapservices.geonord.de:80/mrh-owsproxy/proxy
 wms29=http://ibpm.bjoernsen.de/cgi-bin/mapserv?map=/var/www/localhost/htdocs/informdss/mapserver/map_ew.map
+wms30=http://localhost/cgi-bin/mapserv.exe?map=../htdocs/usr/local/www/docs/mapserver3/rasterdaten.map&SERVICE=WMS&VERSION=1.0.0&Request=GetMap
