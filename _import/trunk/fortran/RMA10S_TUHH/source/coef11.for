@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  EF   30 Apr 2007    4:11 pm
+C     Last change:  K     3 May 2007   10:47 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -425,7 +425,7 @@ C-
         SA=SIN(ALFA(MR))
 
         !nis,oct06,com: addition of nodal velocities with weighting
-        R    = R + XN(M)* (VX(M)*CX + VY(M)*SA) * QFACT(M)
+        R = R + XN(M) * (VX(M)*CX + VY(M)*SA) * QFACT(M)
         !nis,oct06,com: addition of nodal derivative, derivative is in approximation function
         DRDX = DRDX + DNX(M) * (VX(M)*CX + VY(M)*SA) * QFACT(M)
 
