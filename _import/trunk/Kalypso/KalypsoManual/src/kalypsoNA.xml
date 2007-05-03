@@ -234,7 +234,20 @@
 
       <itemizedlist>
         <listitem>
-          <para></para>
+          <para>Trennungslinien vom höchsten bis zum niedrigsten Punkt,
+          orthogonal zu den Höhenlinien</para>
+        </listitem>
+
+        <listitem>
+          <para>Gebiete mit überwiegend natürlicher Endwässerung</para>
+        </listitem>
+
+        <listitem>
+          <para>Gebiete mit überwiegender Ableitung über Kanalisation</para>
+        </listitem>
+
+        <listitem>
+          <para>Trennung der einzelnen Flusseinzugsgebiete</para>
         </listitem>
       </itemizedlist>
 
