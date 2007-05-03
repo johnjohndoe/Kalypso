@@ -1,4 +1,4 @@
-!     Last change:  K     3 Apr 2007    8:05 pm
+!     Last change:  K     2 May 2007    2:59 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1486,6 +1486,30 @@ reading: do
       IF (i.le.0) stop 'Knotennummer.le.0'
     ENDIF
 
+    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+    IF (linie (1:2) .eq.'VO') then
+      !NiS,apr06: variables deactivated for RMA10S
+      !cvvo = 1
+      READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
+      !NiS,mar06: name of variable changed; changed mnd to MaxP
+      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+      !Stop program execution on negative NODE number
+      IF (i.le.0) stop 'Knotennummer.le.0'
+    ENDIF
+
+    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+    IF (linie (1:2) .eq.'GO') then
+      !NiS,apr06: variables deactivated for RMA10S
+      !cvvo = 1
+      READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
+      !NiS,mar06: name of variable changed; changed mnd to MaxP
+      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+      !Stop program execution on negative NODE number
+      IF (i.le.0) stop 'Knotennummer.le.0'
+    ENDIF
+
     !ADDITIONAL INFORMATIONS FOR EVERY NODE ---
     IF (linie (1:2) .eq.'ZU') then
       !NiS,apr06: variables deactivated for RMA10S
@@ -1518,30 +1542,6 @@ reading: do
     !RESTART FILE INFORMATIONS ---
     !IF (linie (1:2) .eq.'RS') then
     !  READ (linie, '(a2,a80)') id, restart
-    !ENDIF
-
-    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-    !IF (linie (1:2) .eq.'VO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      !READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      !IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on negative NODE number
-      !IF (i.le.0) stop 'Knotennummer.le.0'
-    !ENDIF
-
-    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-    !IF (linie (1:2) .eq.'GO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      !READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      !IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on negative NODE number
-      !IF (i.le.0) stop 'Knotennummer.le.0'
     !ENDIF
 
 END DO reading
@@ -2299,7 +2299,6 @@ do i=1,nodecnt
   nconnect(i) = 0       ! Anzahl der Nachbarknoten
 end do
 
-
 ! Jedes Element durchgehen
 neighbours: do i=1,elcnt
 
@@ -2376,8 +2375,11 @@ neighbours: do i=1,elcnt
 
     !nis,feb07: Here is a conflict!!!    
 
+    !nis,may07 Change if-question for numbered Polynom elements
     !EFa Nov06, gesonderte Berechnung für 1D-Teschke-Elemente
-    elseIF(nop(i,2).EQ.-9999) then
+    !elseIF(nop(i,2).EQ.-9999) then
+    ELSEIF(nop(i,2) < -1000) then
+    !-
       node1 = nop(i,1)
       node2 = nop(i,3)
       nconnect(node1) = nconnect(node1)+1
@@ -2471,7 +2473,6 @@ do i=1,nodecnt
   end do
 
 end do
-
 
 !NiS,mar06: unit name changed; changed iout to Lout
 WRITE (Lout, 111 )
