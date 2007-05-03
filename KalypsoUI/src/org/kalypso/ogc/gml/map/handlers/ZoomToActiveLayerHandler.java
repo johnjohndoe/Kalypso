@@ -46,7 +46,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -77,32 +76,40 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
     if( mapPanel == null )
       throw new ExecutionException( "Active part has no MapPanel." );
 
-    IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme(); 
+    final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
+    if( activeTheme == null )
+      throw new ExecutionException( "Kein Thema aktiv" );
+
+//    final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
+//    final FeatureList featureList = ft.getFeatureList();
+//    featureList.invalidate();
+//    for( Object object : featureList )
+//    {
+//      if( object instanceof Feature )
+//        ((Feature)object).invalidEnvelope();
+//    }
     
-    if( activeTheme != null )
-    {
-      final GM_Envelope zoomBox = activeTheme.getBoundingBox();
-      
-      GM_Envelope wishBBox = null;
+    final GM_Envelope zoomBox = activeTheme.getBoundingBox();
+    if( zoomBox == null )
+      throw new ExecutionException( "Aktives Thema hat keinen Extent." );
 
-      final GM_Position zoomMax = zoomBox.getMax();
-      final GM_Position zoomMin = zoomBox.getMin();
+    GM_Envelope wishBBox = null;
 
-      final double newMaxX = zoomMax.getX() + (zoomMax.getX() - zoomMin.getX()) / 20;
-      final double newMinX = zoomMin.getX() - (zoomMax.getX() - zoomMin.getX()) / 20;
-      
-      final double newMaxY = zoomMax.getY() + (zoomMax.getY() - zoomMin.getY()) / 20;
-      final double newMinY = zoomMin.getY() - (zoomMax.getY() - zoomMin.getY()) / 20;
+    final GM_Position zoomMax = zoomBox.getMax();
+    final GM_Position zoomMin = zoomBox.getMin();
 
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+    final double newMaxX = zoomMax.getX() + (zoomMax.getX() - zoomMin.getX()) / 20;
+    final double newMinX = zoomMin.getX() - (zoomMax.getX() - zoomMin.getX()) / 20;
 
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-      
-      new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, wishBBox ), null );
-    }
-    else
-      MessageDialog.openInformation( null, "Zoom to active layer failed", "there is no active layer defined" );
+    final double newMaxY = zoomMax.getY() + (zoomMax.getY() - zoomMin.getY()) / 20;
+    final double newMinY = zoomMin.getY() - (zoomMax.getY() - zoomMin.getY()) / 20;
+
+    final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+    final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+
+    new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, wishBBox ), null );
 
     return Status.OK_STATUS;
   }
