@@ -335,6 +335,10 @@ public class ModelOps
 
   public static final void sortElementEdges(IFE1D2DElement element)
   {
+    // TODO: not every IFE1D2DElement is a IElement2D!!! What to do?
+    if(!(element instanceof IElement2D))
+      return; 
+    
     final IFeatureWrapperCollection edges = ((IElement2D)element).getEdges();
     final List<IFE1D2DEdge> toSort= new ArrayList<IFE1D2DEdge>(edges);
     edges.clear();
