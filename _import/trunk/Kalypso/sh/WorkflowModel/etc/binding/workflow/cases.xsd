@@ -22,6 +22,7 @@
 		<restriction base="string">
 			<enumeration value="VALID" />
 			<enumeration value="INVALID" />
+			<enumeration value="AVAILABLE" />
 		</restriction>
 	</simpleType>
 
