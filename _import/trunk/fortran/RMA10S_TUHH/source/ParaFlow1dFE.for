@@ -1,4 +1,4 @@
-C     Last change:  EF    2 Apr 2007   11:18 am
+C     Last change:  K    17 Apr 2007    9:53 am
       MODULE PARAFlow1dFE
 
 
@@ -14,6 +14,7 @@ C     Last change:  EF    2 Apr 2007   11:18 am
       REAL(KIND=8),ALLOCATABLE       :: betad(:,:)                   !EFa Nov06 beta-Übergang bis h
       REAL(KIND=8),ALLOCATABLE       :: betapk(:,:)                  !EFa Nov06 beta-Polynomkoeffizienten
       REAL(KIND=8),allocatable       :: ah(:)                        !EFa Nov06 A(h) an den Eckknoten
+      REAL(KIND=8),ALLOCATABLE       :: Intah(:)                     !Integration von A over h
       REAL(KIND=8),allocatable       :: qh(:)                        !EFa Nov06 Q(h) an den Eckknoten
       REAL(KIND=8),allocatable       :: dahdh(:)                     !EFa Nov06 Ableitung A(h) nach dh
       REAL(KIND=8),allocatable       :: dqhdh(:)                     !EFa Nov06 Ableitung Q(h) nach dh
@@ -46,6 +47,7 @@ C     Last change:  EF    2 Apr 2007   11:18 am
       REAL(KIND=8),ALLOCATABLE       :: areaint(:,:)                 !EFa Nov06
       REAL(KIND=8),ALLOCATABLE       :: dareaintdh(:,:)              !EFa Nov06
       REAL(KIND=8),ALLOCATABLE       :: d2areaintdh(:,:)             !EFa Nov06
+      REAL(KIND=8),ALLOCATABLE       :: Intareaint(:,:)
       REAL(KIND=8),ALLOCATABLE       :: daintdx(:,:)                 !EFa Nov06
       REAL(KIND=8),ALLOCATABLE       :: d2aintdx(:,:)                !EFa Nov06
       REAL(KIND=8),ALLOCATABLE       :: d2aidhdx(:,:)                !EFa Nov06
