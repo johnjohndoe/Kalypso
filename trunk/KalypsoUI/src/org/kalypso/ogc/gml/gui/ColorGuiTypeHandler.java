@@ -47,6 +47,8 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -162,22 +164,40 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public String getText( Object element )
   {
-    return m_handler.convertToXMLString( element );
+    if( element instanceof RGB )
+    {
+      final RGB rgb = (RGB) element;
+      return "(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+    }
+    else
+      return m_handler.convertToXMLString( element );
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
   @Override
   public Image getImage( final Object element )
   {
-    final RGB rgb = (RGB) element;
-    
-    
-    return super.getImage( element );
+    if( element instanceof RGB )
+    {
+      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), ((RGB) element) } );
+      final ImageData imageData = new ImageData( 24, 13, 1, paletteData );
+      for( int x = 2; x < 23; x++ )
+        for( int y = 1; y < 12; y++ )
+          imageData.setPixel( x, y, 1 );
+      return new Image( null, imageData );
+    }
+    else
+    {
+      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } );
+      final ImageData imageData = new ImageData( 1, 1, 1, paletteData );
+      return new Image( null, imageData );
+    }
   }
 
   /**
