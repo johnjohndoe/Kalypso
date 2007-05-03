@@ -6,7 +6,7 @@
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:swe="http://www.opengis.net/swe" 
 	xmlns:om="http://www.opengis.net/om" 
-	gml:id="root_terrain_model">
+	gml:id="root">
  <simBase:roughnessLayerPolynomCollection>
   <simBase:RoughnessLayerPolygonCollection gml:id="RoughnessLayerPolygonCollection11709431308431"/>
  </simBase:roughnessLayerPolynomCollection>

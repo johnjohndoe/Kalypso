@@ -4,5 +4,5 @@
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
-	gml:id="root_discretisation_model">
+	gml:id="root">
 </wb1d2d:DiscretisationModel>

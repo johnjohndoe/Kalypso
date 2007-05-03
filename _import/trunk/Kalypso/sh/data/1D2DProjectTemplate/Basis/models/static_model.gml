@@ -5,7 +5,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
-	gml:id="root_static_model">
+	gml:id="root">
 	
 	<simBase:terrainModel 
 		xlink:href="terrain.gml#root_terrain_model"/>
