@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.graphics.sld.Geometry;
-import org.kalypsodeegree.xml.DOMPrinter;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -78,9 +77,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Geometry_Impl implements Geometry, Marshallable
 {
-  // private GMLGeometry geometryAsGML = null;
-
-  private String propertyName = null;
+  private String m_propertyName = null;
 
   /**
    * constructor initializing the class with the <Geometry>
@@ -88,7 +85,6 @@ public class Geometry_Impl implements Geometry, Marshallable
   public Geometry_Impl( String propertyName )
   {
     setPropertyName( propertyName );
-    // setGeometryAsGML( geometryAsGML );
   }
 
   /**
@@ -98,7 +94,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    */
   public String getPropertyName( )
   {
-    return propertyName;
+    return m_propertyName;
   }
 
   /**
@@ -109,7 +105,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    */
   public void setPropertyName( String propertyName )
   {
-    this.propertyName = propertyName;
+    this.m_propertyName = propertyName;
   }
 
   // /**
@@ -144,10 +140,10 @@ public class Geometry_Impl implements Geometry, Marshallable
     Debug.debugMethodBegin();
 
     StringBuffer sb = new StringBuffer( 1000 );
-    if( propertyName != null && !propertyName.equals( "" ) )
+    if( m_propertyName != null && !m_propertyName.equals( "" ) )
     {
       sb.append( "<Geometry>" );
-      sb.append( "<ogc:PropertyName>" ).append( propertyName );
+      sb.append( "<ogc:PropertyName>" ).append( m_propertyName );
       sb.append( "</ogc:PropertyName>" );
       sb.append( "</Geometry>" );
     }

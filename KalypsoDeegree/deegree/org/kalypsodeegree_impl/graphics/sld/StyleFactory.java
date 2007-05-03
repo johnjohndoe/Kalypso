@@ -95,6 +95,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.StringExtend;
 
 /**
@@ -1014,7 +1015,7 @@ public class StyleFactory
     {
       geom = new Geometry_Impl( geometryPropertyName );
     }
-    return new LineSymbolizer_Impl( stroke, geom, min, max );
+    return new LineSymbolizer_Impl( stroke, geom, min, max, UOM.pixel );
   }
 
   /**
@@ -1122,7 +1123,7 @@ public class StyleFactory
     {
       geom = new Geometry_Impl( geometryPropertyName );
     }
-    return new PolygonSymbolizer_Impl( fill, stroke, geom, min, max );
+    return new PolygonSymbolizer_Impl( fill, stroke, geom, min, max, UOM.pixel );
   }
 
   /**
@@ -1196,7 +1197,7 @@ public class StyleFactory
     {
       geom = new Geometry_Impl( geometryPropertyName );
     }
-    final PointSymbolizer_Impl pointSymbolizer = new PointSymbolizer_Impl( graphic, geom, min, max );
+    final PointSymbolizer_Impl pointSymbolizer = new PointSymbolizer_Impl( graphic, geom, min, max, UOM.pixel );
     return pointSymbolizer;
   }
 
@@ -1291,7 +1292,7 @@ public class StyleFactory
    */
   public static TextSymbolizer createTextSymbolizer( Geometry geometry, ParameterValueType label, Font font, LabelPlacement labelPlacement, Halo halo, Fill fill, double min, double max )
   {
-    return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max );
+    return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max, UOM.pixel );
   }
 
   // /**

@@ -85,6 +85,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.displayelements.PolygonDisplayElement_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -403,7 +404,7 @@ public class LegendElement_Impl implements LegendElement
     org.kalypsodeegree.graphics.sld.Graphic deegreegraphic = c.getGraphic();
     try
     {
-      BufferedImage buffi = ( (org.kalypsodeegree_impl.graphics.sld.Graphic_Impl)deegreegraphic ).getAsImage( null );
+      BufferedImage buffi = ( (org.kalypsodeegree_impl.graphics.sld.Graphic_Impl)deegreegraphic ).getAsImage( null, UOM.pixel, null );
       int w = buffi.getWidth();
       int h = buffi.getHeight();
       g.drawImage( buffi, width / 2 - w / 2, height / 2 - h / 2, null );
@@ -823,6 +824,9 @@ public class LegendElement_Impl implements LegendElement
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
+ * have been up to: Revision 1.13  2007/05/03 07:07:47  devgernot
+ * have been up to: SLD supports now SE 1.1.0 ish uom attribute for Symbolzers.
+ * have been up to:
  * have been up to: Revision 1.12  2005/06/29 10:41:17  belger
  * have been up to: *** empty log message ***
  * have been up to:

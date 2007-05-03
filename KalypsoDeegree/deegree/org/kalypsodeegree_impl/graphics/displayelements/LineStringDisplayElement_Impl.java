@@ -82,6 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -95,8 +96,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implements LineStringDisplayElement,
-    Serializable
+class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implements LineStringDisplayElement, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -4657962592230618248L;
@@ -180,8 +180,9 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   {
     Debug.debugMethodBegin( this, "paint" );
 
-    LineSymbolizer sym = (LineSymbolizer)getSymbolizer();
+    LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
     org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
+    final UOM uom = sym.getUom();
 
     // no stroke defined -> don't draw anything
     if( stroke == null )
@@ -195,21 +196,21 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     {
       try
       {
-        final Image image = stroke.getGraphicStroke().getGraphic().getAsImage( getFeature() );
-        
+        final Image image = stroke.getGraphicStroke().getGraphic().getAsImage( getFeature(), uom, projection );
+
         CurveWalker walker = new CurveWalker( g.getClipBounds() );
 
         if( geometry instanceof GM_Curve )
         {
-          int[][] pos = LabelFactory.calcScreenCoordinates( projection, (GM_Curve)geometry );
+          int[][] pos = LabelFactory.calcScreenCoordinates( projection, (GM_Curve) geometry );
           ArrayList positions = walker.createPositions( pos, image.getWidth( null ) );
           Iterator it = positions.iterator();
           while( it.hasNext() )
           {
-            double[] label = (double[])it.next();
-            int x = (int)( label[0] + 0.5 );
-            int y = (int)( label[1] + 0.5 );
-            paintImage( image, (Graphics2D)g, x, y, label[2] );
+            double[] label = (double[]) it.next();
+            int x = (int) (label[0] + 0.5);
+            int y = (int) (label[1] + 0.5);
+            paintImage( image, (Graphics2D) g, x, y, label[2] );
           }
         }
       }
@@ -225,16 +226,16 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
       try
       {
         int[][] pos = null;
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
 
         if( geometry instanceof GM_Curve )
         {
-          pos = calcTargetCoordinates( projection, (GM_Curve)geometry );
+          pos = calcTargetCoordinates( projection, (GM_Curve) geometry );
           drawLine( g2, pos, stroke );
         }
         else
         {
-          GM_MultiCurve mc = (GM_MultiCurve)geometry;
+          GM_MultiCurve mc = (GM_MultiCurve) geometry;
           for( int i = 0; i < mc.getSize(); i++ )
           {
             pos = calcTargetCoordinates( projection, mc.getCurveAt( i ) );
@@ -279,15 +280,15 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
       {
         if( distance( tx, ty, pos[0][k - 1], pos[1][k - 1] ) > 1 )
         {
-          pos[0][k] = (int)( tx + 0.5 );
-          pos[1][k] = (int)( ty + 0.5 );
+          pos[0][k] = (int) (tx + 0.5);
+          pos[1][k] = (int) (ty + 0.5);
           k++;
         }
       }
       else
       {
-        pos[0][k] = (int)( tx + 0.5 );
-        pos[1][k] = (int)( ty + 0.5 );
+        pos[0][k] = (int) (tx + 0.5);
+        pos[1][k] = (int) (ty + 0.5);
         k++;
       }
     }
@@ -297,16 +298,13 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   }
 
   /**
-   * Renders a curve to the submitted graphic context.
-   * 
-   * TODO: Calculate miterlimit.
+   * Renders a curve to the submitted graphic context. TODO: Calculate miterlimit.
    */
-  private void drawLine( Graphics g, int[][] pos, org.kalypsodeegree.graphics.sld.Stroke stroke )
-      throws FilterEvaluationException
+  private void drawLine( Graphics g, int[][] pos, org.kalypsodeegree.graphics.sld.Stroke stroke ) throws FilterEvaluationException
   {
 
     // Color & Opacity
-    Graphics2D g2 = (Graphics2D)g;
+    Graphics2D g2 = (Graphics2D) g;
     final Feature feature = getFeature();
     setColor( g2, stroke.getStroke( feature ), stroke.getOpacity( feature ) );
 
@@ -314,12 +312,12 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
     // use a simple Stroke if dash == null or its length < 2
     // that's faster
-    float width = (float)stroke.getWidth( feature );
+    float width = (float) stroke.getWidth( feature );
     int cap = stroke.getLineCap( feature );
     int join = stroke.getLineJoin( feature );
     BasicStroke bs2 = null;
 
-    if( ( dash == null ) || ( dash.length < 2 ) )
+    if( (dash == null) || (dash.length < 2) )
     {
       bs2 = new BasicStroke( width, cap, join );
     }
@@ -336,14 +334,14 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
   private double distance( double x1, double y1, double x2, double y2 )
   {
-    return Math.sqrt( ( x2 - x1 ) * ( x2 - x1 ) + ( y2 - y1 ) * ( y2 - y1 ) );
+    return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 
   private Graphics2D setColor( Graphics2D g2, Color color, double opacity )
   {
     if( opacity < 0.999 )
     {
-      final int alpha = (int)Math.round( opacity * 255 );
+      final int alpha = (int) Math.round( opacity * 255 );
       final int red = color.getRed();
       final int green = color.getGreen();
       final int blue = color.getBlue();

@@ -101,9 +101,9 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
   /**
    * constructor initializing the class with the <PointSymbolizer>
    */
-  PointSymbolizer_Impl( Graphic graphic, Geometry geometry, double min, double max )
+  PointSymbolizer_Impl( Graphic graphic, Geometry geometry, double min, double max, UOM uom )
   {
-    super( geometry );
+    super( geometry, uom );
 
     if( graphic == null )
     {

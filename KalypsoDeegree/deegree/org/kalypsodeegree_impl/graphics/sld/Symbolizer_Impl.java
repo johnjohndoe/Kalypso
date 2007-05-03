@@ -74,11 +74,15 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class Symbolizer_Impl implements Symbolizer
 {
+  public enum UOM { pixel, meter, foot };
+  
   protected double maxDenominator = 9E99;
 
   protected double minDenominator = 0;
 
   protected Geometry geometry = null;
+
+  private UOM m_uom = UOM.pixel;
 
   /**
    * default constructor
@@ -91,8 +95,9 @@ public class Symbolizer_Impl implements Symbolizer
   /**
    * constructor initializing the class with the <Symbolizer>
    */
-  Symbolizer_Impl( Geometry geometry )
+  Symbolizer_Impl( final Geometry geometry, final UOM uom )
   {
+    setUom( uom );
     setGeometry( geometry );
   }
 
@@ -119,6 +124,16 @@ public class Symbolizer_Impl implements Symbolizer
     this.geometry = geometry;
   }
 
+  public void setUom( final UOM uom )
+  {
+    m_uom = uom;
+  }
+  
+  public UOM getUom( )
+  {
+    return m_uom;
+  }
+  
   /**
    * @return the MinScaleDenominator
    */

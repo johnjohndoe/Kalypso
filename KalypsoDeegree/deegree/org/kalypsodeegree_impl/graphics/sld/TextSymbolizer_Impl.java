@@ -98,9 +98,9 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * constructor initializing the class with the <TextSymbolizer>
    */
   TextSymbolizer_Impl( Geometry geometry, ParameterValueType label, Font font, LabelPlacement labelPlacement,
-      Halo halo, Fill fill, double min, double max )
+      Halo halo, Fill fill, double min, double max, UOM uom )
   {
-    super( geometry );
+    super( geometry, uom );
     setLabel( label );
     setFont( font );
     setLabelPlacement( labelPlacement );
