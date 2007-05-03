@@ -19,7 +19,7 @@
 			</Geometry>
 			<Fill>
 				<CssParameter name="fill-opacity">0.5</CssParameter>
-				<CssParameter name="fill">#ff8000</CssParameter>
+				<CssParameter name="fill">#F3C13F</CssParameter>
 			</Fill>
 			<Stroke>
 				<CssParameter name="stroke">#000000</CssParameter>
