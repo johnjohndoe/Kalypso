@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<c1d2d:Control xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" gml:id="root">
+ <c1d2d:Version>NEW</c1d2d:Version>
+ <c1d2d:VEGETA>false</c1d2d:VEGETA>
+ <c1d2d:IDNOPT>0</c1d2d:IDNOPT>
+ <c1d2d:startsim>2001-01-01T09:00:00.000+01:00</c1d2d:startsim>
+ <c1d2d:IEDSW>5</c1d2d:IEDSW>
+ <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
+ <c1d2d:TBMIN>2000.0</c1d2d:TBMIN>
+ <c1d2d:OMEGA>54.0</c1d2d:OMEGA>
+ <c1d2d:ELEV>12.0</c1d2d:ELEV>
+ <c1d2d:UNOM>0.5</c1d2d:UNOM>
+ <c1d2d:UDIR>0.1</c1d2d:UDIR>
+ <c1d2d:HMIN>0.0</c1d2d:HMIN>
+ <c1d2d:DSET>0.01</c1d2d:DSET>
+ <c1d2d:DSETD>0.015</c1d2d:DSETD>
+ <c1d2d:NITI>54</c1d2d:NITI>
+ <c1d2d:NCYC>0</c1d2d:NCYC>
+ <c1d2d:NITN>3</c1d2d:NITN>
+ <c1d2d:CONV_1>1.0E-9</c1d2d:CONV_1>
+ <c1d2d:CONV_2>1.0E-9</c1d2d:CONV_2>
+ <c1d2d:CONV_3>1.0E-9</c1d2d:CONV_3>
+ <c1d2d:IDRPT>1</c1d2d:IDRPT>
+ <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
+ <c1d2d:AC1>1.5</c1d2d:AC1>
+ <c1d2d:AC2>0.67</c1d2d:AC2>
+ <c1d2d:AC3>0.04</c1d2d:AC3>
+ <c1d2d:IACCYC>1</c1d2d:IACCYC>
+</c1d2d:Control>
