@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  EF   26 Mar 2007   10:21 am
+C     Last change:  EF    3 May 2007    9:53 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -582,12 +582,8 @@ C-
           !do i=1,4
           !  nbc(nop(nn,2),i)=0
           !end do
-          !WRITE(*,*)'nbc',nn,nbc(nop(nn,1),1),nbc(nop(nn,1),3)!EFa Dec06, Test
           !-
         end if
-      !EFa Mar07, testing
-      !WRITE(lout,*)nn,'nbc1',nbc(nop(nn,3),1),'nbc2',nbc(nop(nn,3),3)
-      !-
       end do
 
 
