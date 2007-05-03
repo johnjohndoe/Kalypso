@@ -1,4 +1,4 @@
-!     Last change:  K    27 Mar 2007   11:13 am
+!     Last change:  K    27 Apr 2007    5:26 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -72,6 +72,9 @@ INTEGER              :: i, j                           !counters for loops
 INTEGER              :: k                              !node while preparing arc array for writing
 INTEGER              :: nbot, ntop                     !the two nodes of an element
 INTEGER              :: nelem                          !number of element counter for LOOP
+INTEGER              :: PolyApproach
+INTEGER              :: DefLine                        !Number of lines, that need to be written for a continuity line definition
+INTEGER              :: lile, Rest, Startnode, NoLines
 
 !NiS,apr06: changing length of variable, because the length of filenames in RMA10S is 96.
 !CHARACTER(LEN=80) :: nameout, namein
@@ -87,7 +90,7 @@ INTEGER, ALLOCATABLE :: Trans_nodes(:,:)               !informations for writing
 INTEGER              :: trans_els                      !counter and name-giver for transition-elements
 
 !NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
-ALLOCATE (arc_tmp (maxp,5), arcmid(maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid für 1d-Teschke-Elemente auf 5 erhöht
+ALLOCATE (arc_tmp (maxp,5), arcmid(LPPoly:maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid für 1d-Teschke-Elemente auf 5 erhöht
 !NiS,may06: allocate 1D-2D-TRANSITION ELEMENTS array (1: number; 2-6: nodes)
 ALLOCATE (Trans_nodes(MaxT,6))
 
@@ -108,11 +111,15 @@ DO i = 1, np
   DO j = 1, 5
     !NiS,apr06: Changed arc to arc_tmp because of global conflict
     arc_tmp (i, j) = 0
-    arcmid (i, j) = 0
   END DO
 END DO
-                                                                        
-! Zu jedem Midseitenknoten eine Kante erzeugen:                         
+DO i = LPPoly, np
+  DO j = 1, 5
+    arcmid  (i, j) = 0
+  END DO
+END DO
+
+! Zu jedem Midseitenknoten eine Kante erzeugen:
 !     (Kantennummer =Mittseitenknotennummer)                            
 !     an allen Elementen :                                              
       !Run through every element
@@ -148,15 +155,15 @@ END DO
           !EFa Dec06, Test der Fallunterscheidung
           !nis,feb07: Allow for numbered FFF midsides
           !ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k.eq.-9999) then
-          ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k < -1000) then
+          ELSEIF (arcmid (k, 3) .eq. 0 .and. k < -1000) then
           !-
-            arcmid (nelem, 1) = nop (nelem, 1)
-            arcmid (nelem, 2) = nop (nelem, 3)
-            arcmid (nelem, 3) = nelem
-            arcmid (nelem, 4) = nelem
+            arcmid (k, 1) = nop (nelem, 1)
+            arcmid (k, 2) = nop (nelem, 3)
+            arcmid (k, 3) = nelem
+            arcmid (k, 4) = nelem
             !nis,feb07: Enter the negative midside number
             !arcmid (nelem, 5) = -9999
-            arcmid (nelem, 5) = k
+            arcmid (k, 5) = k
             !-
           ENDIF
           !Save informations for 1D-2D-TRANSITION ELEMENTS
@@ -223,12 +230,11 @@ END DO
     301   END DO
        ENDIF
  300 END DO
-                                                                        
 
 ! ----------------------------------------------------------------------------------
 ! Kantennummern von 1 aufsteigend nummerieren:                          
 arccnt = 0
-DO i = 1, np
+DO i = LPPoly, np
   IF (arcmid (i, 3) .ne.0) then
     arccnt = arccnt + 1
     DO j = 1, 5
@@ -247,9 +253,6 @@ DO i = 1, np
     end if
   ENDIF
 END DO
-                                                                        
-                                                                        
-                                                                        
 
 ! -----------------------------------------------------------------------------------
 !NiS,may06: Creation of output/solution file names has a little bit changed in logic order,
@@ -336,12 +339,6 @@ end if
 !WP string = '00'//title
 !WP WRITE (12, '(a80)') string
 
-!WP Problem with length of title-character (78 or 80 ?)
-!WP See SUB output and SUB modell_lesen
-!WP Sometimes the calculation crashes after > 100 time steps
-!WP Changing the format of output!
-write (IKALYPSOFM, 7010) title
-7010 format ('00', A80)
 
 !WP string = 'RS'//namein
 !WP WRITE (12, '(a80)') string
@@ -351,6 +348,14 @@ write (IKALYPSOFM, 7010) title
 write (IKALYPSOFM, 7011) modellein, modellrst
 7011 format ('RS', 2A40)
 !-
+
+!WP Problem with length of title-character (78 or 80 ?)
+!WP See SUB output and SUB modell_lesen
+!WP Sometimes the calculation crashes after > 100 time steps
+!WP Changing the format of output!
+write (IKALYPSOFM, 7010) title
+7010 format ('00', A80)
+
 !WP 01.09.2004
 
 ! Time + step counter
@@ -392,14 +397,14 @@ write_nodes: DO i = 1, np
   END IF
 
   !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
-  teschke(i) = 0
+  PolyApproach = 0
   do j = 0, 12
     if (apoly(i,j) /= 0.0) then
-      teschke(i) = 1
+      PolyApproach = 1
     end if
   end do
 
-  if (teschke(i).eq.1) then
+  if (PolyApproach.eq.1) then
     WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
     WRITE (IKALYPSOFM, 7021) i, (apoly(i,j), j = 0, 4)
     WRITE (IKALYPSOFM, 7022) i, (apoly(i,j), j = 5, 9)
@@ -441,8 +446,30 @@ END do write_elements
 ! 1D-2D-TRANSITION ELEMENTS
 
 write_trans_els: do i = 1, MaxT
-  write (IKALYPSOFM,7014) (trans_nodes(i,k),k=1,6)
+  write (IKALYPSOFM,7040) (trans_nodes(i,k),k=1,6)
 ENDDO write_trans_els
+
+!nis,apr07: write informations of transition lines
+write_trans_lines: do i = 1, MaxLT
+  WRITE(IKALYPSOFM, 7041) i, (translines(i,j), j = 1, 3)
+  LiLe = (lmt(Translines(i,2)) + 1) / 2
+  Rest = LiLe
+  NoLines = 1
+  GetDefLineNo: do
+    if (Rest <= 9) EXIT GetDefLineNo
+    Rest = LiLe - 9
+    NoLines = NoLines + 1
+  ENDDO getDefLineNo
+  Startnode = 1
+  do j = 1, NoLines - 1
+    WRITE(ikalypsofm, 7042) NoLines-1, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + 8 * 2, 2)
+    Startnode = Startnode + 8 * 2 + 1
+  end do
+  !WRITE(*,*) lile, rest, startnode, lmt(translines(i,2))
+  !pause
+  WRITE(ikalypsofm, 7042) NoLines, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + Rest * 2 - 1, 2)
+end do write_trans_lines
+
 
 ! Roughness classes:
 write_roughness: DO i = 1, irk
@@ -523,14 +550,6 @@ END do write_roughness
  7013 FORMAT ('CS',i10,f10.1,2f10.3,3f10.2)
 !-
 
-!NiS,may06: Add 1D-2D-TRANSITION ELEMENTS INFORMATIONS
-!                              Elementnumber, 1st node, midside node, 2nd node
-!                              (at same time midside of 2D-element arc), right
-!                              corner node of 2D-element arc, left corner node
-!                              of 2D-element arc
- 7014 FORMAT ('TE', 6i10)
-!-
-
 !NiS,may06: Calculation does only properly work with all degrees of freedom, read in
 !                              Freiheitsgrade 4 bis 7; Knotennummer,
 !                              salinity, temperature etc.):
@@ -570,6 +589,17 @@ END do write_roughness
 
  7035 FORMAT ('BK3' ,i9,3f20.7)
 
+!NiS,may06: Add 1D-2D-TRANSITION ELEMENTS INFORMATIONS
+!                              Elementnumber, 1st node, midside node, 2nd node
+!                              (at same time midside of 2D-element arc), right
+!                              corner node of 2D-element arc, left corner node
+!                              of 2D-element arc
+ 7040 FORMAT ('TE', 6i10)
+!-
+!nis,apr07: Add 1D-2D-TRANSITION LINE INFORMATIONS
+ 7041 FORMAT ('TL', 4i10)
+!nis,apr07: Add CONTINUITY LINE DEFINTION for 1D-2D-TRANSITION LINE DEFINITION
+ 7042 FORMAT ('CC', i1, 9i8)
 
 
 !--------------- deallocation section -----------------------------
