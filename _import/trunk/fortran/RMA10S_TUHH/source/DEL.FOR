@@ -1,4 +1,4 @@
-C     Last change:  ST   11 Dec 2006    4:28 pm
+C     Last change:  EF    3 May 2007    9:51 am
 
       SUBROUTINE DEL
       USE BLK10MOD
@@ -35,11 +35,8 @@ CIPK OCT98 CONVERT TO F90
           DO 230 M=1,NCN,2
 CIPK OCT98 CONVERT TO F90
             L=ABS(NOP(N,M))
-            !WRITE(*,*)'vel(3,l),dsetd',l,vel(3,l),dsetd!EFa Dec06, Test
             IF(VEL(3,L) .GT. DSETD) GO TO 230
-            !WRITE(*,*)'ndry',l,ndry(l)!EFa Dec06, Test
             IF(NDRY(L) .LT. 1) GO TO 205
-            !WRITE(*,*)'vel(3,l),dset',l,vel(3,l),dset!EFa Dec06, Test
             IF(VEL(3,L) .GT. DSET) GO TO 230
 CIPK OCT98 CONVERT TO F90
   205       IMAT(N)=-ABS(IMAT(N))
@@ -72,7 +69,6 @@ C        ENDIF
       DO 405 N=1,NE
         IF(IMAT(N) .GE. 0) GO TO 405
         IF(IMATO(N) .LT. 0) GO TO 405
-        !WRITE(*,*)'imat(n)',n,imat(n)!EFa Dec06, Test
         NR=NR+1
         IPT(NR)=N
   405 CONTINUE

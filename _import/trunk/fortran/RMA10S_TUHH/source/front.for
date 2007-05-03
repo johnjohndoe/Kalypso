@@ -1,4 +1,4 @@
-C     Last change:  K     2 Mar 2007   10:02 am
+C     Last change:  EF    3 May 2007    9:52 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -91,7 +91,6 @@ C
 C
 C...... Find last appeareance of each node moved from LOAD3
 C
-      !WRITE(*,*)'nszf',nszf !EFa Dec06, Test
       DO J=1,NSZF
         NLSTEL(J)=0
       ENDDO
