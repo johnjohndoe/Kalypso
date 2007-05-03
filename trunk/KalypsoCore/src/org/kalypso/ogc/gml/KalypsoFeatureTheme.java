@@ -368,8 +368,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     private final Map<Feature, DisplayElement[]> m_displayElements = new HashMap<Feature, DisplayElement[]>();
 
-    // private final List<DisplayElement[]> m_displayElements = new ArrayList<DisplayElement[]>();
-
     private final UserStyle[] m_style;
 
     private GM_Envelope m_vaildEnvelope = null;

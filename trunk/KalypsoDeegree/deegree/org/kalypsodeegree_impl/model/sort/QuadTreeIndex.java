@@ -60,7 +60,7 @@ public class QuadTreeIndex implements SpatialIndexExt
 {
   private SpatialIndex m_index;
 
-  private List<Object> m_items = new ArrayList<Object>();
+  private final List<Object> m_items = new ArrayList<Object>();
 
   private final IEnvelopeProvider m_envelopeProvider;
 
@@ -85,9 +85,6 @@ public class QuadTreeIndex implements SpatialIndexExt
   private Envelope getEnvelope( final Object object )
   {
     final GM_Envelope envelope = m_envelopeProvider.getEnvelope( object );
-    if( envelope == null )
-      return new Envelope();
-
     return JTSAdapter.export( envelope );
   }
 
@@ -116,10 +113,13 @@ public class QuadTreeIndex implements SpatialIndexExt
 
       if( bbox == null )
         bbox = envelope;
-      else if( !envelope.isNull() )
+      else
         bbox.expandToInclude( envelope );
     }
 
+    if( bbox == null)
+      return new Envelope();
+    
     return bbox;
   }
 
@@ -140,11 +140,11 @@ public class QuadTreeIndex implements SpatialIndexExt
     revalidate();
 
     final Envelope itemEnv = getEnvelope( item );
+    // TODO: this is not good, because the env this object was added may differ from the new envelope
+    // however, this may lead to the case, that the object will not be removed
     m_index.remove( itemEnv, item );
-    if( itemEnv.isNull() )
-    {
+    if( !itemEnv.isNull() )
       m_index.insert( itemEnv, item );
-    }
 
     /* Bounding box must be calculated anew */
     m_boundingBox = null;
@@ -199,13 +199,15 @@ public class QuadTreeIndex implements SpatialIndexExt
   {
     m_items.add( item );
 
-    if( m_boundingBox != null )
+    if( m_boundingBox != null && !itemEnv.isNull() )
       m_boundingBox.expandToInclude( itemEnv );
 
     if( m_index == null )
       revalidate();
     else if( !itemEnv.isNull() )
       m_index.insert( itemEnv, item );
+    
+    // TODO:check depth of quadtree, if too big, maybe we have to revalidate?
   }
 
   /**
