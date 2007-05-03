@@ -69,6 +69,7 @@ import java.io.Serializable;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
+import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -78,6 +79,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -163,25 +165,39 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   {
     try
     {
-      Image image = defaultImg;
-
       final PointSymbolizer symbolizer = (PointSymbolizer) getSymbolizer();
-      if( symbolizer.getGraphic() != null )
+      final UOM uom = symbolizer.getUom();
+      final Graphic graphic = symbolizer.getGraphic();
+      final Feature feature = getFeature();
+
+      final Image image;
+      final int size;
+      final double rotation;
+      if( graphic == null )
       {
-        image = symbolizer.getGraphic().getAsImage( getFeature() );
+        image = defaultImg;
+        size = 6;
+        rotation = Graphic.ROTATION_DEFAULT;
       }
+      else
+      {
+        image = graphic.getAsImage( feature, uom, projection );
+        size = graphic.getNormalizedSize( feature, uom, projection );
+        rotation = graphic.getRotation( feature );
+      }
+
       Graphics2D g2D = (Graphics2D) g;
 
       final GM_Object geometry = getGeometry();
       if( geometry instanceof GM_Point )
-        drawPoint( g2D, (GM_Point) geometry, projection, image );
+        drawPoint( g2D, (GM_Point) geometry, projection, image, size, rotation );
       else
       {
         GM_MultiPoint mp = (GM_MultiPoint) geometry;
 
         for( int i = 0; i < mp.getSize(); i++ )
         {
-          drawPoint( g2D, mp.getPointAt( i ), projection, image );
+          drawPoint( g2D, mp.getPointAt( i ), projection, image, size, rotation );
         }
       }
     }
@@ -194,7 +210,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   /**
    * renders one point to the submitted graphic context considering the also submitted projection
    */
-  private void drawPoint( Graphics2D g, GM_Point point, GeoTransform projection, Image image )
+  private void drawPoint( Graphics2D g, GM_Point point, GeoTransform projection, Image image, final int size, final double rotation )
   {
     GM_Position source = point.getPosition();
     int x = (int) (projection.getDestX( source.getX() ) + 0.5);
@@ -202,6 +218,11 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
 
     int x_ = x - (image.getWidth( null ) >> 1);
     int y_ = y - (image.getHeight( null ) >> 1);
+
+    g.rotate( Math.toRadians( rotation ), x, y );
+
     g.drawImage( image, x_, y_, null );
+
+    g.rotate( -Math.toRadians( rotation ), x, y );
   }
 }

@@ -69,8 +69,11 @@ import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -116,8 +119,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param rotation
    *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
-  protected Graphic_Impl( Object[] marksAndExtGraphics, ParameterValueType opacity, ParameterValueType size,
-      ParameterValueType rotation )
+  protected Graphic_Impl( Object[] marksAndExtGraphics, ParameterValueType opacity, ParameterValueType size, ParameterValueType rotation )
   {
     setMarksAndExtGraphics( marksAndExtGraphics );
     this.opacity = opacity;
@@ -149,7 +151,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Creates a new <tt>Graphic_Impl</tt> instance based on the default <tt>Mark</tt>: a square.
    */
-  protected Graphic_Impl()
+  protected Graphic_Impl( )
   {
     this( null, null, null );
   }
@@ -161,7 +163,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
    */
-  public Object[] getMarksAndExtGraphics()
+  public Object[] getMarksAndExtGraphics( )
   {
     Object[] objects = new Object[marksAndExtGraphics.size()];
     return marksAndExtGraphics.toArray( objects );
@@ -237,14 +239,12 @@ public class Graphic_Impl implements Graphic, Marshallable
       }
       catch( NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'opacity' ('" + value
-            + "') has invalid format!" );
+        throw new FilterEvaluationException( "Given value for parameter 'opacity' ('" + value + "') has invalid format!" );
       }
 
-      if( ( opacityVal < 0.0 ) || ( opacityVal > 1.0 ) )
+      if( (opacityVal < 0.0) || (opacityVal > 1.0) )
       {
-        throw new FilterEvaluationException( "Value for parameter 'opacity' (given: '" + value
-            + "') must be between 0.0 and 1.0!" );
+        throw new FilterEvaluationException( "Value for parameter 'opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
       }
     }
 
@@ -296,12 +296,60 @@ public class Graphic_Impl implements Graphic, Marshallable
 
       if( sizeVal <= 0.0 )
       {
-        throw new FilterEvaluationException( "Value for parameter 'size' (given: '" + value
-            + "') must be greater than 0!" );
+        throw new FilterEvaluationException( "Value for parameter 'size' (given: '" + value + "') must be greater than 0!" );
       }
     }
 
     return sizeVal;
+  }
+
+  /**
+   * Returns the size in pixel, interprted in the defined units, any default behaviours are applied.
+   */
+  public int getNormalizedSize( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
+  {
+    double size = getSize( feature );
+
+    // if size is unspecified, use the height of the first ExternalGraphic
+    if( size < 0 )
+    {
+      for( int i = 0; i < marksAndExtGraphics.size(); i++ )
+      {
+        Object o = marksAndExtGraphics.get( i );
+        BufferedImage extImage = null;
+
+        if( o instanceof ExternalGraphic )
+        {
+          extImage = ((ExternalGraphic) o).getAsImage();
+          size = extImage.getHeight();
+          break;
+        }
+      }
+    }
+
+    // if there is none, use default value of 6
+    if( size < 0 )
+      size = 6;
+
+    switch( uom )
+    {
+      case meter:
+        // REMARK: we transform here a length near the origina of the coordinate sytem, which is not correct
+        // for all coordinate systems.
+        final GM_Envelope sourceRect = transform.getSourceRect();
+        final double sizeFromNull = transform.getDestX( sourceRect.getMin().getX() );
+        final double sizeFromMeters = transform.getDestX( sourceRect.getMin().getX() + size );
+        final double lengthInMeters = Math.abs( sizeFromMeters - sizeFromNull );
+        return (int) lengthInMeters;
+        
+      case foot:
+        throw new UnsupportedOperationException( "Foot unit not implemented yet..." );
+      
+      case pixel:
+      default:
+        return (int)size;
+
+    }
   }
 
   /**
@@ -343,8 +391,7 @@ public class Graphic_Impl implements Graphic, Marshallable
       }
       catch( NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'rotation' ('" + value
-            + "') has invalid format!" );
+        throw new FilterEvaluationException( "Given value for parameter 'rotation' ('" + value + "') has invalid format!" );
       }
     }
 
@@ -374,37 +421,15 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
-  public BufferedImage getAsImage( Feature feature ) throws FilterEvaluationException
+  public BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
-    int intSize = (int)getSize( feature );
-
-    // if size is unspecified, use the height of the first ExternalGraphic
-    if( intSize < 0 )
-    {
-      for( int i = 0; i < marksAndExtGraphics.size(); i++ )
-      {
-        Object o = marksAndExtGraphics.get( i );
-        BufferedImage extImage = null;
-
-        if( o instanceof ExternalGraphic )
-        {
-          extImage = ( (ExternalGraphic)o ).getAsImage();
-          intSize = extImage.getHeight();
-          break;
-        }
-      }
-    }
-
-    // if there is none, use default value of 6 pixels
-    if( intSize < 0 )
-    {
-      intSize = 6;
-    }
-
+    final int intSize = getNormalizedSize( feature, uom, transform );
+    if( intSize <= 0 )
+      return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );;
+      
     image = new BufferedImage( intSize, intSize, BufferedImage.TYPE_INT_ARGB );
 
-    Graphics2D g = (Graphics2D)image.getGraphics();
-    g.rotate( Math.toRadians( getRotation( feature ) ), intSize >> 1, intSize >> 1 );
+    final Graphics2D g = (Graphics2D) image.getGraphics();
 
     for( int i = 0; i < marksAndExtGraphics.size(); i++ )
     {
@@ -413,11 +438,11 @@ public class Graphic_Impl implements Graphic, Marshallable
 
       if( o instanceof ExternalGraphic )
       {
-        extImage = ( (ExternalGraphic)o ).getAsImage();
+        extImage = ((ExternalGraphic) o).getAsImage();
       }
       else
       {
-        extImage = ( (Mark)o ).getAsImage( feature, intSize );
+        extImage = ((Mark) o).getAsImage( feature, intSize );
       }
 
       g.drawImage( extImage, 0, 0, intSize, intSize, null );
@@ -453,7 +478,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * 
    * @return xml representation of the Graphic
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
@@ -461,24 +486,24 @@ public class Graphic_Impl implements Graphic, Marshallable
     sb.append( "<Graphic>" );
     for( int i = 0; i < marksAndExtGraphics.size(); i++ )
     {
-      sb.append( ( (Marshallable)marksAndExtGraphics.get( i ) ).exportAsXML() );
+      sb.append( ((Marshallable) marksAndExtGraphics.get( i )).exportAsXML() );
     }
     if( opacity != null )
     {
       sb.append( "<Opacity>" );
-      sb.append( ( (Marshallable)opacity ).exportAsXML() );
+      sb.append( ((Marshallable) opacity).exportAsXML() );
       sb.append( "</Opacity>" );
     }
     if( size != null )
     {
       sb.append( "<Size>" );
-      sb.append( ( (Marshallable)size ).exportAsXML() );
+      sb.append( ((Marshallable) size).exportAsXML() );
       sb.append( "</Size>" );
     }
     if( rotation != null )
     {
       sb.append( "<Rotation>" );
-      sb.append( ( (Marshallable)rotation ).exportAsXML() );
+      sb.append( ((Marshallable) rotation).exportAsXML() );
       sb.append( "</Rotation>" );
     }
     sb.append( "</Graphic>" );

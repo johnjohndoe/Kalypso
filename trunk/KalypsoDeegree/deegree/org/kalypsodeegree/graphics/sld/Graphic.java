@@ -63,7 +63,9 @@ package org.kalypsodeegree.graphics.sld;
 import java.awt.image.BufferedImage;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * A Graphic is a "graphic symbol" with an inherent shape, color, and size. Graphics can either be referenced from an
@@ -102,7 +104,7 @@ public interface Graphic
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
-  BufferedImage getAsImage( Feature feature ) throws FilterEvaluationException;
+  BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
 
   /**
    * Sets a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
@@ -183,6 +185,11 @@ public interface Graphic
    *           if the evaluation fails or the value is invalid
    */
   double getSize( Feature feature ) throws FilterEvaluationException;
+
+  /**
+   * Returns the size in pixel, any default behaviours are applied.
+   */
+  public int getNormalizedSize( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
 
   /**
    * @see #getSize(Feature)

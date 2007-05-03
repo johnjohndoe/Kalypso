@@ -60,6 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
+
 /**
  * This is the basis of all symbolizers. It defines the method <tt>getGeometry</tt> that's common to all symbolizers.
  * <p>
@@ -121,4 +123,8 @@ public interface Symbolizer
    *          the geometry of the symbolizer
    */
   void setGeometry( Geometry geometry );
+  
+  public void setUom( final UOM uom );
+  
+  public UOM getUom( );
 }

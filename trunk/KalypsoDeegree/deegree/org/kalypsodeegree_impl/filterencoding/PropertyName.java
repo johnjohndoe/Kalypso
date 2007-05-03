@@ -176,15 +176,9 @@ public class PropertyName extends Expression_Impl
    */
   public Object evaluate( Feature feature )
   {
-    // IPropertyType[] ftp = feature.getFeatureType().getProperties();
+    // TODO: get property via qname, we already have the qname
     final Object object = getProperty( feature, m_value.getLocalPart() );
 
-    // if (feature.getFeatureType ().getProperty (value) == null) {
-    // throw new FilterEvaluationException (
-    // "IFeatureType '" + feature.getFeatureType ().getName () +
-    // "' has no property with name '" + value + "'!");
-    // }
-    // Object object = feature.getProperty (value);
     if( object == null )
     {
       return null;

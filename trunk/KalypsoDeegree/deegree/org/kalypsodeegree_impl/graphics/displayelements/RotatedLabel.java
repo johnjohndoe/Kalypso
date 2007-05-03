@@ -76,6 +76,7 @@ import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * This is a rotated label with style information and screen coordinates, ready to be rendered to the view.
@@ -241,7 +242,6 @@ class RotatedLabel implements Label
    */
   private void paintHalo( Graphics2D g, Halo halo, int x, int y ) throws FilterEvaluationException
   {
-
     int radius = (int)halo.getRadius( feature );
 
     // only draw filled rectangle or circle, if Fill-Element is given
@@ -253,7 +253,7 @@ class RotatedLabel implements Label
 
       if( gFill != null )
       {
-        BufferedImage texture = gFill.getGraphic().getAsImage( feature );
+        BufferedImage texture = gFill.getGraphic().getAsImage( feature, UOM.pixel, null );
         Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
         g.setPaint( new TexturePaint( texture, anchor ) );
       }

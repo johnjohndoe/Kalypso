@@ -130,6 +130,7 @@ import org.kalypsodeegree_impl.filterencoding.Expression_Impl;
 import org.kalypsodeegree_impl.filterencoding.FalseFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -228,7 +229,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>TextSymbolizer</tt> -instance
    */
-  private static TextSymbolizer createTextSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max ) throws XMLParsingException
+  private static TextSymbolizer createTextSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max, final UOM uom ) throws XMLParsingException
   {
 
     // optional: <Geometry>
@@ -279,7 +280,7 @@ public class SLDFactory
     // optional: <Fill>
     Fill fill = null;
 
-    return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max );
+    return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max, uom );
   }
 
   /**
@@ -1126,27 +1127,37 @@ public class SLDFactory
           continue;
         }
 
+        /*
+         * In reference to Symbology Encoding specification (1.1.0), we read an extra 'uom' attribute from the
+         * Symbology-Elements. In SLD 1.0.0 this is not yet supported, always 'pixel' is assumed.
+         */
+        final UOM uom;
+        if( symbolizerElement.hasAttribute( "uom" ) )
+          uom = UOM.valueOf( symbolizerElement.getAttribute( "uom" ) );
+        else
+          uom = UOM.pixel;
+
         String symbolizerName = symbolizerElement.getLocalName();
 
         if( symbolizerName.equals( "LineSymbolizer" ) )
         {
-          symbolizerList.add( createLineSymbolizer( urlResolver, symbolizerElement, min, max ) );
+          symbolizerList.add( createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         }
         else if( symbolizerName.equals( "PointSymbolizer" ) )
         {
-          symbolizerList.add( createPointSymbolizer( urlResolver, symbolizerElement, min, max ) );
+          symbolizerList.add( createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         }
         else if( symbolizerName.equals( "PolygonSymbolizer" ) )
         {
-          symbolizerList.add( createPolygonSymbolizer( urlResolver, symbolizerElement, min, max ) );
+          symbolizerList.add( createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         }
         else if( symbolizerName.equals( "TextSymbolizer" ) )
         {
-          symbolizerList.add( createTextSymbolizer( urlResolver, symbolizerElement, min, max ) );
+          symbolizerList.add( createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         }
         else if( symbolizerName.equals( "RasterSymbolizer" ) )
         {
-          symbolizerList.add( createRasterSymbolizer( symbolizerElement ) );
+          symbolizerList.add( createRasterSymbolizer( symbolizerElement, uom ) );
         }
       }
     }
@@ -1171,9 +1182,8 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PointSymbolizer</tt> -instance
    */
-  private static PointSymbolizer createPointSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max ) throws XMLParsingException
+  private static PointSymbolizer createPointSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max, final UOM uom ) throws XMLParsingException
   {
-
     // optional: <Geometry>
     Geometry geometry = null;
     Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
@@ -1192,7 +1202,7 @@ public class SLDFactory
       graphic = createGraphic( urlResolver, graphicElement );
     }
 
-    return new PointSymbolizer_Impl( graphic, geometry, min, max );
+    return new PointSymbolizer_Impl( graphic, geometry, min, max, uom );
   }
 
   /**
@@ -1210,7 +1220,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LineSymbolizer</tt> -instance
    */
-  private static LineSymbolizer createLineSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max ) throws XMLParsingException
+  private static LineSymbolizer createLineSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max, final UOM uom ) throws XMLParsingException
   {
 
     // optional: <Geometry>
@@ -1231,7 +1241,7 @@ public class SLDFactory
       stroke = createStroke( urlResolver, strokeElement );
     }
 
-    return new LineSymbolizer_Impl( stroke, geometry, min, max );
+    return new LineSymbolizer_Impl( stroke, geometry, min, max, uom );
   }
 
   /**
@@ -1249,7 +1259,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PolygonSymbolizer</tt> -instance
    */
-  private static PolygonSymbolizer createPolygonSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max ) throws XMLParsingException
+  private static PolygonSymbolizer createPolygonSymbolizer( IUrlResolver2 urlResolver, Element element, double min, double max, final UOM uom ) throws XMLParsingException
   {
     // optional: <Geometry>
     Geometry geometry = null;
@@ -1278,7 +1288,7 @@ public class SLDFactory
       stroke = createStroke( urlResolver, strokeElement );
     }
 
-    return new PolygonSymbolizer_Impl( fill, stroke, geometry, min, max );
+    return new PolygonSymbolizer_Impl( fill, stroke, geometry, min, max, uom );
   }
 
   /**
@@ -1392,21 +1402,22 @@ public class SLDFactory
 
     // required: href-Attribute (in <OnlineResource>)
     String href = XMLTools.getRequiredAttrValue( "href", xlnNS, onlineResourceElement );
-//    URL url = null;
-//
-//    try
-//    {
-//      url = urlResolver.resolveURL( href );
-//    }
-//    catch( MalformedURLException e )
-//    {
-//      throw new XMLParsingException( "Value ('" + href + "') of attribute 'href' of " + "element 'OnlineResoure' does not denote a valid URL: " + e.getMessage() );
-//    }
+    // URL url = null;
+    //
+    // try
+    // {
+    // url = urlResolver.resolveURL( href );
+    // }
+    // catch( MalformedURLException e )
+    // {
+    // throw new XMLParsingException( "Value ('" + href + "') of attribute 'href' of " + "element 'OnlineResoure' does
+    // not denote a valid URL: " + e.getMessage() );
+    // }
 
     // required: <Format> (in <OnlineResource>)
     String format = XMLTools.getRequiredStringValue( "Format", CommonNamespaces.SLDNS, element );
 
-    return new ExternalGraphic_Impl(urlResolver, format, href );
+    return new ExternalGraphic_Impl( urlResolver, format, href );
   }
 
   /**
@@ -1619,11 +1630,11 @@ public class SLDFactory
     return (new CssParameter_Impl( name, pvt ));
   }
 
-  private static RasterSymbolizer createRasterSymbolizer( Element element ) //throws XMLParsingException
+  private static RasterSymbolizer createRasterSymbolizer( Element element, final UOM uom ) // throws XMLParsingException
   {
     try
     {
-      //final ObjectFactory fac = new ObjectFactory();
+      // final ObjectFactory fac = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Unmarshaller unmarshaller = jc.createUnmarshaller();
       Object e = unmarshaller.unmarshal( element );
@@ -1648,22 +1659,14 @@ public class SLDFactory
   {
     TreeMap colorMap = new TreeMap();
     /*
-    NodeList nodeList = colorMapElement.getChildNodes();
-    Element node = null;
-    Color color = null;
-    double quantity = 0.0;
-    String label = " ";
-    double opacity = 1.0;
-    for(int i=0; i<nodeList.getLength(); i++)
-    {
-      node = XMLTools.getChildByName( "ColorMapEntry", CommonNamespaces.SLDNS, nodeList.item( i ) );
-      color = Color.decode( XMLTools.getAttrValue( node, "color" ) );
-      quantity = Double.parseDouble( XMLTools.getAttrValue( node, "quantity" ) );
-      ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
-      colorMap.put( new Double( quantity ), colorMapEntryObject );
-    }
-    */
-    
+     * NodeList nodeList = colorMapElement.getChildNodes(); Element node = null; Color color = null; double quantity =
+     * 0.0; String label = " "; double opacity = 1.0; for(int i=0; i<nodeList.getLength(); i++) { node =
+     * XMLTools.getChildByName( "ColorMapEntry", CommonNamespaces.SLDNS, nodeList.item( i ) ); color = Color.decode(
+     * XMLTools.getAttrValue( node, "color" ) ); quantity = Double.parseDouble( XMLTools.getAttrValue( node, "quantity" ) );
+     * ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label ); colorMap.put( new
+     * Double( quantity ), colorMapEntryObject ); }
+     */
+
     List colorMapEntries = colorMapType.getColorMapEntry();
     for( int i = 0; i < colorMapEntries.size(); i++ )
     {
@@ -1673,7 +1676,7 @@ public class SLDFactory
       {
         color = Color.decode( colorMapEntry.getColor() );
       }
-      //double opacity = colorMapEntry.getOpacity();
+      // double opacity = colorMapEntry.getOpacity();
       double opacity = 1.0;
       double quantity = colorMapEntry.getQuantity();
       String label = " ";
@@ -1684,7 +1687,7 @@ public class SLDFactory
       ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
       colorMap.put( new Double( quantity ), colorMapEntryObject );
     }
-    
+
     return colorMap;
   }
 }

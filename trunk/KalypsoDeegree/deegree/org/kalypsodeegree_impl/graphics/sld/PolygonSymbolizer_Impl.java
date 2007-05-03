@@ -91,7 +91,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    */
   public PolygonSymbolizer_Impl()
   {
-    super( null );
+    super( null, UOM.pixel );
     setFill( new Fill_Impl() );
 
     Stroke stroke = new Stroke_Impl();
@@ -101,9 +101,9 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  public PolygonSymbolizer_Impl( Fill fill, Stroke stroke, Geometry geometry, double min, double max )
+  public PolygonSymbolizer_Impl( Fill fill, Stroke stroke, Geometry geometry, double min, double max, UOM uom )
   {
-    super( geometry );
+    super( geometry, uom );
     setFill( fill );
     setStroke( stroke );
     setMinScaleDenominator( min );

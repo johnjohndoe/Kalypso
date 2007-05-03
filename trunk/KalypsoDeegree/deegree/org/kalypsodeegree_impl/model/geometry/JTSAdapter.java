@@ -577,7 +577,7 @@ public class JTSAdapter
   public static GM_Envelope wrap( final Envelope env )
   {
     if( env.isNull() )
-      return new GM_Envelope_Impl();
+      return null;
 
     final Coordinate crdMin = new Coordinate( env.getMinX(), env.getMinY() );
     final Coordinate crdMax = new Coordinate( env.getMaxX(), env.getMaxY() );
@@ -589,6 +589,9 @@ public class JTSAdapter
 
   public static Envelope export( final GM_Envelope env )
   {
+    if( env == null )
+      return new Envelope();
+    
     final GM_Position posMin = env.getMin();
     final GM_Position posMax = env.getMax();
 

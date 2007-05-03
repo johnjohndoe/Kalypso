@@ -85,6 +85,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -166,7 +167,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       if( geometry instanceof GM_Surface )
       {
         area = calcTargetCoordinates( projection, (GM_Surface) geometry );
-        drawPolygon( g, area );
+        drawPolygon( g, area, projection );
       }
       else
       {
@@ -174,7 +175,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         for( int i = 0; i < msurface.getSize(); i++ )
         {
           area = calcTargetCoordinates( projection, msurface.getSurfaceAt( i ) );
-          drawPolygon( g, area );
+          drawPolygon( g, area, projection );
         }
       }
     }
@@ -268,13 +269,14 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   /**
    * renders one surface to the submitted graphic context considering the also submitted projection
    */
-  private void drawPolygon( Graphics g, Area area ) throws FilterEvaluationException
+  private void drawPolygon( Graphics g, Area area, GeoTransform projection ) throws FilterEvaluationException
   {
     Graphics2D g2 = (Graphics2D) g;
 
     PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
     org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
     org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
+    final UOM uom = sym.getUom();
 
     final Feature feature = getFeature();
     // only draw filled polygon, if Fill-Element is given
@@ -299,7 +301,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
         if( gFill != null )
         {
-          BufferedImage texture = gFill.getGraphic().getAsImage( feature );
+          BufferedImage texture = gFill.getGraphic().getAsImage( feature, uom, projection );
           if( texture != null )
           {
             Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
