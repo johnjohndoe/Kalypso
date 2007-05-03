@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  EF   26 Mar 2007   10:40 am
+C     Last change:  EF   30 Apr 2007    4:11 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -81,6 +81,7 @@ cipk jan99 initialize AKE
       ELSE
         FCOEF = GRAV/2.208
       ENDIF
+
 C-
 C-.....ASSIGN PROPER COEFS.....
 C-
@@ -185,7 +186,6 @@ cipk dec00        WRITE(75,*) 'CJ, QFLOW', CJ(NGT),QFLOW, AJ(NGT)
       MAT=MR
 
 cipk dec00 skip out for active gate closure
-
       IF(IGTP(NN) .NE. 0) THEN
         IF(IGTCL(NN) .EQ. 1) THEN
 
@@ -1104,6 +1104,7 @@ c lcr eq por
         J=NCON(I)
         !nis,Oct06,com: Get the first element equation number; first means x-velocity; ndf is fixed depending on what should be calculated.
         IA=NDF*(I-1)
+
         !nis,Oct06,com: Do for every nodal degree of freedom
         DO 1050 K=1,NDF
           !nis,Oct06,com: Increasing by one means next nodal degree of freedom
@@ -1123,19 +1124,18 @@ C     WRITE(*,7778) (R1(N),N=1,NSZF)
 C7778 FORMAT(1P5E12.4)
 
       !nis,mar07,testing
-      if (nn < 100) then
-      write (*,*) 'Element: ', nn
-      WRITE(*,9898) estifm(1,1), estifm(1,3),
+      if (nn <30) then
+      write (lout,*) 'Element: ', nn
+      WRITE(lout,9898) estifm(1,1), estifm(1,3),
      + estifm(1,9),estifm(1,11), f(1)
-      WRITE(*,9898) estifm(3,1), estifm(3,3),
+      WRITE(lout,9898) estifm(3,1), estifm(3,3),
      + estifm(3,9),estifm(3,11), f(3)
-      WRITE(*,9898) estifm(9,1), estifm(9,3),
+      WRITE(lout,9898) estifm(9,1), estifm(9,3),
      + estifm(9,9),estifm(9,11), f(9)
-      WRITE(*,9898) estifm(11,1), estifm(11,3),
+      WRITE(lout,9898) estifm(11,1), estifm(11,3),
      + estifm(11,9), estifm(11,11), f(11)
- 9898 format (5(1x,f14.2))
-      WRITE(*,*) qfact
-      pause
+
+ 9898 format (10(1x,f14.2))
       end if
       !-
 
