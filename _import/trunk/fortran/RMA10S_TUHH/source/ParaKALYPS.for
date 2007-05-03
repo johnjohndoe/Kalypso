@@ -1,4 +1,4 @@
-C     Last change:  K    15 Feb 2007    5:09 pm
+C     Last change:  K    20 Apr 2007    2:41 pm
       MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
 !               Kalypso-2D into RMA10S.
@@ -45,6 +45,9 @@ C     Last change:  K    15 Feb 2007    5:09 pm
 !nis,feb07: Add array for midside nodes of Flow1DFE elements
       INTEGER, ALLOCATABLE     :: FFFmidsidenodes(:)
 !-
+
+      !if restart with kalypso 2D-file, then RESTARTSwitch = 1, else RESTARTSwitch = 0
+      INTEGER                  :: RESTARTSwitch
 
 
 !FEM            switch for the control of CVFEM; switch is parat but the CVFEM-code is not yet translated to RMA10S
