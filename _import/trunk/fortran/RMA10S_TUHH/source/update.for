@@ -1,4 +1,4 @@
-C     Last change:  EF   26 Mar 2007   11:11 am
+C     Last change:  K    18 Apr 2007   10:11 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -46,26 +46,6 @@ C-
      1          'LOW)','LOW)','TH) ',')   ','P)  ',')   ',')   '/
 
       DATA ITIMS/0/
-!nis,jan07: Getting the information, whether network is only 1D or has other dimensions. This test needs only to be done in first iteration
-      if (maxn.eq.1) then
-        testfor1d: do i=1, ne
-          if (ncorn(i) .gt. 3) then
-            ONLY1D = 0
-            WRITE(*,*) 'mehr als 1D-element:', i
-            EXIT testfor1d
-          end if
-        end do testfor1d
-      end if
-!-
-!nis,jan07,testing
-!      do i = 1, 30
-!        write(*,*) 'Knoten: ', i
-!        WRITE(*,*) 'Richtungsbed.:', Alfa(i)
-!        WRITE(*,*) 'Aend.: ', R1(nbc(i,1)), r1(nbc(i,2)), r1(nbc(i,3))
-!        WRITE(*,*) 'Verknuepfung: ', nbc(i,1)
-!      end do
-      !pause
-!-
 
 C-
 C-.....SETUP FOR SOLUTION CORRECTIONS.....
@@ -128,12 +108,6 @@ CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 11) THEN
 	      NCNV(6)=1
           ENDIF		         
         ENDDO
-
-      !nis,jan07: If the network is just 1D, the second degree of freedom must not be calculated. Reactivating it:
-      !if (ONLY1d .eq. 1) then
-      !  NCNV(2) = 9999
-      !end if
-      !-
 
       WRITE(75,*) 'NCNV',MAXN,(NCNV(I),I=1,7)
 CIPK AUG01 END UPDATE
