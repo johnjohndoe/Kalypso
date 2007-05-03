@@ -327,6 +327,7 @@ cipk oct99 add iostat test
           !If the first step to calculate is the first time step or the steady state step, then
           !a restart file can be specified or the modell input file can be used as restart file.
             READ(LIN,'(A8,A96)') ID, FNAMIN
+            RESTARTswitch = 0
             IF (ID(1:7) == 'RESTART') THEN
               IF (TRIM(FNAMIN) == FNAM2 .OR. TRIM(FNAMIN) == '' ) THEN
                 NB = ifile
@@ -343,6 +344,7 @@ cipk oct99 add iostat test
               ENDIF
               KRESTF = 1
               iutub  = 1
+              RESTARTSwitch = 1
             ELSE
               BACKSPACE (LIN)
             ENDIF
