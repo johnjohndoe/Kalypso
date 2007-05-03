@@ -1,4 +1,4 @@
-C     Last change:  K     3 Apr 2007    7:57 pm
+C     Last change:  K    20 Apr 2007   11:16 am
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -124,7 +124,7 @@ CIPK JUN05 SET LOWER LIMIT                             	!provides the oportunity
           MaxLT=LT
           !-
           !nis,feb07: Adding counter of midside nodes of Flow1DFE elements
-          WRITE(litr, *) FFFMS + AddMS
+          WRITE(*, *) 'No. of MS nodes of FFF-elts: ', FFFMS,' + ',AddMS
           !-
         else
           MAXA=0

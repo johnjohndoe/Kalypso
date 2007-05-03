@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  K     3 Apr 2007    7:58 pm
+C     Last change:  K     2 May 2007    2:11 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -29,7 +29,7 @@ CIPK  LAST UPDATE OCT 1 1996
       USE PARAMMOD
       SAVE
 !NiS,jul06: Consistent data types for passing parameters
-      INTEGER :: n, m, a, lt
+      INTEGER :: n, m, a, lt, dummy1, dummy2
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -64,6 +64,11 @@ cWP      MMM2=MEL
 
 cipk feb01
       NCLL=0
+
+      !nis,apr07: dummy-initialize
+      dummy1 = 0
+      dummy2 = 0
+      !-
 
 CNiS,mar06: show values of geometry recognition
         WRITE(*,*)' IFILE=  ', IFILE    
@@ -322,12 +327,11 @@ CIPK JUN03
       CLOSE(5555, STATUS='keep')
 !-
 
-
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
          !nis,feb07: Allow for numbered FFF midsides
          !call rdkalyps(n,m,a,lt,0)
-         call rdkalyps(n,m,a,lt,FFFms,AddMS,0)
+         call rdkalyps(n,m,a,lt,dummy1,dummy2,0)
          !-
   !NiS,apr06: adding this transoformation like it is called after RDRM1 (see above)
          NCLL = NCL
@@ -565,6 +569,9 @@ C-
       ENDIF
       NES=NE
       WRITE(ICFL,6210) NE,LE,NP,LP
+      !nis,apr07: Need a global, unchanged copy of the lowest point number for 1D-elements without midside node
+      lpPoly = lp
+      !-
 C-
 C-.....Read cord data from input file .....
 C-

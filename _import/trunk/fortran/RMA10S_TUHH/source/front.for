@@ -1,4 +1,4 @@
-C     Last change:  EF    3 May 2007    9:52 am
+C     Last change:  K     2 May 2007    3:23 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -374,20 +374,14 @@ C      Process one-d elements
 
 	      IF(NRX .EQ. 2) GO TO 18
 CIPK MAR05
-              !NiS,may06: testing
-              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' vor'
-              !-
-              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
-              IF(INOTR .EQ. 0) THEN
-                !nis,feb07: Allow for numbered FFF midsides
-                !if (nop(n,2).eq.-9999) then
-                if (nop(n,2) < -1000) then
-                !-
-                  CALL COEF1dFE(N,NRX)
-                else
+              IF (nop(n,2) > -1000) THEN
+                IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
-                endif
-              ELSE
+                ELSE
+                  CALL COEF1NT(N,NRX)
+                ENDIF
+
+  
 !NiS,jul06:testing
 !      if(ncorn(n).lt.6.AND.(ibn(nop(n,1)).eq.1
 !     +                  .or.ibn(nop(n,3)).eq.1))then
@@ -402,7 +396,14 @@ CIPK MAR05
 !      end if
 !-
 
-                CALL COEF1NT(N,NRX)
+              !NiS,may06: testing
+              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' vor'
+              !-
+              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
+                !nis,feb07: Allow for numbered FFF midsides
+                !if (nop(n,2).eq.-9999) then
+              ELSEIF (nop(n,2) < -1000) THEN
+                CALL COEF1dFE(N,NRX)
               ENDIF
               !NiS,may06: testing
               !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' nach'
@@ -586,7 +587,8 @@ CIPK FEB04
             temp_nbn = node * degree
             !get the factor; the factor is .ne. 1.0, if the node is     in a line-Connection
             !                the factor is .eq. 1.0, if the node is not in a line-Connection
-            fac(temp_nbn) = EqScale(nop(n,node),degree)
+            !WRITE(*,*) nop(n,node), node, n, degree, temp_nbn
+             fac(temp_nbn) = EqScale(nop(n,node), degree)
             !testing
             !if (fac(temp_nbn).ne.1.0) then
             !  WRITE(*,*) 'Factor wird angewendet:'
@@ -619,21 +621,24 @@ CIPK FEB04
 !           that this relation is the end-relation. The result of the line-scaling is, that the variable in all local equation systems, that are
 !           connected to one coupling point can be collapsed to one point with two degrees of freedom. The local equations at the coupling can then
 !           all come together.
-           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
+!           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
             !nis,nov06,testing:
-!            WRITE(*,*) 'Fac(L)=', fac(l)
+            !WRITE(*,*) 'Fac(L)=', fac(l)
             !-
             !nis,feb07,testing:
-            !WRITE(*,*) 'Spalte', LL, 'Zeile', KK, 'Wert: ', EQ(ll,KK)
+            !if (fac(l) /= 1.0) then
+            !  WRITE(*,*) 'Spalte', LL, 'Zeile', KK
+            !  WRITE(*,*)  'Wert: ', EQ(ll,KK), 'Scaling: ', Fac(L)
+            !endif
             !-
             !IF(n == 1910) then
-            !EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)*Fac(L)
+            EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)*Fac(L)
             !!nis,feb07,testing:
             !WRITE(*,*) 'Spalte', LL, 'Zeile', KK, 'Wert: ', EQ(ll,KK)
-            !IF(fac(l) /= 1.0) then
-            !  WRITE(*,*) fac(l), l, n
-            !  pause
-            !endif
+!            IF(fac(l) /= 1.0) then
+              !WRITE(*,*) fac(l), l, n
+              !pause
+!            endif
             !
             !endif
             !-
