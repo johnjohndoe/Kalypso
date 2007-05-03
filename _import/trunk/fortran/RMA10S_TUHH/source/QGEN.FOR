@@ -1,4 +1,4 @@
-C     Last change:  K     2 Mar 2007    7:00 pm
+C     Last change:  JAJ  22 Apr 2007   12:07 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -458,8 +458,10 @@ C-
           !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
           if (nb.ne.0 .and. igeo.eq.2) then
             REWIND(nb)
-            reading: do WHILE (iostaterror.eq.0)
-              read (nb,'(a2)') LineID
+            reading: do
+              !WRITE(*,*) lineID
+              read (nb,'(a2)', iostat = iostaterror) LineID
+              if (iostaterror /= 0) EXIT reading
               if (LineID.eq.'VA') then
                 BACKSPACE(nb)
                 read (nb,*) LineID, tmpnode,tmpvx,tmpvy,tmpdepth,tmpwl
@@ -481,10 +483,7 @@ C-
         na = line (j, 1)
         nc = line (j, lmt (j) )
         dx = cord (nc, 1) - cord (na, 1)
-        !nis,nov06: for vector usage, the coordinates have to be from the same sign
-        !dy = - (cord (nc, 2) - cord (na, 2) )
-        dy = (cord (nc, 2) - cord (na, 2) )
-        !-
+        dy = - (cord (nc, 2) - cord (na, 2) )
 
 !nis,dec06: deactivating, confuses!
 !        !pl     Anfang
@@ -500,29 +499,11 @@ C-
         alp = atan2 (dx, dy)
         ! alp ist der Winkel zwischen x-Achse und Liniensehne
         ! thet=thet+alp
+        if (ABS(thet) > 1.0e-4 .and. maxn == 1) then
+          thet = thet + alp
+        end if
         ! thet ist jetzt der Winkel zwischen x-Achse und der Senkrechten
         ! der Einstroemgeschwindigkeiten
-
-        !nis,nov06,testing: test for irregular angles
-        !if (ABS(thet).gt.2*3.141596.or.ABS(alp).gt.2*3.141596) then
-        !  WRITE(*,*) 'Einstroemwinkel in QGEN, BSWIT.eq.2 zu hoch!!!'
-        !end if
-
-        !nis,nov06: Scalarproduct of continuity line chord's normal vector and
-        !           Q-flow direction
-        !testing:
-        !WRITE(*,*) 'line:', j
-        !WRITE(*,*) 'alp:', alp
-        !WRITE(*,*) 'thet:',thet
-        !thet = (dx*COS(thet)+dy*SIN(thet))/(SQRT(dx**2+dy**2))
-        !WRITE(*,*) 'thet:', thet
-        !-
-
-        !nis,nov06: Setting thet to zero, if angle to small
-        !if (thet.lt.1e-3) thet = 0
-        !WRITE(*,*) 'thet:', thet
-        !-
-
 
         ! um Wellen laengs des Einstroemrandes zu vermeiden, die sich bei
         ! wiederholtem durchlaufen dieser Option einstellen koennen, wird
@@ -1028,18 +1009,18 @@ C-
 !             29.01.98 cosd/sind unbekannt ?
 !             cosd/sind - liefert Vinkel in Grad
 !             cos/sin   - liefert Vinkel in Radian
-!             Umrechnung vom Radian zu Grad:  cos(alpha)*180¹/pi
+!             Umrechnung vom Radian zu Grad:  cos(alpha)*180/pi
                                                                         
 !             spec(na,1)=vest*(teilline(k)/dxl(k))*cosd(thet)
 !             spec(na,2)=vest*(teilline(k)/dxl(k))*sind(thet)
                                                                         
               !nis,sep06,com: Calculate the Cosinus of the inflow angle relative to the inflow line
               !               and then evaluate the specific inflow at the node, vest seems to be the averaged slope
-              cos_in_grad = (cos (thet) * 180) / 3.141592654
+              cos_in_grad = cos (thet)
               spec (na,1) = vest * (teilline(k) / dxl(k)) * cos_in_grad
               !nis,sep06,com: Calculate the Sinus of the inflow angle relative to the inflow line
               !               and then evaluate the specific inflow at the node, vest seems to be the averaged slope
-              sin_in_grad = (sin (thet) * 180) / 3.141592654
+              sin_in_grad = sin (thet)
               spec (na,2) = vest * (teilline(k) / dxl(k)) * sin_in_grad
 
                                                                         
