@@ -1,4 +1,4 @@
-C     Last change:  EF    4 Apr 2007    1:14 pm
+C     Last change:  K     4 Apr 2007    1:15 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE JAN 12 1999 ADD LOGIC FOR 2DV JUNCTIONS
       SUBROUTINE SETUP
@@ -38,21 +38,21 @@ CIPK OCT98      ILK=1
       NCN=NCORN(J)
 CIPK OCT98      IF(NCN .EQ. 15) ILK=2
 CIPK OCT98      IF(NCN .EQ. 10) ILK=2
-      DO 198 K=1,NCN
-cipk oct98 update to f90
-      !EFa Apr07
-      N=(NOP(J,K))
-      IF(NCN .LT. 9) NTHREE(N)=0
-      if (n >0) then
-        NBC(N,1)=0
-      end if
-      !-
-      !N=ABS(NOP(J,K))
 
-C     IF(IM(K,ILK) .EQ. 0) GO TO 198
-      
-  198 CONTINUE
+      DeactNBC: DO K=1,NCN
+cipk oct98 update to f90
+        !N=ABS(NOP(J,K))
+        N = NOP(J,K)
+        if (n < -1000) CYCLE deactNBC
+        n = ABS(n)
+        IF(NCN .LT. 9) NTHREE(N)=0
+C        IF(IM(K,ILK) .EQ. 0) GO TO 198
+        NBC(N,1)=0
+!  198 CONTINUE
+      ENDDO deactNBC
+
   199 CONTINUE
+
 C
 C                                       FORM DEGREE OF FREEDOM ARRAY
 C
