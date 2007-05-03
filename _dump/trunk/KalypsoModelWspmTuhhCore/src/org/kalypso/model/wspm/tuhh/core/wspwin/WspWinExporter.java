@@ -274,6 +274,8 @@ public class WspWinExporter
 
   private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile ) throws IOException
   {
+    final MODE calcMode = calculation.getCalcMode();
+
     PrintWriter pw = null;
     try
     {
@@ -293,7 +295,8 @@ public class WspWinExporter
       pw.println( "# WATERLEVEL" );
       pw.println( "# BF_UNIFORM" );
       pw.println( "# BF_NON_UNIFORM" );
-      pw.println( "BERECHNUNGSMODUS=" + calculation.getCalcMode().name() );
+      pw.println( "# REIB_KONST" );
+      pw.println( "BERECHNUNGSMODUS=" + calcMode.name() );
 
       // TODO: passt das zum RK?
       pw.println();
@@ -322,6 +325,7 @@ public class WspWinExporter
 
       pw.println();
       pw.println( "# mögliche Werte" );
+      pw.println( "# NON" );
       pw.println( "# DVWK" );
       pw.println( "# BJOERNSEN" );
       pw.println( "# DFG" );

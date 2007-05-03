@@ -64,17 +64,22 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
- * @author Belger
+ * Binding class for CalculationReibConstWspmTuhhSteadyState AND CalculationWspmTuhhSteadyState
+ * 
+ * @author Gernot Belger
  */
 public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 {
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" );
 
+  public static final QName QNAME_TUHH_CALC_REIB_CONST = new QName( NS_WSPM_TUHH, "CalculationReibConstWspmTuhhSteadyState" );
+
   public static enum MODE
   {
     WATERLEVEL,
     BF_UNIFORM,
-    BF_NON_UNIFORM;
+    BF_NON_UNIFORM,
+    REIB_KONST;
   }
 
   public static enum FLIESSGESETZ
@@ -101,7 +106,8 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   {
     DVWK,
     BJOERNSEN,
-    DFG;
+    DFG,
+    NON;
   }
 
   public static enum REIBUNGSVERLUST_TYPE
@@ -117,7 +123,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
     if( calcFeature == null )
       throw new IllegalStateException( "calcFeature is null" );
 
-    if( !QNAME_TUHH_CALC.equals( calcFeature.getFeatureType().getQName() ) )
+    if( !QNAME_TUHH_CALC.equals( calcFeature.getFeatureType().getQName() ) && !QNAME_TUHH_CALC_REIB_CONST.equals( calcFeature.getFeatureType().getQName() ) )
       throw new IllegalStateException( "calcfeature is not of type: " + QNAME_TUHH_CALC );
 
     m_calcFeature = calcFeature;
@@ -185,8 +191,16 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public FLIESSGESETZ getFliessgesetz( )
   {
-    final String property = (String) m_calcFeature.getProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ) );
-    return FLIESSGESETZ.valueOf( property );
+    switch( getCalcMode() )
+    {
+      case REIB_KONST:
+        return FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS;
+
+      default:
+        final String property = (String) m_calcFeature.getProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ) );
+        return FLIESSGESETZ.valueOf( property );
+    }
+
   }
 
   public void setSubReachDef( final double startStation, final double endStation )
@@ -228,26 +242,47 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public START_KONDITION_KIND getStartKind( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
-    final Feature conditionFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    switch( getCalcMode() )
+    {
+      case REIB_KONST:
+        return START_KONDITION_KIND.UNIFORM_BOTTOM_SLOPE;
 
-    return START_KONDITION_KIND.valueOf( (String) conditionFeature.getProperty( new QName( NS_WSPM_TUHH, "kind" ) ) );
+      default:
+        final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
+        final Feature conditionFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+
+        return START_KONDITION_KIND.valueOf( (String) conditionFeature.getProperty( new QName( NS_WSPM_TUHH, "kind" ) ) );
+    }
   }
 
   public Double getStartWaterlevel( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
-    final Feature conditionFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    switch( getCalcMode() )
+    {
+      case REIB_KONST:
+        return null;
 
-    return (Double) conditionFeature.getProperty( new QName( NS_WSPM_TUHH, "waterlevel" ) );
+      default:
+        final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
+        final Feature conditionFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+
+        return (Double) conditionFeature.getProperty( new QName( NS_WSPM_TUHH, "waterlevel" ) );
+    }
   }
 
   public Double getStartSlope( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
-    final Feature conditionFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    switch( getCalcMode() )
+    {
+      case REIB_KONST:
+        return (Double) getFeature().getProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ) );
 
-    return (Double) conditionFeature.getProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ) );
+      default:
+        final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
+        final Feature conditionFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+
+        return (Double) conditionFeature.getProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ) );
+    }
   }
 
   public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, boolean doCalcBarrages )
@@ -275,10 +310,17 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public VERZOEGERUNSVERLUST_TYPE getVerzoegerungsverlust( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    switch( getCalcMode() )
+    {
+      case REIB_KONST:
+        return VERZOEGERUNSVERLUST_TYPE.NON;
 
-    return VERZOEGERUNSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ) ) );
+      default:
+        final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
+        final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+
+        return VERZOEGERUNSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ) ) );
+    }
   }
 
   public REIBUNGSVERLUST_TYPE getReibungsverlust( )
@@ -358,14 +400,42 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
     final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "runOffEventMember" ) );
     if( runOffEvent == null )
       return null;
-    
+
     return ObservationFeatureFactory.toObservation( runOffEvent );
   }
 
   public MODE getCalcMode( )
   {
     final Feature feature = getFeature();
+    if( QNAME_TUHH_CALC_REIB_CONST.equals( getQName() ) )
+      return MODE.REIB_KONST;
+
     final String value = (String) feature.getProperty( new QName( NS_WSPM_TUHH, "mode" ) );
     return MODE.valueOf( value );
+  }
+
+  private Object getQName( )
+  {
+    return getFeature().getFeatureType().getQName();
+  }
+
+  /** Only valid for REIB_KONST mode. */
+  public int getPolynomialDeegree( )
+  {
+    final Integer value = (Integer) getFeature().getProperty( new QName( NS_WSPM_TUHH, "degree" ) );
+    if( value == null )
+      return 4;
+
+    return value;
+  }
+
+  /** Only valid for REIB_KONST mode. */
+  public boolean isPolynomialTriple( )
+  {
+    final Boolean value = (Boolean) getFeature().getProperty( new QName( NS_WSPM_TUHH, "trippleIt" ) );
+    if( value == null )
+      return false;
+    
+    return value;
   }
 }

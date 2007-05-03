@@ -476,6 +476,7 @@ public class WspmTuhhCalcJob implements ISimulation
           break;
         }
         case BF_NON_UNIFORM:
+        case REIB_KONST:
         {
           // bankfull nonuniform
 

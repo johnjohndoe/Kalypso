@@ -9,7 +9,7 @@
             objectClass="org.kalypsodeegree.model.feature.Feature">
          <filter
                name="featureType"
-               value="org.kalypso.model.wspm.tuhh#CalculationWspmTuhhSteadyState"/>
+               value="org.kalypso.model.wspm.tuhh#CalculationWspmTuhhSteadyState;org.kalypso.model.wspm.tuhh#CalculationReibConstWspmTuhhSteadyState"/>
          <action
                class="org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction"
                icon="icons/obj16/startCalulation.gif"

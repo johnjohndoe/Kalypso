@@ -264,8 +264,9 @@ public class PolynomeHelper
       pw.println( "-------------------------------------------------" );
       pw.println( "01 Beiwerte(Pfad) 01Eingang\\Beiwerte.AUS " );
       pw.println( "02 Längsschnitt(Pfad) 01Eingang\\laengsschnitt.txt" );
-      pw.println( "03 PolyGrad(2,3,4) 4" );
-      pw.println( "04 DreiTeil(J/N) J" );
+      pw.println( "03 PolyGrad(2,3,4) " + calculation.getPolynomialDeegree() );
+      final String tripleIt = calculation.isPolynomialTriple() ? "J" : "N";
+      pw.println( "04 DreiTeil(J/N) " + tripleIt );
       pw.println( "05 PolyReduce(J/N) J" );
       pw.println( "06 ProfIntervall(J/N) N" );
       pw.printf( Locale.PRC, "07 StartProf(0000.0000) %.4f", startStation );
