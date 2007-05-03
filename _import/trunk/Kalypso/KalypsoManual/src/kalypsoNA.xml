@@ -230,7 +230,7 @@
         </figure></para>
 
       <para>Bei der Aufteilung in Teileinzugsgebiete sind folgende Punkte zu
-      beachten: </para>
+      beachten:</para>
 
       <itemizedlist>
         <listitem>
@@ -452,7 +452,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/Komponenten_Netzplan-na.png"
+            <imagedata fileref="img/kalypso_na/Systemelments-na.png"
                        scale="70" />
           </imageobject>
         </mediaobject>
