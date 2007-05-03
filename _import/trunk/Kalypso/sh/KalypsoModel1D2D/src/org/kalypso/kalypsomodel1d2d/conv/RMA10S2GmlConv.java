@@ -183,7 +183,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 
   private static final void interpreteResultLine( final String line, final IRMA10SModelElementHandler handler )
   {
-    final String[] strings = line.split( "\\s" );
+    final String[] strings = line.split( "\\s+" );
     if( strings.length == 6 )
     {
       try

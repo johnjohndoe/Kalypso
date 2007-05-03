@@ -200,10 +200,14 @@ public class SimMode1D2DCalcJob implements ISimulation
       // logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich beendet werden!" );
       // }
     }
+    catch( final SimulationException se )
+    {
+      throw se;
+    }
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Simulation couldn't be finished", e );
+      throw new SimulationException( "Simulation couldn't be finished: " + e.getLocalizedMessage(), e );
     }
     final Handler[] handlers = logger.getHandlers();
     for( final Handler handl : handlers )
@@ -272,7 +276,7 @@ public class SimMode1D2DCalcJob implements ISimulation
 
       /* GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
-      
+
       return gmlResultFile;
     }
     finally

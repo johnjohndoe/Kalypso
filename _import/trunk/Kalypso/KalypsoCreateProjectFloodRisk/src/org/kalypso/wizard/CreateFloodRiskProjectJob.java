@@ -137,6 +137,7 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -681,7 +682,7 @@ public class CreateFloodRiskProjectJob extends Job
         fill = StyleFactory.createFill( predefinedColors.get( landusePropertyName ), 0.3 );
       else
         fill = StyleFactory.createFill( color, 0.8 );
-      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl(fill, stroke, geometry, minScaleDenominator, maxScaleDenominator);
+      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl(fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
       Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
       Operation operation = new PropertyIsLikeOperation(new PropertyName(m_landusePropertyName), new Literal(landusePropertyName), '*', '$', '/');
       Filter filter = new ComplexFilter(operation);

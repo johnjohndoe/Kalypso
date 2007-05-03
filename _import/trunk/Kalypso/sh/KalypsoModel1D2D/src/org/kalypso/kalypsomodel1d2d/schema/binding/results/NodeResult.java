@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -61,6 +64,7 @@ public class NodeResult extends AbstractFeatureBinder
   private static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" );
   private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
   private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" );
+  private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
   
   public NodeResult( final Feature featureToBind )
   {
@@ -85,8 +89,11 @@ public class NodeResult extends AbstractFeatureBinder
     getFeature().setProperty( QNAME_PROP_DEPTH, depth );
     getFeature().setProperty( QNAME_PROP_WATERLEVEL, waterlevel );
     
-    // TODO Auto-generated method stub
-    
+    final List<Double> veloList = new ArrayList<Double>();
+    veloList.clear();
+    veloList.add( vx );
+    veloList.add( vy );
+    getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
   }
 
 }

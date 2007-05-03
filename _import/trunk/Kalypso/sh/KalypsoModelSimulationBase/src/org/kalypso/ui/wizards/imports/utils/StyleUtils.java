@@ -50,6 +50,7 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -188,7 +189,7 @@ public class StyleUtils
       Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
       Geometry geometry = new Geometry_Impl( m_GeometryProperty );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
-      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator );
+      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
       Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
       Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( m_CreateFilter )
@@ -359,7 +360,7 @@ public class StyleUtils
       Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
       Geometry geometry = new Geometry_Impl( geometryProperty );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
-      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator );
+      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
       Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
       Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( b_filterPropertySet )
