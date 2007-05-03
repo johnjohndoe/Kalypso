@@ -1,8 +1,10 @@
+C     Last change:  EF    2 May 2007   11:12 am
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
       USE BLKSUBMOD
       USE BLK11MOD
+      USE PARAFlow1dFE
       
 C
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -16,6 +18,7 @@ C-
 C-
 C...... Det up cutoff values
 C-
+
       IF(GRAV .LT. 32.) THEN
         HCUT=0.001
       ELSE
@@ -24,7 +27,6 @@ C-
       NCN=NCORN(NN)
 
 c     form ave velocity
-
       DO N=1,NCN
         NA=NOP(NN,N)
         IF(NA .GT. 0) THEN
@@ -51,13 +53,25 @@ c     skip mid-side in loop
         N1=NOP(NN,KK)
         IF(N1 .NE. 0) THEN
           NA=(KK-1)*NDF+1
-          ESTIFM(1,NA)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
-     +    *VEL(3,N1))*VEL(3,N1)
+          !EFa Apr07, if-clause
+          if (width(n1)==0) then
+            estifm(1,na)=dir(n1)*ah(n1)
+          else
+            ESTIFM(1,NA)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
+     +      *VEL(3,N1))*VEL(3,N1)
+          end if
+          !-
           CX=COS(ALFA(N1))
           SA=SIN(ALFA(N1))
           R=VEL(1,N1)*CX+VEL(2,N1)*SA
-          ESTIFM(1,NA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))
-     +    *VEL(3,N1))*R
+          !EFa Apr07,if-clause
+          if (width(n1)==0) then
+            estifm(1,na+2)=dir(n1)*dahdh(n1)*r
+          else
+            ESTIFM(1,NA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))
+     +      *VEL(3,N1))*R
+          end if
+          !-
           F(1)=F(1)-ESTIFM(1,NA)*R
         ENDIF
       ENDDO
@@ -67,11 +81,14 @@ c      allow for mid-side node
 c
 c      now do the middle of the element
 c
-      F(5)=U(2)-(U(3)+U(1))/2.
-      ESTIFM(5,1)=0.5
-      ESTIFM(5,9)=0.5
-      ESTIFM(5,5)=-1.0
-
+      !EFa, Apr07, if-clause
+      if (nop(nn,2).gt.0) then
+        F(5)=U(2)-(U(3)+U(1))/2.
+        ESTIFM(5,1)=0.5
+        ESTIFM(5,9)=0.5
+        ESTIFM(5,5)=-1.0
+      end if
+      !-
 C-
 C...... The other is some kind elevation relationship
 C-
@@ -440,16 +457,26 @@ C      set sign for DH
 c
 c      This is a corner node
 c
-
         IF(WSLL(N1) .LT. TRANSEL(N1)) THEN
+
+          if (width(n1)==0) then
+            Q=(U(1)*VEL(3,N1)+U(3)*VEL(3,N2))/2.
+          else
+            Q=(u(1)*ah(n1)+u(3)*ah(n2))/2.
+          end if
      
-          Q=(U(1)*VEL(3,N1)+U(3)*VEL(3,N2))/2.
+          
 
 c
 c      Derivative with respect to u1 and u2
 c
-          ESTIFM(NB,NA)=-VEL(3,N1)/2.
-          ESTIFM(NB,NB)=-VEL(3,N2)/2.
+          if (width(n1)==0) then
+            ESTIFM(NB,NA)=-VEL(3,N1)/2.
+            ESTIFM(NB,NB)=-VEL(3,N2)/2.
+          else
+            ESTIFM(NB,NA)=-ah(n1)/2.
+            ESTIFM(NB,NB)=-ah(n2)/2.
+          end if
 
 CIPK JAN06 ADD QFACT1
           QFACT1=1.0           
@@ -463,8 +490,12 @@ C              ESTIFM(NB,NA+2)=ESTIFM(NB,NA+2)+1.E6
 C              ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+1.E6
               VEL(1,NOP(NN,1))=0.
               VEL(2,NOP(NN,1))=0.
-              VEL(1,NOP(NN,2))=0.
-              VEL(2,NOP(NN,2))=0.
+              !EFa Apr07, if-clause
+              if (nop(nn,2).gt.0) then
+                VEL(1,NOP(NN,2))=0.
+                VEL(2,NOP(NN,2))=0.
+              end if
+              !-
               VEL(1,NOP(NN,3))=0.
               VEL(2,NOP(NN,3))=0.
               ESTIFM(1,1)=1.E6              
@@ -477,8 +508,14 @@ C              ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+1.E6
 c
 c      Derivative with respect to h1 and h2  (first term)
 c
-          ESTIFM(NB,NA+2)=-U(1)/2.
-          ESTIFM(NB,NB+2)=-U(3)/2.
+          if (width(n1)==0) then
+            ESTIFM(NB,NA+2)=-U(1)/2.
+            ESTIFM(NB,NB+2)=-U(3)/2.
+          else
+            ESTIFM(NB,NA+2)=-U(1)*dahdh(n1)/2.
+            ESTIFM(NB,NB+2)=-U(3)*dahdh(n2)/2.
+          end if
+
 c
 c      Prepare for call to get function
 c
@@ -696,6 +733,7 @@ c
 
         ENDIF
   500   CONTINUE
+
       ENDIF
       RETURN
       END
