@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <mapv:gismapview name="Rauheitszonen" xmlns:ns0="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <mapv:extent top="5992603.927024217" srs="EPSG:31467" right="3560162.649" left="3552802.6610000003" bottom="5986145.589975784"/>
+    <mapv:extent top="5989575.555479904" srs="EPSG:31467" right="3555308.7998114824" left="3551293.0197393894" bottom="5986277.261447358"/>
     <mapv:layers>
         <mapv:layer visible="true" name="Roughness" id="ID_2" featurePath="#fid#RoughnessLayerPolygonCollection11709431308431/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
             <ns0:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
