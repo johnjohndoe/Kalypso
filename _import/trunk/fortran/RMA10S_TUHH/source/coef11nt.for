@@ -670,7 +670,7 @@ cipk jul06 use perim
 
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
       !nis,jan07: This statement can not work
-      ELSEIF (ORT(NR,5) == -1.0) THEN
+      ELSEIF (ORT(MAT,5) == -1.0) THEN
       !ELSEIF (ORT(MAT,5) .lt. 0) THEN
       !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
