@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -165,6 +166,18 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   public String getText( Object element )
   {
     return m_handler.convertToXMLString( element );
+  }
+  
+  /**
+   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+   */
+  @Override
+  public Image getImage( final Object element )
+  {
+    final RGB rgb = (RGB) element;
+    
+    
+    return super.getImage( element );
   }
 
   /**
