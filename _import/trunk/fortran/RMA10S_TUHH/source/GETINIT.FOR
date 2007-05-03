@@ -1,4 +1,4 @@
-C     Last change:  K     3 Apr 2007    8:15 pm
+C     Last change:  K     3 May 2007    5:13 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -17,6 +17,7 @@ CIPK  LAST UPDATE MAY 1 1996
       USE BLKFTMOD
 !NiS,may06: Module for Kalypso-Use
       USE paraKALYPS
+      USE paraflow1dfe
 !-
 	!********************** DJW 20/07/04
       USE WBMMODS
@@ -327,8 +328,21 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
 	ENDIF
 	DO 172 M=1,NLM
 	  NA=NOP(N,M)
-	  VEL(1,NA)=UNOM
+
+          !nis,may07: Jump over negative node numbers at elements with polynom approach
+          if (na < -1000) then
+            vel(3,nop(n,m-1)) =
+     +          0.5 * (hhmax (nop (n, m-1)) + hhmin (nop (n,m-1)))
+            vel(3,nop(n,m+1)) =
+     +          0.5 * (hhmax (nop (n, m+1)) + hhmin (nop (n,m+1)))
+          end if
+
+          if (na < -1000) GO TO 172
+          !-
+	    VEL(1,NA)=UNOM
+
   172   CONTINUE
+        pause
   173 CONTINUE
   175 CONTINUE
 c      DO 1780 N=1,NP
