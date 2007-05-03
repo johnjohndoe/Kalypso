@@ -39,7 +39,7 @@ public class Perspective implements IPerspectiveFactory
     rightBottom.addPlaceholder( FeatureView.ID );
     veryRight.addPlaceholder( ActionOptionsView.ID );
 
-    layout.getViewLayout( FeatureView.ID ).setMoveable( false );
+    layout.getViewLayout( FeatureView.ID ).setMoveable( true );
     layout.getViewLayout( FeatureTemplateView.ID ).setCloseable( false );
     layout.getViewLayout( FeatureTemplateView.ID ).setMoveable( false );
     layout.getViewLayout( ActionOptionsView.ID ).setCloseable( false );
