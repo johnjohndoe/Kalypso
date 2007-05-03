@@ -1,3 +1,4 @@
+C     Last change:  EF    4 Apr 2007    1:14 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE JAN 12 1999 ADD LOGIC FOR 2DV JUNCTIONS
       SUBROUTINE SETUP
@@ -39,10 +40,17 @@ CIPK OCT98      IF(NCN .EQ. 15) ILK=2
 CIPK OCT98      IF(NCN .EQ. 10) ILK=2
       DO 198 K=1,NCN
 cipk oct98 update to f90
-      N=ABS(NOP(J,K))
+      !EFa Apr07
+      N=(NOP(J,K))
       IF(NCN .LT. 9) NTHREE(N)=0
+      if (n >0) then
+        NBC(N,1)=0
+      end if
+      !-
+      !N=ABS(NOP(J,K))
+
 C     IF(IM(K,ILK) .EQ. 0) GO TO 198
-      NBC(N,1)=0
+      
   198 CONTINUE
   199 CONTINUE
 C
