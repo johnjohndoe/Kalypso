@@ -1,4 +1,4 @@
-C     Last change:  K     3 Apr 2007    7:57 pm
+C     Last change:  K    20 Apr 2007   11:38 am
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -32,7 +32,7 @@ cipk aug06  add input options
      +          ,MaxA, MaxT
 !-
 !nis,feb07: Add FFFMS as counter for midside nodes of Flow1DFE elements
-     +          ,FFFMS, AddMS
+     +          ,FFFMS, AddMS, LPPoly
 !-
 !nis,nov06      add MaxLT as dimensioner for line-transitions
      +          ,MaxLT
@@ -194,9 +194,6 @@ C     LAYER VARIABLE
 !-
       !nis,dec06: Connection node of the coupling elements
       !INTEGER, ALLOCATABLE                 :: ConnectNode (:)
-      !-
-      !nis,jan07: Pointer for network, that shows, whether network only consists of 1D
-      INTEGER                              :: ONLY1D
       !-
 
       !nis,jan07: The velocities at the transition have to be stored temporarily; allocation takes place at the calling of the qgen-subroutine with
