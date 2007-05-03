@@ -1,4 +1,4 @@
-!     Last change:  K     2 Mar 2007    6:26 pm
+!     Last change:  K    30 Apr 2007    5:00 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -79,7 +79,7 @@ END DO
 maxno = LMT(TLine)
 
 !transition line must contain more than one line segment
-if (maxno.lt.2) STOP 'ERROR - transition contains less then 2 segments'
+if (maxno.lt.2) STOP 'ERROR - transition contains of less then 2 segments'
 !-
 
 !starting node, ending node
@@ -149,26 +149,32 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
   alp = atan2 (dx, dy)
 
   !nis,sep06,com: IDNOPT.eq.0, if only wetting and drying is applied
-  IF (idnopt.eq.0) then
+!  IF (idnopt.eq.0) then
   !nis,sep06,com: get the depth of the corner nodes of the actual CCL-segment
     d1 = waspi - ao (na)
     d3 = waspi - ao (nc)
   !nis,sep06,com: IDNOPT.ne.0, if marsh-algorithm is applied
-  ELSE
-  !nis,sep06,com: Get the depth of the corner nodes of the actual CCL-segment
-    d1v = waspi - ao (na)
-    d3v = waspi - ao (nc)
+!  ELSE
+!  !nis,sep06,com: Get the depth of the corner nodes of the actual CCL-segment
+!    d1v = waspi - ao (na)
+!    d3v = waspi - ao (nc)
+!
+!    !nis,sep06,com: Transform the depths to the marsh-algorithm-depths
+!
+!    !nis,sep06: zeigmarsh-parameter is not working in RMA10S yet
+!    !CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1, zeigmarsh)
+!    !CALL amf (d3v, d3, akp (nc), adt (nc), adb (nc), amec (k), d2, 1, zeigmarsh)
+!    CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1)
+!    CALL amf (d3v, d3, akp (nc), adt (nc), adb (nc), amec (k), d2, 1)
+!    !-
+!  ENDIF
 
-    !nis,sep06,com: Transform the depths to the marsh-algorithm-depths
-
-    !nis,sep06: zeigmarsh-parameter is not working in RMA10S yet
-    !CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1, zeigmarsh)
-    !CALL amf (d3v, d3, akp (nc), adt (nc), adb (nc), amec (k), d2, 1, zeigmarsh)
-    CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1)
-    CALL amf (d3v, d3, akp (nc), adt (nc), adb (nc), amec (k), d2, 1)
-    !-
-  ENDIF
-
+!  WRITE(*,*) 'Wassertiefen: ', na, ': ', d1v, ' ', nc, ': ', ' ', d3v
+!  WRITE(*,*) 'Wassertiefen: ', na, ': ', d1, ' ', nc, ': ', ' ', d3
+!  WRITE(*,*) waspi, ao(na), ao(nc), idnopt
+!  WRITE(*,*) akp(na), adt(na), adb(na)
+!  WRITE(*,*) akp(nc), adt(nc), adb(nc)
+!  pause
   !nis,sep06,com: Set depth to 0, if neglectable
   IF (d1.le.0.0) d1 = 0.0
   IF (d3.le.0.0) d3 = 0.0
@@ -205,9 +211,9 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
 
     !nis,jan07,testing
     WRITE(999,*) 'Inputgeschwindigkeit am Knoten: ', na, ' entspricht Linienknoten Nr. ',k,' :', sqrt(vel(1,na)**2+vel(2,na)**2)
-    WRITE(999,*) 'vektorielle Geschwindigkeiten:  ', vel(1,na), vel(2,na)
+    WRITE(999,*) 'Geschwindigkeitskomponenten:  ', vel(1,na), vel(2,na)
     WRITE(999,*) 'Einflussbreite: ', 2*xl, ' Wassertiefe: ', d1
-    WRITE(999,*) 'aktueller Rauhigkeitsbeiwert: ', lambda
+    WRITE(999,*) 'aktueller Fliesswiderstandsbeiwert lambda: ', lambda
     !-
 
     !nis,sep06,com: Initialize the total flow velocity
@@ -277,14 +283,15 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
 
 END DO ThroughNodesOfLine
 
+!nis,sep06,com: Refresh the max-value with the number of nodes of the actual CCL
+maxno = lmt (TLine)
+
 !nis,jan07: testfile ouput
 do i = 1, maxno
  WRITE(999,*) 'Conveyance Factor of node ', i,':',Conveyance(i)
 end do
 !-
 
-!nis,sep06,com: Refresh the max-value with the number of nodes of the actual CCL
-maxno = lmt (TLine)
 
 !nis,sep06,com: Summing of the Conveyance factors
 DO k = 1, maxno
@@ -390,23 +397,23 @@ AssignVelocities: DO k = 1, maxno
     na1 = line (TLine, k - 1)
     na2 = line (TLine, k + 1)
 
-    !nis,sep06,com: If wetting/drying is activated, just calculate the waterdepths of the two adjacent corner nodes of the actual midside node
-    IF (idnopt.eq.0) then
+!    !nis,sep06,com: If wetting/drying is activated, just calculate the waterdepths of the two adjacent corner nodes of the actual midside node
+!    IF (idnopt.eq.0) then
       d1 = waspi - ao (na1)
       d3 = waspi - ao (na2)
-    !nis,sep06,com: If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and
-    !               transform them afterwards
-    ELSE
-      d1v = waspi - ao (na1)
-      d3v = waspi - ao (na2)
-
-      !nis,sep06: Zeigmarsh not active in RMA10S yet
-      !CALL amf (d1v, d1, akp (na1), adt (na1), adb (na1), amec (k - 1), d2, 1, zeigmarsh)
-      !CALL amf (d3v, d3, akp (na2), adt (na2), adb (na2), amec (k + 1), d2, 1, zeigmarsh)
-      CALL amf (d1v, d1, akp (na1), adt (na1), adb (na1), amec (k - 1), d2, 1)
-      CALL amf (d3v, d3, akp (na2), adt (na2), adb (na2), amec (k + 1), d2, 1)
-      !-
-    ENDIF
+!    !nis,sep06,com: If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and
+!    !               transform them afterwards
+!    ELSE
+!      d1v = waspi - ao (na1)
+!      d3v = waspi - ao (na2)
+!
+!      !nis,sep06: Zeigmarsh not active in RMA10S yet
+!      !CALL amf (d1v, d1, akp (na1), adt (na1), adb (na1), amec (k - 1), d2, 1, zeigmarsh)
+!      !CALL amf (d3v, d3, akp (na2), adt (na2), adb (na2), amec (k + 1), d2, 1, zeigmarsh)
+!      CALL amf (d1v, d1, akp (na1), adt (na1), adb (na1), amec (k - 1), d2, 1)
+!      CALL amf (d3v, d3, akp (na2), adt (na2), adb (na2), amec (k + 1), d2, 1)
+!      !-
+!    ENDIF
 
     !nis,sep06,com: Set to 0, if neglectable depth
     IF (d1.le.0.0) d1 = 0.0
@@ -416,19 +423,19 @@ AssignVelocities: DO k = 1, maxno
 
   !nis,sep06,com: Process on corner nodes
   ELSE
-    !nis,sep06,com: Calculate the water depth of the actual node of the actual node of actual CCL
-    !               due to the drying/wetting algorithm or marsh-algorithm
-    !               na is still the actual node number of actual node of actual CCL
-    IF (idnopt.eq.0) then
+!    !nis,sep06,com: Calculate the water depth of the actual node of the actual node of actual CCL
+!    !               due to the drying/wetting algorithm or marsh-algorithm
+!    !               na is still the actual node number of actual node of actual CCL
+!    IF (idnopt.eq.0) then
       d1 = waspi - ao (na)
-    ELSE
-      d1v = waspi - ao (na)
-      !nis,sep06: Zeigmarsh not active in RMA10S
-      !CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1, zeigmarsh)
-      CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1)
-      !-
-
-    ENDIF
+!    ELSE
+!      d1v = waspi - ao (na)
+!      !nis,sep06: Zeigmarsh not active in RMA10S
+!      !CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1, zeigmarsh)
+!      CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1)
+!      !-
+!
+!    ENDIF
   ENDIF
                                                                         
   !nis,sep06,com: Set depth 0, if ngelectable
