@@ -40,12 +40,7 @@ public class SplitSort implements FeatureList
       else if( object instanceof String )
       {
         final GMLWorkspace workspace = getParentFeature().getWorkspace();
-        //TODO Patrice Check causing null pointer exception
-        if( workspace == null )
-        {
-          return null;
-        }
-        final Feature fe = workspace.getFeature( (String) object );
+        final Feature fe = workspace == null ? null : workspace.getFeature( (String) object );
         if( fe != null )
           return fe.getEnvelope();
       }
@@ -86,12 +81,9 @@ public class SplitSort implements FeatureList
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
-    //old
-    m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
-    
-    //new
-    
-//    m_index = new QuadTreeIndex( m_envelopeProvider );
+
+//     m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
+    m_index = new QuadTreeIndex( m_envelopeProvider );
   }
 
   public boolean add( final Object object )
@@ -138,19 +130,18 @@ public class SplitSort implements FeatureList
     return result;
   }
 
+  public boolean remove( final Object object )
+  {
+    final GM_Envelope env = getEnvelope( object );
+    remove(  env, object );
+
+    return m_objects.remove( object );
+  }
+
   private void remove( final GM_Envelope env, final Object object )
   {
     final Envelope itemEnv = JTSAdapter.export( env );
     m_index.remove( itemEnv, object );
-  }
-
-  public boolean remove( final Object object )
-  {
-    final GM_Envelope env = getEnvelope( object );
-    if( env != null )
-      remove( env, object );
-
-    return m_objects.remove( object );
   }
 
   protected GM_Envelope getEnvelope( final Object object )
@@ -171,11 +162,6 @@ public class SplitSort implements FeatureList
   public GM_Envelope getBoundingBox( )
   {
     final Envelope bbox = m_index.getBoundingBox();
-//    //TODO Patrice Check
-//    if( bbox == null )
-//    {
-//      return null;
-//    }
     if( bbox.isNull() )
       return null;
     return JTSAdapter.wrap( bbox );
