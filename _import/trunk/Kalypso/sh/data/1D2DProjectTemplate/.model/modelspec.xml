@@ -3,6 +3,7 @@
     <input id="DiscretisationModel" path="models/discretisation.gml" relativeToCalcCase="true"/>
     <input id="OperationalModel" path="models/operational.gml" relativeToCalcCase="true"/>
 	<input id="FlowRelationshipModel" path="models/flowrelations.gml" relativeToCalcCase="true"/>
+	<input id="FlowResistanceModel" path="models/flow_resistance_model.gml" relativeToCalcCase="true"/>
 	<input id="TerrainModel" path="models/terrain.gml" relativeToCalcCase="true"/>
 	<input id="SimulationControlModel" path="models/control.gml" relativeToCalcCase="true"/>
 	<input id="Roughness" path=".metadata/roughness.gml" relativeToCalcCase="false"/>
