@@ -61,154 +61,6 @@
                name="NodeResultVelocityFunction"/>
               
      </extension>     
-     <extension
-           id="editorActions"
-           name="editorActions"
-           point="org.eclipse.ui.editorActions">
-              <editorContribution
-                    id="org.kalypso.kalypsomodel1d2d.mapeditorContributions"
-                    targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-  			<action
-	           icon="icons/elcl16/edit1d2d.gif"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEElementDelegate"               
-	           label="FE-Element hinzufügen"
-	           style="radio"
-	           toolbarPath="karte/edit"
-	           tooltip="Ein neues FE-Element erzeugen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element2D"/>
-	       			</class>
-			</action>
-			
-			
-         <action               
-               id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineDelegate"
-               label="Kontinuitätslinie definieren"
-               style="radio"
-               toolbarPath="karte/edit"
-               tooltip="Eine neue Kontinuitätslinie definieren">
-               		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineWidget"/>
- 	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="ContinuityLine"/>
-	       			</class>
-         </action>
-         
-        <action
-               	id="xp.CreateGridDelegate"
-               	label="FE-Elementgitter erzeugen"
-               	style="radio"
-               	toolbarPath="karte/edit"
-				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
-               	tooltip="Ein FE-Elementgitter innerhalb von vier Punkten erzeugen">
-	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element2D"/>
-	       			</class>
-       	</action>            
-       	
-     	
-       	
-        <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridActionDelegate"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
-              label="Grid"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Grid draw tool"/>
-              
-        <action
-          class="org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationActionDelegate"
-          id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
-          label="Ele"
-          menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-          style="radio"
-          toolbarPath="karte/tools"
-          tooltip="Höhen zuweisen"/>
-              
-        <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFECLineActionDelegate"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
-              label="CLine"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Root a Continuity Line"/>
-        <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFE1DElementActionDelegate"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.create1dele.CreateFEElement1DWidget"
-              label="1DCreate"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Create 1D Element"/>
-              
-        <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.del.TestDeleteFEElementActionDelegate"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
-              label="FEDel"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Delete  FE Element"/>
-        <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromClAndElement1DActionDelegate"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromClAndElement1DActionDelegate"
-              label="Junc1d2d"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Create a junction element"/>
-  		
-  		<action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromSelectedEdgesActionDelegate"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromSelectedEdgesActionDelegate"
-              label="JuncEdge2"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Create a junction element from selected edge"/>
-  		
-          <action
-               	id="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"
-               	label="Flussschlauch"
-               	style="radio"
-               	toolbarPath="karte/edit"
-				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
-               	tooltip="Flussschlauch anhand von Profilen generieren">
-	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element2D"/>
-	       			</class>
-       	</action>    
-              
-        <action
-              class="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"
-              id="KalypsoModel1D2D.action1"
-              label="Flussschlauch"
-              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-              style="radio"
-              toolbarPath="karte/tools"
-              tooltip="Flussschlauch anhand von Profilen generieren"/>
-              </editorContribution>
-     </extension>
      
      <extension
          id="org.kalypso.core.adapters"
@@ -253,7 +105,7 @@
          	<action
 	           icon="icons/elcl16/add_2delement.gif"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementDelegate"               
-	           label="FE-Element hinzufügen"
+	           label="2D-FE-Element hinzufügen"
 	           style="radio"
 	           toolbarPath="karte/edit"
 	           tooltip="Ein neues FE-Element erzeugen">
@@ -268,7 +120,7 @@
 			</action>
 			
 			<action
-	           icon="icons/elcl16/geom_edit.gif"
+	           icon="icons/elcl16/edit1d2d.gif"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"               
 	           label="FE-Knoten bewegen"
 	           style="radio"
@@ -341,7 +193,7 @@
           <action
                 icon="icons/elcl16/add_1delement.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE1DElementDelegate"
-                label="FE-Element hinzufügen"
+                label="1D-FE-Element hinzufügen"
                 style="radio"
                 toolbarPath="karte/edit"
                 tooltip="Ein neues FE-Element erzeugen">
@@ -356,7 +208,7 @@
 			</action>    
 
 			<action
-	           icon="icons/elcl16/geom_edit.gif"
+	           icon="icons/elcl16/edit1d2d.gif"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget_1d"               
 	           label="FE-Knoten bewegen"
 	           style="radio"
