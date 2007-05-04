@@ -89,8 +89,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-
-import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
@@ -100,6 +99,8 @@ import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
  */
 public class SimMode1D2DCalcJob implements ISimulation
 {
+  public static final String CS_KEY_GAUSS_KRUEGER = "EPSG:31467";
+
   private RMA10Calculation m_calculation;
 
   /**
@@ -140,16 +141,17 @@ public class SimMode1D2DCalcJob implements ISimulation
       m_calculation = new RMA10Calculation( inputProvider );
 
       /** convert discretisation model stuff... */
-      // TODO write merged *.2d file for calc core / Dejan starts like this I (Jessica) think
+      // write merged *.2d file for calc core / Dejan
+      final CS_CoordinateSystem test_CoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( CS_KEY_GAUSS_KRUEGER );
+      final IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
+      final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
+      final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
+      final Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider );
+
       monitor.setMessage( "Generiere 2D Netz..." );
       if( monitor.isCanceled() )
         return;
-
-      final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
-      final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
-      IPositionProvider positionProvider = new XYZOffsetPositionProvider( ConvenienceCSFactory.getInstance().getOGCCSByName( TestWorkspaces.CS_KEY_GAUSS_KRUEGER ), 35 * 100000, 35 * 100000, 0 );
-      Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider );
-      // converter.toRMA10sModel();
+      converter.toRMA10sModel();
 
       /** convert control/resistance stuff... */
       monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );

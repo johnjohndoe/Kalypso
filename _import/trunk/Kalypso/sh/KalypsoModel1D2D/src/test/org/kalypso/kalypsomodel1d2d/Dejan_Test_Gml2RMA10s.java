@@ -102,7 +102,7 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
       Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
       converter.toRMA10sModel();
 //      converter.sysout();
-      converter.write();
+//      converter.write();
     }
     catch( Throwable th )
     {

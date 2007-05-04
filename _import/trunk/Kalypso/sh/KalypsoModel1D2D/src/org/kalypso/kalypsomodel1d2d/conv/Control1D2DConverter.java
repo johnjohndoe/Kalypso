@@ -56,6 +56,8 @@ import org.kalypsodeegree.model.feature.Feature;
 public class Control1D2DConverter
 {
   static Map<String,String> roughnessIDMap = new HashMap<String,String>();
+  
+//  private PrintWriter m_writer;
 
   public Control1D2DConverter( )
   {
@@ -64,6 +66,7 @@ public class Control1D2DConverter
 
   public static void writeR10File( final RMA10Calculation calculation, final PrintWriter pw )
   {
+//    m_w
     writeR10ControlDataBlock( calculation, pw );
     writeR10PropertiesDataBlock( calculation, pw );
    // writeR10ContinuityLineDataBlock( calculation, pw );
@@ -107,7 +110,7 @@ public class Control1D2DConverter
     System.out.printf( l, formatC1 + "\n", c1Props );
 
     // C3
-    String formatC3 = "C3         1.000   1.000   %8.3%8.1f%8.3f%8.3f%8.3f";
+    String formatC3 = "C3         1.000   1.000   %8.3f%8.1f%8.3f%8.3f%8.3f";
     Object[] c3Props = new Object[] { calculation.getUNOM(),calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() };
     System.out.printf( l, formatC3+ "\n", c3Props );
 

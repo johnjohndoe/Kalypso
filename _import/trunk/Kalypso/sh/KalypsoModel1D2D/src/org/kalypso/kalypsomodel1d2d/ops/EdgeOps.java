@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -56,142 +55,118 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-
 /**
  * Provide some operation on edges
- *  
+ * 
  * @author Patrice Congo
- *
  */
 public class EdgeOps
 {
-  private EdgeOps()
+  private EdgeOps( )
   {
-    
+
   }
-  
-  public static final GM_Point computeEdgeMiddle(IFE1D2DEdge edge)
+
+  public static final GM_Point computeEdgeMiddle( IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" );
     IFEMiddleNode middleNode = edge.getMiddleNode();
-    
-    if(middleNode!=null)
+
+    if( middleNode != null )
     {
-      //INFO This have concequences on manipulation the return 
-      //point afterwards
+      // INFO This have concequences on manipulation the return
+      // point afterwards
       return middleNode.getPoint();
     }
-    
+
     IFE1D2DNode node0 = edge.getNode( 0 );
     IFE1D2DNode node1 = edge.getNode( 1 );
-    if(node0==null || node1==null)
+    if( node0 == null || node1 == null )
     {
-      throw new IllegalArgumentException(
-          "Edge does not has too nodes:"+
-          "node0"+node0+
-          "node1"+node1); 
+      throw new IllegalArgumentException( "Edge does not has too nodes:" + "node0" + node0 + "node1" + node1 );
     }
     GM_Point point0 = node0.getPoint();
     GM_Point point1 = node1.getPoint();
-    if(point0==null)
+    if( point0 == null )
     {
-      throw new IllegalArgumentException(
-          "Node0 does not have a location ser:"+
-          "node0"+node0); 
+      throw new IllegalArgumentException( "Node0 does not have a location ser:" + "node0" + node0 );
     }
-    if(point1==null)
+    if( point1 == null )
     {
-      throw new IllegalArgumentException(
-          "Node1 does not have a location ser:"+
-          "node1"+node1); 
+      throw new IllegalArgumentException( "Node1 does not have a location ser:" + "node1" + node1 );
     }
-    final int dim= Math.min( 
-                point0.getCoordinateDimension(),
-                point1.getCoordinateDimension());
-    if(dim==2)
+    final int dim = Math.min( point0.getCoordinateDimension(), point1.getCoordinateDimension() );
+    if( dim == 2 )
     {
-      double middleX=(point0.getX()+point1.getX())/2;
-      double middleY=(point0.getY()+point1.getY())/2;
-      return GeometryFactory.createGM_Point( 
-                middleX, middleY, point0.getCoordinateSystem() );
+      double middleX = (point0.getX() + point1.getX()) / 2;
+      double middleY = (point0.getY() + point1.getY()) / 2;
+      return GeometryFactory.createGM_Point( middleX, middleY, point0.getCoordinateSystem() );
     }
-    else if(dim==3)
+    else if( dim == 3 )
     {
-      double middleX=(point0.getX()+point1.getX())/2;
-      double middleY=(point0.getY()+point1.getY())/2;
-      double middleZ=(point0.getZ()+point1.getZ())/2;
-      return GeometryFactory.createGM_Point( 
-                      middleX, middleY,middleZ, 
-                      point0.getCoordinateSystem() );
+      double middleX = (point0.getX() + point1.getX()) / 2;
+      double middleY = (point0.getY() + point1.getY()) / 2;
+      double middleZ = (point0.getZ() + point1.getZ()) / 2;
+      return GeometryFactory.createGM_Point( middleX, middleY, middleZ, point0.getCoordinateSystem() );
     }
     else
     {
-      throw new IllegalArgumentException(
-          "Edge node point dimention must be 2 or 3:"+
-          "\n\tcurrent dimension="+dim);
+      throw new IllegalArgumentException( "Edge node point dimention must be 2 or 3:" + "\n\tcurrent dimension=" + dim );
     }
   }
-  
+
   /**
-   * To get a border node of the 1d edge.
-   * If the edge has 2 border nodes it end node is return.
+   * To get a border node of the 1d edge. If the edge has 2 border nodes it end node is return.
    * 
-   * @param elementEdge the edge which  border node is to be retrieved
-   * 
+   * @param elementEdge
+   *          the edge which border node is to be retrieved
    * @return the border node of the given 1d node
-   *  
    */
-  public static final IFE1D2DNode<IFE1D2DEdge> find1DEdgeEndNode(IFE1D2DEdge elementEdge )
+  public static final IFE1D2DNode<IFE1D2DEdge> find1DEdgeEndNode( IFE1D2DEdge elementEdge )
   {
-    if(!TypeInfo.is1DEdge( elementEdge ))
+    if( !TypeInfo.is1DEdge( elementEdge ) )
     {
-      throw new IllegalArgumentException(
-          "Must be 1D node but is:"+
-          "\n\tElementQName="+elementEdge.getWrappedFeature().getFeatureType().getQName()+
-          "\n\tValue="+elementEdge);
+      throw new IllegalArgumentException( "Must be 1D node but is:" + "\n\tElementQName=" + elementEdge.getWrappedFeature().getFeatureType().getQName() + "\n\tValue=" + elementEdge );
     }
     IFE1D2DNode node1 = elementEdge.getNode( 1 );
-    if(node1.getContainers().size()==1)
+    if( node1.getContainers().size() == 1 )
     {
       return node1;
     }
     IFE1D2DNode node0 = elementEdge.getNode( 0 );
-    if(node0.getContainers().size()==1)
+    if( node0.getContainers().size() == 1 )
     {
       return node0;
     }
     return null;
   }
-  
+
   /**
-   * Checks whether the given edge is an isolated edge.
-   * An isolated edge is an edge without any border edge. 
+   * Checks whether the given edge is an isolated edge. An isolated edge is an edge without any border edge.
    * 
-   * @param elementEdge the edge to check for isolation
-   * 
-   * @return true is the provided edge is an isolated edge 
-   *            false otherwise
-   *  
+   * @param elementEdge
+   *          the edge to check for isolation
+   * @return true is the provided edge is an isolated edge false otherwise
    */
-  public static final boolean isIsolatedEdge(IFE1D2DEdge edge )
+  public static final boolean isIsolatedEdge( IFE1D2DEdge edge )
   {
     Assert.throwIAEOnNullParam( edge, "edge" );
-    
+
     IFE1D2DNode node1 = edge.getNode( 1 );
-    if(node1.getContainers().size()!=1)
+    if( node1.getContainers().size() != 1 )
     {
       return false;
     }
-    
+
     IFE1D2DNode node0 = edge.getNode( 0 );
-    if(node0.getContainers().size()!=1)
+    if( node0.getContainers().size() != 1 )
     {
       return false;
     }
-    
+
     return true;
   }
-  
+
   /**
    * 
    */
@@ -199,7 +174,7 @@ public class EdgeOps
   {
     return getLeftRight( edge, '-' );
   }
-  
+
   /**
    * 
    */
@@ -207,7 +182,7 @@ public class EdgeOps
   {
     return getLeftRight( edge, '+' );
   }
-  
+
   /**
    *  
    */
@@ -216,72 +191,74 @@ public class EdgeOps
     Assert.throwIAEOnNullParam( edge, "edge" );
     if( edge instanceof EdgeInv )
     {
-      throw new IllegalArgumentException("Edge inv is not allow as argument");
+      throw new IllegalArgumentException( "Edge inv is not allowed as an argument" );
     }
-    
-    IFeatureWrapperCollection<IFE1D2DElement> containers = 
-                                          edge.getContainers();
+
+    IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     final int size = containers.size();
-    if( size>2 || size<1 )
+    if( size > 2 ) // || size<0 )
     {
-      throw new IllegalArgumentException(
-          "Edge must have one or 2 element");
+      throw new IllegalArgumentException( "Edge must have zero, one or 2 container elements" );
     }
-    
+
     final IEdgeInv edgeInv = edge.getEdgeInv();
-    final IFeatureWrapperCollection<IFE1D2DElement> edgeInvContainers = edgeInv.getContainers();
+
+    IFeatureWrapperCollection<IFE1D2DElement> edgeInvContainers = null;
+    if( edgeInv != null )
+      edgeInvContainers = edgeInv.getContainers();
     try
     {
-      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele: containers )
+      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : containers )
       {
-        
-          final GM_Object object = ele.recalculateElementGeometry();
-          if( object instanceof GM_Surface )
+
+        final GM_Object object = ele.recalculateElementGeometry();
+        if( object instanceof GM_Surface )
+        {
+          final char orientation = ((GM_Surface) object).getOrientation();
+          if( orientation == reqOrientation )// +(Conter clock wise) -(CW)
           {
-            final char orientation = ((GM_Surface)object).getOrientation();
-            if( orientation == reqOrientation )//+(Conter clock wise) -(CW)
+            return ele;
+          }
+          else
+          // other orientation -(CCW) +(CW)
+          {
+            if( edgeInv != null && edgeInvContainers.contains( ele ) )
             {
               return ele;
             }
-            else //other orientation -(CCW) +(CW)
-            {
-              if( edgeInvContainers.contains( ele ) )
-              {
-                return ele;
-              }
-            }
           }
-          else
-          {
-            throw new RuntimeException(
-                "Surface expected as geometrie but found:"+object);
-          }        
+        }
+        else
+        {
+          throw new RuntimeException( "Surface expected as geometrie but found:" + object );
+        }
       }
-      
-      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele: edgeInvContainers )
+
+      if( edgeInv != null )
       {
-        
+        for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
+        {
+
           final GM_Object object = ele.recalculateElementGeometry();
           if( object instanceof GM_Surface )
           {
-            final char orientation = ( (GM_Surface)object ).getOrientation();
-            if( orientation != reqOrientation )//+(Conter clock wise) -(CW)
+            final char orientation = ((GM_Surface) object).getOrientation();
+            if( orientation != reqOrientation )// +(Conter clock wise) -(CW)
             {
               return ele;
             }
           }
           else
           {
-            throw new RuntimeException(
-                "Surface expected as geometrie but found:"+object);
-          }        
+            throw new RuntimeException( "Surface expected as geometrie but found:" + object );
+          }
+        }
       }
     }
     catch( GM_Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException(
-          "unable to recompute the edge container geometrie");
+      throw new RuntimeException( "unable to recompute the edge container geometrie" );
     }
     return null;
   }

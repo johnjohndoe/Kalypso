@@ -129,6 +129,19 @@ public class TypeInfo
        return true; 
       }
     }
+    IEdgeInv edgeInv = edge.getEdgeInv();
+    if(edgeInv != null)
+    {
+      IFeatureWrapperCollection<IFE1D2DElement> invContainers = edgeInv.getContainers();
+      for(IFE1D2DElement element:invContainers)
+      {
+        if(Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.equals( 
+                    element.getWrappedFeature().getFeatureType().getQName()))
+        {
+         return true; 
+        }
+      }
+    }
     return false;
   }
 

@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -58,12 +59,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -145,7 +143,7 @@ public class Gml2RMA10SConv
     m_offsetZ = -point.getZ();
   }
 
-  public void toRMA10sModel( ) throws IllegalStateException, GM_Exception, IOException
+  public void toRMA10sModel( ) throws IllegalStateException, IOException
   {
     final PrintWriter stream = new PrintWriter( new File( m_outputURL.getPath() ) );
 //    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
@@ -177,7 +175,6 @@ public class Gml2RMA10SConv
     {
       final IFE1D2DNode node = nodesIterator.next();
 //      System.out.println( node.getGmlID() + " --> " + getID( node ) );
-      final String nodeGmlID = node.getGmlID();
       int nodeID = getID( node );
       final GM_Point point = correctPosition( node.getPoint() );
       final StringBuilder builder = new StringBuilder();
@@ -220,51 +217,17 @@ public class Gml2RMA10SConv
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        int leftParent = 0;
-        int rightParent = 0;
-        final IFeatureWrapperCollection containers = edge.getContainers();
-        if( containers.size() == 1 )
-        {
-          final IPolyElement parent = (IPolyElement) containers.get( 0 );
-          final GM_Surface surface = (GM_Surface) parent.recalculateElementGeometry();
-          char parentOrientation = surface.getOrientation();
-          if( parentOrientation == '+' )
-            leftParent = getID( containers.get( 0 ) );
-          else
-            rightParent = getID( containers.get( 0 ) );
-        }
-        else if( containers.size() == 2 )
-        {
-          final IPolyElement parent = (IPolyElement) containers.get( 0 );
-          final GM_Surface surface = (GM_Surface) parent.recalculateElementGeometry();
-          char parentOrientation = surface.getOrientation();
-          if( parentOrientation == '+' )
-          {
-            leftParent = getID( containers.get( 0 ) );
-            rightParent = getID( containers.get( 1 ) );
-          }
-          else
-          {
-            leftParent = getID( containers.get( 1 ) );
-            rightParent = getID( containers.get( 0 ) );
-          }
-        }
-
+        int leftParent = getID(EdgeOps.getLeftElement(edge));
+        int rightParent = getID(EdgeOps.getRightElement(edge));
         formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
         stream.println( builder.toString() );
 //        lines_AR.put( edge.getGmlID(), builder.toString() );
-
-        // gm surface -> orientation
-
       }
       else
       {
-        stream.println( "**************************************  non 1d/2d edge: " + edge.getGmlID() );
+//        stream.println( "**************************************  non 1d/2d edge: " + edge.getGmlID() );
         System.out.println( "non 1d/2d edge: " + edge.getGmlID() );
-        // element left
-        // element right
       }
-
     }
     stream.flush();
     stream.close();
@@ -279,47 +242,9 @@ public class Gml2RMA10SConv
     }
     catch( ArrayIndexOutOfBoundsException e )
     {
-      System.out.println( "No Z value!" );
+//      System.out.println( "No Z value!" );
     }
     return GeometryFactory.createGM_Point( point.getX() + m_offsetX, point.getY() + m_offsetY, z + m_offsetZ, point.getCoordinateSystem() );
   }
 
-  public void write( ) throws IOException
-  {
-    final PrintStream stream = new PrintStream( new File( m_outputURL.getPath() ) );
-    writeToStream( stream );
-    stream.close();
-  }
-
-  public void sysout( )
-  {
-    writeToStream( System.out );
-  }
-
-  private void writeToStream( final PrintStream stream )
-  {
-//    Iterator<String> iterator;
-//
-//    iterator = lines_FP.keySet().iterator();
-//    while( iterator.hasNext() )
-//      stream.println( lines_FP.get( iterator.next() ) );
-//
-//    iterator = lines_FE.keySet().iterator();
-//    while( iterator.hasNext() )
-//      stream.println( lines_FE.get( iterator.next() ) );
-//
-//    iterator = lines_AR.keySet().iterator();
-//    while( iterator.hasNext() )
-//      stream.println( lines_AR.get( iterator.next() ) );
-//
-//    iterator = lines_CS.keySet().iterator();
-//    while( iterator.hasNext() )
-//      stream.println( lines_CS.get( iterator.next() ) );
-//
-//    iterator = lines_RK.keySet().iterator();
-//    while( iterator.hasNext() )
-//      stream.println( lines_RK.get( iterator.next() ) );
-//
-//    stream.flush();
-  }
 }
