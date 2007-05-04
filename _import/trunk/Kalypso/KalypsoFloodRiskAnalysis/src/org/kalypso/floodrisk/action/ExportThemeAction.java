@@ -116,7 +116,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
     {
       PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
       IMapModellView viewer = outlineaction.getOutlineviewer();
-      final IKalypsoTheme activeTheme = viewer.getMapModell().getActiveTheme();
+      final IKalypsoTheme activeTheme = viewer.getMapPanel().getMapModell().getActiveTheme();
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final Shell activeShell = workbench.getDisplay().getActiveShell();
       if( activeTheme instanceof GisTemplateFeatureTheme )
