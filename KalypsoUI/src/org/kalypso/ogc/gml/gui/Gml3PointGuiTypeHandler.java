@@ -228,7 +228,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object fromText( String text )
+  public Object parseText( String text, String formatHint )
   {
     final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
 

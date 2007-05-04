@@ -154,7 +154,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   /**
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object fromText( String text )
+  public Object parseText( String text, String formatHint )
   {
     // TODO parse, remove errors and create the RGB instance
 

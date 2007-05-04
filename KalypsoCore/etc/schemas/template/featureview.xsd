@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org" xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org"
+	xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org"
+	targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
 	<xs:import namespace="gistableview.template.kalypso.org" schemaLocation="./gistableview.xsd" />
@@ -241,11 +243,11 @@
 											</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
-									<xs:attribute name="format" type="xs:string" use="optional">
+									<xs:attribute name="displayFormat" type="xs:string" use="optional">
 										<xs:annotation>
 											<xs:documentation>
-												Format string used to format/parse entries of this column. See
-												String.format for valid values.
+												Format string used to format entries (in order to display them) of this
+												column. See String.format for valid values.
 											</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
@@ -253,6 +255,15 @@
 										<xs:annotation>
 											<xs:documentation>
 												String used for display if the value is null.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="parseFormat" type="xs:string" use="optional">
+										<xs:annotation>
+											<xs:documentation>
+												Format string used to parse user edited entries of this column. Possible
+												values are type dependend. Used within the XsdBaseGuiTypeHandler
+												implementations.
 											</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>

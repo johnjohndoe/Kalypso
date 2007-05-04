@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.gui;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -185,15 +186,18 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
   @Override
-  public Object fromText( String text ) throws ParseException
+  public Object parseText( final String text, final String formatHint ) throws ParseException
   {
-    Date date = m_df.parse( text );
+    final Date date;
+    if( formatHint == null )
+      date = m_df.parse( text );
+    else
+      date = new SimpleDateFormat( formatHint ).parse( text );
 
-    Calendar cal = Calendar.getInstance();
+    final Calendar cal = Calendar.getInstance();
     cal.setTime( date );
 
-    XMLGregorianCalendarImpl gregorianCalendar = new XMLGregorianCalendarImpl( (GregorianCalendar) cal );
-
+    final XMLGregorianCalendarImpl gregorianCalendar = new XMLGregorianCalendarImpl( (GregorianCalendar) cal );
     return gregorianCalendar;
   }
 }

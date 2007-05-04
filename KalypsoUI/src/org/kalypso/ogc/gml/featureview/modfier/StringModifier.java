@@ -179,7 +179,7 @@ public class StringModifier implements IFeatureModifier
   {
     if( m_guiTypeHandler != null )
     {
-      final Object value = text.length() == 0 ? null : m_guiTypeHandler.fromText( text );
+      final Object value = text.length() == 0 ? null : m_guiTypeHandler.parseText( text, null );
 
       // REMARK: In order to also allow (basic) editing of lists we consider the edited
       // element to be the element with index = 0. Problem: all other elements of the list

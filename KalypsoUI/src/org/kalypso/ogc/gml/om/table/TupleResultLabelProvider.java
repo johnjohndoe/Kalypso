@@ -58,6 +58,9 @@ import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
  */
 public class TupleResultLabelProvider extends EventManager implements ITableLabelProvider
 {
+  /**
+   * comp.getId() -> component-descriptor
+   */
   private final Map<String, ColumnDescriptor> m_columnDescriptors;
 
   public TupleResultLabelProvider( )
@@ -119,11 +122,7 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
     if( element instanceof IRecord )
     {
       final IRecord record = (IRecord) element;
-      final IComponent[] comps = record.getOwner().getComponents();
-      if( columnIndex > comps.length )
-        return null;
-
-      final IComponent comp = comps[columnIndex];
+      final IComponent comp = getComponent( record, columnIndex );
 
       final Object value = record.getValue( comp );
 
@@ -158,12 +157,22 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
     return null;
   }
 
+  private IComponent getComponent( final IRecord record, final int columnIndex )
+  {
+    final IComponent[] comps = record.getOwner().getComponents();
+    if( columnIndex < 0 || columnIndex >= comps.length )
+      return null;
+
+    final IComponent comp = comps[columnIndex];
+    return comp;
+  }
+
   public static String formatValue( final Object value, final ColumnDescriptor descriptor )
   {
     if( descriptor == null )
       return null;
 
-    final String format = descriptor.getFormat();
+    final String format = descriptor.getDisplayFormat();
     if( format == null )
       return null;
 

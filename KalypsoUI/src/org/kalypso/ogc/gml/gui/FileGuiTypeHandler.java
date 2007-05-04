@@ -136,7 +136,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
   /**
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object fromText( String text )
+  public Object parseText( String text, String formatHint )
   {
     return m_handler.convertToJavaValue( text );
   }

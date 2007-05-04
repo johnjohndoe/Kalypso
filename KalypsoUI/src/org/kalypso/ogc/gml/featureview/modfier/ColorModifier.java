@@ -119,7 +119,7 @@ public class ColorModifier implements IFeatureModifier
       final String text = editedStringValue.toString();
       if( text.length() == 0 )
         return null;
-      m_guiTypeHandler.fromText( text );
+      m_guiTypeHandler.parseText( text, null );
       return null;
     }
     catch( final Exception e )
