@@ -50,16 +50,13 @@ import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 
 import de.renew.workflow.base.EActivityExeState;
 import de.renew.workflow.base.Task;
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.TaskExecutionException;
 import de.renew.workflow.connector.ContextActivation;
 import de.renew.workflow.connector.ContextActivationException;
@@ -86,8 +83,6 @@ public class TaskExecutor implements ITaskExecutor
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
-  private ContextActivation m_contextActivation;
-
   public TaskExecutor( final IContextHandlerFactory contextHandlerFactory, final ITaskExecutionAuthority authority, final ICommandService commandService, final IHandlerService handlerService )
   {
     m_contextHandlerFactory = contextHandlerFactory;
@@ -112,7 +107,7 @@ public class TaskExecutor implements ITaskExecutor
     final ContextType context = task.getContext();
     if( context != null )
     {
-      m_contextActivation = activateContext( context );
+      activateContext( context );
       final Collection<String> viewsToKeep = collectOpenedViews( context );
       PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), viewsToKeep );
     }

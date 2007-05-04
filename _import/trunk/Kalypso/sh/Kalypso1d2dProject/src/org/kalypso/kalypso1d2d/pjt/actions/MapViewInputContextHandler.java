@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -19,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -50,7 +50,7 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) 
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -61,7 +61,8 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
       file = folder.getFile( m_mapViewInput );
 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IViewPart view = window.getActivePage().findView( MapView.ID );
+    final IWorkbenchPage activePage = window == null ? null : window.getActivePage();
+    final IViewPart view = activePage == null ? null : activePage.findView( MapView.ID );
 
     if( file != null && file.exists() && view != null && view instanceof MapView )
     {

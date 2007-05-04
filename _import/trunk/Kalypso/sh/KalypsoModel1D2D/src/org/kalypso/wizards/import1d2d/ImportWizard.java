@@ -59,6 +59,7 @@ public class ImportWizard extends Wizard implements IWithContext
   /**
    * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
    */
+  @SuppressWarnings("unchecked")
   public void initModelProperties( IEvaluationContext context )
   {
     final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
