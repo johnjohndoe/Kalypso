@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006   11:12 am
+!     Last change:  MD    2 May 2007   12:08 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -405,11 +405,21 @@ REAL :: xl (maxkla), hl (maxkla), raul (maxkla)
 REAL :: x11 (maxkla), h11 (maxkla), ax1 (maxkla), ay1 (maxkla), dp1 (maxkla), rau1 (maxkla)
 
 
+!**   Lokale Variablen fuer die SSicherung der Zahlschleifen-Parameter aus der Routine qbordv
+!     als sogenannte äußere Abflussschleife
+INTEGER :: isch_out
+INTEGER :: nr_q_out
+REAL :: q_out       ! aktueller Abflusswert der aeusseren Q-Schleife
+REAL :: qvar_in     ! Abflusswert in der inneren Q-Schleife
+CHARACTER(LEN=11):: Q_Abfrage !Abfrage fuer Ende der Inneren Q-Schleife
+
+
 
 ! ------------------------------------------------------------------
 ! VORBELEGUNGEN
 ! ------------------------------------------------------------------
 
+Q_Abfrage = 'IN_SCHLEIFE'
 !WP 10.05.2005
 !WP Bei der normalen Spiegellinienberechnung wird der Dateiname
 !WP PFAD2 nicht verwendet. MARK wird zu 1 gesetzt und dann ganz
@@ -442,6 +452,35 @@ if (istat /= 0) then
              & 1X, 'Programm wird beendet!')
   call stop_programm(0)
 end if
+
+
+! Eroeffnen der Ausgabedatei 'Laengs_QWehre.txt'
+if (isch == 1) then
+  ilen = LEN_TRIM(NAME_PFAD_DATH)
+  NAME_OUT_WEHR = NAME_PFAD_DATH(1:ilen) // 'Laengs_QWehre.txt'
+  NAME_OUT_QWEHR = NAME_PFAD_DATH(1:ilen) // 'HOW_QWehr_HUW.txt'
+
+  UNIT_OUT_WEHR = ju0gfu ()
+  OPEN (unit = UNIT_OUT_WEHR, file = NAME_OUT_WEHR, status = 'REPLACE', iostat = istat)
+  if (istat /= 0) then
+    write (*, 9007) NAME_OUT_WEHR
+    9007 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+       & 1X, 'Programm wird beendet!')
+    call stop_programm(0)
+  end if
+
+
+  UNIT_OUT_QWEHR = ju0gfu ()
+  OPEN (unit = UNIT_OUT_QWEHR, file = NAME_OUT_QWEHR, status = 'REPLACE', iostat = istat)
+  if (istat /= 0) then
+    write (*, 9007) NAME_OUT_QWEHR
+    9008 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+       & 1X, 'Programm wird beendet!')
+    call stop_programm(0)
+  end if
+  WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',4x,''Q_OW '',3x,''Q-wehr'',5x,''h_ow'',7x,''h_uw'',4x,''Ü-Art'')')
+end if
+
 
 ! Wenn BEIWERTE.AUS erzeugt wird
 IF (alpha_ja.eq.1) then
@@ -487,8 +526,9 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
 
   text (ilen + 2:nch80) = EREIGNISNAME
 
-ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
-
+!MD  ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
+!MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
+ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
   WRITE (EREIGNISNAME, '(f8.3)') qvar
 
   EREIGNISNAME = ADJUSTL (EREIGNISNAME)
@@ -855,9 +895,10 @@ Hauptschleife: DO i = 1, maxger
 
 
 
+
   ! ------------------------------------------------------------------------------------------------
   ! Anfangswasserspiegel fuer das erste Profil
-
+  ! ------------------------------------------------------------------------------------------------
   IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
     IF (nprof.eq.1) then
@@ -873,12 +914,12 @@ Hauptschleife: DO i = 1, maxger
         & nz, idr1)
 
     !**   ABFRAGE ZUR BRUECKENBERECHNUNG
+
+
+    ! ------------------------------------------------------------------
+    ! Brueckenberechnung
+    ! ------------------------------------------------------------------
     ELSEIF (ibridge.eq.'b' .and. MIT_BRUECKEN) then
-
-
-      ! ------------------------------------------------------------------
-      ! Brueckenberechnung
-      ! ------------------------------------------------------------------
 
       ! SCHREIBEN IN KONTROLLFILE
       write (UNIT_OUT_LOG, 22) x1(iwl), iwl, h1(iwl), x1(iwr), iwr, h1(iwr), hukmax, hmin, breite
@@ -1321,55 +1362,132 @@ Hauptschleife: DO i = 1, maxger
       !write (*,*) 'In WSPBER. Nach Berechnung Profil 1.'
 
     !**   ELSEIF ZU (nprof.eq.1)
+
+
+
+    ! ---------------------------------------------------------------------------------
+    ! ---------------------------------------------------------------------------------
+    ! Wehrberechnung
+    ! ---------------------------------------------------------------------------------
+    ! ---------------------------------------------------------------------------------
+
     ELSEIF (iwehr.eq.'w'.and. MIT_WEHREN) then
 
+      !MD  Neu !!   Neu !!    Neu !!
+      !MD  Interne-Schleife für Bauwerke ueber alle Abfluesse mit einem Unterwasserstand
+      !MD  Schleife nur fuer die Berechenungsvariante mit konstantem Reibungsgefaelle in allen
+      !MD  normalen Profilen. Am Bauwerk werden alle Verluste beruecksichtigt
+      IF (BERECHNUNGSMODUS == 'REIB_KONST') then
+
+        !MD  Sichern der Werte aus der äusseren Abflussschleife
+        isch_out = isch
+        nr_q_out = nr_q
+        q_out = q
+
+        !MD  Belegung der neuen Werte für die innere Abflussschleife
+        qvar_in = MIN_Q
+        isch = 1
+        Q_Abfrage = 'NO_SCHLEIFE'
 
 
-      ! ---------------------------------------------------------------------------------
-      ! Wehrberechnung
-      ! ---------------------------------------------------------------------------------
+        WRITE (UNIT_OUT_WEHR, '(/,5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_WEHR, '(,5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
+        WRITE (UNIT_OUT_WEHR, '(5x,''-----------------------------'')')
+        WRITE (UNIT_OUT_WEHR, '(5x,'' Q_OW '',6x,''h_ow'',5x,''v_ow'',7x,''he_ow'',3x,''mue'',6x,  &
+               &''Q-wehr'',2x,''h-ue'',5x,''A-ue'',4x,''Ü-Art'',13x,''he-wehr'',4x,''h_uw'',5x,''v_uw'',7x,''he_uw'')')
 
-      WRITE (UNIT_OUT_TAB, 323) stat (nprof)
-      write (UNIT_OUT_LOG, 323)
-      323 FORMAT   (/,5x,'Wehrberechnung an Station km   ',f7.3,' : ',/)
+        ! Schleife zur Bordvoll-Berechung, ISCH ist Zaehler fuer Abflusses
+        DO isch = 1, anz_q
 
-      nz = nz + 3
+          ! Zuweisung der Abfluss-Nummer zu dem globalen Modul MOD_ERG
+          nr_q = isch
+          q = qvar_in
 
+          IF (qvar_in.gt.MAX_Q) then
+            qvar_in = MAX_Q
+          ENDIF
+
+          !MD  Zwischenausgabe im Kontroll-file
+          WRITE (UNIT_OUT_LOG, '('' stat (nprof)='',f8.4)') stat (nprof)
+          WRITE (UNIT_OUT_LOG, '(/,5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
+          WRITE (UNIT_OUT_LOG, '(''  Aeusserer Abfluss q_out ='',f8.4)') q_out
+          WRITE (UNIT_OUT_LOG, '(''  Innerer Abfluss qvar_in ='',f8.4)') qvar_in
+
+          WRITE (UNIT_OUT_TAB, '(/,5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
+          WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Wehrberechnung'')')
+          WRITE (UNIT_OUT_TAB, '(5x,''   fuer Zufluss-OW qvar_in ='',f8.4)') qvar_in
+          WRITE (UNIT_OUT_TAB, '(5x,''   fuer Abfluss-uW q_out ='',f8.4)') q_out
+
+          !MD  Ausgabe der Ergebnisse
+          ! -----------------------------------------------------------------------------------
+          ! Erzeuge Pfad- und Dateinamen für 'Laengs_QWehre.txt'
+
+          nz = nz + 3
+          num (nprof) = prof_nr (1:10)
+          CALL w_ber (henw, q, nprof, nz, idr1, nblatt, Q_Abfrage)
+
+          !MD  nz = nz + 2
+          !MD  strbr = 0.        ! Strecke zwischen den Profilen
+          !MD  Keine Oberwasserberechnung fuer die innere Q-Schleife
+
+          ! --------------------- OW-Berechnung
+         ! nz = nz + 2
+         ! strbr = 0.
+         !
+         ! CALL wspow (henw, strbr, q, q1, hr, hv, rg, indmax, hvst,   &
+         !    & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
+         !    & nz, idr1)
+          ! --------------------- OW-Berechnung
+
+          qvar_in = qvar_in + DELTA_Q
+
+        END DO
+        WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Wehrberechnung abgeschlossen'')')
+        Q_Abfrage = 'IN_SCHLEIFE'
+        !MD  Rueckholen der Werte fuer die äussere Abflussschleife
+        isch = isch_out
+        nr_q = nr_q_out
+        q = q_out
+
+      ENDIF
+
+      IF (BERECHNUNGSMODUS /= 'REIB_KONST' .or. Q_Abfrage == 'IN_SCHLEIFE') then
+        WRITE (UNIT_OUT_TAB, 323) stat (nprof)
+        write (UNIT_OUT_LOG, 323)
+        323 FORMAT   (/,5x,'Wehrberechnung an Station km   ',f7.3,' : ',/)
+
+        nz = nz + 3
+        num (nprof) = prof_nr (1:10)
+
+        CALL w_ber (henw, q, nprof, nz, idr1, nblatt, Q_Abfrage)
+
+        WRITE (UNIT_OUT_TAB, 324)
+        write (UNIT_OUT_LOG, 324)
+        324 FORMAT   (/,5x,'Oberwasser:')
+
+        nz = nz + 2
+        strbr = 0.
+
+        CALL wspow (henw, strbr, q, q1, hr, hv, rg, indmax, hvst,   &
+          & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
+          & nz, idr1)
+
+        out_PROF(nprof,nr_q)%WehrOK   = hokwmin   !WP Speichern der Wehroberkante dieses Profils
+        out_PROF(nprof,nr_q)%chr_kenn = 'w'
+        out_PROF(nprof,nr_q)%qges = q
+      END if
+
+    ! UT   ELSE FUER nprof=1, im FOLGENDEN nprof groesser 1!
+
+
+    ELSEIF (BERECHNUNGSMODUS /= 'REIB_KONST') then
+    ! ---------------------------------------------------------------
+    ! Normale Berechnung fuer alle weiteren Profile ausser nprof=1
+    ! ---------------------------------------------------------------
       num (nprof) = prof_nr (1:10)
 
-      CALL w_ber (henw, q, nprof, nz, idr1, nblatt)
-
-
-      WRITE (UNIT_OUT_TAB, 324)
-      write (UNIT_OUT_LOG, 324)
-      324 FORMAT   (/,5x,'Oberwasser:')
-
-      nz = nz + 2
-
-      strbr = 0.
-
-      CALL wspow (henw, strbr, q, q1, hr, hv, rg, indmax, hvst,   &
-       & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
-       & nz, idr1)
-
-      out_PROF(nprof,nr_q)%WehrOK   = hokwmin   !WP Speichern der Wehroberkante dieses Profils
-      out_PROF(nprof,nr_q)%chr_kenn = 'w'
-
-      out_PROF(nprof,nr_q)%qges = q
-
-    !UT   ELSE FUER nprof=1, im FOLGENDEN nprof groesser 1!
-    ELSE
-
-
-
-      ! ---------------------------------------------------------------
-      ! Normale Berechnung fuer alle weiteren Profile ausser nprof=1
-      ! ---------------------------------------------------------------
-
-      num (nprof) = prof_nr (1:10)
-
-
-      222 CONTINUE
+      !MD  wird nie verwendet
+      !MD  222 CONTINUE
 
       !**   str = abstand zwischen 2 Profilen?
       str = (stat (nprof) - stat (nprof - 1) ) * 1000.
@@ -1378,8 +1496,25 @@ Hauptschleife: DO i = 1, maxger
        & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt,&
        & nz)
 
+    ! MD  Neue Berechenungsvariante mit konstantem Reibungsgefaelle
+    ! MD  --> auch fuer alle anderen Profile n+1 wird die wspanf. aufgerufen!!
+    ELSEIF (BERECHNUNGSMODUS == 'REIB_KONST') then
+
+      num (nprof) = prof_nr (1:10)
+
+      !**   str = abstand zwischen 2 Profilen?
+      str = (stat (nprof) - stat (nprof - 1) ) * 1000.
+      !**   Berechnung Anfangswasserspiegel nach Vorgabe von wsanf:
+      hgrenz = 0.
+      strbr = str
+      wsanf = -1 * GEFAELLE
+
+      CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
+        & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+
     !**   ENDIF ZU (nprof.eq.1)
     ENDIF
+
 
 
 
@@ -1850,10 +1985,9 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
   ilen = LEN_TRIM(NAME_OUT_WSL)
   NAME_OUT_WSL(ilen-2:ilen) = 'wsl'
 
-  mark = 1
-
-  CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, mark, NAME_OUT_LAENGS)
-
+  !MD mark = 1
+  !MD CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, mark, NAME_OUT_LAENGS)
+  CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, NAME_OUT_LAENGS)
 ENDIF
 
 
