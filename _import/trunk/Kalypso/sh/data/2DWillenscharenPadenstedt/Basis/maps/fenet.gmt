@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <mapv:gismapview name="FE-Netz" xmlns:ns0="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <mapv:extent top="89245.944061535" srs="EPSG:31467" right="54577.40521067805" left="52170.021148276086" bottom="86776.251235165"/>
-    <mapv:layers>
-        <mapv:layer visible="true" name="Node" id="ID_2" featurePath="#fid#root/node[Node]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
+    <mapv:extent top="5986907.429040877" srs="EPSG:31467" right="3553001.0378685673" left="3552913.1491502984" bottom="5986871.032771664"/>
+    <mapv:layers active="ID_10">
+        <mapv:layer visible="false" name="Node" id="ID_2" featurePath="#fid#root/node[Node]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="ContinuityLine" id="ID_3" featurePath="#fid#root/element[ContinuityLine]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="Edge" id="ID_4" featurePath="#fid#root/edge[Edge]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="PolyElement" id="ID_5" featurePath="#fid#root/element[PolyElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
