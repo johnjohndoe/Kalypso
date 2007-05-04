@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Dec 2006    3:37 pm
+!     Last change:  MD   10 Apr 2007    6:37 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -314,9 +314,8 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ELSE
     ! vorbelegung
     hv = 0.
-    !                       /* output
     rg = 0.
-    !                       /* output
+
     CALL eb2kst (indmax, hr, hv, rg, q)
   ENDIF
 
@@ -444,8 +443,9 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
       end if
 
-    else
-
+    ELSEIF (VERZOEGERUNGSVERLUST == 'BJOE') then
+    !MD   fuer Berechnungsvarainte mit konstantem Rebinungsgefaelle:
+    !MD   werden KEINE oertlichen Verluste beruecksichtigt
       hvst = hv1 - hv
 
       IF (hv1.lt.hv) then
@@ -539,16 +539,27 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   hrst = rgm * str                                                    
                                                                         
-  ! --------------------------------------------------------------
-  ! Ermittlung lokaler verluste
-  ! --------------------------------------------------------------
-  horts = psiort * hv
+  ! ---------------------------------------------------------------------
+  ! Ermittlung lokaler verluste: NICHT fuer Reibungsgefaelle = konstant
+  ! ---------------------------------------------------------------------
+  IF (VERZOEGERUNGSVERLUST /= 'NON ') then
+    horts = psiort * hv
+    IF (nprof.ne.1.and.istat.ne.1) then
+      vu = sqrt (hv1 * 2 * 9.81)
+      vo = sqrt (hv * 2 * 9.81)
+      heins = psiein * (vu - vo) * (vu - vo) / (2 * 9.81)
+    ENDIF
 
-  IF (nprof.ne.1.and.istat.ne.1) then
-    vu = sqrt (hv1 * 2 * 9.81)
-    vo = sqrt (hv * 2 * 9.81)
-    heins = psiein * (vu - vo) * (vu - vo) / (2 * 9.81)
-  ENDIF                                                  
+  else  ! MD  fuer Reibungsgefaelle = konstant
+    horts = 0.0
+    IF (nprof.ne.1.and.istat.ne.1) then
+      vu = sqrt (hv1 * 2 * 9.81)
+      vo = sqrt (hv * 2 * 9.81)
+      heins = (vu - vo) * (vu - vo) / (2 * 9.81)
+    ENDIF
+  end if
+
+
 
   ! --------------------------------------------------------------
   ! Ermittlung der froudzahl:
