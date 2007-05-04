@@ -1,4 +1,4 @@
-!     Last change:  WP    7 Jun 2006    4:17 pm
+!     Last change:  MD   11 Apr 2007   11:04 am
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -225,11 +225,10 @@ rdruck = idruck
 !     Wenn rdruck=1    dann mit Rohrscheitelhoehe weiter                
 !                                                                       
                                                                         
-!                               /* kennung fuer stationaer gleichfoermig
+!     kennung fuer stationaer gleichfoermig
 ikenn = 3
-
 hborda = 0.
-!                               /* nur fuer ungleichfoermig
+!     nur fuer ungleichfoermig
 heins = 0.
 horts = 0.
 
@@ -245,7 +244,7 @@ it155m = 30
 !JK   SCHREIBEN IN KONTROLLFILE
 IF (nprof.ne.1) then
   WRITE (UNIT_OUT_LOG, '(''ermittlung des stationaer gleichfoermigen '',  &
-    &   ''wasserspiegels in subroutine stationaer'')')
+    &   ''wasserspiegels in subroutine station'')')
 ELSE
   WRITE (UNIT_OUT_LOG, '(''--> wsp stationaer gleichfoermig in wspanf'')')
   WRITE (UNIT_OUT_LOG, '('' hmin ='',f12.3)') hmin
@@ -288,6 +287,13 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
                            & t10,''Sohlgefaelle = '',f7.5)') sgef
   ENDIF
 
+  !MD  Ausgabe an Log-Datei
+  IF (BERECHNUNGSMODUS == 'REIB_KONST') then
+    WRITE (UNIT_OUT_LOG, '(''Wasserspiegel wird fuer stationaer &
+                           & gleichfoermiges Reibungsgefaelle berechnet.'',/, &
+                           & ''Reibungsgefaelle = '',f7.5)') sgef
+  Endif
+
   dx = 0.02
   !     anfangswasserspiegel:
   IF (nprof.gt.1) then
@@ -302,9 +308,9 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   IF (hr.le.hmin) hr = hmin + 0.2
 
-  !     ******************************************************************
-  !     iterationsschleife
-  !     ******************************************************************
+  ! ******************************************************************
+  !  Iterationsschleife ueber die Verluste
+  ! ******************************************************************
 
   !JK   SCHREIBEN IN KONTROLLFILE
   WRITE (UNIT_OUT_LOG, '(''iterations-       gefaelle          wsp      froud&
@@ -361,7 +367,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       ENDIF
 
       !  ueberpruefen, ob schiessen oder stroemen
-      IF (froud.ge.1..and.rdruck.ne.0) then
+      IF (froud.ge.1. .and. rdruck.ne.0) then
 
         ikenn = 4
         hr = hgrenz
@@ -371,7 +377,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
          & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
          & ifehlg, itere1)
 
-      ELSEIF (froud.ge.1.and.jdruck.eq.0) then
+      ELSEIF (froud.ge.1. .and. jdruck.eq.0) then
 
         ikenn = 1
         hr = hgrenz
@@ -431,7 +437,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       ENDIF
 
       !  ueberpruefen, ob schiessen oder stroemen
-      IF (froud.ge.1..and.rdruck.ne.0) then
+      IF (froud.ge.1. .and. rdruck.ne.0) then
 
         ikenn = 4
         hr = hgrenz
@@ -441,7 +447,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
          & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
          & ifehlg, itere1)
 
-      ELSEIF (froud.ge.1.and.jdruck.eq.0) then
+      ELSEIF (froud.ge.1. .and. jdruck.eq.0) then
 
         ikenn = 1
         hr = hgrenz
@@ -659,15 +665,14 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
    & itere1)
 
-  IF (nprof.eq.1) then
+  IF (nprof.eq.1) then   ! 1.profil
     hvst = 0.
-    !                                /* 1.profil
     hrst = 0.
     hborda = 0.
   ENDIF
 
   IF (ikenn.ne.1.and.ikenn.ne.2) then
-    !         d.h. wenn keine grenztiefe errechnet
+    !     d.h. wenn keine grenztiefe errechnet
     hvst = 0.
     hborda = 0.
   ENDIF
