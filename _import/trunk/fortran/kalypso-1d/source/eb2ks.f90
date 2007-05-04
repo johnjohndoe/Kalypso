@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006   11:11 am
+!     Last change:  MD   10 Apr 2007    7:01 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
