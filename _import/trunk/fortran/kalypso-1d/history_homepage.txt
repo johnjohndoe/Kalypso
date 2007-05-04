@@ -272,13 +272,39 @@ Kalypso 1.3.1      04. April 2007
      Berechnung (=Abfluss-Steigergung):      
 
 2.)  Ueberarbeitung und BUG-Fix der Wehrberechnung	 
-	   					                            Monika Donner, 04.04.2007
+	   					    Monika Donner, 04.04.2007
                                                
                                                    
 Kalypso 1.3.1.2     26. April 2007
 -----------------------------------    
 1.)  Ueberarbeitung und BUG-Fix der Wehrberechnung für rund- & scharfkronige Wehre
-						                            Monika Donner, 26.04.2007
+						    Monika Donner, 26.04.2007
+
+Kalypso 2.0.0        04. Mai 2007
+-----------------------------------
+1.)  Einrichtung einer neue 4.te Berechnungsvariante unter Vorgabe eines konstanten
+     Reibungsgefälles. Ziel der neuen Berechnungsvariante ist die Generierung eines 
+     1d-Stranges und der notwendigen Polynome und Daten für die instationäre Berechnung
+     nach Teschke. 
+     In der neuen Berechnungsvariante werden unter der Vorgabe eines konstanten 
+     REIBUNGSGEFÄLLES folgende Effekte berücksichtigt:
+     - Kontinuierliche Verluste entlang des Fließweges infolge Reibung, Trennflächen 
+       und Bewuchs.
+     - Ausbildung von Wasserstand-Abfluss-Beziehungen im OW und UW von Bauwerken: 
+       derzeit NUR für Wehre. In Wehren werden alle örtlichen Verluste mitberücksichtigt.    
+     - Für die Erzeugung der instationären w-Q-Polynome für die normalen Profile
+       sollten alle Bauwerke deaktiviert werden.
+     
+     Für die Berechnungsvariante müssen u.a. folgende Vorgaben erfolgen:
+     - Konstantes Reibungsgefälle
+     - Abflussintervall mit Qmin, Qmax und dQ
+     - KEIN Verlustbeiwert beta (infolge Einschnürung oder Aufweitung)
+     - Fließwiderstand ausschließlich für Darcy-Weisbach ohne Formwiderstand (kein kst)
+     - Brücken deaktivieren!
+     
+     Diese neue Berechnungsvariante lässt sich NUR über die Oberfläche WSPM ansteuern.
+                          
+                                                      Monika Donner, 04.05.2007
 
 	 
 	                                                 
