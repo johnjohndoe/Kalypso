@@ -368,8 +368,12 @@
               name="ZmlChooser"/>
         <wizard
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
-              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ImportBaseMapWizard_1"
-              name="Kalypso"/>
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
+              name="TimeStepWizard"/>
+        <wizard
+              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard"
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeWizard"
+              name="Test"/>
      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">

@@ -42,18 +42,20 @@ package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
 import java.util.Properties;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -62,13 +64,17 @@ import org.kalypsodeegree.model.feature.Feature;
 public class TimestepFillerFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   private final Properties m_arguments;
+  
+  private static final String WIZARD_ID = "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard";
 
   private Button m_button;
+  private Feature m_feature;
 
   public TimestepFillerFeatureControl( Feature feature, IPropertyType ftp, Properties arguments )
   {
     super( feature, ftp );
     m_arguments = arguments;
+    m_feature = feature;
   }
 
   /**
@@ -83,6 +89,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public Control createControl( final Composite parent, final int style )
   {
+    final Display display = PlatformUI.getWorkbench().getDisplay();
     m_button = new Button( parent, style );
 
     m_button.setText( "Fill Timesteps" );
@@ -95,12 +102,17 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        IWizard imp = new ImportBaseMapWizard();
-        
+        final Shell shell = display.getActiveShell();
+        TimeStepFillerWizard wizard = new TimeStepFillerWizard(m_feature);
+        final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+        wizardDialog.open();
         //MessageDialog.openInformation( parent.getShell(), "Fill Timesteps", "Do it, babe" );
+        
+        final FeatureChange[] changes = wizard.getFeatureChange();
+        for( FeatureChange change : changes )
+          fireFeatureChange( change );
       }
     } );
-
     return m_button;
   }
 
