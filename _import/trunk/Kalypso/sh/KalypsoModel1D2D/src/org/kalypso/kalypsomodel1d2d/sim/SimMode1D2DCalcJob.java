@@ -64,6 +64,7 @@ import java.util.logging.XMLFormatter;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -193,7 +194,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse..." );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpDir, monitor, logger, resultEater, tmpDir );
+        loadResults( tmpDir, monitor, logger, inputProvider, resultEater, tmpDir );
       }
       // else
       // {
@@ -216,13 +217,15 @@ public class SimMode1D2DCalcJob implements ISimulation
       handl.close();
   }
 
-  private void loadResults( File tmpdir, ISimulationMonitor monitor, final Logger logger, ISimulationResultEater resultEater, File tmpDir ) throws SimulationException
+  private void loadResults( File tmpdir, ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, File tmpDir ) throws SimulationException
   {
     // TODO: check this here and add more handling, if result model is ready (Jessica)
     monitor.setMessage( "Lese Ergebnisse..." );
+    logger.log( Level.INFO, "Ergebnisse werden gelesen" );
 
     final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
     outputDir.mkdirs();
+    resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
 
     final FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
     final File[] files = tmpDir.listFiles( suffixFileFilter );
@@ -232,16 +235,16 @@ public class SimMode1D2DCalcJob implements ISimulation
     try
     {
       /* zip all .2d files */
-      final File outputZip2d = new File( tmpdir, "test.zip" );
+      final File outputZip2d = new File( outputDir, "test.zip" );
       monitor.setProgress( 99 );
 
       ZipUtilities.zip( outputZip2d, files, outputDir );
-      resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
+//      resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
 
       /* Read all .2d files into NodeResults */
       final File result2dFile = files[0];
-      final File gmlResultfile = read2DIntoNodeResult( result2dFile, outputDir );
-      resultEater.addResult( "NodeResultModel", gmlResultfile );
+      /*final File gmlResultfile = */read2DIntoNodeResult( result2dFile, outputDir, dataProvider );
+//      resultEater.addResult( "NodeResultModel", gmlResultfile );
     }
     catch( final Throwable e )
     {
@@ -249,9 +252,16 @@ public class SimMode1D2DCalcJob implements ISimulation
     }
   }
 
-  private File read2DIntoNodeResult( final File result2dFile, final File outputDir ) throws IOException, InvocationTargetException, GmlSerializeException
+  private File read2DIntoNodeResult( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
+
+    /* Write template sld into result folder */
+    final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStyle" );
+    FileUtils.copyURLToFile( resultStyleURL, new File( outputDir, "result.sld" ) );
+
+    final URL resultURL = (URL) dataProvider.getInputForID( "ResultMap" );
+    FileUtils.copyURLToFile( resultURL, new File( outputDir, "result.gmt" ) );
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
 
