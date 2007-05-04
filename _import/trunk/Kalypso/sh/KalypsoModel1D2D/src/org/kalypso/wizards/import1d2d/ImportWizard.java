@@ -5,17 +5,18 @@ package org.kalypso.wizards.import1d2d;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.IWithContext;
@@ -60,22 +61,8 @@ public class ImportWizard extends Wizard implements IWithContext
    */
   public void initModelProperties( IEvaluationContext context )
   {
-    final ICaseDataProvider szenarioDataProvider = (ICaseDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-    IFEDiscretisationModel1d2d model;
-    try
-    {
-      model = (IFEDiscretisationModel1d2d) szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
-      m_data.setFE1D2DDiscretisationModel( model );
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    // FE1D2DDiscretisationModel feature = (FE1D2DDiscretisationModel) context.get( "IFEDiscretisationModel1d2d" );
-    // final IFolder currentFolder = (IFolder) context.getVariable(
-    // ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME);
-    // m_data.setProjectBaseFolder( currentFolder );
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    m_data.setSzenarioDataProvider( szenarioDataProvider );
   }
 
   @Override
@@ -112,16 +99,19 @@ public class ImportWizard extends Wizard implements IWithContext
   {
     m_pageMain.saveDataToModel();
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
+    
+    try
+    {
+      /* post empty command(s) in order to make pool dirty. */
+      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( "Profile importieren", false ) );
+    }
+    catch( final Exception e )
+    {
+      // will never happen?
+      e.printStackTrace();
+    }
+
     ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
-    // try
-    // {
-    // IResource resource = (IResource) selection.getFirstElement();
-    // resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // }
 
     return status.isOK();
   }

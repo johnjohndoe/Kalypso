@@ -59,6 +59,10 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
     final IWorkbench workbench = (workbenchWindow).getWorkbench();
     if( m_wizardType != null && m_wizardId != null )
     {
+      // FIXME: This is not good!!! As these wizards are also registered within the export/import/new extension-points,
+      // they appear also in the eclipse-ui, but there, they won't work because of the missing context...
+      // This MUST be fixed, else Kalypso-Expert Mode is not usable any more!!!
+      
       final IWizardRegistry wizardRegistry;
       switch( m_wizardType )
       {

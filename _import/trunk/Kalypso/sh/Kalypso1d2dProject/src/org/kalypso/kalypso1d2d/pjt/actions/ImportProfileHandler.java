@@ -113,7 +113,6 @@ public class ImportProfileHandler extends AbstractHandler
     {
       /* post empty command(s) in order to make pool dirty. */
       ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( "Profile importieren", false ) );
-      // modelProvider.saveModel( ITerrainModel.class, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {

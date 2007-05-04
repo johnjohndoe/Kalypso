@@ -3,34 +3,30 @@ package org.kalypso.wizards.import1d2d;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class DataContainer
 {
-
-  public final static String GAUS_KRUEGER = "EPSG:31467";
-
   private String m_inputFile = ""; // absolute path
 
   private CS_CoordinateSystem m_coordinateSystem;
 
-  private IFEDiscretisationModel1d2d m_feature;
+  private static final CS_CoordinateSystem m_defaultCoordinateSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-  // TODO remove, unused
-  // private IFolder m_ProjectBaseFolder;
-  // private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-
-  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
-
-  public DataContainer( )
-  {
-    super();
-  }
+  private ICaseDataProvider<IFeatureWrapper2> m_szenarioDataProvider;
 
   public final void setInputFile( String inputFile )
   {
@@ -68,24 +64,18 @@ public class DataContainer
       return m_coordinateSystem;
   }
 
-  public final IFEDiscretisationModel1d2d getFE1D2DDiscretisationModel( )
+  public final IFEDiscretisationModel1d2d getFE1D2DDiscretisationModel( ) throws CoreException
   {
-    return m_feature;
+    return m_szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
   }
 
-  public final void setFE1D2DDiscretisationModel( IFEDiscretisationModel1d2d model )
+  public void setSzenarioDataProvider( final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider )
   {
-    m_feature = model;
+    m_szenarioDataProvider = szenarioDataProvider;
   }
 
-  // TODO remove, unused
-  // public final IFolder getProjectBaseFolder( )
-  // {
-  // return m_ProjectBaseFolder;
-  // }
-
-  // public final void setProjectBaseFolder( IFolder currentFolder )
-  // {
-  // m_ProjectBaseFolder = currentFolder;
-  // }
+  public void postCommand( final Class<? extends IFeatureWrapper2> clazz, final ICommand command ) throws Exception
+  {
+    m_szenarioDataProvider.postCommand( clazz, command );
+  }
 }

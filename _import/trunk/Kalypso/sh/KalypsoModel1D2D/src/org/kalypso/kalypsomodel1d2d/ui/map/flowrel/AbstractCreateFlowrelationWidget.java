@@ -105,7 +105,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 {
-  private final int m_grabRadius = 20;
+  private final int m_grabRadius = 10;
 
   private IFlowRelationshipModel m_flowRelCollection = null;
 
@@ -185,7 +185,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       return;
     }
 
-    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius * 2 );
+    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius );
     m_modelElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
 
     /* Node has already a flow relation? */
@@ -260,7 +260,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     try
     {
-      final int smallRect = 10;
+      final int smallRect = m_grabRadius;
       /* Node: return its position */
       if( m_modelElement instanceof IFE1D2DNode )
       {

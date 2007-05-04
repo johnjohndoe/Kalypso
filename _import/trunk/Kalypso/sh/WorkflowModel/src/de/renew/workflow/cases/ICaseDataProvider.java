@@ -42,6 +42,7 @@ package de.renew.workflow.cases;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.command.ICommand;
 
 /**
  * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
@@ -51,7 +52,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ICaseDataProvider<T extends Object>
 {
-
   /**
    * Returns the data object corresponding to the given case data key.
    */
@@ -66,6 +66,9 @@ public interface ICaseDataProvider<T extends Object>
    * Saves the data object corresponding to the given case data key
    */
   public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
+
+  /** Post a command to the right command manager corresponding to the fiven model. */
+  public void postCommand( final Class< ? extends T> wrapperClass, final ICommand command ) throws Exception;
 
   /**
    * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
