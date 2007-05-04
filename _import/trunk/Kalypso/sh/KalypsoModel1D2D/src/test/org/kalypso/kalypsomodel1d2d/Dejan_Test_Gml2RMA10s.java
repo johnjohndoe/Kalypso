@@ -99,8 +99,8 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
     try
     {
       IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
-      Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
-      converter.toRMA10sModel();
+//      Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
+//      converter.toRMA10sModel();
 //      converter.sysout();
 //      converter.write();
     }

@@ -74,7 +74,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
             
             GM_Surface surfacePatch =
                 rpc.get( 0 ).getSurface().getSurfaceAt( 0 );//makeSurface( exteriorRP1 );
-            System.out.println("area="+surfacePatch.getArea());
+//            System.out.println("area="+surfacePatch.getArea());
             final IRoughnessEstimateSpec estimate = 
                         rpc.getRoughnessEstimateSpec( surfacePatch );
             assertEquals( 

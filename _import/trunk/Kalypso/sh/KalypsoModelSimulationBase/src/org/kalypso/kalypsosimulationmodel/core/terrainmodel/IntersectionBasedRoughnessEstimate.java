@@ -88,6 +88,7 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   
   private final void makeHistrogram( ) throws GM_Exception
   {
+    histogram = new HashMap<IRoughnessCls, Double>();
     Geometry jtsEstimateZone = JTSAdapter.export( estimateZone );
     final double areaOfEstimateZone = jtsEstimateZone.getArea();
     for( IRoughnessPolygon roughnessPolygon : contributingRP )

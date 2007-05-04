@@ -41,20 +41,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.GmlSerializerXlinkFeatureProvider;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
@@ -66,6 +75,8 @@ public class RMA10Calculation
   private GMLWorkspace m_flowRelWS = null;
 
   private GMLWorkspace m_disModelWorkspace = null;
+
+  private GMLWorkspace m_terrainModelWorkspace = null;
 
   private GMLWorkspace m_operationalWS = null;
 
@@ -79,24 +90,63 @@ public class RMA10Calculation
 
   public RMA10Calculation( final ISimulationDataProvider inputProvider )
   {
+    final Map<String, String> specialUrls = new HashMap<String, String>();
+    specialUrls.put( "project:/.metadata/roughness.gml", "Roughness" );
+    
     try
     {
+      final IUrlResolver resolver = new UrlResolver()
+      {
+        /**
+         * @see org.kalypso.contribs.java.net.UrlResolver#resolveURL(java.net.URL, java.lang.String)
+         */
+        @Override
+        public URL resolveURL( URL baseURL, String relativeURL ) throws MalformedURLException
+        {
+          if( specialUrls.containsKey( relativeURL ))
+          {
+            final String specialUrl = specialUrls.get( relativeURL );
+            try
+            {
+              return (URL) inputProvider.getInputForID( specialUrl );
+            }
+            catch( final SimulationException e )
+            {
+              e.printStackTrace();
+              throw new MalformedURLException( "Missing input for ID: " + specialUrl );
+            }
+          }
+          
+          return super.resolveURL( baseURL, relativeURL );
+        }
+      };
+
+      final IFeatureProviderFactory factory = new AbstractFeatureProviderFactory()
+      {
+        @Override
+        protected IFeatureProvider createProvider( Feature context, String uri, String role, String arcrole, String title, String show, String actuate )
+        {
+          return new GmlSerializerXlinkFeatureProvider( context, uri, role, arcrole, title, show, actuate, this, resolver );
+        }
+      };
+
       // m_flowResWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.FLOWRESISTANCEMODEL_ID ),
       // null );
       // m_flowRelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ),
       // null );
-      m_disModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), null );
+      m_disModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
+      m_terrainModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.TERRAINMODEL_ID ), factory );
       // m_operationalWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.OPERATIONALMODEL_ID ),
       // null );
-      m_controlRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), null ).getRootFeature();
+      m_controlRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
       // m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
       // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
       // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
-      m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
+      m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
 
     }
     catch( SimulationException e )
@@ -120,6 +170,11 @@ public class RMA10Calculation
   public GMLWorkspace getDisModelWorkspace( )
   {
     return m_disModelWorkspace;
+  }
+
+  public GMLWorkspace getTerrainModelWorkspace( )
+  {
+    return m_terrainModelWorkspace;
   }
 
   public void setKalypso1D2DKernelPath( )
@@ -227,6 +282,7 @@ public class RMA10Calculation
   {
     return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
   }
+
   public Double getUNOM( )
   {
     return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );

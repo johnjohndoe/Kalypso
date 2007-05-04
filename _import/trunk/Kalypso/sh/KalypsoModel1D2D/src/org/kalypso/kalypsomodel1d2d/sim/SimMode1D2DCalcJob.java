@@ -147,14 +147,10 @@ public class SimMode1D2DCalcJob implements ISimulation
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
       final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
       final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider );
-
-      monitor.setMessage( "Generiere 2D Netz..." );
-      if( monitor.isCanceled() )
-        return;
-      converter.toRMA10sModel();
+      final Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider, m_calculation.getTerrainModelWorkspace() );
 
       /** convert control/resistance stuff... */
+      // first this because we need roughness classes IDs for creating 2D net later
       monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
       if( monitor.isCanceled() )
         return;
@@ -162,6 +158,11 @@ public class SimMode1D2DCalcJob implements ISimulation
       PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) ) ) );
       Control1D2DConverter.writeR10File( m_calculation, pw );
       pw.close();
+      
+      monitor.setMessage( "Generiere 2D Netz..." );
+      if( monitor.isCanceled() )
+        return;
+      converter.toRMA10sModel(Control1D2DConverter.getRoughnessIDProvider());
 
       /** start calculation... */
       monitor.setMessage( "Starte Rechenkern..." );
