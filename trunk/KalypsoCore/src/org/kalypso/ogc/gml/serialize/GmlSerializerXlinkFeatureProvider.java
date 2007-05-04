@@ -44,6 +44,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -60,11 +61,19 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
 
   private final IFeatureProviderFactory m_factory;
 
+  private final IUrlResolver m_urlResolver;
+
   public GmlSerializerXlinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate, final IFeatureProviderFactory factory )
+  {
+    this( context, uri, role, arcrole, title, show, actuate, factory, new UrlResolver() );
+  }
+
+  public GmlSerializerXlinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate, final IFeatureProviderFactory factory, final IUrlResolver urlResolver )
   {
     super( context, uri, role, arcrole, title, show, actuate );
 
     m_factory = factory;
+    m_urlResolver = urlResolver;
   }
 
   /**
@@ -85,9 +94,9 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
           return null;
 
         final URL context = contextWorkspace.getContext();
-        
-        final URL url = new UrlResolver().resolveURL( context, uri );
-        
+
+        final URL url = m_urlResolver.resolveURL( context, uri );
+
         m_workspace = GmlSerializer.createGMLWorkspace( url, m_factory );
       }
       catch( final Exception e )
