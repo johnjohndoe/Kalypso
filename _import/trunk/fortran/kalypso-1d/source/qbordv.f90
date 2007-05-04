@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Mar 2007    4:35 pm
+!     Last change:  MD   11 Apr 2007   11:39 am
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -324,7 +324,9 @@ write (*,*) 'NAME_OUT_WSL = ', NAME_OUT_WSL
 
 !JK   WENN STATIONAER-UNGLEICHFOERMIGE ABFLUSSVERHAELTNISSE
 !--------------------------------------------------------------------------------------------------
-if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
+If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
+!MD  if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
+
 
   DO i = 1, maxger
     jkenn (i) = 0
@@ -809,8 +811,8 @@ pfad_qb2 = unit2
 
 
 ! Zuweisung des Pfades fuer NAME_OUT_LAENGS in MAIN (=wsp.f90)
-CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, NAME_OUT_LAENGS)
-
+!MD CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, NAME_OUT_LAENGS)
+CALL lapro1 (pfad_qb1, pfad_qb2, nbv, NAME_OUT_LAENGS)
 
 END SUBROUTINE qbordv
 
