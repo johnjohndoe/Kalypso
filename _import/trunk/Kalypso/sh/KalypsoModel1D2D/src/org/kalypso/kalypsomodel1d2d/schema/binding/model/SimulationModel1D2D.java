@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IEvaluationModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IResultModel;
@@ -54,6 +53,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Patric Congo
  */
+// TODO: why doesn't it extend ISimulationModel
 public class SimulationModel1D2D 
                 extends SimulationModel<
                 IStaticModel1D2D,IOperationalModel1D2D,

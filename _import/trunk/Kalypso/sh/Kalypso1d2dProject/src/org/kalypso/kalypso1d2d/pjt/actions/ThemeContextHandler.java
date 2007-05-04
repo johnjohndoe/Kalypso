@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -17,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -51,12 +51,13 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IViewPart view = window.getActivePage().findView( MapView.ID );
+    final IWorkbenchPage activePage = window == null ? null : window.getActivePage();
+    final IViewPart view = activePage == null ? null : activePage.findView( MapView.ID );
 
     if( m_featureType != null && view != null && view instanceof MapView )
     {

@@ -80,7 +80,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 		this.featureMemberProp = featureMemberProp;
 		this.featureList = 
 				(FeatureList) this.featureCol.getProperty(featureMemberProp);
-		
+		  // TODO: the string creation here seems to be a performance problem
 			Assert.throwIAEOnNull(
 					this.featureList, 
 					"could not create the feature list:"+

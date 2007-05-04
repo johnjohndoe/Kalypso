@@ -126,10 +126,6 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
         if( dialog.open() == Window.CANCEL )
           return;
 
-        // TODO
-        // - maybe apply intervall
-        // - maybe read from source
-
         bcresult[0] = wizard.getBoundaryCondition();
       }
     } );
@@ -137,13 +133,14 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     return bcresult[0];
   }
 
+  // TODO: depends on type of element the bc is applied to
   protected TimeserieTypeDescription[] getTimeserieDescriptions( )
   {
     return new TimeserieTypeDescription[] {
         new TimeserieTypeDescription( "Wasserstand - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ),
         new TimeserieTypeDescription( "Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
         new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" ),
-        new TimeserieTypeDescription( "W/Q - Beziehung", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
+//        new TimeserieTypeDescription( "W/Q - Beziehung", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
         
         // This one should be the last one: 
         new TimeserieTypeDescription( "Zeitreihe aus Repository", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ) };

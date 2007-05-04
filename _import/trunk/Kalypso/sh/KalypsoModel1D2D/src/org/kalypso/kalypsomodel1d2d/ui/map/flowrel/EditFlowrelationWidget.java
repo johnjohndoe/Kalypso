@@ -70,10 +70,10 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
   {
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    
+
     final Feature featureToSelect = flowRelation[0].getWrappedFeature();
     final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-    
+
     final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
     selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
 
@@ -97,6 +97,16 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
     } );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    /* Deselect all */
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    selectionManager.clear();
 
-
+    super.finish();
+  }
 }

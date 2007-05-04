@@ -471,7 +471,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFEDiscretisationModel1d2d.class, cTor);
-        
+
 //      StaticModel1D2D  
         cTor = new AdapterConstructor()
         {

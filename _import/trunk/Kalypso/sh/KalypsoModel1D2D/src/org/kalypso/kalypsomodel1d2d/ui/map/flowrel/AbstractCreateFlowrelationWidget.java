@@ -56,6 +56,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -75,7 +76,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
@@ -353,26 +353,29 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     if( m_existingFlowRelation == null )
     {
+      final MapPanel mapPanel = getMapPanel();
       final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
+      final IFlowRelationshipModel flowRelationshipModel = m_flowRelCollection;
+
       /* Create flow relation at position */
       display.asyncExec( new Runnable()
       {
         public void run( )
         {
-          final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
-          final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
+          final Feature parentFeature = flowRelationshipModel.getWrappedFeature();
+          final IRelationType parentRelation = flowRelationshipModel.getWrappedList().getParentFeatureTypeProperty();
           final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation );
           if( flowRel == null )
           {
-            getMapPanel().repaint();
+            mapPanel.repaint();
             return;
           }
 
-          final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+          final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
           flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
 
           /* Post it as an command */
-          final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+          final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
           final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
           try
           {
@@ -438,6 +441,19 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   protected boolean isConsidered( final IFeatureWrapper2 modelElement )
   {
     return modelElement instanceof IFE1D2DNode;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    /* Deselect all */
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    selectionManager.clear();
+    
+    super.finish();
   }
 
   /**

@@ -20,6 +20,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.loader.LoaderException;
@@ -63,6 +64,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
     LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
+    LOCATION_MAP.put( IOperationalModel1D2D.class, MODELS_FOLDER + "/operational.gml" );
 //    LOCATION_MAP.put( ISimulationModel.class,  MODELS_FOLDER + "/simulation.gml" );
     // TODO: add other model types here
   }
@@ -226,6 +228,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
+  @SuppressWarnings("unchecked")
   public <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( modelClass );
