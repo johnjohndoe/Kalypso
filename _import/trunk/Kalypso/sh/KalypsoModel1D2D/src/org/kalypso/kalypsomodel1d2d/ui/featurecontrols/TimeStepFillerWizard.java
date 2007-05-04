@@ -117,11 +117,11 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     //observation_sensor = ObservationFeatureFactory.toObservation( t_feature );
     obs = ObservationFeatureFactory.toObservation( t_feature );
 
-    final String[] componentUrns = getComponentUrns();
-    final IComponent[] components = new IComponent[componentUrns.length];
-//
-    for( int i = 0; i < components.length; i++ )
-      components[i] = ObservationFeatureFactory.createDictionaryComponent( t_feature, componentUrns[i] );
+//    final String[] componentUrns = getComponentUrns();
+//    final IComponent[] components = new IComponent[componentUrns.length];
+////
+//    for( int i = 0; i < components.length; i++ )
+//      components[i] = ObservationFeatureFactory.createDictionaryComponent( t_feature, componentUrns[i] );
     
 // +++++ DOUBT
     //observation = (IObservation)newFeature.getProperty(Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER);
@@ -130,9 +130,10 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
 //    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
 
     final TupleResult result =  obs.getResult();
+    final IComponent[] components = result.getComponents();
     
-    for( final IComponent component : components )
-      result.addComponent( component );
+//    for( final IComponent component : components )
+//      result.addComponent( component );
 //
 //    // TODO: Refaktor in order to let different types of observations to be created
     final IComponent timeComponent = components[0];
@@ -182,8 +183,8 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     {
       final IRecord record = result.createRecord();
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( _HComponent, timePage.getHValue() );
-      record.setValue( _QComponent, timePage.getQValue() );
+      record.setValue( _HComponent, new BigDecimal( timePage.getHValue() ) );
+      record.setValue( _QComponent, new BigDecimal( timePage.getQValue() ) );
       result.add( record );
       //System.out.println("record :"+calendarFrom.getTimeInMillis()+" H :"+timePage.getHValue()+" Q:"+timePage.getQValue()  );
       System.out.println(record.toString());
