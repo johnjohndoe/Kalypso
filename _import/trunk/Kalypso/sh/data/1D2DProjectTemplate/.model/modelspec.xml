@@ -7,9 +7,9 @@
 	<input id="TerrainModel" path="models/terrain.gml" relativeToCalcCase="true"/>
 	<input id="SimulationControlModel" path="models/control.gml" relativeToCalcCase="true"/>
 	<input id="Roughness" path=".metadata/roughness.gml" relativeToCalcCase="false"/>
+	<input id="ResultStyle" path=".metadata/result/result.sld" relativeToCalcCase="false"/>
+	<input id="ResultMap" path=".metadata/result/result.gmt" relativeToCalcCase="false"/>	
 
-	<output id="NodeResultModel" path="results/nodeResult.gml" relativeToCalcCase="true"/>
 	<output id="RESULT_DIR_NAME" path="results" relativeToCalcCase="true"/>
-    <output id="RESULT_2d_ZIP" path="results/2dResults.zip" relativeToCalcCase="true"/>
 </modeldata>
 

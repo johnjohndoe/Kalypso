@@ -32,7 +32,7 @@
 										1
 									</CssParameter>
 									<CssParameter name="fill">
-										#cccccc
+										#ccccff
 									</CssParameter>
 								</Fill>
 							</Mark>

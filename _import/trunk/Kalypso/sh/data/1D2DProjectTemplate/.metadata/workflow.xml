@@ -203,7 +203,7 @@
 		<TaskGroup URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView">
 			<Help>Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.</Help>
 			<Name>Einstellungen Kartenansicht</Name>
-			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VectorDispl">
+			<Task context="ResultMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VectorDispl">
 				<Help>Stellt Strömungsgeschwindigkeiten anhand von Vektoren dar.</Help>
 				<Name>Vektorendarstellung</Name>
 			</Task>
@@ -295,6 +295,10 @@
 							<con:Parameter name="input" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
 						</con:ExtensionContext>
 					</con:ExtensionContext>
+					<con:ExtensionContext id="ResultMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="results/result.gmt" />
+					</con:ExtensionContext>					
 				</con:ViewContext>
 			</con:MultiContext>
 			<con:ViewContext id="FeatureSelectionView" viewId="org.kalypso.featureview.views.FeatureView" parent="1d2dModelling" />
