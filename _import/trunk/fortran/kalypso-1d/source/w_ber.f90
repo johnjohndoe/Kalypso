@@ -1,4 +1,4 @@
-!     Last change:  MD   26 Apr 2007    3:10 pm
+!     Last change:  MD    2 May 2007   12:04 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,8 @@
 ! Research Associate
 !**********************************************************************
 
-SUBROUTINE w_ber (he, qw, np, nz, idr1, nblatt)
+SUBROUTINE w_ber (he, qw, np, nz, idr1, nblatt, Q_Abfrage)
+! w_ber (he, qw, np, nz, idr1, nblatt)
 
 !***********************************************************************
 !**                                                                     
@@ -212,7 +213,8 @@ COMMON / wehr2 / beiw, rkw, lw, wart
 REAL :: v_uew(maxw), huew_neu(maxw)       ! Flieﬂgeschwindigkeit und Wasserstand im Wehr
 REAL :: h_ow                              ! angenommene Wassertiefe im Oberwasser w‰hrend der Wehrberechnung
 REAL :: hgrw (maxw), q_w (maxw)           ! Grenztiefe am Wehr und Wehrabfluss
-REAL :: v_uw, h_uw, h_uw_w                ! Flieﬂgescwindigkeit und Wasserstand im Unterwasser
+REAL :: v_uw, h_uw, h_uw_w                ! Flieﬂgeschwindigkeit und Wasserstand im Unterwasser
+REAL :: f_uw                              ! gesamte Durchstrˆmte Fl‰che im UW qm
 
 ! ------------------------------------------------------------------
 ! Uebergabegroessen der Geometrieberechnung:
@@ -233,7 +235,7 @@ CHARACTER(LEN=1) :: idr1
 INTEGER :: iueart (maxw)        ! Art des Uberfalls: vollk., unvollk. oder ueberstroemen
 CHARACTER(LEN=12) :: uearttxt   ! Bezeichnung des Uberfalls: vollk., unvollk. oder ueberstroemen
 CHARACTER(LEN=6)  :: ABFRAGE    ! Kennung zur Abfluss-iteration Fall 0 oder Fall A
-
+CHARACTER(LEN=11) :: Q_Abfrage  ! Abfrage fuer Ende der Inneren Q-Schleife aus wspber
 
 ! ******************************************************************
 ! Programmanfang                                   
@@ -285,12 +287,19 @@ he_opt = 0.0
 h_uw = wsp (np - 1)                   !MD  Wasserspiegel im Unterwasser
 hen1 = hen (np - 1)                   !MD  Energiehoehe im Unterwasser
 v_uw = SQRT (2. * g * (hen1 - h_uw))  !MD  Flieﬂgeschwindigkeit im Unterwasser
+f_uw = fgesp (np - 1)                 !MD  gesamte Durchstrˆmte Fl‰che im UW
 
-                                                                        
+IF (BERECHNUNGSMODUS == 'REIB_KONST' .and. Q_Abfrage == 'NO_SCHLEIFE') then
+  h_uw = wsp (np - 1)                    !MD  Wasserspiegel im Unterwasser
+  v_uw = qw / f_uw                       !MD  Flieﬂgeschwindigkeit im Unterwasser
+  hen1 = h_uw + ((v_uw**2.)/(2. * g))    !MD  Energiehoehe im Unterwasser
+Endif
+
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 WRITE (UNIT_OUT_LOG, '(''Wasserspiegel am Profil n-1: h_uw = '',f8.4)') h_uw
 WRITE (UNIT_OUT_LOG, '(''Energiehoehe  am Profil n-1: hen1 = '',f8.4)') hen1
 WRITE (UNIT_OUT_LOG, '(''Fliessgesch.  am Profil n-1: v_uw = '',f8.4)') v_uw
+WRITE (UNIT_OUT_LOG, '(''Durch.Fl‰che  am Profil n-1: f_uw = '',f8.4)') f_uw
 
 psieins = 0.0
 psiorts = 0.0
@@ -1259,6 +1268,17 @@ DO 5000 j = 1, nwfd
   ENDIF
   WRITE (UNIT_OUT_TAB, '(5x,i2,10x,f6.4,5x,f7.3,5x,f6.3,5x,f7.3,5x,a)        &
      &') j, cq (j) , q_w (j) , huew (j) , auew (j) , uearttxt
+
+  !MD  NEUER BERECHNUNGSMODUS
+  IF (BERECHNUNGSMODUS == 'REIB_KONST' .or. Q_Abfrage == 'NO_SCHLEIFE') then
+    WRITE (UNIT_OUT_WEHR, '(4x,f7.3,1x,f10.3,1x,f8.3,1x,f10.3,2x,f6.4,2x,f7.3,2x,f6.3,2x,f7.3, &
+       & 3x,a,1x,f10.3,1x,f10.3,1x,f8.3,1x,f10.3)')  &
+       & qw, h_ow, v_ow, he, cq (j), q_w (j), huew (j), auew (j), uearttxt, he_q, h_uw, v_uw, hen1
+
+    WRITE (UNIT_OUT_QWEHR, '(4x,f8.4,1x,f7.3,1x,f7.3,1x,f10.3,1x,f10.3,3x,a)')  &
+       & stat (np), qw, q_w (j), h_ow, h_uw, uearttxt
+  endif
+
 5000 END DO
 
                                                                         
