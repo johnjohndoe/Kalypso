@@ -990,6 +990,61 @@ Kalypso 1.3.1.1      25. April 2007
 
 1.)  Die Zeila Routine ist schon für die neue Berechnungsvarainte und wurde daher wieder zurückgesetzt
                             
-                            Monika Donner, 26.04.2007
+                                                         Monika Donner, 26.04.2007
+
+
+ Kalypso 2.0.0        04. Mai 2007
+-----------------------------------
+
+1.)  Eine neue 4.te Berechnungsvarainte mit der Vorgabe eines konstanten Reibungsgefälles ist möglich.
+     Für die neue Berechnungsvarainte "KONSTANTES REIBUNGSGEFAELLE" wird nur der Anteil der Verlusthöhe infolge 
+     Reibung entlang des Fließweges berücksichtigt. Alle anderen lokalen Verluste werden nicht mitberücksichtigt. 
+
+     Ziel der neuen Berechnungsvariante ist die Generierung eines 1d-Stranges für eine instationäre
+     Berechnung nach dem Rechenverfahren nach Teschke. In der neuen Berechnungsvariante werden unter der 
+     Annahme eines konstanten REIBUNGSGEFÄLLES für JEDES Profil folgende Effekte berücksichtigt:
+     - Kontinuierliche Verluste entlang des Fließweges infolge Reibung, Trennflächen und Bewuchs.
+       (Alle Verluste die in lambda eingehen)
+     - Ausbildung von Wasserstand-Abfluss_Beziehungen im OW und UW von Bauwerken: derzeit NUR für Wehre
+     - An den Wehren erfolgt eine innere Abflusssteigerung, wobei der Unterwasserstand konstant gehalten wird
+       und der Zufluss aus dem Oberwasser über das Wehr stetig von Qmin bis Qmax gesteigert wird. Die Energiehöhe 
+       im Unterwasser wird entsprechend dem festen bekannten UW-WSP und dem neuen Abflussüber das Wehr ermittelt.
+       Es gilt die Konti-Bedingung.
+     - In den Wehren werden alle örtlichen Verluste mitberücksichtigt. Diese Verluste werden später bei der
+       instationären Berechnung verdeckt durch eine How-Q-Huw Beziehung mitgeführt.
+     - Für die spätere Erzeugung der w-Q-Polynome für die normalen Profil sollten alle Bauwerke deaktiviert werden.
+     - Für die Berechnung der How-Q-Huw Beziehung am Wehr muss das Abfluss-Intervall ggf. verkleinert werden:
+
+
+     Unberücksichtigt bleiben:
+     - Alle örtlichen Verluste infolge Einschnürung, Aufweitung oder Formwiderstand in den normalen(!) Gewässerprofilen.
+     - In dieser Version 2.0.0 sind sind noch keine Brücken berücksichtigt: Daher sind unbedingt die Brücken zu deaktiviern!
+
+     Für die die neuen Berechnungsvariante müssen folgende wichtigen Vorgaben erfolgen:
+     - Konstantes stationäres Gefälle = angenommenes Reibungsgefälle
+     - Ein Abflussintervall mit Qmin, Qmax und dQ
+     - KEIN Verlustbeiwert beta (infolge Einschnürung oder Aufweitung)
+     - Fließwiderstand ausschließlich für Darcy-Weisbach ohne Formwiderstand (kein kst)
+     - Brücken sind zu deaktiviern!
+
+     Folgende Routinen haben Änderungen erfahren:
+     - wsp / read_config_file / qbordv / wspber / wspanf (Uebergabe von wsanf) / 
+       verluste / w_ber / zeila
+     
+     Alle Deatils zum Berechnungsablauf, Theorie und zur Umsetzung im Rechenkern kann im Dokument:
+       <Konzeption_neue_WSPM-Berech-Variante.doc>
+     
+     WICHTIG:
+     -------- 
+     Diese neue Berechnungsvariante lässt sich NUR über die Oberfläche WSPM ansteuern.
+     Wer auch in WspWin damit arbeiten möchte, kann sich an mich (MD) wenden.
+ 
+
+2.) Umstellung der Abfrage nach der Berechnungsvarainte in der Routine zeila und lapro.
+    Die Art der Berechnung wird nun nur noch über den Parameter "Berechnungsart" erfragt und nicht mehr 
+    über den Integer "mark". Dies steuert in zeila die Ausgaben.
+
+                          
+                                                         Monika Donner, 04.05.2007
 						
                                                     
