@@ -302,8 +302,11 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     return null;
   }
 
-  private Area areaFromRing( @SuppressWarnings("hiding")
-  GeoTransform projection, float width, final GM_Position[] ex )
+  
+  public static final Area areaFromRing( 
+                                GeoTransform projection, 
+                                float width, 
+                                final GM_Position[] ex )
   {
     final int[] x = new int[ex.length];
     final int[] y = new int[ex.length];
@@ -336,7 +339,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     return new Area( polygon );
   }
 
-  private double distance( double x1, double y1, double x2, double y2 )
+  public static final double distance( double x1, double y1, double x2, double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }

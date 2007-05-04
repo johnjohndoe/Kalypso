@@ -37,7 +37,9 @@ public class KalypsoModelRoughnessConsts
   public static final QName WBR_F_ROUGHNESS_CLS_COLLECTION = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessClsCollection" );
 
   public static final QName WBR_PROP_ROUGHNESS_CLS_MEMBER = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughnessClsMember" );
-
+//  colorStyle
+  public static final QName WBR_PROP_COLOR_STYLE = 
+          new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" );
   // gml
   public static final QName GML_PROP_ID = new QName( NS.GML3, "id" );
 

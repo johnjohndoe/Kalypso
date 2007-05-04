@@ -81,7 +81,13 @@
 					</ul>
 				</html>
 			</xs:documentation>
-			
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
+					kapp:property="wb1d2d:geometry"
+					kapp:valueType="gml:LineStringPropertyType"
+					kapp:isVirtual="true"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractStaticModelType">

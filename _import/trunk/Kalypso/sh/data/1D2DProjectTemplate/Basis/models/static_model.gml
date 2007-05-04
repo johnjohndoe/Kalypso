@@ -8,15 +8,15 @@
 	gml:id="root">
 	
 	<simBase:terrainModel 
-		xlink:href="terrain.gml#root_terrain_model"/>
+		xlink:href="terrain.gml#root"/>
 	
 	<simBase:feDiscretisationModel 
-		xlink:href="discretisation.gml#root_discretisation_model"/>
+		xlink:href="discretisation.gml#root"/>
 	
 	<simBase:flowResistanceModel 
-		xlink:href="terrain.gml#root_flow_resistance_model"/>
+		xlink:href="terrain.gml#root"/>
 	
 	<simBase:flowRelationshipModel 
-		xlink:href="terrain.gml#root_flow_relationship_model"/>
+		xlink:href="terrain.gml#root"/>
 		
 </wb1d2d:StaticModel1D2D>

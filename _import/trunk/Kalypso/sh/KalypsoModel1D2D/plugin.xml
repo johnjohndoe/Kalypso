@@ -59,6 +59,10 @@
                class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
                id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
                name="NodeResultVelocityFunction"/>
+         <function
+               class="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
+               id="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
+               name="StaticModelBBoxFunc"/>
               
      </extension>     
      
@@ -84,6 +88,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>

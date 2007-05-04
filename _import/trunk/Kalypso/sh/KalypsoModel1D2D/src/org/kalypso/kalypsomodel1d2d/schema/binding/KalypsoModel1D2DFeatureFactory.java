@@ -52,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.ui.displayelements.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
 import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -532,6 +533,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             if(KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ))
             {
               return SurfacePatchVisitableDisplayElement.createDisplayElement( feature );
+            }
+            else if(Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL.equals( name ))
+            {
+              return FERoughnessDisplayElement.createDisplayElement( feature );
             }
             else
             {
