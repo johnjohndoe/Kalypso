@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    2:33 pm
+!     Last change:  MD   11 Apr 2007   11:45 am
 !--------------------------------------------------------------------------
 ! This code, lapro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,8 @@
 
 
 !---------------------------------------------------------------------------
-SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, NAME_OUT_LAENGS)
+SUBROUTINE lapro1 (unit5, pfad2, nprof, NAME_OUT_LAENGS)
+!MD SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, NAME_OUT_LAENGS)
 !
 ! geschrieben:    01.08.1989  p. koch
 ! geaendert:      10.05.2005  w. ploeger (um variable file_laengs erweitert)
@@ -73,7 +74,7 @@ implicit none
 CHARACTER(LEN=nch80), INTENT(IN) :: unit5
 CHARACTER(LEN=nch80), INTENT(IN) :: pfad2
 INTEGER, INTENT(IN) :: nprof
-INTEGER, INTENT(IN) :: mark
+! INTEGER, INTENT(IN) :: mark
 CHARACTER(LEN=nch80), INTENT(IN) :: NAME_OUT_LAENGS         ! Variable für Laengschnitt.txt
 
 
@@ -167,7 +168,7 @@ END DO
 
 !ST 29.03.2005---------------------------------------------------
 !Erweitert um Variable für Pfadnamen von Laengsschnit.txt
-CALL zeila (unit5, nprof, pfad2, mark, NAME_OUT_LAENGS)
-
+!MD CALL zeila (unit5, nprof, pfad2, mark, NAME_OUT_LAENGS)
+CALL zeila (unit5, nprof, pfad2, NAME_OUT_LAENGS)
 
 END SUBROUTINE lapro1                                                
