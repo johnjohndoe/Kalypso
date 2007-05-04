@@ -22,7 +22,7 @@
 					<WellKnownName>circle</WellKnownName>
 					<Fill>
 						<CssParameter name="fill-opacity">1.0</CssParameter>
-						<CssParameter name="fill">#00ffff</CssParameter>
+						<CssParameter name="fill">#ff952b</CssParameter>
 					</Fill>
 					<Stroke>
 						<CssParameter name="stroke">#000000</CssParameter>

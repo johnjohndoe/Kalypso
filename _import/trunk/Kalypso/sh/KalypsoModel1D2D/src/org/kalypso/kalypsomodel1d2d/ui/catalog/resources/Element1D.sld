@@ -26,7 +26,7 @@
 				<ogc:PropertyName>geometry</ogc:PropertyName>
 			</Geometry>
 			<Stroke>
-				<CssParameter name="stroke">#0C3EC0</CssParameter>
+				<CssParameter name="stroke">#F3C13F</CssParameter>
 				<CssParameter name="stroke-width">2.0</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
