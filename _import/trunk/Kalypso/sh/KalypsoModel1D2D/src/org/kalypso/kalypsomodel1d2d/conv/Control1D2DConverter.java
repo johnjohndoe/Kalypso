@@ -93,12 +93,6 @@ public class Control1D2DConverter
   {
     Locale locale = Locale.US;
     writer.println( "OUTFIL  result\\Output" );
-    // TODO: add hydrograph files if ready and necessary - ask Jessica
-    // writer.println( "INELTFL " ); // Inflow Hydrograph Q
-    // writer.println( "INELEV " ); // Tidalgraph Data H
-    // writer.println( "INHYD " ); // Hydrograph Q
-    // writer.println( "INCSTR " ); // Structures (later)
-    // writer.println( "INTIMS " ); // Structures time series(later)
     writer.println( "INKALYPSmodel.2d" );
    /// writer.println( "CONTROL A " + calculation.getIaccyc() + " 2d 0" );
     if( calculation.getRestart() )
@@ -108,10 +102,10 @@ public class Control1D2DConverter
     writer.println( "TI Projekt Name" ); // write Project name
 
 //    // C0
-//    String formatC0 = "C0             0%8d%8d%8d%8.3f%8d%8.3f%8.2f       0";
-//    Object[] c0Props = new Object[] { calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
-//        calculation.getTBFACT(), calculation.getTBMIN() };
-//    writer.printf( l, formatC0 + "\n", c0Props );
+    String formatC0 = "C0             0%8d%8d%8d%8.3f%8d%8.3f%8.2f       0";
+    Object[] c0Props = new Object[] { calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
+        calculation.getTBFACT(), calculation.getTBMIN() };
+    writer.printf( locale, formatC0 + "\n", c0Props );
 
     // C1
     writer.println( "C1             0       1       1       0       0       0       0       0       0" ); // fixed
@@ -122,7 +116,7 @@ public class Control1D2DConverter
     writer.printf( locale, formatC1 + "\n", c1Props );
 
     // C3
-    String formatC3 = "C3         1.000   1.000   %8.3f%8.1f%8.3f%8.3f%8.3f";
+    String formatC3 = "C3         1.000   1.000%8.3f%8.1f%8.3f%8.3f%8.3f";
     Object[] c3Props = new Object[] { calculation.getUNOM(),calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() };
     writer.printf( locale, formatC3+ "\n", c3Props );
 
@@ -164,10 +158,10 @@ public class Control1D2DConverter
 //      Double eddy = calculation.getViskosity( roughnessCL );
       Double val = 2900.; 
       Object[] ed1Props = new Object[] { roughnessAsciiID, val,   val,   val,   val};
-      System.out.printf( locale, formatED1+ "\n", ed1Props );
+      writer.printf( locale, formatED1+ "\n", ed1Props );
       // ED2
       String formatED2 = "ED2     %8.1f%8.1f%8.3f%16.1f";
-      System.out.printf( locale, formatED2+ "\n", new Object[] { new Double(0.5),new Double(0.5),new Double(0.001),new Double(20.)});
+      writer.printf( locale, formatED2+ "\n", new Object[] { new Double(0.5),new Double(0.5),new Double(0.001),new Double(20.)});
       
       // ED4
       String formatED4 = "ED4             %8.2f%8.1f%8.2f";
