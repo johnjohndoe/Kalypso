@@ -1,4 +1,4 @@
-!     Last change:  WP   16 Jun 2006    4:05 pm
+!     Last change:  MD   11 Apr 2007   10:26 am
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -204,20 +204,23 @@ IF (nprof.eq.1.or.strbr.ne.0.) then
   CALL grnzh (q, indmax, hgrenz, xi, hi, s)
 
 ENDIF
-                                                                        
-                                                                        
+
 100 CONTINUE
                                                                         
-                                                                        
+
 IF (wsanf.lt.0.) then
-  ! Ermittlung  Anfangs-WSP stationaer gleichfoermig
-  ! Sohlgefaelle = wsanf
+!MD  Ermittlung Anfangs-WSP aus stationaer gleichfoermigen Gefaelle = wsanf
+!MD  bzw. aus dem ggbnen Reibungsgefa  elle fuer das gesamte Gewaesser
                                                                         
-  !UT       SETZE EINUNGSVERLUST NULL
+  !UT   SETZE EINUNGSVERLUST NULL
   hborda = 0.
                                                                         
-  !UT       Erstes profil, DANN str = 100
-  IF (nprof.eq.1) str = 100.
+  !UT    Erstes profil, DANN str = 100
+  IF (nprof.eq.1) then
+    str = 100.
+  ELSEIF (nprof.ne.1) then   !MD neu fuer Reibungsgefaelle
+    str = strbr
+  Endif
 
   CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
       & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
@@ -231,7 +234,7 @@ IF (wsanf.lt.0.) then
 
     wsanf = 0.
                                                                         
-    !JK       ZU BERECHNUNG ALS GRENZTIEFE
+    !JK      Weiter zur BERECHNUNG mit GRENZTIEFE
     GOTO 100
                                                                         
   ENDIF
