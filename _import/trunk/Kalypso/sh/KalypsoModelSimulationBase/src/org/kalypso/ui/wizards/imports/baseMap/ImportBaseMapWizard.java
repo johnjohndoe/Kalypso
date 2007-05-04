@@ -63,8 +63,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -76,8 +78,6 @@ import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
-
-import de.renew.workflow.contexts.IWithContext;
 
 enum SelectedPage
 {
@@ -91,7 +91,7 @@ enum SelectedPage
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Madanagopal
  */
-public class ImportBaseMapWizard extends Wizard implements IWithContext, IKalypsoImportWMSWizard
+public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoImportWMSWizard
 {
   private IStructuredSelection initialSelection;
 
@@ -102,12 +102,12 @@ public class ImportBaseMapWizard extends Wizard implements IWithContext, IKalyps
   protected ImportBaseMapImportImgPage m_PageImportImg;
 
   protected ImportBaseMapImportShpPage m_PageImportShp;
+
   // protected LineShpMainPage m_PageImportShp;
 
   protected ImportWmsWizardPage m_PageImportWMS;
 
   private final ArrayList<String> m_catalog = new ArrayList<String>();
-
 
   // private ISzenarioDataProvider m_modelProvider;
 
@@ -127,6 +127,10 @@ public class ImportBaseMapWizard extends Wizard implements IWithContext, IKalyps
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+
     initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
@@ -147,16 +151,6 @@ public class ImportBaseMapWizard extends Wizard implements IWithContext, IKalyps
     {
       IOUtils.closeQuietly( is );
     }
-  }
-
-  /**
-   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-   */
-  public void initModelProperties( IEvaluationContext context )
-  {
-    m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
-    // m_modelProvider = (ISzenarioDataProvider) context.getVariable(
-    // ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
 
   @Override
@@ -345,24 +339,24 @@ public class ImportBaseMapWizard extends Wizard implements IWithContext, IKalyps
       {
         e1.printStackTrace();
       }
-      final File srcFileShape = new File( m_PageImportShp.getSourceLocation().toOSString() );
-      final IFile dstFileShape = dstFilePath.getFile( m_PageImportShp.getSourceLocation().lastSegment() );
-      File srcFileIndex = null;
-      IFile dstFileIndex = null;
-      File srcFileDBase = null;
-      IFile dstFileDBase = null;
-      final String extension = m_PageImportShp.getSourceLocation().getFileExtension();
-      if( extension.equalsIgnoreCase( "shp" ) )
-      {
-        srcFileIndex = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).toOSString() );
-        dstFileIndex = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).lastSegment() );
-        srcFileDBase = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).toOSString() );
-        dstFileDBase = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).lastSegment() );
-      }
-      else
-      {
-        throw new UnsupportedOperationException( "Unsuported file type: " + extension );
-      }
+    final File srcFileShape = new File( m_PageImportShp.getSourceLocation().toOSString() );
+    final IFile dstFileShape = dstFilePath.getFile( m_PageImportShp.getSourceLocation().lastSegment() );
+    File srcFileIndex = null;
+    IFile dstFileIndex = null;
+    File srcFileDBase = null;
+    IFile dstFileDBase = null;
+    final String extension = m_PageImportShp.getSourceLocation().getFileExtension();
+    if( extension.equalsIgnoreCase( "shp" ) )
+    {
+      srcFileIndex = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).toOSString() );
+      dstFileIndex = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).lastSegment() );
+      srcFileDBase = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).toOSString() );
+      dstFileDBase = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).lastSegment() );
+    }
+    else
+    {
+      throw new UnsupportedOperationException( "Unsuported file type: " + extension );
+    }
     try
     {
       final File finalSrcIndex = srcFileIndex;

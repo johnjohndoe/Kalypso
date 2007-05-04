@@ -38,43 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.application;
+package org.kalypso.kalypso1d2d.pjt.actions;
 
-import java.util.Properties;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.intro.IIntroSite;
-import org.eclipse.ui.intro.config.IIntroAction;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.afgui.scenarios.Scenario;
 
 /**
- * @author Gernot Belger
+ * @author Stefan Kurzbach
  */
-public class Open1D2DProjectIntroAction implements IIntroAction
+public class ScenarioHelper
 {
-  /**
-   * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
-   */
-  public void run( final IIntroSite site, final Properties params )
+  public static String getProjectName( final Scenario scenario )
   {
-    /* Validate parameters */
-    final String projectName = params.getProperty( "project", null );
-
-    final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
-    if( !project.exists() )
-      return;
-
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-
-    // hide intro
-    final IIntroManager introManager = workbench.getIntroManager();
-    introManager.closeIntro( introManager.getIntro() );
-
-    Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );
+    final String name = scenario.getURI();
+    try
+    {
+      final URI uri = new URI( name );
+      return uri.getHost();
+    }
+    catch( final URISyntaxException e )
+    {
+      return null;
+    }
   }
-
 }

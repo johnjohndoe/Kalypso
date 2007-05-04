@@ -57,7 +57,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -76,9 +78,7 @@ import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
-import de.renew.workflow.contexts.IWithContext;
-
-public class ImportObservationWizard extends Wizard implements IWithContext
+public class ImportObservationWizard extends Wizard implements INewWizard
 {
   private final static JAXBContext zmlJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
@@ -104,6 +104,9 @@ public class ImportObservationWizard extends Wizard implements IWithContext
    */
   public void init( IWorkbench workbench, IStructuredSelection currentSelection )
   {
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    m_project = ((IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME )).getProject();
     m_selection = currentSelection;
     final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
@@ -115,14 +118,6 @@ public class ImportObservationWizard extends Wizard implements IWithContext
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-   */
-  public void initModelProperties( IEvaluationContext context )
-  {
-    m_project = ((IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME )).getProject();
-  }
-  
   public final void setProject( IProject project )
   {
     m_project = project;
@@ -274,7 +269,7 @@ public class ImportObservationWizard extends Wizard implements IWithContext
     }
     catch( Exception e )
     {
-//      e.printStackTrace();
+      // e.printStackTrace();
       MessageBox messageBox = new MessageBox( getShell(), SWT.OK );
       messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ) );
       messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ) );

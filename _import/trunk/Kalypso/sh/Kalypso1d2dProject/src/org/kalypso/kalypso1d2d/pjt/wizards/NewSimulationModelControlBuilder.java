@@ -2,6 +2,9 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -20,9 +23,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
@@ -213,31 +219,27 @@ public class NewSimulationModelControlBuilder
       String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
       final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
-      IScenarioManager workflowDB = activeWorkContext.getScenarioManager();
-      if( workflowDB == null )
+      try
       {
-        logger.warning( "no workflow db available" ); //$NON-NLS-1$
-        return;
+        final String projectName = ScenarioHelper.getProjectName( scenario );
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IProject project = workspace.getRoot().getProject( projectName );
+        final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
+        final ScenarioManager scenarioManager = nature.getScenarioManager();
+        if( scenario != null )
+        {
+          activeWorkContext.setCurrentSzenario( scenarioManager.deriveScenario( name, scenario ) );
+        }
+        else
+        {
+          activeWorkContext.setCurrentSzenario( scenarioManager.createBaseScenario( name ) );
+        }
       }
-      else
+      catch( final CoreException e )
       {
-        try
-        {
-          if( scenario != null )
-          {
-            activeWorkContext.setCurrentSzenario( workflowDB.deriveScenario( name, scenario ) );
-          }
-          else
-          {
-            activeWorkContext.setCurrentSzenario( workflowDB.createBaseScenario( name ) );
-          }
-        }
-        catch( final CoreException e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( shell, "Problem", "Szenario konnte nicht erstellt werden.", status );
-          Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-        }
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        ErrorDialog.openError( shell, "Problem", "Szenario konnte nicht erstellt werden.", status );
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
       }
     }
     else

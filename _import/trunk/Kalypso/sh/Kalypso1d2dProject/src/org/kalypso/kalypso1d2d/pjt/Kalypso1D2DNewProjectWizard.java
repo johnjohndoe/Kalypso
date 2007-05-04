@@ -17,12 +17,14 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
+import de.renew.workflow.contexts.IDialogWithResult;
+
 /**
  * Creates a new Kalypso 1d 2d Project
  * 
  * @author Patrice Congo
  */
-public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
+public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard implements IDialogWithResult
 {
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard";
 
@@ -82,10 +84,10 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
       IProject project = getNewProject();
       try
       {
-        Kalypso1D2DProjectNature.addNature( project );
+        Kalypso1D2DProjectNature.addNature( project );        
 
         /* Also activate new project */
-        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );
+        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );        
       }
       catch( CoreException e )
       {
@@ -102,5 +104,13 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
       return true;
     }
 
+  }
+
+  /**
+   * @see de.renew.workflow.contexts.IDialogWithResult#getResult()
+   */
+  public Object getResult( )
+  {
+    return getNewProject().getName();
   }
 }

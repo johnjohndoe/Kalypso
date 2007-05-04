@@ -37,6 +37,10 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   private EWizardType m_wizardType;
 
   private String m_wizardId;
+  
+  public WizardContextHandler( )
+  {   
+  }
 
   /**
    * Creates a new {@link WizardContextHandler} that opens the wizard with the given id
@@ -85,18 +89,13 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
         final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
         wizard.init( workbench, StructuredSelection.EMPTY );
 
-        if( wizard instanceof IWithContext )
+        if( wizardDialog.open() == Window.OK && wizard instanceof IDialogWithResult )
         {
-          ((IWithContext) wizard).initModelProperties( context );
-        }
-
-        if( wizardDialog.open() == Window.OK )
-        {
-          return Status.OK_STATUS;
+          return ((IDialogWithResult) wizardDialog).getResult();
         }
         else
         {
-          return Status.CANCEL_STATUS;
+          return wizardDialog.getReturnCode();
         }
       }
       catch( final CoreException e )

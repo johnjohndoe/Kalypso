@@ -12,7 +12,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
@@ -22,13 +24,11 @@ import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.cases.ICaseDataProvider;
-import de.renew.workflow.contexts.IWithContext;
-
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportWizard extends Wizard implements IWithContext
+public class ImportWizard extends Wizard implements INewWizard
 {
   protected DataContainer m_data; // the data model
 
@@ -60,18 +60,13 @@ public class ImportWizard extends Wizard implements IWithContext
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench iWorkbench, IStructuredSelection iSelection )
+  public void init( IWorkbench workbench, IStructuredSelection iSelection )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ) );//$NON-NLS-1$
     selection = iSelection;
-  }
-
-  /**
-   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-   */
-  public void initModelProperties( IEvaluationContext context )
-  {
-    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     ITerrainModel model;
     try
     {
@@ -97,7 +92,7 @@ public class ImportWizard extends Wizard implements IWithContext
     try
     {
       m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
-  }
+    }
     catch( Exception e )
     {
       // TODO Auto-generated catch block
@@ -130,8 +125,8 @@ public class ImportWizard extends Wizard implements IWithContext
   @Override
   public boolean performCancel( )
   {
-    ((Transformer)m_operation).unprepare();
-    
+    ((Transformer) m_operation).unprepare();
+
     // m_data.getRoughnessPolygonCollection().clear(); THIS MAKES PROBLEM IN GUI!
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();

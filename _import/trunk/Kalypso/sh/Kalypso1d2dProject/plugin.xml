@@ -146,13 +146,13 @@
  	 <!--*** handlers for scenario management ***-->			   
 	     <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.AddScenarioHandler"
-            commandId="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>      	 
+            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"/>      	 
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenarioHandler"
-	           commandId="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>	 
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"/>	 
 	     <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenarioHandler"
-            commandId="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"/>      	 	               
+            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>      	 	               
 
  	 <!--*** import handlers ***-->
 	     <handler
@@ -338,12 +338,6 @@
      		<or>
  	        	<and>
 					<instanceof value="org.eclipse.core.resources.IFolder"/>
-    	     		<not>
-						<test
-	        	            forcePluginActivation="true"
-	            	        property="org.eclipse.core.resources.name"
-	                	    value="imports"/>
-					</not>
     	     	</and>
  				<test
     	            forcePluginActivation="true"
@@ -367,7 +361,7 @@
                tooltip="Ein neues Szenario hinzufügen">
            <class class="org.kalypso.ui.GenericCommandActionDelegate">
         	<parameter name="commandId" 
-                 value="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
+                 value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"/>
            </class>
          </action>
       </viewerContribution>
@@ -385,7 +379,7 @@
                tooltip="Das gewählte Szenario löschen">
            <class class="org.kalypso.ui.GenericCommandActionDelegate">
             	<parameter name="commandId" 
-                     value="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>
+                     value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"/>
            </class>
          </action>
          <action
@@ -397,22 +391,55 @@
                tooltip="Das gewählte Szenario aktivieren">
            <class class="org.kalypso.ui.GenericCommandActionDelegate">
             	<parameter name="commandId" 
-                     value="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"/>
+                     value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>
            </class>
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.kalypso.kalypso1d2d.pjt.natureActions"
+            objectClass="org.eclipse.core.resources.IProject">
+         <filter
+               name="nature"
+               value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+         <action
+               enablesFor="1"
+               icon="icons/nuvola_select/kaboodleloop.png"
+               id="org.kalypso.kalypso1d2d.pjt.natureActions.NewProject"
+               label="Verbinden"
+               tooltip="Projekt mit dem Workflowserver verbinden">
+			<class class="org.kalypso.ui.GenericCommandActionDelegate">
+      			<parameter name="commandId" 
+                 	value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"/>
+   			</class>               
          </action>
       </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            category="de.renew.workflow.tasks.category"
             categoryId="de.renew.workflow.tasks.category"
-            id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
+            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"
+            name="Projekt mit Workflowserver verbinden"/>
+	  <command
+            categoryId="de.renew.workflow.tasks.category"
+            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DeleteProject"
+            name="Projekt von Workflowserver trennen"/>                     
+      <command
+            categoryId="de.renew.workflow.tasks.category"
+            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"
             name="Szenario hinzufügen"/>
       <command
-            category="de.renew.workflow.tasks.category"
             categoryId="de.renew.workflow.tasks.category"
-            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"
+            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
             name="Szenario löschen"/>
+      <category
+            description="Category for workflow tasks"
+            id="de.renew.workflow.tasks.category"
+            name="de.renew.workflow.tasks.category"/>
+      <category
+            description="Category for workflow task groups"
+            id="de.renew.workflow.taskgroups.category"
+            name="de.renew.workflow.taskgroups.category"/>
    </extension>
 </plugin>

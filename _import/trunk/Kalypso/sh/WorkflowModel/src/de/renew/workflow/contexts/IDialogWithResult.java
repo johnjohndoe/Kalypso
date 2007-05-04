@@ -40,17 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.contexts;
 
-
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.ui.INewWizard;
-
 /**
- * Interface used to forward model information to import wizards of type INewWizard
- * 
- * @author antanas
- *
+ * @author Stefan Kurzbach
  */
-public interface IWithContext extends INewWizard
+public interface IDialogWithResult
 {
-  public void initModelProperties(IEvaluationContext context);
+  public Object getResult( );
 }

@@ -55,6 +55,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ui.ImageProvider;
@@ -64,8 +65,6 @@ import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
-
-import de.renew.workflow.contexts.IWithContext;
 
 enum SelectedPage
 {
@@ -79,7 +78,7 @@ enum SelectedPage
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Madanagopal
  */
-public class TimestepChooseWizard extends Wizard implements IWithContext, IKalypsoImportWMSWizard
+public class TimestepChooseWizard extends Wizard implements IKalypsoImportWMSWizard
 {
   private IStructuredSelection initialSelection;
 
@@ -112,6 +111,9 @@ public class TimestepChooseWizard extends Wizard implements IWithContext, IKalyp
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
+    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = service.getCurrentState();
+    m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
     initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
@@ -132,16 +134,6 @@ public class TimestepChooseWizard extends Wizard implements IWithContext, IKalyp
     {
       IOUtils.closeQuietly( is );
     }
-  }
-
-  /**
-   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-   */
-  public void initModelProperties( IEvaluationContext context )
-  {
-    m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
-    // m_modelProvider = (ISzenarioDataProvider) context.getVariable(
-    // ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
 
   @Override

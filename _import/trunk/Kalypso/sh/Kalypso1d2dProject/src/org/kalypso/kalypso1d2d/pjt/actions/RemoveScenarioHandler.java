@@ -7,7 +7,11 @@ import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -18,9 +22,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
+import org.kalypso.afgui.scenarios.ScenarioManager;
+import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 /**
@@ -33,7 +39,7 @@ public class RemoveScenarioHandler extends AbstractHandler
    * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -46,42 +52,58 @@ public class RemoveScenarioHandler extends AbstractHandler
       {
         final Scenario scenario = (Scenario) firstElement;
         final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
-        final IScenarioManager scenarioManager = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getScenarioManager();
         if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
         {
           MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario enthält abgeleitete Szenarien und kann deshalb nicht gelöscht werden." );
           return Status.CANCEL_STATUS;
-        }
+        }        
         else
         {
-          final List<Scenario> rootScenarios = scenarioManager.getRootScenarios();
-          if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
+          final String projectName = ScenarioHelper.getProjectName( scenario );
+          final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+          final IProject project = workspace.getRoot().getProject( projectName );
+          try
           {
-            MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das letzte Basisszenario kann nicht gelöscht werden." );
-            return Status.CANCEL_STATUS;
-          }
-          else
-          {
-            final UIJob runnable = new UIJob( shell.getDisplay(), "Szenario löschen" )
+            final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
+            final ScenarioManager scenarioManager = nature.getScenarioManager();
+            final List<Scenario> rootScenarios = scenarioManager.getRootScenarios();
+            if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
             {
-              /**
-               * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-               */
-              @Override
-              public IStatus runInUIThread( final IProgressMonitor monitor )
+              MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das letzte Basisszenario kann nicht gelöscht werden." );
+              return Status.CANCEL_STATUS;
+            }
+            else if( Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getCurrentScenario() == scenario )
+            {
+              MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario ist zur Zeit aktiv. Bitte aktivieren Sie zuerst ein anderes Szenario." );
+              return Status.CANCEL_STATUS;
+            }
+            else
+            {
+              final UIJob runnable = new UIJob( shell.getDisplay(), "Szenario löschen" )
               {
-                try
+                /**
+                 * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+                 */
+                @Override
+                public IStatus runInUIThread( final IProgressMonitor monitor )
                 {
-                  scenarioManager.removeScenario( scenario, monitor );
+                  try
+                  {
+                    scenarioManager.removeScenario( scenario, monitor );
+                  }
+                  catch( final CoreException e )
+                  {
+                    return e.getStatus();
+                  }
+                  return Status.OK_STATUS;
                 }
-                catch( final CoreException e )
-                {
-                  return e.getStatus();
-                }
-                return Status.OK_STATUS;
-              }
-            };
-            runnable.schedule();
+              };
+              runnable.schedule();
+            }
+          }
+          catch( final CoreException e )
+          {
+            throw new ExecutionException( "Projekt ist kein 1d2d-Projekt oder nicht geöffnet.", e );
           }
         }
       }

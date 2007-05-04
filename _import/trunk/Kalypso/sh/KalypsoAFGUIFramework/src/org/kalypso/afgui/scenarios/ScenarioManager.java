@@ -15,8 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,11 +22,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 import de.renew.workflow.base.IWorkflowSystem;
@@ -84,83 +79,44 @@ public class ScenarioManager implements IScenarioManager
    *              <li> The metadata folder is not accessible.</li>
    *              <li> There is a problem loading the database.</li>
    */
-  public ScenarioManager( final IProject project )
+  public ScenarioManager( final IProject project ) throws CoreException
   {
     final IFolder folder = project.getFolder( METADATA_FOLDER );
     final IFile metadataFile = folder.getFile( METADATA_FILENAME );
     m_project = project;
     m_metaDataFile = metadataFile;
-    final IWorkspaceRunnable runnable = new IWorkspaceRunnable()
+    project.refreshLocal( IResource.DEPTH_INFINITE, null );
+    if( !folder.exists() )
     {
-      public void run( IProgressMonitor monitor ) throws CoreException
-      {
-        if( monitor == null )
-        {
-          monitor = new NullProgressMonitor();
-        }
-        try
-        {
-          monitor.beginTask( "Szenarien laden", 40 );
-
-          project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
-          if( !folder.exists() )
-          {
-            folder.create( false, true, new SubProgressMonitor( monitor, 10 ) );
-          }
-          if( !metadataFile.exists() )
-          {
-            m_projectScenarios = new org.kalypso.afgui.scenarios.ObjectFactory().createProjectScenarios();
-            createBaseScenario( "Basis" );
-            monitor.worked( 10 );
-          }
-          else
-          {
-            m_projectScenarios = loadModel( metadataFile );
-            monitor.worked( 10 );
-          }
-          m_currentWorkflow = new WorkflowSystem( m_project );
-          monitor.worked( 10 );
-        }
-        finally
-        {
-          monitor.done();
-        }
-      }
-
-      /**
-       * Loads the {@link ProjectScenarios} from a file at the given location
-       */
-      private ProjectScenarios loadModel( final IFile file ) throws CoreException
-      {
-        try
-        {
-          final URL url = file.getRawLocationURI().toURL();
-          return (ProjectScenarios) JC.createUnmarshaller().unmarshal( url );
-        }
-        catch( final Throwable e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          throw new CoreException( status );
-        }
-      }
-    };
-
-    final ICoreRunnableWithProgress runnable2 = new ICoreRunnableWithProgress()
+      folder.create( false, true, null );
+    }
+    if( !metadataFile.exists() )
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException
-      {
-        try
-        {
-          project.getWorkspace().run( runnable, m_project, IWorkspace.AVOID_UPDATE, monitor );
-        }
-        catch( Throwable t )
-        {
-          throw new CoreException( StatusUtilities.statusFromThrowable( t ) );
-        }
-        return Status.OK_STATUS;
-      }
-    };
-    ProgressUtilitites.busyCursorWhile( runnable2, "Problem beim Laden der Szenarienbeschreibung" );
+      m_projectScenarios = new org.kalypso.afgui.scenarios.ObjectFactory().createProjectScenarios();
+      createBaseScenario( "Basis" );
+    }
+    else
+    {
+      m_projectScenarios = loadModel( metadataFile );
+    }
+    m_currentWorkflow = new WorkflowSystem( m_project );
+  }
+
+  /**
+   * Loads the {@link ProjectScenarios} from a file at the given location
+   */
+  private ProjectScenarios loadModel( final IFile file ) throws CoreException
+  {
+    try
+    {
+      final URL url = file.getRawLocationURI().toURL();
+      return (ProjectScenarios) JC.createUnmarshaller().unmarshal( url );
+    }
+    catch( final Throwable e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      throw new CoreException( status );
+    }
   }
 
   /**

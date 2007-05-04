@@ -57,6 +57,7 @@ import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 
 import de.renew.workflow.base.EActivityExeState;
 import de.renew.workflow.base.Task;
+import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.cases.TaskExecutionException;
 import de.renew.workflow.connector.ContextActivation;
 import de.renew.workflow.connector.ContextActivationException;
@@ -95,35 +96,38 @@ public class TaskExecutor implements ITaskExecutor
    * @see de.renew.workflow.connector.ITaskExecutor#execute(de.renew.workflow.base.Task)
    */
   public void execute( final Task task ) throws TaskExecutionException
-  {    
+  {
     if( m_activeTask != null )
     {
       if( !m_authority.canStopTask( m_activeTask ) )
         return;
-      m_activeTask.setState( EActivityExeState.AVAILABLE );
     }
     final String name = task.getURI();
-    final Command command = getCommand( m_commandService, name, TaskExecutionListener.CATEGORY_TASK );
+    final Command command = getCommand( m_commandService, name, task instanceof TaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
     final ContextType context = task.getContext();
+    ContextActivation activateContext = null;
     if( context != null )
     {
-      activateContext( context );
+      activateContext = activateContext( context );
       final Collection<String> viewsToKeep = collectOpenedViews( context );
       PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), viewsToKeep );
     }
+    Object result = null;
     try
     {
-      m_handlerService.executeCommand( command.getId(), null );
+      result = m_handlerService.executeCommand( command.getId(), null );
     }
     catch( final NotHandledException e )
     {
-      // ignore not handled
+      // if not handled, last context activation gives result
+      if(activateContext != null) {
+        result = activateContext.getResult();
+      }
     }
     catch( final Throwable e )
     {
       throw new TaskExecutionException( e );
     }
-    task.setState( EActivityExeState.RUNNING );
     m_activeTask = task;
   }
 
@@ -157,8 +161,6 @@ public class TaskExecutor implements ITaskExecutor
   private ContextActivation activateContext( final ContextType context ) throws ContextActivationException
   {
     final IHandler handler = m_contextHandlerFactory.getHandler( context );
-    final Command contextCommand = getCommand( m_commandService, context.getId(), TaskExecutionListener.CATEGORY_CONTEXT );
-    contextCommand.setHandler( handler );
     final ContextType parentContext = context.getParent();
     ContextActivation parentActivation = null;
     if( parentContext != null )
@@ -166,6 +168,8 @@ public class TaskExecutor implements ITaskExecutor
       parentActivation = activateContext( parentContext );
     }
 
+    final Command contextCommand = getCommand( m_commandService, context.getId(), TaskExecutionListener.CATEGORY_CONTEXT );
+    contextCommand.setHandler( handler );
     Object commandResult;
     try
     {
@@ -176,7 +180,7 @@ public class TaskExecutor implements ITaskExecutor
       throw new ContextActivationException( e );
     }
 
-    if( parentActivation == null )
+    if( parentContext == null )
     {
       return new ContextActivation( context, commandResult );
     }

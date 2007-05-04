@@ -103,8 +103,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
 
   private IProject m_project;
 
-  private IFolder m_metaDataFolder;
-
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
@@ -149,9 +147,18 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
 
   private void init( )
   {
-    m_metaDataFolder = m_project.getFolder( ScenarioManager.METADATA_FOLDER );
-    m_scenarioManager = new ScenarioManager( m_project );
-    m_scenarioManager.addScenarioManagerListener( this );
+    try
+    {
+      m_scenarioManager = new ScenarioManager( m_project );
+      m_scenarioManager.addScenarioManagerListener( this );
+    }
+    catch( final CoreException e )
+    {
+      final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final IStatus status = e.getStatus();
+      ErrorDialog.openError( activeShell, "Problem", "Konnte neue Szenariodaten nicht erzeugen.", status );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+    }
   }
 
   synchronized public ScenarioManager getScenarioManager( )
@@ -231,11 +238,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
     }
   }
 
-  public IFolder getImportFolder( )
-  {
-    return m_metaDataFolder;
-  }
-
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManagerListener#scenarioAdded(org.kalypso.afgui.scenarios.Scenario)
    */
@@ -299,7 +301,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
 
     try
     {
-      final Modeldata modelspec = loadModelspec(  );
+      final Modeldata modelspec = loadModelspec();
       final String typeID = modelspec.getTypeID();
       final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
       monitor.worked( 1 );
@@ -311,8 +313,8 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
       monitor.done();
     }
   }
-  
-  private Modeldata loadModelspec(  ) throws CoreException
+
+  private Modeldata loadModelspec( ) throws CoreException
   {
     try
     {
@@ -332,6 +334,4 @@ public class Kalypso1D2DProjectNature implements IProjectNature, IScenarioManage
     }
   }
 
-  
-  
 }

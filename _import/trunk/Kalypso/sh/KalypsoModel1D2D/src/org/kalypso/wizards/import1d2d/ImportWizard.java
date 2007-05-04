@@ -9,7 +9,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -19,12 +21,11 @@ import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.cases.ICaseDataProvider;
-import de.renew.workflow.contexts.IWithContext;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportWizard extends Wizard implements IWithContext
+public class ImportWizard extends Wizard implements INewWizard
 {
   protected DataContainer m_data; // the data model
 
@@ -50,20 +51,14 @@ public class ImportWizard extends Wizard implements IWithContext
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench iWorkbench, IStructuredSelection iSelection )
+  public void init( IWorkbench workbench, IStructuredSelection iSelection )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) ); //$NON-NLS-1$
-    selection = iSelection;
-  }
-
-  /**
-   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
-   */
-  @SuppressWarnings("unchecked")
-  public void initModelProperties( IEvaluationContext context )
-  {
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
     final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     m_data.setSzenarioDataProvider( szenarioDataProvider );
+    setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) ); //$NON-NLS-1$
+    selection = iSelection;
   }
 
   @Override
@@ -100,7 +95,7 @@ public class ImportWizard extends Wizard implements IWithContext
   {
     m_pageMain.saveDataToModel();
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-    
+
     try
     {
       /* post empty command(s) in order to make pool dirty. */
