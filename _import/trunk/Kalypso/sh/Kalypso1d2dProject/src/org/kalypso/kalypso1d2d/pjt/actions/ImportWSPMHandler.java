@@ -51,9 +51,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
@@ -102,19 +104,22 @@ public class ImportWSPMHandler extends AbstractHandler
       if( dialog.open() != Window.OK )
         return Status.CANCEL_STATUS;
 
+      try
+      {
+        /* post empty command(s) in order to make pool dirty. */
+        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( "WSPM-Profile importieren", false ) );
+        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( "WSPM-Profile importieren", false ) );
+        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "WSPM-Profile importieren", false ) );
+      }
+      catch( final Exception e )
+      {
+        // will never happen?
+        e.printStackTrace();
+      }
+
       /* post empty command(s) in order to make pool dirty. */
       final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
-      modelProvider.saveModel( ITerrainModel.class, new NullProgressMonitor() );
-      modelProvider.saveModel( IFEDiscretisationModel1d2d.class, new NullProgressMonitor() );
 
-      // final ICommand discCommand = new EmptyCommand( "WSPM Import", false );
-      // final CommandableWorkspace workspace1 = discModel.getWrappedFeature().getWorkspace();
-      // mapView.postCommand( discCommand, null );
-      // final CommandableWorkspace workspace2 = terrainModel.getWrappedFeature().getWorkspace();
-      // final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
-      // mapView.postCommand( terrainCommand, null );
-
-      /* Add new layer to profile-collection-map */
       // TODO: add a new layer containing the new profiles in the profile-network map?
       /* Zoom to new elements in fe-map? */
       if( mapView != null )
