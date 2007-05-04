@@ -422,7 +422,8 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   /** Only valid for REIB_KONST mode. */
   public int getPolynomialDeegree( )
   {
-    final Integer value = (Integer) getFeature().getProperty( new QName( NS_WSPM_TUHH, "degree" ) );
+    final Feature polyFeature = (Feature) getFeature().getProperty( new QName( NS_WSPM_TUHH, "calcPolynomesMember" ) );
+    final Integer value = (Integer) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "degree" ) );
     if( value == null )
       return 4;
 
@@ -432,10 +433,11 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   /** Only valid for REIB_KONST mode. */
   public boolean isPolynomialTriple( )
   {
-    final Boolean value = (Boolean) getFeature().getProperty( new QName( NS_WSPM_TUHH, "trippleIt" ) );
+    final Feature polyFeature = (Feature) getFeature().getProperty( new QName( NS_WSPM_TUHH, "calcPolynomesMember" ) );
+    final Boolean value = (Boolean) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "trippleIt" ) );
     if( value == null )
       return false;
-    
+
     return value;
   }
 }
