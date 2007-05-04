@@ -201,7 +201,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object fromText( String text )
+  public Object parseText( String text, String formatHint )
   {
     /* Erstellen des Envelopes. */
 

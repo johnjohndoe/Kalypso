@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
  * 
- * @author bce
+ * @author Gernot Belger
  */
 public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 {
@@ -71,6 +71,14 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
   /**
    * Inverse operation to {@link ILabelProvider#getText(java.lang.Object)}. Must return an object of the type for which
    * this handler is registered for.
+   * <p>
+   * Parses a (human edited) text into an object of the type this handler is responsible for.
+   * 
+   * @param text
+   *          The text which gets parsed.
+   * @param formatHint
+   *          Potentially a hint how to parse the text. It depends on the type handler what format hints are supported.
+   *          For example for the date-handler, DateFormat format string can be used. May be <code>null</code>.
    */
-  public Object fromText( final String text ) throws ParseException;
+  public Object parseText( final String text, final String formatHint ) throws ParseException;
 }

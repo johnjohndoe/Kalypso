@@ -111,7 +111,7 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object fromText( final String text ) throws ParseException
+  public Object parseText( final String text, String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler
     // In future, this should be directly implemented at this point 

@@ -178,12 +178,11 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object fromText( String text ) throws ParseException
+  public Object parseText( String text, String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler
     // In future, this should be directly implemented at this point 
     final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
     return marshallingHandler.parseType( text );
   }
-
 }

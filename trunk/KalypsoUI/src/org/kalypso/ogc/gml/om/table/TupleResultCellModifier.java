@@ -45,14 +45,14 @@ import java.text.ParseException;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler;
 import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 public class TupleResultCellModifier implements ICellModifier
 {
@@ -103,14 +103,15 @@ public class TupleResultCellModifier implements ICellModifier
   public IComponent modifyRecord( final IRecord record, final String property, final Object value )
   {
     final IComponent component = m_provider.getComponent( property );
-    final XsdBaseTypeHandler handler = handlerForProperty( component );
+    final XsdBaseGuiTypeHandler handler = handlerForProperty( component );
     try
     {
       if( handler != null )
       {
+        final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
+        final String formatHint = descriptor.getParseFormat();
         
-        // TODO: parse according to column descriptor
-        final Object valueToSet = value == null ? null : handler.parseType( value.toString() );
+        final Object valueToSet = value == null ? null : handler.parseText( value.toString(), formatHint );
 
         final Object oldValue = record.getValue( component );
         if( ObjectUtils.equals( valueToSet, oldValue ) )
@@ -131,12 +132,12 @@ public class TupleResultCellModifier implements ICellModifier
     return component;
   }
 
-  private XsdBaseTypeHandler handlerForProperty( final IComponent component )
+  private XsdBaseGuiTypeHandler handlerForProperty( final IComponent component )
   {
-    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
-    if( handler instanceof XsdBaseTypeHandler )
-    return (XsdBaseTypeHandler) handler;
+    final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    final IGuiTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
+    if( handler instanceof XsdBaseGuiTypeHandler )
+    return (XsdBaseGuiTypeHandler) handler;
     
     return null;
   }
