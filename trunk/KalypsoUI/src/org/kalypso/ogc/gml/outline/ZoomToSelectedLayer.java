@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author ThomaS Jung
+ * @author Thomas Jung
  */
 public class ZoomToSelectedLayer extends MapModellViewActionDelegate
 {
@@ -60,13 +60,14 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final IListManipulator listManipulator = getView();
     final IKalypsoTheme selectedElement = getSelectedTheme();
     
-    // REMARK: throws a class cast exeption. There should be a better solution!
-    final MapPanel panel  = (MapPanel) listManipulator;
+    MapPanel panel = getView().getMapPanel();
     
-    if( listManipulator != null && selectedElement != null )
+//    // REMARK: throws a class cast exeption. There should be a better solution!
+//    final MapPanel panel  = (MapPanel) listManipulator;
+    
+    if( panel != null && selectedElement != null )
     {
       final GM_Envelope zoomBox = selectedElement.getBoundingBox();
       

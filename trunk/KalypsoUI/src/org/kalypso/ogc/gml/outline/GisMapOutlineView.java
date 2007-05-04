@@ -63,6 +63,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
@@ -200,7 +201,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     }
     else
     {
-      m_viewer.setMapModell( null );
+      m_viewer.setMapPanel( null );
     }
     setPartName( newName );
   }
@@ -236,17 +237,17 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell( )
+  public MapPanel getMapPanel( )
   {
-    return m_viewer.getMapModell();
+    return m_viewer.getMapPanel();
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapModell( final IMapModell modell )
+  public void setMapPanel( final MapPanel panel )
   {
-    m_viewer.setMapModell( modell );
+    m_viewer.setMapPanel( panel );
   }
 
   /**
@@ -263,7 +264,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(), (IKalypsoTheme) element );
+    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element );
     m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
@@ -272,7 +273,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
+    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
@@ -280,7 +281,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public void removeElement( final Object element )
   {
-    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
+    m_commandTarget.postCommand( new RemoveThemeCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
@@ -358,6 +359,14 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   public void postCommand( ICommand command, Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapPart()
+   */
+  public IWorkbenchPart getMapPart( )
+  {
+    return m_mapPart;
   }
 
 }

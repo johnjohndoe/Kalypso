@@ -74,7 +74,7 @@ public class MoveThemeUpAction extends AbstractOutlineAction
     // if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme) )
     if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
     {
-      final Object[] elements = getOutlineviewer().getMapModell().getAllThemes();
+      final Object[] elements = getOutlineviewer().getMapPanel().getMapModell().getAllThemes();
 
       bEnable = (elements[0] != s.getFirstElement());
     }

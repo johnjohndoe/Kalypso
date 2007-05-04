@@ -1162,12 +1162,13 @@ TODO: unfortunately the save button is always disabled
           targetID="org.kalypso.ui.views.outline">
       	<action
              class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"
+             enablesFor="1"
              icon="icons/full/elcl16/impl_co.gif"
              id="org.kalypso.ui.views.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"
-             label="%org.kalypso.ogc.gml.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label"
+             label="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label"
              style="push"
              toolbarPath="outline/tools"
-             tooltip="%org.kalypso.ogc.gml.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"/>
+             tooltip="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"/>
        <action
              class="org.kalypso.ogc.gml.outline.MoveThemeUpAction3"
              icon="icons/full/elcl16/prev_nav.gif"

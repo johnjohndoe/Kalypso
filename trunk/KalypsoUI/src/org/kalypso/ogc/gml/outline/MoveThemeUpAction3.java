@@ -79,7 +79,7 @@ public class MoveThemeUpAction3 extends MapModellViewActionDelegate
     final IMapModellView view = getView();
     if( selectedTheme != null && view != null )
     {
-      final IMapModell mapModell = view.getMapModell();
+      final IMapModell mapModell = view.getMapPanel().getMapModell();
       if( mapModell != null )
       {
         final Object[] elements = mapModell.getAllThemes();

@@ -82,7 +82,7 @@ public class MoveThemeDownAction2 implements PluginMapOutlineAction
 
         if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
         {
-          final Object[] elements = viewer.getMapModell().getAllThemes();
+          final Object[] elements = viewer.getMapPanel().getMapModell().getAllThemes();
 
           bEnable = (elements[elements.length - 1] != s.getFirstElement());
         }

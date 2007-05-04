@@ -71,7 +71,7 @@ public class ActivateThemeAction extends AbstractOutlineAction
 
     if( o instanceof IKalypsoTheme )
     {
-      final IMapModell mapModell = getOutlineviewer().getMapModell();
+      final IMapModell mapModell = getOutlineviewer().getMapPanel().getMapModell();
       getOutlineviewer().postCommand( new ActivateThemeCommand( mapModell, (IKalypsoTheme)o ), null );
     }
   }

@@ -69,7 +69,7 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
       {
         m_gisMapOutlinePage = new GisMapOutlinePage( getCommandTarget() );
       }
-      m_gisMapOutlinePage.setMapModell( getMapPanel().getMapModell() );
+      m_gisMapOutlinePage.setMapPanel( getMapPanel() );
       return m_gisMapOutlinePage;
     }
     return super.getAdapter( adapter );
@@ -84,7 +84,7 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
     super.setMapModell( mapModell );
     if( m_gisMapOutlinePage != null )
     {
-      m_gisMapOutlinePage.setMapModell( mapModell );
+      m_gisMapOutlinePage.setMapPanel( getMapPanel() );
     }
   }
 

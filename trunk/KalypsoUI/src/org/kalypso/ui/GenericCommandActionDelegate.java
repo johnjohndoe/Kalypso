@@ -123,6 +123,8 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
 
       m_bars.updateActionBars();
       
+      
+      
       return Status.OK_STATUS;
     }
   }
@@ -347,8 +349,8 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
 
     final UIJob job = new UpdateActionbarsJob( "Update Action-Bars", actionBars, actionId, enabledState );
     job.setPriority( UIJob.INTERACTIVE );
-    job.schedule();
-    //job.schedule(1000);
+//    job.schedule();
+    job.schedule(200);
     //TODO: just delay, when the map view gets the focus by pressing an allready existing button.
   }
 }
