@@ -117,7 +117,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     if( m_featureList != null && m_featureList.getParentFeature() == null )
     {
-      System.out.println( "BAD!" );
+      String message =
+        String.format( 
+            "BAD: layer with no feature list or feature listList.getParent is empty: "+
+            "\n\tfeaturePath = %s\n\tfeatureFromPath = %s", 
+            featurePath,
+            featureFromPath );
+      System.out.println( message );
     }
 
     m_workspace.addModellListener( this );
