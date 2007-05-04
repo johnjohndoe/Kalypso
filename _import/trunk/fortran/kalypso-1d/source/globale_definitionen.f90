@@ -1,4 +1,4 @@
-!     Last change:  MD   27 Apr 2007   10:10 am
+!     Last change:  MD    4 May 2007    5:44 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 1.3.1.2 '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 26.04.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.0   '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 04.05.2007'
 
 end module VERSION
 
@@ -124,6 +124,8 @@ INTEGER	:: UNIT_OUT_WSL         ! Laengschnitt im WspWin Blockformat
 INTEGER	:: UNIT_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
 INTEGER	:: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 INTEGER	:: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+INTEGER	:: UNIT_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
+INTEGER	:: UNIT_OUT_QWEHR       ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung ums Wehr
 
 end module IO_UNITS
 
@@ -161,6 +163,8 @@ CHARACTER(LEN=nch80) 			:: NAME_OUT_WSL         ! Laengschnitt im WspWin Blockfo
 CHARACTER(LEN=nch80) 			:: NAME_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+CHARACTER(LEN=nch80) 			:: NAME_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
+CHARACTER(LEN=nch80) 			:: NAME_OUT_QWEHR       ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung ums Wehr
 
 end module IO_NAMES
 
