@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006    5:28 pm
+!     Last change:  MD    4 May 2007   11:01 am
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -321,10 +321,12 @@ if (antwort == 'n') then
   read (*,*) pfadconfigdatei
   call read_config_file(ADJUSTL(pfadconfigdatei),LEN_TRIM(pfadconfigdatei))
 
-  if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
-    km   = 'j'
-    idr1 = 'j'
-    idr2 = 'j'
+  !MD  if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
+  !MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
+  IF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
+    km   = 'j'  !MD  Kalinin - Miljukov - Parameter werden erstellt (Deaktivieren??)
+    idr1 = 'j'  !MD  WQ-Dateien sollen erstellt werden
+    idr2 = 'j'  !MD  Ergebnislisten sollen erstellt werden
   end if
 
 else
@@ -400,14 +402,6 @@ IF (istat /= 0) then
                &  1X, '-> PROGRAMMABBRUCH!')
    STOP
 ENDIF                                                                 
-
-
-
-
-
-
-
-
 
 
 
@@ -502,7 +496,7 @@ if (RUN_MODUS /='KALYPSO') then
   IF (mode.eq.1.or.mode.eq.2) then
 
     ! WASSERSPIEGELLAGENBERECHNUNG
-    if (mode.eq.1) ifg = 0                ! Manning-Strickler
+    if (mode.eq.1) ifg = 0              ! Manning-Strickler
     IF (mode.eq.2) ifg = 1        	! Darcy-Weisbach
 
     !bordvoll = 'n'
@@ -639,7 +633,10 @@ if (RUN_MODUS /='KALYPSO') then
        & 1X, '*    - bei stationaer-ungleich-              *',/,  &
        & 1X, '*      foermigem Abfluss               (2)   *',/,  &
        & 1X, '*                                            *',/,  &
-       & 1X, '*    - Ende                            (3)   *',/,  &
+       & 1X, '*    - unter konstantem Reibungsgefälle      *',/,  &
+       & 1X, '*      bei stationaer-gleichf. Abfluss (3)   *',/,  &
+       & 1X, '*                                            *',/,  &
+       & 1X, '*    - Ende                            (4)   *',/,  &
        & 1X, '*                                            *',/,  &
        & 1X, '**********************************************',//)
 
@@ -669,24 +666,45 @@ if (RUN_MODUS /='KALYPSO') then
        & 1X, '*                                            *',/, &
        & 1X, '**********************************************',//)
 
-    ELSEIF (mode.eq.2) then
+   !MD  ELSEIF (mode.eq.2) then
+   !MD  Neu: mode = 3 = Reibungsgefaelle
+   ELSEIF (mode.eq.2.or.mode.eq.3) then
+      if (mode.eq.2) then
 
-      BERECHNUNGSMODUS = 'BF_NON_UNI'
+         BERECHNUNGSMODUS = 'BF_NON_UNI'
 
-      write ( * , 1400)
-      1400 FORMAT (// &
-       & 1X, '**********************************************',/, &
-       & 1X, '*  ----------------------------------------  *',/, &
-       & 1X, '*              BORDVOLLBERECHNUNG            *',/, &
-       & 1X, '*  BEI STATIONAER-UNGLEICHFOERMIGEM ABFLUSS  *',/, &
-       & 1X, '*  ----------------------------------------  *',/, &
-       & 1X, '*                                            *',/, &
-       & 1X, '*  Bitte geben Sie fuer die Bordvollbe-      *',/, &
-       & 1X, '*  rechnung die Variationsbreite fuer die    *',/, &
-       & 1X, '*  Durchfluesse an:                          *',/, &
-       & 1X, '*                                            *',/, &
-       & 1X, '**********************************************',//)
+         write ( * , 1400)
+         1400 FORMAT (// &
+         & 1X, '**********************************************',/, &
+         & 1X, '*  ----------------------------------------  *',/, &
+         & 1X, '*              BORDVOLLBERECHNUNG            *',/, &
+         & 1X, '*  BEI STATIONAER-UNGLEICHFOERMIGEM ABFLUSS  *',/, &
+         & 1X, '*  ----------------------------------------  *',/, &
+         & 1X, '*                                            *',/, &
+         & 1X, '*  Bitte geben Sie fuer die Bordvollbe-      *',/, &
+         & 1X, '*  rechnung die Variationsbreite fuer die    *',/, &
+         & 1X, '*  Durchfluesse an:                          *',/, &
+         & 1X, '*                                            *',/, &
+         & 1X, '**********************************************',//)
+      elseif (mode.eq.3) then
 
+         BERECHNUNGSMODUS = 'REIB_KONST'
+
+         write ( * , 1401)
+         1401 FORMAT (// &
+         & 1X, '**********************************************',/, &
+         & 1X, '*  ----------------------------------------  *',/, &
+         & 1X, '*   STATIONAER-UNGLEICHFOERMIGE BERECHNUNG   *',/, &
+         & 1X, '*     UNTER KONSTANTEM REIBUNGSGEFÄLLE       *',/, &
+         & 1X, '*  ----------------------------------------  *',/, &
+         & 1X, '*                                            *',/, &
+         & 1X, '*  Bitte geben Sie fuer die Bordvollbe-      *',/, &
+         & 1X, '*  rechnung die Variationsbreite fuer die    *',/, &
+         & 1X, '*  Durchfluesse an:                          *',/, &
+         & 1X, '*                                            *',/, &
+         & 1X, '**********************************************',//)
+
+      end if
       1191 continue
 
       ! ---------------------------------------------------------------------------------
@@ -1368,6 +1386,8 @@ if (RUN_MODUS /= 'KALYPSO') then
          & 1X, '*                                                    *', /, &
          & 1X, '*  - nach DFG (betta=2/(1+Ai-1/Ai)     (3)           *', /, &
          & 1X, '*                                                    *', /, &
+         & 1X, '*  - ohne Verzoegerungsverlust         (4)           *', /, &
+         & 1X, '*                                                    *', /, &   
          & 1X, '*  - Berechnungsende                   (0)           *', /, &
          & 1X, '*                                                    *', /, &
          & 1X, '******************************************************')
@@ -1388,6 +1408,7 @@ if (RUN_MODUS /= 'KALYPSO') then
     IF (iq.eq.1) VERZOEGERUNGSVERLUST = 'DVWK'
     IF (iq.eq.2) VERZOEGERUNGSVERLUST = 'BJOE'
     IF (iq.eq.3) VERZOEGERUNGSVERLUST = 'DFG '
+    IF (iq.eq.4) VERZOEGERUNGSVERLUST = 'NON '
 
   else
 
@@ -1472,7 +1493,7 @@ NAME_OUT_TAB (ilen+1 : ) = '.tab'
 ! ABFRAGEN BEZUEGLICH BAUWERKE
 ! -------------------------------------------------------------------------------------
 
-!**   GLEICHFOERMIGE BORDVOLLBERECHNUNG                                 
+!**  Kein Eintarg fuer GLEICHFOERMIGE BORDVOLLBERECHNUNG vorhanden
 IF (BERECHNUNGSMODUS == 'BF_UNIFORM') then
 
   MIT_BRUECKEN 	= .FALSE.
@@ -1537,7 +1558,6 @@ else
   nr_ausg = 'n'
 
 end if
-
 
 
 
@@ -1693,6 +1713,11 @@ if (RUN_MODUS /= 'KALYPSO') then
 end if
 
 
+
+  !MD  TEST TEST TEST TEST
+  !   VERZOEGERUNGSVERLUST = 'NON '
+  !   BERECHNUNGSMODUS = 'REIB_KONST'
+  !MD  TEST TEST TEST TEST
 
 
 ! -------------------------------------------------------------------------------------

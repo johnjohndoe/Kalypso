@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Dec 2006    3:28 pm
+!     Last change:  MD    4 May 2007   11:08 am
 !--------------------------------------------------------------------------
 ! This code, read_kalypso_config_file.f90, contains the following
 ! subroutines and functions of the hydrodynamic modell for
@@ -136,6 +136,9 @@ else if (INDEX(part1,'BERECHNUNGSMODUS')/=0) then
     BERECHNUNGSMODUS = 'BF_UNIFORM'
   else if (INDEX(part2,'BF_NON_UNIFORM')/=0) then
     BERECHNUNGSMODUS = 'BF_NON_UNI'
+  !MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
+  else if (INDEX(part2,'REIB_KONST')/=0) then
+    BERECHNUNGSMODUS = 'REIB_KONST'
   else
     write (*,*) 'Keine Zuweisung fuer BERECHNUNGSMODUS. Abbruch.'
     stop
@@ -189,6 +192,9 @@ else if (INDEX(part1,'VERZOEGERUNGSVERLUST')/=0) then
     VERZOEGERUNGSVERLUST = 'DFG '
   else if (INDEX(part2,'BWK')/=0) then
     VERZOEGERUNGSVERLUST = 'BWK '
+  !MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
+  else if (INDEX(part2,'NON')/=0) then
+    VERZOEGERUNGSVERLUST = 'NON '
   else
     write (*,*) 'Keine Zuweisung fuer VERZOEGERUNGSVERLUST. Abbruch.'
     stop
