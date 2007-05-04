@@ -44,16 +44,13 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2D_F_JUNCTION1D2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Junction1D2D" );
 
   public final static QName WB1D2D_F_ABSTRACT_JUNCTION1D2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_Junction1D2D" );
-  
+
   public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DToCLine" );
-  
-  public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_2D = 
-                     new QName( 
-                           UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DTo2D" );
-  public final static QName WB1D2D_F_JUNTCION_CONTEXT = 
-    new QName( 
-          UrlCatalog1D2D.MODEL_1D2D_NS, "_JunctionContext" );
-  
+
+  public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DTo2D" );
+
+  public final static QName WB1D2D_F_JUNTCION_CONTEXT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_JunctionContext" );
+
   public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 
   public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToClineJunction1D2D" );
@@ -72,29 +69,26 @@ public class Kalypso1D2DSchemaConstants
 
   public static final QName WB1D2D_F_COMPLEX_ELE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement" );
 
-  
   public static final QName WB1D2D_F_COMPLEX_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement2D" );
 
-  public static final QName WB1D2D_F_RIVER_CHANNEL1D= new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel1D" );
+  public static final QName WB1D2D_F_RIVER_CHANNEL1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel1D" );
 
-  public static final QName WB1D2D_F_RIVER_CHANNEL_2D = 
-                new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel2D" );
+  public static final QName WB1D2D_F_RIVER_CHANNEL_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel2D" );
 
   public final static QName WB1D2D_PROP_COMPLEX_ELE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElementContainer" );
 
-  public final static QName WB1D2D_PROP_ELE_2D = 
-            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element2D" );
-  
-  public static final QName WB1D2D_PROP_ELEMENT1D = 
-                new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element1D" );
-  public static final QName WB1D2D_PROP_CONTINUITY_LINE = 
-    new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" );
+  public final static QName WB1D2D_PROP_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element2D" );
+
+  public static final QName WB1D2D_PROP_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element1D" );
+
+  public static final QName WB1D2D_PROP_CONTINUITY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" );
+
   // fe1d2d_2DElement
   // ///////////////////////////////////////////////////////////////
   public final static QName WB1D2D_F_DiscretisationModel = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" );
 
-  public final static QName WB1D2D_F_STATIC_MODEL = 
-              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" );
+  public final static QName WB1D2D_F_STATIC_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" );
+
   /**
    * QName for a property linking a feature to an edge. Use for example in DiscretisationModel feature
    */
@@ -143,6 +137,8 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2DCONTROL_PROP_ELEV = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ELEV" );
 
   public final static QName WB1D2DCONTROL_PROP_UDIR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UDIR" );
+
+  public final static QName WB1D2DCONTROL_PROP_UNOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UNOM" );
 
   public final static QName WB1D2DCONTROL_PROP_HMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "HMIN" );
 

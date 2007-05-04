@@ -227,6 +227,10 @@ public class RMA10Calculation
   {
     return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
   }
+  public Double getUNOM( )
+  {
+    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
+  }
 
   public Double getHMIN( )
   {

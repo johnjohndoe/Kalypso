@@ -174,7 +174,7 @@
 						</annotation>
 					</element>
 					<!--TODO: Nico will implement the options 5 and 6 later-->
-					<element name="IEDSW" default="5">
+					<element name="IEDSW" default="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wirbelviskositätsansatz</label>
@@ -185,7 +185,6 @@
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<!--
 									<enumeration value="0">
 									<annotation>
 									<documentation xml:lang="de">
@@ -193,6 +192,7 @@
 									</documentation>
 									</annotation>
 									</enumeration>
+									<!--
 									<enumeration value="1">
 									<annotation>
 									<documentation xml:lang="de">

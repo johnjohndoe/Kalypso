@@ -107,8 +107,8 @@ public class Control1D2DConverter
     System.out.printf( l, formatC1 + "\n", c1Props );
 
     // C3
-    String formatC3 = "C3         1.000   1.000   0.100%8.1f%8.3f%8.3f%8.3f";
-    Object[] c3Props = new Object[] { calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() };
+    String formatC3 = "C3         1.000   1.000   %8.3%8.1f%8.3f%8.3f%8.3f";
+    Object[] c3Props = new Object[] { calculation.getUNOM(),calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() };
     System.out.printf( l, formatC3+ "\n", c3Props );
 
     // C4
@@ -183,9 +183,12 @@ public class Control1D2DConverter
       // CC1
       // CC2
       System.out.println( "ECL" );
-    String formatMP = "MP             %8.2f%8.2f%8.2f";
-    Object[] mpProps = new Object[] { calculation.getAC1(), calculation.getAC2(), calculation.getAC3() };
-    System.out.printf( l, formatMP, mpProps );
+    if( calculation.getIDNOPT() != 0 && calculation.getIDNOPT() != -1) // Write MP Line only under this conditions
+    {
+      String formatMP = "MP             %8.2f%8.2f%8.2f";
+      Object[] mpProps = new Object[] { calculation.getAC1(), calculation.getAC2(), calculation.getAC3() };
+      System.out.printf( l, formatMP, mpProps );
+    }
     System.out.println( "ENDGEO" );
   }
 
