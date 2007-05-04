@@ -2,14 +2,14 @@
 <modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoModel1D2D">
     <input id="DiscretisationModel" path="models/discretisation.gml" relativeToCalcCase="true"/>
     <input id="OperationalModel" path="models/operational.gml" relativeToCalcCase="true"/>
-<!--    <input id="FlowResistanceModel" path="models/flowResistance.gml" relativeToCalcCase="true"/>
-	<input id="FlowRelationshipModel" path="models/flowRelationship.gml" relativeToCalcCase="true"/> -->
+    <input id="FlowResistanceModel" path="models/flow_resistance_model.gml" relativeToCalcCase="true"/>
+	<input id="FlowRelationshipModel" path="models/flowrelations.gml" relativeToCalcCase="true"/>
+	<input id="TerrainModel" path="models/terrain.gml" relativeToCalcCase="true"/>
 	<input id="SimulationControlModel" path="models/control.gml" relativeToCalcCase="true"/>
 	<input id="Roughness" path=".metadata/roughness.gml" relativeToCalcCase="false"/>
-	
+	<input id="ResultStyle" path=".metadata/result/result.sld" relativeToCalcCase="false"/>
+	<input id="ResultMap" path=".metadata/result/result.gmt" relativeToCalcCase="false"/>	
 
-	<output id="SimulationResultModel" path="/results/simulationResult.gml" />
-	<output id="RESULT_DIR_NAME" path="Ergebnisse" relativeToCalcCase="true"/>
-    <output id="RESULT_2d_ZIP" path="Ergebnisse/2dResults.zip" relativeToCalcCase="true"/>
+<output id="RESULT_DIR_NAME" path="results" relativeToCalcCase="true"/>
 </modeldata>
 
