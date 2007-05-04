@@ -1,3 +1,5 @@
-Preprocessing,"Preprocessing",de.renew.workflow.WorkflowTaskImpl,1,"",model
-ImportRoughness,"ImportRoughness",de.renew.workflow.EclipseContextTaskImpl,1,"commandId:org.kalypso.kalypsomodel1d2d.commands.importRoughness",model
-EditRoughnessZones,"EditRoughnessZones",de.renew.workflow.EclipseContextTaskImpl,2,"commandId:org.kalypso.kalypsomodel1d2d.commands.importRoughness",model
+NewProject,"Neues Projekt",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+RemoveProject,"Projekt löschen",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+NewScenario,"Neues Szenario",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+DeriveScenario,"Szenario ableiten",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+MapLoad,"Karte importieren",de.renew.workflow.ConfirmedTaskImpl,1,"",model

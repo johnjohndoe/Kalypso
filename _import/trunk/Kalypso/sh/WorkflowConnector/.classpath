@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="model1D2Dnetsrc/" kind="src" path="src"/>
+<classpath>	
+	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/libs/hsqldb/hsqldb.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/access-2.2dev_0.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/loader.jar" sourcepath="/Renew/Loader/src"/>

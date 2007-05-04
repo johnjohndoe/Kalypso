@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.access.LoginInfo;
 import de.renew.access.Manager;
@@ -27,6 +28,7 @@ import de.renew.workflow.AgendaChangeListener;
 import de.renew.workflow.Client;
 import de.renew.workflow.ClientImpl;
 import de.renew.workflow.WorkItem;
+import de.renew.workflow.WorkItemFilterExpression;
 import de.renew.workflow.WorkflowManager;
 import de.renew.workflow.connector.event.IWorklistChangeListener;
 
@@ -36,7 +38,7 @@ public class WorkflowConnector
 
   private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager";
 
-  public static Logger logger = Logger.getLogger( WorkflowConnector.class.getName() );
+  private static Logger logger = Logger.getLogger( WorkflowConnector.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
@@ -46,15 +48,17 @@ public class WorkflowConnector
       logger.setUseParentHandlers( false );
   }
 
+  private static final boolean m_isWorkflowMode = false;
+
+  private static WorkflowConnector _connector;
+
   private LoginInfo m_login;
 
-  List<IWorklistChangeListener> m_listenerCache = Collections.synchronizedList( new Vector<IWorklistChangeListener>() );
+  private List<IWorklistChangeListener> m_listenerCache = Collections.synchronizedList( new Vector<IWorklistChangeListener>() );
 
   private AgendaChangeListener m_listenerProxy;
 
   private Manager m_manager;
-
-  private static WorkflowConnector _connector;
 
   private boolean _connected = false;
 
@@ -68,10 +72,8 @@ public class WorkflowConnector
     if( _connector == null )
     {
       _connector = new WorkflowConnector();
-    }
-    if( !_connector.isConnected() )
-    {
-      _connector.connect();
+      if( m_isWorkflowMode )
+        _connector.connect();
     }
     return _connector;
   }
@@ -85,12 +87,7 @@ public class WorkflowConnector
   {
   }
 
-  /**
-   * Starts a login-dialog and - if the login is successful - the AgendaGUI.
-   * 
-   * @return true, if the GUI properly started. false, if an error occured (e.g. the login was not successful)
-   */
-  protected void connect( )
+  public void connect( )
   {
     boolean success = false;
     try
@@ -109,15 +106,17 @@ public class WorkflowConnector
     }
     catch( final RemoteException e )
     {
-      e.printStackTrace();
+      handleRemoteException( e );
     }
     catch( final IOException e )
     {
-      e.printStackTrace();
+      logger.log( Level.SEVERE, "IOException occurred", e );
+      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-    catch( NotBoundException e )
+    catch( final NotBoundException e )
     {
-      e.printStackTrace();
+      logger.log( Level.SEVERE, "Server not bound", e );
+      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
     _connected = success;
@@ -126,26 +125,6 @@ public class WorkflowConnector
     else
       logger.info( "Could not connect to workflow server" );
   }
-
-  // private void waitForServer(final RemoteServerRegistry instance )
-  // {
-  // int timeoutSeconds = 10;
-  // while( timeoutSeconds-- > 0 && instance.getSallServers().length == 0 )
-  // {
-  // try
-  // {
-  // Thread.sleep( 1000 );
-  // }
-  // catch( final InterruptedException e )
-  // {
-  // logger.log( Level.WARNING, "interrupted", e );
-  // }
-  // }
-  // if( instance.allServers().length == 0 )
-  // {
-  // logger.log( Level.SEVERE, "timeout reached" );
-  // }
-  // }
 
   private Agenda getAgenda( ) throws RemoteException, IOException
   {
@@ -165,7 +144,7 @@ public class WorkflowConnector
     {
       try
       {
-        return getAgenda().getAvailables();
+        return getAgenda().getAvailables( WorkItemFilterExpression.NO_FILTER );
       }
       catch( final RemoteException e )
       {
@@ -199,7 +178,7 @@ public class WorkflowConnector
     return new Activity[0];
   }
 
-  class AgendaChangeListenerProxy extends UnicastRemoteObject implements AgendaChangeListener
+  private class AgendaChangeListenerProxy extends UnicastRemoteObject implements AgendaChangeListener
   {
 
     private static final long serialVersionUID = -4720319067463967570L;
@@ -237,8 +216,11 @@ public class WorkflowConnector
     /**
      * The runnable for the concurrency preventer to update the availables.
      */
-    class AvailablesUpdater implements Runnable
+    private class AvailablesUpdater implements Runnable
     {
+      public AvailablesUpdater( )
+      {
+      }
 
       public void run( )
       {
@@ -297,18 +279,18 @@ public class WorkflowConnector
    */
   public boolean canRequest( final String id )
   {
-    return getWorkItem( id ) != null;
+    return isWorkflowMode() && getWorkItem( id ) != null;
   }
 
-  public boolean isActive( String id )
+  public boolean isActive( final String id )
   {
-    return getActivity( id ) != null;
+    return isWorkflowMode() && getActivity( id ) != null;
   }
 
   /**
    * Requests a new WorkItem and confirms the active Activity, if there is one
    */
-  public void request( final String id )
+  public Object request( final String id )
   {
     if( canRequest( id ) )
     {
@@ -320,26 +302,28 @@ public class WorkflowConnector
         }
         final Activity activity = getWorkItem( id ).request( m_login, m_client );
         logger.info( "requested " + activity.getWorkItem().getTask().getName() );
+        return activity.getWorkItem().getParameter();
       }
       catch( final RemoteException e )
       {
         handleRemoteException( e );
       }
     }
+    logger.info( "could not request " + id );
+    return null;
   }
 
   /**
    * Confirms an activity that was previously requested
    */
-  public void confirm( final String id )
+  public void confirm( final String id, final Object result )
   {
     if( isActive( id ) )
     {
       try
       {
         final Activity activity = getActivity( id );
-        // TODO result
-        final boolean confirmed = activity.confirm( m_login, m_client, null );
+        final boolean confirmed = activity.confirm( m_login, m_client, result );
         if( confirmed )
         {
           logger.info( "confirmed " + activity.getWorkItem().getTask().getName() );
@@ -358,10 +342,7 @@ public class WorkflowConnector
         handleSecurityException( e );
       }
     }
-    else
-    {
-      logger.info( "no activity " + id );
-    }
+    logger.info( "no activity " + id );
   }
 
   /**
@@ -386,10 +367,7 @@ public class WorkflowConnector
         handleSecurityException( e );
       }
     }
-    else
-    {
-      logger.info( "no activity " + id );
-    }
+    logger.info( "no activity " + id );
   }
 
   private Activity getActivity( final String id )
@@ -447,10 +425,17 @@ public class WorkflowConnector
   private void handleRemoteException( final RemoteException e )
   {
     logger.log( Level.SEVERE, "connection problem", e );
+    WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
   }
 
   private void handleSecurityException( final SecurityException e )
   {
-    logger.log( Level.SEVERE, "cannot cancel", e );
+    logger.log( Level.SEVERE, "security violation", e );
+    WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+  }
+
+  public boolean isWorkflowMode( )
+  {
+    return m_isWorkflowMode && isConnected();
   }
 }

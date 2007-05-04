@@ -50,7 +50,6 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.commands.ICommandService;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
@@ -74,11 +73,9 @@ public class TaskExecutionListener implements IExecutionListener
 
   public static final String CATEGORY_CONTEXT = "de.renew.workflow.contexts.category";//$NON-NLS-1$
 
-  public static final String CATEGORY_TASK = "de.renew.workflow.tasks.category";//$NON-NLS-1$O
+  public static final String CATEGORY_TASK = "de.renew.workflow.tasks.category";//$NON-NLS-1$
 
-  private static final boolean m_isWorkflowMode = false;
-
-  private WorkflowConnector m_connector;
+  public static final String CATEGORY_TASKGROUP = "de.renew.workflow.taskgroups.category";//$NON-NLS-1$
 
   private final ICommandService m_commandService;
 
@@ -89,13 +86,21 @@ public class TaskExecutionListener implements IExecutionListener
   }
 
   /**
+   * @see org.eclipse.core.commands.IExecutionListener#preExecute(java.lang.String,
+   *      org.eclipse.core.commands.ExecutionEvent)
+   */
+  public void preExecute( final String commandId, final ExecutionEvent event )
+  {
+    requestWorkitem( commandId );
+  }
+
+  /**
    * @see org.eclipse.core.commands.IExecutionListener#notHandled(java.lang.String,
    *      org.eclipse.core.commands.NotHandledException)
    */
   public void notHandled( final String commandId, final NotHandledException exception )
   {
-    final Command command = m_commandService.getCommand( commandId );
-    logger.info( "command not handled " + command );
+    requestWorkitem( commandId );
   }
 
   /**
@@ -104,20 +109,7 @@ public class TaskExecutionListener implements IExecutionListener
    */
   public void postExecuteFailure( final String commandId, final ExecutionException exception )
   {
-    final Command command = m_commandService.getCommand( commandId );
-    try
-    {
-      if( CATEGORY_TASK.equals( command.getCategory().getId() ) )
-      {
-        logger.info( "execution failed for " + command );
-        WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( exception ) );
-      }
-    }
-    catch( final NotDefinedException e )
-    {
-      // the command should always be defined
-      e.printStackTrace();
-    }
+    cancelWorkitem( commandId );
   }
 
   /**
@@ -125,57 +117,63 @@ public class TaskExecutionListener implements IExecutionListener
    */
   public void postExecuteSuccess( final String commandId, final Object returnValue )
   {
+    confirmWorkitem( commandId, returnValue );
+  }
+
+  private void confirmWorkitem( final String commandId, final Object returnValue )
+  {
     final Command command = m_commandService.getCommand( commandId );
+    String categoryId = null;
     try
     {
-      if( CATEGORY_TASK.equals( command.getCategory().getId() ) )
-      {
-        logger.info( "execution successful for " + command );
-        if( m_isWorkflowMode )
-        {
-          if( m_connector.canRequest( commandId ) )
-          {
-            m_connector.request( commandId );
-            logger.info( "requested work item " + commandId );
-          }
-          else
-          {
-            logger.info( "no work item available for " + commandId );
-          }
-        }
-      }
+      categoryId = command.getCategory().getId();
     }
     catch( final NotDefinedException e )
     {
       // the command should always be defined
       e.printStackTrace();
+    }
+    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
+    {
+      WorkflowConnector.getConnector().confirm( commandId, returnValue );
     }
   }
 
-  /**
-   * @see org.eclipse.core.commands.IExecutionListener#preExecute(java.lang.String,
-   *      org.eclipse.core.commands.ExecutionEvent)
-   */
-  public void preExecute( final String commandId, final ExecutionEvent event )
+  private void cancelWorkitem( final String commandId )
   {
     final Command command = m_commandService.getCommand( commandId );
+    String categoryId = null;
     try
     {
-      if( CATEGORY_TASK.equals( command.getCategory().getId() ) )
-      {
-        logger.info( "execution successful for " + command );
-        if( m_isWorkflowMode )
-        {
-          // confirm
-          m_connector.confirm( commandId );
-          logger.info( "confirmed activity " + commandId );
-        }
-      }
+      categoryId = command.getCategory().getId();
     }
     catch( final NotDefinedException e )
     {
       // the command should always be defined
       e.printStackTrace();
+    }
+    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
+    {
+      WorkflowConnector.getConnector().cancel( commandId );
+    }
+  }
+
+  private void requestWorkitem( final String commandId )
+  {
+    final Command command = m_commandService.getCommand( commandId );
+    String categoryId = null;
+    try
+    {
+      categoryId = command.getCategory().getId();
+    }
+    catch( final NotDefinedException e )
+    {
+      // the command should always be defined
+      e.printStackTrace();
+    }
+    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
+    {
+      WorkflowConnector.getConnector().request( commandId );
     }
   }
 }

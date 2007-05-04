@@ -1,4 +1,5 @@
-CreateNewScenario,"Create New Scenario",de.renew.workflow.ConfirmedTaskImpl,1,"",model
-RoughLoad,"Load Roughness Shapes",de.renew.workflow.ConfirmedTaskImpl,1,"",model
-ZoneAreaDef,"Edit Roughness Zones",de.renew.workflow.UnconfirmedTaskImpl,1,"",model
-ZoneParaDef,"Edit Roughness Parameters",de.renew.workflow.UnconfirmedTaskImpl,1,"",model
+NewProject,"Neues Projekt",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+RemoveProject,"Projekt löschen",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+NewScenario,"Neues Szenario",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+DeriveScenario,"Szenario ableiten",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+MapLoad,"Karte importieren",de.renew.workflow.ConfirmedTaskImpl,1,"",model
