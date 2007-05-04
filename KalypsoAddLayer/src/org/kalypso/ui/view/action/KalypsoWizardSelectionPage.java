@@ -80,7 +80,7 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
         IKalypsoDataImportWizard createdwizard = (IKalypsoDataImportWizard) element.createWizard();
         // Set the outlineViewer in the import wizard
         createdwizard.setCommandTarget( m_outline );
-        createdwizard.setMapModel( m_outline.getMapModell() );
+        createdwizard.setMapModel( m_outline.getMapPanel().getMapModell() );
         return createdwizard;
       }
     };
