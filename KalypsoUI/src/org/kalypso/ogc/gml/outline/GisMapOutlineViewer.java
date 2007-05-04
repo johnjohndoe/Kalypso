@@ -58,6 +58,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -74,13 +75,13 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
 
   private final MapModellLabelProvider m_labelProvider = new MapModellLabelProvider();
 
-  private IMapModell m_mapModel;
+  private MapPanel m_mapPanel;
 
   private ICommandTarget m_commandTarget;
 
-  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
+  public GisMapOutlineViewer( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    setMapModell( mapModel );
+    setMapPanel( mapPanel );
     m_commandTarget = commandTarget;
   }
 
@@ -97,7 +98,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 
-    m_viewer.setInput( m_mapModel );
+    m_viewer.setInput( m_mapPanel == null ? null : m_mapPanel.getMapModell() );
     m_viewer.refresh();
 
     // Refresh check state
@@ -116,25 +117,27 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell( )
+  public MapPanel getMapPanel( )
   {
-    return m_mapModel;
+    return m_mapPanel;
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapModell( final IMapModell modell )
+  public void setMapPanel( final MapPanel panel )
   {
-    if( m_mapModel != null )
-      m_mapModel.removeModellListener( this );
+    if( m_mapPanel != null )
+      m_mapPanel.removeModellListener( this );
 
-    m_mapModel = modell;
+    m_mapPanel = panel;
 
-    m_labelProvider.setMapModell( modell );
+    final IMapModell mapModell = panel == null ? null : panel.getMapModell();
 
-    if( m_mapModel != null )
-      m_mapModel.addModellListener( this );
+    m_labelProvider.setMapModell( mapModell );
+
+    if( m_mapPanel != null )
+      m_mapPanel.addModellListener( this );
 
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
@@ -143,7 +146,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
         public void run( )
         {
           if( m_viewer.getContentProvider() != null )
-            m_viewer.setInput( modell );
+            m_viewer.setInput( mapModell );
         }
       } );
     }

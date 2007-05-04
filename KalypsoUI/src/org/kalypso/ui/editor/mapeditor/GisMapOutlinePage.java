@@ -71,6 +71,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.AbstractOutlineAction;
@@ -256,17 +257,17 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell( )
+  public MapPanel getMapPanel( )
   {
-    return m_modellView.getMapModell();
+    return m_modellView.getMapPanel();
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapModell( final IMapModell modell )
+  public void setMapPanel( final MapPanel panel )
   {   
-    m_modellView.setMapModell( modell );   
+    m_modellView.setMapPanel( panel );   
   }
 
   /**
@@ -274,7 +275,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(), (IKalypsoTheme) element );
+    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element );
     m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
@@ -283,7 +284,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
+    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
@@ -291,7 +292,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
+    m_commandTarget.postCommand( new RemoveThemeCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**

@@ -539,7 +539,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     if( m_mapModellView != null )
     {
-      m_mapModellView.setMapModell( m_mapModell );
+      m_mapModellView.setMapPanel( m_mapPanel );
     }
   }
 
@@ -578,7 +578,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapModellView = mapModellView;
     if( m_mapModellView != null )
     {
-      m_mapModellView.setMapModell( m_mapModell );
+      m_mapModellView.setMapPanel( m_mapPanel );
     }
   }
 

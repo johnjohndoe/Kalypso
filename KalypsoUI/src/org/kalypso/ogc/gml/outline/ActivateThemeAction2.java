@@ -66,7 +66,7 @@ public class ActivateThemeAction2 implements PluginMapOutlineAction
 
       if( o instanceof IKalypsoTheme )
       {
-        final IMapModell mapModell = viewer.getMapModell();
+        final IMapModell mapModell = viewer.getMapPanel().getMapModell();
         viewer.postCommand( new ActivateThemeCommand( mapModell, (IKalypsoTheme)o ), null );
       }
     }
