@@ -81,7 +81,7 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
     return new QName[]{
 //        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
 //        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
-//        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
+        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
         };
   }
 

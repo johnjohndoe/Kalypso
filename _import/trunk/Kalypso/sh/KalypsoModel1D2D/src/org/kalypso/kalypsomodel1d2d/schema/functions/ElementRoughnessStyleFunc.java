@@ -65,6 +65,7 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
 
   private String getElementRoughnessStyle( IPolyElement polyElement )
   {
+    reinitRoughnessModel();
     if( roughnessPolygonCollection == null )
     {
       System.out.println( "roughness Collection is null" );
@@ -83,6 +84,7 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
       if ( clsName != null )
       {
         //already computed
+        System.out.println("From Cache "+ polyElementID + clsName);
         return clsName;
       }
       else
@@ -117,11 +119,11 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
     
   }
   
-  public static final void clear(  )
+  public static final void  reinitRoughnessModel()
   {
-    System.out.println("Clear the roughness mapping");
-    synchronized( roughnessMap )
-    {
+     if( roughnessPolygonCollection == null )
+     {
+       
       // reinit the roughness polygon layer 
       ITerrainModel terrainModel = getModel( ITerrainModel.class );
       if( terrainModel == null )
@@ -132,18 +134,28 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
       {
         roughnessPolygonCollection = 
             terrainModel.getRoughnessPolygonCollection();        
-        
       }
       
+     }
+      
+  }
+  
+  public static final void clear(  )
+  {
+    System.out.println("Clear the roughness mapping");
+    synchronized( roughnessMap )
+    {
       roughnessMap.clear();
     }
   }
   
   public static final void removeRoughnessClass( Feature polyElementFeature )
   {
+    final String id = polyElementFeature.getId();
+    System.out.println( "Removing " + id );
     synchronized( roughnessMap )
     {
-      roughnessMap.remove( polyElementFeature.getId() );
+      roughnessMap.remove( id );
     }
   }
   
