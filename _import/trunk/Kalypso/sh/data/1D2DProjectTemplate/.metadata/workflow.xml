@@ -227,10 +227,12 @@
 				<Help>Ermöglicht die Erstellung von Gewässerlängsschnitten auf Basis zuvor definierter Querschnitte</Help>
 				<Name>Längsschnitt</Name>
 			</Task>
+	<!-- auskommentiert, da nicht in LANU-Angebot enthalten (TJ)			
 			<Task context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Section" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TimeSeriesDispl">
 				<Help>Ermöglicht die Gangliniendarstellung selektierter Ergebnisgeometrien</Help>
 				<Name>Gangliniendarstellung</Name>
 			</Task>
+	-->
 		</TaskGroup>
 	</TaskGroup>
 	<con:MultiContext id="root">
