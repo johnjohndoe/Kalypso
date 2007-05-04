@@ -89,8 +89,8 @@ public class SplitSort implements FeatureList
     m_parentFeatureTypeProperty = parentFTP;
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
 
-//     m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
-    m_index = new QuadTreeIndex( m_envelopeProvider );
+     m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
+//    m_index = new QuadTreeIndex( m_envelopeProvider );
   }
 
   public boolean add( final Object object )
