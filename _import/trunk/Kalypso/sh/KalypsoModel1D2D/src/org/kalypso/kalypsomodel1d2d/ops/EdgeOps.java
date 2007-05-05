@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -210,7 +211,10 @@ public class EdgeOps
     {
       for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : containers )
       {
-
+        if( ele instanceof IFE1D2DContinuityLine )
+        {
+          continue;
+        }
         final GM_Object object = ele.recalculateElementGeometry();
         if( object instanceof GM_Surface )
         {
@@ -238,7 +242,10 @@ public class EdgeOps
       {
         for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
         {
-
+          if( ele instanceof IFE1D2DContinuityLine )
+          {
+            continue;
+          }
           final GM_Object object = ele.recalculateElementGeometry();
           if( object instanceof GM_Surface )
           {

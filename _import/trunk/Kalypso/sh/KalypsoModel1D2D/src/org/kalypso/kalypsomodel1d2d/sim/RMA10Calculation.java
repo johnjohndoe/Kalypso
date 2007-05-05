@@ -43,9 +43,11 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +56,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -391,10 +397,19 @@ public class RMA10Calculation
     return roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
   }
 
-  public List getContinuityLineList( )
+  public List<IFE1D2DContinuityLine> getContinuityLineList( )
   {
-    // TODO Serch for BoundaryConditions (operational model) which fits to ContinuityLines (discretisation model)
-    return null;
+    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines (discretisation model)
+    IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
+    List<IFE1D2DContinuityLine> list = new ArrayList<IFE1D2DContinuityLine>();
+    Iterator<IFE1D2DElement> iterator = elements.iterator();
+    while(iterator.hasNext()){
+      IFE1D2DElement element = iterator.next();
+      if( element instanceof IFE1D2DContinuityLine )
+        list.add( (IFE1D2DContinuityLine) element );
+    }
+    return list;
   }
   
   public Feature getControlModelFeature()

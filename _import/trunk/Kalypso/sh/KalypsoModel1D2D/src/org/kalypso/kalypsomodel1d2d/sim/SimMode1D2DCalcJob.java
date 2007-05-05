@@ -71,15 +71,10 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
-import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
-import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
@@ -88,9 +83,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
@@ -143,24 +136,24 @@ public class SimMode1D2DCalcJob implements ISimulation
 
         m_calculation = new RMA10Calculation( inputProvider );
 
-        /** convert discretisation model stuff... */
-        // write merged *.2d file for calc core / Dejan
-        final CS_CoordinateSystem test_CoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( CS_KEY_GAUSS_KRUEGER );
-        // TODO: PLEEEEEAAASE: do not cut the coordinates any more, this is horrible!!!!
-        final IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
-        
-        final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_calculation.getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-        final ITerrainModel terrainModel = (ITerrainModel) m_calculation.getTerrainModelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
-        final IFlowRelationshipModel flowrelationModel = (IFlowRelationshipModel) m_calculation.getFlowRelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
+      /** convert discretisation model stuff... */
+      // write merged *.2d file for calc core / Dejan
+      
+      final File modelFile = new File( tmpDir, "model.2d" );
+      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
 
-        final File modelFile = new File( tmpDir, "model.2d" );
-        final Gml2RMA10SConv converter = new Gml2RMA10SConv( modelFile, discModel, terrainModel, flowrelationModel, positionProvider );
-
-        /** convert control/resistance stuff... */
-        // first this because we need roughness classes IDs for creating 2D net later
-        monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
-        if( monitor.isCanceled() )
-          return;
+      monitor.setMessage( "Generiere 2D Netz..." );
+      if( monitor.isCanceled() )
+        return;
+      converter2D.toRMA10sModel( );
+      Control1D2DConverter.setNodesIDProvider( converter2D.getNodesIDProvider() );
+      Control1D2DConverter.setRoughnessIDProvider( converter2D.getRoughnessIDProvider() );
+      
+      /** convert control/resistance stuff... */
+      // first this because we need roughness classes IDs for creating 2D net later
+      monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
+      if( monitor.isCanceled() )
+        return;
 
         // TODO write control and boundary conditions calc core (*.R10 file)
         PrintWriter r10pw = null;
@@ -176,15 +169,10 @@ public class SimMode1D2DCalcJob implements ISimulation
           IOUtils.closeQuietly( r10pw );
         }
 
-        monitor.setMessage( "Generiere 2D Netz..." );
-        if( monitor.isCanceled() )
-          return;
-        converter.toRMA10sModel( Control1D2DConverter.getRoughnessIDProvider() );
-
-        /** start calculation... */
-        monitor.setMessage( "Starte Rechenkern..." );
-        if( monitor.isCanceled() )
-          return;
+      /** start calculation... */
+      monitor.setMessage( "Starte Rechenkern..." );
+      if( monitor.isCanceled() )
+        return;
 
         monitor.setProgress( 20 );
 

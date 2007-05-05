@@ -45,7 +45,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Formatter;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
@@ -61,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -70,6 +73,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCol
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -83,6 +87,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class Gml2RMA10SConv
 {
+  private final LinkedHashMap<String, String> m_roughnessIDProvider = new LinkedHashMap<String, String>( 100 );
+
   private final LinkedHashMap<String, String> m_nodesIDProvider = new LinkedHashMap<String, String>( 100000 );
 
   private final LinkedHashMap<String, String> m_elementsIDProvider = new LinkedHashMap<String, String>( 50000 );
@@ -90,12 +96,6 @@ public class Gml2RMA10SConv
   private final LinkedHashMap<String, String> m_complexElementsIDProvider = new LinkedHashMap<String, String>();
 
   private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>( 100000 );
-
-  private double m_offsetX;
-
-  private double m_offsetY;
-
-  private double m_offsetZ;
 
   private File m_outputFile;
 
@@ -105,17 +105,21 @@ public class Gml2RMA10SConv
 
   private final IFlowRelationshipModel m_flowrelationModel;
 
-  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discModel, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel, final IPositionProvider positionProvider )
+  public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
     m_outputFile = rma10sOutputFile;
-    m_discretisationModel1d2d = discModel;
-    m_terrainModel = terrainModel;
-    m_flowrelationModel = flowrelationModel;
-    // TODO: dont do it!
-    final GM_Point point = positionProvider.getGMPoint( 0.0, 0.0, 0.0 );
-    m_offsetX = -point.getX();
-    m_offsetY = -point.getY();
-    m_offsetZ = -point.getZ();
+    m_discretisationModel1d2d = (IFEDiscretisationModel1d2d) calculation.getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    m_terrainModel = (ITerrainModel) calculation.getTerrainModelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
+    m_flowrelationModel = (IFlowRelationshipModel) calculation.getFlowRelWorkspace().getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    
+    // initialize Roughness IDs
+    List list = calculation.getRoughnessClassList();
+    Iterator iterator = list.iterator();
+    while( iterator.hasNext() )
+    {
+      final Feature roughnessCL = (Feature) iterator.next();
+      getID( m_roughnessIDProvider, roughnessCL.getId() );
+    }
   }
 
   private int getID( IFeatureWrapper2 i1d2dObject )
@@ -144,13 +148,13 @@ public class Gml2RMA10SConv
     return Integer.parseInt( map.get( gmlID ) );
   }
 
-  public void toRMA10sModel( final LinkedHashMap<String, String> roughnessIDProvider ) throws IllegalStateException, IOException, SimulationException
+  public void toRMA10sModel( ) throws IllegalStateException, IOException, SimulationException
   {
     PrintWriter stream = null;
     try
     {
       stream = new PrintWriter( m_outputFile );
-      writeRMA10sModel( roughnessIDProvider, stream );
+      writeRMA10sModel( stream );
       stream.close();
     }
     finally
@@ -159,7 +163,7 @@ public class Gml2RMA10SConv
     }
   }
 
-  private void writeRMA10sModel( final LinkedHashMap<String, String> roughnessIDProvider, final PrintWriter stream ) throws SimulationException
+  private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
@@ -170,7 +174,7 @@ public class Gml2RMA10SConv
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    writeElements( formatter, roughnessIDProvider, elements, roughnessPolygonCollection );
+    writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
     writeNodes( formatter, nodes );
     writeEdges( formatter, edges );
   }
@@ -222,9 +226,6 @@ public class Gml2RMA10SConv
       /* The node itself */
       final int nodeID = getID( node );
       final GM_Point point = node.getPoint();
-      // System.out.println( node.getGmlID() + " --> " + getID( node ) );
-      final GM_Point correctedPoint = correctPosition( point );
-
       BigDecimal station = null;
 
       if( DiscretisationModelUtils.is1DNode( node ) )
@@ -284,9 +285,9 @@ public class Gml2RMA10SConv
 
       /* Now really write the nodes */
       if( station == null )
-        formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ() );
+        formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ() );
       else
-        formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ(), station );
+        formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ(), station );
 
     }
   }
@@ -350,20 +351,14 @@ public class Gml2RMA10SConv
     }
   }
 
-  // TODO: do not move the points any more, Nico sais it is ok!!
-  private GM_Point correctPosition( GM_Point point )
+  public final LinkedHashMap<String, String> getRoughnessIDProvider( )
   {
-    double z = 0.0; // This is not a good default value in Shleswig-Holstein, because it may be a real height....
-    try
-    {
-      z = point.getZ();
-    }
-    catch( ArrayIndexOutOfBoundsException e )
-    {
-      // System.out.println( "No Z value!" );
-      // TODO error handling, each node needs a z! Calculation should stop here!
-    }
-    return GeometryFactory.createGM_Point( point.getX() + m_offsetX, point.getY() + m_offsetY, z + m_offsetZ, point.getCoordinateSystem() );
+    return m_roughnessIDProvider;
+  }
+
+  public final LinkedHashMap<String, String> getNodesIDProvider( )
+  {
+    return m_nodesIDProvider;
   }
 
 }
