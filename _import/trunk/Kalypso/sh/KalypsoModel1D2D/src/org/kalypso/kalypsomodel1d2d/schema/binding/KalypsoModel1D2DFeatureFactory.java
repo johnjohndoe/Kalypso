@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
@@ -495,7 +496,30 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IStaticModel1D2D.class, cTor);
-//      StaticModel1D2D  
+        
+//      ControlModel  
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL ) )
+                {
+                  return new ControlModel1D2D(feature);     
+                }
+                else
+                {
+                  return null;
+                }
+            }
+        };
+        cMap.put(IStaticModel1D2D.class, cTor);
+//      SimulationModel  
         cTor = new AdapterConstructor()
         {
             public Object constructAdapter(

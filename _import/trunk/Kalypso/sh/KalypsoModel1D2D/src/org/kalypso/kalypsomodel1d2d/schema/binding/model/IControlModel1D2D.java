@@ -41,8 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
+ * Interface for model implementing a 
  * @author Madanagopal
  * @author Patrice Congo
  *
@@ -50,4 +53,7 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 public interface IControlModel1D2D extends IControlModel
 {
   //TODO Patrice move RMA10Calculation control stuf into the control binding class
+  
+  public IObservation<TupleResult> getTimeSteps();
+  
 }

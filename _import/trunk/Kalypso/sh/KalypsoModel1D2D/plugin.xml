@@ -47,10 +47,10 @@
               id="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
               name="JunctionContextGeometry"/>
 
-         <function
+         <!--function
               class="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
-              name="ModelFiniteElment"/>
+              name="ModelFiniteElment"/ -->
          <function
               class="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
@@ -89,6 +89,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>

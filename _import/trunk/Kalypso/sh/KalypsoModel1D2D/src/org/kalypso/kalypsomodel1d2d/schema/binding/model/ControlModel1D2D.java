@@ -43,7 +43,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -52,10 +53,10 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Madanagopal
  *
  */
-public class ControlModel extends AbstractFeatureBinder implements IControlModel1D2D
+public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
 
-  public ControlModel( Feature featureToBind )
+  public ControlModel1D2D( Feature featureToBind )
   {
     this( 
         featureToBind,
@@ -63,9 +64,22 @@ public class ControlModel extends AbstractFeatureBinder implements IControlModel
         );
   }
   
-  public ControlModel( Feature featureToBind, QName qnameToBind )
+  public ControlModel1D2D( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getTimeSteps()
+   */
+  public IObservation<TupleResult> getTimeSteps( )
+  {
+    final Feature feature = getFeature();
+    final Object property = 
+        feature.getProperty( 
+             Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+    
+    return (IObservation<TupleResult>) property;
   }
 
 }
