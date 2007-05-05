@@ -49,7 +49,9 @@ import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
@@ -76,6 +78,8 @@ public class MapModell implements IMapModell
   private IKalypsoTheme m_activeTheme = null;
 
   private IProject m_project;
+
+  private String m_name;
 
   public MapModell( final CS_CoordinateSystem crs, final IProject project )
   {
@@ -106,9 +110,20 @@ public class MapModell implements IMapModell
 
   public void addTheme( final IKalypsoTheme theme )
   {
-
     m_themes.add( theme );
+    m_enabledThemeStatus.put( theme, THEME_ENABLED );
 
+    theme.addModellListener( this );
+
+    fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
+
+    if( m_activeTheme == null )
+      activateTheme( theme );
+  }
+
+  public void insertTheme( final IKalypsoTheme theme, final int position )
+  {
+    m_themes.insertElementAt( theme, position );
     m_enabledThemeStatus.put( theme, THEME_ENABLED );
 
     theme.addModellListener( this );
@@ -294,4 +309,47 @@ public class MapModell implements IMapModell
     return null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.kalypsomodel1d2d.ui.map.channeledit.KalypsoThemeVisitor,
+   *      int)
+   */
+  public void accept( KalypsoThemeVisitor ktv, int depth )
+  {
+
+    for( int j = 0; j < getAllThemes().length; j++ )
+    {
+      accept( ktv, depth, getTheme( j ) );
+    }
+
+  }
+
+  public void accept( KalypsoThemeVisitor ktv, int depth, IKalypsoTheme theme )
+  {
+    final boolean recurse = ktv.visit( theme );
+
+    if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
+    {
+      if( theme instanceof IMapModell && depth == KalypsoThemeVisitor.DEPTH_INFINITE )
+      {
+        final IMapModell innerModel = (IMapModell) theme;
+        innerModel.accept( ktv, depth );
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
+   */
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    m_name = name;
+  }
 }

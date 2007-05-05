@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -105,6 +106,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
    */
   public void createFromTemplate( final Gismapview gisview ) throws Exception
   {
+    setName( gisview.getName() );
+
     for( final IKalypsoTheme theme : getAllThemes() )
     {
       if( !((theme instanceof KalypsoLegendTheme) || (theme instanceof ScrabLayerFeatureTheme)) )
@@ -126,12 +129,28 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     }
   }
 
+  public void setName( String name )
+  {
+    m_modell.setName( name );
+  }
+
   public IKalypsoTheme addTheme( final StyledLayerType layer ) throws Exception
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
     {
       addTheme( theme );
+      enableTheme( theme, layer.isVisible() );
+    }
+    return theme;
+  }
+
+  public IKalypsoTheme insertTheme( final StyledLayerType layer, final int position ) throws Exception
+  {
+    final IKalypsoTheme theme = loadTheme( layer, m_context );
+    if( theme != null )
+    {
+      insertTheme( theme, position );
       enableTheme( theme, layer.isVisible() );
     }
     return theme;
@@ -249,16 +268,16 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
           cascadingKalypsoTheme.fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
           .isThemeEnabled( kalypsoTheme ) );
           layerList.add( layer );
-          
+
           cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         }
-        
+
         if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
         {
           layersType.setActive( layer );
         }
       }
-     
+
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       GisTemplateHelper.saveGisMapView( gismapview, bos, file.getCharset() );
       bos.close();
@@ -455,5 +474,42 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     {
       fireModellEvent( null );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
+   */
+  public void accept( KalypsoThemeVisitor visitor, int depth_infinite )
+  {
+    m_modell.accept( visitor, depth_infinite );
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
+   */
+  public void insertTheme( IKalypsoTheme theme, int position )
+  {
+    m_modell.insertTheme( theme, position );
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
+   */
+  public String getName( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int,
+   *      org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public void accept( KalypsoThemeVisitor visitor, int depth_infinite, IKalypsoTheme theme )
+  {
+    m_modell.accept( visitor, depth_infinite, theme );
+
   }
 }
