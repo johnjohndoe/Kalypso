@@ -56,6 +56,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -342,8 +343,11 @@ public class PolynomeHelper
 
       final String stationString = name.substring( 4, name.length() - 4 );
       final BigDecimal station = new BigDecimal( stationString );
-      // TODO: where to get the slope from???
-      final BigDecimal slope = new BigDecimal( "0.001" );
+
+      // REMARK: as the slope is not nicely written to the polynome result files, we get it from the calculation.
+      // BUT: this is only valid for the REIB_KONST mode! So maybe we should change something later...?
+      final Double startSlope = calculation.getStartSlope();
+      final BigDecimal slope = new BigDecimal( startSlope ).setScale( 5, RoundingMode.HALF_UP );
 
       try
       {
