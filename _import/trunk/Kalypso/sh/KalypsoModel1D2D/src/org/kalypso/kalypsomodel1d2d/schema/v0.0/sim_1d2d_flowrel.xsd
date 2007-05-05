@@ -116,6 +116,16 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="slope" type="xs:decimal" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Gefälle</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Slope</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -60,8 +60,6 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
   }
 
   /**
-   * TODO: make this method common to all FeatureWrapperCollections?
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth )
@@ -83,9 +81,8 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     IFlowRelationship nearest = null;
     for( final Feature feature : foundFeatures )
     {
-      final IFlowRelationship curNode = new FlowRelationship( feature, IFlowRelationship.QNAME )
-      {
-      };
+      final IFlowRelationship curNode = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+      
       final double curDist = position.getDistance( curNode.getPosition().getPosition() );
       if( min > curDist )
       {

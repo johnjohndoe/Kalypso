@@ -61,7 +61,15 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
 
   public static final QName QNAME_PROP_STATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "station" );
 
+  public static final QName QNAME_PROP_SLOPE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "slope" );
+
   public BigDecimal getStation();
   
+  public void setStation( final BigDecimal station );
+
   public IPolynomial1D[] getPolynomials();
+
+  public double getSlope( );
+
+  public void setSlope( final double slope );
 }

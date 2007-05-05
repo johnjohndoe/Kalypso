@@ -47,8 +47,9 @@ import java.util.List;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.gml.binding.math.IPolynomialInterpolationInput;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -69,16 +70,49 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
   }
 
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setStation(java.math.BigDecimal)
+   */
+  public void setStation( final BigDecimal station )
+  {
+    getFeature().setProperty( QNAME_PROP_STATION, station );
+  }
+
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getPolynomials()
    */
   public IPolynomial1D[] getPolynomials( )
   {
-    final FeatureList polynomeFeatures = (FeatureList) getFeature().getProperty( QNAME_PROP_POLYNOMES );
-    
+    final Feature feature = getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final FeatureList polynomeFeatures = (FeatureList) feature.getProperty( QNAME_PROP_POLYNOMES );
+
     final List<IPolynomial1D> resultList = new ArrayList<IPolynomial1D>( polynomeFeatures.size() );
-    
-    // TODO Auto-generated method stub
-    return (IPolynomial1D[]) resultList.toArray( new IPolynomialInterpolationInput[resultList.size()] );
+
+    for( final Object object : polynomeFeatures )
+    {
+      final Feature polyFeature = FeatureHelper.getFeature( workspace, object );
+      resultList.add( (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class ) );
+    }
+
+    return resultList.toArray( new IPolynomial1D[resultList.size()] );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getSlope()
+   */
+  public double getSlope( )
+  {
+    final BigDecimal slope = (BigDecimal) getFeature().getProperty( QNAME_PROP_SLOPE );
+    return slope.doubleValue();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setSlope(double)
+   */
+  public void setSlope( final double slope )
+  {
+    final BigDecimal slopeDec = new BigDecimal( slope );
+    getFeature().setProperty( QNAME_PROP_SLOPE, slopeDec );
   }
 
 }

@@ -68,10 +68,12 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -165,7 +167,8 @@ public class Gml2RMA10SConv
 
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
 
-    final Formatter formatter = new Formatter( stream );
+    /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
+    final Formatter formatter = new Formatter( stream, Locale.US );
 
     writeElements( formatter, roughnessIDProvider, elements, roughnessPolygonCollection );
     writeNodes( formatter, nodes );
@@ -196,13 +199,13 @@ public class Gml2RMA10SConv
           if( object instanceof IElement1D )
             leftRightID = getID( ((IElement1D) object) );
         }
-        formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
+        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
         int leftParent = getID( EdgeOps.getLeftElement( edge ) );
         int rightParent = getID( EdgeOps.getRightElement( edge ) );
-        formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
+        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
       }
       else
       {
@@ -235,26 +238,79 @@ public class Gml2RMA10SConv
         {
           final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
           // TODO: get oparameters from king relation
-          formatter.format( Locale.US, "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
+          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
         }
         else if( relationship instanceof ITeschkeFlowRelation )
         {
           final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) relationship;
           station = teschkeRelation.getStation();
 
-          // TODO: Gernot: put your polynomial stuff here
+          final IPolynomial1D[] polynomials = teschkeRelation.getPolynomials();
+          final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials );
+          final double slope = teschkeRelation.getSlope();
+          final Double min = teschkeConv.getMin();
+          final Double max = teschkeConv.getMax();
+
+          formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max );
+
+          final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+          writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null );
+          writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null );
+          writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null );
+
+          final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+          writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope );
+          writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null );
+          writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null );
+
+          final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_COMPONENT_ALPHA );
+
+          if( polyAlpha.length > 1 )
+          {
+            final double hBV = polyAlpha[1].getRangeMin(); // Bordvollhˆhe ist gleich anfang des ‹bergangsbereich
+            formatter.format( "HB%10d%20.7f%n", nodeID, hBV );
+            writePolynome( formatter, "AD ", nodeID, polyAlpha[1], 0, 4, polyAlpha[1].getRangeMax() );
+          }
+          if( polyAlpha.length > 2 )
+          {
+            writePolynome( formatter, "AK1", nodeID, polyAlpha[2], 0, 5, null );
+            writePolynome( formatter, "AK2", nodeID, polyAlpha[2], 5, 10, null );
+            writePolynome( formatter, "AK3", nodeID, polyAlpha[2], 10, 13, null );
+          }
         }
         else
           throw new SimulationException( "Unbekannte Flieﬂrelation gefunden: " + relationship, null );
       }
 
-      /* Now really write the stuff */
+      /* Now really write the nodes */
       if( station == null )
-        formatter.format( Locale.US, "FP%10d%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ() );
+        formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ() );
       else
-        formatter.format( Locale.US, "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ(), station );
+        formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ(), station );
 
     }
+  }
+
+  private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
+  {
+    formatter.format( "%3s%9d", kind, nodeID );
+
+    if( extraValue != null )
+      formatter.format( "%20.7f", extraValue );
+    
+    final double[] coefficients = poly.getCoefficients();
+    for( int j = coeffStart; j < coeffStop; j++ )
+    {
+      final double coeff;
+      if( j < coefficients.length )
+        coeff = coefficients[j];
+      else
+        coeff = 0.0;
+
+      formatter.format( "%20.7f", coeff );
+    }
+
+    formatter.format( "%n" );
   }
 
   private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection )
@@ -290,7 +346,7 @@ public class Gml2RMA10SConv
         e.printStackTrace();
       }
 
-      formatter.format( Locale.US, "FE%10d%10d%10d%10d%n", getID( element ), roughnessID, 1, 0 );
+      formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), roughnessID, 1, 0 );
     }
   }
 

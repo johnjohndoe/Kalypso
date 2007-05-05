@@ -262,6 +262,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final Feature qresultFeature = FeatureHelper.getFeature( qresultsWorkspace, o );
         final Feature pointObsFeature = (Feature) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
         final List polynomeFeatures = (List) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
+        final BigDecimal slope = (BigDecimal) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_slope );
 
         final String name = NamedFeatureHelper.getName( qresultFeature );
         final String description = NamedFeatureHelper.getDescription( qresultFeature );
@@ -284,6 +285,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
           flowRel.setName( name );
           flowRel.setName( description );
           flowRel.setPosition( node.getPoint() );
+          flowRel.setStation( station );
+          flowRel.setSlope( slope.doubleValue() );
 
           /* copy results into new flow relation */
 

@@ -6,8 +6,9 @@
      http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
      http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
      http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd"
-	xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns:swe="http://www.opengis.net/swe" gml:id="components">
+	xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe"
+	gml:id="components">
 
 	<gml:description>Ein Dictionary für die Modellierung von Zeitreihendaten</gml:description>
 	<gml:name>Zeitreihenkomponente</gml:name>
@@ -21,8 +22,27 @@
 			<swe:property xlink:href="#phenomenonTime" />
 			<swe:representation>
 				<swe:SimpleType>
-					<st:restriction base="dateTime"/>
+					<st:restriction base="dateTime" />
 					<gml:unitOfMeasure uom="dict_uom.xml#time" />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<!-- =================================================================
+		Under Relaxation Factor
+		================================================================== -->
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
+			<gml:name>Under Relaxation Factor</gml:name>
+			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="decimal">
+						<st:minInclusive value="0.0" />
+						<st:maxInclusive value="1.0" />
+					</st:restriction>
+					<gml:unitOfMeasure uom=" " />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -101,6 +121,13 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
+		<swe:Phenomenon gml:id="phenomenonUnderRelaxationFactor">
+			<gml:description>Under Relaxation Factor</gml:description>
+			<gml:name>Under Relaxation Factor</gml:name>
+		</swe:Phenomenon>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonWaterlevel">
 			<gml:description>Wasserspiegel [NN+m]</gml:description>
 			<gml:name>Wasserspiegel</gml:name>
@@ -113,14 +140,14 @@
 			<gml:name>Abfluss [m³/s]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
-	
+
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonSpecificDischarge1D">
 			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
 			<gml:name>spezifischer Abfluss [m³/s/m²]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
-	
+
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonSpecificDischarge2D">
 			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>

@@ -84,6 +84,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToEdgeJunction1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToCLineJunction1D2D"/>
          <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>

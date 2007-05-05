@@ -162,7 +162,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       try
       {
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-        Control1D2DConverter.writeR10File( m_calculation, r10pw );
+//        Control1D2DConverter.writeR10File( m_calculation, r10pw );
         r10pw.close();
       }
       finally
@@ -225,7 +225,9 @@ public class SimMode1D2DCalcJob implements ISimulation
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Simulation couldn't be finished: " + e.getLocalizedMessage(), e );
+      final String localizedMessage = e.getLocalizedMessage();
+      final String msg = localizedMessage == null ? e.toString() : localizedMessage;
+      throw new SimulationException( "Simulation couldn't be finished: " + msg, e );
     }
     finally
     {

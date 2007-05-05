@@ -228,7 +228,6 @@ public class RMA10Calculation
   public Double getStartHour( )
   {
     return new Double( getStartCalendar().getHour() );
-
   }
 
   public Integer getIEDSW( )

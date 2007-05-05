@@ -131,7 +131,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
 //    // TODO: Refaktor in order to let different types of observations to be created
     final IComponent timeComponent = components[0];
     final IComponent _underRelaxFactorComponent = components[1];
-    final IComponent _QComponent = components[2];
+//    final IComponent _QComponent = components[2];
 
     GregorianCalendar calendarFrom = new GregorianCalendar();
     GregorianCalendar calendarTo = new GregorianCalendar();

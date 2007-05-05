@@ -4,10 +4,6 @@
 	
     <!-- Component Dictionary -->
 	
-	<catalog:system 
-		systemId="urn:ogc:gml:dict:kalypso:model:simulationmodel" 
-		uri="dict_sim_base.gml" />
-	
     <catalog:public 
     	publicId="urn:ogc:gml:featuretype:http___www.opengis.net_swe:ItemDefinition:annotation:label:de" 
     	uri="${listProperty:http://www.opengis.net/gml#name;0}"/>

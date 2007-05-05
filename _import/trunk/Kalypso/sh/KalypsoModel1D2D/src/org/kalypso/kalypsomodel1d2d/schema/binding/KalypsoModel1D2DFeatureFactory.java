@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.displayelements.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -569,6 +570,33 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
           }
         };
         cMap.put(DisplayElementDecorator.class, cTor);
+
+        // IFlowRelation  
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+              // If a generel flow relation is to be adapted, return the konkrete type instead
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    IKingFlowRelation.QNAME) )
+                  return new KingFlowRelation(feature);
+                else if(featureQName.equals( 
+                    ITeschkeFlowRelation.QNAME) )
+                  return new TeschkeFlowRelation(feature);
+                else if(featureQName.equals( 
+                    IBoundaryCondition.QNAME) )
+                  return new BoundaryCondition(feature);
+                
+                return null;
+            }
+        };
+        cMap.put(IFlowRelationship.class, cTor);
+
         
         // KingFlowRelation  
         cTor = new AdapterConstructor()
@@ -608,7 +636,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         };
         cMap.put(ITeschkeFlowRelation.class, cTor);
         
-        // TeschkeFlowRelation  
+        // BoundaraCondition  
         cTor = new AdapterConstructor()
         {
           public Object constructAdapter(
