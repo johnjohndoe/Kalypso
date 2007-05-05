@@ -508,8 +508,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             {
               QName featureQName=feature.getFeatureType().getQName();
               
-                if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL ) )
+                if(featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL ) )
                 {
                   return new ControlModel1D2D(feature);     
                 }

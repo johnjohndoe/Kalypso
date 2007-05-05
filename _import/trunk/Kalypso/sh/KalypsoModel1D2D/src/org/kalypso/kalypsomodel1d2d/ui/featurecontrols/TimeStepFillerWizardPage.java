@@ -74,8 +74,8 @@ public class TimeStepFillerWizardPage extends WizardPage
   private int timeStep_val;
   protected Date m_dateFrom = new Date();
   protected Date m_dateTo = new Date();
-  private Text _H_Value_Text;
-  protected int _H_val;
+  private Text _underRelaxationFactor_Text;
+  protected int _underRelaxFactor_val;
   private Text _Q_Value_Text;
   protected int _Q_val;
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -230,51 +230,51 @@ public class TimeStepFillerWizardPage extends WizardPage
       }
     } );
 
-    Label _H_Lbl = new Label(container, SWT.NONE);
+    Label _underRelaxationFactor = new Label(container, SWT.NONE);
     data = new GridData();
     data.horizontalSpan = 1;    
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
-    _H_Lbl.setText( "H Value:" );
-    _H_Lbl.setAlignment( SWT.RIGHT );
-    _H_Lbl.setLayoutData( data );
+    _underRelaxationFactor.setText( "Under Relaxation Factor:" );
+    _underRelaxationFactor.setAlignment( SWT.RIGHT );
+    _underRelaxationFactor.setLayoutData( data );
     
-    _H_Value_Text = new Text( container, SWT.BORDER );
+    _underRelaxationFactor_Text = new Text( container, SWT.BORDER );
     data = new GridData ();
     data.horizontalSpan = 2;
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
-    _H_Value_Text.setLayoutData (data);
-    _H_Value_Text.addModifyListener( new ModifyListener()
+    _underRelaxationFactor_Text.setLayoutData (data);
+    _underRelaxationFactor_Text.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
-        _H_val = Integer.parseInt( _H_Value_Text.getText());
+        _underRelaxFactor_val = Integer.parseInt( _underRelaxationFactor_Text.getText());
       }
     } );
     
-    Label _Q_Lbl = new Label(container, SWT.NONE);
-    data = new GridData();
-    data.horizontalSpan = 1;    
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    _Q_Lbl.setText( "Q Value:" );
-    _Q_Lbl.setAlignment( SWT.RIGHT );
-    _Q_Lbl.setLayoutData( data );
-    
-    _Q_Value_Text = new Text( container, SWT.BORDER );
-    data = new GridData ();
-    data.horizontalSpan = 2;
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    _Q_Value_Text.setLayoutData (data);
-    _Q_Value_Text.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        _Q_val = Integer.parseInt( _Q_Value_Text.getText());
-      }
-    } );
+//    Label _Q_Lbl = new Label(container, SWT.NONE);
+//    data = new GridData();
+//    data.horizontalSpan = 1;    
+//    data.horizontalAlignment = GridData.FILL;
+//    data.grabExcessHorizontalSpace = true;
+//    _Q_Lbl.setText( "Q Value:" );
+//    _Q_Lbl.setAlignment( SWT.RIGHT );
+//    _Q_Lbl.setLayoutData( data );
+//    
+//    _Q_Value_Text = new Text( container, SWT.BORDER );
+//    data = new GridData ();
+//    data.horizontalSpan = 2;
+//    data.horizontalAlignment = GridData.FILL;
+//    data.grabExcessHorizontalSpace = true;
+//    _Q_Value_Text.setLayoutData (data);
+//    _Q_Value_Text.addModifyListener( new ModifyListener()
+//    {
+//      public void modifyText( ModifyEvent e )
+//      {
+//        _Q_val = Integer.parseInt( _Q_Value_Text.getText());
+//      }
+//    } );
     container.layout();
     setPageComplete( true );
     
@@ -298,13 +298,13 @@ public class TimeStepFillerWizardPage extends WizardPage
     return timeStep_val;
   }
   
-  public int getHValue() {
-    return _H_val;
+  public int getUnderRelaxationFactorValue() {
+    return _underRelaxFactor_val;
   }
   
-  public int getQValue() {
-    return _Q_val;
-  }
+//  public int getQValue() {
+//    return _Q_val;
+//  }
   
 
   

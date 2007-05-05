@@ -45,7 +45,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -53,7 +52,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -61,14 +59,9 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -137,7 +130,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
 //
 //    // TODO: Refaktor in order to let different types of observations to be created
     final IComponent timeComponent = components[0];
-    final IComponent _HComponent = components[1];
+    final IComponent _underRelaxFactorComponent = components[1];
     final IComponent _QComponent = components[2];
 
     GregorianCalendar calendarFrom = new GregorianCalendar();
@@ -183,8 +176,8 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     {
       final IRecord record = result.createRecord();
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( _HComponent, new BigDecimal( timePage.getHValue() ) );
-      record.setValue( _QComponent, new BigDecimal( timePage.getQValue() ) );
+      record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue()) );
+      //record.setValue( _QComponent, new BigDecimal( timePage.getQValue() ) );
       result.add( record );
       //System.out.println("record :"+calendarFrom.getTimeInMillis()+" H :"+timePage.getHValue()+" Q:"+timePage.getQValue()  );
       System.out.println(record.toString());
@@ -217,22 +210,22 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     timePage.init(initialSelection);
  }
   
-  public String[] getComponentUrns() {
-    String[] res = new String[3];
-    res[0] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
-    res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
-    res[2] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
-//    String type = observation.getAxisList()[1].getType();
-//    if(type.equals( "W" ))
-//      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
-//    if(type.equals( "Q" ))
-//      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
+//  public String[] getComponentUrns() {
+//    String[] res = new String[3];
+//    res[0] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
+//    res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
+//    res[2] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
+////    String type = observation.getAxisList()[1].getType();
+////    if(type.equals( "W" ))
+////      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
+////    if(type.equals( "Q" ))
+////      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
+////    return res;
+////    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+////    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
+////    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
 //    return res;
-//    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-//    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
-//    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
-    return res;
-  }
+//  }
 
   public FeatureChange[] getFeatureChange( )
   {

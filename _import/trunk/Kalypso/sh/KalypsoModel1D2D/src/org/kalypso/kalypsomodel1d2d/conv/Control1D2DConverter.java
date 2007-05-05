@@ -48,12 +48,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -213,13 +212,28 @@ public class Control1D2DConverter
     System.out.println( "com steady state input data" );
     System.out.println( "com -----------------------" );
     Feature controlFeature = calculation.getControlModelFeature();
-  //  IControlModel1D2D controlModel =  new ControlModel1D2D(controlFeature);
-    IPropertyType property = controlFeature.getFeatureType().getProperty( 
-        Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-    Object property2 = controlFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+
+//    IPropertyType property = controlFeature.getFeatureType().getProperty(
+//        Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+//    Object property2 = controlFeature.getProperty( 
+//        Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+    
     IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
     IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
-    System.out.println("Res :"+tupleSet.getResult());
+    TupleResult result = tupleSet.getResult();
+    
+    Iterator<IRecord> iterator = result.iterator();
+    
+    IComponent res_C_0 = result.getComponents()[0];
+    IComponent res_C_1 = result.getComponents()[1];
+    //IComponent res_C_2 = result.getComponents()[2];
+    while (iterator.hasNext()) {
+     IRecord record = iterator.next();
+     System.out.print("Time :"+record.getValue( res_C_0 ));
+     System.out.print("  UnderRelax :"+record.getValue( res_C_1 ));
+     //System.out.println("  Q :"+record.getValue( res_C_2 ));
+    }
+    
     // sb.append( "DT " );// add DELTA
     // // TODO ask Nico about BC-Lines (equal values for all Lines???)
     // // TODO add continuity Lines inflow here (QC,HC)

@@ -65,6 +65,30 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
+     
+	<!-- =================================================================
+		Under Relaxation Factor
+	================================================================== -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="UnderRelaxationFactor">
+               <gml:name>Under Relaxation Factor</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_underRelaxFactor">
+                         <gml:description>Under Relaxation Factor</gml:description>
+                         <gml:name>Under Relaxation Factor</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+							  <st:maxInclusive value="1.0"/>                            
+                         </st:restriction>
+                         <gml:unitOfMeasure uom=" "/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
 	
 	<!-- =================================================================
 		Specific Discharge

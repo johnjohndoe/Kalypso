@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -74,12 +75,20 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    */
   public IObservation<TupleResult> getTimeSteps( )
   {
-    final Feature feature = getFeature();
-    final Object property = 
-        feature.getProperty( 
-             Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-    
-    return (IObservation<TupleResult>) property;
+    try
+    {
+      final Feature feature = getFeature();
+      final Object property = 
+          feature.getProperty( 
+               Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+      IObservation obs = (IObservation)((Feature)property).getAdapter( IObservation.class );
+      return obs;
+    }
+    catch ( Throwable th ) 
+    {
+      th.printStackTrace();
+      throw new RuntimeException( th ); 
+    }
   }
 
 }

@@ -31,41 +31,38 @@
    <gml:name>Zeitschritt Definition</gml:name>
    <om:observedProperty xmlns:om="http://www.opengis.net/om" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
    <om:resultDefinition xmlns:om="http://www.opengis.net/om">
-    <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11783661592184">
+    <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11783736095626">
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
     </sweExt:SortedRecordDefinition>
    </om:resultDefinition>
-   <om:result 
-	   xmlns:om="http://www.opengis.net/om">&lt;
-	   ![CDATA[2007-05-01T13:55:00.000+02:00 2 4
-			2007-05-01T14:55:00.000+02:00 2 3
-			2007-05-01T15:55:00.000+02:00 2 3
-			2007-05-01T16:55:00.000+02:00 2 3
-			2007-05-01T17:55:00.000+02:00 2 3
-			2007-05-01T18:55:00.000+02:00 2 3
-			2007-05-01T19:55:00.000+02:00 2 3
-			2007-05-01T20:55:00.000+02:00 2 3
-			2007-05-01T21:55:00.000+02:00 2 3
-			2007-05-01T22:55:00.000+02:00 2 3
-			2007-05-01T23:55:00.000+02:00 2 3
-			2007-05-02T00:55:00.000+02:00 2 3
-			2007-05-02T01:55:00.000+02:00 2 3
-			2007-05-02T02:55:00.000+02:00 2 3
-			2007-05-02T03:55:00.000+02:00 2 3
-			2007-05-02T04:55:00.000+02:00 2 3
-			2007-05-02T05:55:00.000+02:00 2 3
-			2007-05-02T06:55:00.000+02:00 2 3
-			2007-05-02T07:55:00.000+02:00 2 3
-			2007-05-02T08:55:00.000+02:00 2 3
-			2007-05-02T09:55:00.000+02:00 2 3
-			2007-05-02T10:55:00.000+02:00 2 3
-			2007-05-02T11:55:00.000+02:00 2 3
-			2007-05-02T12:55:00.000+02:00 2 3
-			2007-05-02T13:55:00.000+02:00 2 3
-											 ]]&gt;
- 	</om:result>
+   <om:result xmlns:om="http://www.opengis.net/om">&lt;![CDATA[2007-05-02T15:59:00.000+02:00 5 6
+2007-05-02T16:59:00.000+02:00 5 6
+2007-05-02T17:59:00.000+02:00 5 6
+2007-05-02T18:59:00.000+02:00 5 6
+2007-05-02T19:59:00.000+02:00 5 6
+2007-05-02T20:59:00.000+02:00 5 6
+2007-05-02T21:59:00.000+02:00 5 6
+2007-05-02T22:59:00.000+02:00 5 6
+2007-05-02T23:59:00.000+02:00 5 6
+2007-05-03T00:59:00.000+02:00 5 6
+2007-05-03T01:59:00.000+02:00 5 6
+2007-05-03T02:59:00.000+02:00 5 6
+2007-05-03T03:59:00.000+02:00 5 6
+2007-05-03T04:59:00.000+02:00 5 6
+2007-05-03T05:59:00.000+02:00 5 6
+2007-05-03T06:59:00.000+02:00 5 6
+2007-05-03T07:59:00.000+02:00 5 6
+2007-05-03T08:59:00.000+02:00 5 6
+2007-05-03T09:59:00.000+02:00 5 6
+2007-05-03T10:59:00.000+02:00 5 6
+2007-05-03T11:59:00.000+02:00 5 6
+2007-05-03T12:59:00.000+02:00 5 6
+2007-05-03T13:59:00.000+02:00 5 6
+2007-05-03T14:59:00.000+02:00 5 6
+2007-05-03T15:59:00.000+02:00 5 6
+]]&gt;</om:result>
   </c1d2d:TimestepsObservation>
  </c1d2d:timestepsMember>
 </c1d2d:Control>

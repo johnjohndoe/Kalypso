@@ -146,7 +146,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_calculation.getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
       final ITerrainModel terrainModel = (ITerrainModel) m_calculation.getTerrainModelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
-      final IFlowRelationshipModel flowrelationModel = (IFlowRelationshipModel) m_calculation.getFlowRelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
+      final IFlowRelationshipModel flowrelationModel = (IFlowRelationshipModel) m_calculation.getFlowRelWorkspace().getRootFeature().getAdapter( IFlowRelationshipModel.class );
 
       final File modelFile = new File( tmpDir, "model.2d" );
       final Gml2RMA10SConv converter = new Gml2RMA10SConv( modelFile, discModel, terrainModel, flowrelationModel, positionProvider );
