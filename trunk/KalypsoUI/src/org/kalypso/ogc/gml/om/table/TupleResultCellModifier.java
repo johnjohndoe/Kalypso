@@ -109,7 +109,7 @@ public class TupleResultCellModifier implements ICellModifier
       if( handler != null )
       {
         final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
-        final String formatHint = descriptor.getParseFormat();
+        final String formatHint = descriptor == null ? null : descriptor.getParseFormat();
         
         final Object valueToSet = value == null ? null : handler.parseText( value.toString(), formatHint );
 
