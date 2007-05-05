@@ -106,7 +106,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       else if( char0 == 'A' && char1 == 'R' )
       {
-        // edge LINEID, ID, node1, node2, ellinks, elrechts
+        // edge LINEID, ID, node1, node2, ellinks, elrechts, mid-side node (after calculation)
         interpreteArcLine( line, m_handler );
       }
       else if( char0 == 'R' && char1 == 'K' )

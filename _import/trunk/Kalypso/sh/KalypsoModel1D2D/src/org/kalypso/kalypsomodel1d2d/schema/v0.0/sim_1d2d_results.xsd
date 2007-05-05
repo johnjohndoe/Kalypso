@@ -133,6 +133,16 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="midside" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Mittseitenknoten</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>midside node</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>					
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

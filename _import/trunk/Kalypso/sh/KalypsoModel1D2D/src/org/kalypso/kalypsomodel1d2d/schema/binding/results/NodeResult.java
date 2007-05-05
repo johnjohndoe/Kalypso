@@ -45,6 +45,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -65,6 +66,7 @@ public class NodeResult extends AbstractFeatureBinder
   private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
   private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" );
   private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
+  private static final QName QNAME_PROP_MIDSIDE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "midside" );
   
   public NodeResult( final Feature featureToBind )
   {
@@ -94,6 +96,11 @@ public class NodeResult extends AbstractFeatureBinder
     veloList.add( vx );
     veloList.add( vy );
     getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
+  }
+  
+  public void setMidSide (final boolean isMidSide)
+  {
+    getFeature().setProperty( QNAME_PROP_MIDSIDE, isMidSide );
   }
 
 }

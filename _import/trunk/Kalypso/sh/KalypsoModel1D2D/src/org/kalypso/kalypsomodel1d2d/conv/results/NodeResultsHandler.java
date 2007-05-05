@@ -100,6 +100,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID )
   {
+    //TODO: get the information which nodes are mid-side nodes
+    final NodeResult result = m_nodeIndex.get( middleNodeID );
+    if ( middleNodeID != -1 )
+    {
+      result.setMidSide( true );
+    }
+    else
+      result.setMidSide( false );
   }
 
   /**
@@ -119,7 +127,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     
     try
     {
-      /* Create ne Node-Result*/
+      /* Create new Node-Result*/
       final Feature feature = m_resultWorkspace.createFeature( parentFeature, parentRelation, parentRelation.getTargetFeatureType() );
       m_resultWorkspace.addFeatureAsComposition( parentFeature, parentRelation, -1, feature );
       

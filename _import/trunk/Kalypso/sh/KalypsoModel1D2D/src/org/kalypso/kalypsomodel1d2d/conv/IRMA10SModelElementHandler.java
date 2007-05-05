@@ -39,10 +39,17 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
                       double northing,
                       double elevation);
       
-//    edge LINEID, ID, node1, node2, ellinks, elrechts
+//    edge LINEID, ID, node1, node2, ellinks, elrechts, mid-side node (or -1)
     /**
      * Invoqued by the reader to signal that an arc (edge) 
      * has been read and parsed
+     * @param lineString whole parsed string
+     * @param id ID of the edge
+     * @param node1ID ID of the upsided node of the edge
+     * @param node2ID ID of the downsided node of the edge
+     * @param elementLeftID ID of the left-sided element of the edge
+     * @param elementRigthID ID of the rigth-sided element of the edge
+     * @param middleNodeID ID of the mid-side node of the edge (created while calculation) or -1 if there is non yet 
      */  
     public void handleArc(
                       String lineString,
