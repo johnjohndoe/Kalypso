@@ -156,7 +156,7 @@ public class SimulationModel<
     final CntlM controlModel =
       getSubModel( 
         controlModelCls, 
-        KalypsoModelSimulationBaseConsts.sIM_BASE_P_CONTROL_MODEL );
+        KalypsoModelSimulationBaseConsts.SIM_BASE_P_CONTROL_MODEL );
     return controlModel;
   }
 

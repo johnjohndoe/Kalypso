@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<c1d2d:Control xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" gml:id="root">
+<c1d2d:Control xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <c1d2d:Version>NEW</c1d2d:Version>
  <c1d2d:VEGETA>true</c1d2d:VEGETA>
  <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
- <c1d2d:startsim>2007-04-25T18:43:52.609+02:00</c1d2d:startsim>
+ <c1d2d:startsim/>
  <c1d2d:IEDSW>5</c1d2d:IEDSW>
  <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
  <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
@@ -26,4 +26,46 @@
  <c1d2d:AC2>0.67</c1d2d:AC2>
  <c1d2d:AC3>0.04</c1d2d:AC3>
  <c1d2d:IACCYC>1</c1d2d:IACCYC>
+ <c1d2d:timestepsMember>
+  <c1d2d:TimestepsObservation gml:id="Timeserie11773222660150">
+   <gml:name>Zeitschritt Definition</gml:name>
+   <om:observedProperty xmlns:om="http://www.opengis.net/om" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
+   <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+    <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11783661592184">
+     <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+     <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
+     <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
+    </sweExt:SortedRecordDefinition>
+   </om:resultDefinition>
+   <om:result 
+	   xmlns:om="http://www.opengis.net/om">&lt;
+	   ![CDATA[2007-05-01T13:55:00.000+02:00 2 4
+			2007-05-01T14:55:00.000+02:00 2 3
+			2007-05-01T15:55:00.000+02:00 2 3
+			2007-05-01T16:55:00.000+02:00 2 3
+			2007-05-01T17:55:00.000+02:00 2 3
+			2007-05-01T18:55:00.000+02:00 2 3
+			2007-05-01T19:55:00.000+02:00 2 3
+			2007-05-01T20:55:00.000+02:00 2 3
+			2007-05-01T21:55:00.000+02:00 2 3
+			2007-05-01T22:55:00.000+02:00 2 3
+			2007-05-01T23:55:00.000+02:00 2 3
+			2007-05-02T00:55:00.000+02:00 2 3
+			2007-05-02T01:55:00.000+02:00 2 3
+			2007-05-02T02:55:00.000+02:00 2 3
+			2007-05-02T03:55:00.000+02:00 2 3
+			2007-05-02T04:55:00.000+02:00 2 3
+			2007-05-02T05:55:00.000+02:00 2 3
+			2007-05-02T06:55:00.000+02:00 2 3
+			2007-05-02T07:55:00.000+02:00 2 3
+			2007-05-02T08:55:00.000+02:00 2 3
+			2007-05-02T09:55:00.000+02:00 2 3
+			2007-05-02T10:55:00.000+02:00 2 3
+			2007-05-02T11:55:00.000+02:00 2 3
+			2007-05-02T12:55:00.000+02:00 2 3
+			2007-05-02T13:55:00.000+02:00 2 3
+											 ]]&gt;
+ 	</om:result>
+  </c1d2d:TimestepsObservation>
+ </c1d2d:timestepsMember>
 </c1d2d:Control>
