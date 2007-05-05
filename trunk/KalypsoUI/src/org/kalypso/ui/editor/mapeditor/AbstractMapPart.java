@@ -399,6 +399,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       setMapModell( null );
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
+      // TODO: !!! this is not thre right place, hack code!
+      // please give name to map-model and retrieve it from there...
       partName = gisview.getName();
       monitor.worked( 1 );
 
