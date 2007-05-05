@@ -114,6 +114,20 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="slope" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gefälle</label>
+								<tooltip>Gefälle</tooltip>
+								<description>Gefälle</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Slope</label>
+								<tooltip>Slope</tooltip>
+								<description>Slope</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="pointsMember" type="tuhh:WPointsPropertyType">
 						<annotation>
 							<documentation xml:lang="de">

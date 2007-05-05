@@ -342,6 +342,8 @@ public class PolynomeHelper
 
       final String stationString = name.substring( 4, name.length() - 4 );
       final BigDecimal station = new BigDecimal( stationString );
+      // TODO: where to get the slope from???
+      final BigDecimal slope = new BigDecimal( "0.001" );
 
       try
       {
@@ -352,6 +354,7 @@ public class PolynomeHelper
         NamedFeatureHelper.setDescription( resultFeature, "Gelesen aus: " + name );
 
         resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_station, station );
+        resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_slope, slope );
 
         final Feature obsFeature = workspace.createFeature( resultFeature, pointsObsRelation, ftObservation );
         resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember, obsFeature );
@@ -554,17 +557,17 @@ public class PolynomeHelper
           final double[] coeffDoubles = ArrayUtils.toPrimitive( doubles );
 
           final String domainId;
-          final String rangeId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonWaterlevel";
+          final String rangeId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL;
           switch( type )
           {
             case 'Q':
-              domainId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#" + "phenomenonRunoff";
+              domainId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF;
               break;
             case 'A':
-              domainId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#" + "phenomenonArea";
+              domainId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA;
               break;
             case 'a':
-              domainId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#" + "phenomenonAlpha";
+              domainId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_ALPHA;
               break;
 
             default:

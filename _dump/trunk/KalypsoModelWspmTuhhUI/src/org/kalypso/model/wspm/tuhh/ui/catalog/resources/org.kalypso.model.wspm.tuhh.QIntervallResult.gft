@@ -21,6 +21,12 @@
 	<gft:text editable="true" property="tuhh:station" tooltip="Station" style="SWT.BORDER">
 		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
+	<gft:label text="Gefälle" visible="true" tooltip="Gefälle" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="tuhh:slope" tooltip="Station" style="SWT.BORDER">
+		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
 	<gft:extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
 		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
 		<gft:param name="configuration" value="urn:kalypso:chart:configuration:QIntervallResult" />

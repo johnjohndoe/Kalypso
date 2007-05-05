@@ -59,6 +59,8 @@ public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
 
   public static final QName QNAME_P_QIntervallResult_station = new QName( NS_WSPM_TUHH, "station" );
 
+  public static final QName QNAME_P_QIntervallResult_slope = new QName( NS_WSPM_TUHH, "slope" );
+
   public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( NS_WSPM_TUHH, "pointsMember" );
 
   public static final QName QNAME_P_QIntervallResult_polynomialMember = new QName( NS_WSPM_TUHH, "polynomialMember" );
@@ -66,5 +68,17 @@ public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
   public static final QName QNAME_P_QIntervallResult_profileMember = new QName( NS_WSPM_TUHH, "profileMember" );
 
   public static final QName QNAME_F_WPointsObservation = new QName( NS_WSPM_TUHH, "WPointsObservation" );
+
+
+  public static final String DICT_BASE = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#";
+
+  public static final String DICT_COMPONENT_WATERLEVEL = DICT_BASE + "phenomenonWaterlevel";
+
+  public static final String DICT_COMPONENT_RUNOFF = DICT_BASE + "phenomenonRunoff";
+
+  public static final String DICT_COMPONENT_AREA = DICT_BASE + "phenomenonArea";
+
+  public static final String DICT_COMPONENT_ALPHA = DICT_BASE + "phenomenonAlpha";
+
 
 }
