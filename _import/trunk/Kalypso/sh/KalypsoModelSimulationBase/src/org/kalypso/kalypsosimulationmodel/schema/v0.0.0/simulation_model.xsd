@@ -157,7 +157,11 @@
 	<!-- =====================================================================
 			StaticModel element
 	================================================================== -->
-	<xs:element name="StaticModel" type="simBase:AbstractStaticModelType" abstract="true" substitutionGroup="gml:_Feature">
+	<xs:element 
+		name="StaticModel" 
+		type="simBase:AbstractStaticModelType" 
+		abstract="true" 
+		substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substititution group head for static model 

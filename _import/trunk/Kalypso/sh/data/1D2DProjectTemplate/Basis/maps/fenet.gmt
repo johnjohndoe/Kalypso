@@ -17,7 +17,7 @@
     	<mapv:layer visible="true" name="Basiskarten" id="ID_16" linktype="gmt" xlink:type="simple" xlink:href="base.gmt" xlink:actuate="onRequest"/>
     	
 
-		<!--mapv:layer 
+		<mapv:layer 
 			visible="true" 
 			name="PolyElement+Roughness" 
 			id="id_poly_with_roughness" featurePath="#fid#root/element[Element2D]" linktype="gml" 
@@ -25,24 +25,41 @@
 			xlink:href="../models/discretisation.gml" 
 			xlink:actuate="onRequest">
             <ns1:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
-    	</mapv:layer-->
+    	</mapv:layer>
     	
-    	<!--mapv:layer 
+    	<!-- mapv:layer 
 			visible="true" 
 			name="PolyElement+Roughness" 
 			id="id_staticModel_poly_with_roughness" 
-			featurePath="featureMember[StaticModel1D2D]" 
+			featurePath="featureMember[Feature]" 
 			linktype="gml" 
 			xlink:type="simple" 
 			xlink:href="../models/collection_of_static_model.gml" 
 			xlink:actuate="onRequest">            
 			<ns1:style 
-				style="StaticModel1D2D" 
+				style="static_model1d2d_roughness_style" 
 				linktype="sld" 
 				xlink:type="simple" 
 				xlink:href="project:/.metadata/static_model_1d2d.sld" 
 				xlink:actuate="onRequest"/>
-    	</mapv:layer-->
+    	</mapv:layer -->
+    	
+    	<!-- mapv:layer 
+    		visible="true" 
+    		name="PolyElement+Roughness" 
+    		id="ID_12_dsdf" 
+    		featurePath="featureMember" 
+    		linktype="gml" 
+    		xlink:type="simple" 
+    		xlink:href="../models/collection_of_static_model.gml" 
+    		xlink:actuate="onRequest">
+            <ns1:style 
+            	style="static_model1d2d_roughness_style" 
+            	linktype="sld" 
+            	xlink:type="simple" 
+            	xlink:href="project:/.metadata/static_model_1d2d.sld" 
+            	xlink:actuate="onRequest"/>
+        </mapv:layer -->
     	
     </mapv:layers>
 </mapv:gismapview>

@@ -67,6 +67,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc;
+import org.kalypso.kalypsomodel1d2d.ui.displayelements.FERoughnessDisplayElement;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -164,16 +166,26 @@ public class ApplyColorOnFENETWidgetFace
     formData.bottom = new FormAttachment( 100, 5 );
     clientComposite.setLayoutData( formData );
        
-    Button activateColorBtn = new Button(clientComposite,SWT.PUSH);
+    final Button activateColorBtn = 
+          new Button(clientComposite,SWT.CHECK/*PUSH*/);
     formData = new FormData();
     formData.top = new FormAttachment(0,5);
     formData.left = new FormAttachment(0,5);
-    activateColorBtn.setText( "Activate Colors" );
+    activateColorBtn.setText( "2D element styling activieren" );
     activateColorBtn.setLayoutData( formData );
+    
+    activateColorBtn.setSelection( 
+              ElementRoughnessStyleFunc.isActivated() );
+    
     activateColorBtn.addSelectionListener( new SelectionAdapter(){
       public void widgetSelected( SelectionEvent e )
       {
-        paintRoughnessColors();        
+//        paintRoughnessColors();
+        ElementRoughnessStyleFunc.setActivated( 
+                      activateColorBtn.getSelection() );
+        dataModel.getMapModell().fireModellEvent( null );
+//        dataModel.getMapPanel().fi
+          
       }      
     });
     

@@ -5,17 +5,14 @@ import java.util.Map;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Returns the bounding box of the static model 
@@ -41,7 +38,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     
-    
+     
     final IStaticModel1D2D staticModel = 
             (IStaticModel1D2D) feature.getAdapter( IStaticModel1D2D.class );
     if( staticModel != null )
@@ -49,37 +46,40 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
       try
       {
         IFEDiscretisationModel1d2d discrModel = staticModel.getDiscretisationModel();
-        final GM_Surface surface;
+        final GM_Curve geometry;
         if( discrModel != null )
         {
+          
           IFeatureWrapperCollection<IFE1D2DNode> nodes = discrModel.getNodes();
           if( nodes.isEmpty() )
           {
-            surface = null;
+            geometry = null;
           }
           else
           {
-            GM_Envelope bbox = nodes.getWrappedList().getBoundingBox();
-            
-             surface = 
-                GeometryFactory.createGM_Surface( 
-                    bbox, nodes.get( 0 ).getPoint().getCoordinateSystem() );
-            
+            final GM_Envelope bbox = 
+                    nodes.getWrappedList().getBoundingBox();
+            final CS_CoordinateSystem crs = 
+                    nodes.get( 0 ).getPoint().getCoordinateSystem();
+            geometry = UtilMap.toGM_Curve( bbox, crs );
+             
+//                GeometryFactory.createGM_Surface(bbox, crs );
+             //TODO Patrice Complete
           }
         }
         else
         {
-          surface = null;
+          geometry = null;
         }
         
         System.out.println(
-            "Cannot get feature prop:"+
+            "got feature prop:"+
             "\n\tfeature="+feature+
             "\n\tproperty="+pt.getQName()+
-            "\n\tcurrentValue="+surface );
-        return surface;
+            "\n\tcurrentValue="+geometry );
+        return geometry;
       }
-      catch( final GM_Exception e )
+      catch( final Throwable e )
       {
         e.printStackTrace();
       }
@@ -89,8 +89,9 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
       System.out.println(
           "Cannot get feature prop:"+
           "\n\tfeature="+feature+
+          "\n\tadapter="+staticModel+
           "\n\tproperty="+pt.getQName()+
-          "currentValue="+currentValue);
+          "\n\tcurrentValue="+currentValue);
     }
 
     return null;

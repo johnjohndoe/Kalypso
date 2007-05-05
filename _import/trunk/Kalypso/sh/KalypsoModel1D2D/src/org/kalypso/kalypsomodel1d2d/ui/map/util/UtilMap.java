@@ -55,6 +55,11 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provides map oriented utility methods.
@@ -159,6 +164,42 @@ public class UtilMap
     else
     {
       return false;
+    }
+  }
+  /**
+   * Convert the given bounding box into a {@link GM_Curve}
+   */
+  public static final GM_Curve toGM_Curve( 
+                                  GM_Envelope bBox, 
+                                  CS_CoordinateSystem crs )
+  {
+    Assert.throwIAEOnNullParam( bBox, "bBox" );
+    Assert.throwIAEOnNullParam( crs, "crs" );
+    
+    //System.out.println("getting shape:"+feature);
+    try
+    {
+      GM_Position min = bBox.getMin();
+      GM_Position max = bBox.getMax();
+      
+      double minx=min.getX();
+      double miny=min.getY();
+      
+      double maxx=max.getX();
+      double maxy=max.getY();
+      
+      double[] coords = 
+        new double[]{minx,miny, maxx,miny , maxx,maxy, minx,maxy, minx,miny,};
+      GM_Curve curve = 
+          GeometryFactory.createGM_Curve( 
+                                    coords ,
+                                    2,
+                                    crs );      
+      return curve;
+    }
+    catch( final Throwable e )
+    {
+      throw new RuntimeException( "Could not create curve", e );
     }
   }
 }

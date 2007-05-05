@@ -6,13 +6,13 @@
 			xmlns:xlink="http://www.w3.org/1999/xlink" 
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
     <NamedLayer>
-        <Name>roughness von fe elemente</Name>
+        <Name>Roughness von fe elemente</Name>
         <UserStyle>
-            <Name>Roughness style</Name>
+            <Name>static_model1d2d_roughness_style</Name>
             <Title>Roughness style</Title>
             <FeatureTypeStyle>
                 <Rule>
-                    <Name>default</Name>
+                    <Name>StaticModel1D2D_Style</Name>
                     <Title>default</Title>
                     <Abstract>default</Abstract>
                     <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -28,7 +28,7 @@
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
 							<CssParameter name="stroke-linecap">butt</CssParameter>
 						</Stroke>
-					</LineSymbolizer
+					</LineSymbolizer>
                 </Rule>                
             </FeatureTypeStyle>
         </UserStyle>

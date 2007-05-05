@@ -26,6 +26,8 @@ import de.renew.workflow.cases.ICaseDataProvider;
  */
 public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
 {
+  private static boolean activated;
+  
   private static final Map<String, String> roughnessMap = 
                                     new HashMap<String, String>();
   private static final String DEFAULT_STYLE = "_DEFAULT_STYLE_";
@@ -59,6 +61,11 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
 
   private String getElementRoughnessStyle( IPolyElement polyElement )
   {
+    if( !isActivated() )
+    {
+      return DEFAULT_STYLE;
+    }
+    
     reinitRoughnessModel();
     if( roughnessPolygonCollection == null )
     {
@@ -185,6 +192,24 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
     {
       th.printStackTrace();
       return null;
+    }
+  }
+  
+  public static final boolean isActivated()
+  {
+    
+    synchronized( roughnessMap )
+    {
+      return activated;
+    }
+  }
+  
+  public static final void setActivated(boolean newActivationState)
+  {
+    
+    synchronized( roughnessMap )
+    {
+      activated = newActivationState;
     }
   }
 }
