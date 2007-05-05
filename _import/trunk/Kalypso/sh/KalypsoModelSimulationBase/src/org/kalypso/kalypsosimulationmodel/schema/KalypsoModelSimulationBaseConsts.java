@@ -160,7 +160,7 @@ public class KalypsoModelSimulationBaseConsts
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS,
               "operationalModel");
-    public static final QName sIM_BASE_P_CONTROL_MODEL =
+    public static final QName SIM_BASE_P_CONTROL_MODEL =
       new QName(
               UrlCatalogModelSimulationBase.SIM_MODEL_NS,
               "controlModel");
