@@ -8,6 +8,7 @@
 	<input id="SimulationControlModel" description="Steuerungsdaten"/>	
     <input id="Roughness" description="Rauheitsdatenbank"/>
     <input id="ResultStyle" description="Ergbnisdarstellung"/>
+	<input id="PseudoResults" description="Zip mit Ergebnisdaten. Falls da, wird nicht gerechnet sondern nur dieses zip entpackt." optional="true"/>		
     	
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="RESULT_DIR_NAME" description="Verzeichnis der Berechnungsergebnisse"/>

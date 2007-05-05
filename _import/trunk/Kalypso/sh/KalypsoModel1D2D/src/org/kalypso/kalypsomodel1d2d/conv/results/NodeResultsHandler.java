@@ -100,6 +100,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID )
   {
+    if( middleNodeID == 0  )
+      return; // maybe this is a good place to marc the 1d-nodes....
+    
     //TODO: get the information which nodes are mid-side nodes
     final NodeResult result = m_nodeIndex.get( middleNodeID );
     if ( middleNodeID != -1 )

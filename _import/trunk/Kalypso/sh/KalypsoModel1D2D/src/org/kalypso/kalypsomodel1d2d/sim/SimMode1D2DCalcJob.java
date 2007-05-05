@@ -120,14 +120,23 @@ public class SimMode1D2DCalcJob implements ISimulation
       logger.fine( e1.getLocalizedMessage() );
     }
 
-    final URL pseudoResultUrl = (URL) inputProvider.getInputForID( "PseudoResults" );
+    URL pseudoResultUrl = null;
+    try
+    {
+      pseudoResultUrl = (URL) inputProvider.getInputForID( "PseudoResults" );
+    }
+    catch( final Throwable t )
+    {
+      // just ignore
+    }
 
     final String nowString = DateFormat.getDateTimeInstance().format( new Date() );
     logger.log( Level.INFO, "Starte Berechnung: " + nowString + " (Serverzeit)\n" );
 
     try
     {
-      //this is just for testing the result visualization and can be removed, when the calc job will create real results (TJ) 
+      // this is just for testing the result visualization and can be removed, when the calc job will create real
+      // results (TJ)
       if( pseudoResultUrl == null )
       {
         monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
@@ -136,48 +145,48 @@ public class SimMode1D2DCalcJob implements ISimulation
 
         m_calculation = new RMA10Calculation( inputProvider );
 
-      /** convert discretisation model stuff... */
-      // write merged *.2d file for calc core / Dejan
-      
-      final File modelFile = new File( tmpDir, "model.2d" );
-      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
+        /** convert discretisation model stuff... */
+        // write merged *.2d file for calc core / Dejan
+        final File modelFile = new File( tmpDir, "model.2d" );
+        final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
 
-      monitor.setMessage( "Generiere 2D Netz..." );
-      if( monitor.isCanceled() )
-        return;
-      converter2D.toRMA10sModel( );
-      Control1D2DConverter.setNodesIDProvider( converter2D.getNodesIDProvider() );
-      Control1D2DConverter.setRoughnessIDProvider( converter2D.getRoughnessIDProvider() );
-      
-      /** convert control/resistance stuff... */
-      // first this because we need roughness classes IDs for creating 2D net later
-      monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
-      if( monitor.isCanceled() )
-        return;
+        monitor.setMessage( "Generiere 2D Netz..." );
+        if( monitor.isCanceled() )
+          return;
+        converter2D.toRMA10sModel();
+        Control1D2DConverter.setNodesIDProvider( converter2D.getNodesIDProvider() );
+        Control1D2DConverter.setRoughnessIDProvider( converter2D.getRoughnessIDProvider() );
 
-      // TODO write control and boundary conditions calc core (*.R10 file)
-      PrintWriter r10pw = null;
-      try
-      {
-        r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-        Control1D2DConverter.writeR10File( m_calculation, r10pw );
-        r10pw.close();
-      }
-      finally
-      {
-        /* Alwaysw close stream in a finally block */
-        IOUtils.closeQuietly( r10pw );
-      }
+        /** convert control/resistance stuff... */
+        // first this because we need roughness classes IDs for creating 2D net later
+        monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
+        if( monitor.isCanceled() )
+          return;
 
-      /** start calculation... */
-      monitor.setMessage( "Starte Rechenkern..." );
-      if( monitor.isCanceled() )
-        return;
+        // TODO write control and boundary conditions calc core (*.R10 file)
+        PrintWriter r10pw = null;
+        try
+        {
+          r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
+          Control1D2DConverter.writeR10File( m_calculation, r10pw );
+          r10pw.close();
+        }
+        finally
+        {
+          /* Alwaysw close stream in a finally block */
+          IOUtils.closeQuietly( r10pw );
+        }
+
+        /** start calculation... */
+        monitor.setMessage( "Starte Rechenkern..." );
+        if( monitor.isCanceled() )
+          return;
 
         monitor.setProgress( 20 );
 
         m_calculation.setKalypso1D2DKernelPath();
         copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
+        new File(tmpDir, "result");
         startCalculation( tmpDir, monitor );
       }
       else
@@ -199,7 +208,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse..." );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpDir, monitor, logger, inputProvider, resultEater );        
+        loadResults( tmpDir, monitor, logger, inputProvider, resultEater );
       }
 
     }
@@ -375,9 +384,9 @@ public class SimMode1D2DCalcJob implements ISimulation
    */
   public boolean isSucceeded( final File baseDir )
   {
-    //TODO: this should be adapted. 
-//    final File finalResultFile = new File( baseDir, "steady.2d" );
-//    return finalResultFile.exists();
+    // TODO: this should be adapted.
+    // final File finalResultFile = new File( baseDir, "steady.2d" );
+    // return finalResultFile.exists();
     return true;
   }
 }
