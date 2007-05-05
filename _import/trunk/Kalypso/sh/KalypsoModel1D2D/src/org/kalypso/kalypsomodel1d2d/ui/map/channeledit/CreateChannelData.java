@@ -79,6 +79,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.editor.actions.FeatureComparator;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
@@ -86,6 +88,7 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -227,28 +230,20 @@ public class CreateChannelData
    */
   public IKalypsoFeatureTheme[] getBankThemes( )
   {
-    final IKalypsoTheme[] allThemes = m_widget.getPanel().getMapModell().getAllThemes();
+    /* implement visitor for cascading themes in mapPanel */
+    MapPanel panel = m_widget.getPanel();
+    IMapModell mapModell = panel.getMapModell();
+    if( mapModell == null )
+      return null;
+    final BankThemePredicate predicate = new BankThemePredicate();
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+    mapModell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
 
-    final List<IKalypsoFeatureTheme> goodThemes = new ArrayList<IKalypsoFeatureTheme>();
+    final IKalypsoTheme[] result = visitor.getFeatures();
+    final IKalypsoFeatureTheme[] resultThemes = new IKalypsoFeatureTheme[result.length];
+    System.arraycopy( result, 0, resultThemes, 0, result.length );
 
-    for( final IKalypsoTheme theme : allThemes )
-    {
-      if( theme instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
-        final IFeatureType featureType = fTheme.getFeatureType();
-
-        if( featureType == null )
-          continue;
-
-        final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
-        // choose only the linestrings
-        // just take the first found property
-        if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( GeometryUtilities.QN_LINE_STRING_PROPERTY ) )
-          goodThemes.add( fTheme );
-      }
-    }
-    return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
+    return resultThemes;
   }
 
   /* --------------------- selection handling ---------------------------------- */
