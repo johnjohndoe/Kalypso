@@ -169,17 +169,13 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
 
   public static String formatValue( final Object value, final ColumnDescriptor descriptor )
   {
-    if( descriptor == null )
-      return null;
-
-    final String format = descriptor.getDisplayFormat();
-    if( format == null )
-      return null;
+    final String format = descriptor == null ? "%s" : descriptor.getDisplayFormat();
+    final String displayFormat = format == null ? "%s" : format;
 
     // HACK: in order to format XMLGregorianCalendars convert them to GregorianCalendars
     // is there a better place to do this?
     if( value instanceof XMLGregorianCalendar )
-      return String.format( format, ((XMLGregorianCalendar) value).toGregorianCalendar() );
-    return String.format( format, value );
+      return String.format( displayFormat, ((XMLGregorianCalendar) value).toGregorianCalendar() );
+    return String.format( displayFormat, value );
   }
 }
