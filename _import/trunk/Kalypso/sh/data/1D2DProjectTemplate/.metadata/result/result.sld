@@ -21,6 +21,18 @@
 					<MaxScaleDenominator>
 						1.7976931348623157E308
 					</MaxScaleDenominator>
+						<ogc:Filter>
+						 	<And>
+								<ogc:PropertyIsEqualTo>
+									<ogc:PropertyName>midside</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsEqualTo>
+								<ogc:PropertyIsGreaterThanOrEqualTo>
+									<ogc:PropertyName>velocityNorm</ogc:PropertyName>
+									<ogc:Literal>0.01</ogc:Literal>
+								</ogc:PropertyIsGreaterThanOrEqualTo>
+							</And>
+						</ogc:Filter>	
 					<PointSymbolizer uom="meter">
 						<Graphic>
 							<Mark>
@@ -36,9 +48,8 @@
 									</CssParameter>
 								</Fill>
 							</Mark>
-
 							<Opacity>1.0</Opacity>
-							<Size><ogc:Mul><ogc:Literal>100</ogc:Literal><ogc:PropertyName>velocityNorm</ogc:PropertyName></ogc:Mul></Size>
+							<Size><ogc:Mul><ogc:Literal>30</ogc:Literal><ogc:PropertyName>velocityNorm</ogc:PropertyName></ogc:Mul></Size>
 							<Rotation><ogc:PropertyName>velocityRotation</ogc:PropertyName></Rotation>
 						</Graphic>
 					</PointSymbolizer>
