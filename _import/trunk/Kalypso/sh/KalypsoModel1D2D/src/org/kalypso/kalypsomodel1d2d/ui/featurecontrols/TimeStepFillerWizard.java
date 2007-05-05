@@ -100,75 +100,13 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     System.out.println(timePage.getStartDate());
     System.out.println(timePage.getFinishDate());
     System.out.println(timePage.getTimeSteps());
-   
-//    final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
-//    bc.setName( "1D-Randbedingung" ); // TODO: unterscheide zwischen verschiedenen Typen
-//    bc.setDescription( DF.format( new Date() ) );
-
-    
-    //observation_sensor = (IObservation)t_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-    //observation_sensor = ObservationFeatureFactory.toObservation( t_feature );
     obs = ObservationFeatureFactory.toObservation( t_feature );
-
-//    final String[] componentUrns = getComponentUrns();
-//    final IComponent[] components = new IComponent[componentUrns.length];
-////
-//    for( int i = 0; i < components.length; i++ )
-//      components[i] = ObservationFeatureFactory.createDictionaryComponent( t_feature, componentUrns[i] );
-    
-// +++++ DOUBT
-    //observation = (IObservation)newFeature.getProperty(Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER);
-//    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-//    obs.setName( choosenDesc.getName() );
-//    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
-
     final TupleResult result =  obs.getResult();
     final IComponent[] components = result.getComponents();
-    
-//    for( final IComponent component : components )
-//      result.addComponent( component );
-//
-//    // TODO: Refaktor in order to let different types of observations to be created
     final IComponent timeComponent = components[0];
     final IComponent _underRelaxFactorComponent = components[1];
-//    final IComponent _QComponent = components[2];
-
     GregorianCalendar calendarFrom = new GregorianCalendar();
     GregorianCalendar calendarTo = new GregorianCalendar();
-    //BigDecimal value = null;
-//    if( !m_page1.isChoiceTimeseries() )
-//    {
-//      value = new BigDecimal( m_page2.getDefaultValue() );
-//      calendarFrom.setTime( m_page2.getFromDate() );
-//      calendarTo.setTime( m_page2.getToDate() );
-//      do
-//      {
-//        final IRecord record = result.createRecord();
-//        record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-//        record.setValue( valueComponent, value );
-//        result.add( record );
-//        calendarFrom.add( Calendar.MINUTE, m_page2.getStep() );
-//      }
-//      while( !calendarFrom.after( calendarTo ) );
-//    }
-//    else
-//    {
-
-//    Date dd = timePage.getStartDate();
-//      
-//        while (dd != timePage.getFinishDate()) {
-//          final IRecord record = result.createRecord();
-//          GregorianCalendar calendar = new GregorianCalendar();
-//          calendar.setTime();
-//          record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendar ) );
-//          //record.setValue( _HComponent, value );
-//          record.setValue( _HComponent, timePage.getHValue() );
-//          record.setValue( _QComponent, timePage.getQValue() );
-//          
-//          result.add( record );
-//        }
-      
-   // value = new BigDecimal( 0.0);
     calendarFrom.setTime( timePage.getStartDate() );
     calendarTo.setTime( timePage.getFinishDate() );
     List<IRecord> records = new ArrayList<IRecord>();
@@ -177,22 +115,50 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
       final IRecord record = result.createRecord();
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
       record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue()) );
-      //record.setValue( _QComponent, new BigDecimal( timePage.getQValue() ) );
       result.add( record );
-      //System.out.println("record :"+calendarFrom.getTimeInMillis()+" H :"+timePage.getHValue()+" Q:"+timePage.getQValue()  );
       System.out.println(record.toString());
       calendarFrom.add( Calendar.MINUTE, timePage.getTimeSteps() );
       records.add( record ); 
      
     }
-    
+   
     result.fireRecordsChanged( records.toArray( new IRecord[] {} ), ITupleResultChangedListener.TYPE.ADDED );
     m_changes = ObservationFeatureFactory.toFeatureAsChanges(  obs, t_feature );
+   // updatePageComplete();
     return true;
   }
 
   
+  protected void updatePageComplete( )
+  {
+    timePage.setPageComplete( false );
 
+    if( timePage.getUnderRelaxationFactorValue()<=0.0 ||
+        timePage.getUnderRelaxationFactorValue()>=1.0)
+    {
+      timePage.setMessage( null );
+      timePage.setErrorMessage( "Wrong Value : 0.0 - 1.0 Allowed" );
+      return;
+    }
+    
+    if (timePage.getStartDate().after( timePage.getFinishDate() ))
+    {
+      timePage.setMessage( null );
+      timePage.setErrorMessage( "Incompatible Start Date" );
+      return;
+    }
+
+    if (timePage.getFinishDate().after( timePage.getStartDate()))
+    {
+      timePage.setMessage( null );
+      timePage.setErrorMessage( "Incompatible End Date" );
+      return;
+    }
+
+    timePage.setMessage( null );
+    timePage.setErrorMessage( null );
+    timePage.setPageComplete( true );
+  }
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
    */

@@ -41,12 +41,18 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DContinuityLine;
@@ -273,14 +279,23 @@ public class Control1D2DConverter
    */
   private static void writeR10TimeStepDataBlock( RMA10Calculation calculation, PrintWriter writer )
   {
-    // Locale locale = Locale.US;
+//    Locale locale = Locale.US;
     System.out.println( "com -----------------------" );
     System.out.println( "com steady state input data" );
     System.out.println( "com -----------------------" );
+    System.out.println("DT        0.0000");
+    System.out.println("BC          8010    8010    8010    7010    6010    5010    4010    2010    0010");
+    System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+    System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+    System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+    System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+    System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+    System.out.println("QC             1       0   19.65   0.000   0.000  20.000   0.000");
+    System.out.println("QC             2       0   19.20   0.000   0.000  20.000   0.000");
+    System.out.println("HC             3       0    5.69   00.00    20.0     0.0");
+    System.out.println("ENDSTEP  steady");
+    
     Feature controlFeature = calculation.getControlModelFeature();
-    // IControlModel1D2D controlModel = new ControlModel1D2D(controlFeature);
-    IPropertyType property = controlFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-    Object property2 = controlFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
 
 //    IPropertyType property = controlFeature.getFeatureType().getProperty(
 //        Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
@@ -289,20 +304,35 @@ public class Control1D2DConverter
     
     IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
     IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
-    System.out.println( "Res :" + tupleSet.getResult() );
+    
     TupleResult result = tupleSet.getResult();
     
     Iterator<IRecord> iterator = result.iterator();
     
     IComponent res_C_0 = result.getComponents()[0];
     IComponent res_C_1 = result.getComponents()[1];
-    //IComponent res_C_2 = result.getComponents()[2];
+    ArrayList<Date> timeAndDate = new ArrayList<Date>();
+    ArrayList<BigDecimal> underRelaxFactors = new ArrayList<BigDecimal>();
+   // XMLGregorianCalendar
     while (iterator.hasNext()) {
-     IRecord record = iterator.next();
-     System.out.print("Time :"+record.getValue( res_C_0 ));
-     System.out.print("  UnderRelax :"+record.getValue( res_C_1 ));
-     //System.out.println("  Q :"+record.getValue( res_C_2 ));
+     IRecord record = iterator.next();     
+     timeAndDate.add( DateUtilities.toDate( (XMLGregorianCalendar)record.getValue( res_C_0 ) ) );
+     underRelaxFactors.add( (BigDecimal) record.getValue( res_C_1 ) );     
     }
+    
+    long timeStepInterval = timeAndDate.get(1).getTime() - timeAndDate.get(0).getTime();
+    timeStepInterval = timeStepInterval / (60*60);
+    
+    for (int i =0; i<timeAndDate.size();i++) {
+      System.out.println( "com -----------------------" );
+      System.out.println( "com unsteady "+i );
+      System.out.println( "com -----------------------" );
+      Calendar instance = Calendar.getInstance();
+      instance.setTime( timeAndDate.get( i ) );
+      int dayOfYear = instance.get( Calendar.DAY_OF_YEAR );
+      System.out.println("DT "+timeStepInterval+" "+timeAndDate.get( i ).getYear()+" "+dayOfYear+" "+(timeAndDate.get( i ).getSeconds()/((60*60)*100)));
+    }
+
     
     // sb.append( "DT " );// add DELTA
     // // TODO ask Nico about BC-Lines (equal values for all Lines???)

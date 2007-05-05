@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
@@ -59,6 +60,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
@@ -76,8 +78,6 @@ public class TimeStepFillerWizardPage extends WizardPage
   protected Date m_dateTo = new Date();
   private Text _underRelaxationFactor_Text;
   protected int _underRelaxFactor_val;
-  private Text _Q_Value_Text;
-  protected int _Q_val;
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
   protected TimeStepFillerWizardPage( )
@@ -276,7 +276,8 @@ public class TimeStepFillerWizardPage extends WizardPage
 //      }
 //    } );
     container.layout();
-    setPageComplete( true );
+    //updatePageComplete();
+    //setPageComplete( true );
     
   }
 
@@ -301,7 +302,39 @@ public class TimeStepFillerWizardPage extends WizardPage
   public int getUnderRelaxationFactorValue() {
     return _underRelaxFactor_val;
   }
-  
+
+  protected void updatePageComplete( )
+  {
+    setPageComplete( false );
+
+    if( getUnderRelaxationFactorValue()<=0.0 ||
+        getUnderRelaxationFactorValue()>=1.0)
+    {
+      setMessage( null );
+      setErrorMessage( "Wrong Value : 0.0 - 1.0 Allowed" );
+      return;
+    }
+    
+    if (getStartDate().after( getFinishDate() ))
+    {
+      setMessage( null );
+      setErrorMessage( "Incompatible Start Date" );
+      return;
+    }
+
+    if (getFinishDate().after( getStartDate()))
+    {
+      setMessage( null );
+      setErrorMessage( "Incompatible End Date" );
+      return;
+    }
+
+    setMessage( null );
+    setErrorMessage( null );
+    setPageComplete( true );
+  }
+
+
 //  public int getQValue() {
 //    return _Q_val;
 //  }
