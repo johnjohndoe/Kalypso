@@ -286,7 +286,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           flowRel.setName( description );
           flowRel.setPosition( node.getPoint() );
           flowRel.setStation( station );
-          flowRel.setSlope( slope.doubleValue() );
+          flowRel.setSlope( slope.setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
 
           /* copy results into new flow relation */
 

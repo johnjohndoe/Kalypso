@@ -41,10 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;

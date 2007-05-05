@@ -46,18 +46,6 @@
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:label text="Gefälle" visible="true" tooltip="Angabe des Gefälles." style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.BEGINNING"
-			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
-	<gft:text editable="true" property="wb1d2d:slope" tooltip="Gefälle"
-		style="SWT.BORDER">
-		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2"
-			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-	</gft:text>
-	<gft:validatorlabel property="wb1d2d:slope" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:validatorlabel>
 	<gft:composite tooltip="Referenz auf Profil" style="SWT.NONE">
 		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL"
 			grabExcessHorizontalSpace="true" />
@@ -70,6 +58,18 @@
 		</gft:button>
 	</gft:composite>
 	<gft:validatorlabel property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<gft:label text="Gefälle" visible="true" tooltip="Angabe des Gefälles." style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="wb1d2d:slope" tooltip="Gefälle"
+		style="SWT.BORDER">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2"
+			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:validatorlabel property="wb1d2d:slope" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 	<!-- Anzeige des Profils? -->

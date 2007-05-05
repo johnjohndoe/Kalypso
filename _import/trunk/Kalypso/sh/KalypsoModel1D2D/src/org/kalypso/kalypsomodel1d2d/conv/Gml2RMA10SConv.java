@@ -287,7 +287,7 @@ public class Gml2RMA10SConv
       if( station == null )
         formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ() );
       else
-        formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ(), station );
+       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ(), station );
 
     }
   }

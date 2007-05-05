@@ -155,19 +155,19 @@ public class SimMode1D2DCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
 
-        // TODO write control and boundary conditions calc core (*.R10 file)
-        PrintWriter r10pw = null;
-        try
-        {
-          r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-         // Control1D2DConverter.writeR10File( m_calculation, r10pw );
-          r10pw.close();
-        }
-        finally
-        {
-          /* Alwaysw close stream in a finally block */
-          IOUtils.closeQuietly( r10pw );
-        }
+      // TODO write control and boundary conditions calc core (*.R10 file)
+      PrintWriter r10pw = null;
+      try
+      {
+        r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
+        Control1D2DConverter.writeR10File( m_calculation, r10pw );
+        r10pw.close();
+      }
+      finally
+      {
+        /* Alwaysw close stream in a finally block */
+        IOUtils.closeQuietly( r10pw );
+      }
 
       /** start calculation... */
       monitor.setMessage( "Starte Rechenkern..." );

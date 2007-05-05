@@ -111,7 +111,7 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
    */
   public void setSlope( final double slope )
   {
-    final BigDecimal slopeDec = new BigDecimal( slope );
+    final BigDecimal slopeDec = new BigDecimal( slope ).setScale( 5, BigDecimal.ROUND_HALF_UP );
     getFeature().setProperty( QNAME_PROP_SLOPE, slopeDec );
   }
 
