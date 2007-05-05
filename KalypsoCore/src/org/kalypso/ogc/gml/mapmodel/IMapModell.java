@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -68,6 +69,8 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public IKalypsoTheme getActiveTheme();
 
   public void addTheme( final IKalypsoTheme theme );
+  
+  public void insertTheme( final IKalypsoTheme theme, final int position );  
 
   public void enableTheme( IKalypsoTheme theme, boolean status );
 
@@ -106,5 +109,14 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public IProject getProject();
 
   public IKalypsoFeatureTheme getScrabLayer();
+
+  public void accept( KalypsoThemeVisitor visitor, int depth_infinite );
+  
+  public void accept( KalypsoThemeVisitor visitor, int depth_infinite, IKalypsoTheme theme );
+
+  public void setName( String name );
+  
+  public String getName ();
+  
 
 }

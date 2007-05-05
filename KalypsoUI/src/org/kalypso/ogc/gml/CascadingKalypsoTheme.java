@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.LayerType;
@@ -72,7 +73,8 @@ import org.xml.sax.InputSource;
  * @author Stefan Kurzbach
  */
 // TODO: implementing IMapModell here is an ugly hack to show the layers in the outline view
-// do not do such a thing. Instead let each theme return a content-provider, so the strucutre is delegated to the themes.
+// do not do such a thing. Instead let each theme return a content-provider, so the strucutre is delegated to the
+// themes.
 public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKalypsoTheme, ITemplateTheme, IMapModell
 {
   /**
@@ -122,8 +124,6 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
 
   IFile m_file;
 
-  private String m_customName;
-
   public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
     super( layerType.getHref(), "Cascading", mapModel );
@@ -162,7 +162,8 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
     try
     {
       innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-      m_customName = innerGisView.getName();
+      ((IMapModell)this).setName(innerGisView.getName());
+      ((IKalypsoTheme)this).setName(innerGisView.getName());
       m_innerMapModel.createFromTemplate( innerGisView );
       fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTENT_CHANGED ) );
     }
@@ -174,7 +175,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
 
   public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
-    m_innerMapModel.createGismapTemplate( bbox, srsName, m_customName, monitor, m_file );
+    m_innerMapModel.createGismapTemplate( bbox, srsName, getName(), monitor, m_file );
   }
 
   /**
@@ -467,6 +468,33 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKaly
   public void removeModellListener( ModellEventListener listener )
   {
     m_innerMapModel.removeModellListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
+   */
+  public void accept( KalypsoThemeVisitor visitor, int depth_infinite )
+  {
+    m_innerMapModel.accept( visitor, depth_infinite );
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
+   */
+  public void insertTheme( IKalypsoTheme theme, int position )
+  {
+    m_innerMapModel.insertTheme( theme, position );
+    
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int, org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public void accept( KalypsoThemeVisitor visitor, int depth_infinite, IKalypsoTheme theme )
+  {
+    m_innerMapModel.accept( visitor, depth_infinite, theme );
+    
   }
 
 }
