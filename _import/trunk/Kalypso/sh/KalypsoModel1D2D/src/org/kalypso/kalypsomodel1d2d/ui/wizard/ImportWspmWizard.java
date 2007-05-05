@@ -102,7 +102,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
@@ -145,8 +144,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   {
     /* Choose wspm-reach */
     m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", "Berechnungsvariante wählen", null );
-    m_wspmGmlPage.setDescription( "Bitte wählen Sie eine Berechnungsvariante (Bordvoll ungleichförmig) aus" );
-    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC } );
+    m_wspmGmlPage.setDescription( "Bitte wählen Sie eine Berechnungsvariante (konstantes Reibungsgefälle) aus" );
+    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
     m_wspmGmlPage.setValidKind( true, false );
 
     /* Choose network collection */
@@ -186,7 +185,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           final TuhhCalculation calculation = new TuhhCalculation( (Feature) wspmSelection.getFirstElement() );
 
           /* Check if its the right calculation and if results are present */
-          if( calculation.getCalcMode() != TuhhCalculation.MODE.BF_NON_UNIFORM )
+          if( calculation.getCalcMode() != TuhhCalculation.MODE.REIB_KONST )
             return StatusUtilities.createWarningStatus( "Gewählte Berechnungsvariante muss vom Typ 'Bordvoll ungleichförmig' sein'" );
 
           final TuhhReach reach = calculation.getReach();
@@ -263,7 +262,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final Feature qresultFeature = FeatureHelper.getFeature( qresultsWorkspace, o );
         final Feature pointObsFeature = (Feature) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
         final List polynomeFeatures = (List) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
-        final XLinkedFeature_Impl profileFeature = (XLinkedFeature_Impl) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_profileMember );
 
         final String name = NamedFeatureHelper.getName( qresultFeature );
         final String description = NamedFeatureHelper.getDescription( qresultFeature );

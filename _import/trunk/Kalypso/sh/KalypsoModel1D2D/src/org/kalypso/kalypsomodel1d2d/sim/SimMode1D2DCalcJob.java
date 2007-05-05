@@ -41,13 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -114,15 +112,12 @@ public class SimMode1D2DCalcJob implements ISimulation
     final Logger logger = Logger.getAnonymousLogger();
     final Formatter f = new XMLFormatter();
 
-    Handler h = null;
     try
     {
       final File loggerFile = new File( tmpDir, "simulation.log" );
 
-      h = new StreamHandler( new BufferedOutputStream( new FileOutputStream( loggerFile ) ), f );
+      final Handler h = new StreamHandler( new BufferedOutputStream( new FileOutputStream( loggerFile ) ), f );
       logger.addHandler( h );
-      // why flush??
-      h.flush();
     }
     catch( final FileNotFoundException e1 )
     {
@@ -144,31 +139,44 @@ public class SimMode1D2DCalcJob implements ISimulation
       /** convert discretisation model stuff... */
       // write merged *.2d file for calc core / Dejan
       final CS_CoordinateSystem test_CoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( CS_KEY_GAUSS_KRUEGER );
+      // TODO: PLEEEEEAAASE: do not cut the coordinates any more, this is horrible!!!!
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
       final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
-      final URL modelURL = (new File( tmpDir, "model.2d" )).toURL();
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelURL, positionProvider, m_calculation.getTerrainModelWorkspace() );
+      final File modelFile = new File( tmpDir, "model.2d" );
+      final Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelFile, positionProvider, m_calculation.getTerrainModelWorkspace() );
 
       /** convert control/resistance stuff... */
       // first this because we need roughness classes IDs for creating 2D net later
       monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
       if( monitor.isCanceled() )
         return;
+
       // TODO write control and boundary conditions calc core (*.R10 file)
-      PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) ) ) );
-      Control1D2DConverter.writeR10File( m_calculation, pw );
-      pw.close();
-      
+      PrintWriter r10pw = null;
+      try
+      {
+        r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
+        Control1D2DConverter.writeR10File( m_calculation, r10pw );
+        r10pw.close();
+      }
+      finally
+      {
+        /* Alwaysw close stream in a finally block */
+        IOUtils.closeQuietly( r10pw );
+      }
+
       monitor.setMessage( "Generiere 2D Netz..." );
       if( monitor.isCanceled() )
         return;
-      converter.toRMA10sModel(Control1D2DConverter.getRoughnessIDProvider());
+      converter.toRMA10sModel( Control1D2DConverter.getRoughnessIDProvider() );
 
       /** start calculation... */
       monitor.setMessage( "Starte Rechenkern..." );
       if( monitor.isCanceled() )
         return;
+
       monitor.setProgress( 20 );
+
       m_calculation.setKalypso1D2DKernelPath();
       copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
       startCalculation( tmpDir, monitor );
@@ -195,7 +203,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse..." );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpDir, monitor, logger, inputProvider, resultEater, tmpDir );
+        loadResults( tmpDir, monitor, logger, inputProvider, resultEater );
       }
       // else
       // {
@@ -213,12 +221,15 @@ public class SimMode1D2DCalcJob implements ISimulation
       e.printStackTrace();
       throw new SimulationException( "Simulation couldn't be finished: " + e.getLocalizedMessage(), e );
     }
-    final Handler[] handlers = logger.getHandlers();
-    for( final Handler handl : handlers )
-      handl.close();
+    finally
+    {
+      final Handler[] handlers = logger.getHandlers();
+      for( final Handler handl : handlers )
+        handl.close();
+    }
   }
 
-  private void loadResults( File tmpdir, ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, File tmpDir ) throws SimulationException
+  private void loadResults( final File tmpDir, ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater ) throws SimulationException
   {
     // TODO: check this here and add more handling, if result model is ready (Jessica)
     monitor.setMessage( "Lese Ergebnisse..." );
@@ -240,12 +251,12 @@ public class SimMode1D2DCalcJob implements ISimulation
       monitor.setProgress( 99 );
 
       ZipUtilities.zip( outputZip2d, files, outputDir );
-//      resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
+      // resultEater.addResult( RMA10SimModelConstants.RESULT_2d_ZIP_ID, outputZip2d );
 
       /* Read all .2d files into NodeResults */
       final File result2dFile = files[0];
-      /*final File gmlResultfile = */read2DIntoNodeResult( result2dFile, outputDir, dataProvider );
-//      resultEater.addResult( "NodeResultModel", gmlResultfile );
+      /* final File gmlResultfile = */read2DIntoNodeResult( result2dFile, outputDir, dataProvider );
+      // resultEater.addResult( "NodeResultModel", gmlResultfile );
     }
     catch( final Throwable e )
     {

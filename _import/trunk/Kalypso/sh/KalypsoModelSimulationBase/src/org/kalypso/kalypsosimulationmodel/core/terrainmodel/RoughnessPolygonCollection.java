@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -28,14 +29,11 @@ import com.vividsolutions.jts.geom.Polygon;
 public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughnessPolygon> implements IRoughnessPolygonCollection
 {
 
-  public RoughnessPolygonCollection(Feature featureToBind)
+  public RoughnessPolygonCollection( Feature featureToBind )
   {
-    this(
-        featureToBind,
-        IRoughnessPolygon.class, 
-        KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
+    this( featureToBind, IRoughnessPolygon.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
   }
-  
+
   public RoughnessPolygonCollection( Feature featureCol, Class<IRoughnessPolygon> fwClass, QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
@@ -50,7 +48,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   {
     return null;
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#checkOverlapping()
    */
@@ -109,12 +107,12 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
           final Geometry jtsIntersection = polygon1.intersection( polygon2 );
           if( jtsIntersection.getArea() > 0 )
           {
-            if(!isInside( containsList, i ))
+            if( !isInside( containsList, i ) )
             {
               dstPolygonsList.add( roughnessPolygon1 );
               addToList( containsList, i );
             }
-            if(!isInside( containsList, j ))
+            if( !isInside( containsList, j ) )
             {
               dstPolygonsList.add( roughnessPolygon2 );
               addToList( containsList, j );
@@ -133,45 +131,42 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   @SuppressWarnings("unchecked")
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
-//    List<Feature> srcPolygonsList = getWrappedList();
-//    List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
-//    Iterator<Feature> iterator = srcPolygonsList.listIterator();
-//    while( iterator.hasNext() )
-//    {
-//      dstPolygonsList.add( new RoughnessPolygon( iterator.next() ) );
-//    }
-//    return dstPolygonsList;
-    final List<IRoughnessPolygon> dstPolygonsList = 
-                                  new ArrayList<IRoughnessPolygon>(this);
+    // List<Feature> srcPolygonsList = getWrappedList();
+    // List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+    // Iterator<Feature> iterator = srcPolygonsList.listIterator();
+    // while( iterator.hasNext() )
+    // {
+    // dstPolygonsList.add( new RoughnessPolygon( iterator.next() ) );
+    // }
+    // return dstPolygonsList;
+    final List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>( this );
     return dstPolygonsList;
   }
-  
-  
 
   @SuppressWarnings("unchecked")
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position location )
   {
     return query( location );
-    
-//    List<Feature> srcPolygonsList = getWrappedList();
-//    List<Feature> dstPolygonsList = new ArrayList<Feature>();
-//    Iterator<Feature> iterator = srcPolygonsList.listIterator();
-//    Feature polygon = null;
-//    while( iterator.hasNext() )
-//    {
-//      polygon = iterator.next();
-//      if( polygon.getDefaultGeometryProperty().contains( location ) )
-//        dstPolygonsList.add( polygon );
-//    }
-//    if( dstPolygonsList.size() > 0 )
-//    {
-//      IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[dstPolygonsList.size()];
-//      for( int i = 0; i < dstPolygonsList.size(); i++ )
-//        dstPolygonsArray[i] = new RoughnessPolygon( dstPolygonsList.get( i ) );
-//      return dstPolygonsArray;
-//    }
-//    else
-//      return null;
+
+    // List<Feature> srcPolygonsList = getWrappedList();
+    // List<Feature> dstPolygonsList = new ArrayList<Feature>();
+    // Iterator<Feature> iterator = srcPolygonsList.listIterator();
+    // Feature polygon = null;
+    // while( iterator.hasNext() )
+    // {
+    // polygon = iterator.next();
+    // if( polygon.getDefaultGeometryProperty().contains( location ) )
+    // dstPolygonsList.add( polygon );
+    // }
+    // if( dstPolygonsList.size() > 0 )
+    // {
+    // IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[dstPolygonsList.size()];
+    // for( int i = 0; i < dstPolygonsList.size(); i++ )
+    // dstPolygonsArray[i] = new RoughnessPolygon( dstPolygonsList.get( i ) );
+    // return dstPolygonsArray;
+    // }
+    // else
+    // return null;
 
     // /*
     // * Mark from Dejan: The following code does not work correctly,
@@ -188,37 +183,35 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     // return dstPolygonsArray;
 
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#selectRoughnessPolygons(org.kalypsodeegree.model.geometry.GM_Polygon)
    */
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface selectionZone )
   {
-    return query( 
-              selectionZone, 
-              false, 
-              KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
+    return query( selectionZone, false, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
   }
-  
-  private int[] getEmptyList(int size)
+
+  private int[] getEmptyList( int size )
   {
     int[] list = new int[size];
-    for(int i=0; i<size; i++)
+    for( int i = 0; i < size; i++ )
       list[i] = -1;
     return list;
   }
-  
-  private boolean isInside(int[] list, int member)
+
+  private boolean isInside( int[] list, int member )
   {
-    for(int i=0; i<list.length; i++)
-      if(list[i] == member)
+    for( int i = 0; i < list.length; i++ )
+      if( list[i] == member )
         return true;
     return false;
   }
-  
-  private int[] addToList(int[] list, int member){
-    for(int i=0; i<list.length; i++)
-      if(list[i] == -1)
+
+  private int[] addToList( int[] list, int member )
+  {
+    for( int i = 0; i < list.length; i++ )
+      if( list[i] == -1 )
         list[i] = member;
     return list;
   }
@@ -226,21 +219,31 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#getRoughnessEstimateSpec(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Object object )
+  public IRoughnessEstimateSpec getRoughnessEstimateSpec( final GM_Object object )
   {
-//    return new CellDivisionBasedRoughnessEstimate(this, (GM_Surface)object, 100 );
+    // return new CellDivisionBasedRoughnessEstimate(this, (GM_Surface)object, 100 );
     try
     {
-      return 
-        new IntersectionBasedRoughnessEstimate( this, ( GM_Surface )object );
+      if( object instanceof GM_Surface )
+      {
+        final GM_Surface surface = (GM_Surface) object;
+        return new IntersectionBasedRoughnessEstimate( this, surface );
+      }
+      else if( object instanceof GM_Curve )
+      {
+        // TODO: implement it!
+        // According to Nico, 1d-king element also need the rougness
+      }
+      else
+      {
+        // TODO: what to do?
+      }
     }
-    catch (Exception e) 
+    catch( Exception e )
     {
       e.printStackTrace();
     }
     return null;
   }
 
-  
-  
 }
