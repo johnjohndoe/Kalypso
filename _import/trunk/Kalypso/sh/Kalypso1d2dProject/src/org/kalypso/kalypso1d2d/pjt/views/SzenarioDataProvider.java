@@ -65,6 +65,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
     LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
     LOCATION_MAP.put( IOperationalModel1D2D.class, MODELS_FOLDER + "/operational.gml" );
+//    LOCATION_MAP.put( IControlModel1D2D.class, MODELS_FOLDER + "/control.gml" );
 //    LOCATION_MAP.put( ISimulationModel.class,  MODELS_FOLDER + "/simulation.gml" );
     // TODO: add other model types here
   }

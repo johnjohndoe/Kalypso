@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -50,6 +51,7 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -57,12 +59,16 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -89,11 +95,26 @@ public class Gml2RMA10SConv
 
   private double m_offsetZ;
 
-  private IFEDiscretisationModel1d2d m_discretisationModel1d2d;
-
   private File m_outputFile;
 
-  private final GMLWorkspace m_terrainModelWS;
+  private IFEDiscretisationModel1d2d m_discretisationModel1d2d;
+
+  private final ITerrainModel m_terrainModel;
+
+  private final IFlowRelationshipModel m_flowrelationModel;
+
+  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discModel, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel, final IPositionProvider positionProvider )
+  {
+    m_outputFile = rma10sOutputFile;
+    m_discretisationModel1d2d = discModel;
+    m_terrainModel = terrainModel;
+    m_flowrelationModel = flowrelationModel;
+    // TODO: dont do it!
+    final GM_Point point = positionProvider.getGMPoint( 0.0, 0.0, 0.0 );
+    m_offsetX = -point.getX();
+    m_offsetY = -point.getY();
+    m_offsetZ = -point.getZ();
+  }
 
   private int getID( IFeatureWrapper2 i1d2dObject )
   {
@@ -115,24 +136,13 @@ public class Gml2RMA10SConv
   private int getID( final LinkedHashMap<String, String> map, final String gmlID )
   {
     // TODO: why the String to Integer and back conversion???
-    // at least, comment this!
+    // at least, comment why this is better than putting the Integer directly into the map!
     if( !map.containsKey( gmlID ) )
       map.put( gmlID, Integer.toString( map.size() + 1 ) );
     return Integer.parseInt( map.get( gmlID ) );
   }
 
-  public Gml2RMA10SConv( IFEDiscretisationModel1d2d sourceModel, final File rma10sOutputFile, IPositionProvider positionProvider, GMLWorkspace terrainModelWS )
-  {
-    m_discretisationModel1d2d = sourceModel;
-    m_outputFile = rma10sOutputFile;
-    m_terrainModelWS = terrainModelWS;
-    GM_Point point = positionProvider.getGMPoint( 0.0, 0.0, 0.0 );
-    m_offsetX = -point.getX();
-    m_offsetY = -point.getY();
-    m_offsetZ = -point.getZ();
-  }
-
-  public void toRMA10sModel( final LinkedHashMap<String, String> roughnessIDProvider ) throws IllegalStateException, IOException
+  public void toRMA10sModel( final LinkedHashMap<String, String> roughnessIDProvider ) throws IllegalStateException, IOException, SimulationException
   {
     PrintWriter stream = null;
     try
@@ -147,14 +157,13 @@ public class Gml2RMA10SConv
     }
   }
 
-  private void writeRMA10sModel( final LinkedHashMap<String, String> roughnessIDProvider, final PrintWriter stream )
+  private void writeRMA10sModel( final LinkedHashMap<String, String> roughnessIDProvider, final PrintWriter stream ) throws SimulationException
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
     final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_discretisationModel1d2d.getEdges();
 
-    final ITerrainModel adapter = (ITerrainModel) m_terrainModelWS.getRootFeature().getAdapter( ITerrainModel.class );
-    final IRoughnessPolygonCollection roughnessPolygonCollection = adapter.getRoughnessPolygonCollection();
+    final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
 
     final Formatter formatter = new Formatter( stream );
 
@@ -166,7 +175,7 @@ public class Gml2RMA10SConv
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges )
   {
     // TODO: according to Nico, also middle-nodes should be written (generated automatically as the middle of the edge)
-    
+
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
@@ -188,14 +197,12 @@ public class Gml2RMA10SConv
             leftRightID = getID( ((IElement1D) object) );
         }
         formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
-        // lines_AR.put( edge.getGmlID(), builder.toString() );
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
         int leftParent = getID( EdgeOps.getLeftElement( edge ) );
         int rightParent = getID( EdgeOps.getRightElement( edge ) );
         formatter.format( Locale.US, "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
-        // lines_AR.put( edge.getGmlID(), builder.toString() );
       }
       else
       {
@@ -205,20 +212,48 @@ public class Gml2RMA10SConv
     }
   }
 
-  private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes )
+  private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    for( final IFE1D2DNode node : nodes )
+    for( final IFE1D2DNode<IFE1D2DEdge> node : nodes )
     {
-      // System.out.println( node.getGmlID() + " --> " + getID( node ) );
+      /* The node itself */
       final int nodeID = getID( node );
-      final GM_Point point = correctPosition( node.getPoint() );
-      formatter.format( Locale.US, "FP%10d%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ() );
+      final GM_Point point = node.getPoint();
+      // System.out.println( node.getGmlID() + " --> " + getID( node ) );
+      final GM_Point correctedPoint = correctPosition( point );
 
-      // lines_FP.put( nodeGmlID, builder.toString() );
-      formatter.format( Locale.US, "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
-      // lines_CS.put( nodeGmlID, builder.toString() );
+      BigDecimal station = null;
 
-      // TODO: Gernot: put your polynomial stuff here
+      if( DiscretisationModelUtils.is1DNode( node ) )
+      {
+        /* Node parameters */
+        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.0 );
+        if( relationship == null )
+          throw new SimulationException( "1D-Knoten ohne Fließparameter gefunden: " + node.getGmlID(), null );
+
+        if( relationship instanceof IKingFlowRelation )
+        {
+          final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
+          // TODO: get oparameters from king relation
+          formatter.format( Locale.US, "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
+        }
+        else if( relationship instanceof ITeschkeFlowRelation )
+        {
+          final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) relationship;
+          station = teschkeRelation.getStation();
+
+          // TODO: Gernot: put your polynomial stuff here
+        }
+        else
+          throw new SimulationException( "Unbekannte Fließrelation gefunden: " + relationship, null );
+      }
+
+      /* Now really write the stuff */
+      if( station == null )
+        formatter.format( Locale.US, "FP%10d%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ() );
+      else
+        formatter.format( Locale.US, "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, correctedPoint.getX(), correctedPoint.getY(), correctedPoint.getZ(), station );
+
     }
   }
 
@@ -242,7 +277,7 @@ public class Gml2RMA10SConv
         }
         else
         {
-          IRoughnessCls[] cls = roughnessEstimateSpec.mostSpreadRoughness();
+          final IRoughnessCls[] cls = roughnessEstimateSpec.mostSpreadRoughness();
           if( cls.length > 0 )
           {
             roughnessID = getID( roughnessIDProvider, cls[0].getGmlID() );
@@ -259,11 +294,10 @@ public class Gml2RMA10SConv
     }
   }
 
-  
   // TODO: do not move the points any more, Nico sais it is ok!!
   private GM_Point correctPosition( GM_Point point )
   {
-    double z = 0.0;
+    double z = 0.0; // This is not a good default value in Shleswig-Holstein, because it may be a real height....
     try
     {
       z = point.getZ();
@@ -271,6 +305,7 @@ public class Gml2RMA10SConv
     catch( ArrayIndexOutOfBoundsException e )
     {
       // System.out.println( "No Z value!" );
+      // TODO error handling, each node needs a z! Calculation should stop here!
     }
     return GeometryFactory.createGM_Point( point.getX() + m_offsetX, point.getY() + m_offsetY, z + m_offsetZ, point.getCoordinateSystem() );
   }

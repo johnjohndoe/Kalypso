@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 /**
  * @author Gernot Belger
@@ -56,4 +59,9 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
 
   public static final QName QNAME_PROP_POLYNOMES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "polynomialMember" );
 
+  public static final QName QNAME_PROP_STATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "station" );
+
+  public BigDecimal getStation();
+  
+  public IPolynomial1D[] getPolynomials();
 }

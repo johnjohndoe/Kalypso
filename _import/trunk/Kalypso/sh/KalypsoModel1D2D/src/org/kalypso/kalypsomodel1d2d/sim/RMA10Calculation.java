@@ -70,101 +70,84 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public class RMA10Calculation
 {
-  private GMLWorkspace m_flowResWS = null;
-
-  private GMLWorkspace m_flowRelWS = null;
-
   private GMLWorkspace m_disModelWorkspace = null;
 
   private GMLWorkspace m_terrainModelWorkspace = null;
 
-  private GMLWorkspace m_operationalWS = null;
+  private GMLWorkspace m_operationalModelWorkspace;
 
-  private Feature m_controlRoot = null;
+  private GMLWorkspace m_flowRelWorkspace = null;
 
-  private Feature m_roughnessRoot = null;
+  private GMLWorkspace m_flowResistanceWorkspace = null;
+
+  private Feature m_controlRootWorkspace = null;
+
+  private Feature m_roughnessRootWorkspace = null;
 
   private boolean m_restart;
 
   private String m_kalypso1D2DKernelPath;
 
-  public RMA10Calculation( final ISimulationDataProvider inputProvider )
+  public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
     final Map<String, String> specialUrls = new HashMap<String, String>();
     specialUrls.put( "project:/.metadata/roughness.gml", "Roughness" );
-    
-    try
+
+    final IUrlResolver resolver = new UrlResolver()
     {
-      final IUrlResolver resolver = new UrlResolver()
+      /**
+       * @see org.kalypso.contribs.java.net.UrlResolver#resolveURL(java.net.URL, java.lang.String)
+       */
+      @Override
+      public URL resolveURL( URL baseURL, String relativeURL ) throws MalformedURLException
       {
-        /**
-         * @see org.kalypso.contribs.java.net.UrlResolver#resolveURL(java.net.URL, java.lang.String)
-         */
-        @Override
-        public URL resolveURL( URL baseURL, String relativeURL ) throws MalformedURLException
+        if( specialUrls.containsKey( relativeURL ) )
         {
-          if( specialUrls.containsKey( relativeURL ))
+          final String specialUrl = specialUrls.get( relativeURL );
+          try
           {
-            final String specialUrl = specialUrls.get( relativeURL );
-            try
-            {
-              return (URL) inputProvider.getInputForID( specialUrl );
-            }
-            catch( final SimulationException e )
-            {
-              e.printStackTrace();
-              throw new MalformedURLException( "Missing input for ID: " + specialUrl );
-            }
+            return (URL) inputProvider.getInputForID( specialUrl );
           }
-          
-          return super.resolveURL( baseURL, relativeURL );
+          catch( final SimulationException e )
+          {
+            e.printStackTrace();
+            throw new MalformedURLException( "Missing input for ID: " + specialUrl );
+          }
         }
-      };
 
-      final IFeatureProviderFactory factory = new AbstractFeatureProviderFactory()
+        return super.resolveURL( baseURL, relativeURL );
+      }
+    };
+
+    final IFeatureProviderFactory factory = new AbstractFeatureProviderFactory()
+    {
+      @Override
+      protected IFeatureProvider createProvider( Feature context, String uri, String role, String arcrole, String title, String show, String actuate )
       {
-        @Override
-        protected IFeatureProvider createProvider( Feature context, String uri, String role, String arcrole, String title, String show, String actuate )
-        {
-          return new GmlSerializerXlinkFeatureProvider( context, uri, role, arcrole, title, show, actuate, this, resolver );
-        }
-      };
+        return new GmlSerializerXlinkFeatureProvider( context, uri, role, arcrole, title, show, actuate, this, resolver );
+      }
+    };
 
-      // m_flowResWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-      // RMA10SimModelConstants.FLOWRESISTANCEMODEL_ID ),
-      // null );
-      // m_flowRelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-      // RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ),
-      // null );
-      m_disModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
-      m_terrainModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.TERRAINMODEL_ID ), factory );
-      // m_operationalWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-      // RMA10SimModelConstants.OPERATIONALMODEL_ID ),
-      // null );
-      m_controlRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
-      // m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-      // RMA10SimModelConstants.ROUGHNESS_ID ), null ).getRootFeature();
-      // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-      // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
-      m_roughnessRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
+    // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
+    // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
+    m_disModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
+    m_terrainModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.TERRAINMODEL_ID ), factory );
+    m_operationalModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.OPERATIONALMODEL_ID ), factory );
+    m_flowRelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ), factory );
+    // m_flowResWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
+    // RMA10SimModelConstants.FLOWRESISTANCEMODEL_ID ),
+    // factory );
 
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
+    m_controlRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
+
+    m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
   }
 
   public RMA10Calculation( GMLWorkspace disModelWorkspace, Feature controlRoot, Feature roughnessRoot )
   {
     m_disModelWorkspace = disModelWorkspace;
-    m_controlRoot = controlRoot;
-    m_roughnessRoot = roughnessRoot;
-
+    m_controlRootWorkspace = controlRoot;
+    m_roughnessRootWorkspace = roughnessRoot;
   }
 
   public GMLWorkspace getDisModelWorkspace( )
@@ -177,9 +160,24 @@ public class RMA10Calculation
     return m_terrainModelWorkspace;
   }
 
+  public GMLWorkspace getOperationalModelWorkspace( )
+  {
+    return m_operationalModelWorkspace;
+  }
+  
+  public GMLWorkspace getFlowRelWorkspace( )
+  {
+    return m_flowRelWorkspace;
+  }
+  
+  public GMLWorkspace getFlowResistanceWorkspace( )
+  {
+    return m_flowResistanceWorkspace;
+  }
+  
   public void setKalypso1D2DKernelPath( )
   {
-    String kalypso1D2DVersion = (String) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
+    String kalypso1D2DVersion = (String) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
     if( kalypso1D2DVersion.equals( "test" ) )
       m_kalypso1D2DKernelPath = RMA10SimModelConstants.SIM_EXE_FILE_TEST;
     else if( kalypso1D2DVersion.equals( "NEW" ) )
@@ -197,7 +195,7 @@ public class RMA10Calculation
 
   public Integer getIaccyc( )
   {
-    Integer iaccyc = (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
+    Integer iaccyc = (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
     if( iaccyc > 1 )
     {
       m_restart = true;
@@ -208,7 +206,7 @@ public class RMA10Calculation
 
   public Integer getIDNOPT( )
   {
-    return (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDNOPT );
+    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDNOPT );
   }
 
   public int getStartYear( )
@@ -218,7 +216,7 @@ public class RMA10Calculation
 
   public XMLGregorianCalendar getStartCalendar( )
   {
-    return (XMLGregorianCalendar) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_startsim );
+    return (XMLGregorianCalendar) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_startsim );
   }
 
   public Integer getStartJulianDay( )
@@ -235,12 +233,12 @@ public class RMA10Calculation
 
   public Integer getIEDSW( )
   {
-    return (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
+    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
   }
 
   public Double getViskosity( Feature roughnessFE )
   {
-    int iedsw = ((Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW )).intValue();
+    int iedsw = ((Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW )).intValue();
     if( iedsw == 0 )
     {
       return getEddy( roughnessFE );
@@ -260,87 +258,87 @@ public class RMA10Calculation
 
   public Double getTBFACT( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
   }
 
   public Double getTBMIN( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
   }
 
   public Double getOMEGA( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
   }
 
   public Double getELEV( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
   }
 
   public Double getUDIR( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
   }
 
   public Double getUNOM( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
   }
 
   public Double getHMIN( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
   }
 
   public Double getDSET( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
   }
 
   public Double getDSETD( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
   }
 
   public Integer getNITI( )
   {
-    return (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
+    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
   }
 
   public Integer getNITN( )
   {
-    return (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
+    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
   }
 
   public Integer getNCYC( )
   {
-    return (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NCYC );
+    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NCYC );
   }
 
   public Double getCONV_1( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
   }
 
   public Double getCONV_2( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
   }
 
   public Double getCONV_3( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
   }
 
   public Integer getIDRPT( )
   {
-    return (Integer) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
+    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
   }
 
   public Double getDRFACT( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
   }
 
   public boolean getRestart( )
@@ -350,22 +348,22 @@ public class RMA10Calculation
 
   public boolean getVegeta( )
   {
-    return (Boolean) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VEGETA );
+    return (Boolean) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VEGETA );
   }
 
   public Double getAC1( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
   }
 
   public Double getAC2( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
   }
 
   public Double getAC3( )
   {
-    return (Double) m_controlRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
+    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
   }
 
   public String getName( Feature feature )
@@ -376,7 +374,7 @@ public class RMA10Calculation
   public List getRoughnessClassList( )
   {
     // return (List) m_roughnessRoot.getProperty( KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-    return (List) m_roughnessRoot.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
+    return (List) m_roughnessRootWorkspace.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
   }
 
   public Double getKs( Feature roughnessFE )
@@ -391,7 +389,7 @@ public class RMA10Calculation
 
   public Object getDp( Feature roughnessFE )
   {
-    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
+    return roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
   }
 
   public List getContinuityLineList( )
@@ -399,4 +397,5 @@ public class RMA10Calculation
     // TODO Serch for BoundaryConditions (operational model) which fits to ContinuityLines (discretisation model)
     return null;
   }
+
 }

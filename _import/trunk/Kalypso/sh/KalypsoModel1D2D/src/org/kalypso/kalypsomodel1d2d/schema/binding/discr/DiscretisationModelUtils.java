@@ -38,47 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.gml.binding.math.IPolynomialInterpolationInput;
+package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 /**
+ * Utility stuff related to the 1d2d discretisation model.
+ * 
  * @author Gernot Belger
  */
-public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlowRelation
+public class DiscretisationModelUtils
 {
-  public TeschkeFlowRelation( final Feature featureToBind )
+  private DiscretisationModelUtils( )
   {
-    super( featureToBind, ITeschkeFlowRelation.QNAME );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate." );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getStation()
+   * Cheks if a node is a 1d-node.
+   * <p>
+   * A 1d-node is a node which as at least on 1D-element connected to it.
    */
-  public BigDecimal getStation( )
+  public static boolean is1DNode( final IFE1D2DNode<IFE1D2DEdge> node )
   {
-    return (BigDecimal) getFeature().getProperty( QNAME_PROP_STATION );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getPolynomials()
-   */
-  public IPolynomial1D[] getPolynomials( )
-  {
-    final FeatureList polynomeFeatures = (FeatureList) getFeature().getProperty( QNAME_PROP_POLYNOMES );
+    final IFE1D2DElement<IFE1D2DComplexElement,IFE1D2DEdge>[] elements = node.getElements();
+    for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
+    {
+      if( element instanceof IElement1D )
+        return true;
+    }
     
-    final List<IPolynomial1D> resultList = new ArrayList<IPolynomial1D>( polynomeFeatures.size() );
-    
-    // TODO Auto-generated method stub
-    return (IPolynomial1D[]) resultList.toArray( new IPolynomialInterpolationInput[resultList.size()] );
+    return false;
   }
-
 }

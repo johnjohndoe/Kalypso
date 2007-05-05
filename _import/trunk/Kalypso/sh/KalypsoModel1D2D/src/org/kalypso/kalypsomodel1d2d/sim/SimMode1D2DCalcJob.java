@@ -77,7 +77,9 @@ import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
@@ -141,9 +143,13 @@ public class SimMode1D2DCalcJob implements ISimulation
       final CS_CoordinateSystem test_CoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( CS_KEY_GAUSS_KRUEGER );
       // TODO: PLEEEEEAAASE: do not cut the coordinates any more, this is horrible!!!!
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
-      final FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( m_calculation.getDisModelWorkspace().getRootFeature() );
+      
+      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_calculation.getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+      final ITerrainModel terrainModel = (ITerrainModel) m_calculation.getTerrainModelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
+      final IFlowRelationshipModel flowrelationModel = (IFlowRelationshipModel) m_calculation.getFlowRelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
+
       final File modelFile = new File( tmpDir, "model.2d" );
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( sourceModel, modelFile, positionProvider, m_calculation.getTerrainModelWorkspace() );
+      final Gml2RMA10SConv converter = new Gml2RMA10SConv( modelFile, discModel, terrainModel, flowrelationModel, positionProvider );
 
       /** convert control/resistance stuff... */
       // first this because we need roughness classes IDs for creating 2D net later
