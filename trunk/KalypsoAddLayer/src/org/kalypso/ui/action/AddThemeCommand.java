@@ -128,7 +128,7 @@ public class AddThemeCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    m_theme = m_mapModell.addTheme( m_layer );
+    m_theme = m_mapModell.insertTheme( m_layer, 0 );
     m_mapModell.activateTheme( m_theme );
   }
 
