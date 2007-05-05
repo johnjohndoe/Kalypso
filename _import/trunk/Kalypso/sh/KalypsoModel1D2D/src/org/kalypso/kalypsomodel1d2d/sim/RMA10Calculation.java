@@ -397,5 +397,10 @@ public class RMA10Calculation
     // TODO Serch for BoundaryConditions (operational model) which fits to ContinuityLines (discretisation model)
     return null;
   }
+  
+  public Feature getControlModelFeature()
+  {
+    return m_controlRootWorkspace;
+  }
 
 }

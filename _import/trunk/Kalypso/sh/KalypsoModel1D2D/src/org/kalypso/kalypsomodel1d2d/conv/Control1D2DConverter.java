@@ -48,7 +48,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -79,8 +85,8 @@ public class Control1D2DConverter
   public static void writeR10File( final RMA10Calculation calculation, final PrintWriter pw )
   {
     m_roughnessIDProvider.clear();
-    writeR10ControlDataBlock( calculation, pw );
-    writeR10PropertiesDataBlock( calculation, pw );
+  //  writeR10ControlDataBlock( calculation, pw );
+   // writeR10PropertiesDataBlock( calculation, pw );
    // writeR10ContinuityLineDataBlock( calculation, pw );
     writeR10TimeStepDataBlock( calculation, pw );
 
@@ -203,10 +209,17 @@ public class Control1D2DConverter
   private static void writeR10TimeStepDataBlock( RMA10Calculation calculation, PrintWriter writer )
   {
 //    Locale locale = Locale.US;
-    writer.println( "com -----------------------" );
-    writer.println( "com steady state input data" );
-    writer.println( "com -----------------------" );
-    
+    System.out.println( "com -----------------------" );
+    System.out.println( "com steady state input data" );
+    System.out.println( "com -----------------------" );
+    Feature controlFeature = calculation.getControlModelFeature();
+  //  IControlModel1D2D controlModel =  new ControlModel1D2D(controlFeature);
+    IPropertyType property = controlFeature.getFeatureType().getProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+    Object property2 = controlFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+    IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
+    IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
+    System.out.println("Res :"+tupleSet.getResult());
     // sb.append( "DT " );// add DELTA
     // // TODO ask Nico about BC-Lines (equal values for all Lines???)
     // // TODO add continuity Lines inflow here (QC,HC)
