@@ -354,7 +354,7 @@ public class Gml2RMA10SConv
     formatter.format( "%n" );
   }
 
-  private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception
+  private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
     for( final IFE1D2DElement element : elements )
     {
@@ -363,10 +363,10 @@ public class Gml2RMA10SConv
     }
 }
 
-  private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception
+  private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
     /*
-     * According to Nico Schrage, if we have an Element1D with Polynomial flow-relations, the special roughness-clas
+     * According to Nico Schrage, if we have an Element1D with Polynomial flow-relations, the special roughness-class
      * '889' should be used.
      */
     if( element instanceof IElement1D && DiscretisationModelUtils.isTeschkeElement1D( (IElement1D) element, m_flowrelationModel ) )
@@ -382,7 +382,10 @@ public class Gml2RMA10SConv
 
     // TODO: check if this is ok!?
     // Probably we should throw an exception instead and stop calculation
-    return 1;
+    
+    // YES, JUST DO IT:
+    throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
+//    return -1;
   }
 
   public final LinkedHashMap<String, String> getRoughnessIDProvider( )
