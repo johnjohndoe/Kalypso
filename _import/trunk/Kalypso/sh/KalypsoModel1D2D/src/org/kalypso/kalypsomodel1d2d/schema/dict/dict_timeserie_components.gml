@@ -39,7 +39,7 @@
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
-						<st:minInclusive value="0.0" />
+						<st:minInclusive value="0.1" />
 						<st:maxInclusive value="1.0" />
 					</st:restriction>
 					<gml:unitOfMeasure uom=" " />
@@ -122,8 +122,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonUnderRelaxationFactor">
-			<gml:description>Under Relaxation Factor</gml:description>
-			<gml:name>Under Relaxation Factor</gml:name>
+			<gml:description>Wichtungsfaktor [-]</gml:description>
+			<gml:name>Wichtungsfaktor [-]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
