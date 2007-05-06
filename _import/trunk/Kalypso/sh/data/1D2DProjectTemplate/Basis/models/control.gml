@@ -36,7 +36,7 @@
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
     </sweExt:SortedRecordDefinition>
    </om:resultDefinition>
-   <om:result xmlns:om="http://www.opengis.net/om">&lt;![CDATA[]]&gt;</om:result>
+   <om:result xmlns:om="http://www.opengis.net/om"/>
   </c1d2d:TimestepsObservation>
  </c1d2d:timestepsMember>
 </c1d2d:Control>
