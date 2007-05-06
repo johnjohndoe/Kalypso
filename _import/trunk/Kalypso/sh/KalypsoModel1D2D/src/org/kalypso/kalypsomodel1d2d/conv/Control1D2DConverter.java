@@ -258,16 +258,16 @@ public class Control1D2DConverter
     formatter.format( "com -----------------------%n" );
     formatter.format( "com steady state input data%n" );
     formatter.format( "com -----------------------%n" );
-    formatter.format( "DT        0.0000%n" );
-    formatter.format( "BC          8010    8010    8010    7010    6010    5010    4010    2010    0010%n" );
-    formatter.format( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n" );
-    formatter.format( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n" );
-    formatter.format( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n" );
-    formatter.format( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n" );
-    formatter.format( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n" );
-    formatter.format( "QC             1       0   19.65   0.000   0.000  20.000   0.000%n" );
-    formatter.format( "QC             2       0   19.20   0.000   0.000  20.000   0.000%n" );
-    formatter.format( "HC             3       0    5.69   00.00    20.0     0.0%n" );
+    formatter.format( "DT%14f%n",0.0000 );
+    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",8010,8010,8010,7010,6010,5010,4010,2010,0010);
+    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+    formatter.format( "QC%14d%8d%8f%8f%8f%8f%8f%n",1,0,19.65,0.000,0.000,20.000,0.000);
+    formatter.format( "QC%14d%8d%8f%8f%8f%8f%8f%n",2,0,19.20,0.000,0.000,20.000,0.000);
+    formatter.format( "HC%14d%8d%8f%8f%8f%8f%n",3,0,5.69,00.00,20.0,0.0);
     formatter.format( "ENDSTEP  steady%n" );
 
     Feature controlFeature = calculation.getControlModelFeature();
@@ -316,18 +316,14 @@ public class Control1D2DConverter
       int dayOfYear = instance.get( Calendar.DAY_OF_YEAR );
       instance.setTime( timeAndDate.get( i ) );
       int _year = instance.get( Calendar.YEAR ); 
-      formatter.format( "DT " +
-                  " " + timeStepInterval +
-                  " " + _year +                    
-                  " " + dayOfYear +
-                  " " + getTimeInPercentage(timeAndDate.get( i ))+"%n" );      
+      formatter.format( "DT%14f%8d%8d%8f%n",timeStepInterval,_year,dayOfYear,getTimeInPercentage(timeAndDate.get( i )));      
       BigDecimal uRVal= underRelaxFactors.get( i ); 
-      formatter.format("BC          "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010%n");
-      formatter.format("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n");
-      formatter.format("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n");
-      formatter.format("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n");
-      formatter.format("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n");
-      formatter.format("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010%n");                
+      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010");
+      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
+      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
       for (ITimeStepinfo item : timeStepInfos) {
         TYPE type = item.getType();
         if (type == TYPE.CONTI_BC_Q)
