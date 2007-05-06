@@ -80,8 +80,8 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
 
   public ApplyColorOnFENETWidget( )
   {
-    this.name = "Activate Colors";
-    this.tooltip = "Activate Colors and Apply them";
+    this.name = "Rauheitszuweisung anzeigen";
+    this.tooltip = "Aktiviert die Anzeige der zugewiesenen Element-Rauheiten. ";
   }
 
   public Control createControl( Composite parent, FormToolkit toolkit )

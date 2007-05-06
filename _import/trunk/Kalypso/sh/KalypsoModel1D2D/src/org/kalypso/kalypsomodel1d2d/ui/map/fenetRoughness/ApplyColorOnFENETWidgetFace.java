@@ -178,7 +178,7 @@ public class ApplyColorOnFENETWidgetFace
     formData = new FormData();
     formData.top = new FormAttachment(0,5);
     formData.left = new FormAttachment(0,5);
-    activateColorBtn.setText( "2D-Element-Rauheit-Styling aktivieren" );
+    activateColorBtn.setText( "Rauheitsanzeige für 2D-Elemente aktivieren" );
     activateColorBtn.setLayoutData( formData );
     ModelMergeService mergeService = 
                   ModelMergeService.getInstance();
