@@ -195,7 +195,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
 
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( gridBeginning );
-    label_3.setText( "Schritt [min]:" );
+    label_3.setText( "Zeitschritt [min]:" );
 
     m_dateTimeStep = new Text( container, SWT.BORDER );
     m_dateTimeStep.addModifyListener( new ModifyListener()
@@ -208,6 +208,7 @@ public class NodalBCSelectionWizardPage2 extends WizardPage
     } );
     m_dateTimeStep.setText( DEFAULTSTEP );
     m_dateTimeStep.setLayoutData( gridFillHorizontal );
+    
     final Label emptylabel_1 = new Label( container, SWT.NONE );
     emptylabel_1.setLayoutData( gridEnd );
     emptylabel_1.setText( "" );

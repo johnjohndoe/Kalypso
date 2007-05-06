@@ -111,7 +111,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
-    setWindowTitle( "Randbedinung definieren" );
+    setWindowTitle( "Randbedingung definieren" );
     m_currentSzenario = currentScenarioFolder;
     m_repositoryPath = m_currentSzenario.getProject().getLocation().append( "/imports/timeseries" );
   }
