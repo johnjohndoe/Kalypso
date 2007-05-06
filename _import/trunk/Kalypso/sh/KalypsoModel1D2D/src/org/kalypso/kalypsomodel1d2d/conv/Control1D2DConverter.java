@@ -351,8 +351,11 @@ public class Control1D2DConverter
   {
     Calendar instance_ = Calendar.getInstance();
     instance_.setTime( _date );
+    int i = instance_.get(Calendar.HOUR_OF_DAY);
+    int j2 = instance_.get(Calendar.MINUTE);
+    float j = (float) (j2/60.0);
     //return instance_.get(Calendar.HOUR_OF_DAY)+"."+(instance_.get(Calendar.MINUTE)*100)/60;
-    return (double)instance_.get(Calendar.HOUR_OF_DAY)+(((instance_.get(Calendar.MINUTE)*100)/60)*100);
+    return (double)i+j;
   }
   
   private Date getFirstTimeStep(final RMA10Calculation calculation) {
