@@ -36,7 +36,7 @@
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
     </sweExt:SortedRecordDefinition>
    </om:resultDefinition>
-   <om:result xmlns:om="http://www.opengis.net/om">&lt;![CDATA[2001-01-01T09:00:00.000+01:00 1
+   <om:result xmlns:om="http://www.opengis.net/om">2001-01-01T09:00:00.000+01:00 1
 2001-01-01T19:00:00.000+01:00 1
 2001-01-02T05:00:00.000+01:00 1
 2001-01-02T15:00:00.000+01:00 1
@@ -50,7 +50,7 @@
 2001-01-05T23:00:00.000+01:00 1
 2001-01-06T09:00:00.000+01:00 1
 2001-01-06T19:00:00.000+01:00 1
-]]&gt;</om:result>
+</om:result>
   </c1d2d:TimestepsObservation>
  </c1d2d:timestepsMember>
 </c1d2d:Control>
