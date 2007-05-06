@@ -4,6 +4,7 @@
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117813102775819">
    <gml:name>deaktivierte Elemente</gml:name>
+   <wbr:roughness_GroundLink xlink:href="roughness.gml#Roughness_GroundCls11707777217344"/>
    <wbr:colorStyle>#ff0000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>
