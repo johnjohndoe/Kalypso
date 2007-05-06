@@ -68,6 +68,12 @@ public class BankThemePredicate implements IKalypsoThemePredicate
     {
       final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
       final IFeatureType featureType = fTheme.getFeatureType();
+      if( featureType == null )
+      {
+        /// problem with theme polyelement+roughness theme
+        System.out.println("Feature type is null for theme : name="+theme.getName() );
+        return false;
+      }
       final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
 
       if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QName ) )

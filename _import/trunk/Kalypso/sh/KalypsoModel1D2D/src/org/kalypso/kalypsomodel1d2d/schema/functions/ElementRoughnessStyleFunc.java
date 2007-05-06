@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
@@ -26,10 +27,10 @@ import de.renew.workflow.cases.ICaseDataProvider;
  */
 public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
 {
-  private static boolean activated;
+  private static boolean activated = true;
   
-  private static final Map<String, String> roughnessMap = 
-                                    new HashMap<String, String>();
+  private static final Map<String, IRoughnessCls> roughnessMap = 
+                                    new HashMap<String, IRoughnessCls>();
   private static final String DEFAULT_STYLE = "_DEFAULT_STYLE_";
   
   private static IRoughnessPolygonCollection roughnessPolygonCollection;
@@ -56,21 +57,21 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
   {
     IPolyElement polyElement = 
       (IPolyElement) feature.getAdapter( IPolyElement.class );
-    return getElementRoughnessStyle( polyElement );
+    return getElementRoughnessCls( polyElement );
   }
-
-  private String getElementRoughnessStyle( IPolyElement polyElement )
+  
+  private IRoughnessCls getElementRoughnessCls( IPolyElement polyElement )
   {
     if( !isActivated() )
     {
-      return DEFAULT_STYLE;
+      return null;
     }
     
     reinitRoughnessModel();
     if( roughnessPolygonCollection == null )
     {
       System.out.println( "roughness Collection is null" );
-      return DEFAULT_STYLE;
+      return null;
     }
     
     try
@@ -81,7 +82,7 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
         return null;
       }
       final String polyElementID = polyElement.getGmlID();
-      String clsName = roughnessMap.get( polyElementID );
+      IRoughnessCls clsName = roughnessMap.get( polyElementID ); 
       if ( clsName != null )
       {
         //already computed
@@ -90,7 +91,7 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
       }
       else
       {
-        clsName = DEFAULT_STYLE;
+        clsName = null;
         if( !roughnessPolygonCollection.isEmpty() )
         {
           IRoughnessEstimateSpec roughnessEstimateSpec = 
@@ -99,11 +100,8 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
           IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
           if( classes.length >0 )
           {
-            IRoughnessCls roughnessCls = classes[0];
-            if( roughnessCls != null )
-            {
-              clsName = roughnessCls.getName( );
-            }            
+            clsName = classes[0];
+                        
           }
           
         }
@@ -115,10 +113,72 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
     catch( GM_Exception e )
     {
       e.printStackTrace();
-      return "_DEFAULT_STYLE_";
+      return null;
     }
     
   }
+  
+
+//  private String getElementRoughnessStyle( IPolyElement polyElement )
+//  {
+//    if( !isActivated() )
+//    {
+//      return DEFAULT_STYLE;
+//    }
+//    
+//    reinitRoughnessModel();
+//    if( roughnessPolygonCollection == null )
+//    {
+//      System.out.println( "roughness Collection is null" );
+//      return DEFAULT_STYLE;
+//    }
+//    
+//    try
+//    {
+//      if( polyElement == null )
+//      {
+//        System.out.println( "not a polyelement" );
+//        return null;
+//      }
+//      final String polyElementID = polyElement.getGmlID();
+//      String clsName = roughnessMap.get( polyElementID );
+//      if ( clsName != null )
+//      {
+//        //already computed
+//        System.out.println("From Cache "+ polyElementID + clsName);
+//        return clsName;
+//      }
+//      else
+//      {
+//        clsName = DEFAULT_STYLE;
+//        if( !roughnessPolygonCollection.isEmpty() )
+//        {
+//          IRoughnessEstimateSpec roughnessEstimateSpec = 
+//                    roughnessPolygonCollection.getRoughnessEstimateSpec( 
+//                                            polyElement.recalculateElementGeometry() );
+//          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+//          if( classes.length >0 )
+//          {
+//            IRoughnessCls roughnessCls = classes[0];
+//            if( roughnessCls != null )
+//            {
+//              clsName = roughnessCls.getName( );
+//            }            
+//          }
+//          
+//        }
+//        System.out.println( "StyleName=" + clsName );
+//        roughnessMap.put( polyElementID, clsName );
+//        return clsName;  
+//      }
+//    }
+//    catch( GM_Exception e )
+//    {
+//      e.printStackTrace();
+//      return "_DEFAULT_STYLE_";
+//    }
+//    
+//  }
   
   public static final void  reinitRoughnessModel()
   {
@@ -126,7 +186,7 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
      {
        
       // reinit the roughness polygon layer 
-      ITerrainModel terrainModel = getModel( ITerrainModel.class );
+      ITerrainModel terrainModel = Util.getModel( ITerrainModel.class );
       if( terrainModel == null )
       {
         roughnessPolygonCollection = null;
@@ -172,28 +232,28 @@ public class ElementRoughnessStyleFunc extends FeaturePropertyFunction
     return null;
   }
 
-  public static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
-  {
-    try
-    {
-      IWorkbench workbench = PlatformUI.getWorkbench();
-      IHandlerService  service = 
-          (IHandlerService) workbench.getService( IHandlerService.class );
-      IEvaluationContext currentState = service.getCurrentState();
-      ICaseDataProvider<IFeatureWrapper2> caseDataProvider =
-          (ICaseDataProvider<IFeatureWrapper2>) 
-            currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-      T model =
-        caseDataProvider.getModel( modelClass );
-      
-      return model;
-    }
-    catch ( Throwable th ) 
-    {
-      th.printStackTrace();
-      return null;
-    }
-  }
+//  public static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
+//  {
+//    try
+//    {
+//      IWorkbench workbench = PlatformUI.getWorkbench();
+//      IHandlerService  service = 
+//          (IHandlerService) workbench.getService( IHandlerService.class );
+//      IEvaluationContext currentState = service.getCurrentState();
+//      ICaseDataProvider<IFeatureWrapper2> caseDataProvider =
+//          (ICaseDataProvider<IFeatureWrapper2>) 
+//            currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+//      T model =
+//        caseDataProvider.getModel( modelClass );
+//      
+//      return model;
+//    }
+//    catch ( Throwable th ) 
+//    {
+//      th.printStackTrace();
+//      return null;
+//    }
+//  }
   
   public static final boolean isActivated()
   {

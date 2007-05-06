@@ -63,14 +63,19 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc;
-import org.kalypso.kalypsomodel1d2d.ui.displayelements.FERoughnessDisplayElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1D2DElementRoughnessTheme;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -140,7 +145,7 @@ public class ApplyColorOnFENETWidgetFace
 
     // Creates Section for "Select Elevation Model"
     colorAndButtonSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    colorAndButtonSection.setText( "Apply Colors" );
+    colorAndButtonSection.setText( "Rauheit für Elemente" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -171,22 +176,37 @@ public class ApplyColorOnFENETWidgetFace
     formData = new FormData();
     formData.top = new FormAttachment(0,5);
     formData.left = new FormAttachment(0,5);
-    activateColorBtn.setText( "2D element styling activieren" );
+    activateColorBtn.setText( "2D-Element-Rauheit-Styling aktivieren" );
     activateColorBtn.setLayoutData( formData );
     
-    activateColorBtn.setSelection( 
-              ElementRoughnessStyleFunc.isActivated() );
-    
+//    activateColorBtn.setSelection( 
+//              ElementRoughnessStyleFunc.isActivated() );
+    toggleMap( activateColorBtn.getSelection() );
     activateColorBtn.addSelectionListener( new SelectionAdapter(){
       public void widgetSelected( SelectionEvent e )
       {
-//        paintRoughnessColors();
-        ElementRoughnessStyleFunc.setActivated( 
-                      activateColorBtn.getSelection() );
-        dataModel.getMapModell().fireModellEvent( null );
-//        dataModel.getMapPanel().fi
-          
-      }      
+//        IMapModell mapModell = dataModel.getMapModell();        
+//        Model1D2DElementRoughnessTheme theme = 
+//          UtilMap.findTheme( 
+//            mapModell, Model1D2DElementRoughnessTheme.class );
+//        if( theme == null )
+//        {
+//          theme = new Model1D2DElementRoughnessTheme(
+//                              "Element+Rauhheiten",mapModell);
+//          mapModell.addTheme( theme );
+//        }
+//        if( activateColorBtn.getSelection() )
+//        {
+//          IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
+//          theme.setStaticModel( staticModel );
+//        }
+//        else
+//        {
+//          mapModell.removeTheme( theme );//theme.setStaticModel( null );
+//        }
+//        mapModell.fireModellEvent( null );
+        toggleMap( activateColorBtn.getSelection() );
+      }  
     });
     
     Composite newComposite = new Composite(clientComposite,SWT.None);
@@ -197,12 +217,35 @@ public class ApplyColorOnFENETWidgetFace
     newComposite.setLayoutData( formData );
     newComposite.setLayout( new GridLayout(1,false) );
     
-    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( "All Color", "Select Farbe", newComposite);
-    Button buttonMax = maxColorSelector.getColorSelector().getButton();
-    buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
+//    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( "All Color", "Select Farbe", newComposite);
+//    Button buttonMax = maxColorSelector.getColorSelector().getButton();
+//    buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
     
   }
 
+   private final void toggleMap(boolean selected )
+   {
+     IMapModell mapModell = dataModel.getMapModell();        
+     Model1D2DElementRoughnessTheme theme = 
+       UtilMap.findTheme( 
+         mapModell, Model1D2DElementRoughnessTheme.class );
+     if( theme == null )
+     {
+       theme = new Model1D2DElementRoughnessTheme(
+                           "Element+Rauhheiten",mapModell);
+       mapModell.addTheme( theme );
+     }
+     if( selected )
+     {
+       IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
+       theme.setStaticModel( staticModel );
+     }
+     else
+     {
+       mapModell.removeTheme( theme );//theme.setStaticModel( null );
+     }
+     mapModell.fireModellEvent( null );
+   }
 
   protected void paintRoughnessColors( )
   {

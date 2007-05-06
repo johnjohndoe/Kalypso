@@ -1,5 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -114,6 +116,8 @@ public interface IRoughnessCls extends IFeatureWrapper2
 	 * 			roughness configuration
 	 */
 	public RoughnessConfigConsistency validate();
+    
+    public RGB getColorStyle();
 	
 //	/**
 //	 * Use the method to get the name of this roughness

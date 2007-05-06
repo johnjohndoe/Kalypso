@@ -40,48 +40,110 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.update;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-
-import de.renew.workflow.cases.ICaseDataProvider;
 
 public class ModelMergeService
 {
   private static final ModelMergeService modelMergeService = new ModelMergeService();
   
-  private final Map<String, String> femRoughnessStyleMap = 
-                                      new HashMap<String, String>();
-
-  private IStaticModel1D2D currentStaticModel;
+  private final Map<String, IRoughnessCls> femRoughnessStyleMap = 
+                                      new HashMap<String, IRoughnessCls>();
+  private boolean doReInit = true;
+  
+  private IRoughnessPolygonCollection roughnessPolygonCollection;
+  
+  
+  private static final String DEFAULT_STYLE = "_DEFAULT_STYLE_";
   
   synchronized public String getRoughnessStyle( String elementID )
   {
-    return femRoughnessStyleMap.get( elementID );
+    IRoughnessCls cls = femRoughnessStyleMap.get( elementID );
+    if( cls == null )
+    {
+      return DEFAULT_STYLE;
+    }
+    else
+    {
+      return cls.getName();
+    }
   }
   
-  synchronized public void setStaticModel( IStaticModel1D2D newStaticModel )
+  
+  synchronized public void doReInit()
   {
-    femRoughnessStyleMap.clear();
-    this.currentStaticModel = newStaticModel;
+    modelMergeService.doReInit = true;
   }
   
-  public ModelMergeService( )
+  
+  public synchronized IRoughnessCls getElementRoughnessCls( 
+                                          IPolyElement polyElement
+                                           )
+  {
+    if( doReInit )
+    {
+      femRoughnessStyleMap.clear();
+      ITerrainModel terrainModel= Util.getModel( ITerrainModel.class );
+      roughnessPolygonCollection = terrainModel.getRoughnessPolygonCollection();
+      doReInit = false;
+    }
+    try
+    {
+      if( polyElement == null )
+      {
+        System.out.println( "not a polyelement" );
+        return null;
+      }
+        final String polyElementID = polyElement.getGmlID();
+        if ( femRoughnessStyleMap.containsKey( polyElementID ) )
+        {
+          //already computed
+          //System.out.println("From Cache "+ polyElementID + clsName);
+          return femRoughnessStyleMap.get( polyElementID );
+        }
+        else
+        {
+          IRoughnessCls cls = null;
+          if( !roughnessPolygonCollection.isEmpty() )
+          {
+          IRoughnessEstimateSpec roughnessEstimateSpec = 
+          roughnessPolygonCollection.getRoughnessEstimateSpec( 
+                                polyElement.recalculateElementGeometry() );
+          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+          if( classes.length >0 )
+          {
+            cls = classes[0];
+            
+          }
+          
+          }
+          System.out.println( "StyleName=" + 
+          (cls==null ? null:cls.getGmlID()) );
+          femRoughnessStyleMap.put( polyElementID, cls );
+          return cls;  
+        }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  
+  }
+  
+  
+  private ModelMergeService( )
   {
     
   } 
@@ -91,121 +153,45 @@ public class ModelMergeService
     return modelMergeService;
   }
   
-  private String getElementRoughnessStyle( IPolyElement polyElement )
+  synchronized public final  String getElementRoughnessStyle( IPolyElement polyElement )
   {
-    try
+    IRoughnessCls cls = getElementRoughnessCls(polyElement);
+    if( cls == null )
     {
-      if( polyElement == null )
-      {
-        System.out.println( "not a polyelement" );
-        return null;
-      }
-      String clsName = femRoughnessStyleMap.get( polyElement.getGmlID() );
-      System.out.println("getting style");
-      if ( clsName != null )
-      {
-        //already computed
-        return clsName;
-      }
-      else
-      {
-        ITerrainModel terrainModel = getModel( ITerrainModel.class );
-        if( terrainModel == null )
-        {
-          return "_DEFAULT_STYLE_";
-        }
-        IRoughnessPolygonCollection roughnessPolygonCollection = 
-                                terrainModel.getRoughnessPolygonCollection();
-        if( roughnessPolygonCollection.isEmpty())
-        {
-          return "_DEFAULT_STYLE_";
-        }
-          IRoughnessEstimateSpec roughnessEstimateSpec = 
-            roughnessPolygonCollection.getRoughnessEstimateSpec( 
-                                    polyElement.recalculateElementGeometry() );
-          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
-          if( classes.length >0 )
-          {
-            IRoughnessCls roughnessCls = classes[0];
-            if( roughnessCls == null )
-            {
-              System.out.println("StyleName=_DEFAULT_STYLE_");
-              clsName = "_DEFAULT_STYLE_";
-            }
-            else
-            {
-              String name = roughnessCls.getName( );
-              System.out.println( "StyleName=" + name );
-              clsName = name;
-              
-            }
-            if( clsName != null )
-            {
-              femRoughnessStyleMap.put( polyElement.getGmlID(), clsName );
-              return clsName;
-            }
-            else
-            {
-              return "_DEFAULT_STYLE_";
-            }
-          }
-          else
-          {
-            return "_DEFAULT_STYLE_";
-          }
-      }
+      return null;
     }
-    catch( GM_Exception e )
+    else
     {
-      e.printStackTrace();
-      return "_DEFAULT_STYLE_";
+      return cls.getName();
     }
     
   }
   
-  public static final void removeRoughnessClass( Feature polyElementFeature )
+  synchronized public final void removeRoughnessClass( Feature polyElementFeature )
   {
     String id = polyElementFeature.getId();
-    Map<String, String> map = ModelMergeService.modelMergeService.femRoughnessStyleMap;
-    synchronized( map )
-    {
-      map.remove( id );
-    }
+    femRoughnessStyleMap.remove( id );
+    
   }
   
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
-  public Object setValue( 
-                final Feature feature, 
-                final IPropertyType pt, 
-                final Object valueToSet )
+  synchronized public final Color getColor(IPolyElement polyElement, Color defaultColor)
   {
-    return null;
-  }
-
-  public static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
-  {
-    try
+    IRoughnessCls rCls = getElementRoughnessCls( polyElement );
+    final Color color;
+    if( rCls ==null)
     {
-      IWorkbench workbench = PlatformUI.getWorkbench();
-      IHandlerService  service = 
-          (IHandlerService) workbench.getService( IHandlerService.class );
-      IEvaluationContext currentState = service.getCurrentState();
-      ICaseDataProvider<IFeatureWrapper2> caseDataProvider =
-          (ICaseDataProvider<IFeatureWrapper2>) 
-            currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-      T model =
-        caseDataProvider.getModel( modelClass );
-      
-      return model;
+      color = defaultColor;
     }
-    catch ( Throwable th ) 
+    else
     {
-      th.printStackTrace();
-      return null;
+      RGB colorStyle = rCls.getColorStyle();
+      color = new Color(
+                colorStyle.red,
+                colorStyle.green, 
+                colorStyle.blue,
+                50);
     }
+    return color;
   }
   
 }

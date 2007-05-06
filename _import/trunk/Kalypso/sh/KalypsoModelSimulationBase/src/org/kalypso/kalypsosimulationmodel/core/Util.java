@@ -8,6 +8,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -15,12 +19,15 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * Holds utility methods
@@ -449,4 +456,30 @@ public class Util
 //	          ex);
 //	    }   
 	  }
+      
+      /**
+       * Gets the szenario model
+       */
+      public static final  <T extends IFeatureWrapper2> T getModel(Class<T> modelClass)
+      {
+        try
+        {
+          IWorkbench workbench = PlatformUI.getWorkbench();
+          IHandlerService  service = 
+              (IHandlerService) workbench.getService( IHandlerService.class );
+          IEvaluationContext currentState = service.getCurrentState();
+          ICaseDataProvider<IFeatureWrapper2> caseDataProvider =
+              (ICaseDataProvider<IFeatureWrapper2>) 
+                currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+          T model =
+            caseDataProvider.getModel( modelClass );
+          
+          return model;
+        }
+        catch ( Throwable th ) 
+        {
+          th.printStackTrace();
+          return null;
+        }
+      }
 }

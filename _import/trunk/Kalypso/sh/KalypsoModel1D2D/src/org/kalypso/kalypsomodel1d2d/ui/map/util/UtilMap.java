@@ -144,6 +144,22 @@ public class UtilMap
     return null;
   }
 
+  
+  static public <T> T findTheme( 
+                                  final IMapModell mapModel,
+                                  final Class<T> themeType )
+  {
+    Assert.throwIAEOnNullParam( mapModel, "mapModel" );
+    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
+    for( final IKalypsoTheme theme : allThemes )
+    {
+      if( themeType.isInstance( theme ) )
+      {
+        return (T)theme;
+      }
+    }
+    return null;
+  }
   /**
    * Answer whether the theme is showing feature of the given type. This check is made based on substitution
    * 

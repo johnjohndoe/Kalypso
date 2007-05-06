@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -61,6 +60,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  */
 public class GeometryToStructUpdater implements IGmlWorkspaceListener
 {
+  private final ModelMergeService mergeService = ModelMergeService.getInstance();
   /**
    * Work space which is monitored
    */
@@ -97,12 +97,14 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
    if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( rootFeatureQname ) )
     {
      System.out.println("Update roughness merge because of ne dicr-model");
-      ElementRoughnessStyleFunc.clear( );
+//      ElementRoughnessStyleFunc.clear( );
+       mergeService.doReInit();
     }
    else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL.equals( rootFeature ) )
    {
      System.out.println("Update roughness merge because of new terrain-model");
-     ElementRoughnessStyleFunc.clear();
+//     ElementRoughnessStyleFunc.clear();
+     mergeService.doReInit();
    }
    else
    {
@@ -136,7 +138,12 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
     {
       if( TypeInfo.isPolyElementFeature( feature ) )
       {
-        ElementRoughnessStyleFunc.removeRoughnessClass( feature );
+//        ElementRoughnessStyleFunc.removeRoughnessClass( feature );
+        mergeService.removeRoughnessClass( feature );
+      }
+      else
+      {
+//        System.out.println("Changed:"+feature.getFeatureType().getQName());
       }
       
     }

@@ -2,6 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
@@ -438,4 +439,15 @@ public class RoughnessCls
     return buf.toString();
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls#getColorStyle()
+   */
+  public RGB getColorStyle( )
+  {
+    final Feature feature = getFeature();
+    RGB property = 
+      (RGB) feature.getProperty( 
+              KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
+    return property;
+  }
 }
