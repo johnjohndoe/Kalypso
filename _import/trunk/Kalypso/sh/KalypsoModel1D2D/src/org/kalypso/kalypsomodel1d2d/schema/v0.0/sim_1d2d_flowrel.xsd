@@ -38,6 +38,78 @@
 				<xs:sequence>
 					<!--  TODO: restrict to profiles of certain type -->
 					<xs:element name="kingProfileMember" type="wb1d2d:KingProfilePropertyType" />
+					<xs:element name="width" type="xs:decimal">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Breite [m]</xs:label>
+								<xs:tooltip>Breite der Sohle des Flussschlauches [m]</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Width [m]</xs:label>
+								<xs:tooltip>Width of the riverbed [m]</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ss1" type="xs:decimal" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Böschungsneigung rechts</xs:label>
+								<xs:tooltip>Böschungsneigung rechts</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>bankslope right</xs:label>
+								<xs:tooltip>bankslope right</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ss2" type="xs:decimal" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Böschungsneigung links</xs:label>
+								<xs:tooltip>Böschungsneigung links</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>bankslope left</xs:label>
+								<xs:tooltip>bankslope left</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="wids" type="xs:decimal">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Speicherbreite</xs:label>
+								<xs:tooltip>Breite des Speichers bei Übertreten des Ufers (Summe beider Vorländer)</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>TODO</xs:label>
+								<xs:tooltip>TODO</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="widbs" type="xs:decimal">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Übertretungshöhe</xs:label>
+								<xs:tooltip>Übertretungshöhe des Ufers - entspricht geringster Höhe des Wasserstands im Hochwasserspeicher</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>TODO</xs:label>
+								<xs:tooltip>TODO</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="wss" type="xs:decimal" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Böschungsneigung Speicher</xs:label>
+								<xs:tooltip>Neigung der Böschung des Hochwasserspeichers</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>TODO</xs:label>
+								<xs:tooltip>TODO</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -48,8 +48,72 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class KingFlowRelation extends FlowRelationship implements IKingFlowRelation
 {
+
   public KingFlowRelation( final Feature featureToBind )
   {
     super( featureToBind, IKingFlowRelation.QNAME );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getWidth()
+   */
+  public Double getWidth( )
+  {
+    return (Double) getWrappedFeature().getProperty( QNAME_PROP_WIDTH );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getBankSlopeLeft()
+   */
+  public Double getBankSlopeLeft( )
+  {
+    Double slopeLeft = (Double) ( getWrappedFeature().getProperty( QNAME_PROP_SS1 ));
+    if( slopeLeft == null )
+    {
+      slopeLeft = 0.0;
+    }
+    return slopeLeft; 
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getBankSlopeRight()
+   */
+  public Double getBankSlopeRight( )
+  {
+    Double slopeRight = (Double) ( getWrappedFeature().getProperty( QNAME_PROP_SS2 ));
+    if( slopeRight == null )
+    {
+      slopeRight = 0.0;
+    }
+    return slopeRight; 
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getHeightStorage()
+   */
+  public Double getHeightStorage( )
+  {
+    return (Double) getWrappedFeature().getProperty( QNAME_PROP_WIDS );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getSlopeStorage()
+   */
+  public Double getSlopeStorage( )
+  {
+    Double slopeStorage = (Double) ( getWrappedFeature().getProperty( QNAME_PROP_WIDBS ));
+    if( slopeStorage == null )
+    {
+      slopeStorage = 0.0;
+    }
+    return slopeStorage; 
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getWidthStorage()
+   */
+  public Double getWidthStorage( )
+  {
+    return (Double) getWrappedFeature().getProperty( QNAME_PROP_WSS );
   }
 }

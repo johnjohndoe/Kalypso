@@ -51,4 +51,28 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 public interface IKingFlowRelation extends IFlowRelationship
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "KingFlowRelation" );
+
+  public static final QName QNAME_PROP_WIDTH = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "width" );
+
+  public static final QName QNAME_PROP_SS1 = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ss1" );
+
+  public static final QName QNAME_PROP_SS2 = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ss2" );
+
+  public static final QName QNAME_PROP_WIDS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wids" );
+
+  public static final QName QNAME_PROP_WIDBS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "widbs" );
+
+  public static final QName QNAME_PROP_WSS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wss" );
+
+  public Double getWidth( );
+
+  public Double getBankSlopeLeft( );
+
+  public Double getBankSlopeRight( );
+
+  public Double getWidthStorage( );
+
+  public Double getHeightStorage( );
+
+  public Double getSlopeStorage( );
 }

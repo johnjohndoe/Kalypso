@@ -273,9 +273,15 @@ public class Gml2RMA10SConv
 
         if( relationship instanceof IKingFlowRelation )
         {
-          // final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
+           final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
+           final Double width = kingRelation.getWidth();
+           Double bankSlopeLeft = kingRelation.getBankSlopeLeft();
+           Double bankSlopeRight = kingRelation.getBankSlopeRight();
+           Double widthStorage = kingRelation.getWidthStorage();
+           Double heightStorage = kingRelation.getHeightStorage();
+           Double slopeStorage = kingRelation.getSlopeStorage();
           // TODO: get oparameters from king relation
-          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
+          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft,bankSlopeRight, widthStorage, heightStorage, slopeStorage );
         }
         else if( relationship instanceof ITeschkeFlowRelation )
         {
