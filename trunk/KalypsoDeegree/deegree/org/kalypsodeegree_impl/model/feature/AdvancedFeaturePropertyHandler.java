@@ -76,7 +76,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
 
   private final static IFeaturePropertyHandler CHECK_HANDLER = new CheckFeaturePropertyHandler();
 
-  private final Map<IPropertyType, IFeaturePropertyHandler> m_handlers = new HashMap<IPropertyType, IFeaturePropertyHandler>();
+  private final Map<QName, IFeaturePropertyHandler> m_handlers = new HashMap<QName, IFeaturePropertyHandler>();
 
   public static final QName QNAME_FUNCTION = new QName( NS.KALYPSO_APPINFO, "functionId" );
 
@@ -119,7 +119,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
           final Map<String, String> properties = parseParameters( parameters );
 
           final FeaturePropertyFunction propertyFunction = KalypsoDeegreeExtensions.createPropertyFunction( functionId, properties );
-          m_handlers.put( pt, propertyFunction );
+          m_handlers.put( pt.getQName(), propertyFunction );
         }
         catch( final Exception e )
         {
@@ -159,7 +159,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
   {
     final Object checkedValue = CHECK_HANDLER.setValue( feature, pt, valueToSet );
 
-    final IFeaturePropertyHandler handler = m_handlers.get( pt );
+    final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );
     if( handler != null )
       return handler.setValue( feature, pt, checkedValue );
 
@@ -174,7 +174,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
   {
     final Object checkedValue = CHECK_HANDLER.getValue( feature, pt, currentValue );
 
-    final IFeaturePropertyHandler handler = m_handlers.get( pt );
+    final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );
     if( handler != null )
       return handler.getValue( feature, pt, checkedValue );
 
@@ -186,7 +186,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
    */
   public boolean invalidateEnvelope( final IPropertyType pt )
   {
-    final IFeaturePropertyHandler handler = m_handlers.get( pt );
+    final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );
     if( handler != null )
       return handler.invalidateEnvelope( pt );
     
