@@ -212,7 +212,7 @@ public class Control1D2DConverter
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
-        final String nodeID = m_nodesIDProvider.get( node.getGmlID() );
+        final int nodeID = Integer.parseInt( m_nodesIDProvider.get( node.getGmlID() ));
 
         /* Write start stuff */
         if( i == 0 )
@@ -220,7 +220,7 @@ public class Control1D2DConverter
         else if( i % 9 == 0 )
           formatter.format( "%nCC2     " );
 
-        formatter.format( "%8s", nodeID );
+        formatter.format( "%8d", nodeID );
       }
 
       if( nodes.length % 9 != 0 )
