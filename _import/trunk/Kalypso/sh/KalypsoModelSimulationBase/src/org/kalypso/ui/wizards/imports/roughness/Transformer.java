@@ -11,8 +11,10 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -24,6 +26,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
@@ -142,6 +146,17 @@ public class Transformer implements ICoreRunnableWithProgress
         f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
+    //use (dummy) command to make workspace dirty
+    ICaseDataProvider caseDataProvider = 
+                        Util.getCaseDataProvider();
+    if( caseDataProvider != null )
+    {
+      caseDataProvider.postCommand( 
+                      ITerrainModel.class, 
+                      new AddRoughnessPolygonsCmd()
+                      );
+    }
+    
   }
 
   private void serialize( ) throws IOException, GmlSerializeException
@@ -163,6 +178,15 @@ public class Transformer implements ICoreRunnableWithProgress
     final Feature parentFeature = wrappedList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    
+    //fire event for roughness changes
+    //TODO Patrice check it
+    workspace.fireModellEvent(
+        new FeatureStructureChangeModellEvent( 
+                    workspace, 
+                    parentFeature.getParent(), 
+                    parentFeature, 
+                    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // TODO: also post the adds as commands to the dataProvider
 
     //    

@@ -81,7 +81,7 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
     return new QName[]{
 //        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
 //        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
+        //Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
         };
   }
 
@@ -141,9 +141,22 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
 //        ElementRoughnessStyleFunc.removeRoughnessClass( feature );
         mergeService.removeRoughnessClass( feature );
       }
+      else if ( feature == null )
+      {
+        ///go ahead
+      }
       else
       {
-//        System.out.println("Changed:"+feature.getFeatureType().getQName());
+        
+        QName name = feature.getFeatureType().getQName();
+        if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION.equals( name ) )
+        {
+          mergeService.doReInit();
+        }
+        else
+        {
+          System.out.println("Changed:"+name);
+        }
       }
       
     }

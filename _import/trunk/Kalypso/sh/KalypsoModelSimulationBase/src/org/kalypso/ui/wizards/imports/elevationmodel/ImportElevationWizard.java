@@ -66,18 +66,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
+import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Madanagopal
@@ -216,14 +221,29 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
             
+            
+            final Feature temFeature = tem.getWrappedFeature();
             workspace.fireModellEvent( 
                 new FeatureStructureChangeModellEvent( 
                             workspace, 
                             temSys.getWrappedFeature(), 
-                            tem.getWrappedFeature(), 
+                            temFeature, 
+                            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( 
+                new FeatureStructureChangeModellEvent( 
+                            workspace, 
+                            temFeature.getParent(), 
+                            temFeature, 
                             FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
-            pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
+            ICaseDataProvider caseDataProvider = Util.getCaseDataProvider();
+            caseDataProvider.postCommand( 
+                ITerrainModel.class, 
+                new AddTerrainelevationModelCmd());
+            
+            caseDataProvider.saveModel( ITerrainModel.class, null );
+            
+//            pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
           }
           
           

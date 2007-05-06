@@ -73,6 +73,7 @@ import org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1D2DElementRoughnessTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsomodel1d2d.update.ModelMergeService;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -103,6 +104,7 @@ public class ApplyColorOnFENETWidgetFace
   static int index = 0;
   private Composite rootPanel;
   private FormToolkit toolkit;
+  
 
   private ListViewer areaViewer;
 
@@ -178,33 +180,17 @@ public class ApplyColorOnFENETWidgetFace
     formData.left = new FormAttachment(0,5);
     activateColorBtn.setText( "2D-Element-Rauheit-Styling aktivieren" );
     activateColorBtn.setLayoutData( formData );
+    ModelMergeService mergeService = 
+                  ModelMergeService.getInstance();
+    //TODO Patrice put this into preferences or ..
+    final boolean isRoughnessToBeDisplay = 
+                    mergeService.getIsRoughnessToBeDisplay();
+    activateColorBtn.setSelection( isRoughnessToBeDisplay );
+    toggleMap( isRoughnessToBeDisplay );
     
-//    activateColorBtn.setSelection( 
-//              ElementRoughnessStyleFunc.isActivated() );
-    toggleMap( activateColorBtn.getSelection() );
     activateColorBtn.addSelectionListener( new SelectionAdapter(){
       public void widgetSelected( SelectionEvent e )
       {
-//        IMapModell mapModell = dataModel.getMapModell();        
-//        Model1D2DElementRoughnessTheme theme = 
-//          UtilMap.findTheme( 
-//            mapModell, Model1D2DElementRoughnessTheme.class );
-//        if( theme == null )
-//        {
-//          theme = new Model1D2DElementRoughnessTheme(
-//                              "Element+Rauhheiten",mapModell);
-//          mapModell.addTheme( theme );
-//        }
-//        if( activateColorBtn.getSelection() )
-//        {
-//          IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
-//          theme.setStaticModel( staticModel );
-//        }
-//        else
-//        {
-//          mapModell.removeTheme( theme );//theme.setStaticModel( null );
-//        }
-//        mapModell.fireModellEvent( null );
         toggleMap( activateColorBtn.getSelection() );
       }  
     });
@@ -225,6 +211,12 @@ public class ApplyColorOnFENETWidgetFace
 
    private final void toggleMap(boolean selected )
    {
+     
+     final ModelMergeService mergeService = ModelMergeService.getInstance();
+     
+     mergeService.doReInit();     
+     mergeService.setIsRoughnessToBeDisplay( selected );
+     
      IMapModell mapModell = dataModel.getMapModell();        
      Model1D2DElementRoughnessTheme theme = 
        UtilMap.findTheme( 

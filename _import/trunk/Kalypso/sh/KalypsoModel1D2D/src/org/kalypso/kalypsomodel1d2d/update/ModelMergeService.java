@@ -62,6 +62,8 @@ public class ModelMergeService
                                       new HashMap<String, IRoughnessCls>();
   private boolean doReInit = true;
   
+  private boolean isRoughnessToBeDisplay = false;
+  
   private IRoughnessPolygonCollection roughnessPolygonCollection;
   
   
@@ -80,10 +82,28 @@ public class ModelMergeService
     }
   }
   
+  synchronized public boolean getIsRoughnessToBeDisplay()
+  {
+    return modelMergeService.isRoughnessToBeDisplay;
+  }
   
+  synchronized public void setIsRoughnessToBeDisplay(
+                                boolean isRoughnessToBeDisplay )
+  {
+    modelMergeService.isRoughnessToBeDisplay = 
+                                isRoughnessToBeDisplay;
+  }
+  
+  synchronized public boolean getDoReInit()
+  {
+    return modelMergeService.doReInit;
+  }
+  
+    
   synchronized public void doReInit()
   {
     modelMergeService.doReInit = true;
+    System.out.println("Reiniting model roughness merge service");
   }
   
   
@@ -117,19 +137,23 @@ public class ModelMergeService
           IRoughnessCls cls = null;
           if( !roughnessPolygonCollection.isEmpty() )
           {
-          IRoughnessEstimateSpec roughnessEstimateSpec = 
-          roughnessPolygonCollection.getRoughnessEstimateSpec( 
-                                polyElement.recalculateElementGeometry() );
-          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
-          if( classes.length >0 )
+            IRoughnessEstimateSpec roughnessEstimateSpec = 
+            roughnessPolygonCollection.getRoughnessEstimateSpec( 
+                                  polyElement.recalculateElementGeometry() );
+            IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+            if( classes.length >0 )
+            {
+              cls = classes[0];
+              
+            }          
+          }
+          else
           {
-            cls = classes[0];
-            
+            System.out.println("roughness polygone collection is empty");
           }
-          
-          }
-          System.out.println( "StyleName=" + 
-          (cls==null ? null:cls.getGmlID()) );
+          System.out.println( 
+                  "StyleName=" + 
+                          (cls==null ? null:cls.getGmlID()) );
           femRoughnessStyleMap.put( polyElementID, cls );
           return cls;  
         }
@@ -178,7 +202,7 @@ public class ModelMergeService
   {
     IRoughnessCls rCls = getElementRoughnessCls( polyElement );
     final Color color;
-    if( rCls ==null)
+    if( rCls == null )
     {
       color = defaultColor;
     }
@@ -191,6 +215,7 @@ public class ModelMergeService
                 colorStyle.blue,
                 50);
     }
+    System.out.println("Color ="+color);
     return color;
   }
   

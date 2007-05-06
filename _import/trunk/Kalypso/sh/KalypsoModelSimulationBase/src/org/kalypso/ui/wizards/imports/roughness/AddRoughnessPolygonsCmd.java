@@ -38,18 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports.elevationmodel;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import org.kalypso.commons.command.ICommand;
 
 /**
- * Currently just a dummy command use to get the pool
+ * Yet only a dummy command used to make the workspace 
  * dirty.
- * TODO Patrice implemts this command 
+ * TODO Patrice realy implement it
+ * 
  * @author Patrice Congo
- *
  */
-public class AddTerrainelevationModelCmd implements ICommand
+public class AddRoughnessPolygonsCmd implements ICommand
 {
 
   /**
@@ -57,7 +57,7 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public String getDescription( )
   {
-    return "Terrain Elevation Model hinzufügen ";
+    return "Rauheitpolygone hinzufügen ";
   }
 
   /**
@@ -73,23 +73,6 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public void process( ) throws Exception
   {
-//    ITerrainElevationModel tem =
-//      new NativeTerrainElevationModelWrapper(temSys,nativeTEMRelPath);
-//
-//    //TODO introduce in the first page a name imput field and gets the
-//    //name from there
-//    
-//    String name=dstFileTif.getName();
-//    tem.setName( name );
-//    System.out.println("Workspace:"+workspace.getClass());
-//    workspace.fireModellEvent( 
-//       new FeatureStructureChangeModellEvent( 
-//             workspace, 
-//             temSys.getWrappedFeature(),
-//             tem.getWrappedFeature(), 
-//             FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-
   }
 
   /**
@@ -97,8 +80,6 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public void redo( ) throws Exception
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -106,7 +87,6 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public void undo( ) throws Exception
   {
-    // TODO Auto-generated method stub
 
   }
 

@@ -482,4 +482,27 @@ public class Util
           return null;
         }
       }
+      
+      /**
+       * Gets the szenario data provider
+       */
+      public static final  ICaseDataProvider getCaseDataProvider()
+      {
+        try
+        {
+          IWorkbench workbench = PlatformUI.getWorkbench();
+          IHandlerService  service = 
+              (IHandlerService) workbench.getService( IHandlerService.class );
+          IEvaluationContext currentState = service.getCurrentState();
+          ICaseDataProvider caseDataProvider =
+              (ICaseDataProvider) 
+                currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+          return caseDataProvider;
+        }
+        catch ( Throwable th ) 
+        {
+          th.printStackTrace();
+          return null;
+        }
+      }
 }

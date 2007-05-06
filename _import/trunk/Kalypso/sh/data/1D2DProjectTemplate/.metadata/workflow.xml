@@ -179,12 +179,14 @@
 					</Help>
 					<Name>Höhen zuweisen</Name>
 				</Task>
-				<!--  
+				<!-- --> 
 					<Task context="2dElementTheme" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughnessFENETColor">
-					<Help>Apply Colors to FE ELements</Help>
-					<Name>Colors For FE ELement</Name>
+					<!--Help>Apply Colors to FE ELements</Help -->
+					<!--Name>Colors For FE ELement</Name -->
+					<Help>Element-Rauheit Visualisierung</Help>
+					<Name>Visualisierung der Element-Rauheiten</Name> 
 					</Task>
-				-->
+				<!-- -->
 			</TaskGroup>
 			<!--
 				<TaskGroup context="FenetMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CntrStrcGroup">
