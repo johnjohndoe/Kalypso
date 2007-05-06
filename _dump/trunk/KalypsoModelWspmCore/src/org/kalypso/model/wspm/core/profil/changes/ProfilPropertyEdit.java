@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 public final class ProfilPropertyEdit implements IProfilChange
 {

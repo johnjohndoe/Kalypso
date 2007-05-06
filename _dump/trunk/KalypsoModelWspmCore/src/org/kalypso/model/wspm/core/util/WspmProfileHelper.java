@@ -172,12 +172,8 @@ public class WspmProfileHelper
     Coordinate coordProfileOne = new Coordinate( pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
     Coordinate coordProfileTwo = new Coordinate( pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
     
-    //you have to take the difference of the width coordinate, not the distance of the widht-height segment!
-    double segmentProfileLength = JTSUtilities.getLengthBetweenPoints( coordProfileOne, coordProfileTwo );
-
     /* Important: The interpolation is done here :). */
     double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * ( coordProfileTwo.x - coordProfileOne.x );
-    //double toProfilePointLength = coordProfileTwo.x - coordProfileOne.x;
     
     return coordProfileOne.x + toProfilePointLength;
   }

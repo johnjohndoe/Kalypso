@@ -281,13 +281,6 @@
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
                tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-               id="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-               label="Fließzonen erzeugen"
-               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-               style="push"
-               tooltip="Erzeugt Fließzonen-Begrenzer anhand von Linien-Themen"/>
       </objectContribution>
    </extension>
      <extension
@@ -413,22 +406,18 @@
                id="org.kalypso.model.wspm.ui.view.table.swt.category"
                name="SWTTable Commands"/>
          <command
-               category="SWTTable Commands"
                categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
                id="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
                name="Move up"/>
          <command
-               category="SWTTable Commands"
                categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
                id="org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"
                name="Move down"/>
          <command
-               category="SWTTable Commands"
                categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
                id="org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboardCommand"
                name="Copy to Clipboard"/>
          <command
-               category="SWTTable Commands"
                categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
                id="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboardCommand"
                name="Paste from Clipboard"/>

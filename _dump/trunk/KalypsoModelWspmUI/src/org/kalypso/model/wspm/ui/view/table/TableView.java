@@ -54,7 +54,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;

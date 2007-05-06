@@ -56,13 +56,6 @@
                <filter
                      name="featureThemeQname"
                      value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
-               <action
-                     class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-                     id="org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction"
-                     label="Rauheiten zuweisen"
-                     menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-                     style="push"
-                     tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
 		         <action
 		               class="org.kalypso.model.wspm.tuhh.ui.actions.CreateDeviderMapThemeAction"
 		               id="org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"

@@ -45,7 +45,6 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**

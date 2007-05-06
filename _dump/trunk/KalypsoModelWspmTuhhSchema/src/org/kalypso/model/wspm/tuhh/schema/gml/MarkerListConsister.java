@@ -109,7 +109,7 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
         tuhhReach.recreateMarkerList();
       }
       // TODO: generate also event for FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE and hand over changed features
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reachFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reachFeatures, null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
   }
 }

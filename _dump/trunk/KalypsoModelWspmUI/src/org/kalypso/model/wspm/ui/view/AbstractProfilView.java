@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.contexts.IContextActivation;
-import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
