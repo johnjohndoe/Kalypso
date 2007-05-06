@@ -239,18 +239,14 @@
 				<Name>Rauheitswerte bearbeiten</Name>
 			</Task>
 		</TaskGroup>
-		<TaskGroup
-			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Cond">
-			<Help>Randbedingungen festlegen</Help>
+		<TaskGroup context="BoundaryConditionTheme"
+			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
+			<Help>
+				Festlegung von Knoten- und Linienrandbedingungen für die
+				Berechnung.
+			</Help>
 			<Name>Randbedingungen</Name>
-			<Task context="BoundaryConditionTheme"
-				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
-				<Help>
-					Festlegung von Knoten- und Linienrandbedingungen für
-					die Berechnung.
-				</Help>
-				<Name>Randbedingungen</Name>
-			</Task>
+
 			<!-- 
 				<TaskGroup
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StSolGroup">
