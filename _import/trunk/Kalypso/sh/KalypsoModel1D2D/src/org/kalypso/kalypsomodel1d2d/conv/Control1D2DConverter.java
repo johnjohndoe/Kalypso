@@ -64,7 +64,9 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
@@ -85,7 +87,7 @@ public class Control1D2DConverter
     return Integer.parseInt( m_roughnessIDProvider.get( gmlID ) );
   }
 
-  public void writeR10File( final RMA10Calculation calculation, final PrintWriter pw )
+  public void writeR10File( final RMA10Calculation calculation, final PrintWriter pw ) throws SimulationException
   {
     final Formatter formatter = new Formatter( pw, Locale.US );
 
@@ -159,7 +161,7 @@ public class Control1D2DConverter
   /**
    * writes the Properties Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-  private void writeR10PropertiesDataBlock( final RMA10Calculation calculation, final Formatter formatter )
+  private void writeR10PropertiesDataBlock( final RMA10Calculation calculation, final Formatter formatter ) throws SimulationException
   {
     for( final Object elt : calculation.getRoughnessClassList() )
     {
@@ -176,7 +178,17 @@ public class Control1D2DConverter
 
       // ED4
       String formatED4 = "ED4             %8.2f%8.1f%8.2f%n";
-      formatter.format( formatED4 + "\n", calculation.getKs( roughnessCL ), calculation.getAxAy( roughnessCL ), calculation.getDp( roughnessCL ) );
+      final Double ks = calculation.getKs( roughnessCL );
+      final Double axAy = calculation.getAxAy( roughnessCL );
+      final Double dp = calculation.getDp( roughnessCL );
+      
+      if( ks == null )
+        throw new SimulationException( "No ks value found for rougness class: " + NamedFeatureHelper.getName( roughnessCL ), null );
+      
+      final Double axayCorrected = axAy == null ? 0.0 : axAy;
+      final Double dpCorrected = dp == null ? 0.0 : dp;
+      
+      formatter.format( formatED4, ks, axayCorrected, dpCorrected );
     }
   }
 
@@ -189,9 +201,7 @@ public class Control1D2DConverter
     final List<IFE1D2DContinuityLine> continuityLineList = calculation.getContinuityLineList();
     // TODO: no, this is wrong. There will be additional ('virtual') conti-lines comming from the boundary conditions
 
-    formatter.format( "SCL     %4d", continuityLineList.size() );
-
-    // TODO: consider cased where number of contilines is 0 (line break, ECL, ...)
+    formatter.format( "SCL     %4d%n", continuityLineList.size() );
 
     int lineID = 1;
     for( final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )

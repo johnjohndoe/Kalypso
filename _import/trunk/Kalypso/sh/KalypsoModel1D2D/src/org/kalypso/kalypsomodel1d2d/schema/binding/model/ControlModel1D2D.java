@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 

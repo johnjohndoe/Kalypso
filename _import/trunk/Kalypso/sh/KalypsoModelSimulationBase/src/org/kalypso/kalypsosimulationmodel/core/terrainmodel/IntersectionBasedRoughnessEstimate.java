@@ -76,7 +76,7 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   
   public IntersectionBasedRoughnessEstimate(
                     IRoughnessPolygonCollection roughnessPolygonCollection, 
-                    GM_Surface estimateZone ) throws GM_Exception
+                    GM_Surface estimateZone )
   {
     Assert.throwIAEOnNullParam( roughnessPolygonCollection, "roughnessPolygonCollection" );
     Assert.throwIAEOnNullParam( estimateZone, "estimateZone" );
