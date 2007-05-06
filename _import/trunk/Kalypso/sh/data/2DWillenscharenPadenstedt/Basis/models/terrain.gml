@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<simBase:TerrainModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:swe="http://www.opengis.net/swe" xmlns:om="http://www.opengis.net/om" gml:id="root">
+<simBase:TerrainModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:swe="http://www.opengis.net/swe" xmlns:om="http://www.opengis.net/om" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <simBase:terrainElevationModelSystem>
   <simBase:TerrainElevationModelSystem gml:id="Scenario_Terrain_Elevation_ModelSystem"/>
  </simBase:terrainElevationModelSystem>
@@ -8,7 +8,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881945901">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -225,7 +225,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946702">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -424,7 +424,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946704">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -596,7 +596,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946701">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -651,7 +651,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946706">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -913,7 +913,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946705">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1112,7 +1112,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946703">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1221,7 +1221,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946708">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1294,7 +1294,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946709">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1452,7 +1452,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819467011">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1471,7 +1471,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819467010">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1553,7 +1553,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946700">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1608,7 +1608,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946707">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1654,7 +1654,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819467014">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1691,7 +1691,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819467015">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1737,7 +1737,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946808">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1774,7 +1774,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468014">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1811,7 +1811,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468021">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1830,7 +1830,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468015">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1867,7 +1867,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946803">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1886,7 +1886,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946807">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1905,7 +1905,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468017">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -1933,7 +1933,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468010">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2015,7 +2015,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468016">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2070,7 +2070,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468028">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2098,7 +2098,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946806">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2117,7 +2117,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946805">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2163,7 +2163,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468024">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2191,7 +2191,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819468027">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2219,7 +2219,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon117818819469021">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2310,7 +2310,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946907">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2455,7 +2455,7 @@
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11781881946905">
      <simBase:polygonProperty>
-      <gml:MultiPolygon xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns4="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gts" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+      <gml:MultiPolygon xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:polygonMember>
         <gml:Polygon srsName="EPSG:31467">
          <gml:exterior>
@@ -2564,6 +2564,2884 @@
   </simBase:RoughnessLayerPolygonCollection>
  </simBase:roughnessLayerPolynomCollection>
  <simBase:riverProfileNetworkCollectionMember>
-  <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840"/>
+  <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840">
+   <simBase:riverProfileNetwork>
+    <simBase:RiverProfileNetwork gml:id="RiverProfileNetwork117845130326424">
+     <gml:description>Importiert aus Trippel-Profil-Datei: profil_tripple_import_daten.txt
+Importiert am 06.05.2007 13:35 aus E:\FE-Projekte\2006_Kalypso_1d2d_Risiko\12_Beispielprojekt_Stoer\1d2dModell\05_1dKnoten</gml:description>
+     <gml:name>profil_tripple_import_daten</gml:name>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130330415">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition11784513036168">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.18 5986894.321 3552967.118
+1.299764978756824 6.65 5986894.031 3552965.851
+3.0296103473524285 6.17 5986893.644 3552964.165
+8.651927396429175 5.07 5986892.387 3552958.685
+10.593066237491872 5.94 5986891.953 3552956.793
+11.453754915343454 4.98 5986891.761 3552955.954
+11.83024528710493 4.16 5986891.677 3552955.587
+11.88361194306909 3.58 5986891.665 3552955.535
+12.313468896219591 2.58 5986891.569 3552955.116
+13.173406684649525 3.09 5986891.376 3552954.278
+13.387847818660626 3.44 5986891.328 3552954.069
+13.712921656624289 5.1 5986891.256 3552953.752
+15.439619371639461 5.53 5986890.87 3552952.069
+17.168490101413393 5.57 5986890.483 3552950.384
+20.628931980855807 6.27 5986889.71 3552947.011
+25.343265549519543 6.86 5986888.656 3552942.416
+]]&gt;</om:result>
+       <prof:station>58.4500</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552967.118 5986894.321 6.18,3552965.851 5986894.031 6.65,3552964.165 5986893.644 6.17,3552958.685 5986892.387 5.07,3552956.793 5986891.953 5.94,3552955.954 5986891.761 4.98,3552955.587 5986891.677 4.16,3552955.535 5986891.665 3.58,3552955.116 5986891.569 2.58,3552954.278 5986891.376 3.09,3552954.069 5986891.328 3.44,3552953.752 5986891.256 5.1,3552952.069 5986890.87 5.53,3552950.384 5986890.483 5.57,3552947.011 5986889.71 6.27,3552942.416 5986888.656 6.86</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130668813">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130669816">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.87 5986916.918 3552961.449
+3.129007829870783 7.59 5986916.141 3552958.418
+3.475839201155015 7.41 5986916.055 3552958.082
+5.77778207607196 7.76 5986915.484 3552955.852
+8.039463309180979 7.97 5986914.923 3552953.661
+10.469468453061207 8.15 5986914.32 3552951.307
+10.6441023562352 8.5 5986914.276 3552951.138
+11.023918100723412 8.63 5986914.182 3552950.77
+11.034358407605554 8.37 5986914.179 3552950.76
+11.732144191203862 5.1 5986914.006 3552950.084
+12.078975562036975 5.08 5986913.92 3552949.748
+12.422652736229058 4.33 5986913.835 3552949.415
+12.551683740170224 3.91 5986913.803 3552949.29
+12.595100326750007 3.38 5986913.792 3552949.248
+13.11753309779894 2.37 5986913.662 3552948.742
+13.462179293440718 2.77 5986913.577 3552948.408
+13.634626386578889 3.15 5986913.534 3552948.241
+13.804887950189 3.96 5986913.492 3552948.076
+14.452228663900126 5.0 5986913.331 3552947.449
+14.667844062117167 5.08 5986913.278 3552947.24
+14.7546772357272 5.64 5986913.256 3552947.156
+14.883708239668367 6.85 5986913.224 3552947.031
+15.057123925425948 6.83 5986913.181 3552946.863
+15.143957098585513 7.0 5986913.159 3552946.779
+15.359572497253929 8.43 5986913.106 3552946.57
+18.13762595198721 7.87 5986912.416 3552943.879
+19.525920229472977 7.84 5986912.072 3552942.534
+23.860591727860957 6.8 5986910.996 3552938.335
+]]&gt;</om:result>
+       <prof:station>58.4930</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552961.449 5986916.918 5.87,3552958.418 5986916.141 7.59,3552958.082 5986916.055 7.41,3552955.852 5986915.484 7.76,3552953.661 5986914.923 7.97,3552951.307 5986914.32 8.15,3552951.138 5986914.276 8.5,3552950.77 5986914.182 8.63,3552950.76 5986914.179 8.37,3552950.084 5986914.006 5.1,3552949.748 5986913.92 5.08,3552949.415 5986913.835 4.33,3552949.29 5986913.803 3.91,3552949.248 5986913.792 3.38,3552948.742 5986913.662 2.37,3552948.408 5986913.577 2.77,3552948.241 5986913.534 3.15,3552948.076 5986913.492 3.96,3552947.449 5986913.331 5.0,3552947.24 5986913.278 5.08,3552947.156 5986913.256 5.64,3552947.031 5986913.224 6.85,3552946.863 5986913.181 6.83,3552946.779 5986913.159 7.0,3552946.57 5986913.106 8.43,3552943.879 5986912.416 7.87,3552942.534 5986912.072 7.84,3552938.335 5986910.996 6.8</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130679919">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130679936">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.81 5986958.196 3552939.053
+2.5527040566074564 5.45 5986957.169 3552936.716
+5.1111926728526464 4.87 5986956.139 3552934.374
+15.347490929726654 4.87 5986952.02 3552925.003
+17.427343087764868 4.74 5986951.183 3552923.099
+17.586754505012188 4.05 5986951.119 3552922.953
+17.626149936435727 3.52 5986951.103 3552922.917
+18.101235192224376 2.61 5986950.912 3552922.482
+18.616631156357098 2.83 5986950.705 3552922.01
+18.695422018353128 3.59 5986950.673 3552921.938
+18.854833436026933 4.41 5986950.609 3552921.792
+20.12829328992497 5.45 5986950.097 3552920.626
+20.208405711156118 5.78 5986950.064 3552920.553
+21.164360731303514 6.72 5986949.679 3552919.678
+21.32468852015253 7.13 5986949.615 3552919.531
+21.96365174293415 7.34 5986949.358 3552918.946
+24.51990701177996 6.78 5986948.329 3552916.606
+25.725743236542822 6.66 5986947.844 3552915.502
+]]&gt;</om:result>
+       <prof:station>58.5500</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552939.053 5986958.196 5.81,3552936.716 5986957.169 5.45,3552934.374 5986956.139 4.87,3552925.003 5986952.02 4.87,3552923.099 5986951.183 4.74,3552922.953 5986951.119 4.05,3552922.917 5986951.103 3.52,3552922.482 5986950.912 2.61,3552922.01 5986950.705 2.83,3552921.938 5986950.673 3.59,3552921.792 5986950.609 4.41,3552920.626 5986950.097 5.45,3552920.553 5986950.064 5.78,3552919.678 5986949.679 6.72,3552919.531 5986949.615 7.13,3552918.946 5986949.358 7.34,3552916.606 5986948.329 6.78,3552915.502 5986947.844 6.66</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile11784513068296">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130682942">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.83 5986999.474 3552916.656
+5.045159462659166 5.22 5986996.827 3552912.361
+15.137181063931546 4.97 5986991.533 3552903.769
+17.659597563946424 5.05 5986990.209 3552901.622
+20.023866795603308 5.33 5986988.969 3552899.609
+20.414057774376335 5.88 5986988.764 3552899.277
+20.805951892597275 4.46 5986988.559 3552898.943
+20.8442272114737 3.6 5986988.538 3552898.911
+21.15894772215987 2.85 5986988.373 3552898.643
+21.78563743790276 2.76 5986988.045 3552898.109
+21.98184651044145 2.91 5986987.942 3552897.942
+22.060922422870444 3.65 5986987.9 3552897.875
+22.09950998573168 4.23 5986987.88 3552897.842
+22.25798395837317 5.05 5986987.797 3552897.707
+22.667893704398463 5.327 5986987.582 3552897.358
+24.775421166180813 6.75 5986986.476 3552895.564
+28.17596244623587 6.54 5986984.692 3552892.669
+]]&gt;</om:result>
+       <prof:station>58.6000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552916.656 5986999.474 5.83,3552912.361 5986996.827 5.22,3552903.769 5986991.533 4.97,3552901.622 5986990.209 5.05,3552899.609 5986988.969 5.33,3552899.277 5986988.764 5.88,3552898.943 5986988.559 4.46,3552898.911 5986988.538 3.6,3552898.643 5986988.373 2.85,3552898.109 5986988.045 2.76,3552897.942 5986987.942 2.91,3552897.875 5986987.9 3.65,3552897.842 5986987.88 4.23,3552897.707 5986987.797 5.05,3552897.358 5986987.582 5.327,3552895.564 5986986.476 6.75,3552892.669 5986984.692 6.54</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130685031">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130685025">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.79 5987035.337 3552892.388
+9.37522746355621 5.15 5987030.656 3552884.265
+18.754919249917997 5.03 5987025.973 3552876.138
+21.23910623965277 5.22 5987024.732 3552873.986
+21.34614828751021 4.968 5987024.679 3552873.893
+21.532944968139557 4.53 5987024.586 3552873.731
+21.606006586282138 3.44 5987024.549 3552873.668
+21.752492080254484 2.86 5987024.476 3552873.541
+22.041865541211656 2.54 5987024.332 3552873.29
+22.331737927310655 2.56 5987024.187 3552873.039
+22.549916752942924 2.85 5987024.078 3552872.85
+22.695536119857625 4.46 5987024.005 3552872.724
+22.841155486369402 5.2 5987023.932 3552872.598
+23.361234326657268 5.348 5987023.673 3552872.147
+24.88712029859334 5.78 5987022.911 3552870.825
+28.16153536146537 6.48 5987021.276 3552867.988
+]]&gt;</om:result>
+       <prof:station>58.6470</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552892.388 5987035.337 5.79,3552884.265 5987030.656 5.15,3552876.138 5987025.973 5.03,3552873.986 5987024.732 5.22,3552873.893 5987024.679 4.968,3552873.731 5987024.586 4.53,3552873.668 5987024.549 3.44,3552873.541 5987024.476 2.86,3552873.29 5987024.332 2.54,3552873.039 5987024.187 2.56,3552872.85 5987024.078 2.85,3552872.724 5987024.005 4.46,3552872.598 5987023.932 5.2,3552872.147 5987023.673 5.348,3552870.825 5987022.911 5.78,3552867.988 5987021.276 6.48</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130686020">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130687020">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.74 5987083.415 3552878.232
+8.42265528188376 5.21 5987082.036 3552869.923
+18.95257802598278 5.08 5987080.313 3552859.535
+20.260207943032015 5.3 5987080.099 3552858.245
+20.38991916087342 5.07 5987080.078 3552858.117
+20.488229892777547 4.67 5987080.062 3552858.02
+20.57043086615771 3.46 5987080.048 3552857.939
+20.702116096909556 3.03 5987080.027 3552857.809
+20.96466133111868 2.68 5987079.984 3552857.55
+21.361027323503578 2.69 5987079.919 3552857.159
+21.47561353538446 3.2 5987079.9 3552857.046
+21.541537734214817 4.46 5987079.889 3552856.981
+21.60746193320057 4.82 5987079.878 3552856.916
+22.66060247485264 5.8 5987079.706 3552855.877
+23.713743016197405 6.39 5987079.534 3552854.838
+26.93119620163611 6.79 5987079.007 3552851.664
+]]&gt;</om:result>
+       <prof:station>58.7000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552878.232 5987083.415 5.74,3552869.923 5987082.036 5.21,3552859.535 5987080.313 5.08,3552858.245 5987080.099 5.3,3552858.117 5987080.078 5.07,3552858.02 5987080.062 4.67,3552857.939 5987080.048 3.46,3552857.809 5987080.027 3.03,3552857.55 5987079.984 2.68,3552857.159 5987079.919 2.69,3552857.046 5987079.9 3.2,3552856.981 5987079.889 4.46,3552856.916 5987079.878 4.82,3552855.877 5987079.706 5.8,3552854.838 5987079.534 6.39,3552851.664 5987079.007 6.79</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130688015">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130689015">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.92 5987128.737 3552875.397
+7.473147797047512 5.24 5987128.784 3552867.924
+14.950295515218881 5.08 5987128.831 3552860.447
+17.985348892164687 5.18 5987128.849 3552857.412
+18.131352316959337 4.73 5987128.85 3552857.266
+18.24735662714727 3.38 5987128.851 3552857.15
+18.3633609373352 3.09 5987128.852 3552857.034
+19.062372382183597 2.68 5987128.856 3552856.335
+19.13537923103807 3.11 5987128.857 3552856.262
+19.1783792311014 4.42 5987128.857 3552856.219
+19.29538350461471 5.22 5987128.858 3552856.102
+19.717388243713803 5.265 5987128.86 3552855.68
+21.630425880738333 5.47 5987128.872 3552853.767
+22.56444515237444 6.5 5987128.878 3552852.833
+23.49846442401653 6.96 5987128.884 3552851.899
+25.09749569365355 7.3 5987128.894 3552850.3
+]]&gt;</om:result>
+       <prof:station>58.7490</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552875.397 5987128.737 5.92,3552867.924 5987128.784 5.24,3552860.447 5987128.831 5.08,3552857.412 5987128.849 5.18,3552857.266 5987128.85 4.73,3552857.15 5987128.851 3.38,3552857.034 5987128.852 3.09,3552856.335 5987128.856 2.68,3552856.262 5987128.857 3.11,3552856.219 5987128.857 4.42,3552856.102 5987128.858 5.22,3552855.68 5987128.86 5.265,3552853.767 5987128.872 5.47,3552852.833 5987128.878 6.5,3552851.899 5987128.884 6.96,3552850.3 5987128.894 7.3</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130690048">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130690012">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.34 5987177.037 3552880.804
+1.0644219088701545 6.79 5987177.324 3552879.779
+3.194498433345864 6.84 5987177.899 3552877.728
+6.388996829290347 5.6 5987178.761 3552874.652
+17.039109551546655 5.17 5987181.635 3552864.397
+19.568777513719315 5.34 5987182.317 3552861.961
+19.73402278593173 5.63 5987182.362 3552861.802
+19.964517905228455 4.04 5987182.424 3552861.58
+20.03100098606188 3.11 5987182.442 3552861.516
+20.49322387585727 2.11 5987182.567 3552861.071
+21.02481864647824 3.48 5987182.71 3552860.559
+21.073583387706034 4.38 5987182.723 3552860.512
+21.340478498315182 5.4 5987182.795 3552860.255
+21.872343142937364 5.42 5987182.939 3552859.743
+24.79994642859435 4.7 5987183.729 3552856.924
+25.864368337213392 5.63 5987184.016 3552855.899
+29.174114249322837 7.11 5987184.909 3552852.712
+]]&gt;</om:result>
+       <prof:station>58.8000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552880.804 5987177.037 6.34,3552879.779 5987177.324 6.79,3552877.728 5987177.899 6.84,3552874.652 5987178.761 5.6,3552864.397 5987181.635 5.17,3552861.961 5987182.317 5.34,3552861.802 5987182.362 5.63,3552861.58 5987182.424 4.04,3552861.516 5987182.442 3.11,3552861.071 5987182.567 2.11,3552860.559 5987182.71 3.48,3552860.512 5987182.723 4.38,3552860.255 5987182.795 5.4,3552859.743 5987182.939 5.42,3552856.924 5987183.729 4.7,3552855.899 5987184.016 5.63,3552852.712 5987184.909 7.11</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130691057">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130691051">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.47 5987229.265 3552896.213
+2.8545770265487422 8.25 5987229.784 3552893.406
+5.137794274352632 7.57 5987230.2 3552891.161
+9.706013292414541 5.28 5987231.031 3552886.669
+16.55941609683053 5.26 5987232.278 3552879.93
+18.987795186051486 5.52 5987232.719 3552877.542
+19.129205935354975 5.12 5987232.745 3552877.403
+19.30415735691256 4.05 5987232.777 3552877.231
+19.33966791887737 3.49 5987232.783 3552877.196
+19.480095836235 2.82 5987232.809 3552877.058
+19.763900346368143 2.75 5987232.861 3552876.779
+20.26522858240598 3.52 5987232.952 3552876.286
+20.319163728620453 4.36 5987232.962 3552876.233
+20.59983613559483 5.24 5987233.013 3552875.957
+21.16726278259078 5.6 5987233.116 3552875.399
+24.591414940449496 5.08 5987233.739 3552872.032
+26.87346686794739 5.43 5987234.154 3552869.788
+29.439323060408803 6.26 5987234.621 3552867.265
+]]&gt;</om:result>
+       <prof:station>58.8530</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552896.213 5987229.265 7.47,3552893.406 5987229.784 8.25,3552891.161 5987230.2 7.57,3552886.669 5987231.031 5.28,3552879.93 5987232.278 5.26,3552877.542 5987232.719 5.52,3552877.403 5987232.745 5.12,3552877.231 5987232.777 4.05,3552877.196 5987232.783 3.49,3552877.058 5987232.809 2.82,3552876.779 5987232.861 2.75,3552876.286 5987232.952 3.52,3552876.233 5987232.962 4.36,3552875.957 5987233.013 5.24,3552875.399 5987233.116 5.6,3552872.032 5987233.739 5.08,3552869.788 5987234.154 5.43,3552867.265 5987234.621 6.26</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130693027">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130693041">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.68 5987278.632 3552900.592
+4.918342200380003 6.4 5987278.329 3552895.683
+9.842673017917683 5.32 5987278.026 3552890.768
+17.230635660241276 5.12 5987277.572 3552883.394
+18.76957068144303 5.44 5987277.477 3552881.858
+19.151325838644286 5.9 5987277.453 3552881.477
+19.379755258904424 4.92 5987277.439 3552881.249
+19.53301973616276 3.41 5987277.43 3552881.096
+19.68628421336641 2.99 5987277.421 3552880.943
+19.992873515087943 2.72 5987277.402 3552880.637
+20.45278872493474 2.89 5987277.373 3552880.178
+20.60605320213839 3.44 5987277.364 3552880.025
+20.75831941612827 4.59 5987277.355 3552879.873
+20.912643750061672 5.19 5987277.345 3552879.719
+21.52682043461591 5.58 5987277.307 3552879.106
+23.990452306706693 5.87 5987277.156 3552876.647
+25.219803761720076 5.77 5987277.08 3552875.42
+29.558027937652117 6.7 5987276.813 3552871.09
+]]&gt;</om:result>
+       <prof:station>58.9000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552900.592 5987278.632 7.68,3552895.683 5987278.329 6.4,3552890.768 5987278.026 5.32,3552883.394 5987277.572 5.12,3552881.858 5987277.477 5.44,3552881.477 5987277.453 5.9,3552881.249 5987277.439 4.92,3552881.096 5987277.43 3.41,3552880.943 5987277.421 2.99,3552880.637 5987277.402 2.72,3552880.178 5987277.373 2.89,3552880.025 5987277.364 3.44,3552879.873 5987277.355 4.59,3552879.719 5987277.345 5.19,3552879.106 5987277.307 5.58,3552876.647 5987277.156 5.87,3552875.42 5987277.08 5.77,3552871.09 5987276.813 6.7</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile11784513069409">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130694063">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.31 5987330.724 3552889.034
+5.237013748459391 6.59 5987329.176 3552884.031
+9.164830953715951 5.4 5987328.014 3552880.279
+14.402800026094402 5.13 5987326.466 3552875.275
+17.026197060408602 5.26 5987325.69 3552872.769
+19.647387820196386 5.63 5987324.915 3552870.265
+19.810605466384747 5.46 5987324.867 3552870.109
+20.136381463274816 4.46 5987324.77 3552869.798
+20.217990285872574 3.84 5987324.746 3552869.72
+20.4618611535333 2.79 5987324.674 3552869.487
+20.784179319434294 2.55 5987324.579 3552869.179
+21.111865144675964 2.83 5987324.482 3552868.866
+21.31588720202626 3.25 5987324.422 3552868.671
+21.399702475279692 3.92 5987324.397 3552868.591
+21.727388300521362 5.31 5987324.3 3552868.278
+22.381509084466114 6.09 5987324.107 3552867.653
+25.00174456992623 6.28 5987323.332 3552865.15
+29.307240824628558 7.21 5987322.059 3552861.037
+]]&gt;</om:result>
+       <prof:station>58.9510</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552889.034 5987330.724 7.31,3552884.031 5987329.176 6.59,3552880.279 5987328.014 5.4,3552875.275 5987326.466 5.13,3552872.769 5987325.69 5.26,3552870.265 5987324.915 5.63,3552870.109 5987324.867 5.46,3552869.798 5987324.77 4.46,3552869.72 5987324.746 3.84,3552869.487 5987324.674 2.79,3552869.179 5987324.579 2.55,3552868.866 5987324.482 2.83,3552868.671 5987324.422 3.25,3552868.591 5987324.397 3.92,3552868.278 5987324.3 5.31,3552867.653 5987324.107 6.09,3552865.15 5987323.332 6.28,3552861.037 5987322.059 7.21</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130696051">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130696064">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.24 5987375.834 3552874.402
+1.9930002506950173 5.87 5987375.427 3552872.451
+4.6541956587106625 6.0 5987374.883 3552869.846
+9.973649860067173 5.39 5987373.795 3552864.639
+15.29192072551448 5.34 5987372.708 3552859.433
+19.937876494119855 5.6 5987371.759 3552854.885
+20.272077032146225 5.47 5987371.69 3552854.558
+20.687858224714788 5.67 5987371.605 3552854.151
+20.996359440426865 4.13 5987371.542 3552853.849
+21.036171498853932 3.31 5987371.534 3552853.81
+21.36918801484173 2.89 5987371.466 3552853.484
+21.7012256634857 2.85 5987371.398 3552853.159
+22.19956791521242 3.24 5987371.297 3552852.671
+22.323329783712403 3.56 5987371.271 3552852.55
+22.36412193974955 4.4 5987371.263 3552852.51
+22.52965139287416 4.81 5987371.229 3552852.348
+22.694202297155325 5.54 5987371.195 3552852.187
+23.024078031345326 6.4 5987371.128 3552851.864
+24.354186297729598 7.04 5987370.856 3552850.562
+28.688704148432354 7.72 5987369.97 3552846.319
+]]&gt;</om:result>
+       <prof:station>59.0000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552874.402 5987375.834 7.24,3552872.451 5987375.427 5.87,3552869.846 5987374.883 6.0,3552864.639 5987373.795 5.39,3552859.433 5987372.708 5.34,3552854.885 5987371.759 5.6,3552854.558 5987371.69 5.47,3552854.151 5987371.605 5.67,3552853.849 5987371.542 4.13,3552853.81 5987371.534 3.31,3552853.484 5987371.466 2.89,3552853.159 5987371.398 2.85,3552852.671 5987371.297 3.24,3552852.55 5987371.271 3.56,3552852.51 5987371.263 4.4,3552852.348 5987371.229 4.81,3552852.187 5987371.195 5.54,3552851.864 5987371.128 6.4,3552850.562 5987370.856 7.04,3552846.319 5987369.97 7.72</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130698020">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130698086">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.89 5987423.79 3552867.546
+1.9795201441169652 6.47 5987423.672 3552865.57
+5.936623756370134 5.42 5987423.435 3552861.62
+11.224134796469185 5.2 5987423.118 3552856.342
+17.835944306798122 5.29 5987422.723 3552849.742
+19.15636999570809 5.57 5987422.643 3552848.424
+20.14912474885065 5.55 5987422.584 3552847.433
+20.231277046839597 5.41 5987422.579 3552847.351
+20.49875601795796 3.98 5987422.563 3552847.084
+20.539804769213298 3.08 5987422.561 3552847.043
+20.704109364261594 2.68 5987422.551 3552846.879
+21.360269405967678 3.24 5987422.512 3552846.224
+21.687880455920276 3.67 5987422.492 3552845.897
+21.770032753444426 4.42 5987422.487 3552845.815
+21.852185050968576 4.84 5987422.482 3552845.733
+22.017487803540405 5.26 5987422.472 3552845.568
+22.681693344194162 5.88 5987422.432 3552844.905
+25.324420723040078 7.17 5987422.274 3552842.267
+27.61751688313645 8.47 5987422.137 3552839.978
+]]&gt;</om:result>
+       <prof:station>59.0510</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552867.546 5987423.79 5.89,3552865.57 5987423.672 6.47,3552861.62 5987423.435 5.42,3552856.342 5987423.118 5.2,3552849.742 5987422.723 5.29,3552848.424 5987422.643 5.57,3552847.433 5987422.584 5.55,3552847.351 5987422.579 5.41,3552847.084 5987422.563 3.98,3552847.043 5987422.561 3.08,3552846.879 5987422.551 2.68,3552846.224 5987422.512 3.24,3552845.897 5987422.492 3.67,3552845.815 5987422.487 4.42,3552845.733 5987422.482 4.84,3552845.568 5987422.472 5.26,3552844.905 5987422.432 5.88,3552842.267 5987422.274 7.17,3552839.978 5987422.137 8.47</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130706133">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130706161">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.45 5987472.874 3552865.416
+6.580579686043338 5.5 5987473.247 3552858.846
+13.156110767172866 5.29 5987473.619 3552852.281
+19.733638646078646 5.36 5987473.991 3552845.714
+24.860846560673846 5.79 5987474.281 3552840.595
+25.268495919877665 4.57 5987474.304 3552840.188
+25.67614527913403 2.78 5987474.327 3552839.781
+25.777323339791888 2.51 5987474.333 3552839.68
+25.980677710506445 2.46 5987474.345 3552839.477
+26.38533188394386 2.91 5987474.368 3552839.073
+26.59062679383993 3.39 5987474.379 3552838.868
+26.69479972680554 4.24 5987474.385 3552838.764
+26.90114894514397 4.92 5987474.397 3552838.558
+28.13108593552652 6.51 5987474.466 3552837.33
+28.952431782604698 8.1 5987474.513 3552836.51
+33.36951226604703 9.11 5987474.763 3552832.1
+]]&gt;</om:result>
+       <prof:station>59.1000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552865.416 5987472.874 6.45,3552858.846 5987473.247 5.5,3552852.281 5987473.619 5.29,3552845.714 5987473.991 5.36,3552840.595 5987474.281 5.79,3552840.188 5987474.304 4.57,3552839.781 5987474.327 2.78,3552839.68 5987474.333 2.51,3552839.477 5987474.345 2.46,3552839.073 5987474.368 2.91,3552838.868 5987474.379 3.39,3552838.764 5987474.385 4.24,3552838.558 5987474.397 4.92,3552837.33 5987474.466 6.51,3552836.51 5987474.513 8.1,3552832.1 5987474.763 9.11</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130708151">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130708138">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.35 5987512.363 3552867.417
+1.3556920739983265 6.09 5987513.112 3552866.287
+2.7105507382816 6.09 5987513.861 3552865.158
+8.132485540576692 5.36 5987516.857 3552860.639
+13.555806386958846 5.29 5987519.854 3552856.119
+16.26857655769559 5.41 5987521.353 3552853.858
+19.485569718869925 5.93 5987523.131 3552851.177
+20.163692126652514 4.96 5987523.506 3552850.612
+20.24883905861887 4.71 5987523.553 3552850.541
+20.312352836988694 4.2 5987523.588 3552850.488
+20.343417286177875 3.42 5987523.605 3552850.462
+21.273374811736154 2.78 5987524.119 3552849.687
+21.35852174370251 3.06 5987524.166 3552849.616
+21.442283309977004 3.55 5987524.212 3552849.546
+21.483332061493257 4.11 5987524.235 3552849.512
+21.652240320537963 4.96 5987524.328 3552849.371
+21.82087009252788 5.57 5987524.422 3552849.231
+22.15646657641055 6.09 5987524.607 3552848.951
+27.327952243075813 8.58 5987527.465 3552844.641
+27.338768896608773 9.05 5987527.471 3552844.632
+27.380649679940596 9.06 5987527.494 3552844.597
+]]&gt;</om:result>
+       <prof:station>59.1500</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552867.417 5987512.363 6.35,3552866.287 5987513.112 6.09,3552865.158 5987513.861 6.09,3552860.639 5987516.857 5.36,3552856.119 5987519.854 5.29,3552853.858 5987521.353 5.41,3552851.177 5987523.131 5.93,3552850.612 5987523.506 4.96,3552850.541 5987523.553 4.71,3552850.488 5987523.588 4.2,3552850.462 5987523.605 3.42,3552849.687 5987524.119 2.78,3552849.616 5987524.166 3.06,3552849.546 5987524.212 3.55,3552849.512 5987524.235 4.11,3552849.371 5987524.328 4.96,3552849.231 5987524.422 5.57,3552848.951 5987524.607 6.09,3552844.641 5987527.465 8.58,3552844.632 5987527.471 9.05,3552844.597 5987527.494 9.06</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130710158">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130710164">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.21 5987543.647 3552901.583
+2.9428180372415937 6.2 5987545.954 3552899.756
+5.889229583866143 5.72 5987548.264 3552897.927
+11.785483055160064 5.34 5987552.886 3552894.266
+14.73251546098425 5.37 5987555.196 3552892.436
+17.30519849629663 5.68 5987557.213 3552890.839
+17.85259323487107 6.07 5987557.642 3552890.499
+18.217109352600723 4.78 5987557.928 3552890.273
+18.49041504196839 4.05 5987558.142 3552890.103
+18.53523691170489 3.54 5987558.177 3552890.075
+18.717494970858425 2.65 5987558.32 3552889.962
+18.89975302972325 2.52 5987558.463 3552889.849
+19.450741231978874 3.24 5987558.895 3552889.507
+19.54257259967815 4.16 5987558.967 3552889.45
+20.09496557610242 5.41 5987559.4 3552889.107
+23.03840455104506 5.27 5987561.707 3552887.279
+24.510515959139745 5.55 5987562.861 3552886.365
+25.98200670003595 6.56 5987564.015 3552885.452
+31.013359599608165 7.73 5987567.959 3552882.328
+]]&gt;</om:result>
+       <prof:station>59.2000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552901.583 5987543.647 6.21,3552899.756 5987545.954 6.2,3552897.927 5987548.264 5.72,3552894.266 5987552.886 5.34,3552892.436 5987555.196 5.37,3552890.839 5987557.213 5.68,3552890.499 5987557.642 6.07,3552890.273 5987557.928 4.78,3552890.103 5987558.142 4.05,3552890.075 5987558.177 3.54,3552889.962 5987558.32 2.65,3552889.849 5987558.463 2.52,3552889.507 5987558.895 3.24,3552889.45 5987558.967 4.16,3552889.107 5987559.4 5.41,3552887.279 5987561.707 5.27,3552886.365 5987562.861 5.55,3552885.452 5987564.015 6.56,3552882.328 5987567.959 7.73</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130712178">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130712122">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.84 5987582.124 3552944.635
+2.8589951029413063 5.56 5987584.391 3552942.893
+10.009074543088866 5.42 5987590.061 3552938.537
+11.439577951399405 5.84 5987591.195 3552937.665
+12.148427723871423 5.84 5987591.757 3552937.233
+12.505047970038682 4.42 5987592.04 3552937.016
+12.862277587854999 2.45 5987592.323 3552936.798
+13.221702128061821 2.31 5987592.608 3552936.579
+13.400713300712377 3.03 5987592.75 3552936.47
+13.579724473646474 3.47 5987592.892 3552936.361
+13.75873564658057 4.25 5987593.034 3552936.252
+14.293573939551216 5.48 5987593.458 3552935.926
+15.000412677109683 5.61 5987594.019 3552935.496
+17.14976513741527 5.33 5987595.723 3552934.186
+29.137777983631523 8.41 5987605.229 3552926.882
+]]&gt;</om:result>
+       <prof:station>59.2560</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552944.635 5987582.124 5.84,3552942.893 5987584.391 5.56,3552938.537 5987590.061 5.42,3552937.665 5987591.195 5.84,3552937.233 5987591.757 5.84,3552937.016 5987592.04 4.42,3552936.798 5987592.323 2.45,3552936.579 5987592.608 2.31,3552936.47 5987592.75 3.03,3552936.361 5987592.892 3.47,3552936.252 5987593.034 4.25,3552935.926 5987593.458 5.48,3552935.496 5987594.019 5.61,3552934.186 5987595.723 5.33,3552926.882 5987605.229 8.41</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130714253">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130715283">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.75 5987612.677 3552978.432
+6.75610131682581 5.49 5987616.701 3552973.005
+9.282544666346817 5.69 5987618.205 3552970.975
+10.020954443770737 5.57 5987618.645 3552970.382
+10.233154821282797 5.06 5987618.772 3552970.212
+10.44276636647715 4.27 5987618.896 3552970.043
+10.54776636673792 3.68 5987618.959 3552969.959
+10.75436985185046 3.16 5987619.082 3552969.793
+11.173975619441714 3.01 5987619.332 3552969.456
+11.592182505672158 3.24 5987619.581 3552969.12
+11.905986584891298 3.81 5987619.768 3552968.868
+12.009586777599779 4.43 5987619.83 3552968.785
+12.219198323169573 5.07 5987619.954 3552968.616
+12.427200726823365 5.46 5987620.078 3552968.449
+13.26501335490391 5.79 5987620.577 3552967.776
+16.63126364310337 5.29 5987622.582 3552965.072
+26.758019589497486 8.01 5987628.613 3552956.937
+30.423074159573545 8.67 5987630.796 3552953.993
+]]&gt;</om:result>
+       <prof:station>59.3000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552978.432 5987612.677 5.75,3552973.005 5987616.701 5.49,3552970.975 5987618.205 5.69,3552970.382 5987618.645 5.57,3552970.212 5987618.772 5.06,3552970.043 5987618.896 4.27,3552969.959 5987618.959 3.68,3552969.793 5987619.082 3.16,3552969.456 5987619.332 3.01,3552969.12 5987619.581 3.24,3552968.868 5987619.768 3.81,3552968.785 5987619.83 4.43,3552968.616 5987619.954 5.07,3552968.449 5987620.078 5.46,3552967.776 5987620.577 5.79,3552965.072 5987622.582 5.29,3552956.937 5987628.613 8.01,3552953.993 5987630.796 8.67</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile11784513071720">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130717282">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.55 5987678.286 3552997.679
+3.4220807998399905 5.58 5987678.2 3552994.258
+5.984880050583506 5.18 5987678.136 3552991.696
+9.399963065556488 5.37 5987678.05 3552988.282
+9.935120986329801 5.14 5987678.037 3552987.747
+10.149205082083833 4.57 5987678.031 3552987.533
+10.360264315156298 3.67 5987678.026 3552987.322
+10.571349606103054 2.96 5987678.02 3552987.111
+10.997466960803006 2.77 5987678.01 3552986.685
+11.63766692968883 3.38 5987677.994 3552986.045
+11.743709374154069 4.2 5987677.991 3552985.939
+11.956768051525902 4.8 5987677.986 3552985.726
+12.807052709367884 5.54 5987677.964 3552984.876
+13.231170617612113 5.71 5987677.954 3552984.452
+16.647253315714753 5.3 5987677.868 3552981.037
+18.3567941895396 5.62 5987677.825 3552979.328
+21.780874358413886 6.9 5987677.739 3552975.905
+28.107872540526863 8.5 5987677.58 3552969.58
+]]&gt;</om:result>
+       <prof:station>59.3650</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552997.679 5987678.286 5.55,3552994.258 5987678.2 5.58,3552991.696 5987678.136 5.18,3552988.282 5987678.05 5.37,3552987.747 5987678.037 5.14,3552987.533 5987678.031 4.57,3552987.322 5987678.026 3.67,3552987.111 5987678.02 2.96,3552986.685 5987678.01 2.77,3552986.045 5987677.994 3.38,3552985.939 5987677.991 4.2,3552985.726 5987677.986 4.8,3552984.876 5987677.964 5.54,3552984.452 5987677.954 5.71,3552981.037 5987677.868 5.3,3552979.328 5987677.825 5.62,3552975.905 5987677.739 6.9,3552969.58 5987677.58 8.5</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130718289">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130718213">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.49 5987726.363 3552998.291
+7.321244771505915 5.15 5987726.498 3552990.971
+10.981876410673951 5.28 5987726.566 3552987.311
+12.811192403436088 5.49 5987726.6 3552985.482
+13.491316656496998 5.72 5987726.613 3552984.802
+13.895377295611087 4.453 5987726.62 3552984.398
+14.406475133539026 2.85 5987726.63 3552983.887
+14.634510218673208 2.68 5987726.634 3552983.659
+14.96956394567183 3.197 5987726.64 3552983.324
+15.263606459830074 3.65 5987726.645 3552983.03
+15.320615230652114 4.29 5987726.646 3552982.973
+15.777703843918209 5.21 5987726.655 3552982.516
+21.268651302903056 5.92 5987726.757 3552977.026
+24.927264838393327 7.92 5987726.824 3552973.368
+29.50505404238408 8.5 5987726.909 3552968.791
+]]&gt;</om:result>
+       <prof:station>59.4000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3552998.291 5987726.363 5.49,3552990.971 5987726.498 5.15,3552987.311 5987726.566 5.28,3552985.482 5987726.6 5.49,3552984.802 5987726.613 5.72,3552984.398 5987726.62 4.453,3552983.887 5987726.63 2.85,3552983.659 5987726.634 2.68,3552983.324 5987726.64 3.197,3552983.03 5987726.645 3.65,3552982.973 5987726.646 4.29,3552982.516 5987726.655 5.21,3552977.026 5987726.757 5.92,3552973.368 5987726.824 7.92,3552968.791 5987726.909 8.5</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130720213">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130720227">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.5 5987768.793 3553000.186
+6.226891520281367 5.21 5987771.166 3552994.429
+9.341533714622969 5.21 5987772.352 3552991.549
+12.846172925980799 5.48 5987773.688 3552988.309
+13.141254270637365 5.2 5987773.8 3552988.036
+13.237638916611635 4.81 5987773.837 3552987.947
+13.333644124713397 4.1 5987773.873 3552987.858
+13.526413416734407 3.36 5987773.947 3552987.68
+13.910263648173766 2.87 5987774.093 3552987.325
+14.296725807037994 2.8 5987774.241 3552986.968
+14.490039024332274 3.63 5987774.314 3552986.789
+14.612423663534644 4.68 5987774.361 3552986.676
+14.999428831774159 5.32 5987774.508 3552986.318
+15.772895055822083 5.86 5987774.803 3552985.603
+20.45062409889306 7.9 5987776.585 3552981.278
+25.271352052273443 9.05 5987778.422 3552976.821
+]]&gt;</om:result>
+       <prof:station>59.4480</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553000.186 5987768.793 5.5,3552994.429 5987771.166 5.21,3552991.549 5987772.352 5.21,3552988.309 5987773.688 5.48,3552988.036 5987773.8 5.2,3552987.947 5987773.837 4.81,3552987.858 5987773.873 4.1,3552987.68 5987773.947 3.36,3552987.325 5987774.093 2.87,3552986.968 5987774.241 2.8,3552986.789 5987774.314 3.63,3552986.676 5987774.361 4.68,3552986.318 5987774.508 5.32,3552985.603 5987774.803 5.86,3552981.278 5987776.585 7.9,3552976.821 5987778.422 9.05</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130722268">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130722264">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.5 5987812.802 3553024.917
+3.210966365184813 5.23 5987814.494 3553022.188
+8.022860482841246 5.15 5987817.029 3553018.098
+11.230223262390606 5.52 5987818.719 3553015.372
+13.541244681900782 5.56 5987819.937 3553013.408
+13.759924813508446 5.82 5987820.052 3553013.222
+13.910868511682953 4.96 5987820.132 3553013.094
+14.01051287935313 4.08 5987820.184 3553013.009
+14.3132487375872 2.94 5987820.344 3553012.752
+15.161044114003218 2.85 5987820.79 3553012.031
+15.458799046633358 4.65 5987820.947 3553011.778
+15.659138758383646 4.87 5987821.053 3553011.608
+15.857575146029617 5.33 5987821.157 3553011.439
+16.299065802786327 5.447 5987821.39 3553011.064
+16.652897684110684 5.54 5987821.576 3553010.763
+20.66056283960807 7.92 5987823.688 3553007.357
+23.86930246733524 8.34 5987825.379 3553004.63
+25.471607057644015 8.37 5987826.223 3553003.268
+27.223477486422492 8.94 5987827.146 3553001.779
+]]&gt;</om:result>
+       <prof:station>59.5000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553024.917 5987812.802 5.5,3553022.188 5987814.494 5.23,3553018.098 5987817.029 5.15,3553015.372 5987818.719 5.52,3553013.408 5987819.937 5.56,3553013.222 5987820.052 5.82,3553013.094 5987820.132 4.96,3553013.009 5987820.184 4.08,3553012.752 5987820.344 2.94,3553012.031 5987820.79 2.85,3553011.778 5987820.947 4.65,3553011.608 5987821.053 4.87,3553011.439 5987821.157 5.33,3553011.064 5987821.39 5.447,3553010.763 5987821.576 5.54,3553007.357 5987823.688 7.92,3553004.63 5987825.379 8.34,3553003.268 5987826.223 8.37,3553001.779 5987827.146 8.94</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307232124">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130723295">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.6 5987856.608 3553051.504
+3.3974181375454586 5.25 5987858.399 3553048.617
+10.191404669525518 5.31 5987861.981 3553042.844
+15.17861681686428 5.53 5987864.61 3553038.606
+15.379805782671696 4.75 5987864.716 3553038.435
+15.533825262128964 3.38 5987864.797 3553038.304
+15.637599054414158 2.92 5987864.852 3553038.216
+15.85044876639745 2.67 5987864.964 3553038.035
+16.697920890336967 3.32 5987865.411 3553037.315
+17.11778991735072 4.73 5987865.632 3553036.958
+17.33116751715081 5.22 5987865.745 3553036.777
+17.800432900012108 5.253 5987865.992 3553036.378
+19.865849565228743 5.4 5987867.081 3553034.623
+21.562493310890133 6.08 5987867.975 3553033.181
+23.26104122045158 6.98 5987868.871 3553031.738
+28.694197301509128 8.55 5987871.735 3553027.121
+]]&gt;</om:result>
+       <prof:station>59.5510</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553051.504 5987856.608 5.6,3553048.617 5987858.399 5.25,3553042.844 5987861.981 5.31,3553038.606 5987864.61 5.53,3553038.435 5987864.716 4.75,3553038.304 5987864.797 3.38,3553038.216 5987864.852 2.92,3553038.035 5987864.964 2.67,3553037.315 5987865.411 3.32,3553036.958 5987865.632 4.73,3553036.777 5987865.745 5.22,3553036.378 5987865.992 5.253,3553034.623 5987867.081 5.4,3553033.181 5987867.975 6.08,3553031.738 5987868.871 6.98,3553027.121 5987871.735 8.55</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130729336">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307303104">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.73 5987900.765 3553073.984
+12.351183344569996 5.2 5987906.716 3553063.161
+14.568360152995641 5.92 5987907.784 3553061.218
+14.857029514260962 3.91 5987907.923 3553060.965
+15.44019501363001 2.77 5987908.204 3553060.454
+15.970525099335529 3.58 5987908.459 3553059.989
+16.069013677667435 4.35 5987908.507 3553059.903
+16.261912614445052 4.49 5987908.6 3553059.734
+16.64858689644289 5.62 5987908.786 3553059.395
+18.570391256827875 5.03 5987909.712 3553057.711
+19.3428632626804 5.52 5987910.084 3553057.034
+20.886930942623536 7.07 5987910.828 3553055.681
+21.659402948516448 7.66 5987911.2 3553055.004
+26.06558610390921 8.19 5987913.323 3553051.143
+]]&gt;</om:result>
+       <prof:station>59.6000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553073.984 5987900.765 5.73,3553063.161 5987906.716 5.2,3553061.218 5987907.784 5.92,3553060.965 5987907.923 3.91,3553060.454 5987908.204 2.77,3553059.989 5987908.459 3.58,3553059.903 5987908.507 4.35,3553059.734 5987908.6 4.49,3553059.395 5987908.786 5.62,3553057.711 5987909.712 5.03,3553057.034 5987910.084 5.52,3553055.681 5987910.828 7.07,3553055.004 5987911.2 7.66,3553051.143 5987913.323 8.19</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130731323">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307323136">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.86 5987945.857 3553097.934
+4.763360368421691 5.53 5987948.106 3553093.735
+5.358831610498823 5.27 5987948.387 3553093.21
+10.119956792624443 5.17 5987950.635 3553089.013
+11.607958136880129 5.56 5987951.337 3553087.701
+11.904135448426791 5.4 5987951.477 3553087.44
+12.173018322474453 4.46 5987951.604 3553087.203
+12.192253706348266 3.66 5987951.613 3553087.186
+12.466489006720678 3.364 5987951.742 3553086.944
+12.860195750759342 2.94 5987951.928 3553086.597
+13.008725208864469 3.55 5987951.998 3553086.466
+13.119260271380346 4.36 5987952.051 3553086.369
+13.267789729924393 4.48 5987952.121 3553086.238
+13.488789729471442 5.47 5987952.225 3553086.043
+13.629732980669182 5.501 5987952.292 3553085.919
+14.081145208940029 5.6 5987952.505 3553085.521
+15.27208769306536 5.15 5987953.067 3553084.471
+16.46214861593871 5.3 5987953.629 3553083.422
+17.653091099653487 5.66 5987954.191 3553082.372
+20.630037857715173 7.35 5987955.597 3553079.748
+21.22550909935282 8.45 5987955.878 3553079.223
+24.47980733450798 8.66 5987957.414 3553076.354
+]]&gt;</om:result>
+       <prof:station>59.6520</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553097.934 5987945.857 5.86,3553093.735 5987948.106 5.53,3553093.21 5987948.387 5.27,3553089.013 5987950.635 5.17,3553087.701 5987951.337 5.56,3553087.44 5987951.477 5.4,3553087.203 5987951.604 4.46,3553087.186 5987951.613 3.66,3553086.944 5987951.742 3.364,3553086.597 5987951.928 2.94,3553086.466 5987951.998 3.55,3553086.369 5987952.051 4.36,3553086.238 5987952.121 4.48,3553086.043 5987952.225 5.47,3553085.919 5987952.292 5.501,3553085.521 5987952.505 5.6,3553084.471 5987953.067 5.15,3553083.422 5987953.629 5.3,3553082.372 5987954.191 5.66,3553079.748 5987955.597 7.35,3553079.223 5987955.878 8.45,3553076.354 5987957.414 8.66</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130732363">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition11784513073234">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.88 5987986.882 3553122.586
+4.8217761249971804 5.37 5987989.337 3553118.436
+10.849553908034107 5.28 5987992.406 3553113.248
+12.354140562083817 6.01 5987993.172 3553111.953
+12.428066200382307 5.9 5987993.209 3553111.889
+12.578299352942544 4.78 5987993.286 3553111.76
+12.673315140789938 3.74 5987993.334 3553111.678
+12.97103984577172 3.14 5987993.486 3553111.422
+13.27099484276336 3.04 5987993.639 3553111.164
+13.572671822102606 3.55 5987993.792 3553110.904
+13.648474196622512 4.49 5987993.831 3553110.839
+13.800428136845893 4.55 5987993.908 3553110.708
+14.102613510674189 5.67 5987994.062 3553110.448
+14.312875252125098 5.647 5987994.169 3553110.267
+17.715648385832345 5.28 5987995.901 3553107.338
+22.537424510829524 6.41 5987998.356 3553103.188
+27.3556003069517 8.43 5988000.809 3553099.041
+29.07764937705915 8.79 5988001.686 3553097.559
+]]&gt;</om:result>
+       <prof:station>59.7000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553122.586 5987986.882 5.88,3553118.436 5987989.337 5.37,3553113.248 5987992.406 5.28,3553111.953 5987993.172 6.01,3553111.889 5987993.209 5.9,3553111.76 5987993.286 4.78,3553111.678 5987993.334 3.74,3553111.422 5987993.486 3.14,3553111.164 5987993.639 3.04,3553110.904 5987993.792 3.55,3553110.839 5987993.831 4.49,3553110.708 5987993.908 4.55,3553110.448 5987994.062 5.67,3553110.267 5987994.169 5.647,3553107.338 5987995.901 5.28,3553103.188 5987998.356 6.41,3553099.041 5988000.809 8.43,3553097.559 5988001.686 8.79</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130733388">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130734334">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.8 5988074.914 3553169.546
+10.490668663079697 5.37 5988080.049 3553160.398
+12.041147621564704 6.06 5988080.808 3553159.046
+12.378284092664929 3.82 5988080.973 3553158.752
+12.790212484039124 2.73 5988081.175 3553158.393
+13.064214309168545 2.72 5988081.309 3553158.154
+13.203012724370806 3.62 5988081.377 3553158.033
+13.26925470461385 4.25 5988081.409 3553157.975
+13.536556032738378 5.61 5988081.54 3553157.742
+14.083687643999523 5.74 5988081.808 3553157.265
+15.186884816131185 5.34 5988082.348 3553156.303
+17.39464068981487 5.13 5988083.429 3553154.378
+19.600545720014775 5.14 5988084.508 3553152.454
+26.7798789059621 6.22 5988088.023 3553146.194
+30.835812090989943 8.46 5988090.008 3553142.657
+]]&gt;</om:result>
+       <prof:station>59.8000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553169.546 5988074.914 5.8,3553160.398 5988080.049 5.37,3553159.046 5988080.808 6.06,3553158.752 5988080.973 3.82,3553158.393 5988081.175 2.73,3553158.154 5988081.309 2.72,3553158.033 5988081.377 3.62,3553157.975 5988081.409 4.25,3553157.742 5988081.54 5.61,3553157.265 5988081.808 5.74,3553156.303 5988082.348 5.34,3553154.378 5988083.429 5.13,3553152.454 5988084.508 5.14,3553146.194 5988088.023 6.22,3553142.657 5988090.008 8.46</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130734323">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130734350">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.66 5988160.425 3553219.044
+4.261758440059493 5.75 5988163.449 3553216.041
+5.682344587075644 5.46 5988164.457 3553215.04
+8.523516880118986 5.56 5988166.473 3553213.038
+11.362570419355054 5.88 5988168.488 3553211.038
+12.1566541681844 5.77 5988169.051 3553210.478
+12.463541770012602 4.58 5988169.269 3553210.262
+12.508796603853124 3.9 5988169.301 3553210.23
+12.683453410171278 3.15 5988169.425 3553210.107
+13.038423831706966 2.96 5988169.677 3553209.857
+13.39268503489225 3.08 5988169.928 3553209.607
+13.744827051467094 4.48 5988170.178 3553209.359
+14.26879747009362 5.84 5988170.55 3553208.99
+14.660537179596995 5.815 5988170.828 3553208.714
+19.953970470028906 5.48 5988174.584 3553204.984
+25.637729261655487 5.39 5988178.617 3553200.979
+29.89878312196213 5.64 5988181.641 3553197.977
+35.60658339856014 7.23 5988185.691 3553193.955
+]]&gt;</om:result>
+       <prof:station>59.9000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553219.044 5988160.425 5.66,3553216.041 5988163.449 5.75,3553215.04 5988164.457 5.46,3553213.038 5988166.473 5.56,3553211.038 5988168.488 5.88,3553210.478 5988169.051 5.77,3553210.262 5988169.269 4.58,3553210.23 5988169.301 3.9,3553210.107 5988169.425 3.15,3553209.857 5988169.677 2.96,3553209.607 5988169.928 3.08,3553209.359 5988170.178 4.48,3553208.99 5988170.55 5.84,3553208.714 5988170.828 5.815,3553204.984 5988174.584 5.48,3553200.979 5988178.617 5.39,3553197.977 5988181.641 5.64,3553193.955 5988185.691 7.23</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307353135">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130735373">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.59 5988237.496 3553287.148
+3.1388891349760657 5.96 5988238.991 3553284.388
+5.231164451024501 5.73 5988239.987 3553282.548
+8.108281063063274 5.75 5988241.357 3553280.018
+8.567821050768554 6.24 5988241.576 3553279.614
+8.826882819414015 4.69 5988241.699 3553279.386
+9.021536358026403 2.88 5988241.792 3553279.215
+9.216189895784755 2.47 5988241.885 3553279.044
+9.41260272685266 3.06 5988241.978 3553278.871
+9.607256265055971 4.77 5988242.071 3553278.7
+9.991616772551838 5.89 5988242.254 3553278.362
+10.220269347822986 5.878 5988242.363 3553278.161
+18.356724411042965 5.46 5988246.237 3553271.006
+24.63314711818695 5.64 5988249.226 3553265.487
+29.252654018705314 7.13 5988251.426 3553261.425
+]]&gt;</om:result>
+       <prof:station>60.0000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553287.148 5988237.496 5.59,3553284.388 5988238.991 5.96,3553282.548 5988239.987 5.73,3553280.018 5988241.357 5.75,3553279.614 5988241.576 6.24,3553279.386 5988241.699 4.69,3553279.215 5988241.792 2.88,3553279.044 5988241.885 2.47,3553278.871 5988241.978 3.06,3553278.7 5988242.071 4.77,3553278.362 5988242.254 5.89,3553278.161 5988242.363 5.878,3553271.006 5988246.237 5.46,3553265.487 5988249.226 5.64,3553261.425 5988251.426 7.13</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130736360">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition11784513073634">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.72 5988303.614 3553290.614
+0.36843588332349514 5.65 5988303.502 3553290.263
+0.7371769846805012 5.25 5988303.389 3553289.912
+6.636874011166873 5.58 5988301.594 3553284.292
+11.060922495873426 5.33 5988300.247 3553280.078
+13.270889464061678 5.86 5988299.574 3553277.973
+13.637116170050868 5.66 5988299.463 3553277.624
+13.726609186773214 5.06 5988299.435 3553277.539
+13.902771044037886 3.29 5988299.382 3553277.371
+14.271206927200867 3.1 5988299.27 3553277.02
+14.362601675221633 3.54 5988299.242 3553276.933
+14.45399642368567 4.59 5988299.214 3553276.846
+14.729132753567534 6.18 5988299.13 3553276.584
+14.978972702341897 6.105 5988299.054 3553276.346
+16.20097106540925 5.74 5988298.682 3553275.182
+22.098762940555147 5.44 5988296.887 3553269.564
+25.046858596831083 5.78 5988295.989 3553266.756
+25.784683102032325 6.3 5988295.765 3553266.053
+27.258730929948527 6.65 5988295.316 3553264.649
+28.152142929181043 7.06 5988295.044 3553263.798
+]]&gt;</om:result>
+       <prof:station>60.0560</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553290.614 5988303.614 5.72,3553290.263 5988303.502 5.65,3553289.912 5988303.389 5.25,3553284.292 5988301.594 5.58,3553280.078 5988300.247 5.33,3553277.973 5988299.574 5.86,3553277.624 5988299.463 5.66,3553277.539 5988299.435 5.06,3553277.371 5988299.382 3.29,3553277.02 5988299.27 3.1,3553276.933 5988299.242 3.54,3553276.846 5988299.214 4.59,3553276.584 5988299.13 6.18,3553276.346 5988299.054 6.105,3553275.182 5988298.682 5.74,3553269.564 5988296.887 5.44,3553266.756 5988295.989 5.78,3553266.053 5988295.765 6.3,3553264.649 5988295.316 6.65,3553263.798 5988295.044 7.06</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130737342">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition11784513073733">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.66 5988343.825 3553267.182
+7.716846830291288 5.5 5988338.939 3553261.209
+7.906607205480036 4.4 5988338.819 3553261.062
+8.020308568506364 5.48 5988338.747 3553260.974
+10.442865275779546 5.84 5988337.213 3553259.099
+14.073498967435336 5.34 5988334.914 3553256.289
+15.88927345793909 5.76 5988333.765 3553254.883
+15.96520105459628 5.59 5988333.716 3553254.825
+16.1159126997021 6.04 5988333.621 3553254.708
+16.265849353357087 4.41 5988333.526 3553254.592
+16.30426809853384 3.78 5988333.502 3553254.562
+16.455612077606194 3.35 5988333.406 3553254.445
+16.681607652738883 3.14 5988333.263 3553254.27
+16.75548593119209 3.79 5988333.216 3553254.213
+16.809522955448962 4.68 5988333.182 3553254.171
+16.84857420426731 4.79 5988333.157 3553254.141
+16.925411694838992 5.58 5988333.109 3553254.081
+16.997882378520085 6.08 5988333.063 3553254.025
+17.30134407274908 6.11 5988332.871 3553253.79
+17.906719989269256 5.81 5988332.487 3553253.322
+22.74901902989451 5.53 5988329.421 3553249.574
+25.168761371439622 6.16 5988327.889 3553247.701
+26.835232193696157 6.88 5988326.834 3553246.411
+]]&gt;</om:result>
+       <prof:station>60.1000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553267.182 5988343.825 5.66,3553261.209 5988338.939 5.5,3553261.062 5988338.819 4.4,3553260.974 5988338.747 5.48,3553259.099 5988337.213 5.84,3553256.289 5988334.914 5.34,3553254.883 5988333.765 5.76,3553254.825 5988333.716 5.59,3553254.708 5988333.621 6.04,3553254.592 5988333.526 4.41,3553254.562 5988333.502 3.78,3553254.445 5988333.406 3.35,3553254.27 5988333.263 3.14,3553254.213 5988333.216 3.79,3553254.171 5988333.182 4.68,3553254.141 5988333.157 4.79,3553254.081 5988333.109 5.58,3553254.025 5988333.063 6.08,3553253.79 5988332.871 6.11,3553253.322 5988332.487 5.81,3553249.574 5988329.421 5.53,3553247.701 5988327.889 6.16,3553246.411 5988326.834 6.88</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307383139">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130738382">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.58 5988383.581 3553233.639
+6.2014695840836405 5.44 5988379.606 3553228.879
+6.295192580055244 4.37 5988379.546 3553228.807
+6.36971103443704 5.07 5988379.498 3553228.75
+6.443589312297756 5.5 5988379.451 3553228.693
+11.252785711311729 5.94 5988376.368 3553225.002
+13.659623470153457 5.87 5988374.826 3553223.154
+16.065567152219785 5.53 5988373.283 3553221.308
+17.866790348071586 5.59 5988372.129 3553219.925
+18.468053185474187 5.89 5988371.743 3553219.464
+18.765611582988832 5.74 5988371.553 3553219.235
+18.840778065282137 5.09 5988371.504 3553219.178
+18.877013407122686 4.6 5988371.481 3553219.15
+18.894817900874262 3.9 5988371.47 3553219.136
+18.965110147912586 3.09 5988371.425 3553219.082
+19.11491335190272 3.09 5988371.329 3553218.967
+19.339234550587577 3.46 5988371.185 3553218.795
+19.37687761065086 3.69 5988371.161 3553218.766
+19.413755788564885 4.34 5988371.137 3553218.738
+19.597617149107776 6.13 5988371.019 3553218.597
+19.740379188789294 6.1 5988370.928 3553218.487
+21.999463073948128 5.63 5988369.48 3553216.753
+24.40617410809414 5.64 5988367.937 3553214.906
+27.2474417825144 6.57 5988366.116 3553212.725
+]]&gt;</om:result>
+       <prof:station>60.1520</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553233.639 5988383.581 5.58,3553228.879 5988379.606 5.44,3553228.807 5988379.546 4.37,3553228.75 5988379.498 5.07,3553228.693 5988379.451 5.5,3553225.002 5988376.368 5.94,3553223.154 5988374.826 5.87,3553221.308 5988373.283 5.53,3553219.925 5988372.129 5.59,3553219.464 5988371.743 5.89,3553219.235 5988371.553 5.74,3553219.178 5988371.504 5.09,3553219.15 5988371.481 4.6,3553219.136 5988371.47 3.9,3553219.082 5988371.425 3.09,3553218.967 5988371.329 3.09,3553218.795 5988371.185 3.46,3553218.766 5988371.161 3.69,3553218.738 5988371.137 4.34,3553218.597 5988371.019 6.13,3553218.487 5988370.928 6.1,3553216.753 5988369.48 5.63,3553214.906 5988367.937 5.64,3553212.725 5988366.116 6.57</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307393113">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307393125">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.51 5988421.49 3553202.887
+2.3192912711827147 5.64 5988419.996 3553201.113
+5.221283862256515 5.47 5988418.127 3553198.893
+5.490172315397936 5.2 5988417.953 3553198.688
+5.517190827707338 4.31 5988417.936 3553198.667
+5.55265912326244 5.28 5988417.913 3553198.64
+7.5830957755663775 5.87 5988416.605 3553197.087
+7.873359449043928 6.58 5988416.418 3553196.865
+10.19482471860988 7.35 5988414.923 3553195.089
+16.94041564951426 6.83 5988410.577 3553189.93
+17.15833535956376 5.89 5988410.437 3553189.763
+18.89991739860982 5.34 5988409.315 3553188.431
+20.06097209178847 5.51 5988408.567 3553187.543
+20.714608841118924 6.16 5988408.146 3553187.043
+20.874274116048053 4.64 5988408.043 3553186.921
+20.89207860979963 4.16 5988408.032 3553186.907
+20.965188116523457 3.35 5988407.985 3553186.851
+21.107824016523228 3.13 5988407.893 3553186.742
+21.32497834006683 3.25 5988407.753 3553186.576
+21.43073750023338 4.7 5988407.685 3553186.495
+21.466205796142965 4.76 5988407.662 3553186.468
+21.61242480947597 6.01 5988407.568 3553186.356
+21.765045253929916 5.995 5988407.47 3553186.239
+23.93236110540942 5.78 5988406.073 3553184.582
+27.06571920815797 6.21 5988404.055 3553182.185
+]]&gt;</om:result>
+       <prof:station>60.2000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553202.887 5988421.49 5.51,3553201.113 5988419.996 5.64,3553198.893 5988418.127 5.47,3553198.688 5988417.953 5.2,3553198.667 5988417.936 4.31,3553198.64 5988417.913 5.28,3553197.087 5988416.605 5.87,3553196.865 5988416.418 6.58,3553195.089 5988414.923 7.35,3553189.93 5988410.577 6.83,3553189.763 5988410.437 5.89,3553188.431 5988409.315 5.34,3553187.543 5988408.567 5.51,3553187.043 5988408.146 6.16,3553186.921 5988408.043 4.64,3553186.907 5988408.032 4.16,3553186.851 5988407.985 3.35,3553186.742 5988407.893 3.13,3553186.576 5988407.753 3.25,3553186.495 5988407.685 4.7,3553186.468 5988407.662 4.76,3553186.356 5988407.568 6.01,3553186.239 5988407.47 5.995,3553184.582 5988406.073 5.78,3553182.185 5988404.055 6.21</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307404153">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307404103">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.33 5988494.527 3553133.332
+0.8660277128982135 5.25 5988493.875 3553132.762
+0.9440148915875353 5.66 5988493.816 3553132.711
+5.7432908785622505 5.58 5988490.203 3553129.552
+5.860222482175366 4.4 5988490.115 3553129.475
+5.9396202156273175 5.42 5988490.055 3553129.423
+7.827552947404843 6.11 5988488.634 3553128.18
+8.142224204189832 6.96 5988488.397 3553127.973
+10.659499318020885 7.22 5988486.502 3553126.316
+21.319749409493436 6.6 5988478.476 3553119.3
+21.399147141936623 6.04 5988478.416 3553119.248
+21.556436683889984 5.61 5988478.298 3553119.144
+22.81587505063245 5.35 5988477.349 3553118.316
+25.33597227158082 5.49 5988475.452 3553116.657
+26.593904304630726 6.09 5988474.505 3553115.829
+26.67254907525806 6.33 5988474.446 3553115.777
+26.750536253947384 5.94 5988474.387 3553115.726
+26.85966003697379 4.98 5988474.305 3553115.654
+26.87876500996504 4.31 5988474.291 3553115.641
+27.153080521847393 3.12 5988474.084 3553115.461
+27.308958679187164 3.65 5988473.967 3553115.358
+27.46699981291386 4.43 5988473.848 3553115.254
+27.54639754636581 5.28 5988473.788 3553115.202
+27.625795279113973 5.9 5988473.728 3553115.15
+27.7044400501321 6.19 5988473.669 3553115.098
+31.12461928544963 6.31 5988471.094 3553112.847
+]]&gt;</om:result>
+       <prof:station>60.3000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553133.332 5988494.527 5.33,3553132.762 5988493.875 5.25,3553132.711 5988493.816 5.66,3553129.552 5988490.203 5.58,3553129.475 5988490.115 4.4,3553129.423 5988490.055 5.42,3553128.18 5988488.634 6.11,3553127.973 5988488.397 6.96,3553126.316 5988486.502 7.22,3553119.3 5988478.476 6.6,3553119.248 5988478.416 6.04,3553119.144 5988478.298 5.61,3553118.316 5988477.349 5.35,3553116.657 5988475.452 5.49,3553115.829 5988474.505 6.09,3553115.777 5988474.446 6.33,3553115.726 5988474.387 5.94,3553115.654 5988474.305 4.98,3553115.641 5988474.291 4.31,3553115.461 5988474.084 3.12,3553115.358 5988473.967 3.65,3553115.254 5988473.848 4.43,3553115.202 5988473.788 5.28,3553115.15 5988473.728 5.9,3553115.098 5988473.669 6.19,3553112.847 5988471.094 6.31</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130746421">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130747459">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.34 5988566.366 3553081.025
+4.868479228633471 5.58 5988565.209 3553076.296
+4.942458955740387 5.4 5988565.192 3553076.224
+5.034137742937546 4.38 5988565.17 3553076.135
+5.145223295468356 5.6 5988565.144 3553076.027
+6.915997419736675 6.33 5988564.723 3553074.307
+7.063218342350205 7.05 5988564.688 3553074.164
+9.423847495778283 7.13 5988564.127 3553071.871
+14.146811078161225 6.74 5988563.006 3553067.283
+21.227727191278987 6.6 5988561.323 3553060.405
+21.52314046120459 5.76 5988561.253 3553060.118
+23.88474097751345 5.26 5988560.692 3553057.824
+25.065422560275103 5.34 5988560.412 3553056.677
+26.836196684774308 6.29 5988559.991 3553054.957
+27.070736660309443 6.26 5988559.936 3553054.729
+27.10687528190547 6.55 5988559.927 3553054.694
+27.178909996047125 5.67 5988559.91 3553054.624
+27.25191684503554 4.27 5988559.893 3553054.553
+27.473353066029997 3.22 5988559.84 3553054.338
+27.691637284287946 4.03 5988559.788 3553054.126
+27.76270063643414 4.7 5988559.771 3553054.057
+27.78016488556032 5.23 5988559.767 3553054.04
+27.853171734548738 5.76 5988559.75 3553053.969
+28.147613579323487 6.32 5988559.68 3553053.683
+29.8977724292642 7.02 5988559.264 3553051.983
+]]&gt;</om:result>
+       <prof:station>60.4000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553081.025 5988566.366 5.34,3553076.296 5988565.209 5.58,3553076.224 5988565.192 5.4,3553076.135 5988565.17 4.38,3553076.027 5988565.144 5.6,3553074.307 5988564.723 6.33,3553074.164 5988564.688 7.05,3553071.871 5988564.127 7.13,3553067.283 5988563.006 6.74,3553060.405 5988561.323 6.6,3553060.118 5988561.253 5.76,3553057.824 5988560.692 5.26,3553056.677 5988560.412 5.34,3553054.957 5988559.991 6.29,3553054.729 5988559.936 6.26,3553054.694 5988559.927 6.55,3553054.624 5988559.91 5.67,3553054.553 5988559.893 4.27,3553054.338 5988559.84 3.22,3553054.126 5988559.788 4.03,3553054.057 5988559.771 4.7,3553054.04 5988559.767 5.23,3553053.969 5988559.75 5.76,3553053.683 5988559.68 6.32,3553051.983 5988559.264 7.02</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307474176">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307474137">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.48 5988609.985 3553077.539
+3.735880351147274 5.51 5988610.786 3553073.89
+3.8280757959323366 4.34 5988610.806 3553073.8
+3.9508601595254196 5.6 5988610.832 3553073.68
+4.95535854194895 6.06 5988611.048 3553072.699
+5.7077852823092385 6.18 5988611.209 3553071.964
+5.833713833565239 6.45 5988611.236 3553071.841
+5.958665824471573 7.03 5988611.263 3553071.719
+13.995747135470769 6.64 5988612.987 3553063.869
+20.023069758542814 6.61 5988614.28 3553057.982
+20.5255933897182 5.48 5988614.387 3553057.491
+22.78330240565754 5.99 5988614.872 3553055.286
+22.939820775083238 5.65 5988614.905 3553055.133
+22.969653642789915 5.23 5988614.912 3553055.104
+23.03084187657166 3.96 5988614.924 3553055.044
+23.155793867932655 3.62 5988614.951 3553054.922
+23.280745858637744 3.54 5988614.978 3553054.8
+23.40472166249297 3.73 5988615.005 3553054.679
+23.435315779383846 4.04 5988615.011 3553054.649
+23.496927466739454 5.11 5988615.025 3553054.589
+23.558319648566336 5.75 5988615.038 3553054.529
+23.633052506412366 5.768 5988615.054 3553054.456
+23.808009643753508 5.81 5988615.091 3553054.285
+24.811316675473815 7.02 5988615.306 3553053.305
+25.778936952648092 7.67 5988615.514 3553052.36
+]]&gt;</om:result>
+       <prof:station>60.4510</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553077.539 5988609.985 5.48,3553073.89 5988610.786 5.51,3553073.8 5988610.806 4.34,3553073.68 5988610.832 5.6,3553072.699 5988611.048 6.06,3553071.964 5988611.209 6.18,3553071.841 5988611.236 6.45,3553071.719 5988611.263 7.03,3553063.869 5988612.987 6.64,3553057.982 5988614.28 6.61,3553057.491 5988614.387 5.48,3553055.286 5988614.872 5.99,3553055.133 5988614.905 5.65,3553055.104 5988614.912 5.23,3553055.044 5988614.924 3.96,3553054.922 5988614.951 3.62,3553054.8 5988614.978 3.54,3553054.679 5988615.005 3.73,3553054.649 5988615.011 4.04,3553054.589 5988615.025 5.11,3553054.529 5988615.038 5.75,3553054.456 5988615.054 5.768,3553054.285 5988615.091 5.81,3553053.305 5988615.306 7.02,3553052.36 5988615.514 7.67</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130748417">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130749421">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.57 5988675.931 3553099.516
+0.6022042841680553 5.6 5988676.174 3553098.965
+1.2040057466473502 5.37 5988676.416 3553098.414
+1.5057672417375731 5.56 5988676.538 3553098.138
+2.238751552245723 5.49 5988676.833 3553097.467
+2.294697955166523 4.42 5988676.856 3553097.416
+2.3515574312173864 5.52 5988676.879 3553097.364
+3.705125309111395 6.19 5988677.424 3553096.125
+3.855091972447637 6.93 5988677.485 3553095.988
+8.669283077671372 6.65 5988679.425 3553091.582
+12.280384018011436 6.71 5988680.88 3553088.277
+12.582145513052279 6.85 5988681.002 3553088.001
+12.657385130131807 7.07 5988681.032 3553087.932
+12.82664528515001 7.0 5988681.1 3553087.777
+13.257356325277556 7.71 5988681.274 3553087.383
+13.43331654772617 4.89 5988681.345 3553087.222
+13.43743965357586 4.31 5988681.346 3553087.218
+13.453992598720657 3.86 5988681.353 3553087.203
+13.565478024132098 3.35 5988681.398 3553087.101
+13.677879091395383 4.13 5988681.443 3553086.998
+13.714128229438565 4.87 5988681.458 3553086.965
+13.787538037977264 5.98 5988681.488 3553086.898
+13.882474858797487 7.67 5988681.526 3553086.811
+14.165453656685445 7.56 5988681.64 3553086.552
+14.6167772658125 7.46 5988681.822 3553086.139
+15.067698545079818 7.38 5988682.003 3553085.726
+15.994510284418494 8.01 5988682.377 3553084.878
+]]&gt;</om:result>
+       <prof:station>60.5210</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553099.516 5988675.931 5.57,3553098.965 5988676.174 5.6,3553098.414 5988676.416 5.37,3553098.138 5988676.538 5.56,3553097.467 5988676.833 5.49,3553097.416 5988676.856 4.42,3553097.364 5988676.879 5.52,3553096.125 5988677.424 6.19,3553095.988 5988677.485 6.93,3553091.582 5988679.425 6.65,3553088.277 5988680.88 6.71,3553088.001 5988681.002 6.85,3553087.932 5988681.032 7.07,3553087.777 5988681.1 7.0,3553087.383 5988681.274 7.71,3553087.222 5988681.345 4.89,3553087.218 5988681.346 4.31,3553087.203 5988681.353 3.86,3553087.101 5988681.398 3.35,3553086.998 5988681.443 4.13,3553086.965 5988681.458 4.87,3553086.898 5988681.488 5.98,3553086.811 5988681.526 7.67,3553086.552 5988681.64 7.56,3553086.139 5988681.822 7.46,3553085.726 5988682.003 7.38,3553084.878 5988682.377 8.01</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307494143">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307504109">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.6 5988681.027 3553101.681
+0.5957130182592437 5.61 5988681.272 3553101.138
+1.192749030469756 5.41 5988681.518 3553100.594
+1.341802711919734 5.54 5988681.579 3553100.458
+2.1425155193069867 5.53 5988681.908 3553099.728
+2.1984619222277866 4.38 5988681.931 3553099.677
+2.2544083251485865 5.44 5988681.954 3553099.626
+2.2731966195316953 5.55 5988681.962 3553099.609
+3.614087368370006 6.18 5988682.514 3553098.387
+3.6884109847763256 6.44 5988682.544 3553098.319
+3.763143842491505 6.83 5988682.575 3553098.251
+3.8003056506946646 6.93 5988682.59 3553098.217
+4.993054576920198 6.77 5988683.081 3553097.13
+9.762315840267874 6.67 5988685.043 3553092.783
+12.29645553627274 6.75 5988686.085 3553090.473
+12.35240193961803 6.53 5988686.108 3553090.422
+12.371190234001139 6.28 5988686.116 3553090.405
+12.520243915451116 5.87 5988686.177 3553090.269
+13.04031314141913 6.18 5988686.391 3553089.795
+13.115957044311813 6.05 5988686.422 3553089.726
+13.190689901640669 5.8 5988686.453 3553089.658
+13.22561839989303 5.24 5988686.467 3553089.626
+13.244406693879585 4.79 5988686.475 3553089.609
+13.281568502458663 3.49 5988686.49 3553089.575
+13.431034217926408 3.43 5988686.552 3553089.439
+13.47713194025328 3.48 5988686.571 3553089.397
+13.51338107787254 4.23 5988686.586 3553089.364
+13.53084532699872 4.91 5988686.593 3553089.348
+13.566692223725699 5.45 5988686.607 3553089.315
+13.732710295151321 5.97 5988686.676 3553089.164
+13.742559152912644 6.08 5988686.68 3553089.155
+13.889378769990042 5.77 5988686.74 3553089.021
+14.336038595683991 5.48 5988686.924 3553088.614
+14.707054767800418 5.73 5988687.077 3553088.276
+15.004249990181592 7.56 5988687.199 3553088.005
+15.599963008440834 7.79 5988687.444 3553087.462
+15.855529046680996 8.01 5988687.549 3553087.229
+]]&gt;</om:result>
+       <prof:station>60.5280</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553101.681 5988681.027 5.6,3553101.138 5988681.272 5.61,3553100.594 5988681.518 5.41,3553100.458 5988681.579 5.54,3553099.728 5988681.908 5.53,3553099.677 5988681.931 4.38,3553099.626 5988681.954 5.44,3553099.609 5988681.962 5.55,3553098.387 5988682.514 6.18,3553098.319 5988682.544 6.44,3553098.251 5988682.575 6.83,3553098.217 5988682.59 6.93,3553097.13 5988683.081 6.77,3553092.783 5988685.043 6.67,3553090.473 5988686.085 6.75,3553090.422 5988686.108 6.53,3553090.405 5988686.116 6.28,3553090.269 5988686.177 5.87,3553089.795 5988686.391 6.18,3553089.726 5988686.422 6.05,3553089.658 5988686.453 5.8,3553089.626 5988686.467 5.24,3553089.609 5988686.475 4.79,3553089.575 5988686.49 3.49,3553089.439 5988686.552 3.43,3553089.397 5988686.571 3.48,3553089.364 5988686.586 4.23,3553089.348 5988686.593 4.91,3553089.315 5988686.607 5.45,3553089.164 5988686.676 5.97,3553089.155 5988686.68 6.08,3553089.021 5988686.74 5.77,3553088.614 5988686.924 5.48,3553088.276 5988687.077 5.73,3553088.005 5988687.199 7.56,3553087.462 5988687.444 7.79,3553087.229 5988687.549 8.01</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130751476">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130751463">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.67 5988745.906 3553134.558
+3.6818187082243354 5.42 5988747.664 3553131.323
+3.767293850661105 4.41 5988747.705 3553131.248
+3.8697682378155527 5.44 5988747.754 3553131.158
+6.598031055108743 6.26 5988749.057 3553128.761
+6.870977936121723 6.87 5988749.187 3553128.521
+17.51371842008057 6.7 5988754.269 3553119.17
+18.059210857969504 6.17 5988754.53 3553118.691
+20.243337685796334 6.07 5988755.573 3553116.772
+22.426108402340734 6.23 5988756.615 3553114.854
+23.244547159930402 6.14 5988757.006 3553114.135
+23.38102060045395 5.97 5988757.071 3553114.015
+23.467374523314202 6.19 5988757.112 3553113.939
+23.54838069585427 5.026 5988757.151 3553113.868
+23.60297007232301 4.23 5988757.177 3553113.82
+23.67144634554888 3.86 5988757.21 3553113.76
+24.011512515499803 3.12 5988757.372 3553113.461
+24.182462800335205 5.81 5988757.454 3553113.311
+25.2738481585897 5.53 5988757.975 3553112.352
+26.366589665432155 5.54 5988758.497 3553111.392
+27.73227777043485 5.83 5988759.149 3553110.192
+28.14081907745497 7.18 5988759.344 3553109.833
+29.6944564229859 8.18 5988760.086 3553108.468
+]]&gt;</om:result>
+       <prof:station>60.6000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553134.558 5988745.906 5.67,3553131.323 5988747.664 5.42,3553131.248 5988747.705 4.41,3553131.158 5988747.754 5.44,3553128.761 5988749.057 6.26,3553128.521 5988749.187 6.87,3553119.17 5988754.269 6.7,3553118.691 5988754.53 6.17,3553116.772 5988755.573 6.07,3553114.854 5988756.615 6.23,3553114.135 5988757.006 6.14,3553114.015 5988757.071 5.97,3553113.939 5988757.112 6.19,3553113.868 5988757.151 5.026,3553113.82 5988757.177 4.23,3553113.76 5988757.21 3.86,3553113.461 5988757.372 3.12,3553113.311 5988757.454 5.81,3553112.352 5988757.975 5.53,3553111.392 5988758.497 5.54,3553110.192 5988759.149 5.83,3553109.833 5988759.344 7.18,3553108.468 5988760.086 8.18</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130752463">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307524193">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.72 5988765.92 3553148.28
+1.128611979595885 5.56 5988766.593 3553147.374
+3.6846401477636546 5.46 5988768.117 3553145.322
+3.781840971091424 4.39 5988768.175 3553145.244
+3.8890417176058807 5.5 5988768.239 3553145.158
+6.711672582574842 6.15 5988769.922 3553142.892
+7.064880736466977 6.83 5988770.132 3553142.608
+16.94578595817541 6.66 5988776.024 3553134.676
+17.36958897807527 6.23 5988776.277 3553134.336
+20.757626758719272 6.08 5988778.297 3553131.616
+22.451645648576715 6.2 5988779.307 3553130.256
+22.73464741517742 6.15 5988779.476 3553130.029
+23.227853254563353 5.79 5988779.77 3553129.633
+23.50805675233568 6.05 5988779.937 3553129.408
+23.790462489100083 6.2 5988780.105 3553129.181
+23.85766367903655 5.82 5988780.145 3553129.127
+23.892663679371825 5.54 5988780.166 3553129.099
+23.944064067958873 4.96 5988780.197 3553129.058
+23.952666393336777 4.77 5988780.202 3553129.051
+23.96126871887708 4.42 5988780.207 3553129.044
+23.99626871902609 3.96 5988780.228 3553129.016
+24.170670553778514 3.22 5988780.332 3553128.876
+24.400071948510554 3.43 5988780.469 3553128.692
+24.41727659942876 3.63 5988780.479 3553128.678
+24.46727659905623 4.57 5988780.509 3553128.638
+24.49227659942876 5.27 5988780.524 3553128.618
+24.56168121023723 5.84 5988780.565 3553128.562
+24.63028150110647 6.08 5988780.606 3553128.507
+24.910484998878797 5.84 5988780.773 3553128.282
+26.03909697847468 5.63 5988781.446 3553127.376
+27.168511871032344 5.63 5988782.119 3553126.469
+28.29712385062823 5.86 5988782.792 3553125.563
+28.791728743306606 5.81 5988783.087 3553125.166
+29.63793557375185 7.83 5988783.592 3553124.487
+31.640758581494726 8.52 5988784.786 3553122.879
+]]&gt;</om:result>
+       <prof:station>60.6310</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553148.28 5988765.92 5.72,3553147.374 5988766.593 5.56,3553145.322 5988768.117 5.46,3553145.244 5988768.175 4.39,3553145.158 5988768.239 5.5,3553142.892 5988769.922 6.15,3553142.608 5988770.132 6.83,3553134.676 5988776.024 6.66,3553134.336 5988776.277 6.23,3553131.616 5988778.297 6.08,3553130.256 5988779.307 6.2,3553130.029 5988779.476 6.15,3553129.633 5988779.77 5.79,3553129.408 5988779.937 6.05,3553129.181 5988780.105 6.2,3553129.127 5988780.145 5.82,3553129.099 5988780.166 5.54,3553129.058 5988780.197 4.96,3553129.051 5988780.202 4.77,3553129.044 5988780.207 4.42,3553129.016 5988780.228 3.96,3553128.876 5988780.332 3.22,3553128.692 5988780.469 3.43,3553128.678 5988780.479 3.63,3553128.638 5988780.509 4.57,3553128.618 5988780.524 5.27,3553128.562 5988780.565 5.84,3553128.507 5988780.606 6.08,3553128.282 5988780.773 5.84,3553127.376 5988781.446 5.63,3553126.469 5988782.119 5.63,3553125.563 5988782.792 5.86,3553125.166 5988783.087 5.81,3553124.487 5988783.592 7.83,3553122.879 5988784.786 8.52</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130754585">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130754514">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.81 5988801.354 3553199.265
+3.2664091904022254 5.52 5988804.552 3553198.6
+3.347013160498563 4.52 5988804.631 3553198.584
+3.4440955994419613 5.52 5988804.726 3553198.564
+6.032112600836864 6.13 5988807.26 3553198.038
+6.4212167001460205 6.8 5988807.641 3553197.959
+14.184695366027222 6.7 5988815.242 3553196.379
+14.701474816130329 6.2 5988815.748 3553196.274
+18.840033502611448 6.31 5988819.8 3553195.432
+19.357017061425054 6.21 5988820.306 3553195.326
+20.003430242366406 5.64 5988820.939 3553195.195
+20.54276687184794 5.982 5988821.467 3553195.085
+20.648865882524554 6.05 5988821.571 3553195.064
+20.71340269288919 5.22 5988821.634 3553195.05
+20.732819180984848 4.76 5988821.653 3553195.046
+20.736819180709176 4.27 5988821.657 3553195.046
+20.800167424542856 3.56 5988821.719 3553195.033
+21.059638040058545 3.36 5988821.973 3553194.98
+21.18927213993351 3.52 5988822.1 3553194.954
+21.22202881916349 4.33 5988822.132 3553194.947
+21.286356107442263 5.46 5988822.195 3553194.934
+21.351663074200246 6.07 5988822.259 3553194.921
+21.4324714904251 5.973 5988822.338 3553194.904
+21.6111359803422 5.76 5988822.513 3553194.868
+22.645877493239745 5.52 5988823.526 3553194.657
+23.938906882722172 5.72 5988824.792 3553194.394
+24.455686332825277 6.16 5988825.298 3553194.289
+25.230957252798014 6.21 5988826.057 3553194.131
+26.00720721228513 7.14 5988826.817 3553193.973
+26.783457171867028 7.76 5988827.577 3553193.815
+27.301215803098977 7.77 5988828.084 3553193.71
+28.33595731700323 6.94 5988829.097 3553193.499
+29.37147457855516 7.88 5988830.111 3553193.289
+29.945524228824834 8.2 5988830.673 3553193.172
+]]&gt;</om:result>
+       <prof:station>60.7000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553199.265 5988801.354 5.81,3553198.6 5988804.552 5.52,3553198.584 5988804.631 4.52,3553198.564 5988804.726 5.52,3553198.038 5988807.26 6.13,3553197.959 5988807.641 6.8,3553196.379 5988815.242 6.7,3553196.274 5988815.748 6.2,3553195.432 5988819.8 6.31,3553195.326 5988820.306 6.21,3553195.195 5988820.939 5.64,3553195.085 5988821.467 5.982,3553195.064 5988821.571 6.05,3553195.05 5988821.634 5.22,3553195.046 5988821.653 4.76,3553195.046 5988821.657 4.27,3553195.033 5988821.719 3.56,3553194.98 5988821.973 3.36,3553194.954 5988822.1 3.52,3553194.947 5988822.132 4.33,3553194.934 5988822.195 5.46,3553194.921 5988822.259 6.07,3553194.904 5988822.338 5.973,3553194.868 5988822.513 5.76,3553194.657 5988823.526 5.52,3553194.394 5988824.792 5.72,3553194.289 5988825.298 6.16,3553194.131 5988826.057 6.21,3553193.973 5988826.817 7.14,3553193.815 5988827.577 7.76,3553193.71 5988828.084 7.77,3553193.499 5988829.097 6.94,3553193.289 5988830.111 7.88,3553193.172 5988830.673 8.2</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130755517">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130755579">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 5.96 5988811.057 3553297.022
+3.1670001582432445 5.71 5988814.224 3553297.023
+5.808000347394163 6.25 5988816.865 3553297.024
+6.336000347327108 6.75 5988817.393 3553297.024
+10.031000482943044 6.61 5988821.088 3553297.025
+10.558000482712076 6.17 5988821.615 3553297.025
+14.7790006010706 6.34 5988825.836 3553297.026
+16.33900092117341 6.071 5988827.396 3553297.027
+16.45900092128517 6.05 5988827.516 3553297.027
+16.55700092151614 5.05 5988827.614 3553297.027
+16.622000920994598 4.0 5988827.679 3553297.027
+16.78600092179926 3.33 5988827.843 3553297.027
+16.9500009216726 3.84 5988828.007 3553297.027
+16.999000921322423 4.47 5988828.056 3553297.027
+17.03200092114361 5.3 5988828.089 3553297.027
+17.082000921888667 5.645 5988828.139 3553297.027
+17.163000921195763 6.2 5988828.22 3553297.027
+18.218000921829063 5.65 5988829.275 3553297.027
+19.802000921627897 5.65 5988830.859 3553297.027
+20.33000186853 6.25 5988831.387 3553297.028
+20.857001868299033 7.15 5988831.914 3553297.028
+21.122001867963757 7.43 5988832.179 3553297.028
+21.385001868231978 7.42 5988832.442 3553297.028
+21.64900186866411 7.68 5988832.706 3553297.028
+24.81800202620422 8.04 5988835.875 3553297.029
+28.511002161565614 7.45 5988839.568 3553297.03
+29.089002161312294 7.61 5988840.146 3553297.03
+]]&gt;</om:result>
+       <prof:station>60.8000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553297.022 5988811.057 5.96,3553297.023 5988814.224 5.71,3553297.024 5988816.865 6.25,3553297.024 5988817.393 6.75,3553297.025 5988821.088 6.61,3553297.025 5988821.615 6.17,3553297.026 5988825.836 6.34,3553297.027 5988827.396 6.071,3553297.027 5988827.516 6.05,3553297.027 5988827.614 5.05,3553297.027 5988827.679 4.0,3553297.027 5988827.843 3.33,3553297.027 5988828.007 3.84,3553297.027 5988828.056 4.47,3553297.027 5988828.089 5.3,3553297.027 5988828.139 5.645,3553297.027 5988828.22 6.2,3553297.027 5988829.275 5.65,3553297.027 5988830.859 5.65,3553297.028 5988831.387 6.25,3553297.028 5988831.914 7.15,3553297.028 5988832.179 7.43,3553297.028 5988832.442 7.42,3553297.028 5988832.706 7.68,3553297.029 5988835.875 8.04,3553297.03 5988839.568 7.45,3553297.03 5988840.146 7.61</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile11784513075659">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307565147">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.16 5988859.05 3553392.804
+1.1250537765813038 5.79 5988859.635 3553391.843
+3.3779097416279598 5.95 5988860.807 3553389.919
+4.505191871808237 5.87 5988861.393 3553388.956
+6.758901924116799 6.2 5988862.565 3553387.031
+7.886184053415144 6.69 5988863.151 3553386.068
+8.7303179290985 5.91 5988863.59 3553385.347
+9.856745912019516 6.17 5988864.176 3553384.385
+13.23773807412158 5.89 5988865.934 3553381.497
+15.558335626068665 6.29 5988867.141 3553379.515
+15.593321337741845 6.62 5988867.159 3553379.485
+15.697422250297851 5.3 5988867.213 3553379.396
+15.731554346303264 4.6 5988867.231 3553379.367
+15.774600832752007 3.99 5988867.253 3553379.33
+15.778206384231014 3.14 5988867.255 3553379.327
+16.05827244776928 3.61 5988867.401 3553379.088
+16.198732406982316 4.01 5988867.474 3553378.968
+16.23286450298773 4.34 5988867.492 3553378.939
+16.28534307033778 5.53 5988867.519 3553378.894
+16.389443982410686 6.34 5988867.573 3553378.805
+17.51449775899199 5.98 5988868.158 3553377.844
+18.358631634675348 5.96 5988868.597 3553377.123
+18.640925807352087 6.26 5988868.744 3553376.882
+19.344599737942502 7.59 5988869.11 3553376.281
+27.23301199886216 7.94 5988873.212 3553369.543
+30.01717937883666 6.96 5988874.66 3553367.165
+]]&gt;</om:result>
+       <prof:station>60.9000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553392.804 5988859.05 6.16,3553391.843 5988859.635 5.79,3553389.919 5988860.807 5.95,3553388.956 5988861.393 5.87,3553387.031 5988862.565 6.2,3553386.068 5988863.151 6.69,3553385.347 5988863.59 5.91,3553384.385 5988864.176 6.17,3553381.497 5988865.934 5.89,3553379.515 5988867.141 6.29,3553379.485 5988867.159 6.62,3553379.396 5988867.213 5.3,3553379.367 5988867.231 4.6,3553379.33 5988867.253 3.99,3553379.327 5988867.255 3.14,3553379.088 5988867.401 3.61,3553378.968 5988867.474 4.01,3553378.939 5988867.492 4.34,3553378.894 5988867.519 5.53,3553378.805 5988867.573 6.34,3553377.844 5988868.158 5.98,3553377.123 5988868.597 5.96,3553376.882 5988868.744 6.26,3553376.281 5988869.11 7.59,3553369.543 5988873.212 7.94,3553367.165 5988874.66 6.96</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307565155">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307575203">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.3 5988958.958 3553422.898
+1.0649178371474628 5.86 5988959.163 3553421.853
+3.1955426281536425 5.69 5988959.572 3553419.762
+5.5911220990070625 5.77 5988960.032 3553417.411
+5.8582325627208105 6.0 5988960.084 3553417.149
+6.390104728144586 5.8 5988960.186 3553416.627
+14.909851790170674 5.73 5988961.823 3553408.266
+16.505660362305253 6.17 5988962.13 3553406.7
+16.605485209199422 6.57 5988962.149 3553406.602
+16.737867231932885 5.28 5988962.174 3553406.472
+16.750236549030195 3.99 5988962.177 3553406.46
+16.883600712079062 3.58 5988962.202 3553406.329
+17.21268732669424 3.59 5988962.265 3553406.006
+17.22093353794186 4.5 5988962.267 3553405.998
+17.254667793854164 4.37 5988962.274 3553405.965
+17.321749832845956 5.15 5988962.286 3553405.899
+17.588860297016456 6.02 5988962.338 3553405.637
+17.6835862171716 6.01 5988962.356 3553405.544
+18.65162340685436 5.91 5988962.542 3553404.594
+19.450605258967702 7.08 5988962.696 3553403.81
+21.581230049973883 7.29 5988963.105 3553401.719
+23.711854840980063 7.86 5988963.514 3553399.628
+24.777753991854922 7.85 5988963.719 3553398.582
+27.439461714108745 7.15 5988964.231 3553395.97
+28.175100892178495 7.26 5988964.372 3553395.248
+]]&gt;</om:result>
+       <prof:station>61.0000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553422.898 5988958.958 6.3,3553421.853 5988959.163 5.86,3553419.762 5988959.572 5.69,3553417.411 5988960.032 5.77,3553417.149 5988960.084 6.0,3553416.627 5988960.186 5.8,3553408.266 5988961.823 5.73,3553406.7 5988962.13 6.17,3553406.602 5988962.149 6.57,3553406.472 5988962.174 5.28,3553406.46 5988962.177 3.99,3553406.329 5988962.202 3.58,3553406.006 5988962.265 3.59,3553405.998 5988962.267 4.5,3553405.965 5988962.274 4.37,3553405.899 5988962.286 5.15,3553405.637 5988962.338 6.02,3553405.544 5988962.356 6.01,3553404.594 5988962.542 5.91,3553403.81 5988962.696 7.08,3553401.719 5988963.105 7.29,3553399.628 5988963.514 7.86,3553398.582 5988963.719 7.85,3553395.97 5988964.231 7.15,3553395.248 5988964.372 7.26</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130763562">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130763520">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.36 5989032.782 3553454.861
+2.043497247830238 5.64 5989034.802 3553454.552
+7.493455504707287 5.85 5989040.189 3553453.726
+21.802495478873325 5.83 5989054.333 3553451.559
+22.997285000853857 6.53 5989055.514 3553451.378
+23.167134934207272 6.94 5989055.682 3553451.353
+23.252134934049494 5.9 5989055.766 3553451.34
+23.337134933820497 4.23 5989055.85 3553451.327
+23.37971427192822 3.79 5989055.892 3553451.32
+23.464567085420356 3.5 5989055.976 3553451.308
+23.805555355322078 3.45 5989056.313 3553451.256
+23.93297984290506 3.62 5989056.439 3553451.237
+23.95435740098892 4.72 5989056.46 3553451.233
+23.96949014658879 4.68 5989056.475 3553451.231
+24.01191655382877 5.5 5989056.517 3553451.225
+24.0535098227496 5.85 5989056.558 3553451.218
+29.501339665644082 5.9 5989061.943 3553450.393
+30.18217591657829 6.13 5989062.616 3553450.29
+31.96671955522906 6.12 5989064.38 3553450.02
+]]&gt;</om:result>
+       <prof:station>61.1000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553454.861 5989032.782 6.36,3553454.552 5989034.802 5.64,3553453.726 5989040.189 5.85,3553451.559 5989054.333 5.83,3553451.378 5989055.514 6.53,3553451.353 5989055.682 6.94,3553451.34 5989055.766 5.9,3553451.327 5989055.85 4.23,3553451.32 5989055.892 3.79,3553451.308 5989055.976 3.5,3553451.256 5989056.313 3.45,3553451.237 5989056.439 3.62,3553451.233 5989056.46 4.72,3553451.231 5989056.475 4.68,3553451.225 5989056.517 5.5,3553451.218 5989056.558 5.85,3553450.393 5989061.943 5.9,3553450.29 5989062.616 6.13,3553450.02 5989064.38 6.12</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130764588">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130764576">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.39 5989031.778 3553485.965
+2.066680914387422 5.63 5989033.815 3553486.314
+2.756672943047709 5.87 5989034.495 3553486.431
+5.513345756601316 5.7 5989037.212 3553486.897
+20.680467105133093 5.89 5989052.161 3553489.46
+22.401250937729426 6.26 5989053.857 3553489.751
+22.487564320142635 5.89 5989053.942 3553489.766
+22.531130362521054 5.51 5989053.985 3553489.773
+22.56368800338601 4.95 5989054.017 3553489.779
+22.584901206545016 4.1 5989054.038 3553489.782
+22.75735699792439 3.52 5989054.208 3553489.811
+22.886248425405128 2.74 5989054.335 3553489.833
+23.14600215493701 3.32 5989054.591 3553489.877
+23.31747226873248 4.56 5989054.76 3553489.906
+23.382410701344917 5.41 5989054.824 3553489.917
+23.424990039452638 5.41 5989054.866 3553489.924
+23.511303421865847 5.84 5989054.951 3553489.939
+23.85621500462459 6.39 5989055.291 3553489.997
+26.6160137289428 5.9 5989058.011 3553490.464
+29.37367215628237 6.15 5989060.729 3553490.93
+31.221206999861607 6.14 5989062.55 3553491.242
+]]&gt;</om:result>
+       <prof:station>61.1270</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553485.965 5989031.778 6.39,3553486.314 5989033.815 5.63,3553486.431 5989034.495 5.87,3553486.897 5989037.212 5.7,3553489.46 5989052.161 5.89,3553489.751 5989053.857 6.26,3553489.766 5989053.942 5.89,3553489.773 5989053.985 5.51,3553489.779 5989054.017 4.95,3553489.782 5989054.038 4.1,3553489.811 5989054.208 3.52,3553489.833 5989054.335 2.74,3553489.877 5989054.591 3.32,3553489.906 5989054.76 4.56,3553489.917 5989054.824 5.41,3553489.924 5989054.866 5.41,3553489.939 5989054.951 5.84,3553489.997 5989055.291 6.39,3553490.464 5989058.011 5.9,3553490.93 5989060.729 6.15,3553491.242 5989062.55 6.14</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130765599">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307655210">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.41 5989031.106 3553497.106
+1.0213603680372894 5.98 5989032.082 3553497.407
+4.082941168864983 5.67 5989035.008 3553498.308
+14.286838119951174 5.93 5989044.76 3553501.311
+16.03319346728736 6.195 5989046.429 3553501.825
+16.133478063007875 6.21 5989046.525 3553501.854
+16.243245999611272 5.03 5989046.63 3553501.886
+16.273610452628343 4.19 5989046.659 3553501.895
+16.335295135069227 3.62 5989046.718 3553501.913
+16.64937951842086 4.18 5989047.018 3553502.006
+16.711064199970956 4.53 5989047.077 3553502.024
+16.757237786143538 5.45 5989047.121 3553502.038
+16.883768414222907 5.92 5989047.242 3553502.075
+17.391140073116677 6.41 5989047.727 3553502.224
+19.427243459910446 5.85 5989049.673 3553502.823
+20.448603827057774 6.17 5989050.649 3553503.124
+21.81823516374806 6.14 5989051.958 3553503.527
+]]&gt;</om:result>
+       <prof:station>61.1390</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553497.106 5989031.106 6.41,3553497.407 5989032.082 5.98,3553498.308 5989035.008 5.67,3553501.311 5989044.76 5.93,3553501.825 5989046.429 6.195,3553501.854 5989046.525 6.21,3553501.886 5989046.63 5.03,3553501.895 5989046.659 4.19,3553501.913 5989046.718 3.62,3553502.006 5989047.018 4.18,3553502.024 5989047.077 4.53,3553502.038 5989047.121 5.45,3553502.075 5989047.242 5.92,3553502.224 5989047.727 6.41,3553502.823 5989049.673 5.85,3553503.124 5989050.649 6.17,3553503.527 5989051.958 6.14</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307665163">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307665106">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.44 5989002.829 3553547.175
+1.686656455637463 6.01 5989004.242 3553548.096
+2.1079746252855256 6.13 5989004.595 3553548.326
+3.796014909197295 5.76 5989006.009 3553549.248
+5.483509206206998 5.86 5989007.423 3553550.169
+7.170165661590186 5.72 5989008.836 3553551.09
+22.357576237208505 5.96 5989021.56 3553559.382
+24.071691753009105 6.193 5989022.996 3553560.318
+24.200939576979493 6.21 5989023.104 3553560.389
+24.270279319751907 5.647 5989023.162 3553560.427
+24.40979634420219 4.51 5989023.279 3553560.503
+24.513805959401733 4.21 5989023.366 3553560.56
+25.037749658009517 4.46 5989023.805 3553560.846
+25.14121462809862 5.05 5989023.892 3553560.902
+25.245224243298164 5.84 5989023.979 3553560.959
+26.090082219291663 6.12 5989024.687 3553561.42
+31.151435398206377 5.92 5989028.927 3553564.184
+33.42638594674178 6.15 5989030.833 3553565.426
+]]&gt;</om:result>
+       <prof:station>61.2000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553547.175 5989002.829 6.44,3553548.096 5989004.242 6.01,3553548.326 5989004.595 6.13,3553549.248 5989006.009 5.76,3553550.169 5989007.423 5.86,3553551.09 5989008.836 5.72,3553559.382 5989021.56 5.96,3553560.318 5989022.996 6.193,3553560.389 5989023.104 6.21,3553560.427 5989023.162 5.647,3553560.503 5989023.279 4.51,3553560.56 5989023.366 4.21,3553560.846 5989023.805 4.46,3553560.902 5989023.892 5.05,3553560.959 5989023.979 5.84,3553561.42 5989024.687 6.12,3553564.184 5989028.927 5.92,3553565.426 5989030.833 6.15</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130766545">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130767548">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.4 5988983.166 3553577.468
+2.861357020352652 5.9 5988985.566 3553579.026
+3.3384314382182447 6.11 5988985.966 3553579.286
+4.292035653831056 5.82 5988986.766 3553579.805
+21.451583957973764 6.19 5989001.159 3553589.148
+22.222952222671733 6.5 5989001.806 3553589.568
+22.34222082752856 5.64 5989001.906 3553589.633
+22.51586413988188 4.65 5989002.052 3553589.727
+22.633749677269872 3.96 5989002.151 3553589.791
+22.870065144900796 4.06 5989002.349 3553589.92
+23.225649171180994 3.93 5989002.647 3553590.114
+23.344375748170417 4.19 5989002.747 3553590.178
+23.38487266180875 4.65 5989002.781 3553590.2
+23.4924877163338 5.5 5989002.871 3553590.259
+23.553233086411844 6.5 5989002.922 3553590.292
+24.088286354916157 6.32 5989003.371 3553590.583
+25.99381725132231 6.14 5989004.969 3553591.621
+28.856557547557905 6.32 5989007.37 3553593.18
+30.76016070995749 5.97 5989008.967 3553594.216
+34.78259479874616 6.18 5989012.341 3553596.406
+]]&gt;</om:result>
+       <prof:station>61.2410</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553577.468 5988983.166 6.4,3553579.026 5988985.566 5.9,3553579.286 5988985.966 6.11,3553579.805 5988986.766 5.82,3553589.148 5989001.159 6.19,3553589.568 5989001.806 6.5,3553589.633 5989001.906 5.64,3553589.727 5989002.052 4.65,3553589.791 5989002.151 3.96,3553589.92 5989002.349 4.06,3553590.114 5989002.647 3.93,3553590.178 5989002.747 4.19,3553590.2 5989002.781 4.65,3553590.259 5989002.871 5.5,3553590.292 5989002.922 6.5,3553590.583 5989003.371 6.32,3553591.621 5989004.969 6.14,3553593.18 5989007.37 6.32,3553594.216 5989008.967 5.97,3553596.406 5989012.341 6.18</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307675197">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130767541">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.63 5988955.749 3553630.615
+8.491362493897721 5.99 5988963.62 3553633.801
+18.699496750818795 6.03 5988973.082 3553637.632
+18.831345148083948 5.5 5988973.204 3553637.682
+18.961890159777347 4.67 5988973.325 3553637.731
+19.093362589760588 4.49 5988973.447 3553637.78
+19.55184814102741 4.73 5988973.872 3553637.952
+19.68462238514399 5.6 5988973.995 3553638.002
+19.946639560039568 6.03 5988974.238 3553638.1
+25.25144587161011 6.0 5988979.155 3553640.091
+26.313263652824816 6.41 5988980.139 3553640.49
+27.374706066792392 6.22 5988981.123 3553640.888
+31.18297877260689 6.28 5988984.653 3553642.317
+]]&gt;</om:result>
+       <prof:station>61.3000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553630.615 5988955.749 6.63,3553633.801 5988963.62 5.99,3553637.632 5988973.082 6.03,3553637.682 5988973.204 5.5,3553637.731 5988973.325 4.67,3553637.78 5988973.447 4.49,3553637.952 5988973.872 4.73,3553638.002 5988973.995 5.6,3553638.1 5988974.238 6.03,3553640.091 5988979.155 6.0,3553640.49 5988980.139 6.41,3553640.888 5988981.123 6.22,3553642.317 5988984.653 6.28</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307686208">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130768688">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.54 5988961.554 3553732.952
+6.521244130098465 6.15 5988967.931 3553731.588
+11.980035938258496 6.63 5988973.269 3553730.446
+12.234824085390136 6.63 5988973.518 3553730.392
+12.337005296643285 6.07 5988973.618 3553730.371
+12.491358787501351 5.54 5988973.769 3553730.339
+12.54255449025131 5.11 5988973.819 3553730.328
+12.744960023709782 4.55 5988974.017 3553730.286
+13.612270810223226 4.24 5988974.865 3553730.104
+13.740153568981112 5.28 5988974.99 3553730.077
+13.867828938585749 5.74 5988975.115 3553730.051
+14.27187101515762 6.23 5988975.51 3553729.966
+15.080723288687869 6.36 5988976.301 3553729.797
+18.343021405390715 6.1 5988979.491 3553729.114
+21.604132411730244 6.22 5988982.68 3553728.432
+23.23517686304027 6.5 5988984.275 3553728.091
+27.569146521371863 6.36 5988988.513 3553727.184
+]]&gt;</om:result>
+       <prof:station>61.4000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553732.952 5988961.554 6.54,3553731.588 5988967.931 6.15,3553730.446 5988973.269 6.63,3553730.392 5988973.518 6.63,3553730.371 5988973.618 6.07,3553730.339 5988973.769 5.54,3553730.328 5988973.819 5.11,3553730.286 5988974.017 4.55,3553730.104 5988974.865 4.24,3553730.077 5988974.99 5.28,3553730.051 5988975.115 5.74,3553729.966 5988975.51 6.23,3553729.797 5988976.301 6.36,3553729.114 5988979.491 6.1,3553728.432 5988982.68 6.22,3553728.091 5988984.275 6.5,3553727.184 5988988.513 6.36</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130769668">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307696225">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.63 5988974.737 3553830.527
+4.607512236042568 6.59 5988979.337 3553830.79
+6.138985383135172 6.25 5988980.866 3553830.877
+7.444084995568011 6.306 5988982.169 3553830.951
+7.767643336398109 6.32 5988982.492 3553830.97
+7.923902736517038 5.796 5988982.648 3553830.979
+8.146226824353413 5.05 5988982.87 3553830.991
+8.333550074293289 4.73 5988983.057 3553831.002
+9.096819358477424 5.01 5988983.819 3553831.046
+9.289079598571789 5.69 5988984.011 3553831.056
+9.481394444395772 6.09 5988984.203 3553831.067
+11.010928034133805 6.44 5988985.73 3553831.155
+17.152908495784047 6.38 5988991.862 3553831.505
+27.34947463410586 6.62 5989002.042 3553832.086
+]]&gt;</om:result>
+       <prof:station>61.5000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553830.527 5988974.737 6.63,3553830.79 5988979.337 6.59,3553830.877 5988980.866 6.25,3553830.951 5988982.169 6.306,3553830.97 5988982.492 6.32,3553830.979 5988982.648 5.796,3553830.991 5988982.87 5.05,3553831.002 5988983.057 4.73,3553831.046 5988983.819 5.01,3553831.056 5988984.011 5.69,3553831.067 5988984.203 6.09,3553831.155 5988985.73 6.44,3553831.505 5988991.862 6.38,3553832.086 5989002.042 6.62</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130770623">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307706200">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.8 5988966.88 3553927.527
+4.370888811306695 6.61 5988971.17 3553928.364
+5.464053940467025 6.49 5988972.243 3553928.573
+8.740796225134618 6.33 5988975.459 3553929.201
+10.381130337818371 6.31 5988977.069 3553929.515
+10.65412850640226 6.28 5988977.337 3553929.567
+10.927126675074847 6.22 5988977.605 3553929.619
+11.575101983156515 6.63 5988978.241 3553929.743
+11.664924029012248 6.296 5988978.329 3553929.761
+11.780045703649048 5.91 5988978.442 3553929.783
+11.933805256742907 5.58 5988978.593 3553929.812
+12.035785646653121 5.03 5988978.693 3553929.832
+12.17228473053228 4.87 5988978.827 3553929.858
+12.30878381532571 4.75 5988978.961 3553929.884
+12.65101327062997 4.64 5988979.297 3553929.949
+12.922048323572495 4.66 5988979.563 3553930.001
+13.332718507457114 4.64 5988979.966 3553930.08
+13.537467134145773 4.69 5988980.167 3553930.119
+13.5547298106446 4.78 5988980.184 3553930.122
+13.689266050427245 5.67 5988980.316 3553930.148
+13.706730299553426 5.74 5988980.333 3553930.152
+13.911478926330783 6.07 5988980.534 3553930.191
+14.150938735413238 6.35 5988980.769 3553930.237
+14.96796994669851 6.39 5988981.571 3553930.393
+15.241949872309135 6.43 5988981.84 3553930.445
+17.151356062638804 6.18 5988983.714 3553930.811
+19.337877730169744 6.3 5988985.86 3553931.23
+20.430061322456762 6.35 5988986.932 3553931.439
+21.523226451706122 6.37 5988988.005 3553931.648
+22.616583209439188 6.49 5988989.078 3553931.858
+24.25476299202572 6.69 5988990.686 3553932.171
+27.234975400379547 6.64 5988993.611 3553932.742
+]]&gt;</om:result>
+       <prof:station>61.6000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3553927.527 5988966.88 6.8,3553928.364 5988971.17 6.61,3553928.573 5988972.243 6.49,3553929.201 5988975.459 6.33,3553929.515 5988977.069 6.31,3553929.567 5988977.337 6.28,3553929.619 5988977.605 6.22,3553929.743 5988978.241 6.63,3553929.761 5988978.329 6.296,3553929.783 5988978.442 5.91,3553929.812 5988978.593 5.58,3553929.832 5988978.693 5.03,3553929.858 5988978.827 4.87,3553929.884 5988978.961 4.75,3553929.949 5988979.297 4.64,3553930.001 5988979.563 4.66,3553930.08 5988979.966 4.64,3553930.119 5988980.167 4.69,3553930.122 5988980.184 4.78,3553930.148 5988980.316 5.67,3553930.152 5988980.333 5.74,3553930.191 5988980.534 6.07,3553930.237 5988980.769 6.35,3553930.393 5988981.571 6.39,3553930.445 5988981.84 6.43,3553930.811 5988983.714 6.18,3553931.23 5988985.86 6.3,3553931.439 5988986.932 6.35,3553931.648 5988988.005 6.37,3553931.858 5988989.078 6.49,3553932.171 5988990.686 6.69,3553932.742 5988993.611 6.64</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130770637">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307716203">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.06 5988950.463 3554026.327
+1.9737578363581612 6.96 5988952.401 3554026.701
+5.922066081987294 6.71 5988956.278 3554027.448
+6.907963135757548 6.62 5988957.246 3554027.635
+10.855289446303383 6.44 5988961.122 3554028.382
+11.346179454173074 6.4 5988961.604 3554028.475
+11.40736768795482 6.38 5988961.664 3554028.487
+12.27304430246419 6.6 5988962.514 3554028.651
+12.412489631454008 5.97 5988962.651 3554028.677
+12.56821374634342 5.52 5988962.804 3554028.706
+12.645679868339673 5.19 5988962.88 3554028.721
+12.921623702953296 4.72 5988963.151 3554028.773
+13.167163924030783 4.85 5988963.392 3554028.82
+13.53783358840206 5.0 5988963.756 3554028.89
+13.906539432920884 5.03 5988964.118 3554028.96
+14.029705987101671 5.07 5988964.239 3554028.983
+14.045003045318799 5.12 5988964.254 3554028.986
+14.151890837393584 5.67 5988964.359 3554029.006
+14.275248042510976 5.94 5988964.48 3554029.03
+14.551191877124598 6.27 5988964.751 3554029.082
+15.538070795303678 6.49 5988965.72 3554029.269
+15.661237349484466 6.48 5988965.841 3554029.292
+15.906777570651087 6.41 5988966.082 3554029.339
+16.029944123916934 6.43 5988966.203 3554029.362
+19.23396737662415 6.25 5988969.349 3554029.969
+21.20949996255617 6.34 5988971.289 3554030.342
+24.17327188373619 6.42 5988974.199 3554030.904
+27.508505908884334 6.68 5988977.474 3554031.535
+]]&gt;</om:result>
+       <prof:station>61.7000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554026.327 5988950.463 7.06,3554026.701 5988952.401 6.96,3554027.448 5988956.278 6.71,3554027.635 5988957.246 6.62,3554028.382 5988961.122 6.44,3554028.475 5988961.604 6.4,3554028.487 5988961.664 6.38,3554028.651 5988962.514 6.6,3554028.677 5988962.651 5.97,3554028.706 5988962.804 5.52,3554028.721 5988962.88 5.19,3554028.773 5988963.151 4.72,3554028.82 5988963.392 4.85,3554028.89 5988963.756 5.0,3554028.96 5988964.118 5.03,3554028.983 5988964.239 5.07,3554028.986 5988964.254 5.12,3554029.006 5988964.359 5.67,3554029.03 5988964.48 5.94,3554029.082 5988964.751 6.27,3554029.269 5988965.72 6.49,3554029.292 5988965.841 6.48,3554029.339 5988966.082 6.41,3554029.362 5988966.203 6.43,3554029.969 5988969.349 6.25,3554030.342 5988971.289 6.34,3554030.904 5988974.199 6.42,3554031.535 5988977.474 6.68</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130777645">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307776220">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.42 5988941.498 3554128.811
+3.8411286106520137 6.77 5988945.336 3554128.656
+4.321504504645002 6.66 5988945.816 3554128.637
+4.561712747867693 6.63 5988946.056 3554128.627
+7.442049534219646 6.75 5988948.934 3554128.511
+8.402841395092018 6.77 5988949.894 3554128.472
+11.760596746027256 6.42 5988953.249 3554128.336
+11.999766142125292 6.35 5988953.488 3554128.327
+12.65831986034223 6.84 5988954.146 3554128.3
+12.852484738862172 6.06 5988954.34 3554128.292
+12.972588860463825 5.68 5988954.46 3554128.287
+13.09265550874028 5.27 5988954.58 3554128.283
+13.212759630341933 5.04 5988954.7 3554128.278
+13.332863751943586 4.83 5988954.82 3554128.273
+13.51299981134241 4.63 5988955.0 3554128.266
+13.873312176147367 4.61 5988955.36 3554128.251
+14.353688070158773 4.75 5988955.84 3554128.232
+14.50380802257145 4.84 5988955.99 3554128.226
+14.608927002290537 5.69 5988956.095 3554128.221
+14.804052603155043 6.1 5988956.29 3554128.214
+14.924156724776081 6.26 5988956.41 3554128.209
+14.984231677551614 6.33 5988956.47 3554128.206
+15.705814659500982 6.4 5988957.191 3554128.177
+15.943984766675996 6.46 5988957.429 3554128.168
+22.426281659872103 6.47 5988963.906 3554127.906
+25.303620882136634 6.89 5988966.781 3554127.79
+26.980999789814035 6.97 5988968.457 3554127.722
+27.131119741296136 6.96 5988968.607 3554127.716
+]]&gt;</om:result>
+       <prof:station>61.8000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554128.811 5988941.498 7.42,3554128.656 5988945.336 6.77,3554128.637 5988945.816 6.66,3554128.627 5988946.056 6.63,3554128.511 5988948.934 6.75,3554128.472 5988949.894 6.77,3554128.336 5988953.249 6.42,3554128.327 5988953.488 6.35,3554128.3 5988954.146 6.84,3554128.292 5988954.34 6.06,3554128.287 5988954.46 5.68,3554128.283 5988954.58 5.27,3554128.278 5988954.7 5.04,3554128.273 5988954.82 4.83,3554128.266 5988955.0 4.63,3554128.251 5988955.36 4.61,3554128.232 5988955.84 4.75,3554128.226 5988955.99 4.84,3554128.221 5988956.095 5.69,3554128.214 5988956.29 6.1,3554128.209 5988956.41 6.26,3554128.206 5988956.47 6.33,3554128.177 5988957.191 6.4,3554128.168 5988957.429 6.46,3554127.906 5988963.906 6.47,3554127.79 5988966.781 6.89,3554127.722 5988968.457 6.97,3554127.716 5988968.607 6.96</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130778677">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307786132">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.25 5988965.197 3554228.739
+6.681341556813473 6.68 5988971.407 3554226.274
+7.63563344113472 6.67 5988972.294 3554225.922
+9.545515636656463 6.61 5988974.069 3554225.217
+10.97834779675467 6.52 5988975.401 3554224.689
+12.889528584012792 6.59 5988977.177 3554223.983
+13.128333944144858 6.61 5988977.399 3554223.895
+13.91791421262213 6.84 5988978.133 3554223.604
+14.43767665829593 5.78 5988978.616 3554223.412
+14.526067833768618 5.36 5988978.698 3554223.379
+14.540933903041925 5.31 5988978.712 3554223.374
+14.899141942721334 4.79 5988979.045 3554223.242
+15.018544623306056 4.71 5988979.156 3554223.198
+15.25734998257234 4.67 5988979.378 3554223.11
+15.852504584523055 4.72 5988979.931 3554222.89
+15.98676552452914 5.63 5988980.056 3554222.841
+16.195858805351744 6.17 5988980.25 3554222.763
+16.404581108874346 6.49 5988980.444 3554222.686
+17.359802549574205 6.4 5988981.332 3554222.334
+19.267456868373245 6.37 5988983.105 3554221.63
+21.17604063580656 6.4 5988984.879 3554220.926
+23.085922831500195 6.46 5988986.654 3554220.221
+24.995436119720626 6.55 5988988.429 3554219.517
+29.02262434545009 6.71 5988992.172 3554218.031
+]]&gt;</om:result>
+       <prof:station>61.9000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554228.739 5988965.197 7.25,3554226.274 5988971.407 6.68,3554225.922 5988972.294 6.67,3554225.217 5988974.069 6.61,3554224.689 5988975.401 6.52,3554223.983 5988977.177 6.59,3554223.895 5988977.399 6.61,3554223.604 5988978.133 6.84,3554223.412 5988978.616 5.78,3554223.379 5988978.698 5.36,3554223.374 5988978.712 5.31,3554223.242 5988979.045 4.79,3554223.198 5988979.156 4.71,3554223.11 5988979.378 4.67,3554222.89 5988979.931 4.72,3554222.841 5988980.056 5.63,3554222.763 5988980.25 6.17,3554222.686 5988980.444 6.49,3554222.334 5988981.332 6.4,3554221.63 5988983.105 6.37,3554220.926 5988984.879 6.4,3554220.221 5988986.654 6.46,3554219.517 5988988.429 6.55,3554218.031 5988992.172 6.71</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130778678">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130779643">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.51 5989001.386 3554315.683
+3.5536928682634463 6.37 5989004.933 3554315.465
+5.585480258638574 6.45 5989006.961 3554315.341
+7.61527138049306 6.49 5989008.987 3554315.217
+10.407512416415365 6.49 5989011.774 3554315.046
+11.677909204993608 6.34 5989013.042 3554314.968
+13.201749747542557 6.3 5989014.563 3554314.875
+14.137487424817255 6.38 5989015.497 3554314.818
+14.328864016556919 6.01 5989015.688 3554314.806
+14.471148941968194 5.81 5989015.83 3554314.797
+14.566280429654112 5.38 5989015.925 3554314.792
+14.91597315229841 4.75 5989016.274 3554314.77
+15.171413947683396 4.68 5989016.529 3554314.755
+15.67942280606793 4.61 5989017.036 3554314.723
+15.805617099954926 4.62 5989017.162 3554314.716
+15.981960515819104 4.78 5989017.338 3554314.705
+15.99799173520018 4.86 5989017.354 3554314.704
+16.125243453637854 5.83 5989017.481 3554314.696
+16.37868772809031 6.28 5989017.734 3554314.681
+16.53800188311362 6.54 5989017.893 3554314.671
+17.29845569462073 6.71 5989018.652 3554314.624
+17.551899969045625 6.81 5989018.905 3554314.609
+17.679151687512572 6.83 5989019.032 3554314.601
+18.693049118321508 6.87 5989020.044 3554314.539
+20.721842109601813 7.02 5989022.069 3554314.415
+24.785478042953923 7.53 5989026.125 3554314.166
+26.30931858553129 7.56 5989027.646 3554314.073
+27.404370182819402 7.52 5989028.739 3554314.006
+]]&gt;</om:result>
+       <prof:station>62.0000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554315.683 5989001.386 6.51,3554315.465 5989004.933 6.37,3554315.341 5989006.961 6.45,3554315.217 5989008.987 6.49,3554315.046 5989011.774 6.49,3554314.968 5989013.042 6.34,3554314.875 5989014.563 6.3,3554314.818 5989015.497 6.38,3554314.806 5989015.688 6.01,3554314.797 5989015.83 5.81,3554314.792 5989015.925 5.38,3554314.77 5989016.274 4.75,3554314.755 5989016.529 4.68,3554314.723 5989017.036 4.61,3554314.716 5989017.162 4.62,3554314.705 5989017.338 4.78,3554314.704 5989017.354 4.86,3554314.696 5989017.481 5.83,3554314.681 5989017.734 6.28,3554314.671 5989017.893 6.54,3554314.624 5989018.652 6.71,3554314.609 5989018.905 6.81,3554314.601 5989019.032 6.83,3554314.539 5989020.044 6.87,3554314.415 5989022.069 7.02,3554314.166 5989026.125 7.53,3554314.073 5989027.646 7.56,3554314.006 5989028.739 7.52</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130780694">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130780613">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.67 5989004.211 3554413.178
+1.0028205221311535 6.64 5989005.204 3554413.318
+5.011982653775208 6.63 5989009.174 3554413.877
+6.014664059512433 6.65 5989010.167 3554414.016
+7.016494384109682 6.72 5989011.159 3554414.156
+9.02199606656662 6.78 5989013.145 3554414.435
+10.024816589619975 6.72 5989014.138 3554414.575
+11.025656736110976 6.69 5989015.129 3554414.715
+11.527562106154644 6.66 5989015.626 3554414.785
+12.53024351096954 6.53 5989016.619 3554414.924
+14.159138228145332 6.8 5989018.232 3554415.151
+14.659063222606674 7.07 5989018.727 3554415.221
+15.019547618824078 7.21 5989019.084 3554415.271
+15.068055350543464 6.9 5989019.132 3554415.278
+15.332655048304977 6.27 5989019.394 3554415.315
+15.584102855869096 5.63 5989019.643 3554415.35
+15.678007061767381 5.33 5989019.736 3554415.363
+16.022368790194793 4.81 5989020.077 3554415.411
+16.8998908705561 4.69 5989020.946 3554415.533
+17.071576629967534 4.87 5989021.116 3554415.557
+17.150348452081605 5.82 5989021.194 3554415.568
+17.698780762919075 6.7 5989021.737 3554415.645
+18.5763028423581 6.92 5989022.606 3554415.767
+18.701602484001445 6.97 5989022.73 3554415.785
+19.20237888051374 7.01 5989023.226 3554415.854
+23.21564139413045 6.73 5989027.2 3554416.414
+24.46878025263347 6.62 5989028.441 3554416.588
+27.47724181988412 6.94 5989031.42 3554417.008
+29.388839319555256 7.22 5989033.313 3554417.274
+]]&gt;</om:result>
+       <prof:station>62.1000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554413.178 5989004.211 6.67,3554413.318 5989005.204 6.64,3554413.877 5989009.174 6.63,3554414.016 5989010.167 6.65,3554414.156 5989011.159 6.72,3554414.435 5989013.145 6.78,3554414.575 5989014.138 6.72,3554414.715 5989015.129 6.69,3554414.785 5989015.626 6.66,3554414.924 5989016.619 6.53,3554415.151 5989018.232 6.8,3554415.221 5989018.727 7.07,3554415.271 5989019.084 7.21,3554415.278 5989019.132 6.9,3554415.315 5989019.394 6.27,3554415.35 5989019.643 5.63,3554415.363 5989019.736 5.33,3554415.411 5989020.077 4.81,3554415.533 5989020.946 4.69,3554415.557 5989021.116 4.87,3554415.568 5989021.194 5.82,3554415.645 5989021.737 6.7,3554415.767 5989022.606 6.92,3554415.785 5989022.73 6.97,3554415.854 5989023.226 7.01,3554416.414 5989027.2 6.73,3554416.588 5989028.441 6.62,3554417.008 5989031.42 6.94,3554417.274 5989033.313 7.22</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130780637">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130781688">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 6.71 5988991.84 3554506.19
+0.11510864455066534 6.69 5988991.955 3554506.185
+1.0369768564810191 6.36 5988992.876 3554506.145
+1.1520855010316844 6.33 5988992.991 3554506.14
+1.6125200783241294 6.37 5988993.451 3554506.12
+4.001784609630125 6.43 5988995.838 3554506.016
+4.319093607101432 6.74 5988996.155 3554506.002
+4.779528184393877 6.63 5988996.615 3554505.982
+6.189891612715757 7.53 5988998.024 3554505.92
+7.80241168967114 7.1 5988999.635 3554505.85
+8.493063556085142 6.78 5989000.325 3554505.82
+11.94332571972809 6.36 5989003.772 3554505.67
+12.86523786312517 6.84 5989004.693 3554505.629
+12.922272940092846 6.43 5989004.75 3554505.627
+13.05241132786359 6.23 5989004.88 3554505.621
+13.223554542824285 5.93 5989005.051 3554505.614
+13.266601028916046 5.46 5989005.094 3554505.612
+13.280636698206377 5.35 5989005.108 3554505.611
+13.510853987327936 5.11 5989005.338 3554505.601
+13.74207033590112 4.94 5989005.569 3554505.591
+13.855180901169396 4.87 5989005.682 3554505.586
+14.08539818936051 4.86 5989005.912 3554505.576
+14.431723182058684 5.07 5989006.258 3554505.561
+14.602866396107883 5.31 5989006.429 3554505.554
+14.717975040658548 5.87 5989006.544 3554505.549
+14.746046378310256 5.99 5989006.572 3554505.547
+15.063312828573295 6.48 5989006.889 3554505.534
+15.522748351597011 6.46 5989007.348 3554505.514
+17.36253230581836 6.34 5989009.186 3554505.433
+18.282402406037153 6.34 5989010.105 3554505.393
+19.200274400905986 6.36 5989011.022 3554505.353
+21.730666465336856 6.36 5989013.55 3554505.243
+25.4131440285207 6.87 5989017.229 3554505.083
+29.351901319451706 7.3 5989021.164 3554504.911
+]]&gt;</om:result>
+       <prof:station>62.2000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554506.19 5988991.84 6.71,3554506.185 5988991.955 6.69,3554506.145 5988992.876 6.36,3554506.14 5988992.991 6.33,3554506.12 5988993.451 6.37,3554506.016 5988995.838 6.43,3554506.002 5988996.155 6.74,3554505.982 5988996.615 6.63,3554505.92 5988998.024 7.53,3554505.85 5988999.635 7.1,3554505.82 5989000.325 6.78,3554505.67 5989003.772 6.36,3554505.629 5989004.693 6.84,3554505.627 5989004.75 6.43,3554505.621 5989004.88 6.23,3554505.614 5989005.051 5.93,3554505.612 5989005.094 5.46,3554505.611 5989005.108 5.35,3554505.601 5989005.338 5.11,3554505.591 5989005.569 4.94,3554505.586 5989005.682 4.87,3554505.576 5989005.912 4.86,3554505.561 5989006.258 5.07,3554505.554 5989006.429 5.31,3554505.549 5989006.544 5.87,3554505.547 5989006.572 5.99,3554505.534 5989006.889 6.48,3554505.514 5989007.348 6.46,3554505.433 5989009.186 6.34,3554505.393 5989010.105 6.34,3554505.353 5989011.022 6.36,3554505.243 5989013.55 6.36,3554505.083 5989017.229 6.87,3554504.911 5989021.164 7.3</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307816178">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307816119">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.4 5989037.453 3554613.713
+2.6056670929958856 7.01 5989039.379 3554611.958
+6.9505974723847 6.93 5989042.591 3554609.032
+8.68770886771529 7.0 5989043.875 3554607.862
+10.426232954575276 7.04 5989045.16 3554606.691
+12.922186880462618 7.03 5989047.005 3554605.01
+13.901195052314186 7.15 5989047.729 3554604.351
+14.077436364039134 6.41 5989047.859 3554604.232
+14.267870079432052 6.05 5989048.0 3554604.104
+14.335811230046081 5.53 5989048.05 3554604.058
+14.607638381397212 4.87 5989048.251 3554603.875
+14.82350176423127 4.84 5989048.41 3554603.729
+14.904969549093794 4.79 5989048.471 3554603.675
+15.176796700131431 4.78 5989048.672 3554603.492
+15.285773762007906 4.86 5989048.752 3554603.418
+15.475468253000129 4.88 5989048.892 3554603.29
+15.571055909614705 5.16 5989048.963 3554603.226
+15.624870405036267 5.51 5989049.003 3554603.19
+15.679358935974504 5.97 5989049.043 3554603.153
+15.869792652056988 6.37 5989049.184 3554603.025
+16.060899951448068 6.57 5989049.325 3554602.896
+16.930868341879385 6.62 5989049.968 3554602.31
+18.44996610020673 6.51 5989051.091 3554601.287
+18.775607007042296 6.54 5989051.332 3554601.068
+22.68161903921773 6.49 5989054.219 3554598.437
+26.587631072081518 7.11 5989057.106 3554595.806
+29.728476340776265 7.35 5989059.428 3554593.691
+]]&gt;</om:result>
+       <prof:station>62.3000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554613.713 5989037.453 7.4,3554611.958 5989039.379 7.01,3554609.032 5989042.591 6.93,3554607.862 5989043.875 7.0,3554606.691 5989045.16 7.04,3554605.01 5989047.005 7.03,3554604.351 5989047.729 7.15,3554604.232 5989047.859 6.41,3554604.104 5989048.0 6.05,3554604.058 5989048.05 5.53,3554603.875 5989048.251 4.87,3554603.729 5989048.41 4.84,3554603.675 5989048.471 4.79,3554603.492 5989048.672 4.78,3554603.418 5989048.752 4.86,3554603.29 5989048.892 4.88,3554603.226 5989048.963 5.16,3554603.19 5989049.003 5.51,3554603.153 5989049.043 5.97,3554603.025 5989049.184 6.37,3554602.896 5989049.325 6.57,3554602.31 5989049.968 6.62,3554601.287 5989051.091 6.51,3554601.068 5989051.332 6.54,3554598.437 5989054.219 6.49,3554595.806 5989057.106 7.11,3554593.691 5989059.428 7.35</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307827132">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition117845130783734">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.27 5989116.46 3554677.045
+1.0478253667882393 7.29 5989117.163 3554676.268
+2.72574431603441 7.12 5989118.289 3554675.024
+4.401509514447611 6.92 5989119.414 3554673.782
+5.2404689890706955 6.8 5989119.977 3554673.16
+6.498572721366519 6.8 5989120.821 3554672.227
+11.10961913176175 6.5 5989123.916 3554668.809
+12.7847131589269 6.59 5989125.04 3554667.567
+13.411981841340346 6.61 5989125.461 3554667.102
+13.72490994795871 6.53 5989125.671 3554666.87
+14.262982433646723 6.52 5989126.032 3554666.471
+14.288477531101446 6.79 5989126.049 3554666.452
+14.39395264711807 6.36 5989126.12 3554666.374
+14.511468603291725 6.0 5989126.199 3554666.287
+14.590778123651088 5.17 5989126.252 3554666.228
+14.696253239040797 4.98 5989126.323 3554666.15
+14.748655529072353 4.9 5989126.358 3554666.111
+14.958933915833548 4.88 5989126.499 3554665.955
+15.142305124403071 4.79 5989126.622 3554665.819
+15.351842710607825 4.83 5989126.763 3554665.664
+15.535213918552644 4.75 5989126.886 3554665.528
+15.680379341483238 4.97 5989126.983 3554665.42
+15.74623524471398 5.85 5989127.027 3554665.371
+15.798580254031458 6.09 5989127.063 3554665.333
+16.100209164780626 6.83 5989127.265 3554665.109
+16.832281565878517 7.2 5989127.756 3554664.566
+19.76258411029332 7.11 5989129.723 3554662.394
+20.601543584916406 7.13 5989130.286 3554661.772
+23.955969019355365 7.13 5989132.537 3554659.285
+24.898990758506855 7.37 5989133.17 3554658.586
+26.302929859769396 7.36 5989134.112 3554657.545
+]]&gt;</om:result>
+       <prof:station>62.4000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554677.045 5989116.46 7.27,3554676.268 5989117.163 7.29,3554675.024 5989118.289 7.12,3554673.782 5989119.414 6.92,3554673.16 5989119.977 6.8,3554672.227 5989120.821 6.8,3554668.809 5989123.916 6.5,3554667.567 5989125.04 6.59,3554667.102 5989125.461 6.61,3554666.87 5989125.671 6.53,3554666.471 5989126.032 6.52,3554666.452 5989126.049 6.79,3554666.374 5989126.12 6.36,3554666.287 5989126.199 6.0,3554666.228 5989126.252 5.17,3554666.15 5989126.323 4.98,3554666.111 5989126.358 4.9,3554665.955 5989126.499 4.88,3554665.819 5989126.622 4.79,3554665.664 5989126.763 4.83,3554665.528 5989126.886 4.75,3554665.42 5989126.983 4.97,3554665.371 5989127.027 5.85,3554665.333 5989127.063 6.09,3554665.109 5989127.265 6.83,3554664.566 5989127.756 7.2,3554662.394 5989129.723 7.11,3554661.772 5989130.286 7.13,3554659.285 5989132.537 7.13,3554658.586 5989133.17 7.37,3554657.545 5989134.112 7.36</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307847157">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307857147">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.64 5989183.184 3554745.583
+1.7348639715824445 7.69 5989184.621 3554744.611
+2.6004932225495923 7.67 5989185.338 3554744.126
+5.6372726018391734 6.81 5989187.853 3554742.424
+8.239982727479113 6.8 5989190.009 3554740.966
+11.709710671415422 6.92 5989192.883 3554739.022
+15.068497356686398 7.13 5989195.665 3554737.14
+15.123141660971053 7.16 5989195.71 3554737.109
+15.663986370715243 7.27 5989196.158 3554736.806
+15.690613424339265 7.29 5989196.18 3554736.791
+15.718072484883427 7.45 5989196.203 3554736.776
+15.919710775141906 7.7 5989196.37 3554736.663
+16.136332564969855 6.29 5989196.549 3554736.541
+16.19041583418447 5.5 5989196.594 3554736.511
+16.204838039325587 5.41 5989196.606 3554736.503
+16.284719201491782 5.29 5989196.672 3554736.458
+16.392885739662713 5.23 5989196.762 3554736.398
+16.82278921689241 4.92 5989197.118 3554736.157
+17.17337301584028 4.76 5989197.408 3554735.96
+17.348384444308376 5.24 5989197.553 3554735.862
+17.44212877733819 6.0 5989197.631 3554735.81
+17.71200467506594 6.62 5989197.854 3554735.658
+18.574028456385424 6.86 5989198.568 3554735.175
+19.006148809784133 6.9 5989198.926 3554734.933
+21.606642032538165 7.03 5989201.08 3554733.476
+23.33790053447246 7.02 5989202.514 3554732.506
+24.204918411558836 7.1 5989203.232 3554732.02
+26.43957834069404 7.22 5989205.083 3554730.768
+]]&gt;</om:result>
+       <prof:station>62.5000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554745.583 5989183.184 7.64,3554744.611 5989184.621 7.69,3554744.126 5989185.338 7.67,3554742.424 5989187.853 6.81,3554740.966 5989190.009 6.8,3554739.022 5989192.883 6.92,3554737.14 5989195.665 7.13,3554737.109 5989195.71 7.16,3554736.806 5989196.158 7.27,3554736.791 5989196.18 7.29,3554736.776 5989196.203 7.45,3554736.663 5989196.37 7.7,3554736.541 5989196.549 6.29,3554736.511 5989196.594 5.5,3554736.503 5989196.606 5.41,3554736.458 5989196.672 5.29,3554736.398 5989196.762 5.23,3554736.157 5989197.118 4.92,3554735.96 5989197.408 4.76,3554735.862 5989197.553 5.24,3554735.81 5989197.631 6.0,3554735.658 5989197.854 6.62,3554735.175 5989198.568 6.86,3554734.933 5989198.926 6.9,3554733.476 5989201.08 7.03,3554732.506 5989202.514 7.02,3554732.02 5989203.232 7.1,3554730.768 5989205.083 7.22</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130785737">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307857203">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.62 5989202.312 3554773.965
+11.896065609874972 6.95 5989212.651 3554768.081
+12.117718491481188 6.7 5989212.844 3554767.972
+12.258374099790924 5.66 5989212.966 3554767.902
+12.298685388440003 5.32 5989213.001 3554767.882
+12.600090431723663 5.16 5989213.263 3554767.733
+13.056910965205963 5.33 5989213.66 3554767.507
+13.1178125255146 5.66 5989213.713 3554767.477
+13.27769373093631 6.63 5989213.852 3554767.398
+13.57996844076704 6.9 5989214.115 3554767.249
+24.242630631662454 7.24 5989223.382 3554761.975
+]]&gt;</om:result>
+       <prof:station>62.5930</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554773.965 5989202.312 7.62,3554768.081 5989212.651 6.95,3554767.972 5989212.844 6.7,3554767.902 5989212.966 5.66,3554767.882 5989213.001 5.32,3554767.733 5989213.263 5.16,3554767.507 5989213.66 5.33,3554767.477 5989213.713 5.66,3554767.398 5989213.852 6.63,3554767.249 5989214.115 6.9,3554761.975 5989223.382 7.24</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307867214">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307867212">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.6 5989225.396 3554834.589
+0.9677174177113588 7.49 5989226.335 3554834.355
+2.9050929619630974 7.37 5989228.215 3554833.887
+4.117043868553187 7.25 5989229.391 3554833.594
+5.570075527052292 7.32 5989230.801 3554833.243
+7.507451071304031 7.28 5989232.681 3554832.775
+9.444826615555769 7.17 5989234.561 3554832.307
+11.865334207285278 7.07 5989236.91 3554831.723
+12.107627417594726 7.09 5989237.145 3554831.664
+12.924730838661254 7.46 5989237.938 3554831.467
+12.970085000410233 7.11 5989237.982 3554831.456
+13.24318022239095 6.56 5989238.247 3554831.39
+13.364934072287594 6.1 5989238.365 3554831.36
+13.440120507022863 5.85 5989238.438 3554831.342
+13.713215728212404 5.49 5989238.703 3554831.276
+13.955267375965628 5.5 5989238.938 3554831.218
+14.351085515625568 5.66 5989239.322 3554831.122
+14.502429494541003 5.97 5989239.469 3554831.086
+14.654014455007365 6.54 5989239.616 3554831.049
+14.85095353152276 7.07 5989239.807 3554831.001
+16.18029208888643 7.37 5989241.097 3554830.68
+16.422585300099165 7.37 5989241.332 3554830.621
+18.11669775149636 7.19 5989242.976 3554830.212
+18.84212245455583 7.25 5989243.68 3554830.037
+21.7450330635815 7.13 5989246.497 3554829.336
+24.65109637956348 7.26 5989249.317 3554828.634
+25.619784152197465 7.27 5989250.257 3554828.4
+28.529970572303583 7.23 5989253.081 3554827.697
+29.41013248859405 7.25 5989253.935 3554827.484
+]]&gt;</om:result>
+       <prof:station>62.6000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554834.589 5989225.396 7.6,3554834.355 5989226.335 7.49,3554833.887 5989228.215 7.37,3554833.594 5989229.391 7.25,3554833.243 5989230.801 7.32,3554832.775 5989232.681 7.28,3554832.307 5989234.561 7.17,3554831.723 5989236.91 7.07,3554831.664 5989237.145 7.09,3554831.467 5989237.938 7.46,3554831.456 5989237.982 7.11,3554831.39 5989238.247 6.56,3554831.36 5989238.365 6.1,3554831.342 5989238.438 5.85,3554831.276 5989238.703 5.49,3554831.218 5989238.938 5.5,3554831.122 5989239.322 5.66,3554831.086 5989239.469 5.97,3554831.049 5989239.616 6.54,3554831.001 5989239.807 7.07,3554830.68 5989241.097 7.37,3554830.621 5989241.332 7.37,3554830.212 5989242.976 7.19,3554830.037 5989243.68 7.25,3554829.336 5989246.497 7.13,3554828.634 5989249.317 7.26,3554828.4 5989250.257 7.27,3554827.697 5989253.081 7.23,3554827.484 5989253.935 7.25</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile11784513079279">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307937155">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.58 5989241.028 3554925.057
+0.7170341695155991 7.49 5989241.745 3554925.064
+2.1510930938146036 7.46 5989243.179 3554925.077
+6.9303144740118 6.96 5989247.958 3554925.123
+9.798441563959216 6.85 5989250.826 3554925.15
+10.635479794224723 7.0 5989251.663 3554925.158
+10.754483995780447 6.87 5989251.782 3554925.159
+10.934495107180373 6.59 5989251.962 3554925.161
+10.949495106845097 6.52 5989251.977 3554925.161
+10.979495107105867 5.93 5989252.007 3554925.161
+10.993495106606678 5.69 5989252.021 3554925.161
+11.35151745228758 5.13 5989252.379 3554925.165
+11.709530021906987 4.96 5989252.737 3554925.168
+11.799535577143905 5.08 5989252.827 3554925.169
+11.978546750447386 5.18 5989253.006 3554925.171
+12.083551511757033 5.3 5989253.111 3554925.172
+12.187551512040155 5.74 5989253.215 3554925.172
+12.247559845319065 6.07 5989253.275 3554925.173
+12.277559844648513 6.44 5989253.305 3554925.173
+12.39757651026738 6.7 5989253.425 3554925.175
+13.353609982726338 6.85 5989254.381 3554925.183
+13.831636132756696 6.91 5989254.859 3554925.188
+15.746720726222883 6.96 5989256.774 3554925.206
+18.854865510505295 7.2 5989259.882 3554925.236
+20.767950192084733 7.09 5989261.795 3554925.254
+22.44202665354703 6.96 5989263.469 3554925.27
+25.857176577088058 7.24 5989266.884 3554925.302
+]]&gt;</om:result>
+       <prof:station>62.7000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3554925.057 5989241.028 7.58,3554925.064 5989241.745 7.49,3554925.077 5989243.179 7.46,3554925.123 5989247.958 6.96,3554925.15 5989250.826 6.85,3554925.158 5989251.663 7.0,3554925.159 5989251.782 6.87,3554925.161 5989251.962 6.59,3554925.161 5989251.977 6.52,3554925.161 5989252.007 5.93,3554925.161 5989252.021 5.69,3554925.165 5989252.379 5.13,3554925.168 5989252.737 4.96,3554925.169 5989252.827 5.08,3554925.171 5989253.006 5.18,3554925.172 5989253.111 5.3,3554925.172 5989253.215 5.74,3554925.173 5989253.275 6.07,3554925.173 5989253.305 6.44,3554925.175 5989253.425 6.7,3554925.183 5989254.381 6.85,3554925.188 5989254.859 6.91,3554925.206 5989256.774 6.96,3554925.236 5989259.882 7.2,3554925.254 5989261.795 7.09,3554925.27 5989263.469 6.96,3554925.302 5989266.884 7.24</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile117845130794784">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307947129">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 7.74 5989233.468 3555023.29
+3.1701738116470493 7.67 5989236.629 3555023.531
+4.388727872661593 7.3 5989237.844 3555023.624
+5.364537792908754 7.18 5989238.817 3555023.698
+6.340347713155916 7.16 5989239.79 3555023.772
+11.703812358566614 6.86 5989245.138 3555024.179
+12.069884755067015 6.87 5989245.503 3555024.207
+12.542258548555889 7.18 5989245.974 3555024.243
+12.573322997205425 6.88 5989246.005 3555024.245
+12.817064663502903 6.68 5989246.248 3555024.264
+12.923366122233016 5.85 5989246.354 3555024.272
+13.105903789605833 5.43 5989246.536 3555024.286
+13.35056682314417 5.44 5989246.78 3555024.304
+13.715642157889805 5.16 5989247.144 3555024.332
+14.005478318369386 5.07 5989247.433 3555024.354
+14.066682893145648 5.22 5989247.494 3555024.359
+14.249220560518465 5.76 5989247.676 3555024.373
+14.371552077752032 6.65 5989247.798 3555024.382
+14.630326109868134 7.14 5989248.056 3555024.402
+15.606136030115296 7.25 5989249.029 3555024.476
+16.09354243095631 7.29 5989249.515 3555024.513
+19.018977954456982 7.2 5989252.432 3555024.735
+21.701745368707986 7.06 5989255.107 3555024.939
+24.626183776539985 7.28 5989258.023 3555025.161
+28.44221902241412 7.39 5989261.828 3555025.451
+]]&gt;</om:result>
+       <prof:station>62.8000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3555023.29 5989233.468 7.74,3555023.531 5989236.629 7.67,3555023.624 5989237.844 7.3,3555023.698 5989238.817 7.18,3555023.772 5989239.79 7.16,3555024.179 5989245.138 6.86,3555024.207 5989245.503 6.87,3555024.243 5989245.974 7.18,3555024.245 5989246.005 6.88,3555024.264 5989246.248 6.68,3555024.272 5989246.354 5.85,3555024.286 5989246.536 5.43,3555024.304 5989246.78 5.44,3555024.332 5989247.144 5.16,3555024.354 5989247.433 5.07,3555024.359 5989247.494 5.22,3555024.373 5989247.676 5.76,3555024.382 5989247.798 6.65,3555024.402 5989248.056 7.14,3555024.476 5989249.029 7.25,3555024.513 5989249.515 7.29,3555024.735 5989252.432 7.2,3555024.939 5989255.107 7.06,3555025.161 5989258.023 7.28,3555025.451 5989261.828 7.39</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+     <simBase:riverProfile>
+      <prof:Profile xmlns:prof="org.kalypso.model.wspmprofile" gml:id="Profile1178451307947130">
+       <gml:name>Trippel-Import</gml:name>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1178451307957284">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result>&lt;![CDATA[0.0 8.05 5989237.239 3555126.622
+0.8641307774991737 8.0 5989238.088 3555126.461
+1.7264839525611966 7.85 5989238.935 3555126.299
+4.5338207692461125 7.26 5989241.693 3555125.775
+6.691971829888559 7.29 5989243.813 3555125.371
+9.282585849640611 7.49 5989246.358 3555124.887
+12.739482145208772 7.29 5989249.754 3555124.241
+12.793417291708154 7.27 5989249.807 3555124.231
+13.184482503285151 6.71 5989250.191 3555124.157
+13.198624639383034 6.59 5989250.205 3555124.155
+13.211966303714377 6.27 5989250.218 3555124.152
+13.225119249475993 6.13 5989250.231 3555124.15
+13.279054395975376 5.92 5989250.284 3555124.14
+13.386924688145303 5.54 5989250.39 3555124.12
+13.522442215073577 5.1 5989250.523 3555124.094
+13.846053092498535 5.13 5989250.841 3555124.034
+13.953923384668462 5.19 5989250.947 3555124.014
+14.235948206928873 5.15 5989251.224 3555123.961
+14.398923664428215 5.64 5989251.384 3555123.93
+14.479335107251574 6.59 5989251.463 3555123.915
+14.587205399421501 7.02 5989251.569 3555123.895
+14.641140546007222 7.21 5989251.622 3555123.885
+15.937921174322835 7.16 5989252.896 3555123.643
+17.232736991239744 7.03 5989254.168 3555123.401
+18.09490286858842 7.0 5989255.015 3555123.24
+22.412000273481468 7.23 5989259.256 3555122.433
+23.275335666243368 7.2 5989260.104 3555122.271
+25.86594968608242 7.18 5989262.649 3555121.787
+28.990020267965647 7.29 5989265.718 3555121.203
+]]&gt;</om:result>
+       <prof:station>62.9000</prof:station>
+       <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+       <prof:profileLocation>
+        <gml:LineString xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+         <gml:coordinates ts="," decimal="." cs=" ">3555126.622 5989237.239 8.05,3555126.461 5989238.088 8.0,3555126.299 5989238.935 7.85,3555125.775 5989241.693 7.26,3555125.371 5989243.813 7.29,3555124.887 5989246.358 7.49,3555124.241 5989249.754 7.29,3555124.231 5989249.807 7.27,3555124.157 5989250.191 6.71,3555124.155 5989250.205 6.59,3555124.152 5989250.218 6.27,3555124.15 5989250.231 6.13,3555124.14 5989250.284 5.92,3555124.12 5989250.39 5.54,3555124.094 5989250.523 5.1,3555124.034 5989250.841 5.13,3555124.014 5989250.947 5.19,3555123.961 5989251.224 5.15,3555123.93 5989251.384 5.64,3555123.915 5989251.463 6.59,3555123.895 5989251.569 7.02,3555123.885 5989251.622 7.21,3555123.643 5989252.896 7.16,3555123.401 5989254.168 7.03,3555123.24 5989255.015 7.0,3555122.433 5989259.256 7.23,3555122.271 5989260.104 7.2,3555121.787 5989262.649 7.18,3555121.203 5989265.718 7.29</gml:coordinates>
+        </gml:LineString>
+       </prof:profileLocation>
+      </prof:Profile>
+     </simBase:riverProfile>
+    </simBase:RiverProfileNetwork>
+   </simBase:riverProfileNetwork>
+  </simBase:RiverProfileNetworkCollection>
  </simBase:riverProfileNetworkCollectionMember>
 </simBase:TerrainModel>
