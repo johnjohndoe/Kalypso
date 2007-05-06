@@ -407,9 +407,6 @@
   </wb1d2d:PolyElement>
  </wb1d2d:element>
  <wb1d2d:element>
-  <wb1d2d:PolyElement gml:id="FE211"/>
- </wb1d2d:element>
- <wb1d2d:element>
   <wb1d2d:PolyElement gml:id="PolyElement1178481283182492">
    <wb1d2d:directedEdge xlink:href="#Edge117848128318271"/>
    <wb1d2d:directedEdge xlink:href="#Edge1178481283182407"/>
