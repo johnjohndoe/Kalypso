@@ -4,10 +4,10 @@
 
     <gft:view typename="wbr:RoughnessClsCollection" style="SWT.NONE" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
-        <gft:gridLayout numColumns="1" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
+        <gft:gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
         
         <gft:group text="Roughness table" style="0">
-	        <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+	        <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" heightHint="200" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns="1" horizontalSpacing="10"/>
 	        <gft:table property="wbr:roughnessClsMember" style="SWT.NONE">
 	            <gft:gridData verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
@@ -25,7 +25,7 @@
         </gft:group>
         
         <gft:group text="Roughness classes" style="0">
-	        <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+	        <gft:gridData horizontalSpan="1" minimumHeight="200" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns="1" horizontalSpacing="5"/>
 	        <gft:table property="wbr:roughness_GroundClsMember" style="SWT.NONE">
 	            <gft:gridData verticalAlignment="GridData.FILL" heightHint="50" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
@@ -41,7 +41,7 @@
         </gft:group>
         
         <gft:group text="Vegetation classes" style="0">
-	        <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+	        <gft:gridData horizontalSpan="1" minimumHeight="200" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns="1" horizontalSpacing="5"/>
 	        <gft:table property="wbr:roughness_VegetationClsMember">
 	            <gft:gridData verticalAlignment="GridData.FILL" heightHint="50" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
