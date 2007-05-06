@@ -198,6 +198,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<![CDATA[Rauheitszonen definieren sowie Rauheitsklassen bearbeiten.]]>
 			</Help>
 			<Name>Rauheitsmodellierung</Name>
+			<!-- 
 			<Task context="RoughnessTheme"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
 				<Help>
@@ -205,6 +206,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Rauheitszonen definieren</Name>
 			</Task>
+			 -->
 			<Task context="RoughnessDatabase"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
 				<Help>
