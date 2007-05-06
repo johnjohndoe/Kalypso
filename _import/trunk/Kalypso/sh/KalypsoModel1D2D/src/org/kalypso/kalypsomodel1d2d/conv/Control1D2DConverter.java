@@ -133,8 +133,7 @@ public class Control1D2DConverter
     formatter.format( "C0%14d%8d%8d%8d%8.3f%8d%8.3f%8.2f%8d%n", c0Props );
 
     // C1
-    Object[] c1Props = new Object[] { 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 };
-    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", c1Props );
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 );
 
     // C2
     Object[] c2Props = new Object[] { calculation.getOMEGA(), calculation.getELEV(), 1.0, 1.0, 1.0, 1 };
@@ -219,7 +218,7 @@ public class Control1D2DConverter
         if( i == 0 )
           formatter.format( "CC1 %4d", info.getID() );
         else if( i % 9 == 0 )
-          formatter.format( "%nCC2 " );
+          formatter.format( "%nCC2     " );
 
         formatter.format( "%8s", nodeID );
       }
