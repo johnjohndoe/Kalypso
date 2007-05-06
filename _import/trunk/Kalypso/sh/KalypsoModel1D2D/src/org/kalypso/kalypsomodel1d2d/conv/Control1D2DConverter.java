@@ -76,6 +76,10 @@ public class Control1D2DConverter
 
   private final LinkedHashMap<String, String> m_roughnessIDProvider;
 
+  private long timeStepInterval_;
+
+  private double timeStepInterval;
+
   public Control1D2DConverter( final LinkedHashMap<String, String> nodesIDProvider, final LinkedHashMap<String, String> roughnessIDProvider )
   {
     m_nodesIDProvider = nodesIDProvider;
@@ -273,6 +277,7 @@ public class Control1D2DConverter
     IComponent res_C_1 = result.getComponents()[1];
     ArrayList<Date> timeAndDate = new ArrayList<Date>();
     ArrayList<BigDecimal> underRelaxFactors = new ArrayList<BigDecimal>();
+    
     // XMLGregorianCalendar
     while( iterator.hasNext() )
     {
@@ -282,25 +287,52 @@ public class Control1D2DConverter
     }
 
     // TODO: chek if timeserie is filled or not...
-    long timeStepInterval = timeAndDate.get( 1 ).getTime() - timeAndDate.get( 0 ).getTime();
-    timeStepInterval = timeStepInterval / (60 * 60);
 
-    for( int i = 0; i < timeAndDate.size(); i++ )
+    for( int i = 1; i < timeAndDate.size(); i++ )
     {
+      Calendar instance = Calendar.getInstance();
+      instance.setTime( timeAndDate.get( i ) );    
+      
+      Calendar instance_3 = Calendar.getInstance();
+      instance_3.setTime( timeAndDate.get( i-1 ) );
+      
+      timeStepInterval_ =  instance.getTimeInMillis()-instance_3.getTimeInMillis();
+           
+      timeStepInterval = (double)timeStepInterval_ / (60*60*1000);
+           
       System.out.println( "com -----------------------" );
       System.out.println( "com unsteady " + i );
       System.out.println( "com -----------------------" );
-      Calendar instance = Calendar.getInstance();
+      //Calendar instance = Calendar.getInstance();
       instance.setTime( timeAndDate.get( i ) );
+      //instance.get( Calendar. )
       int dayOfYear = instance.get( Calendar.DAY_OF_YEAR );
-      System.out.println( "DT " + timeStepInterval + " " + timeAndDate.get( i ).getYear() + " " + dayOfYear + " " + (timeAndDate.get( i ).getSeconds() / ((60 * 60) * 100)) );
+      instance.setTime( timeAndDate.get( i ) );
+      int _year = instance.get( Calendar.YEAR ); 
+      System.out.println( "DT " +
+                  " " + timeStepInterval +
+                  " " + _year +                    
+                  " " + dayOfYear +
+                  " " + getTimeInPercentage(timeAndDate.get( i )) );      
+      BigDecimal uRVal= underRelaxFactors.get( i ); 
+      System.out.println("BC          "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010");
+      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
+      System.out.println("QC             1       0    1.00   0.000   0.000  20.000   0.000");
+      System.out.println("QC             1       0    1.00   0.000   0.000  20.000   0.000");
+      System.out.println("HC             3       0    8.30   00.00    20.0     0.0");
+      System.out.println("ENDSTEP  steady");    
     }
+  }
 
-    // sb.append( "DT " );// add DELTA
-    // // TODO ask Nico about BC-Lines (equal values for all Lines???)
-    // // TODO add continuity Lines inflow here (QC,HC)
-    // sb.append( "ENDSTEP steady" );
-
+  private String getTimeInPercentage(Date _date )
+  {
+    Calendar instance_ = Calendar.getInstance();
+    instance_.setTime( _date );
+    return instance_.get(Calendar.HOUR_OF_DAY)+"."+(instance_.get(Calendar.MINUTE)*100)/60;    
   }
 
 }
