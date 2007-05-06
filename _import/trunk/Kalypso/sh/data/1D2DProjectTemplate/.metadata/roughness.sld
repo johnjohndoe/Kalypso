@@ -2449,7 +2449,7 @@
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>deaktive Elemente</ogc:Literal>
+                            <ogc:Literal>deaktivierte Elemente</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -2460,40 +2460,11 @@
                         </Geometry>
                         <Fill>
                             <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
+                            <CssParameter name="fill">#ff0000</CssParameter>
                         </Fill>
                         <Stroke>
                             <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>deaktive Elemente</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
