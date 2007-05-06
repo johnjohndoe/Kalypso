@@ -34,7 +34,7 @@
 		================================================================== -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Under Relaxation Factor</gml:name>
+			<gml:name>Wichtungsfaktor [-]</gml:name>
 			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
 			<swe:representation>
 				<swe:SimpleType>

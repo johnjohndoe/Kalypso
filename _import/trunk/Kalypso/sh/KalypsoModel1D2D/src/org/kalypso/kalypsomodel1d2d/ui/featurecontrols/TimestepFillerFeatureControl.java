@@ -92,7 +92,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
     final Display display = PlatformUI.getWorkbench().getDisplay();
     m_button = new Button( parent, style );
 
-    m_button.setText( "Fill Timesteps" );
+    m_button.setText( "Zeitschritte definieren" );
 
     m_button.addSelectionListener( new SelectionAdapter()
     {

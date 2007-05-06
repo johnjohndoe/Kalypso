@@ -97,9 +97,9 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     
     final Feature newFeature = t_feature;
     
-    System.out.println(timePage.getStartDate());
-    System.out.println(timePage.getFinishDate());
-    System.out.println(timePage.getTimeSteps());
+//    System.out.println(timePage.getStartDate());
+//    System.out.println(timePage.getFinishDate());
+//    System.out.println(timePage.getTimeSteps());
     obs = ObservationFeatureFactory.toObservation( t_feature );
     final TupleResult result =  obs.getResult();
     final IComponent[] components = result.getComponents();
@@ -170,7 +170,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
   
   @Override
   public void addPages() {
-    setWindowTitle("Extract");
+    setWindowTitle("Berechnungszeitschritte definieren");
     timePage = new TimeStepFillerWizardPage();
     addPage(timePage);
     timePage.init(initialSelection);

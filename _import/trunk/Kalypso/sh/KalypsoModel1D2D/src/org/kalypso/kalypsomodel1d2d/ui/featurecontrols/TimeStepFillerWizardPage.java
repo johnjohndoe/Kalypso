@@ -45,7 +45,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
@@ -60,29 +59,41 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
  * @author Madanagopal
- *
  */
 public class TimeStepFillerWizardPage extends WizardPage
 {
 
-  private Text m_dateFromTxt;
-  private Text m_dateToTxt;
-  private Text timeStep_Text;
+  private Text m_dateTimeFrom;
+
+  private Text m_dateTimeTo;
+
+  private Text m_dateTimeStep;
+
   private int timeStep_val;
+
   protected Date m_dateFrom = new Date();
+
   protected Date m_dateTo = new Date();
-  private Text _underRelaxationFactor_Text;
-  protected int _underRelaxFactor_val;
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+  Text uRelFactorText;
+
+  protected int uRelFactor;
+
+  private static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+
+  private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" );
+  
+  private static final String DEFAULTSTEP = "60";
 
   protected TimeStepFillerWizardPage( )
   {
-    super("Example");
+    super( "Example" );
+    setTitle( "Zeitschrittdefinition" );
+    setDescription( "Dieser Dialog ermöglicht die Vordefinition der gewünschten Berechnunszeitschritte." );
     // TODO Auto-generated constructor stub
   }
 
@@ -91,52 +102,45 @@ public class TimeStepFillerWizardPage extends WizardPage
    */
   public void createControl( Composite parent )
   {
-    Composite container = new Composite(parent, SWT.NULL);
-    final GridLayout gridLayout = new GridLayout();
+    Composite container = new Composite( parent, SWT.NULL );
+    GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
-    container.setLayout(gridLayout);
-    setControl(container);
+    container.setLayout( gridLayout );
+    setControl( container );
 
-    
-    GridData data = new GridData();
-    Label vonLbl = new Label(container, SWT.NONE);
-    
-    data.horizontalAlignment = GridData.FILL;
-    data.horizontalSpan = 1;
-    data.grabExcessHorizontalSpace = true;
+    final GridData gridBeginning = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
+    final GridData gridEnd = new GridData( SWT.END, SWT.CENTER, false, false );
+    final GridData gridFillHorizontal = new GridData( SWT.FILL, SWT.CENTER, true, false );
+
+    final Label vonLbl = new Label( container, SWT.NONE );
+    vonLbl.setLayoutData( gridBeginning );
     vonLbl.setText( "Von:" );
-    vonLbl.setAlignment( SWT.RIGHT);
-    vonLbl.setLayoutData( data );
-    
-    m_dateFromTxt = new Text( container, SWT.BORDER );
-    data = new GridData ();
-    data.horizontalSpan = 1;
-    data.horizontalAlignment = GridData.FILL;
-    m_dateFromTxt.setLayoutData (data);
-    //m_dateFromTxt.setEnabled( false );
-    m_dateFromTxt.addModifyListener( new ModifyListener()
+
+    m_dateTimeFrom = new Text( container, SWT.BORDER );
+    m_dateTimeFrom.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
         try
         {
-          m_dateFrom = DATE_FORMAT.parse( m_dateFromTxt.getText());
-      //    dateIntervalChanged();
+          m_dateFrom = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
+          // dateIntervalChanged();
           setPageComplete( true );
         }
         catch( ParseException e1 )
         {
-          //m_diagView.removeAllItems();
+          // m_diagView.removeAllItems();
           setPageComplete( false );
         }
         getWizard().getContainer().updateButtons();
       }
     } );
+    m_dateTimeFrom.setText( DATEFORMAT.format( new Date() ) );
+    m_dateTimeFrom.setLayoutData( gridFillHorizontal );
 
-    final Button dateFromBtn = new Button( container, SWT.PUSH );
-    data = new GridData();
+    final Button dateFromBtn = new Button( container, SWT.NONE );
     dateFromBtn.setText( "..." );
-    //dateFromBtn.setEnabled( false );
+    // dateFromBtn.setEnabled( false );
     dateFromBtn.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -149,33 +153,23 @@ public class TimeStepFillerWizardPage extends WizardPage
         if( calendarDialog.open() == Window.OK )
         {
           m_dateFrom = calendarDialog.getDate();
-          m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom) );
+          m_dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
         }
       }
-    } );    
+    } );
 
-    Label bisLbl = new Label(container, SWT.NONE);
-    data = new GridData ();
-    data.horizontalAlignment = GridData.FILL;
-    data.horizontalSpan = 1;
-    data.grabExcessHorizontalSpace = true;
+    Label bisLbl = new Label( container, SWT.NONE );
+    bisLbl.setLayoutData( gridBeginning );
     bisLbl.setText( "Bis:" );
-    bisLbl.setAlignment( SWT.RIGHT );
-    bisLbl.setLayoutData( data );
-    
-    m_dateToTxt = new Text( container, SWT.BORDER );
-    data = new GridData ();
-    data.horizontalAlignment = GridData.FILL;
-    data.horizontalSpan = 1;
-    m_dateToTxt.setLayoutData (data);
-    //m_dateToTxt.setEnabled( false );
-    m_dateToTxt.addModifyListener( new ModifyListener()
+
+    m_dateTimeTo = new Text( container, SWT.BORDER );
+    m_dateTimeTo.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
         try
         {
-          m_dateTo = DATE_FORMAT.parse( m_dateToTxt.getText());
+          m_dateTo = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
           setPageComplete( true );
         }
         catch( ParseException e1 )
@@ -185,8 +179,11 @@ public class TimeStepFillerWizardPage extends WizardPage
         getWizard().getContainer().updateButtons();
       }
     } );
+    
+    m_dateTimeTo.setText( DATETIMEFORMAT.format( new Date() ) );
+    m_dateTimeTo.setLayoutData( gridFillHorizontal );
 
-    final Button dateToBtn = new Button( container, SWT.PUSH );
+    final Button dateToBtn = new Button( container, SWT.NONE );
     dateToBtn.setText( "..." );
     dateToBtn.addSelectionListener( new SelectionAdapter()
     {
@@ -197,135 +194,109 @@ public class TimeStepFillerWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateTo );
-        
+
         if( calendarDialog.open() == Window.OK )
         {
           m_dateTo = calendarDialog.getDate();
-          m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo) );          
-        }  
-      }
-    } );
-    
-    Label timeStepLbl = new Label(container, SWT.NONE);
-    data = new GridData();
-    data.horizontalSpan = 1;    
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    timeStepLbl.setText( "Time Steps:" );
-    timeStepLbl.setAlignment( SWT.RIGHT );
-    timeStepLbl.setLayoutData( data );
-    
-    timeStep_Text = new Text( container, SWT.BORDER );
-    data = new GridData ();
-    data.horizontalSpan = 2;
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-
-    timeStep_Text.setLayoutData (data);
-    timeStep_Text.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        timeStep_val = Integer.parseInt( timeStep_Text.getText());
+          m_dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
+        }
       }
     } );
 
-    Label _underRelaxationFactor = new Label(container, SWT.NONE);
-    data = new GridData();
-    data.horizontalSpan = 1;    
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    _underRelaxationFactor.setText( "Under Relaxation Factor:" );
-    _underRelaxationFactor.setAlignment( SWT.RIGHT );
-    _underRelaxationFactor.setLayoutData( data );
-    
-    _underRelaxationFactor_Text = new Text( container, SWT.BORDER );
-    data = new GridData ();
-    data.horizontalSpan = 2;
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    _underRelaxationFactor_Text.setLayoutData (data);
-    _underRelaxationFactor_Text.addModifyListener( new ModifyListener()
+    Label timeStepLbl = new Label( container, SWT.NONE );
+    timeStepLbl.setLayoutData( gridBeginning );
+    timeStepLbl.setText( "Zeitschritt [min]:" );
+
+    m_dateTimeStep = new Text( container, SWT.BORDER );
+    m_dateTimeStep.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
-        _underRelaxFactor_val = Integer.parseInt( _underRelaxationFactor_Text.getText());
+        timeStep_val = Integer.parseInt( m_dateTimeStep.getText() );
       }
     } );
+
+    m_dateTimeStep.setText( DEFAULTSTEP );
+    m_dateTimeStep.setLayoutData( gridFillHorizontal );
     
-//    Label _Q_Lbl = new Label(container, SWT.NONE);
-//    data = new GridData();
-//    data.horizontalSpan = 1;    
-//    data.horizontalAlignment = GridData.FILL;
-//    data.grabExcessHorizontalSpace = true;
-//    _Q_Lbl.setText( "Q Value:" );
-//    _Q_Lbl.setAlignment( SWT.RIGHT );
-//    _Q_Lbl.setLayoutData( data );
-//    
-//    _Q_Value_Text = new Text( container, SWT.BORDER );
-//    data = new GridData ();
-//    data.horizontalSpan = 2;
-//    data.horizontalAlignment = GridData.FILL;
-//    data.grabExcessHorizontalSpace = true;
-//    _Q_Value_Text.setLayoutData (data);
-//    _Q_Value_Text.addModifyListener( new ModifyListener()
-//    {
-//      public void modifyText( ModifyEvent e )
-//      {
-//        _Q_val = Integer.parseInt( _Q_Value_Text.getText());
-//      }
-//    } );
+    final Label emptylabel_1 = new Label( container, SWT.NONE );
+    emptylabel_1.setLayoutData( gridEnd );
+    emptylabel_1.setText( "" );
+    
+    Label uRelFactorLabel = new Label( container, SWT.NONE );
+    uRelFactorLabel.setLayoutData( gridBeginning );
+    uRelFactorLabel.setText( "Wichtungsfaktor [-]:" );
+
+    uRelFactorText = new Text( container, SWT.BORDER );
+    uRelFactorText.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        uRelFactor = Integer.parseInt( uRelFactorText.getText() );
+      }
+    } );
+
+    uRelFactorText.setText( "1" );
+    uRelFactorText.setLayoutData( gridFillHorizontal );
+    
+    final Label emptylabel_2 = new Label( container, SWT.NONE );
+    emptylabel_2.setLayoutData( gridEnd );
+    emptylabel_2.setText( "" );
     container.layout();
-    //updatePageComplete();
-    //setPageComplete( true );
-    
+    // updatePageComplete();
+    // setPageComplete( true );
+
   }
 
   public void init( IStructuredSelection initialSelection )
   {
     // TODO Auto-generated method stub
-    
+
   }
-  public Date getStartDate() {
-    
+
+  public Date getStartDate( )
+  {
+
     return m_dateFrom;
   }
-  
-  public Date getFinishDate() {
+
+  public Date getFinishDate( )
+  {
     return m_dateTo;
   }
-  
-  public int getTimeSteps() {
+
+  public int getTimeSteps( )
+  {
     return timeStep_val;
   }
-  
-  public int getUnderRelaxationFactorValue() {
-    return _underRelaxFactor_val;
+
+  public int getUnderRelaxationFactorValue( )
+  {
+    return uRelFactor;
   }
 
   protected void updatePageComplete( )
   {
     setPageComplete( false );
 
-    if( getUnderRelaxationFactorValue()<=0.0 ||
-        getUnderRelaxationFactorValue()>=1.0)
+    if( getUnderRelaxationFactorValue() <= 0.0 || getUnderRelaxationFactorValue() >= 1.0 )
     {
       setMessage( null );
-      setErrorMessage( "Wrong Value : 0.0 - 1.0 Allowed" );
-      return;
-    }
-    
-    if (getStartDate().after( getFinishDate() ))
-    {
-      setMessage( null );
-      setErrorMessage( "Incompatible Start Date" );
+      setErrorMessage( "Falsche Eingabe! Mögliche Werte: 0.1 - 1.0." );
       return;
     }
 
-    if (getFinishDate().after( getStartDate()))
+    if( getStartDate().after( getFinishDate() ) )
     {
       setMessage( null );
-      setErrorMessage( "Incompatible End Date" );
+      setErrorMessage( "Inkompatibles Startdatum." );
+      return;
+    }
+
+    if( getFinishDate().after( getStartDate() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Inkompatibles Enddatum." );
       return;
     }
 
@@ -334,11 +305,8 @@ public class TimeStepFillerWizardPage extends WizardPage
     setPageComplete( true );
   }
 
+  // public int getQValue() {
+  // return _Q_val;
+  // }
 
-//  public int getQValue() {
-//    return _Q_val;
-//  }
-  
-
-  
 }
