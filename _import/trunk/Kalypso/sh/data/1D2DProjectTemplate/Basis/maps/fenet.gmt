@@ -39,7 +39,7 @@
 			featurePath="#fid#root/flowRelationshipMember[BoundaryCondition]"
 			linktype="gml" xlink:type="simple"
 			xlink:href="../models/operational.gml" xlink:actuate="onRequest" />
-		<mapv:layer visible="true" name="Höhenmodel" id="ID_11"
+		<mapv:layer visible="true" name="Höhenmodelle" id="ID_11"
 			featurePath="#fid#Scenario_Terrain_Elevation_ModelSystem/terrainElevationModel[NativeTerrainElevationModelWrapper]"
 			linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml"
 			xlink:actuate="onRequest" />
