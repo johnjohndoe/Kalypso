@@ -47,7 +47,16 @@ import java.util.Date;
  */
 public interface ITimeStepinfo
 {
-  enum TYPE { CONTI, CONTI_BC_Q, CONTI_BC_H, ELE_BC_1D, ELE_BCE_2D, WQ };
+  enum TYPE { 
+      CONTI, 
+      /** Continuityline of in line Junction Contect*/
+      CONTI_LINE_JC, 
+      /** Continuity line in a element junction context*/
+      CONTI_ELE_JC,
+      CONTI_BC_Q, 
+      CONTI_BC_H, 
+      ELE_BC_1D, 
+      ELE_BCE_2D, WQ };
   
   public int getID( );
 
