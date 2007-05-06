@@ -49,9 +49,14 @@ import java.util.Map.Entry;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
+import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -86,6 +91,51 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
 //    makeHistrogram();
   }
   
+  public IntersectionBasedRoughnessEstimate( 
+                        RoughnessPolygonCollection roughnessPolygonCollection, 
+                        GM_Curve estimateLine )
+  {
+    this(roughnessPolygonCollection, toSurface( estimateLine ));
+  }
+
+  private static final GM_Surface toSurface( GM_Curve estimateLine )
+  {
+    Assert.throwIAEOnNullParam( estimateLine, "estimateLine" );
+    try
+    {
+      final double delta = estimateLine.getLength()/100;
+      GM_Position[] positions = estimateLine.getAsLineString().getPositions();
+      List<GM_Position> surfaceOuter= new ArrayList<GM_Position>(positions.length*3);
+      for( int i = 0; i<positions.length; i++ )
+      {
+        final GM_Position pos= positions[i];
+        final GM_Position posT = GeometryFactory.createGM_Position( pos.getX(), pos.getY() + delta );
+        surfaceOuter.add( posT );
+      }
+      
+      for(int i = positions.length-1; i>=0; i-- )
+      {
+        final GM_Position pos= positions[i];
+        final GM_Position posT = GeometryFactory.createGM_Position( pos.getX(), pos.getY() - delta );
+        surfaceOuter.add( posT );
+      }
+      
+      surfaceOuter.add( surfaceOuter.get( 0 ) );
+      GM_Surface surface = 
+        GeometryFactory.createGM_Surface( 
+                surfaceOuter.toArray( new GM_Position[surfaceOuter.size()] ), 
+                new GM_Position[0][], 
+                new GM_SurfaceInterpolation_Impl( 
+                              GM_SurfaceInterpolation.PLANAR ),
+                estimateLine.getCoordinateSystem() );
+      return surface;
+    }
+    catch ( Throwable th ) 
+    {
+      throw new RuntimeException(th);
+    }
+  }
+
   private final void makeHistrogram( ) throws GM_Exception
   {
     histogram = new HashMap<IRoughnessCls, Double>();

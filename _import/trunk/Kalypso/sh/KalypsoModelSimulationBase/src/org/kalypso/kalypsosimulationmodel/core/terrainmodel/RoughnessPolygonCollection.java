@@ -233,6 +233,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
       {
         // TODO: implement it!
         // According to Nico, 1d-king element also need the rougness
+        return new IntersectionBasedRoughnessEstimate(this, (GM_Curve)object);
       }
       else
       {

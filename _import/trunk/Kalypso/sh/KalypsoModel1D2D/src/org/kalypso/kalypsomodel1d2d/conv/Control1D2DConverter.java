@@ -235,10 +235,8 @@ public class Control1D2DConverter
 
         formatter.format( "%8d", nodeID );
       }
-
       if( nodes.length % 9 != 0 )
         formatter.format( "%n" );
-
     }
 
     formatter.format( "ECL%n" );

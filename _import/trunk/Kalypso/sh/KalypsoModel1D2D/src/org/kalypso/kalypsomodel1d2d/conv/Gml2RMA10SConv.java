@@ -58,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtil
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -273,15 +274,15 @@ public class Gml2RMA10SConv
 
         if( relationship instanceof IKingFlowRelation )
         {
-           final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
-           final Double width = kingRelation.getWidth();
-           Double bankSlopeLeft = kingRelation.getBankSlopeLeft();
-           Double bankSlopeRight = kingRelation.getBankSlopeRight();
-           Double widthStorage = kingRelation.getWidthStorage();
-           Double heightStorage = kingRelation.getHeightStorage();
-           Double slopeStorage = kingRelation.getSlopeStorage();
+          final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
+          final Double width = kingRelation.getWidth();
+          Double bankSlopeLeft = kingRelation.getBankSlopeLeft();
+          Double bankSlopeRight = kingRelation.getBankSlopeRight();
+          Double widthStorage = kingRelation.getWidthStorage();
+          Double heightStorage = kingRelation.getHeightStorage();
+          Double slopeStorage = kingRelation.getSlopeStorage();
           // TODO: get oparameters from king relation
-          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft,bankSlopeRight, widthStorage, heightStorage, slopeStorage );
+          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft, bankSlopeRight, widthStorage, heightStorage, slopeStorage );
         }
         else if( relationship instanceof ITeschkeFlowRelation )
         {
@@ -364,10 +365,14 @@ public class Gml2RMA10SConv
   {
     for( final IFE1D2DElement element : elements )
     {
+      if( element instanceof IFE1D2DContinuityLine )
+      {
+        continue;
+      }
       final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
       formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), roughnessID, 1, 0 );
     }
-}
+  }
 
   private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
@@ -376,7 +381,9 @@ public class Gml2RMA10SConv
      * '889' should be used.
      */
     if( element instanceof IElement1D && DiscretisationModelUtils.isTeschkeElement1D( (IElement1D) element, m_flowrelationModel ) )
+    {
       return 889;
+    }
 
     final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
     if( roughnessEstimateSpec != null )
@@ -388,10 +395,10 @@ public class Gml2RMA10SConv
 
     // TODO: check if this is ok!?
     // Probably we should throw an exception instead and stop calculation
-    
+
     // YES, JUST DO IT:
-    throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
-//    return -1;
+    throw new SimulationException( "Keine Rauheitszone gefunden: " + element.getGmlID(), null );
+    // return 0;
   }
 
   public final LinkedHashMap<String, String> getRoughnessIDProvider( )

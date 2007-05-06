@@ -47,9 +47,13 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -285,5 +289,35 @@ public class TypeInfo
     {
       return false;
     }
+  }
+  
+  public static final boolean isJunctionContextCL(
+              IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine)
+  {
+    Assert.throwIAEOnNullParam( cLine, "cLine" );
+    IFeatureWrapperCollection<IFE1D2DComplexElement> containers = cLine.getContainers();
+    for( IFE1D2DComplexElement ce:containers )
+    {
+      if( isJuntionContext( ce ))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public static final IJunctionContext1DToCLine getJunctionContextCL(
+                                  IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine)
+  {
+    Assert.throwIAEOnNullParam( cLine, "cLine" );
+    IFeatureWrapperCollection<IFE1D2DComplexElement> containers = cLine.getContainers();
+    for( IFE1D2DComplexElement ce:containers )
+    {
+      if( isJuntionContext( ce ))
+      {
+        return (IJunctionContext1DToCLine) ce; 
+      }
+    }
+    return null;
   }
 }

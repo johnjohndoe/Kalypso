@@ -47,14 +47,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.util.List;
 
-
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
 import org.kalypso.kalypsomodel1d2d.update.ModelMergeService;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -63,12 +60,8 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -219,7 +212,7 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
           Area area = calcTargetCoordinates( projection, surface );
 //          IRoughnessCls roughness = //getRoughness( (IPolyElement)element );
 //            getElementRoughnessCls( (IPolyElement)element, rpc );
-          Color color = mergeService.getColor( (IPolyElement)element, Color.LIGHT_GRAY );
+          Color color = mergeService.getColor( (IPolyElement)element, Color.BLACK );
           
           g.setColor( color );
           ((Graphics2D) g ).fill( area );
