@@ -264,7 +264,17 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element );
+    IMapModell mapModell = getMapPanel().getMapModell();
+
+    IKalypsoTheme theme = (IKalypsoTheme) element;
+    IMapModell themeMapModell = theme.getMapModell();
+
+    final MoveThemeUpCommand moveThemeUpCommand;
+    if( !themeMapModell.equals( mapModell ) )
+      moveThemeUpCommand = new MoveThemeUpCommand( themeMapModell, (IKalypsoTheme) element );
+    else
+      moveThemeUpCommand = new MoveThemeUpCommand( mapModell, (IKalypsoTheme) element );
+
     m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
@@ -273,7 +283,18 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
+    IMapModell mapModell = getMapPanel().getMapModell();
+
+    IKalypsoTheme theme = (IKalypsoTheme) element;
+    IMapModell themeMapModell = theme.getMapModell();
+
+    final MoveThemeDownCommand moveThemeDownCommand;
+    if( !themeMapModell.equals( mapModell ) )
+      moveThemeDownCommand = new MoveThemeDownCommand( themeMapModell, (IKalypsoTheme) element );
+    else
+      moveThemeDownCommand = new MoveThemeDownCommand( mapModell, (IKalypsoTheme) element );
+
+    m_commandTarget.postCommand( moveThemeDownCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
