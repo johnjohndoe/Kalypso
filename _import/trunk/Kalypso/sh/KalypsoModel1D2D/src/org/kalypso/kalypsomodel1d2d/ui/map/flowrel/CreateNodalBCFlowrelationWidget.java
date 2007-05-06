@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
@@ -110,6 +111,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
     final IBoundaryCondition[] bcresult = new IBoundaryCondition[1];
+    final IFolder scenarioFolder = m_currentScenarioFolder;
 
     display.syncExec( new Runnable()
     {
@@ -120,7 +122,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
         // TODO: make it dependend on the element type
         final TimeserieTypeDescription[] descriptions = getTimeserieDescriptions();
 
-        final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptions, workspace, parentFeature, parentRelation, m_currentScenarioFolder );
+        final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptions, workspace, parentFeature, parentRelation, scenarioFolder );
 
         final Shell shell = display.getActiveShell();
         final WizardDialog dialog = new WizardDialog( shell, wizard );
@@ -138,12 +140,14 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   protected TimeserieTypeDescription[] getTimeserieDescriptions( )
   {
     return new TimeserieTypeDescription[] {
-        new TimeserieTypeDescription( "Wasserstand - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ),
-        new TimeserieTypeDescription( "Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
-        new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D" ),
-//        new TimeserieTypeDescription( "W/Q - Beziehung", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
-        
-        // This one should be the last one: 
+        new TimeserieTypeDescription( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ),
+        new TimeserieTypeDescription( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ),
+        new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D ),
+        // new TimeserieTypeDescription( "W/Q - Beziehung",
+        // "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel",
+        // "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
+
+        // This one should be the last one:
         new TimeserieTypeDescription( "Zeitreihe aus Repository", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ) };
   }
 

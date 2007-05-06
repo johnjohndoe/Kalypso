@@ -47,7 +47,7 @@ import java.util.Date;
  */
 public interface ITimeStepinfo
 {
-  enum TYPE { CONTI, CONTI_BC, ELE_BC_1D, ELE_BCE_2D, WQ };
+  enum TYPE { CONTI, CONTI_BC_Q, CONTI_BC_H, ELE_BC_1D, ELE_BCE_2D, WQ };
   
   public int getID( );
 

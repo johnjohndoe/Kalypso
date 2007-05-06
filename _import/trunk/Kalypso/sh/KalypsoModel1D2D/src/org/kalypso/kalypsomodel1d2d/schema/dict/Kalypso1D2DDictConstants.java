@@ -38,38 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.conv;
-
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
+package org.kalypso.kalypsomodel1d2d.schema.dict;
 
 /**
  * @author antanas
  */
-public class ContinuityLineInfo extends BoundaryConditionInfo implements ITimeStepinfo
+public interface Kalypso1D2DDictConstants
 {
-  private final IFE1D2DNode[] m_nodeArray;
+  public static final String DICT_COMPONENT_TIME = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
 
-  public ContinuityLineInfo( final int ID, final IFE1D2DNode[] nodeArray )
-  {
-    super( ID, TYPE.CONTI );
-    m_nodeArray = nodeArray;
-  }
+  public static final String DICT_COMPONENT_WATERLEVEL = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
 
-  public IFE1D2DNode[] getNodes( )
-  {
-    return m_nodeArray;
-  }
+  public static final String DICT_COMPONENT_DISCHARGE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo#setObservation(org.kalypso.observation.IObservation,
-   *      org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IComponent)
-   */
-  public void setObservation( IObservation<TupleResult> obs, IComponent timeComponent, IComponent valueComponent, final TYPE type )
-  {
-    super.setObservation( obs, timeComponent, valueComponent );
-    setType( type );
-  }
+  public static final String DICT_COMPONENT_DISCHARGE_1D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D";
+
+  public static final String DICT_COMPONENT_DISCHARGE_2D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D";
 }

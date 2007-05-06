@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -448,16 +449,16 @@ public class RMA10Calculation
       if( info instanceof ContinuityLineInfo )
         continuityLineInfos.add( (ContinuityLineInfo) info );
     }
-    
-    return continuityLineInfos.toArray(new ContinuityLineInfo[continuityLineInfos.size()]);
+
+    return continuityLineInfos.toArray( new ContinuityLineInfo[continuityLineInfos.size()] );
   }
 
   public ITimeStepinfo[] getTimeStepInfos( )
   {
-    return m_timeStepInfos.toArray(new ITimeStepinfo[m_timeStepInfos.size()]);
+    return m_timeStepInfos.toArray( new ITimeStepinfo[m_timeStepInfos.size()] );
   }
-  
-  private List<ITimeStepinfo> calculationBoundaryConditionInfos( )
+
+  private List<ITimeStepinfo> calculationBoundaryConditionInfos( ) throws SimulationException
   {
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
@@ -484,48 +485,51 @@ public class RMA10Calculation
         final IBoundaryCondition bc = (IBoundaryCondition) relationship;
         final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( bc.getTimeserieFeature() );
         final TupleResult obsResult = obs.getResult();
-        
+
         final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.0 );
 
         if( wrapper2 instanceof IFE1D2DContinuityLine )
         {
           final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
           final ContinuityLineInfo info = contiMap.get( contiLine );
-          
-          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
-          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
-          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
-          final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-          
-          info.setObservation( obs, timeComponent, valueComponent );
-        }
-        else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
-        {
-          // create new contiline
-          final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] {(IFE1D2DNode) wrapper2};
-          final ContinuityLineInfo info = new ContinuityLineInfo( contiCount++, nodeArray );
 
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
           final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-          
+
           info.setObservation( obs, timeComponent, valueComponent );
+        }
+        else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
+        {
+          // create new contiline
+          final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
+          final ContinuityLineInfo info = new ContinuityLineInfo( contiCount++, nodeArray );
+
+          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+          if( qComponent != null )
+            info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+          else if( hComponent != null )
+            info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
+          else
+            throw new SimulationException( "Falsche Parameter an Kontinuitäslinien Randbedingung", null );
         }
         else if( wrapper2 instanceof IElement2D )
         {
           final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
-          
+
           final String gmlID = ele2d.getGmlID();
-          final int id = 0; // TODO: get  ascii element id for gmlid
-          
+          final int id = 0; // TODO: get ascii element id for gmlid
+
           final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
 
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
           final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-          
+
           info.setObservation( obs, timeComponent, valueComponent );
         }
 
@@ -535,5 +539,4 @@ public class RMA10Calculation
 
     return result;
   }
-
 }

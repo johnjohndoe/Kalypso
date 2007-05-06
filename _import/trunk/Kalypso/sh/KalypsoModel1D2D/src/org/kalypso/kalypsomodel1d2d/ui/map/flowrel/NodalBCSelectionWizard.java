@@ -86,8 +86,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private WizardPageZmlChooser m_page3;
 
-  IFolder m_scenarioFolder;
-
   private final TimeserieTypeDescription[] m_descriptions;
 
   private final CommandableWorkspace m_workspace;
@@ -99,7 +97,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   private IBoundaryCondition m_boundaryCondition;
 
   private IPath m_repositoryPath;
-  
+
   private IFolder m_currentSzenario;
 
   /**
@@ -238,9 +236,9 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
       ITuppleModel model = m_page3.getTuppleModel();
       IAxis dateAxis;
       IAxis valueAxis;
-//      System.out.println(model.getAxisList()[0].getDataClass());
-//      System.out.println(model.getAxisList()[1].getDataClass());
-      if(model.getAxisList()[0].getDataClass().equals( Date.class ))
+      // System.out.println(model.getAxisList()[0].getDataClass());
+      // System.out.println(model.getAxisList()[1].getDataClass());
+      if( model.getAxisList()[0].getDataClass().equals( Date.class ) )
       {
         dateAxis = model.getAxisList()[0];
         valueAxis = model.getAxisList()[1];
@@ -256,7 +254,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
       {
         for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
         {
-          Object element = model.getElement( cntFrom, dateAxis );
           Date date = (Date) model.getElement( cntFrom, dateAxis );
           if( m_page3.getFromDate().before( date ) )
             break;
