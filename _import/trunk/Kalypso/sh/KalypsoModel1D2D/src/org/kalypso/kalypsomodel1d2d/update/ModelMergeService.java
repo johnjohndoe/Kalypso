@@ -213,9 +213,9 @@ public class ModelMergeService
                 colorStyle.red,
                 colorStyle.green, 
                 colorStyle.blue,
-                50);
+                150 );
     }
-    System.out.println("Color ="+color);
+//    System.out.println("Color ="+color);
     return color;
   }
   

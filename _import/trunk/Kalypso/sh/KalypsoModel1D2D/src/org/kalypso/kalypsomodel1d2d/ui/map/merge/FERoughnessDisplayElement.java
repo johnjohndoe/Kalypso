@@ -220,26 +220,16 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
 //          IRoughnessCls roughness = //getRoughness( (IPolyElement)element );
 //            getElementRoughnessCls( (IPolyElement)element, rpc );
           Color color = mergeService.getColor( (IPolyElement)element, Color.LIGHT_GRAY );
-//          if( roughness ==null)
-//          {
-//            color = Color.BLUE;
-//          }
-//          else
-//          {
-//            RGB colorStyle = roughness.getColorStyle();
-//            color = new Color(
-//                      colorStyle.red,
-//                      colorStyle.green, 
-//                      colorStyle.blue,
-//                      50);
-//          }
           
           g.setColor( color );
           ((Graphics2D) g ).fill( area );
           
-//          java.awt.Stroke bs2 = new BasicStroke( 3 );
-//          ((Graphics2D) graphics).setStroke( bs2 );
-//          ((Graphics2D) graphics).draw( area );
+          //shape drawing
+          g.setColor( Color.BLACK );
+          java.awt.Stroke bs2 = new BasicStroke( 1 );
+          
+          ((Graphics2D) g).setStroke( bs2 );
+          ((Graphics2D) g).draw( area );
         }
         catch( Exception e )
         {
