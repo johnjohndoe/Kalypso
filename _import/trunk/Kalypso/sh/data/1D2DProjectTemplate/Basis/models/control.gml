@@ -34,6 +34,7 @@
     <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11773222661254">
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+     <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
     </sweExt:SortedRecordDefinition>
    </om:resultDefinition>
    <om:result xmlns:om="http://www.opengis.net/om"/>

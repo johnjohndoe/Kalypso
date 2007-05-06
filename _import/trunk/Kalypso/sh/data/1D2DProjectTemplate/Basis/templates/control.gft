@@ -85,22 +85,6 @@
         <gft:validatorlabel property="c1d2d:NITI" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-		<gft:label text="Start der instationären Berechnung" visible="true" tooltip="Startdatum und Zeit der instationären Berechnung, lediglich zur Information bei stationärer Berechnung." style="SWT.NONE">
-            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-        </gft:label>
-        <gft:composite tooltip="Startdatum und Zeit der instationären Berechnung, lediglich zur Information bei stationärer Berechnung." style="SWT.NONE">
-            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
-            <gft:gridLayout numColumns="2" marginWidth="1" makeColumnsEqualWidth="false"/>
-            <gft:text editable="true" property="c1d2d:startsim" style="SWT.BORDER">
-                <gft:gridData widthHint="200" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
-            </gft:text>
-            <gft:button property="c1d2d:startsim" visible="true" style="SWT.PUSH">
-                <gft:gridData horizontalAlignment="GridData.BEGINNING"/>
-            </gft:button>
-        </gft:composite>
-        <gft:validatorlabel property="c1d2d:startsim" visible="true" style="SWT.NONE">
-            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-        </gft:validatorlabel>
         <gft:label text="Anzahl der Zeitschritte (instationär)" visible="true" tooltip="Anzahl der Zeitschritte (instationär)" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
