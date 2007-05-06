@@ -96,7 +96,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
 
   public static final String EGDE_1D_NR_STR_PREFFIX = "Anzahl: ";
   
-  public static final String DISTANCE_JUNCTION_STR_PREFIX = "Abbstand 1D/2D: ";
+  public static final String DISTANCE_JUNCTION_STR_PREFIX = "Abbstand 1D-2D: ";
   
   /**
    * The root panel for any control shon in this face
@@ -276,7 +276,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
 
     this.buttonConvertToModel = 
       toolkit.createButton( compConversion, "", SWT.PUSH );
-    buttonConvertToModel.setToolTipText( "Build Junction element" );
+    buttonConvertToModel.setToolTipText( "Klicken Sie hier, um das Kopplungselement zu erzeugen" );
     
     final Image convImage = 
             KalypsoModel1D2DUIImages.ID_OK.createImage();
@@ -303,7 +303,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
 
     toolkit.createLabel( 
         compConversion, 
-        "1D/2D-Kopplung generieren", 
+        "1D-2D-Kopplung generieren", 
         SWT.NULL );
     dataModel.resetSelections();
     return rootPanel;
@@ -475,7 +475,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     Label label1DKante = 
               toolkit.createLabel( 
                   clientComposite, 
-                  "Auswahl 1D Kante" );
+                  "Auswahl 1D-Kante" );
     label1DKante.setFont( sectionTextFont );
     FormData formData = new FormData();
 //    formData.top = new FormAttachment(0);
@@ -511,7 +511,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     Label label2DKante = 
             toolkit.createLabel( 
                 clientComposite, 
-                "Auswahl 2D Kanten" );
+                "Auswahl 2D-Kanten" );
     label2DKante.setFont( sectionTextFont );
     formData = new FormData();
     formData.top = new FormAttachment(edgeNr1D,5);

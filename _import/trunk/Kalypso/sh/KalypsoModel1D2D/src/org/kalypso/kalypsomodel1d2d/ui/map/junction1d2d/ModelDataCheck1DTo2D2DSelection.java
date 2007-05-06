@@ -99,7 +99,7 @@ public class ModelDataCheck1DTo2D2DSelection implements IDataModelCheck
     else if(!ModelOps.hasOnlyBorderEdges( 
                 new ArrayList<IFE1D2DEdge>( selected2DEdges )))
     {
-      message = "Die selektierte 2D-Kante muss eine Grenz-Kante sein";
+      message = "Die selektierte 2D-Kante muss eine Randkante sein";
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
     else
