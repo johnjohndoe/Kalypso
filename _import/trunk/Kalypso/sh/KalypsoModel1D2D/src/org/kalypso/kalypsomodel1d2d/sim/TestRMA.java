@@ -82,9 +82,8 @@ public class TestRMA extends TestCase
     test_dis_URL = TestRMA.class.getResource( "testData/input/discretisation.gml" );
     test_control_URL = TestRMA.class.getResource( "testData/input/control.gml" );
     test_terrain_URL = TestRMA.class.getResource( "testData/input/roughness.gml" );
-    
-    
-    //outputFilePath = "./testData/output/";
+
+    // outputFilePath = "./testData/output/";
 
   }
 
@@ -99,8 +98,11 @@ public class TestRMA extends TestCase
 
       RMA10Calculation m_calculation = new RMA10Calculation( w_dis, w_control, w_terrain );
 
-      //PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( outputFilePath, RMA10SimModelConstants.R10_File ) ) ) );
-      Control1D2DConverter.writeR10File( m_calculation, null );
+      // TODO: if a file in a test-case is written, also do delete it!
+      // PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( outputFilePath,
+      // RMA10SimModelConstants.R10_File ) ) ) );
+      // TODO: this cannot work because stream is null and no provider have been given...
+      new Control1D2DConverter( null, null ).writeR10File( m_calculation, null );
 
     }
     catch( MalformedURLException e )
@@ -115,7 +117,5 @@ public class TestRMA extends TestCase
     }
 
   }
-  
-
 
 }

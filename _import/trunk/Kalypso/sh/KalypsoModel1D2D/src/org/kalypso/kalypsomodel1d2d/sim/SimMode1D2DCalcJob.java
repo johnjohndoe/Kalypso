@@ -150,12 +150,11 @@ public class SimMode1D2DCalcJob implements ISimulation
         final File modelFile = new File( tmpDir, "model.2d" );
         final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
 
-        monitor.setMessage( "Generiere 2D Netz..." );
         if( monitor.isCanceled() )
           return;
+
+        monitor.setMessage( "Generiere 2D Netz..." );
         converter2D.toRMA10sModel();
-        Control1D2DConverter.setNodesIDProvider( converter2D.getNodesIDProvider() );
-        Control1D2DConverter.setRoughnessIDProvider( converter2D.getRoughnessIDProvider() );
 
         /** convert control/resistance stuff... */
         // first this because we need roughness classes IDs for creating 2D net later
@@ -163,12 +162,12 @@ public class SimMode1D2DCalcJob implements ISimulation
         if( monitor.isCanceled() )
           return;
 
-        // TODO write control and boundary conditions calc core (*.R10 file)
         PrintWriter r10pw = null;
         try
         {
           r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-          Control1D2DConverter.writeR10File( m_calculation, r10pw );
+          final Control1D2DConverter controlConverter = new Control1D2DConverter( converter2D.getNodesIDProvider(), converter2D.getRoughnessIDProvider() );
+          controlConverter.writeR10File( m_calculation, r10pw );
           r10pw.close();
         }
         finally
@@ -186,7 +185,11 @@ public class SimMode1D2DCalcJob implements ISimulation
 
         m_calculation.setKalypso1D2DKernelPath();
         copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
-        new File(tmpDir, "result");
+        /*
+         * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an
+         * argument?)
+         */
+        new File( tmpDir, "result" ).mkdirs();
         startCalculation( tmpDir, monitor );
       }
       else
@@ -382,7 +385,8 @@ public class SimMode1D2DCalcJob implements ISimulation
   /**
    * checks if calculation of simulations is succeeded
    */
-  public boolean isSucceeded( final File baseDir )
+  public boolean isSucceeded( @SuppressWarnings("unused")
+  final File baseDir )
   {
     // TODO: this should be adapted.
     // final File finalResultFile = new File( baseDir, "steady.2d" );
