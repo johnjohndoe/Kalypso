@@ -9,13 +9,9 @@
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing">
 		<Help>
-			Im Modellaufbau werden alle notwendigen Daten für die
-			Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut.
-			&#xa;Es lässt sich zwischen den verschiedenen Arbeitsphasen
-			für die unterschiedlichen Netzarten (1D oder 2D)
-			unterscheiden. &#xa;Wechseln Sie durch Aktivieren der
-			entsprechenden Taskgruppe den Bearbeitungsmodus des
-			gewünschten Datensatzes.
+		<![CDATA[Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut.
+Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. 
+Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.]]>
 		</Help>
 		<Name>Preprocessing: Modellaufbau</Name>
 		<TaskGroup
@@ -51,8 +47,7 @@
 			<Task context="ImportRoughness"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad">
 				<Help>
-					Einladen von Polygonen zur Rauheitszonenabgrenzung
-					(SHP)
+					<![CDATA[Einladen von Polygonen zur Rauheitszonenabgrenzung (SHP)]]>
 				</Help>
 				<Name>Import von Rauheitsshapes</Name>
 			</Task>
@@ -70,8 +65,7 @@
 			<Task context="FenetMap"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfileImport">
 				<Help>
-					Einladen von ASCII-Profildaten (Station, Rechtswert,
-					Hochwert, Höhe)
+					<![CDATA[Einladen von ASCII-Profildaten (Station, Rechtswert, Hochwert, Höhe)]]>
 				</Help>
 				<Name>Import von Profildaten (Trippel)</Name>
 			</Task>
@@ -79,8 +73,7 @@
 		<TaskGroup
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NetCstr">
 			<Help>
-				Bereitstellung aller Bearbeitungsoptionen zum Aufbau
-				eines gekoppelten 1D-2D-Netzes.
+				<![CDATA[Bereitstellung aller Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes.]]>
 			</Help>
 			<Name>Netzaufbau</Name>
 			<TaskGroup
@@ -90,8 +83,7 @@
 				<TaskGroup
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport">
 					<Help>
-						Importieren von 1D-Finite-Elementen von externen
-						Datenquellen
+						<![CDATA[Importieren von 1D-Finite-Elementen von externen Datenquellen]]>
 					</Help>
 					<Name>Fremddaten importieren</Name>
 					<!-- <Task context="ImportWSPM" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm"> 
@@ -102,8 +94,7 @@
 					<Task context="1dElementTheme"
 						URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm">
 						<Help>
-							FE-1D-Netz aus stationärem Modell (WSPM)
-							erzeugen
+							<![CDATA[FE-1D-Netz aus stationärem Modell (WSPM) erzeugen.]]>
 						</Help>
 						<Name>WSPM Modell</Name>
 					</Task>
@@ -154,28 +145,23 @@
 				<Task context="2dElementTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
 					<Help>
-						Generiert Flussschlauchelemente aus
-						Profilendaten. &#xa;Vorraussetzung hierfür ist
-						ein in der Karte vorhandenes Profillinienthema,
-						&#xa;sowie ein Thema, welches die Uferbereiche
-						definiert.
+						<![CDATA[Generiert Flussschlauchelemente aus Profilendaten. 
+Vorraussetzung hierfür ist ein in der Karte vorhandenes Profillinienthema,
+sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Flussschlauchgenerator</Name>
 				</Task>
 				<Task context="2dElementTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
 					<Help>
-						Generiert ein regelmäßiges FE-2D-Elementenetz
-						mittels Definition vier gegenüberliegender
-						Linienzüge.
+						<![CDATA[Generiert ein regelmäßiges FE-2D-Elementenetz mittels Definition vier gegenüberliegender Linienzüge.]]>
 					</Help>
 					<Name>Bandgenerator</Name>
 				</Task>
 				<Task context="2dElementTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
 					<Help>
-						Weist den FE-2D-Elementknoten mittels zuvor
-						importierter Geländemodelle Höhen zu.
+						<![CDATA[Weist den FE-2D-Elementknoten mittels zuvor importierter Geländemodelle Höhen zu.]]>
 					</Help>
 					<Name>Höhen zuweisen</Name>
 				</Task>
@@ -193,17 +179,14 @@
 				<Task context="FenetMap"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 					<Help>
-						Ermöglicht die Erstellung einer Kopplung von 1D
-						zu 2D zwischen einem 1D-Element und einer
-						2D-Randlinie.
+						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]>
 					</Help>
 					<Name>1D-2D-Linienkopplung</Name>
 				</Task>
 				<Task context="FenetMap"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
 					<Help>
-						Ermöglicht die Erstellung einer Kopplung von 1D
-						zu 2D zwischen zwei Elementen.
+						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen.]]>
 					</Help>
 					<Name>1D-2D-Elementkopplung</Name>
 				</Task>
@@ -212,30 +195,27 @@
 		<TaskGroup
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughMod">
 			<Help>
-				Rauheitszonen definieren sowie Rauheitsklassen
-				bearbeiten.
+				<![CDATA[Rauheitszonen definieren sowie Rauheitsklassen bearbeiten.]]>
 			</Help>
 			<Name>Rauheitsmodellierung</Name>
 			<Task context="RoughnessTheme"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ZoneDefGroup">
 				<Help>
-					Ermöglicht die Definition von Rauheitszonen auf
-					Basis von Polygonthemen.
+					<![CDATA[Ermöglicht die Definition von Rauheitszonen auf Basis von Polygonthemen.]]>
 				</Help>
 				<Name>Rauheitszonen definieren</Name>
 			</Task>
 			<Task context="RoughnessDatabase"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ClassDefGroup">
 				<Help>
-					Ermöglicht die Bearbeitung der Rauheitswerte einer
-					Rauheitszone in einer Rauheitsdatenbank.
+					<![CDATA[Ermöglicht die Bearbeitung der Rauheitswerte einer Rauheitszone in einer Rauheitsdatenbank.]]>
 				</Help>
 				<Name>Rauheitswerte bearbeiten</Name>
 			</Task>
 			<Task context="2dElementTheme"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughnessFENETColor">
 				<Help>
-					an 2D-Elemente zugewiesene Rauheitsklassen anzeigen.
+					<![CDATA[Zeigt die den 2D-Elementen zugewiesenen Rauheitsklassen an.]]>
 				</Help>
 				<Name>Rauheitsklassen anzeigen</Name>
 			</Task>
@@ -243,8 +223,7 @@
 		<TaskGroup context="BoundaryConditionTheme"
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
 			<Help>
-				Festlegung von Knoten- und Linienrandbedingungen für die
-				Berechnung.
+				<![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]>
 			</Help>
 			<Name>Randbedingungen</Name>
 			<!-- 
@@ -266,9 +245,8 @@
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
 		<Help>
-			Nach Aufbau des Strömungsmodells können Berechnungen mit dem
-			Ziel der Kalibrierung &#xa;und/oder Szenarienrechnung
-			durchgeführt werden.
+			<![CDATA[Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung
+und/oder Szenarienrechnung durchgeführt werden.]]>
 		</Help>
 		<Name>Processing: Kalibrieren und Rechnen</Name>
 		<TaskGroup context="CalcParams"
@@ -284,9 +262,8 @@
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcLinesSet">
 				<Help>
-					Definition von Messlinien, an denen während der
-					Berechnung Daten &#xa;über den Abfluss und
-					Wasserstand gesammelt werden sollen.
+					<![CDATA[Definition von Messlinien, an denen während der Berechnung Daten
+über den Abfluss und Wasserstand gesammelt werden sollen.]]>
 				</Help>
 				<Name>Kontinuitätslinien bestimmen</Name>
 			</Task>
@@ -294,9 +271,8 @@
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodeObserveSet">
 				<Help>
-					Definition von Messpunkten, an denen während der
-					Berechnung Daten &#xa;über den Abfluss und
-					Wasserstand gesammelt werden sollen.
+					<![CDATA[Definition von Messpunkten, an denen während der Berechnung Daten
+über den Abfluss und Wasserstand gesammelt werden sollen.]]>
 				</Help>
 				<Name>Ausgabeknoten bestimmen</Name>
 			</Task>
@@ -305,8 +281,7 @@
 			context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc"
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation">
 			<Help>
-				Startet die Berechnung unter Verwendung eines
-				Kontrolldisplays
+				<![CDATA[Startet die Berechnung unter Verwendung eines Kontrolldisplays]]>
 			</Help>
 			<Name>Berechnung durchführen</Name>
 		</TaskGroup>
@@ -314,23 +289,21 @@
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
 		<Help>
-			Nach der Druchführung der Strömungsberechungen können die
-			Ergebnisse &#xa;hier ausgewertet und visualisiert werden.
+			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse
+hier ausgewertet und visualisiert werden.]]>
 		</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<TaskGroup
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView">
 			<Help>
-				Hier werden die Ergebnisauswertungen zur Darstellung in
-				einer Karte durchgeführt.
+				<![CDATA[Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.]]>
 			</Help>
 			<Name>Einstellungen Kartenansicht</Name>
 			<Task
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VectorDispl">
 				<Help>
-					Stellt Strömungsgeschwindigkeiten anhand von
-					Vektoren dar.
+					<![CDATA[Stellt Strömungsgeschwindigkeiten anhand von Vektoren dar.]]>
 				</Help>
 				<Name>Vektorendarstellung</Name>
 			</Task>
@@ -338,8 +311,7 @@
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ColoredDispl">
 				<Help>
-					Stellt Berechnungsergebnisse anhand von Farbflächen
-					dar.
+					<![CDATA[Stellt Berechnungsergebnisse anhand von Farbflächen dar.]]>
 				</Help>
 				<Name>Farbflächendarstellung</Name>
 			</Task>
@@ -347,8 +319,7 @@
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#IsolineDispl">
 				<Help>
-					Stellt Berechnungsergebnisse anhand von Isolinien
-					dar.
+					<![CDATA[Stellt Berechnungsergebnisse anhand von Isolinien dar.]]>
 				</Help>
 				<Name>Isoliniendarstellung</Name>
 			</Task>
@@ -361,8 +332,7 @@
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Section"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CrossSecDef">
 				<Help>
-					Ermöglicht die Erstellung oder Bearbeitung von
-					beliebigen Schnitten durch das Gebiet
+					<![CDATA[Ermöglicht die Erstellung oder Bearbeitung von beliebigen Schnitten durch das Gebiet]]>
 				</Help>
 				<Name>einzelne Schnitte</Name>
 			</Task>
@@ -370,8 +340,7 @@
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Section"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LongSecDef">
 				<Help>
-					Ermöglicht die Erstellung von Gewässerlängsschnitten
-					auf Basis zuvor definierter Querschnitte
+					<![CDATA[Ermöglicht die Erstellung von Gewässerlängsschnitten auf Basis zuvor definierter Querschnitte]]>
 				</Help>
 				<Name>Längsschnitt</Name>
 			</Task>
