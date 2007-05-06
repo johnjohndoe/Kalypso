@@ -50,15 +50,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITriangleAlgorithm;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ListRetriever;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TriangleThreeDividerAlgorithm;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -458,9 +455,9 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       graphics.setColor( colorModel.getColor( elevation ) );
       ((Graphics2D) graphics).fill( area );
       
-      java.awt.Stroke bs2 = new BasicStroke( 3 );
-      ((Graphics2D) graphics).setStroke( bs2 );
-      ((Graphics2D) graphics).draw( area );
+//      java.awt.Stroke bs2 = new BasicStroke( 0 );
+//      ((Graphics2D) graphics).setStroke( bs2 );
+//      ((Graphics2D) graphics).draw( area );
     }
     catch( Exception e )
     {
