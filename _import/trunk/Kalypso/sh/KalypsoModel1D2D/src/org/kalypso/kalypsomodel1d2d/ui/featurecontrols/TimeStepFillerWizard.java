@@ -67,21 +67,26 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 /**
  * @author madanago
- *
  */
 public class TimeStepFillerWizard extends Wizard implements INewWizard
 {
   protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy H:mm" );
+
   private IStructuredSelection initialSelection;
+
   private TimeStepFillerWizardPage timePage;
+
   private Feature t_feature;
+
   private IObservation observation_sensor;
+
   private org.kalypso.observation.IObservation<TupleResult> obs;
+
   private IBoundaryCondition m_boundaryCondition;
+
   private ITuppleModel model;
+
   private FeatureChange[] m_changes;
-
-
 
   public TimeStepFillerWizard( Feature feature )
   {
@@ -94,14 +99,8 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    
-    final Feature newFeature = t_feature;
-    
-//    System.out.println(timePage.getStartDate());
-//    System.out.println(timePage.getFinishDate());
-//    System.out.println(timePage.getTimeSteps());
     obs = ObservationFeatureFactory.toObservation( t_feature );
-    final TupleResult result =  obs.getResult();
+    final TupleResult result = obs.getResult();
     final IComponent[] components = result.getComponents();
     final IComponent timeComponent = components[0];
     final IComponent _underRelaxFactorComponent = components[1];
@@ -110,94 +109,44 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     calendarFrom.setTime( timePage.getStartDate() );
     calendarTo.setTime( timePage.getFinishDate() );
     List<IRecord> records = new ArrayList<IRecord>();
-    while( !calendarFrom.after( calendarTo ))
+    while( !calendarFrom.after( calendarTo ) )
     {
       final IRecord record = result.createRecord();
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue()) );
+      record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue() ) );
       result.add( record );
-      System.out.println(record.toString());
       calendarFrom.add( Calendar.MINUTE, timePage.getTimeSteps() );
-      records.add( record ); 
-     
+      records.add( record );
+
     }
-   
+
     result.fireRecordsChanged( records.toArray( new IRecord[] {} ), ITupleResultChangedListener.TYPE.ADDED );
-    m_changes = ObservationFeatureFactory.toFeatureAsChanges(  obs, t_feature );
-   // updatePageComplete();
+    m_changes = ObservationFeatureFactory.toFeatureAsChanges( obs, t_feature );
     return true;
   }
 
-  
-  protected void updatePageComplete( )
-  {
-    timePage.setPageComplete( false );
-
-    if( timePage.getUnderRelaxationFactorValue()<=0.0 ||
-        timePage.getUnderRelaxationFactorValue()>=1.0)
-    {
-      timePage.setMessage( null );
-      timePage.setErrorMessage( "Wrong Value : 0.0 - 1.0 Allowed" );
-      return;
-    }
-    
-    if (timePage.getStartDate().after( timePage.getFinishDate() ))
-    {
-      timePage.setMessage( null );
-      timePage.setErrorMessage( "Incompatible Start Date" );
-      return;
-    }
-
-    if (timePage.getFinishDate().after( timePage.getStartDate()))
-    {
-      timePage.setMessage( null );
-      timePage.setErrorMessage( "Incompatible End Date" );
-      return;
-    }
-
-    timePage.setMessage( null );
-    timePage.setErrorMessage( null );
-    timePage.setPageComplete( true );
-  }
   /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     initialSelection = selection;
-    
+
   }
-  
+
   @Override
-  public void addPages() {
-    setWindowTitle("Berechnungszeitschritte definieren");
+  public void addPages( )
+  {
+    setWindowTitle( "Berechnungszeitschritte definieren" );
     timePage = new TimeStepFillerWizardPage();
-    addPage(timePage);
-    timePage.init(initialSelection);
- }
-  
-//  public String[] getComponentUrns() {
-//    String[] res = new String[3];
-//    res[0] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
-//    res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
-//    res[2] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
-////    String type = observation.getAxisList()[1].getType();
-////    if(type.equals( "W" ))
-////      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
-////    if(type.equals( "Q" ))
-////      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
-////    return res;
-////    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-////    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
-////    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
-//    return res;
-//  }
+    addPage( timePage );
+    timePage.init( initialSelection );
+  }
 
   public FeatureChange[] getFeatureChange( )
   {
     return m_changes;
   }
- 
-  
-  
+
 }

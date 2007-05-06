@@ -53,18 +53,21 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
  * @author Madanagopal
  */
-public class TimeStepFillerWizardPage extends WizardPage
+public class TimeStepFillerWizardPage extends WizardPage implements SelectionListener
 {
 
   private Text m_dateTimeFrom;
@@ -79,15 +82,15 @@ public class TimeStepFillerWizardPage extends WizardPage
 
   protected Date m_dateTo = new Date();
 
-  Text uRelFactorText;
-
-  protected int uRelFactor;
+  protected Double m_uRelFactor;
 
   private static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
 
   private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" );
-  
+
   private static final String DEFAULTSTEP = "60";
+
+  private Combo m_uRelFactorCombo;
 
   protected TimeStepFillerWizardPage( )
   {
@@ -124,7 +127,11 @@ public class TimeStepFillerWizardPage extends WizardPage
         try
         {
           m_dateFrom = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
-          // dateIntervalChanged();
+          if( getStartDate().after( getFinishDate() ) )
+          {
+            setMessage( null );
+            setErrorMessage( "Startdatum nach Enddatum nicht möglich." );
+          }
           setPageComplete( true );
         }
         catch( ParseException e1 )
@@ -170,6 +177,11 @@ public class TimeStepFillerWizardPage extends WizardPage
         try
         {
           m_dateTo = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
+          if( getStartDate().after( getFinishDate() ) )
+          {
+            setMessage( null );
+            setErrorMessage( "Enddatum vor Startdatum nicht möglich." );
+          }
           setPageComplete( true );
         }
         catch( ParseException e1 )
@@ -179,7 +191,7 @@ public class TimeStepFillerWizardPage extends WizardPage
         getWizard().getContainer().updateButtons();
       }
     } );
-    
+
     m_dateTimeTo.setText( DATETIMEFORMAT.format( new Date() ) );
     m_dateTimeTo.setLayoutData( gridFillHorizontal );
 
@@ -218,27 +230,23 @@ public class TimeStepFillerWizardPage extends WizardPage
 
     m_dateTimeStep.setText( DEFAULTSTEP );
     m_dateTimeStep.setLayoutData( gridFillHorizontal );
-    
+
     final Label emptylabel_1 = new Label( container, SWT.NONE );
     emptylabel_1.setLayoutData( gridEnd );
     emptylabel_1.setText( "" );
-    
+
     Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( gridBeginning );
     uRelFactorLabel.setText( "Wichtungsfaktor [-]:" );
 
-    uRelFactorText = new Text( container, SWT.BORDER );
-    uRelFactorText.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        uRelFactor = Integer.parseInt( uRelFactorText.getText() );
-      }
-    } );
+    m_uRelFactorCombo = new Combo( container, SWT.NONE );
+    final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" };
+    m_uRelFactorCombo.setItems( possibleURFValues );
+    m_uRelFactorCombo.select( 9 );
+    m_uRelFactor = 1.0;
+    m_uRelFactorCombo.setLayoutData( gridFillHorizontal );
+    m_uRelFactorCombo.addSelectionListener( this );
 
-    uRelFactorText.setText( "1" );
-    uRelFactorText.setLayoutData( gridFillHorizontal );
-    
     final Label emptylabel_2 = new Label( container, SWT.NONE );
     emptylabel_2.setLayoutData( gridEnd );
     emptylabel_2.setText( "" );
@@ -270,43 +278,30 @@ public class TimeStepFillerWizardPage extends WizardPage
     return timeStep_val;
   }
 
-  public int getUnderRelaxationFactorValue( )
+  public double getUnderRelaxationFactorValue( )
   {
-    return uRelFactor;
+    return m_uRelFactor;
   }
 
-  protected void updatePageComplete( )
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetDefaultSelected( SelectionEvent e )
   {
-    setPageComplete( false );
-
-    if( getUnderRelaxationFactorValue() <= 0.0 || getUnderRelaxationFactorValue() >= 1.0 )
-    {
-      setMessage( null );
-      setErrorMessage( "Falsche Eingabe! Mögliche Werte: 0.1 - 1.0." );
-      return;
-    }
-
-    if( getStartDate().after( getFinishDate() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Inkompatibles Startdatum." );
-      return;
-    }
-
-    if( getFinishDate().after( getStartDate() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Inkompatibles Enddatum." );
-      return;
-    }
-
-    setMessage( null );
-    setErrorMessage( null );
-    setPageComplete( true );
+    //
   }
 
-  // public int getQValue() {
-  // return _Q_val;
-  // }
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetSelected( SelectionEvent e )
+  {
+    Widget w = e.widget;
+    if( w instanceof Combo )
+    {
+      m_uRelFactor = Double.parseDouble( m_uRelFactorCombo.getText() );
+    }
+
+  }
 
 }
