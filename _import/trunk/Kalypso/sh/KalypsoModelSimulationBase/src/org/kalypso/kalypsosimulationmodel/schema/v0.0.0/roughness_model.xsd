@@ -210,7 +210,18 @@
 					<!--xs:element name="axay" type="xs:double" / -->
 					<!--xs:element name="dp" type="xs:double" / -->
 					
-					<xs:element name="colorStyle" type="common:color" />
+					<xs:element name="colorStyle" type="common:color" >
+					<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Farbdarstellung</xs:label>
+								<xs:tooltip>Farbdarstellung der Rauheitsklasse in der Karte</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Color style</xs:label>
+								<xs:tooltip>Color of roughness classes in the map</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						</xs:element>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 			</xs:extension>
