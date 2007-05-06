@@ -131,8 +131,14 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
           {
             setMessage( null );
             setErrorMessage( "Startdatum nach Enddatum nicht möglich." );
+            setPageComplete(false);
           }
-          setPageComplete( true );
+          else {
+            setMessage( null );
+            setErrorMessage(null);
+            setPageComplete( true );  
+          }
+          
         }
         catch( ParseException e1 )
         {
@@ -181,8 +187,13 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
           {
             setMessage( null );
             setErrorMessage( "Enddatum vor Startdatum nicht möglich." );
+            setPageComplete( false );
           }
-          setPageComplete( true );
+          else {
+            setMessage( null );
+            setErrorMessage(null);
+            setPageComplete( true );
+          }
         }
         catch( ParseException e1 )
         {
@@ -221,7 +232,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     m_dateTimeStep = new Text( container, SWT.BORDER );
     m_dateTimeStep.addModifyListener( new ModifyListener()
-    {
+       {
       public void modifyText( ModifyEvent e )
       {
         timeStep_val = Integer.parseInt( m_dateTimeStep.getText() );

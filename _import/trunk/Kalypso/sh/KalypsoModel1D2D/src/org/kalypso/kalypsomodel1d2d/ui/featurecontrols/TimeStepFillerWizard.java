@@ -113,7 +113,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     {
       final IRecord record = result.createRecord();
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue() ) );
+      record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue()).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
       result.add( record );
       calendarFrom.add( Calendar.MINUTE, timePage.getTimeSteps() );
       records.add( record );
