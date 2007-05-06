@@ -54,4 +54,6 @@ public interface ITimeStepinfo
   public TYPE getType( );
 
   public double getValue( final Date date );
+  
+  public double getTheta();
 }

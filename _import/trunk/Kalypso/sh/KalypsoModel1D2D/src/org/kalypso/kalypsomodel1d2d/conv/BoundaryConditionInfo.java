@@ -91,6 +91,15 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     // TODO Auto-generated method stub
     return 0;
   }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo#getTheta()
+   */
+  public double getTheta( )
+  {
+    // TODO Auto-generated method stub
+    return 0.0;
+  }
 
   public void setObservation( final IObservation<TupleResult> obs, final IComponent timeComponent, final IComponent valueComponent )
   {
