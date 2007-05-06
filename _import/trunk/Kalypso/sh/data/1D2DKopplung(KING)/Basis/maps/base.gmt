@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<mapv:gismapview name="Grundlagen" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns8="types.template.kalypso.org">
-    <mapv:extent top="87.97670790576454" srs="EPSG:31467" right="187.4135901410852" left="-17.975195792335782" bottom="14.875744661513608"/>
+<mapv:gismapview name="Grundlagen" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns10="types.template.kalypso.org">
+    <mapv:extent top="279.97426987302913" srs="EPSG:31467" right="461.65039738191797" left="393.7259390349776" bottom="220.0853642324508"/>
     <mapv:layers/>
 </mapv:gismapview>
 
