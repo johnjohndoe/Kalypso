@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
 <wb1d2d:DiscretisationModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:swe="http://www.opengis.net/swe" gml:id="root">
+ <wb1d2d:complexElement>
+  <wb1d2d:JunctionContext1DToCLine gml:id="JunctionContext1DToCLine1178484043980352">
+   <wb1d2d:element1D xlink:href="#Element1D11784840206858"/>
+   <wb1d2d:continuityLine xlink:href="#ContinuityLine1178484043930386"/>
+  </wb1d2d:JunctionContext1DToCLine>
+ </wb1d2d:complexElement>
  <wb1d2d:element>
   <wb1d2d:PolyElement gml:id="FE138">
    <wb1d2d:directedEdge xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xlink:href="#EdgeInv117848078807978"/>
@@ -685,7 +691,63 @@
  </wb1d2d:element>
  <wb1d2d:element>
   <wb1d2d:Element1D gml:id="Element1D11784840206858">
+   <wb1d2d:elementContainer xlink:href="#JunctionContext1DToCLine1178484043980352"/>
    <wb1d2d:directedEdge xlink:href="#Edge1178484020685313"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:ContinuityLine gml:id="ContinuityLine1178484043930386">
+   <wb1d2d:elementContainer xlink:href="#JunctionContext1DToCLine1178484043980352"/>
+   <wb1d2d:directedEdge xlink:href="#Edge1178483673162505"/>
+   <wb1d2d:directedEdge xlink:href="#EdgeInv1178484043980323"/>
+   <wb1d2d:directedEdge xlink:href="#EdgeInv1178484043980107"/>
+  </wb1d2d:ContinuityLine>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:ContinuityLine gml:id="ContinuityLine1178484504635451">
+   <wb1d2d:directedEdge xlink:href="#Edge1178481283182407"/>
+   <wb1d2d:directedEdge xlink:href="#EdgeInv117848078812946"/>
+   <wb1d2d:directedEdge xlink:href="#EdgeInv117848078807978"/>
+  </wb1d2d:ContinuityLine>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D117848452118916">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484521189231"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484523010279">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484523010314"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484524890479">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484524890203"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484526471537">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484526471234"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484528281203">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484528281401"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484533562278">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484533562233"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484535463260">
+   <wb1d2d:directedEdge xlink:href="#Edge117848453546345"/>
+  </wb1d2d:Element1D>
+ </wb1d2d:element>
+ <wb1d2d:element>
+  <wb1d2d:Element1D gml:id="Element1D1178484537103137">
+   <wb1d2d:directedEdge xlink:href="#Edge1178484537103303"/>
   </wb1d2d:Element1D>
  </wb1d2d:element>
  <wb1d2d:edge>
@@ -699,6 +761,7 @@
   <wb1d2d:EdgeInv gml:id="EdgeInv117848078807978">
    <wb1d2d:edge xlink:href="#AR1"/>
    <wb1d2d:edgeContainer xlink:href="#FE138"/>
+   <wb1d2d:edgeContainer xlink:href="#ContinuityLine1178484504635451"/>
   </wb1d2d:EdgeInv>
  </wb1d2d:edge>
  <wb1d2d:edge>
@@ -712,6 +775,7 @@
   <wb1d2d:EdgeInv gml:id="EdgeInv117848078812946">
    <wb1d2d:edge xlink:href="#AR2"/>
    <wb1d2d:edgeContainer xlink:href="#FE136"/>
+   <wb1d2d:edgeContainer xlink:href="#ContinuityLine1178484504635451"/>
   </wb1d2d:EdgeInv>
  </wb1d2d:edge>
  <wb1d2d:edge>
@@ -829,6 +893,7 @@
  </wb1d2d:edge>
  <wb1d2d:edge>
   <wb1d2d:Edge gml:id="AR13">
+   <wb1d2d:edgeInv xlink:href="#EdgeInv1178484043980107"/>
    <wb1d2d:directedNode xlink:href="#PE17"/>
    <wb1d2d:directedNode xlink:href="#PE18"/>
    <wb1d2d:edgeContainer xlink:href="#FE95"/>
@@ -836,6 +901,7 @@
  </wb1d2d:edge>
  <wb1d2d:edge>
   <wb1d2d:Edge gml:id="AR14">
+   <wb1d2d:edgeInv xlink:href="#EdgeInv1178484043980323"/>
    <wb1d2d:directedNode xlink:href="#PE18"/>
    <wb1d2d:directedNode xlink:href="#PE19"/>
    <wb1d2d:edgeContainer xlink:href="#FE93"/>
@@ -2515,6 +2581,7 @@
  </wb1d2d:edge>
  <wb1d2d:edge>
   <wb1d2d:Edge gml:id="Edge117848128318271">
+   <wb1d2d:edgeInv xlink:href="#EdgeInv1178484504625287"/>
    <wb1d2d:directedNode xlink:href="#PE141"/>
    <wb1d2d:directedNode xlink:href="#PE4"/>
    <wb1d2d:edgeContainer xlink:href="#PolyElement1178481283182492"/>
@@ -2525,6 +2592,7 @@
    <wb1d2d:directedNode xlink:href="#PE4"/>
    <wb1d2d:directedNode xlink:href="#PE3"/>
    <wb1d2d:edgeContainer xlink:href="#PolyElement1178481283182492"/>
+   <wb1d2d:edgeContainer xlink:href="#ContinuityLine1178484504635451"/>
   </wb1d2d:Edge>
  </wb1d2d:edge>
  <wb1d2d:edge>
@@ -2877,6 +2945,77 @@
    <wb1d2d:edgeContainer xlink:href="#Element1D11784840206858"/>
   </wb1d2d:Edge>
  </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:EdgeInv gml:id="EdgeInv1178484043980323">
+   <wb1d2d:edge xlink:href="#AR14"/>
+  </wb1d2d:EdgeInv>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:EdgeInv gml:id="EdgeInv1178484043980107">
+   <wb1d2d:edge xlink:href="#AR13"/>
+  </wb1d2d:EdgeInv>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:EdgeInv gml:id="EdgeInv1178484504625287">
+   <wb1d2d:edge xlink:href="#Edge117848128318271"/>
+  </wb1d2d:EdgeInv>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484521189231">
+   <wb1d2d:directedNode xlink:href="#PE167"/>
+   <wb1d2d:directedNode xlink:href="#PE168"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D117848452118916"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484523010314">
+   <wb1d2d:directedNode xlink:href="#PE168"/>
+   <wb1d2d:directedNode xlink:href="#PE169"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484523010279"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484524890203">
+   <wb1d2d:directedNode xlink:href="#PE169"/>
+   <wb1d2d:directedNode xlink:href="#PE170"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484524890479"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484526471234">
+   <wb1d2d:directedNode xlink:href="#PE170"/>
+   <wb1d2d:directedNode xlink:href="#PE171"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484526471537"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484528281401">
+   <wb1d2d:directedNode xlink:href="#PE171"/>
+   <wb1d2d:directedNode xlink:href="#PE172"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484528281203"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484533562233">
+   <wb1d2d:directedNode xlink:href="#PE172"/>
+   <wb1d2d:directedNode xlink:href="#PE173"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484533562278"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge117848453546345">
+   <wb1d2d:directedNode xlink:href="#PE173"/>
+   <wb1d2d:directedNode xlink:href="#PE174"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484535463260"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
+ <wb1d2d:edge>
+  <wb1d2d:Edge gml:id="Edge1178484537103303">
+   <wb1d2d:directedNode xlink:href="#PE174"/>
+   <wb1d2d:directedNode xlink:href="#PE175"/>
+   <wb1d2d:edgeContainer xlink:href="#Element1D1178484537103137"/>
+  </wb1d2d:Edge>
+ </wb1d2d:edge>
  <wb1d2d:node>
   <wb1d2d:Node gml:id="PE1">
    <gml:pointProperty>
@@ -2927,6 +3066,7 @@
    </gml:pointProperty>
    <wb1d2d:nodeContainer xlink:href="#Edge117848128318271"/>
    <wb1d2d:nodeContainer xlink:href="#Edge1178481283182407"/>
+   <wb1d2d:nodeContainer xlink:href="#EdgeInv1178484504625287"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -3118,6 +3258,7 @@
    </gml:pointProperty>
    <wb1d2d:nodeContainer xlink:href="#AR13"/>
    <wb1d2d:nodeContainer xlink:href="#AR101"/>
+   <wb1d2d:nodeContainer xlink:href="#EdgeInv1178484043980107"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -3131,6 +3272,8 @@
    <wb1d2d:nodeContainer xlink:href="#AR14"/>
    <wb1d2d:nodeContainer xlink:href="#AR98"/>
    <wb1d2d:nodeContainer xlink:href="#EdgeInv117848078866198"/>
+   <wb1d2d:nodeContainer xlink:href="#EdgeInv1178484043980323"/>
+   <wb1d2d:nodeContainer xlink:href="#EdgeInv1178484043980107"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -3144,6 +3287,7 @@
    <wb1d2d:nodeContainer xlink:href="#AR93"/>
    <wb1d2d:nodeContainer xlink:href="#EdgeInv1178480788651193"/>
    <wb1d2d:nodeContainer xlink:href="#Edge1178483673162505"/>
+   <wb1d2d:nodeContainer xlink:href="#EdgeInv1178484043980323"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4371,6 +4515,7 @@
    <wb1d2d:nodeContainer xlink:href="#Edge117848128318271"/>
    <wb1d2d:nodeContainer xlink:href="#EdgeInv1178481297227308"/>
    <wb1d2d:nodeContainer xlink:href="#Edge117848129722755"/>
+   <wb1d2d:nodeContainer xlink:href="#EdgeInv1178484504625287"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4597,6 +4742,7 @@
     </gml:Point>
    </gml:pointProperty>
    <wb1d2d:nodeContainer xlink:href="#Edge117848383445012"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484521189231"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4606,6 +4752,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">741.2818473 436.0621778 9.24</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484521189231"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484523010314"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4615,6 +4763,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">758.6023553 446.0621778 9.22</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484523010314"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484524890203"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4624,6 +4774,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">775.9228634 456.0621778 9.2</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484524890203"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484526471234"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4633,6 +4785,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">793.2433715 466.0621778 9.18</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484526471234"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484528281401"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4642,6 +4796,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">810.5638796 476.0621778 9.16</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484528281401"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484533562233"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4651,6 +4807,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">827.8843876 486.0621778 9.14</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484533562233"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge117848453546345"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4660,6 +4818,8 @@
      <gml:coordinates ts="," decimal="." cs=" ">845.2048957 496.0621778 9.12</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge117848453546345"/>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484537103303"/>
   </wb1d2d:Node>
  </wb1d2d:node>
  <wb1d2d:node>
@@ -4669,6 +4829,7 @@
      <gml:coordinates ts="," decimal="." cs=" ">862.5254038 506.0621778 9.1</gml:coordinates>
     </gml:Point>
    </gml:pointProperty>
+   <wb1d2d:nodeContainer xlink:href="#Edge1178484537103303"/>
   </wb1d2d:Node>
  </wb1d2d:node>
 </wb1d2d:DiscretisationModel>
