@@ -136,23 +136,19 @@ public class Control1D2DConverter
     formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 );
 
     // C2
-    Object[] c2Props = new Object[] { calculation.getOMEGA(), calculation.getELEV(), 1.0, 1.0, 1.0, 1 };
-    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", c2Props );
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", calculation.getOMEGA(), calculation.getELEV(), 1.0, 1.0, 1.0, 1 );
 
     // C3
-    String formatC3 = "C3         1.000   1.000%8.3f%8.1f%8.3f%8.3f%8.3f%n";
-    formatter.format( formatC3, calculation.getUNOM(), calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() );
+    formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, calculation.getUNOM(), calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() );
 
     // C4
-    formatter.format( "C4          00.0    20.0     0.0%n" ); // fixed values
+    formatter.format( "C4%14.1f%8.1f%8.1f%n", 0.0, 20.0, 0.0 );
 
     // C5
-    String formatC5 = "C5      %8d%8d        %8d       0       1       1       0       1       1%n";
-    formatter.format( formatC5, calculation.getNITI(), calculation.getNITN(), calculation.getNCYC() );
+    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", calculation.getNITI(), calculation.getNITN(), calculation.getNCYC(), 0, 1, 1, 0, 1, 1 );
 
     // CV
-    String formatCV = "CV      %8.2f%8.2f%8.2f   0.050   0.050        %8d%8.2f%n";
-    formatter.format( formatCV, calculation.getCONV_1(), calculation.getCONV_2(), calculation.getCONV_3(), calculation.getIDRPT(), calculation.getDRFACT() );
+    formatter.format( "CV%14.2f%8.2f%8.2f%8.2f%8.2f%16d%8.2f%n", calculation.getCONV_1(), calculation.getCONV_2(), calculation.getCONV_3(), 0.05, 0.05, calculation.getIDRPT(), calculation.getDRFACT() );
 
     // VEGETA
     if( calculation.getVegeta() )
@@ -171,16 +167,13 @@ public class Control1D2DConverter
       final Feature roughnessCL = (Feature) elt;
       final int roughnessAsciiID = getRoughnessID( roughnessCL.getId() );
 
-      String formatED1 = "ED1     %8d%8.1f%8.1f%8.1f%8.1f    -1.0  1.000   1.000%n";
       // Double eddy = calculation.getViskosity( roughnessCL );
-      Double val = 2900.;
-      formatter.format( formatED1, roughnessAsciiID, val, val, val, val );
+      double val = 2900.0;
+      formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 );
       // ED2
-      String formatED2 = "ED2     %8.1f%8.1f%8.3f%16.1f%n";
-      formatter.format( formatED2, new Double( 0.5 ), new Double( 0.5 ), new Double( 0.001 ), new Double( 20. ) );
+      formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
 
       // ED4
-      String formatED4 = "ED4             %8.2f%8.1f%8.2f%n";
       final Double ks = calculation.getKs( roughnessCL );
       final Double axAy = calculation.getAxAy( roughnessCL );
       final Double dp = calculation.getDp( roughnessCL );
@@ -191,7 +184,7 @@ public class Control1D2DConverter
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
       final Double dpCorrected = dp == null ? 0.0 : dp;
 
-      formatter.format( formatED4, ks, axayCorrected, dpCorrected );
+      formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );
     }
   }
 
@@ -203,7 +196,7 @@ public class Control1D2DConverter
   {
     final ContinuityLineInfo[] infos = calculation.getContinuityLineInfo();
 
-    formatter.format( "SCL     %4d%n", infos.length );
+    formatter.format( "SCL%9d%n", infos.length );
 
     for( final ContinuityLineInfo info : infos )
     {
@@ -212,7 +205,7 @@ public class Control1D2DConverter
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
-        final int nodeID = Integer.parseInt( m_nodesIDProvider.get( node.getGmlID() ));
+        final int nodeID = Integer.parseInt( m_nodesIDProvider.get( node.getGmlID() ) );
 
         /* Write start stuff */
         if( i == 0 )
@@ -232,8 +225,7 @@ public class Control1D2DConverter
 
     if( calculation.getIDNOPT() != 0 && calculation.getIDNOPT() != -1 ) // Write MP Line only under this conditions
     {
-      String formatMP = "MP             %8.2f%8.2f%8.2f%n";
-      formatter.format( formatMP, calculation.getAC1(), calculation.getAC2(), calculation.getAC3() );
+      formatter.format( "MP%21.2f%8.2f%8.2f%n", calculation.getAC1(), calculation.getAC2(), calculation.getAC3() );
     }
     formatter.format( "ENDGEO%n" );
   }
@@ -276,7 +268,7 @@ public class Control1D2DConverter
     IComponent res_C_1 = result.getComponents()[1];
     ArrayList<Date> timeAndDate = new ArrayList<Date>();
     ArrayList<BigDecimal> underRelaxFactors = new ArrayList<BigDecimal>();
-    
+
     // XMLGregorianCalendar
     while( iterator.hasNext() )
     {
@@ -290,48 +282,44 @@ public class Control1D2DConverter
     for( int i = 1; i < timeAndDate.size(); i++ )
     {
       Calendar instance = Calendar.getInstance();
-      instance.setTime( timeAndDate.get( i ) );    
-      
+      instance.setTime( timeAndDate.get( i ) );
+
       Calendar instance_3 = Calendar.getInstance();
-      instance_3.setTime( timeAndDate.get( i-1 ) );
-      
-      timeStepInterval_ =  instance.getTimeInMillis()-instance_3.getTimeInMillis();
-           
-      timeStepInterval = (double)timeStepInterval_ / (60*60*1000);
-           
+      instance_3.setTime( timeAndDate.get( i - 1 ) );
+
+      timeStepInterval_ = instance.getTimeInMillis() - instance_3.getTimeInMillis();
+
+      timeStepInterval = (double) timeStepInterval_ / (60 * 60 * 1000);
+
       System.out.println( "com -----------------------" );
       System.out.println( "com unsteady " + i );
       System.out.println( "com -----------------------" );
-      //Calendar instance = Calendar.getInstance();
+      // Calendar instance = Calendar.getInstance();
       instance.setTime( timeAndDate.get( i ) );
-      //instance.get( Calendar. )
+      // instance.get( Calendar. )
       int dayOfYear = instance.get( Calendar.DAY_OF_YEAR );
       instance.setTime( timeAndDate.get( i ) );
-      int _year = instance.get( Calendar.YEAR ); 
-      System.out.println( "DT " +
-                  " " + timeStepInterval +
-                  " " + _year +                    
-                  " " + dayOfYear +
-                  " " + getTimeInPercentage(timeAndDate.get( i )) );      
-      BigDecimal uRVal= underRelaxFactors.get( i ); 
-      System.out.println("BC          "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010    "+uRVal+"010");
-      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
-      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
-      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
-      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
-      System.out.println("BC          0010    0010    0010    0010    0010    0010    0010    0010    0010");
-      System.out.println("QC             1       0    1.00   0.000   0.000  20.000   0.000");
-      System.out.println("QC             1       0    1.00   0.000   0.000  20.000   0.000");
-      System.out.println("HC             3       0    8.30   00.00    20.0     0.0");
-      System.out.println("ENDSTEP  steady");    
+      int _year = instance.get( Calendar.YEAR );
+      System.out.println( "DT " + " " + timeStepInterval + " " + _year + " " + dayOfYear + " " + getTimeInPercentage( timeAndDate.get( i ) ) );
+      BigDecimal uRVal = underRelaxFactors.get( i );
+      System.out.println( "BC          " + uRVal + "010    " + uRVal + "010    " + uRVal + "010    " + uRVal + "010    " + uRVal + "010    " + uRVal + "010    " + uRVal + "010    " + uRVal + "010" );
+      System.out.println( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010" );
+      System.out.println( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010" );
+      System.out.println( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010" );
+      System.out.println( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010" );
+      System.out.println( "BC          0010    0010    0010    0010    0010    0010    0010    0010    0010" );
+      System.out.println( "QC             1       0    1.00   0.000   0.000  20.000   0.000" );
+      System.out.println( "QC             1       0    1.00   0.000   0.000  20.000   0.000" );
+      System.out.println( "HC             3       0    8.30   00.00    20.0     0.0" );
+      System.out.println( "ENDSTEP  steady" );
     }
   }
 
-  private String getTimeInPercentage(Date _date )
+  private String getTimeInPercentage( Date _date )
   {
     Calendar instance_ = Calendar.getInstance();
     instance_.setTime( _date );
-    return instance_.get(Calendar.HOUR_OF_DAY)+"."+(instance_.get(Calendar.MINUTE)*100)/60;    
+    return instance_.get( Calendar.HOUR_OF_DAY ) + "." + (instance_.get( Calendar.MINUTE ) * 100) / 60;
   }
 
 }
