@@ -27,8 +27,8 @@
                             <CssParameter name="fill">#aaaaaa</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.5</CssParameter>
                             <CssParameter name="stroke">#777777</CssParameter>
+                            <CssParameter name="stroke-width">1.5</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -56,8 +56,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -85,8 +85,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -114,8 +114,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -143,8 +143,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -172,8 +172,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -201,8 +201,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -230,8 +230,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -259,8 +259,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -288,8 +288,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -317,8 +317,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -346,8 +346,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -375,8 +375,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -404,35 +404,6 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 2</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
                             <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
@@ -464,6 +435,35 @@
                         <Stroke>
                             <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Vorland mit Bewuchs 2</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -491,8 +491,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -520,8 +520,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -549,8 +549,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -578,8 +578,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -607,8 +607,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -636,8 +636,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -665,8 +665,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -694,8 +694,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -723,8 +723,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -752,8 +752,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -781,8 +781,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -810,8 +810,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -839,8 +839,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -868,8 +868,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -897,8 +897,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -926,8 +926,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -955,8 +955,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -984,8 +984,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1013,8 +1013,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1042,8 +1042,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1071,8 +1071,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1100,8 +1100,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1129,8 +1129,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1158,8 +1158,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1187,8 +1187,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1216,8 +1216,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1245,8 +1245,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1274,8 +1274,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1303,8 +1303,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1332,8 +1332,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1361,8 +1361,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1390,8 +1390,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1419,8 +1419,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1448,8 +1448,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1477,8 +1477,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1506,8 +1506,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1535,8 +1535,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1564,8 +1564,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1593,8 +1593,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1622,8 +1622,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1638,151 +1638,6 @@
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
                             <ogc:Literal>Vorland mit Bewuchs 21</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 22</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 23</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 24</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 24</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 23</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1840,7 +1695,123 @@
                     <ogc:Filter>
                         <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
                             <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>Vorland mit Bewuchs 21</ogc:Literal>
+                            <ogc:Literal>Vorland mit Bewuchs 23</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Vorland mit Bewuchs 24</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Vorland mit Bewuchs 24</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Vorland mit Bewuchs 23</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Vorland mit Bewuchs 22</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -1885,6 +1856,35 @@
                         <Stroke>
                             <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Vorland mit Bewuchs 21</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1912,8 +1912,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1941,8 +1941,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1970,8 +1970,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -1999,8 +1999,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2028,8 +2028,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2057,8 +2057,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2086,8 +2086,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2115,8 +2115,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2144,8 +2144,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2173,8 +2173,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2202,8 +2202,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2231,8 +2231,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2260,8 +2260,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2289,8 +2289,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2318,8 +2318,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2347,8 +2347,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2376,8 +2376,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2405,8 +2405,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2434,35 +2434,6 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
-                            <CssParameter name="stroke-opacity">0.5</CssParameter>
-                            <CssParameter name="stroke-linecap">butt</CssParameter>
-                        </Stroke>
-                    </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>default</Name>
-                    <Title>default</Title>
-                    <Abstract>default</Abstract>
-                    <ogc:Filter>
-                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                            <ogc:Literal>deaktive Elemente</ogc:Literal>
-                        </ogc:PropertyIsLike>
-                    </ogc:Filter>
-<MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
-                    <PolygonSymbolizer>
-                        <Geometry>
-                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
-                        </Geometry>
-                        <Fill>
-                            <CssParameter name="fill-opacity">0.5</CssParameter>
-                            <CssParameter name="fill">#ffffff</CssParameter>
-                        </Fill>
-                        <Stroke>
                             <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
@@ -2494,6 +2465,35 @@
                         <Stroke>
                             <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>deaktive Elemente</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
+                            <CssParameter name="fill">#ffffff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2521,8 +2521,8 @@
                             <CssParameter name="fill">#80ff80</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2550,8 +2550,8 @@
                             <CssParameter name="fill">#0080ff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2579,8 +2579,8 @@
                             <CssParameter name="fill">#000000</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2608,8 +2608,8 @@
                             <CssParameter name="fill">#ff0000</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2637,8 +2637,8 @@
                             <CssParameter name="fill">#8000ff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2666,8 +2666,8 @@
                             <CssParameter name="fill">#c0c0c0</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2695,8 +2695,8 @@
                             <CssParameter name="fill">#8000ff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2724,8 +2724,8 @@
                             <CssParameter name="fill">#ff8000</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2753,8 +2753,8 @@
                             <CssParameter name="fill">#ffff00</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2782,8 +2782,8 @@
                             <CssParameter name="fill">#808080</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2811,8 +2811,8 @@
                             <CssParameter name="fill">#808000</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2840,8 +2840,8 @@
                             <CssParameter name="fill">#800080</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2869,8 +2869,8 @@
                             <CssParameter name="fill">#ff80ff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2898,8 +2898,8 @@
                             <CssParameter name="fill">#c0c0c0</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2927,8 +2927,8 @@
                             <CssParameter name="fill">#6b6b6b</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2956,8 +2956,8 @@
                             <CssParameter name="fill">#004000</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -2985,8 +2985,8 @@
                             <CssParameter name="fill">#008000</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3014,8 +3014,8 @@
                             <CssParameter name="fill">#00ff00</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3043,8 +3043,8 @@
                             <CssParameter name="fill">#008080</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3072,8 +3072,8 @@
                             <CssParameter name="fill">#408080</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3101,8 +3101,8 @@
                             <CssParameter name="fill">#ff8080</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3130,8 +3130,8 @@
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3159,8 +3159,8 @@
                             <CssParameter name="fill">#ff80ff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3188,8 +3188,8 @@
                             <CssParameter name="fill">#00ffff</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3217,8 +3217,8 @@
                             <CssParameter name="fill">#c05b3f</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3246,8 +3246,8 @@
                             <CssParameter name="fill">#800080</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3275,8 +3275,8 @@
                             <CssParameter name="fill">#914d93</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3304,8 +3304,8 @@
                             <CssParameter name="fill">#e21dbf</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3333,8 +3333,8 @@
                             <CssParameter name="fill">#f8d6d8</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3362,8 +3362,8 @@
                             <CssParameter name="fill">#3ec16b</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3391,8 +3391,8 @@
                             <CssParameter name="fill">#c1b91e</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3420,8 +3420,8 @@
                             <CssParameter name="fill">#5e0f4e</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3449,8 +3449,8 @@
                             <CssParameter name="fill">#0db360</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3478,8 +3478,8 @@
                             <CssParameter name="fill">#0e6372</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3507,8 +3507,8 @@
                             <CssParameter name="fill">#cd4932</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3536,8 +3536,8 @@
                             <CssParameter name="fill">#ff8040</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3565,8 +3565,8 @@
                             <CssParameter name="fill">#8bf3c1</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3594,8 +3594,8 @@
                             <CssParameter name="fill">#e39be1</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke">#000000</CssParameter>
                             <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-opacity">0.5</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
@@ -3619,7 +3619,36 @@
                             <ogc:PropertyName>polygonProperty</ogc:PropertyName>
                         </Geometry>
                         <Fill>
+                            <CssParameter name="fill-opacity">0.5</CssParameter>
                             <CssParameter name="fill">#8000ff</CssParameter>
+                        </Fill>
+                        <Stroke>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">0.5</CssParameter>
+                            <CssParameter name="stroke-linecap">butt</CssParameter>
+                        </Stroke>
+                    </PolygonSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <Abstract>default</Abstract>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
+                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
+                            <ogc:Literal>Fluss</ogc:Literal>
+                        </ogc:PropertyIsLike>
+                    </ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+                    <MaxScaleDenominator>1.0E15</MaxScaleDenominator>
+                    <PolygonSymbolizer>
+                        <Geometry>
+                            <ogc:PropertyName>polygonProperty</ogc:PropertyName>
+                        </Geometry>
+                        <Fill>
+                            <CssParameter name="fill">#0000ff</CssParameter>
                             <CssParameter name="fill-opacity">0.5</CssParameter>
                         </Fill>
                         <Stroke>
