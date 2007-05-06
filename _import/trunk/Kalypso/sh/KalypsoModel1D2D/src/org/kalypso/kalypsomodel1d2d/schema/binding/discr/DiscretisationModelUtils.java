@@ -45,6 +45,8 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -62,7 +64,7 @@ public class DiscretisationModelUtils
   /**
    * Cheks if a node is a 1d-node.
    * <p>
-   * A 1d-node is a node which as at least on 1D-element connected to it.
+   * A 1d-node is a node which as at least on 1D-element connected to it. TODO move this into the TypeInfo class
    */
   public static boolean is1DNode( final IFE1D2DNode<IFE1D2DEdge> node )
   {
@@ -77,7 +79,8 @@ public class DiscretisationModelUtils
   }
 
   /**
-   * An 1D-Element is an Teschke Element, if at least one associated flow-relation is teschke.
+   * An 1D-Element is an Teschke Element, if at least one associated flow-relation is teschke. * TODO move this into the
+   * TypeInfo class
    */
   @SuppressWarnings("unchecked")
   public static boolean isTeschkeElement1D( final IElement1D element1D, final IFlowRelationshipModel model )
@@ -93,4 +96,23 @@ public class DiscretisationModelUtils
 
     return false;
   }
+
+  /**
+   */
+  public static IFeatureWrapper2 findModelElementForBC( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  {
+    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
+    if( node != null )
+      return node;
+
+    final IFE1D2DContinuityLine contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
+    if( contiLine != null )
+      return contiLine;
+
+    // TODO: also find 1D-Elements
+
+    final IPolyElement element2d = discModel.find2DElement( currentPos, grabDistance );
+    return element2d;
+  }
+
 }

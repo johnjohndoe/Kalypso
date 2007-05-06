@@ -38,25 +38,65 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.flowrel;
+package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.util.List;
+import java.util.Date;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * Interface for classes representing a simBase:FlowRelationshipModel
- * 
- * @author Gernot Belger
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IModel
+public class BoundaryConditionInfo implements ITimeStepinfo
 {
-  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
+  private final int m_id;
 
-  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
+  private TYPE m_type;
+
+  private IObservation<TupleResult> m_obs;
+
+  private IComponent m_timeComponent;
+
+  public BoundaryConditionInfo( final int id, final TYPE type )
+  {
+    m_id = id;
+    m_type = type;
+  }
+
+  public int getID( )
+  {
+    return m_id;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo#getType()
+   */
+  public TYPE getType( )
+  {
+    return m_type;
+  }
+
+  public void setType( final TYPE type )
+  {
+    m_type = type;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo#getValue(java.util.Date)
+   */
+  public double getValue( final Date date )
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public void setObservation( final IObservation<TupleResult> obs, final IComponent timeComponent, final IComponent valueComponent )
+  {
+    m_obs = obs;
+    m_timeComponent = timeComponent;
+    m_timeComponent = valueComponent;
+  }
+
 }

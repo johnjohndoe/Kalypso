@@ -69,7 +69,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IOperationalModel1D2D.class, MODELS_FOLDER + "/operational.gml" );
     LOCATION_MAP.put( IControlModel1D2D.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
-//    LOCATION_MAP.put( ISimulationModel.class,  MODELS_FOLDER + "/simulation.gml" );
+    // TODO: put the roughness database here, in order to have save mechanism...
+    // LOCATION_MAP.put( ISimulationModel.class, MODELS_FOLDER + "/simulation.gml" );
     // TODO: add other model types here
   }
 

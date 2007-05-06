@@ -38,25 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.flowrel;
+package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import java.util.Date;
 
 /**
- * Interface for classes representing a simBase:FlowRelationshipModel
- * 
- * @author Gernot Belger
+ * @author antanas
  */
-public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IModel
+public interface ITimeStepinfo
 {
-  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
+  enum TYPE { CONTI, CONTI_BC, ELE_BC_1D, ELE_BCE_2D, WQ };
+  
+  public int getID( );
 
-  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
+  public TYPE getType( );
+
+  public double getValue( final Date date );
 }

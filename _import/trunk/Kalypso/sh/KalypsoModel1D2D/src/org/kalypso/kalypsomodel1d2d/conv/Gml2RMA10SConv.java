@@ -361,7 +361,7 @@ public class Gml2RMA10SConv
       final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
       formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), roughnessID, 1, 0 );
     }
-  }
+}
 
   private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception
   {

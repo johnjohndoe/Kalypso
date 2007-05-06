@@ -55,12 +55,28 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
+import org.kalypso.kalypsomodel1d2d.conv.ContinuityLineInfo;
+import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializerXlinkFeatureProvider;
@@ -69,6 +85,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
@@ -93,6 +110,8 @@ public class RMA10Calculation
   private boolean m_restart;
 
   private String m_kalypso1D2DKernelPath;
+
+  private List<ITimeStepinfo> m_timeStepInfos;
 
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
@@ -145,8 +164,9 @@ public class RMA10Calculation
     // factory );
 
     m_controlRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
-
     m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
+
+    m_timeStepInfos = calculationBoundaryConditionInfos();
   }
 
   public RMA10Calculation( GMLWorkspace disModelWorkspace, Feature controlRoot, Feature roughnessRoot )
@@ -170,17 +190,17 @@ public class RMA10Calculation
   {
     return m_operationalModelWorkspace;
   }
-  
+
   public GMLWorkspace getFlowRelWorkspace( )
   {
     return m_flowRelWorkspace;
   }
-  
+
   public GMLWorkspace getFlowResistanceWorkspace( )
   {
     return m_flowResistanceWorkspace;
   }
-  
+
   public void setKalypso1D2DKernelPath( )
   {
     String kalypso1D2DVersion = (String) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
@@ -392,29 +412,128 @@ public class RMA10Calculation
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY );
   }
 
-  public Object getDp( Feature roughnessFE )
+  public Double getDp( Feature roughnessFE )
   {
-    return roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
+    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
   }
 
   public List<IFE1D2DContinuityLine> getContinuityLineList( )
   {
-    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines (discretisation model)
+    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
+    // (discretisation model)
     IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
     List<IFE1D2DContinuityLine> list = new ArrayList<IFE1D2DContinuityLine>();
     Iterator<IFE1D2DElement> iterator = elements.iterator();
-    while(iterator.hasNext()){
+    while( iterator.hasNext() )
+    {
       IFE1D2DElement element = iterator.next();
       if( element instanceof IFE1D2DContinuityLine )
         list.add( (IFE1D2DContinuityLine) element );
     }
     return list;
   }
-  
-  public Feature getControlModelFeature()
+
+  public Feature getControlModelFeature( )
   {
     return m_controlRootWorkspace;
+  }
+
+  public ContinuityLineInfo[] getContinuityLineInfo( )
+  {
+    final List<ContinuityLineInfo> continuityLineInfos = new ArrayList<ContinuityLineInfo>();
+
+    for( final ITimeStepinfo info : m_timeStepInfos )
+    {
+      if( info instanceof ContinuityLineInfo )
+        continuityLineInfos.add( (ContinuityLineInfo) info );
+    }
+    
+    return continuityLineInfos.toArray(new ContinuityLineInfo[continuityLineInfos.size()]);
+  }
+
+  public ITimeStepinfo[] getTimeStepInfos( )
+  {
+    return m_timeStepInfos.toArray(new ITimeStepinfo[m_timeStepInfos.size()]);
+  }
+  
+  private List<ITimeStepinfo> calculationBoundaryConditionInfos( )
+  {
+    final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
+
+    /* Take all conti lines whihc are defined in the discretisation model. */
+    final Map<IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>, ContinuityLineInfo> contiMap = new HashMap<IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>, ContinuityLineInfo>();
+    final List<IFE1D2DContinuityLine> continuityLineList = getContinuityLineList();
+    int contiCount = 1;
+    for( final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
+    {
+      final List<IFE1D2DNode> nodes = line.getNodes();
+      final IFE1D2DNode[] nodeArray = nodes.toArray( new IFE1D2DNode[nodes.size()] );
+      final ContinuityLineInfo info = new ContinuityLineInfo( contiCount++, nodeArray );
+      result.add( info );
+      contiMap.put( line, info );
+    }
+
+    /* Add all boundary conditions. */
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    for( final IFlowRelationship relationship : model )
+    {
+      if( relationship instanceof IBoundaryCondition )
+      {
+        final IBoundaryCondition bc = (IBoundaryCondition) relationship;
+        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( bc.getTimeserieFeature() );
+        final TupleResult obsResult = obs.getResult();
+        
+        final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.0 );
+
+        if( wrapper2 instanceof IFE1D2DContinuityLine )
+        {
+          final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
+          final ContinuityLineInfo info = contiMap.get( contiLine );
+          
+          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
+          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
+          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
+          final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
+          
+          info.setObservation( obs, timeComponent, valueComponent );
+        }
+        else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
+        {
+          // create new contiline
+          final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] {(IFE1D2DNode) wrapper2};
+          final ContinuityLineInfo info = new ContinuityLineInfo( contiCount++, nodeArray );
+
+          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
+          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
+          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
+          final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
+          
+          info.setObservation( obs, timeComponent, valueComponent );
+        }
+        else if( wrapper2 instanceof IElement2D )
+        {
+          final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
+          
+          final String gmlID = ele2d.getGmlID();
+          final int id = 0; // TODO: get  ascii element id for gmlid
+          
+          final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
+
+          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
+          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
+          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
+          final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
+          
+          info.setObservation( obs, timeComponent, valueComponent );
+        }
+
+        // TODO: consider 1delements
+      }
+    }
+
+    return result;
   }
 
 }

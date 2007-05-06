@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -162,16 +163,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   @Override
   protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
-    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
-    if( node != null )
-      return node;
-
-    final IFE1D2DContinuityLine contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
-    if( contiLine != null )
-      return contiLine;
-
-    final IPolyElement element2d = discModel.find2DElement( currentPos, grabDistance );
-    return element2d;
+    return DiscretisationModelUtils.findModelElementForBC( discModel, currentPos, grabDistance );
   }
 
   /**

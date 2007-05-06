@@ -48,15 +48,11 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
@@ -70,10 +66,14 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
+ * @author Gernot Belger
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * @author Madanagopal
  */
 public class Control1D2DConverter
 {
   private final LinkedHashMap<String, String> m_nodesIDProvider;
+
   private final LinkedHashMap<String, String> m_roughnessIDProvider;
 
   public Control1D2DConverter( final LinkedHashMap<String, String> nodesIDProvider, final LinkedHashMap<String, String> roughnessIDProvider )
@@ -96,9 +96,8 @@ public class Control1D2DConverter
 
     // TODO: contilines and stuff
     // count contilines and make ids (also for the virtual ones)
-    
+
     // attach timeseries to ids inside of interpolationhelper classes...
-    
     writeR10ContinuityLineDataBlock( calculation, formatter );
     writeR10TimeStepDataBlock( calculation, formatter );
   }
@@ -123,18 +122,19 @@ public class Control1D2DConverter
     formatter.format( "TI Projekt Name%n" ); // write Project name
 
     // // C0
-    Object[] c0Props = new Object[] { calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
-        calculation.getTBFACT(), calculation.getTBMIN() };
+    Object[] c0Props = new Object[] { 0, calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
+        calculation.getTBFACT(), calculation.getTBMIN(), 0 };
     // TODO: also write the (at the moment) constant values with the corrct format strings (%xxx.yyf),so later we
     // can easily exchange the given values without thinking about format any more (applies to all Cx)
-    formatter.format( "C0             0%8d%8d%8d%8.3f%8d%8.3f%8.2f       0%n", c0Props );
+    formatter.format( "C0%14d%8d%8d%8d%8.3f%8d%8.3f%8.2f%8d%n", c0Props );
 
     // C1
-    formatter.format( "C1             0       1       1       0       0       0       0       0       0       2%n" ); // fixed
+    Object[] c1Props = new Object[] { 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 };
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", c1Props );
 
     // C2
-    String formatC1 = "C2      %8.2f%8.3f     1.0     1.0     1.0       1%n";
-    formatter.format( formatC1 + "\n", calculation.getOMEGA(), calculation.getELEV() );
+    Object[] c2Props = new Object[] { calculation.getOMEGA(), calculation.getELEV(), 1.0, 1.0, 1.0, 1 };
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", c2Props );
 
     // C3
     String formatC3 = "C3         1.000   1.000%8.3f%8.1f%8.3f%8.3f%8.3f%n";
@@ -181,13 +181,13 @@ public class Control1D2DConverter
       final Double ks = calculation.getKs( roughnessCL );
       final Double axAy = calculation.getAxAy( roughnessCL );
       final Double dp = calculation.getDp( roughnessCL );
-      
+
       if( ks == null )
         throw new SimulationException( "No ks value found for rougness class: " + NamedFeatureHelper.getName( roughnessCL ), null );
-      
+
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
       final Double dpCorrected = dp == null ? 0.0 : dp;
-      
+
       formatter.format( formatED4, ks, axayCorrected, dpCorrected );
     }
   }
@@ -198,85 +198,39 @@ public class Control1D2DConverter
 
   private void writeR10ContinuityLineDataBlock( final RMA10Calculation calculation, final Formatter formatter )
   {
-    final List<IFE1D2DContinuityLine> continuityLineList = calculation.getContinuityLineList();
-    // TODO: no, this is wrong. There will be additional ('virtual') conti-lines comming from the boundary conditions
+    final ContinuityLineInfo[] infos = calculation.getContinuityLineInfo();
 
-    formatter.format( "SCL     %4d%n", continuityLineList.size() );
+    formatter.format( "SCL     %4d%n", infos.length );
 
-    int lineID = 1;
-    for( final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
+    for( final ContinuityLineInfo info : infos )
     {
-      final List<IFE1D2DNode> nodes = line.getNodes();
-      final Iterator<IFE1D2DNode> iterator = nodes.iterator();
-      boolean cc1Written = false;
-      ArrayList<String> nodeIDs = new ArrayList<String>();
-      while( iterator.hasNext() )
-      {
-        final IFE1D2DNode node = iterator.next();
-        nodeIDs.add( m_nodesIDProvider.get( node.getGmlID() ) );
-        if( nodeIDs.size() == 9 )
-        {
-          if( !cc1Written )
-          {
-            final String formatCC1 = "CC1 %4d%8d%8d%8d%8d%8d%8d%8d%8d%8d";
-            Object[] mpProps = new Object[10];
-            mpProps[0] = lineID++;
-            for( int i = 1; i < 10; i++ )
-              mpProps[i] = Integer.parseInt( nodeIDs.get( i - 1 ) );
-            formatter.format( formatCC1, mpProps );
-            cc1Written = true;
-          }
-          else
-          {
-            final String formatCC2 = "CC2 %8d%8d%8d%8d%8d%8d%8d%8d%8d";
-            Object[] mpProps = new Object[9];
-            for( int i = 0; i < 9; i++ )
-              mpProps[i] = Integer.parseInt( nodeIDs.get( i ) );
-            formatter.format( formatCC2, mpProps );
-          }
-          nodeIDs.clear();
-        }
+      final IFE1D2DNode[] nodes = info.getNodes();
 
-        // 01-03 I ID(1:3) "CC1"
-        // 05-08 I ID(5:8) Definitionsnummer der Kontinuitätslinie
-        // 09-80 I LINE(J,K) Liste der ersten bis zu 9 Eckknoten, die die Kontinuitätslinie definieren.
-
-        // CC2
-        // 01-03 I ID "CC2"
-        // 09-80 I LINE(J,K) Liste der folgenden bis zu 9 Eckknoten, Kontinuitätslinie definieren.
-      }
-      if( nodeIDs.size() > 0 )
+      for( int i = 0; i < nodes.length; i++ )
       {
-        String subFormat = "";
-        for( int i = 0; i < nodeIDs.size(); i++ )
-          subFormat.concat( "%8d" );
-        if( !cc1Written )
-        {
-          final String formatCC1 = "CC1 %4d".concat( subFormat );
-          Object[] mpProps = new Object[nodeIDs.size() + 1];
-          mpProps[0] = lineID++;
-          for( int i = 1; i < nodeIDs.size(); i++ )
-            mpProps[i] = Integer.parseInt( nodeIDs.get( i - 1 ) );
-          formatter.format( formatCC1, mpProps );
-          cc1Written = true;
-        }
-        else
-        {
-          final String formatCC2 = "CC2".concat( subFormat );
-          Object[] mpProps = new Object[nodeIDs.size()];
-          for( int i = 0; i < nodeIDs.size(); i++ )
-            mpProps[i] = Integer.parseInt( nodeIDs.get( i ) );
-          formatter.format( formatCC2, mpProps );
-        }
+        final IFE1D2DNode node = nodes[i];
+        final String nodeID = m_nodesIDProvider.get( node.getGmlID() );
+
+        /* Write start stuff */
+        if( i == 0 )
+          formatter.format( "CC1 %4d", info.getID() );
+        else if( i % 9 == 0 )
+          formatter.format( "%nCC2 " );
+
+        formatter.format( "%8s", nodeID );
       }
-      formatter.format( "ECL%n" );
+
+      if( nodes.length % 9 != 0 )
+        formatter.format( "%n" );
+
     }
+
+    formatter.format( "ECL%n" );
 
     if( calculation.getIDNOPT() != 0 && calculation.getIDNOPT() != -1 ) // Write MP Line only under this conditions
     {
       String formatMP = "MP             %8.2f%8.2f%8.2f%n";
-      Object[] mpProps = new Object[] { calculation.getAC1(), calculation.getAC2(), calculation.getAC3() };
-      formatter.format( formatMP, mpProps );
+      formatter.format( formatMP, calculation.getAC1(), calculation.getAC2(), calculation.getAC3() );
     }
     formatter.format( "ENDGEO%n" );
   }

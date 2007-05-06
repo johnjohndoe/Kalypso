@@ -38,25 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.flowrel;
+package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * Interface for classes representing a simBase:FlowRelationshipModel
- * 
- * @author Gernot Belger
+ * @author antanas
  */
-public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IModel
+public class ContinuityLineInfo extends BoundaryConditionInfo implements ITimeStepinfo
 {
-  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
+  private final IFE1D2DNode[] m_nodeArray;
 
-  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
+  public ContinuityLineInfo( final int ID, final IFE1D2DNode[] nodeArray )
+  {
+    super( ID, TYPE.CONTI );
+    m_nodeArray = nodeArray;
+  }
+
+  public IFE1D2DNode[] getNodes( )
+  {
+    return m_nodeArray;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo#setObservation(org.kalypso.observation.IObservation,
+   *      org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IComponent)
+   */
+  @Override
+  public void setObservation( IObservation<TupleResult> obs, IComponent timeComponent, IComponent valueComponent )
+  {
+    super.setObservation( obs, timeComponent, valueComponent );
+    
+    // a contiline with a timeserie is a CONTI_BC
+    setType( TYPE.CONTI_BC );
+  }
 }
