@@ -91,12 +91,18 @@ public class Control1D2DConverter
 
     writeR10ControlDataBlock( calculation, formatter );
     writeR10PropertiesDataBlock( calculation, formatter );
+
+    // TODO: contilines and stuff
+    // count contilines and make ids (also for the virtual ones)
+    
+    // attach timeseries to ids inside of interpolationhelper classes...
+    
     writeR10ContinuityLineDataBlock( calculation, formatter );
     writeR10TimeStepDataBlock( calculation, formatter );
   }
 
   /**
-   * writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * Writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
   private void writeR10ControlDataBlock( final RMA10Calculation calculation, final Formatter formatter )
   {

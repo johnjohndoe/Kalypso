@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
@@ -75,10 +76,14 @@ import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Converts discretisation model to bce2d model
@@ -111,7 +116,7 @@ public class Gml2RMA10SConv
     m_discretisationModel1d2d = (IFEDiscretisationModel1d2d) calculation.getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     m_terrainModel = (ITerrainModel) calculation.getTerrainModelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
     m_flowrelationModel = (IFlowRelationshipModel) calculation.getFlowRelWorkspace().getRootFeature().getAdapter( IFlowRelationshipModel.class );
-    
+
     // initialize Roughness IDs
     List list = calculation.getRoughnessClassList();
     Iterator iterator = list.iterator();
@@ -122,7 +127,7 @@ public class Gml2RMA10SConv
     }
   }
 
-  private int getID( IFeatureWrapper2 i1d2dObject )
+  private int getID( final IFeatureWrapper2 i1d2dObject )
   {
     if( i1d2dObject == null )
       return 0;
@@ -148,7 +153,7 @@ public class Gml2RMA10SConv
     return Integer.parseInt( map.get( gmlID ) );
   }
 
-  public void toRMA10sModel( ) throws IllegalStateException, IOException, SimulationException
+  public void toRMA10sModel( ) throws IllegalStateException, SimulationException
   {
     PrintWriter stream = null;
     try
@@ -157,13 +162,21 @@ public class Gml2RMA10SConv
       writeRMA10sModel( stream );
       stream.close();
     }
+    catch( final IOException ioe )
+    {
+      throw new SimulationException( "Fehler beim Schreiben der Modelldatei: " + ioe.getLocalizedMessage(), ioe );
+    }
+    catch( final GM_Exception gme )
+    {
+      throw new SimulationException( "Fehler beim Erzeugen von Geometrien: " + gme.getLocalizedMessage(), gme );
+    }
     finally
     {
       IOUtils.closeQuietly( stream );
     }
   }
 
-  private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException
+  private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException, GM_Exception
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
@@ -179,10 +192,8 @@ public class Gml2RMA10SConv
     writeEdges( formatter, edges );
   }
 
-  private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges )
+  private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
-    // TODO: according to Nico, also middle-nodes should be written (generated automatically as the middle of the edge)
-
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
@@ -190,7 +201,32 @@ public class Gml2RMA10SConv
         continue;
       int node0ID = getID( edge.getNode( 0 ) );
       int node1ID = getID( edge.getNode( 1 ) );
-      int middleNodeID = (edge.getMiddleNode() == null) ? 0 : getID( edge.getMiddleNode() );
+
+      /*
+       * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
+       * needed for the restart approach later.
+       */
+      final int middleNodeID;
+      if( edge.getMiddleNode() == null )
+      {
+        /* create virtual node id */
+        final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
+        middleNodeID = getID( getNodesIDProvider(), gmlID );
+
+        /* Calculate middle of arc. */
+        final GM_Curve curve = edge.getCurve();
+        final LineString edgeLine = (LineString) JTSAdapter.export( curve );
+        final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 );
+        final GM_Point middleNodePoint = (GM_Point) JTSAdapter.wrap( point );
+
+        /* Write it: Station is not needed, because the element length is taken from real nodes. */
+        formatNode( formatter, middleNodeID, middleNodePoint, null );
+      }
+      else
+      {
+        middleNodeID = getID( edge.getMiddleNode() );
+      }
+
       /* Directly format into the string, this is quickest! */
       // System.out.println( edge.getGmlID() + " --> " + getID( edge ) );
       if( TypeInfo.is1DEdge( edge ) )
@@ -237,7 +273,7 @@ public class Gml2RMA10SConv
 
         if( relationship instanceof IKingFlowRelation )
         {
-          final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
+          // final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
           // TODO: get oparameters from king relation
           formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, 10.0, 2.0, 2.0, 0.0, 0.0, 0.0 );
         }
@@ -283,13 +319,17 @@ public class Gml2RMA10SConv
           throw new SimulationException( "Unbekannte Flieﬂrelation gefunden: " + relationship, null );
       }
 
-      /* Now really write the nodes */
-      if( station == null )
-        formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ() );
-      else
-       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ(), station );
-
+      formatNode( formatter, nodeID, point, station );
     }
+  }
+
+  private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station )
+  {
+    /* Now really write the nodes */
+    if( station == null )
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ() );
+    else
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ(), station );
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
@@ -298,7 +338,7 @@ public class Gml2RMA10SConv
 
     if( extraValue != null )
       formatter.format( "%20.7f", extraValue );
-    
+
     final double[] coefficients = poly.getCoefficients();
     for( int j = coeffStart; j < coeffStop; j++ )
     {
@@ -314,41 +354,35 @@ public class Gml2RMA10SConv
     formatter.format( "%n" );
   }
 
-  private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection )
+  private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception
   {
     for( final IFE1D2DElement element : elements )
     {
-      int roughnessID = 1;
-      // System.out.println( element.getGmlID() + " --> " + getID( element ) );
-      try
-      {
-        /*
-         * TODO: according to Nico, if we have an Element1D with Polynomial flow-relations, the special roughness-clas
-         * '889' shpould be used.
-         */
-
-        final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
-        if( roughnessEstimateSpec == null )
-        {
-          // TODO: check what to do here...
-        }
-        else
-        {
-          final IRoughnessCls[] cls = roughnessEstimateSpec.mostSpreadRoughness();
-          if( cls.length > 0 )
-          {
-            roughnessID = getID( roughnessIDProvider, cls[0].getGmlID() );
-          }
-        }
-      }
-      catch( final GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
+      final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
       formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), roughnessID, 1, 0 );
     }
+  }
+
+  private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception
+  {
+    /*
+     * According to Nico Schrage, if we have an Element1D with Polynomial flow-relations, the special roughness-clas
+     * '889' should be used.
+     */
+    if( element instanceof IElement1D && DiscretisationModelUtils.isTeschkeElement1D( (IElement1D) element, m_flowrelationModel ) )
+      return 889;
+
+    final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
+    if( roughnessEstimateSpec != null )
+    {
+      final IRoughnessCls[] cls = roughnessEstimateSpec.mostSpreadRoughness();
+      if( cls.length > 0 )
+        return getID( roughnessIDProvider, cls[0].getGmlID() );
+    }
+
+    // TODO: check if this is ok!?
+    // Probably we should throw an exception instead and stop calculation
+    return 1;
   }
 
   public final LinkedHashMap<String, String> getRoughnessIDProvider( )

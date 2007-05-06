@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.List;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypsodeegree.model.geometry.GM_Position;
+
 /**
  * Utility stuff related to the 1d2d discretisation model.
  * 
@@ -59,13 +66,31 @@ public class DiscretisationModelUtils
    */
   public static boolean is1DNode( final IFE1D2DNode<IFE1D2DEdge> node )
   {
-    final IFE1D2DElement<IFE1D2DComplexElement,IFE1D2DEdge>[] elements = node.getElements();
+    final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = node.getElements();
     for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
     {
       if( element instanceof IElement1D )
         return true;
     }
-    
+
+    return false;
+  }
+
+  /**
+   * An 1D-Element is an Teschke Element, if at least one associated flow-relation is teschke.
+   */
+  @SuppressWarnings("unchecked")
+  public static boolean isTeschkeElement1D( final IElement1D element1D, final IFlowRelationshipModel model )
+  {
+    final List<IFE1D2DNode> nodes = element1D.getNodes();
+    for( final IFE1D2DNode node : nodes )
+    {
+      final GM_Position nodePos = node.getPoint().getPosition();
+      final IFlowRelationship flowRel = model.findFlowrelationship( nodePos, 0.0 );
+      if( flowRel instanceof ITeschkeFlowRelation )
+        return true;
+    }
+
     return false;
   }
 }
