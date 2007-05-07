@@ -49,7 +49,6 @@ import java.util.GregorianCalendar;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -77,8 +76,6 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 public class NodalBCSelectionWizard extends Wizard implements IWizard
 {
   protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy H:mm" );
-
-  private IStructuredSelection initialSelection;
 
   private NodalBCSelectionWizardPage1 m_page1;
 
@@ -119,7 +116,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   {
     m_page1 = new NodalBCSelectionWizardPage1( m_descriptions );
     addPage( m_page1 );
-    m_page1.init( initialSelection );
     m_page2 = new NodalBCSelectionWizardPage2();
     addPage( m_page2 );
     m_page3 = new WizardPageZmlChooser();
@@ -212,6 +208,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     // TODO: Refaktor in order to let different types of observations to be created
     final IComponent domainComponent = components[0];
     final IComponent valueComponent = components[1];
+    result.setSortComponents( new IComponent[] { domainComponent } );
 
     GregorianCalendar calendarFrom = new GregorianCalendar();
     GregorianCalendar calendarTo = new GregorianCalendar();

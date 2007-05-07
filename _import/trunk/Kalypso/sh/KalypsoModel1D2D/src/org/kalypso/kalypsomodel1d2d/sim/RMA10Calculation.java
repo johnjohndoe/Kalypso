@@ -486,19 +486,23 @@ public class RMA10Calculation
         final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( bc.getTimeserieFeature() );
         final TupleResult obsResult = obs.getResult();
 
-        final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.0 );
+        // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
+        final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 1.0 );
 
         if( wrapper2 instanceof IFE1D2DContinuityLine )
         {
           final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
           final ContinuityLineInfo info = contiMap.get( contiLine );
 
-          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
-          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
-          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
-          final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-
-          info.setObservation( obs, timeComponent, valueComponent );
+          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+          if( qComponent != null )
+            info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+          else if( hComponent != null )
+            info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
+          else
+            throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
         }
         else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
         {
@@ -512,9 +516,9 @@ public class RMA10Calculation
           if( qComponent != null )
             info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
           else if( hComponent != null )
-            info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
+            info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
           else
-            throw new SimulationException( "Falsche Parameter an Kontinuitäslinien Randbedingung", null );
+            throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
         }
         else if( wrapper2 instanceof IElement2D )
         {
@@ -532,7 +536,8 @@ public class RMA10Calculation
 
           info.setObservation( obs, timeComponent, valueComponent );
         }
-
+        else
+          throw new SimulationException( "Nicht zugeorndete Randbedingung: " + bc.getName(), null );
         // TODO: consider 1delements
       }
     }
