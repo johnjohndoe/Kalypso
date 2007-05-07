@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
@@ -61,6 +60,8 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
+import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
@@ -76,17 +77,6 @@ public class Control1D2DConverter
   private final LinkedHashMap<String, String> m_nodesIDProvider;
 
   private final LinkedHashMap<String, String> m_roughnessIDProvider;
-
-  private long timeStepInterval_;
-
-  private double timeStepInterval;
-
-  private TYPE CONTI_BC_Q;
-  private TYPE CONTI_BC_H;
-  TYPE _Q = CONTI_BC_Q;
-  TYPE _H = CONTI_BC_H;
-  //enum TYPE { CONTI, CONTI_BC_Q, CONTI_BC_H, ELE_BC_1D, ELE_BCE_2D, WQ };
-
 
   public Control1D2DConverter( final LinkedHashMap<String, String> nodesIDProvider, final LinkedHashMap<String, String> roughnessIDProvider )
   {
@@ -104,12 +94,7 @@ public class Control1D2DConverter
     final Formatter formatter = new Formatter( pw, Locale.US );
 
     writeR10ControlDataBlock( calculation, formatter );
-   //writeR10PropertiesDataBlock( calculation, formatter );
-
-    // TODO: contilines and stuff
-    // count contilines and make ids (also for the virtual ones)
-
-    // attach timeseries to ids inside of interpolationhelper classes...
+    writeR10PropertiesDataBlock( calculation, formatter );
     writeR10ContinuityLineDataBlock( calculation, formatter );
     writeR10TimeStepDataBlock( calculation, formatter );
   }
@@ -137,20 +122,14 @@ public class Control1D2DConverter
     formatter.format( "TI Projekt Name%n" ); // write Project name
 
     // // C0
-//    Object[] c0Props = new Object[] { 0, calculation.getIDNOPT(), calculation.getStartYear(), calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
-//        calculation.getTBFACT(), calculation.getTBMIN(), 0 };
-    Object[] c0Props = new Object[] { 0, 
-                                        calculation.getIDNOPT(), 
-                                        calendarForFirstTimeStep.get( Calendar.YEAR ),
-                                        calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-                                        getTimeInPercentage( firstDate ),
-                                        calculation.getIEDSW(),
-                                        calculation.getTBFACT(),
-                                        calculation.getTBMIN(), 
-                                        0 };
+    // Object[] c0Props = new Object[] { 0, calculation.getIDNOPT(), calculation.getStartYear(),
+    // calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
+    // calculation.getTBFACT(), calculation.getTBMIN(), 0 };
+    Object[] c0Props = new Object[] { 0, calculation.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
+        getTimeInPercentage( firstDate ), calculation.getIEDSW(), calculation.getTBFACT(), calculation.getTBMIN(), 0 };
     // TODO: also write the (at the moment) constant values with the corrct format strings (%xxx.yyf),so later we
     // can easily exchange the given values without thinking about format any more (applies to all Cx)
-    formatter.format( "C0%14d%8d%8d%8d%8.3f%8d%8.3f%8.2f%8d%n", c0Props );
+    formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props );
 
     // C1
     formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 );
@@ -169,6 +148,8 @@ public class Control1D2DConverter
 
     // CV
     formatter.format( "CV%14.2f%8.2f%8.2f%8.2f%8.2f%16d%8.2f%n", calculation.getCONV_1(), calculation.getCONV_2(), calculation.getCONV_3(), 0.05, 0.05, calculation.getIDRPT(), calculation.getDRFACT() );
+
+    formatter.format( "IOP%n" );
 
     // VEGETA
     if( calculation.getVegeta() )
@@ -231,7 +212,7 @@ public class Control1D2DConverter
         if( i == 0 )
           formatter.format( "CC1 %4d", info.getID() );
         else if( i % 9 == 0 )
-          formatter.format( "%nCC2 " );
+          formatter.format( "%nCC2     " );
 
         formatter.format( "%8d", nodeID );
       }
@@ -251,117 +232,145 @@ public class Control1D2DConverter
   /**
    * writes the Timestep Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-  private void writeR10TimeStepDataBlock( final RMA10Calculation calculation, final Formatter formatter )
+  private void writeR10TimeStepDataBlock( final RMA10Calculation calculation, final Formatter formatter ) throws SimulationException
   {
     formatter.format( "com -----------------------%n" );
     formatter.format( "com steady state input data%n" );
     formatter.format( "com -----------------------%n" );
-    formatter.format( "DT%14f%n",0.0000 );
-    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",8010,8010,8010,7010,6010,5010,4010,2010,0010);
-    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-    formatter.format( "BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-    formatter.format( "QC%14d%8d%8f%8f%8f%8f%8f%n",1,0,19.65,0.000,0.000,20.000,0.000);
-    formatter.format( "QC%14d%8d%8f%8f%8f%8f%8f%n",2,0,19.20,0.000,0.000,20.000,0.000);
-    formatter.format( "HC%14d%8d%8f%8f%8f%8f%n",3,0,5.69,00.00,20.0,0.0);
+    formatter.format( "DT%14f%n", 0.0000 );
+
+    /* For the moment, steady is like nsteady */
+    final int niti = calculation.getNITI();
+    if( niti == 0 )
+      formatter.format( "BC%n" );
+    else
+      formatBC( formatter, (float) 1.0, niti );
+    // formatter.format( "QC%14d%8d%8f%8f%8f%8f%8f%n", 1, 0, 19.65, 0.000, 0.000, 20.000, 0.000 );
+    // formatter.format( "QC%14d%8d%8f%8f%8f%8f%8f%n", 2, 0, 19.20, 0.000, 0.000, 20.000, 0.000 );
+    // formatter.format( "HC%14d%8d%8f%8f%8f%8f%n", 3, 0, 5.69, 00.00, 20.0, 0.0 );
     formatter.format( "ENDSTEP  steady%n" );
 
-    Feature controlFeature = calculation.getControlModelFeature();
+    final Feature controlFeature = calculation.getControlModelFeature();
 
-    IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
-    IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
+    final IControlModel1D2D controlModel = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
+    final IObservation<TupleResult> observation = controlModel.getTimeSteps();
+    final TupleResult result = observation.getResult();
 
-    TupleResult result = tupleSet.getResult();
+    final TupleResultIndex index = new TupleResultIndex( result, TupleResultUtilities.findComponentById( result, result.getSortComponents()[0].getId() ) );
 
-    Iterator<IRecord> iterator = result.iterator();
+    final IComponent res_C_0 = result.getComponents()[0];
+    final IComponent res_C_1 = result.getComponents()[1];
 
-    IComponent res_C_0 = result.getComponents()[0];
-    IComponent res_C_1 = result.getComponents()[1];
-    ArrayList<Date> timeAndDate = new ArrayList<Date>();
-    ArrayList<BigDecimal> underRelaxFactors = new ArrayList<BigDecimal>();
-    
-    // XMLGregorianCalendar
-    while( iterator.hasNext() )
-    {
-      IRecord record = iterator.next();
-      timeAndDate.add( DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) ) );
-      underRelaxFactors.add( (BigDecimal) record.getValue( res_C_1 ) );
-    }
-    
+    final Iterator<IRecord> iterator = index.getIterator();
+    if( !iterator.hasNext() )
+      throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
+    final IRecord firstRecord = iterator.next();
+    Date lastDate = DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( res_C_0 ) );
+
     final ITimeStepinfo[] timeStepInfos = calculation.getTimeStepInfos();
-     
 
-    for( int i = 1; i < timeAndDate.size(); i++ )
+    for( int stepCount = 1; iterator.hasNext(); stepCount++ )
     {
-      Calendar instance = Calendar.getInstance();
-      instance.setTime( timeAndDate.get( i ) );    
-      
-      Calendar instance_3 = Calendar.getInstance();
-      instance_3.setTime( timeAndDate.get( i-1 ) );
-      
-      timeStepInterval_ =  instance.getTimeInMillis()-instance_3.getTimeInMillis();
-           
-      timeStepInterval = (double)timeStepInterval_ / (60*60*1000);
-           
+      final IRecord record = iterator.next();
+      final Date date = DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
+      final BigDecimal uRVal = (BigDecimal) record.getValue( res_C_1 );
+
+      final Calendar stepDateCal = Calendar.getInstance();
+      stepDateCal.setTime( date );
+
+      final Calendar lastCal = Calendar.getInstance();
+      lastCal.setTime( lastDate );
+
+      final long timeStepInterval = stepDateCal.getTimeInMillis() - lastCal.getTimeInMillis();
+
+      final double timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
+
       formatter.format( "com -----------------------%n" );
-      formatter.format( "com unsteady " + i +"%n");
+      formatter.format( "com unsteady %4d%n", stepCount );
       formatter.format( "com -----------------------%n" );
-      //Calendar instance = Calendar.getInstance();
-      instance.setTime( timeAndDate.get( i ) );
-      //instance.get( Calendar. )
-      int dayOfYear = instance.get( Calendar.DAY_OF_YEAR );
-      instance.setTime( timeAndDate.get( i ) );
-      int _year = instance.get( Calendar.YEAR ); 
-      formatter.format( "DT%14f%8d%8d%8f%n",timeStepInterval,_year,dayOfYear,getTimeInPercentage(timeAndDate.get( i )));      
-      BigDecimal uRVal= underRelaxFactors.get( i ); 
-      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010",uRVal+"010");
-      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-      formatter.format("BC%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n",0010,0010,0010,0010,0010,0010,0010,0010,0010);
-      for (ITimeStepinfo item : timeStepInfos) {
-        TYPE type = item.getType();
-        if (type == TYPE.CONTI_BC_Q)
-        {     formatter.format(type+
-                " "+ item.getID() +
-                " "+ item.getValue( timeAndDate.get( i )) +
-                "   0.000  20.000   0.000%n"); 
+      stepDateCal.setTime( date );
+      final int dayOfYear = stepDateCal.get( Calendar.DAY_OF_YEAR );
+      stepDateCal.setTime( date );
+      final int year = stepDateCal.get( Calendar.YEAR );
+      formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, getTimeInPercentage( date ) );
+
+      float uRVal_ = uRVal.floatValue();
+      // BC lines
+      final int nitn = calculation.getNITN();
+      formatBC( formatter, uRVal_, nitn );
+
+      for( final ITimeStepinfo item : timeStepInfos )
+      {
+        final TYPE type = item.getType();
+        switch( type )
+        {
+          case CONTI_BC_Q:
+          {
+            final double q = item.getValue( date );
+            final double theta = item.getTheta();
+            formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, q, theta, 0.000, 20.000, 0.000 );
+          }
+            break;
+
+          case CONTI_BC_H:
+          {
+            final double h = item.getValue( date );
+            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, h, 0.0, 20.0, 0.0 );
+          }
+            break;
+
+          default:
+            break;
         }
-        if (type == TYPE.CONTI_BC_H) {
-            formatter.format(type +
-                " "+ item.getID() +
-                " "+ item.getValue(timeAndDate.get( i )) +
-                "    20.0     0.0%n");            
-        }
-      }      
-      formatter.format("ENDSTEP  steady%n");    
+      }
+      formatter.format( "ENDSTEP  unsteady%n" );
+
+      lastDate = date;
     }
   }
 
-  private double getTimeInPercentage(Date _date )
+  private void formatBC( final Formatter formatter, float uRVal_, final int nitn )
+  {
+    final int buffVal;
+    if( uRVal_ == (float) 1.0 )
+      buffVal = 0;
+    else
+      buffVal = (int) (((uRVal_ * 10)));
+
+    for( int j = 0; j < nitn; j++ )
+    {
+      if( j % 9 == 0 )
+        formatter.format( "%nBC      " );
+
+      formatter.format( "%5d010", buffVal );
+    }
+
+    if( nitn % 9 == 0 )
+      formatter.format( "%n" );
+  }
+
+  private double getTimeInPercentage( Date _date )
   {
     Calendar instance_ = Calendar.getInstance();
     instance_.setTime( _date );
-    int i = instance_.get(Calendar.HOUR_OF_DAY);
-    int j2 = instance_.get(Calendar.MINUTE);
-    float j = (float) (j2/60.0);
-    //return instance_.get(Calendar.HOUR_OF_DAY)+"."+(instance_.get(Calendar.MINUTE)*100)/60;
-    return (double)i+j;
+    int i = instance_.get( Calendar.HOUR_OF_DAY );
+    int j2 = instance_.get( Calendar.MINUTE );
+    float j = (float) (j2 / 60.0);
+    // return instance_.get(Calendar.HOUR_OF_DAY)+"."+(instance_.get(Calendar.MINUTE)*100)/60;
+    return (double) i + j;
   }
-  
-  private Date getFirstTimeStep(final RMA10Calculation calculation) {
+
+  private Date getFirstTimeStep( final RMA10Calculation calculation )
+  {
     Feature controlFeature = calculation.getControlModelFeature();
     IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
     IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
     TupleResult result = tupleSet.getResult();
     IRecord record = result.get( 0 );
 
-    IComponent res_C_0 = result.getComponents()[0];     
+    IComponent res_C_0 = result.getComponents()[0];
     return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
-    
+
   }
 
 }

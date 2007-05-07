@@ -397,8 +397,11 @@ public class Gml2RMA10SConv
     // Probably we should throw an exception instead and stop calculation
 
     // YES, JUST DO IT:
-    throw new SimulationException( "Keine Rauheitszone gefunden: " + element.getGmlID(), null );
+     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
+    // System.out.println( "Keine Rauheitszone gefunden: " + element );
     // return 0;
+
+    // return -1;
   }
 
   public final LinkedHashMap<String, String> getRoughnessIDProvider( )

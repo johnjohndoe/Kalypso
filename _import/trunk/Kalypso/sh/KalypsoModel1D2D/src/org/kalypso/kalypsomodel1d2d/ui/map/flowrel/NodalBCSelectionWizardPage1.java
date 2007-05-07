@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,9 +55,9 @@ import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidg
  */
 public class NodalBCSelectionWizardPage1 extends WizardPage
 {
-  private Button[] m_radioBtnGroup;
+  private final Button[] m_radioBtnGroup; 
 
-  private TimeserieTypeDescription[] m_descriptions;
+  private final TimeserieTypeDescription[] m_descriptions;
 
   protected NodalBCSelectionWizardPage1( final TimeserieTypeDescription[] descriptions )
   {
@@ -66,10 +65,6 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     setTitle( "Art der Randbedingung" );
     setDescription( "Geben sie auf dieser Seite die Art der Randbedingung ein." );
     m_descriptions = descriptions;
-  }
-
-  public void init( ISelection selection )
-  {
     m_radioBtnGroup = new Button[m_descriptions.length];
   }
 

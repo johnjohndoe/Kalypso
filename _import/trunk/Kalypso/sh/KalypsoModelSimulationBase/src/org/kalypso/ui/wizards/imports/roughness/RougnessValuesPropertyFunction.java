@@ -109,7 +109,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
     member = (Feature) feature.getProperty( m_vegetationClsMember );
     try
     {
-     // TODO: here very often NPE fly...
+     // TODO: here very often NPE fly... which is slow
       return getValue( member.getProperty( ptQName ) );
     }
     catch( Exception e1 )

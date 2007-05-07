@@ -45,6 +45,7 @@ import java.util.Date;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.util.TupleResultIndex;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -55,9 +56,9 @@ public class BoundaryConditionInfo implements ITimeStepinfo
 
   private TYPE m_type;
 
-  private IObservation<TupleResult> m_obs;
+  private IComponent m_valueComponent;
 
-  private IComponent m_timeComponent;
+  private TupleResultIndex m_index;
 
   public BoundaryConditionInfo( final int id, final TYPE type )
   {
@@ -88,24 +89,24 @@ public class BoundaryConditionInfo implements ITimeStepinfo
    */
   public double getValue( final Date date )
   {
-    // TODO Auto-generated method stub
-    return 0;
+    final Number result = (Number) m_index.getValue( m_valueComponent, date );
+    return result == null ? 0.0 : result.doubleValue();
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo#getTheta()
    */
   public double getTheta( )
   {
     // TODO Auto-generated method stub
-    return 0.0;
+    return Math.PI;
   }
 
-  public void setObservation( final IObservation<TupleResult> obs, final IComponent timeComponent, final IComponent valueComponent )
+  public void setObservation( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent valueComponent )
   {
-    m_obs = obs;
-    m_timeComponent = timeComponent;
-    m_timeComponent = valueComponent;
+    m_valueComponent = valueComponent;
+    
+    m_index = new TupleResultIndex( obs.getResult(), domainComponent );
   }
 
 }
