@@ -74,6 +74,10 @@ public class TupleResultCellModifier implements ICellModifier
     final IComponent component = m_provider.getComponent( property );
 
     final Object value = record.getValue( component );
+
+    /* Empty elements are always edited as empty string */
+    if( value == null )
+      return "";
     
     final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
     final String formatValue = TupleResultLabelProvider.formatValue( value, descriptor );

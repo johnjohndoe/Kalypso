@@ -50,7 +50,6 @@ import org.kalypsodeegree.model.XsdBaseTypeHandler;
  */
 public class XsdBaseTypeHandlerXMLGregorianCalendar extends XsdBaseTypeHandler<XMLGregorianCalendar>
 {
-
   private final DatatypeFactory m_dataTypeFactory;
 
   public XsdBaseTypeHandlerXMLGregorianCalendar( final DatatypeFactory dataTypeFactory, final String xsdTypeName )
