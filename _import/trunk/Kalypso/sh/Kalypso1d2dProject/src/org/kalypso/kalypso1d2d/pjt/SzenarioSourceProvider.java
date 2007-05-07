@@ -97,6 +97,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
       return findModelContext( (IFolder) parent, modelFile );
     else
       return null;
+    
   }
 
   private IFolder getSzenarioFolder( )

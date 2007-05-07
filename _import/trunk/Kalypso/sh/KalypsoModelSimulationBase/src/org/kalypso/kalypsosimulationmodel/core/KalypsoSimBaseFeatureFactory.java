@@ -12,8 +12,10 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -137,6 +139,27 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 			}
 		};
 		cMap.put(IRoughnessCls.class, cTor);
+        
+//      IRoughnessCls
+        cTor= new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                    Feature feature, 
+                                    Class cls) 
+                                    throws IllegalArgumentException
+            {
+                try
+                {
+                  return new RoughnessClsCollection(feature);
+                }
+                catch ( Throwable th) 
+                {
+                  th.printStackTrace();
+                  return null;
+                }
+            }
+        };
+        cMap.put(IRoughnessClsCollection.class, cTor);
 		
 		//IRoughnessClsCorrection
 		cTor= new AdapterConstructor()

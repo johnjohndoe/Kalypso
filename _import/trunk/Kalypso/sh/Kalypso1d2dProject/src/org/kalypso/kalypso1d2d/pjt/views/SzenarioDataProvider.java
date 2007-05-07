@@ -3,17 +3,23 @@
  */
 package org.kalypso.kalypso1d2d.pjt.views;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -24,6 +30,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -69,6 +76,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IOperationalModel1D2D.class, MODELS_FOLDER + "/operational.gml" );
     LOCATION_MAP.put( IControlModel1D2D.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
+    LOCATION_MAP.put( IRoughnessClsCollection.class,  "project:/.metadata/roughness.gml" );
     // TODO: put the roughness database here, in order to have save mechanism...
     // LOCATION_MAP.put( ISimulationModel.class, MODELS_FOLDER + "/simulation.gml" );
     // TODO: add other model types here
@@ -197,11 +205,30 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
           context = ResourceUtilities.createURL( folder );
           newKey = new PoolableObjectType( "gml", gmlLocation, context );
         }
+        else if( gmlLocation.startsWith( "project:/" ))
+        {
+          
+          try
+          {
+            IPath path = new Path(gmlLocation);
+            IFile file = szenarioFolder.getProject().getFile( path );
+            URL url = FileLocator.resolve( file.getLocationURI().toURL() );
+            File gmlFile = new File(url.toURI());
+            context = gmlFile.getParentFile().toURL();
+            String fileName = gmlFile.getName();
+            newKey = new PoolableObjectType( "gml", fileName, context );
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
       }
       catch( final MalformedURLException e )
       {
         // should never happen
         e.printStackTrace();
+        newKey = null;
       }
     }
 

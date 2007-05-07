@@ -10,9 +10,11 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -145,8 +147,9 @@ public class DataContainer
   {
     m_roughnessDatabaseLocation = dbLocation;
 
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
-    final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
+//    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
+//    final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
+    final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
     for( int i = 0; i < collection.size(); i++ )
       m_roughnessStaticCollectionMap.put( collection.get( i ).getName(), collection.get( i ).getGmlID() );
   }
