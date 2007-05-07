@@ -52,15 +52,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
@@ -78,13 +75,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
 
   private Feature t_feature;
 
-  private IObservation observation_sensor;
-
   private org.kalypso.observation.IObservation<TupleResult> obs;
-
-  private IBoundaryCondition m_boundaryCondition;
-
-  private ITuppleModel model;
 
   private FeatureChange[] m_changes;
 
@@ -101,6 +92,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
   {
     obs = ObservationFeatureFactory.toObservation( t_feature );
     final TupleResult result = obs.getResult();
+    result.clear();
     final IComponent[] components = result.getComponents();
     final IComponent timeComponent = components[0];
     final IComponent _underRelaxFactorComponent = components[1];

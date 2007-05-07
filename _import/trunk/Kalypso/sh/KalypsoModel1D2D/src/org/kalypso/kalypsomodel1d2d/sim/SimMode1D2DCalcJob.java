@@ -137,7 +137,7 @@ public class SimMode1D2DCalcJob implements ISimulation
     {
       // this is just for testing the result visualization and can be removed, when the calc job will create real
       // results (TJ)
-      if( pseudoResultUrl == null )
+//      if( pseudoResultUrl == null )
       {
         monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
         if( monitor.isCanceled() )
@@ -192,7 +192,7 @@ public class SimMode1D2DCalcJob implements ISimulation
         new File( tmpDir, "result" ).mkdirs();
         startCalculation( tmpDir, monitor );
       }
-      else
+//      else
       {
         InputStream resultStream = null;
         try
@@ -244,8 +244,11 @@ public class SimMode1D2DCalcJob implements ISimulation
     outputDir.mkdirs();
     resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
 
-    final FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
+    // TODO: @the moment,only the pseudo 'result.2d' is read.
+    final FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( "result.2d" );
     final File[] files = tmpDir.listFiles( suffixFileFilter );
+    if( files == null || files.length == 0)
+      return;
 
     monitor.setProgress( 80 );
 
