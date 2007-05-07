@@ -30,7 +30,18 @@
 		================================================== -->
 
 	<xs:element name="KingFlowRelation" type="wb1d2d:KingFlowRelationType"
-		substitutionGroup="simBase:_FlowRelationship" />
+		substitutionGroup="simBase:_FlowRelationship" >
+		<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Netzparameter (King)</xs:label>
+								<xs:tooltip>Netzparameter (King)</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Flowrelations (King)</xs:label>
+								<xs:tooltip>Flowrelations (King)</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 
 	<xs:complexType name="KingFlowRelationType">
 		<xs:complexContent>
@@ -125,7 +136,18 @@
 		Polynomial Flow Relation (Teschke)		
 		================================================== -->
 	<xs:element name="TeschkeFlowRelation" type="wb1d2d:TeschkeFlowRelationType"
-		substitutionGroup="simBase:_FlowRelationship" />
+		substitutionGroup="simBase:_FlowRelationship" >
+		<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Netzparameter (Teschke)</xs:label>
+								<xs:tooltip>Netzparameter (Teschke)</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Flowrelations (Teschke)</xs:label>
+								<xs:tooltip>Flowrelations (Teschke)</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 
 	<xs:complexType name="TeschkeFlowRelationType">
 		<xs:complexContent>
