@@ -118,15 +118,15 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
     feDataModel.setMapModell( mapModell );
     feDataModel.setMapPanel( mapPanel );
 
-    IKalypsoFeatureTheme roughnessTheme = UtilMap.findEditableTheme( mapModell, 
-                                  KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
-    Feature systemFeature = roughnessTheme.getFeatureList().getParentFeature();// ;
-    System.out.println( systemFeature.getFeatureType().getQName());
-    System.out.println( systemFeature.getParent().getFeatureType().getQName() );
-    ITerrainModel system = (ITerrainModel) systemFeature.getParent().getAdapter( ITerrainModel.class );
-    feDataModel.setRoughnessPolygonCollection( system.getRoughnessPolygonCollection() );
-    feDataModel.setRoughnessTheme( roughnessTheme );
-    feDataModel.setMapPanel( mapPanel );    
+//    IKalypsoFeatureTheme roughnessTheme = UtilMap.findEditableTheme( mapModell, 
+//                                  KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
+//    Feature systemFeature = roughnessTheme.getFeatureList().getParentFeature();// ;
+//    System.out.println( systemFeature.getFeatureType().getQName());
+//    System.out.println( systemFeature.getParent().getFeatureType().getQName() );
+//    ITerrainModel system = (ITerrainModel) systemFeature.getParent().getAdapter( ITerrainModel.class );
+//    feDataModel.setRoughnessPolygonCollection( system.getRoughnessPolygonCollection() );
+//    feDataModel.setRoughnessTheme( roughnessTheme );
+//    feDataModel.setMapPanel( mapPanel );    
 //    IKalypsoFeatureTheme feNodesTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
 //    Feature feNodesFeature = feNodesTheme.getFeatureList().getParentFeature();
     
