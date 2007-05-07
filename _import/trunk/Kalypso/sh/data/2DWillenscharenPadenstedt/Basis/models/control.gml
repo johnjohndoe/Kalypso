@@ -15,7 +15,7 @@
  <c1d2d:DSET>0.01</c1d2d:DSET>
  <c1d2d:DSETD>0.015</c1d2d:DSETD>
  <c1d2d:NITI>0</c1d2d:NITI>
- <c1d2d:NCYC>14</c1d2d:NCYC>
+ <c1d2d:NCYC>2</c1d2d:NCYC>
  <c1d2d:NITN>54</c1d2d:NITN>
  <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
  <c1d2d:CONV_2>0.01</c1d2d:CONV_2>
@@ -31,26 +31,14 @@
    <gml:name>Zeitschritt Definition</gml:name>
    <om:observedProperty xmlns:om="http://www.opengis.net/om" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
    <om:resultDefinition xmlns:om="http://www.opengis.net/om">
-    <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11784517609044">
+    <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11785091657501">
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
     </sweExt:SortedRecordDefinition>
    </om:resultDefinition>
-   <om:result xmlns:om="http://www.opengis.net/om">2001-01-01T09:00:00.000+01:00 1
-2001-01-01T19:00:00.000+01:00 1
-2001-01-02T05:00:00.000+01:00 1
-2001-01-02T15:00:00.000+01:00 1
-2001-01-03T01:00:00.000+01:00 1
-2001-01-03T11:00:00.000+01:00 1
-2001-01-03T21:00:00.000+01:00 1
-2001-01-04T07:00:00.000+01:00 1
-2001-01-04T17:00:00.000+01:00 1
-2001-01-05T03:00:00.000+01:00 1
-2001-01-05T13:00:00.000+01:00 1
-2001-01-05T23:00:00.000+01:00 1
-2001-01-06T09:00:00.000+01:00 1
-2001-01-06T19:00:00.000+01:00 1
-</om:result>
+   <om:result xmlns:om="http://www.opengis.net/om">&lt;![CDATA[2007-01-01T09:00:00.000+01:00 0.800
+2007-01-01T19:00:00.000+01:00 0.800
+]]&gt;</om:result>
   </c1d2d:TimestepsObservation>
  </c1d2d:timestepsMember>
 </c1d2d:Control>
