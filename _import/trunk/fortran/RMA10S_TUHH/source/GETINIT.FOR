@@ -1,4 +1,4 @@
-C     Last change:  K     3 May 2007    5:13 pm
+C     Last change:  K     7 May 2007    1:19 am
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -36,7 +36,7 @@ CIPK APR06
       DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
       CHARACTER(LEN=20)    :: inquiretest
-      INTEGER              :: dummy(6), j
+      INTEGER              :: dummy(4), j
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
       REAL(KIND=8)         :: VAAA, HTP, H, HS
@@ -58,8 +58,9 @@ C-
 
       RESTARTTEST: IF (inquiretest .eq. 'FORMATTED') THEN
         WRITE(*,*) ' Going to RDKALYPSO for restarting'
-        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),dummy(5),
-     +                dummy(6),2)
+!        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),dummy(5),
+!     +                dummy(6),2)
+        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),2)
         npx = maxp-1
         ndx = 9
         !NiS,may06: Testausgabe
@@ -328,21 +329,11 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
 	ENDIF
 	DO 172 M=1,NLM
 	  NA=NOP(N,M)
-
-          !nis,may07: Jump over negative node numbers at elements with polynom approach
-          if (na < -1000) then
-            vel(3,nop(n,m-1)) =
-     +          0.5 * (hhmax (nop (n, m-1)) + hhmin (nop (n,m-1)))
-            vel(3,nop(n,m+1)) =
-     +          0.5 * (hhmax (nop (n, m+1)) + hhmin (nop (n,m+1)))
+          if (imat(n) == 889) then
+            vel(3,na) = 0.5 * (hhmin(na) + hhmax(na))
           end if
-
-          if (na < -1000) GO TO 172
-          !-
-	    VEL(1,NA)=UNOM
-
+	  VEL(1,NA)=UNOM
   172   CONTINUE
-        pause
   173 CONTINUE
   175 CONTINUE
 c      DO 1780 N=1,NP

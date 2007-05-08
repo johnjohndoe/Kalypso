@@ -1,4 +1,4 @@
-C     Last change:  K     2 May 2007    3:23 pm
+C     Last change:  K     7 May 2007    1:01 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -16,6 +16,7 @@ cipk  last update Jan 21 97  add option for Smagorinksy in 2-D
       USE BLKSANMOD
       !nis,feb07,testing
       USE ParaKalyps
+      USE paraflow1dfe
       !-
       SAVE
 C
@@ -244,21 +245,34 @@ CIPK NOV99     Either process surface integrals or collapse to 2-d
           ELSEIF(IMAT(N) .LT. 2000) THEN
             IF(NETYP(N)/10 .LT. 1) THEN
 CIPK MAR05
-              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (notwendig?)
-              !nis,feb07: Allow for numbered FFF midsides
-              !IF(nop(n,2).NE.-9999)then
-              IF(nop(n,2) > -1000)then
-              !-
-              !-
+!nis,may07
+!Add midside node for polynom approach
+!              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (notwendig?)
+!              !nis,feb07: Allow for numbered FFF midsides
+!              !IF(nop(n,2).NE.-9999)then
+!              IF(nop(n,2) > -1000)then
+!              !-
+!              !-
+!Add midside node for polynom approach
+!-
+
+              if ( imat(n) /= 889 ) then
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
 	        endif
-              !nis,feb07: Allow for numbered FFF midside nodes
-              !ELSEif(nop(n,2).EQ.-9999)then
-              ELSEif(nop(n,2) < -1000) then
-              !-
+
+!nis,may07
+!Add midside node for polynom approach
+!              !nis,feb07: Allow for numbered FFF midside nodes
+!              !ELSEif(nop(n,2).EQ.-9999)then
+!              !ELSEif(nop(n,2) < -1000)then
+!              !-
+!Add midside node for polynom approach
+!-
+
+              ELSEif( imat(n) == 889 ) then
                 call coef1dFE(n,nrx)
               endif
 
@@ -374,37 +388,24 @@ C      Process one-d elements
 
 	      IF(NRX .EQ. 2) GO TO 18
 CIPK MAR05
-              IF (nop(n,2) > -1000) THEN
+!nis,may07
+!Add midside node for polynom approach
+!              IF (nop(n,2) > -1000) THEN
+              IF (imat(n) /= 889) THEN
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
                 ENDIF
-
-  
-!NiS,jul06:testing
-!      if(ncorn(n).lt.6.AND.(ibn(nop(n,1)).eq.1
-!     +                  .or.ibn(nop(n,3)).eq.1))then
-!       do i = 1,3
-!          WRITE(*,*)(nbc(nop(4465,i),z),z=1,7),'nop:',nop(n,i)
-!        end do
-!        WRITE(*,*)'Element ',n,' (Rand)'
-!        WRITE(*,*) 'Gleichungen'
-!        do i = 1, 12
-!        WRITE(*,'(6f10.1)') (estifm(i,j),j=1,6)
-!        end do
-!      end if
-!-
-
-              !NiS,may06: testing
-              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' vor'
-              !-
-              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
-                !nis,feb07: Allow for numbered FFF midsides
-                !if (nop(n,2).eq.-9999) then
-              ELSEIF (nop(n,2) < -1000) THEN
+!              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
+!                !nis,feb07: Allow for numbered FFF midsides
+!                !if (nop(n,2).eq.-9999) then
+!              ELSEIF (nop(n,2) < -1000) THEN
+              ELSEIF (imat(n) == 889) THEN
                 CALL COEF1dFE(N,NRX)
               ENDIF
+!Add midside node for polynom approach
+!-
               !NiS,may06: testing
               !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' nach'
               !-
@@ -470,13 +471,19 @@ cipk jan99
 	  KC=KC+1     !NiS,may06: count loop
 CIPK JAN99
           if(i .eq. 0) go to 22 !NiS,may06: loop cycle, if node is zero
-          !nis,feb07: negative nodes are midside nodes of Flow1DFE elements, so cycle that loop
-          if (i < -1000) GO TO 22
-          !-
+
+!nis,may07
+!Add midside node for polynom approach
+!          !nis,feb07: negative nodes are midside nodes of Flow1DFE elements, so cycle that loop
+!          if (i < -1000) GO TO 22
+!          !-
+!Add midside node for polynom approach
+!-
 
 !Nis,mun06:testing
 !          if(i.eq.12816 .or. i.eq.12790 .or. i.eq.12791)
-!     +     WRITE(*,*) 'in front:', i, nbc(i,1), n
+!           WRITE(*,*) 'in front:', i, nbc(i,1), n
+!           pause
 !-
 
 	  LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I

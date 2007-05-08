@@ -1,4 +1,4 @@
-C     Last change:  K    20 Apr 2007   11:16 am
+C     Last change:  K     6 May 2007   11:56 am
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -24,9 +24,13 @@ cipk aug05      INCLUDE 'BLK10.COM'
 !nis,nov06: Initialize MaxLT, the dimensioner for the number of Line transitions
       MaxLT = 0
 !-
-!nis,feb07: Initialize MaxFFFMS, the dimensioner of the number of midside nodes of Flow1DFE elements
-      FFFMS = 0
-      AddMS = 0
+!nis,may07
+!Add midside nodes for polynom approach
+!!nis,feb07: Initialize MaxFFFMS, the dimensioner of the number of midside nodes of Flow1DFE elements
+!      FFFMS = 0
+!      AddMS = 0
+!-
+!Add midside nodes for polynom approach
 !-
 
       NCLL=0
@@ -55,17 +59,20 @@ cipk jun03 add RM1 input capabilities
 
 !NiS,mar06: adding the option of reading KALYPSO-2D input files for determination of allocatable array size
         if (iGEO == 2) then
+!nis,may07
+!Add midside node for polynom approach
           !NiS,mar06: Additional parameter 'A' in comparison to other read-subroutines; the parameter gives back the number of arcs
           !nis,feb07: Add the counter of midside nodes of Flow1DFE elements
-          !call RDKALYPS(N,M,A,LT,1)
-          call RDKALYPS(N,M,A,LT,FFFMS,AddMS,1)
+          call RDKALYPS(N,M,A,LT,1)
+          !call RDKALYPS(N,M,A,LT,FFFMS,AddMS,1)
           !-
           REWIND IFILE
           WRITE(*,*)' back from rdkalypso'
-          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT, ', ',
-     +               FFFMS+AddMS
+          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT !, ', '
+!     +               FFFMS+AddMS
           GO TO 100
         end if
+!-
 !-
 
 cipk may02 Make CORD real*8 and NOP integer*4
@@ -124,7 +131,7 @@ CIPK JUN05 SET LOWER LIMIT                             	!provides the oportunity
           MaxLT=LT
           !-
           !nis,feb07: Adding counter of midside nodes of Flow1DFE elements
-          WRITE(*, *) 'No. of MS nodes of FFF-elts: ', FFFMS,' + ',AddMS
+          !WRITE(*, *) 'No. of MS nodes of FFF-elts: '!, FFFMS,' + ',AddMS
           !-
         else
           MAXA=0
@@ -132,8 +139,8 @@ CIPK JUN05 SET LOWER LIMIT                             	!provides the oportunity
           MaxLT=0
           !-
           !nis,feb07: Adding counter of midside nodes of Flow1DFE elements; dummy value zero
-          FFFMS = 0
-          AddMS = 0
+          !FFFMS = 0
+          !AddMS = 0
           !-
         end if
 !-
