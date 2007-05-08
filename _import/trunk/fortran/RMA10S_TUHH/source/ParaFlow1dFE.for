@@ -1,4 +1,4 @@
-C     Last change:  K     4 May 2007    8:10 am
+C     Last change:  K     8 May 2007    3:23 pm
       MODULE PARAFlow1dFE
 
 
@@ -32,8 +32,4 @@ C     Last change:  K     4 May 2007    8:10 am
       !decision switch for way of coefficient calculation
       INTEGER                        :: beient                       !decision switch for flow coefficient (2: beta, 1: alpha, 0. ignore)
 
-      !testing variables
-      REAL (KIND = 8), allocatable   :: matrix(:,:), vector(:)
-      INTEGER                        :: maxeq
-
-      END MODULE 
+      END MODULE
