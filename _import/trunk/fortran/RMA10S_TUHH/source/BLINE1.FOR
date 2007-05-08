@@ -1,4 +1,4 @@
-C     Last change:  K    12 Mar 2007    5:46 pm
+C     Last change:  K     6 May 2007    0:04 am
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -154,10 +154,16 @@ CIPK JUN05
 C-
 C...... Skip slope calculation for sides that have fixed flow or elevation
 C-
-          !nis,feb07: Add for direction of FFF-elements
-          !IF(IBN(N2) .EQ. 1) THEN
-          if (ibn(n2) == 1 .or. n2 < -1000) then
-          !-
+
+!nis,may07
+!Add midside node for polynom approach
+!          !nis,feb07: Add for direction of FFF-elements
+          IF(IBN(N2) == 1) THEN
+!          if (ibn(n2) == 1 .or. n2 < -1000) then
+!          !-
+!Add midside node for polynom approach
+
+!-
 C-
 C...... Get direction of outward normal for 2-d plan elements
 C-
@@ -167,32 +173,36 @@ C-
      +                CORD(N3,1),CORD(N3,2),SRT,1)
         !NiS,may06,com: 1D-part
             !nis,feb07: Add for direction of FFF-elements
-            !else
-            ELSEIF (n2 > -1000) then
+            else
+            !ELSEIF (n2 > -1000) then
             !-
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,2)
-            !nis,feb07: Add for FFF-elements (at this place)
-            else
-              !nis,feb07,testing
-              !if (n == 8) then
-              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
-              !  WRITE(*,*) 'SRT: ', SRT
-              !end if
-              !-
-              call outnrm   (cord(n1,1), cord(n1,2),
-     +                    0.5*(cord(n1,1)+cord(n3,1)),
-     +                    0.5*(cord(n1,2)+cord(n3,2)),
-     +                      cord(n3,1), cord(n3,2), SRT, 2)
-            !-
-!nis,feb07,baustelle!!!
-              !nis,feb07,testing
-              !if (n == 8) then
-              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
-              !  WRITE(*,*) 'SRT: ', SRT
-              !  pause
-              !end if
-              !-
+!nis,may07
+!Add midside node for polynom approach
+!            !nis,feb07: Add for FFF-elements (at this place)
+!            else
+!              !nis,feb07,testing
+!              !if (n == 8) then
+!              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
+!              !  WRITE(*,*) 'SRT: ', SRT
+!              !end if
+!              !-
+!              call outnrm   (cord(n1,1), cord(n1,2),
+!     +                    0.5*(cord(n1,1)+cord(n3,1)),
+!     +                    0.5*(cord(n1,2)+cord(n3,2)),
+!     +                      cord(n3,1), cord(n3,2), SRT, 2)
+!            !-
+!!nis,feb07,baustelle!!!
+!              !nis,feb07,testing
+!              !if (n == 8) then
+!              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
+!              !  WRITE(*,*) 'SRT: ', SRT
+!              !  pause
+!              !end if
+!              !-
+!Add midside node for polynom approach
+!-
 
             ENDIF
             VOUTN(N1)=SRT(1)
@@ -200,12 +210,16 @@ C-
             VOUTN(N3)=SRT(3)
             NFK=NFIXK(N2)/100
 
-            !nis,feb07: For Flow1DFE Elements the midside node has a negative number. So nfixk is not properly defined. But because the loop has to
-            !           be cycled for every of those elements, add this control:
-             !NiS,may06,com: following is related to the first three digits for boundary condition of nodal input-line
-             !IF(NFK .LT. 113  .AND.  NFK .NE. 2) THEN
-             IF((NFK .LT. 113  .AND.  NFK .NE. 2)
-     +           .or. n2 < -1000) THEN
+!nis,may07
+!Add midside node for polynom approach
+!            !nis,feb07: For Flow1DFE Elements the midside node has a negative number. So nfixk is not properly defined. But because the loop has to
+!            !           be cycled for every of those elements, add this control:
+!             !NiS,may06,com: following is related to the first three digits for boundary condition of nodal input-line
+             IF(NFK < 113  .AND.  NFK /= 2) THEN
+!             IF((NFK < 113  .AND.  NFK /= 2)
+!     +           .or. n2 < -1000) THEN
+!Add midside node for polynom approach
+!-
 
 CIPK JUN05
               N1=NOP(N,M-1)

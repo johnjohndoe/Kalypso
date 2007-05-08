@@ -1,4 +1,4 @@
-C     Last change:  K    15 Feb 2007    5:28 pm
+C     Last change:  K     6 May 2007   11:58 pm
 cipk  last update dec 2003   add iedsw dependence
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 cipk  last update Jan 12 2001 add test for IMAT
@@ -17,12 +17,17 @@ CIPK AUG05      INCLUDE 'BLK4.COM'
       DIMENSION   DD(4), X(8),Y(8)
 C
       DO 90 LL=1,NE
-      !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-      !nis,feb07: Allow for numbered midsides of FFF
-      !if (nop(ll,2).eq.-9999) then
-      if (nop(ll,2) < -1000) GOTO 90
-      !-
-      !-
+!nis,may07
+!Add midside node for polynom approach
+!      !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
+!      !nis,feb07: Allow for numbered midsides of FFF
+!      !if (nop(ll,2).eq.-9999) then
+!      if (nop(ll,2) < -1000) GOTO 90
+      if (imat(ll) == 889) GO TO 90
+!      !-
+!      !-
+!Add midside node for polynom approach
+!-
       IF (IMAT(LL) .EQ. 0) GO TO 90
 
 cipk dec03 add iedsw depedence
@@ -221,12 +226,17 @@ cccc      ENDIF
 CIPK NOV97     open(75,file='elemdir.dat')
          open(76,file='elemxycoef.dat')
          do 11  j=1,ne
-           !EFa Dec06, Fallunterscheidung für 1d-Teschke-ELemente
-           !nis,feb07: Allow for numbered FFF midsides
-           !if (nop(j,2).NE.-9999) then
-           if (nop(j,2) > -1000) then
-           !-
-           !-
+!nis,may07
+!Add midside node for polynom approach
+!           !EFa Dec06, Fallunterscheidung für 1d-Teschke-ELemente
+!           !nis,feb07: Allow for numbered FFF midsides
+!           !if (nop(j,2).NE.-9999) then
+!           if (nop(j,2) > -1000) then
+           if (imat(j) /= 889) then
+!           !-
+!           !-
+!Add midside node for polynom approach
+!-
 cipk jan01 put in test
 	     if(imat(j) .gt. 0) then
                angx = th(j)
