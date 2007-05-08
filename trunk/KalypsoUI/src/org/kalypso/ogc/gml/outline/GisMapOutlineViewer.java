@@ -40,16 +40,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -67,9 +66,9 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author Gernot Belger
  */
-public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListener, SelectionListener, ICommandTarget
+public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListener, ICommandTarget
 {
-  protected TreeViewer m_viewer;
+  protected CheckboxTreeViewer m_viewer;
 
   private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
 
@@ -93,8 +92,22 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
 
   public void createControl( final Composite parent )
   {
-    m_viewer = new TreeViewer( parent, SWT.SINGLE | SWT.CHECK );
-    m_viewer.getTree().addSelectionListener( this );
+    m_viewer = new CheckboxTreeViewer( parent );
+    m_viewer.addCheckStateListener( new ICheckStateListener()
+    {
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        final Object data = event.getElement();
+        if( data instanceof IKalypsoTheme )
+        {
+          final IKalypsoTheme theme = (IKalypsoTheme) data;
+          final IMapModell mm = theme.getMapModell();
+          final ICommand command = new EnableThemeCommand( mm, theme, event.getChecked() );
+          postCommand( command, null );
+        }
+      }
+    } );
+
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 
@@ -213,44 +226,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
         }
       } );
     }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  public void widgetSelected( final SelectionEvent e )
-  {
-    final TreeItem ti = (TreeItem) e.item;
-    final Object data = ti.getData();
-    // if( data instanceof IKalypsoTheme )
-    // {
-    // if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
-    // {
-    // m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
-    // null );
-    // m_mapModel.activateTheme( (IKalypsoTheme)data );
-    // // todo: maybe create MultiCommand (eg. activate and enable )
-    // }
-    // }
-
-    if( (e.detail & SWT.CHECK) != 0 )
-    {
-      if( data instanceof IKalypsoTheme )
-      {
-        final IKalypsoTheme theme = (IKalypsoTheme) data;
-        final IMapModell mm = theme.getMapModell();
-        final ICommand command = new EnableThemeCommand( mm, theme, ti.getChecked() );
-        postCommand( command, null );
-      }
-    }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-   */
-  public void widgetDefaultSelected( final SelectionEvent e )
-  {
-    //
   }
 
   /**
