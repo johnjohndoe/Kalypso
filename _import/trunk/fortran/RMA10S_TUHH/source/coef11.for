@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  K     3 May 2007   10:47 am
+C     Last change:  K     8 May 2007    2:31 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -39,7 +39,7 @@ CIPK LAST UPDATED SEP 7 1995
 !           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
 !           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
 !           also as real, kind=8.
-      REAL(KIND=8) :: HS, HD, HD1, HDX, dum1, HS1, HSX
+      REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 !-
 
 C
@@ -267,8 +267,6 @@ C-
 CIPK JAN03
       EINA=EINX(NN)*CX+EINY(NN)*SA
 
-
-      !nis,oct,com: What is this loop for?
       DO 107 K=1,NCN
 C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
 C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
@@ -436,10 +434,10 @@ C-
           DSALDX=DSALDX+DOX(M)*ST(M)
 CIPK MAY02
         GAIN=GAIN+XO(M)*GAN(MR)
-        endif
 CIPK FEB07
-        IF(ICK .EQ. 6) THEN
-          EXTL=EXTL+XO(M)*EXTLD(MR)
+          IF(ICK .EQ. 6) THEN
+            EXTL=EXTL+XO(M)*EXTLD(MR)
+          ENDIF
         ENDIF
 
         IF(ICYC.LT.1) GO TO 270
@@ -687,9 +685,9 @@ cipk oct98 update to f90
 cipk mar01 Clean logic abd modify to set side flows zero for dry locations
       IF( ICYC .GT. 0 ) then
         FRN=ACR*BETA1
-	ELSE
+      ELSE
         FRN = 0.0
-	ENDIF
+      ENDIF
       IF(H+ABED .GT. AZER) THEN
 CIPK MAY04
         SIDFT=SIDFQ
@@ -1123,20 +1121,34 @@ C     WRITE(*,7777) NN,(F(I),I=1,12)
 C     WRITE(*,7778) (R1(N),N=1,NSZF)
 C7778 FORMAT(1P5E12.4)
 
-      !nis,mar07,testing
-      if (nn <30) then
-      write (lout,*) 'Element: ', nn
-      WRITE(lout,9898) estifm(1,1), estifm(1,3),
-     + estifm(1,9),estifm(1,11), f(1)
-      WRITE(lout,9898) estifm(3,1), estifm(3,3),
-     + estifm(3,9),estifm(3,11), f(3)
-      WRITE(lout,9898) estifm(9,1), estifm(9,3),
-     + estifm(9,9),estifm(9,11), f(9)
-      WRITE(lout,9898) estifm(11,1), estifm(11,3),
-     + estifm(11,9), estifm(11,11), f(11)
-
- 9898 format (10(1x,f14.2))
-      end if
+      !estifm-testoutput
+      if (nn > 0) then
+        WRITE(9919,*) 'Element ', nn, 'coef1Pol'
+        WRITE(9919,'(6x,12(1x,i10))') ( nbc (nop(nn,1), j), j=1, 4), 0, 0, 0, 0, ( nbc (nop(nn,3), j), j=1, 4)
+        do i = 1,12
+          if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
+            if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
+              WRITE(9919,'(i6,13(1x,f10.2))') 0, (estifm(i,j), j=1, 12), f(i)
+            else
+              WRITE(9919,'(i6,13(1x,f10.2))') nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1, 12), f(i)
+            end if
+          elseif (MOD(i,4) == 3 ) then
+            if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
+              WRITE(9919,'(i6,13(1x,f10.2))') 0, (estifm(i,j), j=1, 12), f(i)
+            else
+              WRITE(9919,'(i6,13(1x,f10.2))') nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1, 12), f(i)
+            end if
+          ELSE
+            if (nop(nn, i/4 ) < 0) then
+              WRITE(9919,'(i6,13(1x,f10.2))') 0, (estifm(i,j), j=1, 12), f(i)
+            else
+              WRITE(9919,'(i6,13(1x,f10.2))') nbc( nop(nn, i/4 ), 4), (estifm(i,j), j=1, 12), f(i)
+            end if
+          endif
+        end do
+        WRITE(9919,*)
+        WRITE(9919,*)
+      endif
       !-
 
       RETURN

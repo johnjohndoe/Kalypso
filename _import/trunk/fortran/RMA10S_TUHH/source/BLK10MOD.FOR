@@ -1,4 +1,4 @@
-C     Last change:  K    20 Apr 2007   11:38 am
+C     Last change:  K     8 May 2007    2:24 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -200,6 +200,11 @@ C     LAYER VARIABLE
       !           BSWIT == 3; the size is then exactly of the transition size; it is deallocated directly after everery usage
       REAL, ALLOCATABLE, DIMENSION (:,:)   :: TransitionVels
       !-
+
+      !testing variables
+      REAL (KIND = 8), allocatable   :: matrix(:,:), vector(:)
+      !-
+
 
 
       END MODULE

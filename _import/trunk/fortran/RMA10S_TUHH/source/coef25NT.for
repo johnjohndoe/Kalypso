@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  EF   26 Mar 2007   10:43 am
+C     Last change:  K     3 May 2007   10:11 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1907,6 +1907,33 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           ENDIF
  1400   CONTINUE
  1450 CONTINUE
+
+
+      !matrix in datei
+      if (nn==92 .or. nn==93 .or. nn==95) then
+        WRITE(9919,*) 'Element ', nn, 'coef2nt', xht
+        WRITE(9919,'(6x,32(1x,i10))')
+     +       ( ( nbc (nop(nn,i), j), j=1, 4), i = 1,8)
+        do i = 1,32
+          if (MOD(i,4)/=0) then
+!            WRITE(*,*) i, MOD(i,4),
+!     +         1+(i-MOD(i,4))/ 4, nop(nn, 1+(i-MOD(i,4))/ 4)
+            WRITE(9919,'(i6,33(1x,f10.2))')
+     +       nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
+     +       (estifm(i,j), j=1, 32),
+     +       f(i)
+          ELSE
+!            WRITE(*,*) i, 4,
+!     +       i/4, nop(nn, i/4)
+            WRITE(9919,'(i6,33(1x,f10.2))')
+     +       nbc( nop(nn, i/4 ), 4),
+     +       (estifm(i,j), j=1, 32),f(i)
+          endif
+        end do
+        WRITE(9919,*)
+        WRITE(9919,*)
+      endif
+      !-
 
 !      WRITE(196,*) 'ELEMENT',NN,' F'
 !      WRITE(196,1996) (F(I),I=1,32)

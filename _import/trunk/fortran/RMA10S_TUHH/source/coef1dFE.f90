@@ -1,4 +1,4 @@
-!Last change:  K     7 May 2007    3:36 am
+!Last change:  K     8 May 2007    2:23 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1445,45 +1445,7 @@ if (nn > -10) then
   WRITE(*,'(a18,4(1x,f13.8))') '         dvintdx: ', (dvintdx(i), i = 1, 4)
 ENDIF
 
-!nis,feb07,testing: Writing whole matrix (just steady case for 1D element)
-!matrix (2*nn-1, 2*nn-1) = matrix (2*nn-1, 2*nn-1) + estifm(1,1)
-!matrix (2*nn-1, 2*nn)   = matrix (2*nn-1, 2*nn)   + estifm(1,3)
-!matrix (2*nn-1, 2*nn+1) = matrix (2*nn-1, 2*nn+1) + estifm(1,9)
-!matrix (2*nn-1, 2*nn+2) = matrix (2*nn-1, 2*nn+2) + estifm(1,11)
-!matrix (2*nn  , 2*nn-1) = matrix (2*nn  , 2*nn-1) + estifm(3,1)
-!matrix (2*nn  , 2*nn)   = matrix (2*nn  , 2*nn)   + estifm(3,3)
-!matrix (2*nn  , 2*nn+1) = matrix (2*nn  , 2*nn+1) + estifm(3,9)
-!matrix (2*nn  , 2*nn+2) = matrix (2*nn  , 2*nn+2) + estifm(3,11)
-!matrix (2*nn+1, 2*nn-1) = matrix (2*nn+1, 2*nn-1) + estifm(9,1)
-!matrix (2*nn+1, 2*nn)   = matrix (2*nn+1, 2*nn)   + estifm(9,3)
-!matrix (2*nn+1, 2*nn+1) = matrix (2*nn+1, 2*nn+1) + estifm(9,9)
-!matrix (2*nn+1, 2*nn+2) = matrix (2*nn+1, 2*nn+2) + estifm(9,11)
-!matrix (2*nn+2, 2*nn-1) = matrix (2*nn+2, 2*nn-1) + estifm(11,1)
-!matrix (2*nn+2, 2*nn)   = matrix (2*nn+2, 2*nn)   + estifm(11,3)
-!matrix (2*nn+2, 2*nn+1) = matrix (2*nn+2, 2*nn+1) + estifm(11,9)
-!matrix (2*nn+2, 2*nn+2) = matrix (2*nn+2, 2*nn+2) + estifm(11,11)
-
-!vector (2*nn-1) = vector (2*nn-1) + f(1)
-!vector (2*nn)   = vector (2*nn)   + f(3)
-!vector (2*nn+1) = vector (2*nn+1) + f(9)
-!vector (2*nn+2) = vector (2*nn+2) + f(11)
-!-
-
-!!nis,mar07,testing
-!if (nn > 00) then
-!  write (9919,*) 'Element: ', nn
-!  WRITE(9919,9898) nbc(nop(nn,1), 1), estifm(1,1), estifm(1,3), estifm(1,9),estifm(1,11), f(1)
-!  WRITE(9919,9898) nbc(nop(nn,1), 3), estifm(3,1), estifm(3,3), estifm(3,9),estifm(3,11), f(3)
-!  WRITE(9919,9898) nbc(nop(nn,3), 1), estifm(9,1), estifm(9,3), estifm(9,9),estifm(9,11), f(9)
-!  WRITE(9919,9898) nbc(nop(nn,3), 3), estifm(11,1), estifm(11,3), estifm(11,9), estifm(11,11), f(11)
-!  WRITE(9919,*)
-!  WRITE(9919,*)
-!
-! 9898 format (i5, 5(1x,f14.4))
-!  !pause
-!end if
-
-!testoutput
+!estifm-testoutput
 if (nn > 0) then
   WRITE(9919,*) 'Element ', nn, 'coef1Pol'
   WRITE(9919,'(6x,12(1x,i10))') ( nbc (nop(nn,1), j), j=1, 4), 0, 0, 0, 0, ( nbc (nop(nn,3), j), j=1, 4)

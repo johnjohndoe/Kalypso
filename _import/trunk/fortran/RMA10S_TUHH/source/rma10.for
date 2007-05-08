@@ -1,4 +1,4 @@
-C     Last change:  EF    4 Apr 2007   11:02 am
+C     Last change:  K     8 May 2007    3:11 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -46,6 +46,7 @@ cipk aug98 add character statement
       CHARACTER*4 IPACKB(1200),IPACKT(77)
       !nis,feb07,testing: Writing matrix
       CHARACTER (LEN = 25) :: matrixname
+      CHARACTER (LEN = 30) :: matrixformat
       !-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: VTM, HTP, VH, H, HS
@@ -305,65 +306,13 @@ CIPK JAN02 SET SIDFF TO ZERO
 cipk aug00 experimental
       IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
-!nis,jan07: testoutput because of solution at the line transition
-!      teststat=0
-!      open (UNIT=901,FILE='test_vor_LOAD.txt',IOSTAT=teststat)
-!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
-!      do i = 17,20
-!        WRITE(901,*) i, (vel(j,i),j=1,3)
-!      end do
-!      do i = 106,108
-!        WRITE(901,*) i, (vel(j,i),j=1,3)
-!      end do
-!        WRITE(901,*) '68', (vel(j,68),j=1,3)
-!
-!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
-!      do i = 17,20
-!        WRITE(901,*) i, (nbc(i,j),j=1,4)
-!      end do
-!      do i = 106,108
-!        WRITE(901,*) i, (nbc(i,j),j=1,4)
-!      end do
-!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
-!        WRITE(901,*) 'Ausgabe des IBN-arrays'
-!      do i = 1,np
-!        WRITE(901,'(i4,1x,i2,1x,i1,2(1x,f11.8))')
-!     +         i, ibn(i), Transmember (i), alfa(i), alfak(i)
-!      end do
-!      close (901)
-!-
-
 !nis,feb07: Calling the processing of the 1D 2D line transitions
       if (MaxLT /= 0) call TransVelDistribution
 !-
 
-
-      write(*,*) 'entering load'
+       write(*,*) 'entering load'
 
       CALL LOAD
-
-!nis,jan07: testoutput because of solution at the line transition
-!      teststat=0
-!      open (UNIT=901,FILE='test_nach_LOAD.txt',IOSTAT=teststat)
-!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
-!      do i = 17,20
-!        WRITE(901,*) i, (vel(j,i),j=1,3)
-!      end do
-!      do i = 106,108
-!        WRITE(901,*) i, (vel(j,i),j=1,3)
-!      end do
-!        WRITE(901,*) '68', (vel(j,68),j=1,3)
-!
-!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
-!      do i = 17,20
-!        WRITE(901,*) i, (nbc(i,j),j=1,4)
-!      end do
-!      do i = 106,108
-!        WRITE(901,*) i, (nbc(i,j),j=1,4)
-!      end do
-!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
-!      close (901)
-!-
 
 C-
 C......  Compute areas of continuity lines for stage flow input
@@ -375,48 +324,20 @@ c  250 CONTINUE
       IF (ITEQV(MAXN) .NE. 5  .AND.  IOPTZD .GT. 0
      +    .AND. IOPTZD .LT. 3) CALL MELLII
 
-      !nis,feb07,testing
-      if (maxn == 1) then
-        ALLOCATE (matrix(2*maxp-2, 2*maxp-2), vector(2*maxp-2))
-        do i = 1, 2*maxp-2
-          do j = 1, 2*maxp-2
-            matrix(i,j) = 0.0
-          end do
-          vector(i) = 0.0
-        end do
-      endif
-      !-
 
-      CALL FRONT(1)
-
-      !nis,feb07,testing
-      !WRITE(*,*) 'Writing updates as control'
-      !do i = 1, maxp
-      !  WRITE(*,*) r1(i)
-      !enddo
-      !-
       !nis,feb07,testing: Write whole matrix
       if (maxn > -1) then
         write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
         teststat = 0
         open (9919, matrixname, iostat = teststat)
-        if (teststat /= 0) STOP 'Fehler bei Matrixdatei'
-        do i = 1, 2*maxp-2
-          WRITE(9919, '(6(f7.2),2(1x,f9.4))')
-     *         (matrix(i,j), j = 1, 2*maxp-2), vector (i), r1(i)
-        ENDDO
-        do i = 1, 2*maxp-2
-          do j = 1, 2*maxp-2
-            matrix(i,j) = 0.0
-          end do
-          vector(i) = 0.0
-        end do
-      pause
+        if (teststat /= 0) STOP 'ERROR - while opening matrix file'
       endif
       !-
 
-      !nis,feb07,testing in coefs, stop after calc job
-      !pause
+      CALL FRONT(1)
+
+      !close testfile
+      close (9919, status = 'keep')
       !-
 
 CIPK JAN97
@@ -427,32 +348,6 @@ CIPK JAN97 END CHANGES
 
       IDRYC=IDRYC-1
       CALL UPDATE
-
-
-!nis,jan07: testoutput because of solution at the line transition
-!      teststat=0
-!      open (UNIT=901,FILE='test_voroutput.txt',IOSTAT=teststat)
-!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
-!      do i = 17,20
-!        WRITE(901,*) i, (vel(j,i),j=1,3)
-!      end do
-!      do i = 106,108
-!        WRITE(901,*) i, (vel(j,i),j=1,3)
-!      end do
-!        WRITE(901,*) '68', (vel(j,68),j=1,3)
-!
-!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
-!      do i = 17,20
-!        WRITE(901,*) i, (nbc(i,j),j=1,4)
-!      end do
-!      do i = 106,108
-!        WRITE(901,*) i, (nbc(i,j),j=1,4)
-!      end do
-!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
-!      close (901)
-!-
-
-
 
 C      CALL CHECK
 C     REWIND IVS
@@ -838,6 +733,7 @@ CIPK NOV97  458 CONTINUE
 cipk mar98 add logic to update HEL
           VTM=VEL(3,J)
           CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
+
           DO 450 K=NDL,NDF
 CIPK SEP96        VOLD(K,J)=VEL(K,J)
 CIPK SEP96        VDOTO(K,J)=VDOT(K,J)
@@ -858,7 +754,9 @@ cc              VEL(K,J)=VEL(K,J)+VEL(K,J)-V2OL(K,J)
               ENDIF
 
             ENDIF
+
   450     CONTINUE
+
           IF(NDL .EQ. 1) THEN
             IF(IESPC(3,J) .EQ. 0) THEN
 
@@ -983,7 +881,6 @@ C-                        !		initialization:
 	  ITPAS=0             !               ITPAS= ???
   465   MAXN=MAXN+1       !               MAXN = actual iteration number; first initialized, then incremented
                           !-
-
 cipk oct02
         IF(MAXN .EQ. 1) THEN
 	          write(75,*) 'going to heatex-535',n,maxn,TET,itpas
@@ -997,6 +894,7 @@ CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
 	  ENDIF
 C     DO 700 MAXN=1,NITN
 C     REWIND IVS
+
 C-
 C......  Process dry nodes
 C-
@@ -1008,6 +906,7 @@ C-
             IDRYC=IDSWT
           ENDIF
         ENDIF
+
 cipk APR97  Add dropout
 cipk mar01 rearrange dropout logic to allow for idrpt = 2
 c          move logic into DRPOUT
@@ -1027,7 +926,9 @@ c     set IACTV to be active for all
 cipk mar01 end change
 
 cipkapr97 end changes
+
         CALL BLINE(MAXN)
+
         ICK=ITEQS(MAXN)+4
 
 cipk nov99 add optional call for transitioning
@@ -1047,7 +948,6 @@ c          CALL SHEAR
 
 CIPK OCT02
   470   CONTINUE
-
 
         CALL LOAD
 C-
@@ -1070,11 +970,17 @@ CIPK JAN97 END CHANGES
 
         CALL FRONT(1)
         IDRYC=IDRYC-1
+
         CALL UPDATE
+
+
+        WRITE(*,*) 'nach update: ', icyc, maxn
+
 C      CALL CHECK
 C     REWIND IVS
         IF(ITEQV(MAXN) .NE. 5  .AND.  ITEQV(MAXN) .NE. 2
      +  .AND.  ITEQV(MAXN) .LT. 8) CALL VRTVEL
+
         IF(NPRTF .GT. 0) THEN
           IF(MOD(MAXN,NPRTF) .EQ. 0  .OR.  MAXN .EQ. NITA
      +      .OR. NCONV .EQ. 1) THEN
@@ -1096,6 +1002,7 @@ C......UPDATE TIME DERIVATIVE
 C-
 CIPK NOV97
         write(75,*) 'rma10-646'
+
         DO  J=1,NP
 
 CIPK MAR98
@@ -1106,7 +1013,7 @@ CIPK MAR98
           ENDDO
           HDET(J)=ALTM*(HEL(J)-HOL(J))-(ALPHA-1.)*HDOT(J)
         ENDDO
- 
+
   550   CONTINUE
 CIPK OCT02  CHECK FOR NEGATIVE TEMPS
 
@@ -1293,7 +1200,6 @@ c      14   VSING subscript(7)  water column potential by node
               WRITE(*,*)'back from write_kalypso'
             END IF
 !-
-
 CIPK AUG02
             IF(ISMSFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
@@ -1538,6 +1444,7 @@ CIPK SEP02 ADD RESTART DATA FOR BED
         ENDIF
 !NiS,may06: Renaming 800-DO-Loop to Main_dynamic_Loop
 !  800 CONTINUE
+
       ENDDO Main_dynamic_Loop
 !-
       CALL ZVRS(1)
