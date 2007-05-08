@@ -46,6 +46,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
+import org.kalypso.kalypsomodel1d2d.conv.TestControl1D2DConverter;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -102,7 +103,7 @@ public class TestRMA extends TestCase
       // PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter( new File( outputFilePath,
       // RMA10SimModelConstants.R10_File ) ) ) );
       // TODO: this cannot work because stream is null and no provider have been given...
-      new Control1D2DConverter( null, null ).writeR10File( m_calculation, null );
+      new TestControl1D2DConverter( null, null ).writeR10File( m_calculation, null );
 
     }
     catch( MalformedURLException e )
