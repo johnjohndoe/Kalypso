@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
-import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -53,7 +51,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -64,24 +61,13 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc;
-import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1D2DElementRoughnessTheme;
+import org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor.RoughnessCorrectionDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor.RoughnessStylingControl;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsomodel1d2d.update.ModelMergeService;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Madanagopal
@@ -90,49 +76,26 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 public class ApplyColorOnFENETWidgetFace
 {
 
-//  public Control createControl( Composite parent )
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//
-//  public void disposeControl( )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-  static int index = 0;
+
   private Composite rootPanel;
   private FormToolkit toolkit;
-  
 
-  private ListViewer areaViewer;
 
   private Section colorAndButtonSection;
 
-  private ColorOnFEDataModel dataModel;
+  private RoughnessCorrectionDataModel dataModel;
 
 
-  public ApplyColorOnFENETWidgetFace( ColorOnFEDataModel feDataModel )
+  public ApplyColorOnFENETWidgetFace( RoughnessCorrectionDataModel feDataModel )
   {
    this.dataModel = feDataModel;
   }
-  private IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
-  {
 
-    public void selectionChanged( IFeatureSelection selection )
-    {
-      // TODO Auto-generated method stub
-      
-    }
-    //TODO
-  };
-  private IRoughnessPolygonCollection roughnessPolygons;
-  private IFEDiscretisationModel1d2d nodeModel;
+  private RoughnessStylingControl roughnessStylingControl;
   
   public Control createControl( Composite parent )
   {
-    this.dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
+//    this.dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
     initStoreDefaults();
 
     parent.setLayout( new FillLayout() );
@@ -154,7 +117,14 @@ public class ApplyColorOnFENETWidgetFace
     colorAndButtonSection.setLayoutData( tableWrapData );
     colorAndButtonSection.setExpanded( true );
 
-    createSelectElevationModel( colorAndButtonSection );
+    roughnessStylingControl = 
+                  new RoughnessStylingControl( 
+                        dataModel,
+                        toolkit,
+                        colorAndButtonSection 
+                        );
+    roughnessStylingControl.createControl();
+//    createSelectElevationModel( colorAndButtonSection );
     return rootPanel;
   }
 
@@ -239,29 +209,15 @@ public class ApplyColorOnFENETWidgetFace
      mapModell.fireModellEvent( null );
    }
 
-  protected void paintRoughnessColors( )
-  {
-    nodeModel = dataModel.getDiscretisationModel();
-    roughnessPolygons = dataModel.getRoughnessPolygonCollection();
-    for (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> inte: nodeModel.getElements()) {
-       try
-      {
-         //roughnessPolygons.getSelectedPolygons( point )
-       IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygons.getRoughnessEstimateSpec( inte.recalculateElementGeometry());
-       //roughnessEstimateSpec.getContributingRoughnessPolygons()mostSpreadRoughness(); 
-      }
-      catch( GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }    
-    }
-    
-//  roughnessPolygons.getRoughnessEstimateSpec( inte. );
-  }
+ 
 
   public void disposeControl( )
   {
+    if( roughnessStylingControl != null )
+    {
+      roughnessStylingControl.dispose();
+    }
+    
     if( rootPanel == null )
     {
       System.out.println( "Disposing null root panel" );
@@ -272,11 +228,11 @@ public class ApplyColorOnFENETWidgetFace
       rootPanel.dispose();
       toolkit.dispose();
     }
-    MapPanel mapPanel = dataModel.getMapPanel();
-    if( mapPanel != null )
-    {
-      mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
-    }
+//    MapPanel mapPanel = dataModel.getMapPanel();
+//    if( mapPanel != null )
+//    {
+//      mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
+//    }
     
   }
   
@@ -311,12 +267,6 @@ public class ApplyColorOnFENETWidgetFace
       }
 
     };
-  }
-
-  // TODO patrice use scheduling rule to wait for map load
-  // See OpenMapViewCommand
-  private static final void waitOnMap( IMapModell mapModell, MapPanel mapPanel )
-  {
   }
 
 }

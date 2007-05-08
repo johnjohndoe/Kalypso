@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
+package org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -49,36 +49,39 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor.RoughnessCorrectionDataModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
 /**
- * @author Madanagopal
+ * Widget which provides mechanism for modelling 
+ * roughness correction
+ * 
+ * @author Patrice Congo
  */
-public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
+public class RoughnessCorrectionWidget implements IWidgetWithOptions, IWidget
 {
 
+  private RoughnessCorrectionDataModel dataModel = 
+                  new RoughnessCorrectionDataModel();
+
+  private RoughnessCorrectionWidgetFace widgetFace = 
+                  new RoughnessCorrectionWidgetFace( dataModel );
+
+  private final String name;
+
+  private final String tooltip;
+
   /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * Current strategy for the widget functionality
    */
-  private RoughnessCorrectionDataModel feDataModel = 
-                          new RoughnessCorrectionDataModel();
-
-  private ApplyColorOnFENETWidgetFace widgetFace = 
-                      new ApplyColorOnFENETWidgetFace( feDataModel );
-
-  private String name;
-
-  private String tooltip;
-
-  public ApplyColorOnFENETWidget( )
+  private IWidget strategy;
+  
+  public RoughnessCorrectionWidget( )
   {
-    this.name = "Rauheitszuweisung anzeigen";
-    this.tooltip = "Aktiviert die Anzeige der zugewiesenen Element-Rauheiten. ";
+    this.name = "Rauheit korrigieren";
+    this.tooltip = "Rauheit korrigieren";
   }
 
   public Control createControl( Composite parent, FormToolkit toolkit )
@@ -112,8 +115,8 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
     IMapModell mapModell = mapPanel.getMapModell();
-    feDataModel.setMapModell( mapModell );
-    feDataModel.setMapPanel( mapPanel );
+    dataModel.setMapModell( mapModell );
+    dataModel.setMapPanel( mapPanel );
   }
 
   /**
@@ -122,7 +125,7 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
   {
-    return false;
+    return true;
   }
 
   /**
@@ -130,7 +133,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void clickPopup( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.clickPopup( p );
+    }
+
   }
 
   /**
@@ -138,7 +145,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void doubleClickedLeft( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.doubleClickedLeft( p );
+    }
   }
 
   /**
@@ -146,7 +156,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void doubleClickedRight( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.doubleClickedRight( p );
+    }
   }
 
   /**
@@ -154,7 +167,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void dragged( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.dragged( p );
+    }
   }
 
   /**
@@ -162,7 +178,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void finish( )
   {
-    
+    if( strategy != null )
+    {
+      strategy.finish();
+    }
+
   }
 
   /**
@@ -186,7 +206,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void keyPressed( KeyEvent e )
   {
-    
+    if( strategy != null )
+    {
+      strategy.keyPressed( e );
+    }
+
   }
 
   /**
@@ -194,7 +218,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void keyReleased( KeyEvent e )
   {
-    
+    if( strategy != null )
+    {
+      strategy.keyReleased( e );
+    }
   }
 
   /**
@@ -202,7 +229,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void keyTyped( KeyEvent e )
   {
-    
+    if( strategy != null )
+    {
+      strategy.keyTyped( e );
+    }
   }
 
   /**
@@ -210,7 +240,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void leftClicked( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.leftClicked( p );
+    }
   }
 
   /**
@@ -218,7 +251,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void leftPressed( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.leftPressed( p );
+    }
   }
 
   /**
@@ -226,7 +262,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void leftReleased( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.leftReleased( p );
+    }
   }
 
   /**
@@ -234,7 +273,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void middleClicked( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.middleClicked( p );
+    }
   }
 
   /**
@@ -242,7 +284,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void middlePressed( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.middlePressed( p );
+    }
+
   }
 
   /**
@@ -250,7 +296,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void middleReleased( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.middleReleased( p );
+    }
   }
 
   /**
@@ -258,7 +307,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void moved( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.moved( p );
+    }
+
   }
 
   /**
@@ -266,7 +319,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void paint( Graphics g )
   {
-    
+    if( strategy != null )
+    {
+      strategy.paint( g );
+    }
   }
 
   /**
@@ -274,7 +330,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void rightClicked( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.rightClicked( p );
+    }
   }
 
   /**
@@ -282,7 +341,11 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void rightPressed( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.rightPressed( p );
+    }
+
   }
 
   /**
@@ -290,7 +353,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void rightReleased( Point p )
   {
-    
+    if( strategy != null )
+    {
+      strategy.rightReleased( p );
+    }
   }
 
   /**
@@ -298,7 +364,10 @@ public class ApplyColorOnFENETWidget implements IWidgetWithOptions, IWidget
    */
   public void setSelection( ISelection selection )
   {
-    
+    if( strategy != null )
+    {
+      strategy.setSelection( selection );
+    }
   }
 
 }

@@ -221,6 +221,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Rauheitsklassen anzeigen</Name>
 			</Task>
+			<Task context="2dElementTheme"
+				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#roughness_correction_modelling">
+				<Help>
+					<![CDATA[Rauheitskorrektur an Finit-Elemente modelelieren.]]>
+				</Help>
+				<Name>Rauheitskorrektur modellieren</Name>
+			</Task>
 		</TaskGroup>
 		<TaskGroup context="BoundaryConditionTheme"
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">

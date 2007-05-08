@@ -42,19 +42,13 @@ package org.kalypso.kalypsomodel1d2d.ui.map.merge;
 
 import java.awt.Graphics;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeListener;
-import org.kalypso.ogc.gml.KalypsoThemeEvent;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -63,22 +57,16 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Patrice Congo
  *
  */
-public class Model1D2DElementRoughnessTheme /*implements IKalypsoTheme */extends AbstractKalypsoTheme
+public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
 {
   
   private FERoughnessDisplayElement feRoughnessDisplayElement;
   
   private IStaticModel1D2D staticModel;
-
-//  private String name;
-//
-//  private IMapModell mapModell;
   
   public Model1D2DElementRoughnessTheme( String name, IMapModell mapModel )
   {
     super( name, "Elemente+Rauhheiten", mapModel);
-//    this.name = name;
-//    this.mapModell = mapModel;
   }
   
   public void setStaticModel( IStaticModel1D2D staticModel )
@@ -142,45 +130,9 @@ public class Model1D2DElementRoughnessTheme /*implements IKalypsoTheme */extends
   public boolean isLoaded( )
   {
     return super.isLoaded();
-//    return true;
   }
   
-  
-
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
-//   */
-//  public void dispose( )
-//  {
-//    
-//  }
-
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
-//   */
-//  public String getContext( )
-//  {
-//    return null;
-//  }
-
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
-//   */
-//  public IMapModell getMapModell( )
-//  {
-//    return mapModell;
-//  }
-
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
-//   */
-//  public String getName( )
-//  {
-//    return name;
-//    
-//  }
-
-  /**
+   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
    */
   public String getType( )
@@ -188,90 +140,5 @@ public class Model1D2DElementRoughnessTheme /*implements IKalypsoTheme */extends
     return "GML_MERGE";
   }
 
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
-//   */
-//  public void setName( String name )
-//  {
-////    this.name = name;
-//    
-//  }
-//
-//  /**
-//   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-//   */
-//  public Object getAdapter( Class adapter )
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//
-//  /**
-//   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-//   */
-//  public void onModellChange( ModellEvent modellEvent )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
-//   */
-//  public void addKalypsoThemeListener( IKalypsoThemeListener listener )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#fireKalypsoThemeEvent(org.kalypso.ogc.gml.KalypsoThemeEvent)
-//   */
-//  public void fireKalypsoThemeEvent( KalypsoThemeEvent event )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  /**
-//   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
-//   */
-//  public void removeKalypsoThemeListener( IKalypsoThemeListener listener )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  /**
-//   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-//   */
-//  public void addModellListener( ModellEventListener listener )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  /**
-//   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
-//   */
-//  public void fireModellEvent( ModellEvent event )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  /**
-//   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-//   */
-//  public void removeModellListener( ModellEventListener listener )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//  
-//  
-//  //////////////////
-//  
   
-
 }
