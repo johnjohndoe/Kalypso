@@ -99,12 +99,12 @@ public class ModelDataCheck1DToCLine2DSelection implements IDataModelCheck//IMes
       message = "Die selektierte 2D-Kanten müssen eine Linie bilden";
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
-    else if(!ModelOps.hasOnlyBorderEdges( 
-                new ArrayList<IFE1D2DEdge>( selected2DEdges )))
-    {
-      message = "Die selektierte 2D-Kanten müssen eine Grenz-Linie bilden";
-      messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
-    }
+//    else if(!ModelOps.hasOnlyBorderEdges( 
+//                new ArrayList<IFE1D2DEdge>( selected2DEdges )))
+//    {
+//      message = "Die selektierte 2D-Kanten müssen eine Grenz-Linie bilden";
+//      messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
+//    }
     else
     {
       message = null;

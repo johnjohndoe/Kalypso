@@ -389,7 +389,7 @@ public class Gml2RMA10SConv
     if( roughnessEstimateSpec != null )
     {
       final IRoughnessCls[] cls = roughnessEstimateSpec.mostSpreadRoughness();
-      if( cls.length > 0 )
+      if( cls.length > 0 && cls[0] != null )
         return getID( roughnessIDProvider, cls[0].getGmlID() );
     }
 

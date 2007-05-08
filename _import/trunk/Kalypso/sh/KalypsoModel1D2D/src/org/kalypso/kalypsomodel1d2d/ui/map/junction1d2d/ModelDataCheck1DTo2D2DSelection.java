@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.IDataModelCheck;
@@ -96,12 +94,12 @@ public class ModelDataCheck1DTo2D2DSelection implements IDataModelCheck
       message = "Wählen sie nur eine 2D-Kante";
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
-    else if(!ModelOps.hasOnlyBorderEdges( 
-                new ArrayList<IFE1D2DEdge>( selected2DEdges )))
-    {
-      message = "Die selektierte 2D-Kante muss eine Randkante sein";
-      messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
-    }
+//    else if(!ModelOps.hasOnlyBorderEdges( 
+//                new ArrayList<IFE1D2DEdge>( selected2DEdges )))
+//    {
+//      message = "Die selektierte 2D-Kante muss eine Randkante sein";
+//      messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
+//    }
     else
     {
       message = null;
