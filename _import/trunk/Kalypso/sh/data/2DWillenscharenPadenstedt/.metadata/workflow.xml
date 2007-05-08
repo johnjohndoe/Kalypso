@@ -302,7 +302,7 @@ hier ausgewertet und visualisiert werden.]]>
 			</Help>
 			<Name>Einstellungen Kartenansicht</Name>
 			<Task
-				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#PlanView"
+				context="ResultMap"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#VectorDispl">
 				<Help>
 					<![CDATA[Stellt Strömungsgeschwindigkeiten anhand von Vektoren dar.]]>
@@ -470,6 +470,14 @@ hier ausgewertet und visualisiert werden.]]>
 							<con:Parameter name="input"
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
 						</con:ExtensionContext>
+					</con:ExtensionContext>
+					<con:ExtensionContext id="ResultMap"
+						parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="results/result.gmt" />
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:MultiContext>

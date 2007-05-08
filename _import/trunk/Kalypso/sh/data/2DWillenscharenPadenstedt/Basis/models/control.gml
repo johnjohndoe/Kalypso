@@ -34,11 +34,12 @@
     <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11785091657501">
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
      <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+     <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
     </sweExt:SortedRecordDefinition>
    </om:resultDefinition>
-   <om:result xmlns:om="http://www.opengis.net/om">&lt;![CDATA[2007-01-01T09:00:00.000+01:00 0.800
+   <om:result xmlns:om="http://www.opengis.net/om">2007-01-01T09:00:00.000+01:00 0.800
 2007-01-01T19:00:00.000+01:00 0.800
-]]&gt;</om:result>
+</om:result>
   </c1d2d:TimestepsObservation>
  </c1d2d:timestepsMember>
 </c1d2d:Control>

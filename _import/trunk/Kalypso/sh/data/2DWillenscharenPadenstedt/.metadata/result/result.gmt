@@ -6,6 +6,7 @@
             <ns9:style style="Vector Style" linktype="sld" xlink:type="simple" xlink:href="result.sld" xlink:actuate="onRequest"/>
         </mapv:layer>
         <mapv:layer visible="true" name="Base" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="../maps/base.gmt" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="Base" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="../maps/fenet.gmt" xlink:actuate="onRequest"/>
     </mapv:layers>
 </mapv:gismapview>
 
