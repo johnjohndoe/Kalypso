@@ -1,4 +1,4 @@
-!     Last change:  K    27 Apr 2007    5:26 pm
+!     Last change:  K     6 May 2007    1:53 am
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -89,8 +89,13 @@ INTEGER              :: iicyc                          !local variable for inter
 INTEGER, ALLOCATABLE :: Trans_nodes(:,:)               !informations for writing specific informations about transition elements
 INTEGER              :: trans_els                      !counter and name-giver for transition-elements
 
-!NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
-ALLOCATE (arc_tmp (maxp,5), arcmid(LPPoly:maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid für 1d-Teschke-Elemente auf 5 erhöht
+!nis,may07
+!Add midside node for polynom approach
+!!NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
+!!ALLOCATE (arc_tmp (maxp,5), arcmid(LPPoly:maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid für 1d-Teschke-Elemente auf 5 erhöht
+ALLOCATE (arc_tmp (maxp,5), arcmid(1:maxp,4))
+!Add midside node for polynom approach
+!-
 !NiS,may06: allocate 1D-2D-TRANSITION ELEMENTS array (1: number; 2-6: nodes)
 ALLOCATE (Trans_nodes(MaxT,6))
 
@@ -113,11 +118,17 @@ DO i = 1, np
     arc_tmp (i, j) = 0
   END DO
 END DO
-DO i = LPPoly, np
-  DO j = 1, 5
+!nis,may07
+!Add midside node for polynom approach
+!DO i = LPPoly, np
+DO i = 1, np
+!  DO j = 1, 5
+  DO j = 1, 4
     arcmid  (i, j) = 0
   END DO
 END DO
+!Add midside node for polynom approach
+!-
 
 ! Zu jedem Midseitenknoten eine Kante erzeugen:
 !     (Kantennummer =Mittseitenknotennummer)                            
@@ -140,32 +151,37 @@ END DO
 
         !1D-ELEMENTS or 1D-2D-TRANSITION ELEMENTS
         IF (nnum .eq. 3 .or. nnum .eq. 5) THEN
-          !midside node
+!nis,may07
+!Add midside node for polynom approach
+!          !midside node
           k = nop (nelem, 2)
-          !no midside node assigned to arcmid yet:
-
-          !nis,feb07: Allow for numbered FFF midsides
-          !IF (arcmid (k, 3) .eq. 0.and.k.NE.-9999) THEN
-          IF (arcmid (k, 3) .eq. 0 .and. k > -1000) THEN
-          !-
+!          !no midside node assigned to arcmid yet:
+!
+!          !nis,feb07: Allow for numbered FFF midsides
+!          !IF (arcmid (k, 3) .eq. 0.and.k.NE.-9999) THEN
+!          IF (arcmid (k, 3) .eq. 0 .and. k > -1000) THEN
+!          !-
             arcmid (k, 1) = nop (nelem, 1)
             arcmid (k, 2) = nop (nelem, 3)
             arcmid (k, 3) = nelem
             arcmid (k, 4) = nelem
-          !EFa Dec06, Test der Fallunterscheidung
-          !nis,feb07: Allow for numbered FFF midsides
-          !ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k.eq.-9999) then
-          ELSEIF (arcmid (k, 3) .eq. 0 .and. k < -1000) then
-          !-
-            arcmid (k, 1) = nop (nelem, 1)
-            arcmid (k, 2) = nop (nelem, 3)
-            arcmid (k, 3) = nelem
-            arcmid (k, 4) = nelem
-            !nis,feb07: Enter the negative midside number
-            !arcmid (nelem, 5) = -9999
-            arcmid (k, 5) = k
-            !-
-          ENDIF
+!            arcmid (k, 5) = nop (nelem, 2)
+!          !EFa Dec06, Test der Fallunterscheidung
+!          !nis,feb07: Allow for numbered FFF midsides
+!          !ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k.eq.-9999) then
+!          ELSEIF (arcmid (k, 3) .eq. 0 .and. k < -1000) then
+!          !-
+!            arcmid (k, 1) = nop (nelem, 1)
+!            arcmid (k, 2) = nop (nelem, 3)
+!            arcmid (k, 3) = nelem
+!            arcmid (k, 4) = nelem
+!            !nis,feb07: Enter the negative midside number
+!            !arcmid (nelem, 5) = -9999
+!            arcmid (k, 5) = k
+!            !-
+!          ENDIF
+!Add midside node for polynom approach
+!-
           !Save informations for 1D-2D-TRANSITION ELEMENTS
           IF (nnum .eq. 5) THEN
             !NiS,may06: testing transition elements
@@ -189,6 +205,7 @@ END DO
         !2D-ELEMENTS
         ELSE
           DO 301 j = 2, nnum, 2
+            !midside node of an arc
             k = nop (nelem, j)
                                                                         
             IF (arcmid (k, 3) .eq.0) then
@@ -234,23 +251,36 @@ END DO
 ! ----------------------------------------------------------------------------------
 ! Kantennummern von 1 aufsteigend nummerieren:                          
 arccnt = 0
-DO i = LPPoly, np
+
+!nis,may07
+!Add midside node for polynom approach
+!DO i = LPPoly, np
+DO i = 1, np
+!Add midside node for polynom approach
+!-
+
   IF (arcmid (i, 3) .ne.0) then
     arccnt = arccnt + 1
-    DO j = 1, 5
-      !Save 1st and 2nd node as well as elemts associated to the arc
+    DO j = 1, 4
+      !Save 1st and 2nd node as well as elements associated to the arc
       !NiS,apr06: Changed arc to arc_tmp because of global conflict
       arc_tmp (arccnt, j) = arcmid (i, j)
     END DO
-    !Save midside node to ARC array
-    !NiS,apr06: Changed arc to arc_tmp because of global conflict!
-    !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-    !nis,feb07: Allow for numbered FFF midsides
-    !if (arcmid(i,5).NE.-9999) then
-    if (arcmid(i,5) > -1000) then
-    !-
+
+!nis,may07
+!Add midside for polynom approach
+!    !Save midside node to ARC array
+!    !NiS,apr06: Changed arc to arc_tmp because of global conflict!
+!    !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
+!    !nis,feb07: Allow for numbered FFF midsides
+!    !if (arcmid(i,5).NE.-9999) then
+!    if (arcmid(i,5) > -1000) then
+!    !-
       arc_tmp (arccnt, 5) = i
-    end if
+!    end if
+!Add midside node for polynom approach
+!-
+
   ENDIF
 END DO
 
@@ -374,7 +404,7 @@ write_nodes: DO i = 1, np
   IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
   !-
   if (kmx(i).NE.-1) then
-    write (IKALYPSOFM, 7036) i, cord (i, 1), cord (i, 2), aour(i),kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+    write (IKALYPSOFM, 7036) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   else
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
   endif
