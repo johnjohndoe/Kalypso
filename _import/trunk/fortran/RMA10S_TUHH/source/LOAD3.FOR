@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  EF    3 May 2007    9:53 am
+C     Last change:  K     6 May 2007    1:46 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -176,12 +176,21 @@ CIPK JUN05
 CIPK OCT98 CONVERT TO F90
         !NiS,may06: every element that is in the range of 1-899 and 1001+
         IF(NM .LT. 900  .OR. NM .GT. 1000) THEN
-          L=MOD(NM,100) !NiS,may06: for every normal element
+!nis,may07: Might be error with the mod-function, because this function would reduce any material type greater than 100 to a number less than 100
+!           Increasing to mod(nm,1000)
+!          L=MOD(NM,100) !NiS,may06: for every normal element
+          L=MOD(NM,1000) !NiS,may06: for every normal element
+!-
         ELSE
           L=NM !NiS,may06: for special elements
         ENDIF
+!nis,may07
+!Allow for polynom approach with turbulent exchange coefficient equal to zero
         !NiS,may06: if no turbulent exchange coefficient, jump over element
-        IF(ORT(L,1) .EQ. 0.) GO TO 199
+!        IF(ORT(L,1) .EQ. 0.) GO TO 199
+        IF(ORT(L,1) .EQ. 0. .and. L /= 889) GO TO 199
+!Allow for polynom approach with turbulent exchange coefficient equal to zero
+!-
         ILK=1
 
         !NiS,may06: ITEQV.eq.5 means forced reduction to plan view
@@ -211,9 +220,15 @@ CIPK OCT98 CONVERT TO F90
         !-
           !NiS,may06: local copy of processed node number
           N=NCON(K)
-          !nis,feb07: Cycle, if nod is negative. It's only possible for midside nodes, which shouldn't be processed here
-          if (n < 0) CYCLE NBCrelation
-          !-
+!nis,may07
+!Add midside node for polynom approach; at the moment only a linear approach is used for such elements, so the midsides must be cycled
+!          !nis,feb07: Cycle, if node is negative. It's only possible for midside nodes, which shouldn't be processed here
+!          if (n < 0) CYCLE NBCrelation
+!          !-
+           if (imat (j) == 889 .and. k == 2) CYCLE NBCrelation
+!Add midside node for polynom approach; at the moment only a linear approach is used for such elements, so the midsides must be cycled
+!-
+
 C-
 C........ Setup for special case inflow quality conditions
 C-
@@ -563,12 +578,16 @@ cipk jun05      vels+sed
 C-
 C...... Install special values for one-two dimension intersections
 C-
+
+!nis,may07
+!Add midside node to Polynom approach
       !EFa Nov06, Modifikation für 1D-Teschke-Elemente
       do nn=1,ne
       !nis,feb07: Allow for numbered FFF midsides
         if ((ncorn(nn).eq.5.or.ncorn(nn).eq.3).and.
       !+       nop(nn,2).EQ.-9999) then
-     +       nop(nn,2) < -1000) then
+      !+       nop(nn,2) < -1000) then
+     +       imat(nn) == 889) then
       !-
 
           nbc(nop(nn,1),2)=0 !EFa Dec06
@@ -583,6 +602,9 @@ C-
           !  nbc(nop(nn,2),i)=0
           !end do
           !-
+!Add midside node to Polynom approach
+!-
+
         end if
       end do
 
@@ -821,11 +843,17 @@ CIPK DEC05 ADD QFACT
             ENDIF
             !NiS,may06,com: get midside node
             N1=NOP(NN,2)
+
+!nis,may07
+!Add midside node for polynom approach
             !EFa Nov06, die folgende nbc-Zuweisung nicht für 1D-Teschke-Elemente
             !nis,feb07: Allow for numbered FFF midsides
             !if (n1.ne.-9999) then
-            if (n1 > -1000) THEN
+            !if (n1 > -1000) THEN
+            if (imat(nn) /= 889) then
             !-
+!add midside node for polynom approach
+!-
             IF(ISUBMEL(nn) .EQ. 1) THEN
                 NBC(N1,1)=1
                 NBC(N1,2)=0
@@ -1132,11 +1160,16 @@ C-
           N1=NOP(N,1)
           IF(NDEP(N1) .GT. 1  .OR.  N .GT. NEM) THEN
             N2=NOP(N,2)
+!nis,may07
+!Add midside node for polynom approach; Think at this place it is senseless
             !EFa Nov06, die folgenden nbc-Zuweisungen nicht für1D-Teschke-Elemente
             !nis,feb07: Allow for numbered FFF midsides
             !if (n2.NE.-9999) then
-            if (n2 > -1000) then
+            !if (n2 > -1000) then
+            if (imat(n) /= 889) then
             !-
+!add midside node for polynom approach
+!-
 cipk may02 switch  to 7
             DO 282 K=1,7
 cipk may02            DO 282 K=1,6
@@ -1154,11 +1187,16 @@ cipk may02
             SPEC(N3,3)=VEL(3,N1) + AO(N1)-AO(N3)
 C
 C
+!nis,may07
+!add midside node for polynom approach
             !EFa Nov06, folgende Berechnungen nicht für 1D-Teschke-ELemente
             !nis,feb07: Allow for numbered FFF midsides
             !if (n2.NE.-9999) then
-            if (n2 > -1000) then
+!            if (n2 > -1000) then
+            if (imat(n) /= 889) then
             !-
+!add midside node for polynom approach
+!-
             WZ = WIDTH(N3) + (SS1(N3)+SS2(N3))*(CORD(N3,3)-AO(N3))
      &                    * (VEL(3,N3)/(ELEV-AO(N3)) ) 
 C

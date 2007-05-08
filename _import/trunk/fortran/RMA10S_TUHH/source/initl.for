@@ -1,4 +1,4 @@
-C     Last change:  K    17 Apr 2007    9:57 am
+C     Last change:  K     6 May 2007    0:29 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -31,9 +31,14 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       !EFa Nov06, neues Modul für Teschke-1D-Elemente
       USE PARAFlow1dFE
 !-
-      !nis,feb07: Add minimum number for some allocations coming from the midside node numbers of FFF elements
-      INTEGER :: minNoNu, MaxFFFMS
-      !-
+
+!nis,may07
+!Add midside node for polynom approach
+!      !nis,feb07: Add minimum number for some allocations coming from the midside node numbers of FFF elements
+!      INTEGER :: minNoNu, MaxFFFMS
+!      !-
+!Add midside node for polynom approach
+!-
       
 C	INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
@@ -146,13 +151,17 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
 
-      !nis,feb07: Calculate minimum node number for particular calculations with Flow1DFE elements
-      if ((FFFMS+AddMS) /= 0) then
-        minNoNu = (-1) * (1000 + FFFMS + AddMS)
-      else
-        minNoNu = 1
-      end if
-      !-
+!nis,may07
+!Add midside node for polynom approach
+!      !nis,feb07: Calculate minimum node number for particular calculations with Flow1DFE elements
+!      if ((FFFMS+AddMS) /= 0) then
+!        minNoNu = (-1) * (1000 + FFFMS + AddMS)
+!      else
+!        minNoNu = 1
+!      end if
+!      !-
+!Add midside node for polynom approach
+!-
 
       ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,7),ITAB(MAXP),
      1              ALFA(MAXP),VOLD(7,MAXP),
@@ -161,15 +170,19 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
      4             NSURF(MAXP),NBTN(MAXP),IBN(MAXP),NFIX1(MAXP)
      5             ,FCTV(MAXP),FCTS(MAXP),NREF(MAXP),NTHREE(MAXP)
      6             ,VVEL(MAXP),FC(MAXP,3)
-!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
-!     7             ,ADIF(MAXP),XSLP(MAXP),YSLP(MAXP),NFIXK(MAXP)
-     7             ,ADIF(MAXP), XSLP(minNoNu:MAXP)
-     +             ,YSLP(minNoNu:MAXP),NFIXK(minNoNu:MAXP)
-!-
+!nis,may07
+!Add midside node for polynom approach
+!!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
+     7             ,ADIF(MAXP),XSLP(MAXP),YSLP(MAXP),NFIXK(MAXP)
+!!     7             ,ADIF(MAXP), XSLP(minNoNu:MAXP)
+!!     +             ,YSLP(minNoNu:MAXP),NFIXK(minNoNu:MAXP)
+!!-
      8             ,WIDTH(MAXP),SS1(MAXP),SS2(MAXP),NFIXP(MAXP)
-!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
-!     +             ,ALFAK(MAXP),VOUTN(MAXP),WIDS(MAXP)
-     +             ,ALFAK(MAXP),VOUTN(minNoNu:MAXP),WIDS(MAXP)
+!!nis,feb07: Changing the sizes of the arrays; purpose: direction setting for Flow1DFE elements
+     +             ,ALFAK(MAXP),VOUTN(MAXP),WIDS(MAXP)
+!!     +             ,ALFAK(MAXP),VOUTN(minNoNu:MAXP),WIDS(MAXP)
+!!-
+!Add midside node for polynom approach
 !-
      +             ,DIR(MAXP)
      +             ,PRESS(MAXP),DEN(MAXP),NODC(MAXP),NSTRT(MAXP,2)
@@ -789,210 +802,82 @@ CIPK MAR01
       end do
 !-
 
-!nis,jan07: Initializing property of network. Value 0 means network has 2D or 3D elements. Value 1 means only 1D elements. The standard is 0
-      ONLY1D = 1
-!-
-
       !EFa Nov06, allocating für Teschke-1D-Elemente
+      !polynom coefficients
       ALLOCATE(apoly(maxp,0:12))
-      ALLOCATE(hhmin(maxp))
-      ALLOCATE(hhmax(maxp))
       ALLOCATE(qpoly(maxp,0:12))
-      ALLOCATE(qgef(maxp))
-      ALLOCATE(hbordv(maxp))
-      ALLOCATE(alphah(maxp))
       ALLOCATE(alphad(maxp,0:3))
       ALLOCATE(alphapk(maxp,0:12))
-      ALLOCATE(betah(maxp))
       ALLOCATE(betad(maxp,0:3))
       ALLOCATE(betapk(maxp,0:12))
+      !validty border between 4th order and 13th order polynoms for flow coefficient
+      ALLOCATE(alphah(maxp))
+      ALLOCATE(betah(maxp))
+      !intersecting water depth for flow coefficient (e.g. Boussinesq)
+      ALLOCATE(hbordv(maxp))
+      !validity range for polynoms
+      ALLOCATE(hhmin(maxp))
+      ALLOCATE(hhmax(maxp))
+      !reference friction slope
+      ALLOCATE(qgef(maxp))
+      !flow kilometer of node
       ALLOCATE(kmx(maxp))
-      ALLOCATE(sfwicht(maxp))
-      ALLOCATE(ah(maxp))
-      ALLOCATE(Intah(maxp))
-      ALLOCATE(qh(maxp))
-      ALLOCATE(hdif(maxp))
-      ALLOCATE(dahdh(maxp))
-      ALLOCATE(dqhdh(maxp))
-      ALLOCATE(d2ahdh(maxp))
-      ALLOCATE(d2qhdh(maxp))
-      ALLOCATE(sfnod(maxp))
-      ALLOCATE(dsfnoddh(maxp))
-      ALLOCATE(dsfnoddq(maxp))
-      ALLOCATE(pdif(maxp,0:3))
-      ALLOCATE(pbei(maxp,0:12))
-      ALLOCATE(bei(maxp))
-      ALLOCATE(dbeidh(maxp))
-      ALLOCATE(d2beidh(maxp))
-      ALLOCATE(dbeizdh(maxp))
-      ALLOCATE(d2beizdh(maxp))
-      ALLOCATE(dbeiodh(maxp))
-      ALLOCATE(d2beiodh(maxp))
-      ALLOCATE(bnode(maxp))
-      ALLOCATE(hhint(maxp,4))
-      ALLOCATE(dhhintdx(maxp,4))
-      ALLOCATE(dhintdt(maxp,4))
-      ALLOCATE(qqint(maxp,4))
-      ALLOCATE(qqintdx(maxp,4))
-      ALLOCATE(areaint(maxp,4))
-      ALLOCATE(dareaintdh(maxp,4))
-      ALLOCATE(d2areaintdh(maxp,4))
-      ALLOCATE(Intareaint(maxp,4))
-      ALLOCATE(daintdx(maxp,4))
-      ALLOCATE(d2aintdx(maxp,4))
-      ALLOCATE(d2aidhdx(maxp,4))
-      ALLOCATE(daintdt(maxp,4))
-      ALLOCATE(qschint(maxp,4))
-      ALLOCATE(dqsintdh(maxp,4))
-      ALLOCATE(d2qsidh(maxp,4))
-      ALLOCATE(dqsintdx(maxp,4))
-      ALLOCATE(d2qsidhdx(maxp,4))
-      ALLOCATE(s0schint(maxp,4))
-      ALLOCATE(sfwicint(maxp,4))
-      ALLOCATE(sfint(maxp,4))
-      ALLOCATE(dsfintdh1(maxp,4))
-      ALLOCATE(dhht(maxe,2))
-      ALLOCATE(beiint(maxp,4))
-      ALLOCATE(dbeiintdh(maxp,4))
-      ALLOCATE(d2beiintdh(maxp,4))
-      ALLOCATE(dbeiintdx(maxp,4))
-      ALLOCATE(d2beiintdhdx(maxp,4))
-      ALLOCATE(bint(maxp,4))
-      ALLOCATE(qqt(maxp))
-      ALLOCATE(dqqt(maxe,2))
-      ALLOCATE(dqdtaltzs(maxe,2))
-      ALLOCATE(froude(maxp))
-      ALLOCATE(froudeint(maxp,4))
-      ALLOCATE(dqintdt(maxp,4))
-      ALLOCATE(sbot(maxp))
-      ALLOCATE(vflowint(maxp,4))
-      ALLOCATE(dvintdx(maxp,4))
-      ALLOCATE(teschke(maxp))
-      !ALLOCATE(qhalt(maxe,2))
-      ALLOCATE(qhalt(maxe))
-      ALLOCATE(dhdtaltzs(maxe,2))
-      ALLOCATE(hhalt(maxe,2))
-      ALLOCATE(hht(maxp))
-      ALLOCATE(kennung(maxp))
-      ALLOCATE(dvdtaltzs(maxe,2))
-      ALLOCATE(vvt(maxp))
-      ALLOCATE(dvvt(maxe,2))
-      ALLOCATE(dvintdt(maxp,4))
 
-      outer3: DO i = 1, MaxP
+      !time dependent values
+      ALLOCATE (hht(1:maxp), vvt(1:maxp))
+      ALLOCATE (dhht(1:maxp), dvvt(1:maxp))
+
+      !cross sectional area
+      ALLOCATE (ah(1:maxp))
+      ALLOCATE (dahdh(1:maxp))
+      ALLOCATE (qh(1:maxp))
+
+      init1: DO i = 1, MaxP
+        !polynom coefficients
+        innerinit1: DO j = 0, 12
+          apoly   (i,j) = 0.0
+          qpoly   (i,j) = 0.0
+          alphapk (i,j) = 0.0
+          betapk  (i,j) = 0.0
+        ENDDO innerinit1
+        innerinit2: DO j = 0, 3
+          alphad (i,j) = 0.0
+          betad  (i,j) = 0.0
+        ENDDO innerinit2
+        !validity range for polynoms
         hhmin(i)      = 0.0
         hhmax(i)      = 0.0
+        !flow kilometer of node
+        kmx(i)        = -1.0
+        !reference friction slope
         qgef(i)       = 0.0
+        !intersecting water depth for flow coefficient (e.g. Boussinesq)
         hbordv(i)     = 0.0
+        !validty border between 4th order and 13th order polynoms for flow coefficient
         alphah(i)     = 0.0
         betah(i)      = 0.0
-        kmx(i)        = -1.0
-        sfwicht(i)    = 1.0
-        ah(i)         = 0.0
-        Intah(i)      = 0.0
-        qh(i)         = 0.0
-        hdif(i)       = 0.0
-        dahdh(i)      = 0.0
-        dqhdh(i)      = 0.0
-        d2ahdh(i)     = 0.0
-        d2qhdh(i)     = 0.0
-        sfnod(i)      = 0.0
-        bei(i)        = 0.0
-        dbeidh(i)     = 0.0
-        d2beidh(i)    = 0.0
-        dbeizdh(i)    = 0.0
-        d2beizdh(i)   = 0.0
-        dbeiodh(i)    = 0.0
-        d2beiodh(i)   = 0.0
-        bnode(i)      = 0.0
-        qqt(i)        = 0.0
-        froude(i)     = 0.0
-        sbot(i)       = 0.0
-        teschke(i)    = 0.0
+        !time dependent variables
         hht(i)        = 0.0
-        !kennung(maxp) = 0.0
-        kennung(i)    = 0.0
         vvt(i)        = 0.0
-        inner3: DO j = 0, 12
-          apoly (i, j) = 0.0
-          qpoly (i, j) = 0.0
-          alphapk(i,j) = 0.0
-          betapk(i,j)  = 0.0
-          pbei(i,j)    = 0.0
-        ENDDO inner3
-      ENDDO outer3
+        dhht(i)       = 0.0
+        dvvt(i)       = 0.0
+        !cross sectional areas, derivative of areas and discharge
+        ah(i)         = 0.0
+        dahdh(i)      = 0.0
+        qh(i)         = 0.0
+      ENDDO init1
 
-      outer4: DO i = 1,MaxP
-        inner4: DO j = 0, 3
-          alphad(i,j) = 0.0
-          betad(i,j)  = 0.0
-          pdif(i,j)   = 0.0
-        ENDDO inner4
-      ENDDO outer4
-
-      outer5: DO i = 1,MaxP
-        qhalt(i)=0
-        inner5: DO j = 1, 4
-          hhint(i,j)       = 0.0
-          dhhintdx(i,j)    = 0.0
-          dhintdt(i,j)     = 0.0
-          qqint(i,j)       = 0.0
-          qqintdx(i,j)     = 0.0
-          areaint(i,j)     = 0.0
-          Intareaint(i,j)  = 0.0
-          dareaintdh(i,j)  = 0.0
-          d2areaintdh(i,j) = 0.0
-          daintdx(i,j)     = 0.0
-          d2aintdx(i,j)    = 0.0
-          d2aidhdx(i,j)    = 0.0
-          daintdt(i,j)     = 0.0
-          qschint(i,j)     = 0.0
-          dqsintdh(i,j)    = 0.0
-          d2qsidh(i,j)     = 0.0
-          dqsintdx(i,j)    = 0.0
-          d2qsidhdx(i,j)   = 0.0
-          s0schint(i,j)    = 0.0
-          sfwicint(i,j)    = 0.0
-          sfint(i,j)       = 0.0
-          dsfintdh1(i,j)   = 0.0
-          beiint(i,j)      = 0.0
-          dbeiintdh(i,j)   = 0.0
-          d2beiintdh(i,j)  = 0.0
-          dbeiintdx(i,j)   = 0.0
-          d2beiintdhdx(i,j)= 0.0
-          bint(i,j)        = 0.0
-          froudeint(i,j)   = 0.0
-          dqintdt(i,j)     = 0.0
-          vflowint(i,j)    = 0.0
-          dvintdx(i,j)     = 0.0
-          dvintdt(i,j)     = 0.0
-        ENDDO inner5
-      ENDDO outer5
-
-      urfc=1.0
-
-      do i=1,maxe
-        do j=1,2
-          dhht(i,j)      = 0.0
-          hhalt(i,j)     = 0.0
-          dhdtaltzs(i,j) = 0.0
-          dqqt(i,j)      = 0.0
-          !qhalt(i,j)     = 0.0
-          dqdtaltzs(i,j) = 0.0
-          dvdtaltzs(i,j) = 0.0
-          dvvt(i,j)      = 0.0
-        end do
-      end do
-
-      !nis,feb07: Adding midside nodes storage of Flow1DFE elements
-      MaxFFFMS = FFFMS + AddMS
-      ALLOCATE (FFFmidsidenodes(1:MaxFFFMS))
-      do i = 1, MaxFFFMS
-        FFFmidsidenodes(i) = 0
-      end do
-      !-
-
-
-!-      
+!nis,may07
+!Add midside node for polynom approach
+!      !nis,feb07: Adding midside nodes storage of Flow1DFE elements
+!      MaxFFFMS = FFFMS + AddMS
+!      ALLOCATE (FFFmidsidenodes(1:MaxFFFMS))
+!      do i = 1, MaxFFFMS
+!        FFFmidsidenodes(i) = 0
+!      end do
+!      !-
+!!-
+!Add midside node for polynom approach
+!-
       RETURN
 	END

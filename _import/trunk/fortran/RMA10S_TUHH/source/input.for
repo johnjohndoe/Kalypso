@@ -1,4 +1,4 @@
-C     Last change:  K     2 Mar 2007    7:28 pm
+C     Last change:  K     6 May 2007    2:58 am
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1418,15 +1418,22 @@ cipk jan99 set directions
          if(imat(n) .gt. 900) then
            n1=nop(n,1)
            if(ndep(n1) .gt. 1) then
-             !EFa Nov06, gesonderte Richtungsberechnung für 1D-Techke-Elemente
-             !nis,feb07: Allow for numbered FFF midsides, although this code is not correct!!!
-             !if (nop(n,2).EQ.-9999) then
-             if (nop(n,2) < -1000) then
-             !-
-               n2=nop(n,3)
-             else
-               n2=nop(n,2)
-             endif
+
+!nis,may07
+!Add midside node for polynom approach
+!             !EFa Nov06, gesonderte Richtungsberechnung für 1D-Techke-Elemente
+!             !nis,feb07: Allow for numbered FFF midsides, although this code is not correct!!!
+!             !if (nop(n,2).EQ.-9999) then
+!             if (nop(n,2) < -1000) then
+!             !-
+!               n2=nop(n,3)
+!             else
+!               n2=nop(n,2)
+!             endif
+             n2=nop(n,2)
+!Add midside node for polynom approach
+!-
+
              if(abs(alfa(n1)-alfa(n2)) .gt. 1.570796  .and.
      +          abs(alfa(n1)-alfa(n2)) .lt. 4.713388) then
                 if(alfa(n1) .gt. alfa(n2)) then
@@ -1628,11 +1635,17 @@ C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
           ILK=1
         ENDIF
 
-        !EFa Nov06, keine Berechnung fü 1D-Teschke-Elemente
-        !nis,feb07: Allow for numbered FFF midsides
-        !if (nop(j,2).NE.-9999) then
-        if (nop(j,2) > -1000) then
-        !-
+!nis,may07
+!Add midside node for polynom approach
+!The interpolation of missing data is also done in RDKalypso.subroutine. So this is skipped here for polynom approach data
+!        !EFa Nov06, keine Berechnung fü 1D-Teschke-Elemente
+!        !nis,feb07: Allow for numbered FFF midsides
+!        !if (nop(j,2).NE.-9999) then
+!        if (nop(j,2) > -1000) then
+        if (imat(j) == 889) then
+!        !-
+!Add midside node for polynom approach
+!-
         DO 101 K=1,NCN
           KL=IL(K,ILK)
 CIPK SEP05
@@ -1689,11 +1702,15 @@ CIPK OCT98 CONVERT TO F90
 
 CIPK SEP04  ENSURE VALUES AT ALL NODES
       DO N=1,NPM
-        !EFa Nov06, keine Sicherung der Werte für 1D-Teschke-Elemente
-        !nis,feb07: Allow for numbered FFF midsides
-        !if (nop(n,2).NE.-9999) then
-        if (nop(n,2) > -1000) then
-        !-
+!nis,may07
+!Add midside nodes for polynom
+!        !EFa Nov06, keine Sicherung der Werte für 1D-Teschke-Elemente
+!        !nis,feb07: Allow for numbered FFF midsides
+!        !if (nop(n,2).NE.-9999) then
+!        if (nop(n,2) > -1000) then
+!        !-
+!add midside node for polynom approach
+!-
           IF(NDEP(N) .GT. 1) THEN
             N1=NREF(N)+1
             NV=NDEP(N)+N1-2
@@ -1705,7 +1722,6 @@ CIPK SEP04  ENSURE VALUES AT ALL NODES
           akp(M)=akp(n)
         ENDDO
 	  ENDIF
-        endif
       ENDDO
 
 
@@ -1884,19 +1900,29 @@ CIPKNOV97
 cipk dec00 allow for gate option
 
           ELSEIF((IMAT(N) .LT. 900  .or.
+!nis,may07
+!Add midside node for polynom approach
       !nis,feb07: Allow for numbered FFF midsides and documentation, it wasn't documented before. This code is also questionable!
       !+    IGTP(N) .NE. 0).and.nop(n,2).NE.-9999) THEN
-     +    IGTP(N) .NE. 0) .and. nop(n,2) > -1000) THEN
+      !+    IGTP(N) .NE. 0) .and. nop(n,2) > -1000) THEN
+     +    IGTP(N) .NE. 0) .and. imat(n) /= 889) THEN
       !-
+!add midside node for polynom approach
+!-
             CALL COEF1(N,0)
 CIPK NOV97
             CALL COEF1(N,3)
           !EFa Nov06, Aufruf der coef1dFE-Subroutine für 1D-Teschke-Elemente
           ELSEIF((IMAT(N) .LT. 900  .or.
+!nis,may07
+!add midside node for polynom approach
       !nis,feb07: Allow for numbered FFF midsides
       !+    IGTP(N) .NE. 0).and.nop(n,2).eq.-9999) THEN
-     +    IGTP(N) .NE. 0) .and. nop(n,2) < -1000) THEN
+      !+    IGTP(N) .NE. 0) .and. nop(n,2) < -1000) THEN
+     +    IGTP(N) .NE. 0) .and. imat(n) == 889) THEN
       !-
+!add midside node for polynom approach
+!-
 
             CALL COEF1dFE(N,0)
             CALL COEF1dFE(N,3)

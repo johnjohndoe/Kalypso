@@ -1,4 +1,4 @@
-C     Last change:  K     4 Apr 2007    1:15 pm
+C     Last change:  K     6 May 2007    2:47 am
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE JAN 12 1999 ADD LOGIC FOR 2DV JUNCTIONS
       SUBROUTINE SETUP
@@ -43,7 +43,13 @@ CIPK OCT98      IF(NCN .EQ. 10) ILK=2
 cipk oct98 update to f90
         !N=ABS(NOP(J,K))
         N = NOP(J,K)
-        if (n < -1000) CYCLE deactNBC
+
+!nis,may07
+!Add midside node for polynom approach
+!        if (n < -1000) CYCLE deactNBC
+!Add midside node for polynom approach
+!-
+
         n = ABS(n)
         IF(NCN .LT. 9) NTHREE(N)=0
 C        IF(IM(K,ILK) .EQ. 0) GO TO 198

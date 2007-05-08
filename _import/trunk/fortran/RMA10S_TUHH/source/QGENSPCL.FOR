@@ -1,4 +1,4 @@
-C     Last change:  K    15 Feb 2007    5:50 pm
+C     Last change:  K     6 May 2007    3:00 am
 cipk  last update sep 04 2004 add error message
 CIPK  LAST UPDATE DEC 10 2002 rearrange boundaries near the inflow level, reset magnitude
 cipk  last update feb 09 2001 allow for zero length cc lines
@@ -87,14 +87,20 @@ c
             IQSPCL(NA) = -1
          ENDIF
 C
-           !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-           !nis,feb07: Allow for numbered FFF midsides
-           !if (nm.EQ.-9999) then
-           if (nm < -1000) then
-           !-
-             dx=cord(nc,1)-cord(na,1)
-             dy=cord(nc,2)-cord(na,2)
-           else
+
+!nis,may07
+!Add midside node for polynom approach
+!           !EFa Nov06, Sonderfall für Teschke-1D-Elemente
+!           !nis,feb07: Allow for numbered FFF midsides
+!           !if (nm.EQ.-9999) then
+!           if (nm < -1000) then
+!           !-
+!             dx=cord(nc,1)-cord(na,1)
+!             dy=cord(nc,2)-cord(na,2)
+!           else
+!Add midside node for polynom approach
+!-
+
              IF(CORD(NM,1) .GT. VOID) THEN
                DX=2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
                DY=2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
@@ -102,7 +108,6 @@ C
                DX=CORD(NC,1)-CORD(NA,1)
                DY=CORD(NC,2)-CORD(NA,2)
              ENDIF
-           endif
          BEETA = ATAN2(DY,DX)
          WRITE(*,*) 'NA,NM,NC,DX,DY,,BEETA',NA,NM,NC,DX,DY,BEETA
          IF (ABS(BEETA-THET) .GT. 1.570796  .AND.
@@ -151,14 +156,20 @@ cipk oct98 update to f90
             IF (NCN .EQ. 5) NCN=3
             DO 104 M=1,NCN
 cipk oct98 update to f90
-              !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-              !nis,feb07: Allow for numbered FFF midsides
-              !if (nop(n,2).NE.-9999) then
-              if (nop(n,2) > -1000) then
-              !-
-                K=ABS(NOP(N,M))
-                IBN(K)=IBN(K)+1
-              end if
+
+!nis,may07
+!Add midside node for polynom approach
+!              !EFa Nov06, Sonderfall für Teschke-1D-Elemente
+!              !nis,feb07: Allow for numbered FFF midsides
+!              !if (nop(n,2).NE.-9999) then
+!              if (nop(n,2) > -1000) then
+!              !-
+              K=ABS(NOP(N,M))
+              IBN(K)=IBN(K)+1
+!              end if
+!Add midside node for polynom approach
+!-
+
   104       CONTINUE
   105    CONTINUE
 C

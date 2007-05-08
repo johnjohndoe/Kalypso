@@ -1,4 +1,4 @@
-!     Last change:  K     2 May 2007    2:59 pm
+!     Last change:  K     7 May 2007    1:53 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -798,9 +798,9 @@ IF (ierr.eq.1) stop 5
 !-----------------------------------------------------------------------
 !nis,dec06: Adding TLcnt as counter for number of 1D-2D-Transition lines
 !SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,KSWIT)
-!SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
+SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
-SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,FFFcnt,Addcnt,KSWIT)
+!SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,FFFcnt,Addcnt,KSWIT)
 !-
 !-
 !
@@ -877,7 +877,7 @@ INTEGER                :: TLcnt                        !nominal 1D-2D-Transition
 
 !-
 !nis,feb07: Adding numberation for Flow 1D FE element midside nodes
-INTEGER                :: fffcnt, AddCnt               !counter for midside nodes of flow1D-FE elements, so that they can also be enumberated
+!INTEGER                :: fffcnt, AddCnt               !counter for midside nodes of flow1D-FE elements, so that they can also be enumberated
 !-
 INTEGER                :: elem (MaxE, 6)               !local array for element informations ([number of arcs +1]; node-numbers of corners); dependent
                                               	       !on the type and shape of element; the first entry can also show 1D-ELEMENT with negative value
@@ -970,8 +970,8 @@ elcnt   = 0
 TLcnt   = 0
 !-
 !nis,feb07: Initializing the number of midside nodes of Flow1DFE elements
-fffCnt = 0
-AddCnt = 0
+!fffCnt = 0
+!AddCnt = 0
 !-
 !nis,dec06: Initilaizing CCL supporting variable
 DefLine = 0
@@ -1140,14 +1140,19 @@ reading: do
         ELSEIF (temparc(5) > 0) then
         !-
           midsidenode_max = MAX (midsidenode_max,temparc(5))
-        !nis,feb07: Add for numbered midside nodes of FFF-elements
-        ELSEIF (temparc(5) < 1000) then
-          if (temparc(5) /= -9999) then
-            FFFcnt = MAX(FFFcnt, abs(temparc(5)+1000))
-          else
-            Addcnt = Addcnt + 1
-          endif
-        !-
+
+!nis,may07
+!Add midside nodes for Polynom approach
+!        !nis,feb07: Add for numbered midside nodes of FFF-elements
+!        ELSEIF (temparc(5) < -1000) then
+!          if (temparc(5) /= -9999) then
+!            FFFcnt = MAX(FFFcnt, abs(temparc(5)+1000))
+!          else
+!            Addcnt = Addcnt + 1
+!          endif
+!        !-
+!Add midside nodes for Polynom approach
+!-
         !nis,feb07: Error if no of previous cases
         else
           WRITE(*,*) 'ERROR - illegal midside node number'
@@ -1580,10 +1585,14 @@ IF (KSWIT == 1) THEN                                                    !midside
   WRITE(*,*)' Kanten ohne midside: ', arcs_without_midside              !normally everything should work properly because the commands and the
   nodecnt = nodecnt + arcs_without_midside                              !geometry won't change between the runs with KSWIT=1 and KSWIT=0.
 
-  !nis,feb07: Add numberation of midside nodes of Flow1DFE elements and control output
-  WRITE(*,*) AddCnt, 'nodes get a new number'
-  WRITE(*,*) 'They are part of Flow1DFE elements'
-  !-
+!nis,may07
+!Add midside node for polynom approach
+!  !nis,feb07: Add numberation of midside nodes of Flow1DFE elements and control output
+!  WRITE(*,*) AddCnt, 'nodes get a new number'
+!  WRITE(*,*) 'They are part of Flow1DFE elements'
+!  !-
+!Add midside node for polynom approach
+!-
 
   REWIND(IFILE)
   DEALLOCATE(arc)                                                       !the pro forma allocation of arc(i,j) is stopped
@@ -1650,16 +1659,20 @@ DO i = 1, arccnt
       ELSE
         !No 4th NODE at normal 1D-ELEMENTS
         IF (nop(arc(i,3),4).eq.0) THEN
-          !nis,feb07: Change from general number to numberation starting from -1000
-          !if (arc(i,5).EQ.-9999) then
-          if (arc(i,5) < -1000) then
-          !-
-            !EFa Nov06, Teschke (nur Eckknoten)
-            elem(j,1) = -3
-          else
+!nis,may07
+!adding midside for Polynom approach
+!          !nis,feb07: Change from general number to numberation starting from -1000
+!          !if (arc(i,5).EQ.-9999) then
+!          if (arc(i,5) < -1000) then
+!          !-
+!            !EFa Nov06, Teschke (nur Eckknoten)
+!            elem(j,1) = -3
+!          else
             !EFa Nov06, mit Mittseitenknoten
             elem(j,1) = -1
-          end if
+!          end if
+!adding midside for Polynom approach
+!-
         !4th NODE at 1D-2D-transition ELEMENTS; nodes for 1D-2D-TRANSITION ELEMENTS were already assigned in the reading section
         ELSE
           elem(j,1) = -2
@@ -1907,8 +1920,8 @@ end if
 !          & 1X, 'Number of arcs:     ', I6/)
 !NEW:
  !nis,feb07: Adding the number of midside nodes with a negative arc-number
-WRITE (Lout,103) elcnt, nodecnt, arccnt, FFFCnt
-WRITE ( *  ,103) elcnt, nodecnt, arccnt, FFFCnt
+WRITE (Lout,103) elcnt, nodecnt, arccnt !, FFFCnt
+WRITE ( *  ,103) elcnt, nodecnt, arccnt !, FFFCnt
 WRITE (Lout,102) elzaehl
 WRITE (*   ,102) elzaehl
 103 format (1X, 'dimension of element-array   : ', I6 / &
@@ -1924,7 +1937,7 @@ WRITE (*   ,102) elzaehl
 !initializing the counter variable for additional midside nodes.
 mittzaehl = 0
 !nis,feb07: Introduce a midside node counter for FFF-elements
-FFF_mittzaehl = 0
+!FFF_mittzaehl = 0
 !-
 
 !SR::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -1941,20 +1954,25 @@ all_arcs: DO i=1,arccnt
   if (arc(i,1).eq.0) CYCLE all_arcs
   !-
 
-  !EFa Nov06, Mittseitenknoten für 1D-Teschke-Element werden nicht berechnet
-  !nis,feb07: Introduce numberation of midsidenodes for FFF-elements
-  !if (arc(i,5).NE.-9999) then
-  if (arc(i,5) < -1000) then
-    if (arc(i,5) == -9999) then
-      FFF_mittzaehl = FFF_mittzaehl + 1
-      nop(arc(i,3),2) = (-1) * (FFFMS + FFF_mittzaehl + 1000)
-    else
-      nop(arc(i,3),2) = arc(i,5)
-    end if
-    !no more processing
-    CYCLE all_arcs
-  end if
-  !-
+!nis,may07
+!adding midside for Polynom approach
+!
+!  !EFa Nov06, Mittseitenknoten für 1D-Teschke-Element werden nicht berechnet
+!  !nis,feb07: Introduce numberation of midsidenodes for FFF-elements
+!  !if (arc(i,5).NE.-9999) then
+!  if (arc(i,5) < -1000) then
+!    if (arc(i,5) == -9999) then
+!      FFF_mittzaehl = FFF_mittzaehl + 1
+!      nop(arc(i,3),2) = (-1) * (FFFMS + FFF_mittzaehl + 1000)
+!    else
+!      nop(arc(i,3),2) = arc(i,5)
+!    end if
+!    !no more processing
+!    CYCLE all_arcs
+!  end if
+!  !-
+!adding midside for Polynom approach
+!-
   
   ! Mittseitenknoten vorhanden?
   !NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap
@@ -2067,8 +2085,13 @@ all_arcs: DO i=1,arccnt
 !1400 END DO all_arcs
 END DO all_arcs
 !-
-!nis,feb07: Actualize the number of midside nodes of Flow1DFE elements
-MaxFFFMS = MaxFFFMS + FFF_mittzaehl
+
+!nis,may07
+!  adding midside for Polynom approach
+!  !nis,feb07: Actualize the number of midside nodes of Flow1DFE elements
+!  MaxFFFMS = MaxFFFMS + FFF_mittzaehl
+!  !-
+!adding midside for Polynom approach
 !-
 
 !NiS,mar06: unit name changed; changed iout in Lout
@@ -2086,28 +2109,55 @@ DO i = 1, arccnt
   !EFa Nov06, nicht für 1D-Teschke-Elemente
   !nis,feb07: Allow for numberes midside nodes of Flow1DFE elements
   !IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0.and. arc(i,5).NE.-9999) THEN
-  IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0.and. arc(i,5) > -1000) THEN
+  !IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0.and. arc(i,5) > -1000) THEN
+  IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0) THEN
   !-
-    !error if one of the two corner nodes does not have cross sectional informations
-    IF (WIDTH(nop(arc(i,3),1)).eq.0 .or. WIDTH(nop(arc(i,3),3)).eq.0) THEN
-      CLOSE (75)
-      OPEN(75,FILE = 'ERROR.DAT')
-      WRITE (75,9004) nop(arc(i,3),1), nop(arc(i,3),3)
-9004  FORMAT ('ERROR - 1D-NODE ', I6, ' OR ', I6, ' HAS NO CROSS SECTIONAL INFORMATIONS.',/'EXECUTION OF PROGRAM TERMINATED!')
-      CLOSE(75)
-      STOP
-    ELSE
-      !Interpolate cross sectional informations for midside nodes, if necessary
-      !EFa Nov06, Korrektur der Knoten (2.Knoten wird zwischen dem 1. und 3. Knoten interpoliert)
-      IF(WIDTH (nop(arc(i,3),2)) .eq. 0) THEN
-        width (nop(arc(i,3),2)) = 0.5 * (width (nop(arc(i,3),1)) + width (nop(arc(i,3),3)))
-        ss1 (nop(arc(i,3),2))   = 0.5 * (ss1 (nop(arc(i,3),1))   + ss1 (nop(arc(i,3),3)))
-        ss2 (nop(arc(i,3),2))   = 0.5 * (ss2 (nop(arc(i,3),1))   + ss2 (nop(arc(i,3),3)))
-        wids (nop(arc(i,3),2))  = 0.5 * (wids (nop(arc(i,3),1))  + wids (nop(arc(i,3),3)))
-        widbs (nop(arc(i,3),2)) = 0.5 * (widbs (nop(arc(i,3),1)) + widbs (nop(arc(i,3),3)))
-        wss (nop(arc(i,3),2))   = 0.5 * (wss (nop(arc(i,3),1))   + wss (nop(arc(i,3),3)))
-      END IF
-    END IF
+
+    if (imat (arc (i,3)) == 889) then
+      do j = 0, 12
+        apoly   (nop (arc(i,3), 2), j) = 0.5 * (apoly   (arc(i,1), j) + apoly   (arc(i,2), j))
+        qpoly   (nop (arc(i,3), 2), j) = 0.5 * (qpoly   (arc(i,1), j) + qpoly   (arc(i,2), j))
+        alphapk (nop (arc(i,3), 2), j) = 0.5 * (alphapk (arc(i,1), j) + alphapk (arc(i,2), j))
+        betapk  (nop (arc(i,3), 2), j) = 0.5 * (betapk  (arc(i,1), j) + betapk  (arc(i,2), j))
+!      WRITE(*,*) 'Polynomdaten'
+!      WRITE(*,*) (apoly (nop (arc(i,3), k), j), k=1, 3)
+!      WRITE(*,*) (qpoly (nop (arc(i,3), k), j), k=1, 3)
+!      WRITE(*,*) (alphapk (nop (arc(i,3), k), j), k=1, 3)
+!      WRITE(*,*) (betapk (nop (arc(i,3), k), j), k=1, 3)
+!      pause
+      end do
+      do j = 0, 3
+        alphad  (nop (arc(i,3), 2), j) = 0.5 * (alphad  (arc(i,1), j) + alphad  (arc(i,2), j))
+        betad   (nop (arc(i,3), 2), j) = 0.5 * (betad   (arc(i,1), j) + betad   (arc(i,2), j))
+      end do
+      hhmin  (nop (arc(i,3), 2)) = 0.5 * (hhmin  (arc(i,1)) + hhmin  (arc(i,2)))
+      hhmax  (nop (arc(i,3), 2)) = 0.5 * (hhmax  (arc(i,1)) + hhmax  (arc(i,2)))
+      hbordv (nop (arc(i,3), 2)) = 0.5 * (hbordv (arc(i,1)) + hbordv (arc(i,2)))
+      alphah (nop (arc(i,3), 2)) = 0.5 * (alphah (arc(i,1)) + alphah (arc(i,2)))
+      betah  (nop (arc(i,3), 2)) = 0.5 * (betah  (arc(i,1)) + betah  (arc(i,2)))
+
+    else
+      !error if one of the two corner nodes does not have cross sectional informations
+      IF (WIDTH (nop (arc(i,3), 1)) == 0 .or. WIDTH (nop (arc(i,3), 3)) == 0) THEN
+        CLOSE (75)
+        OPEN (75,FILE = 'ERROR.DAT')
+        WRITE (75,9004) nop(arc(i,3),1), nop(arc(i,3),3)
+9004    FORMAT ('ERROR - 1D-NODE ', I6, ' OR ', I6, ' HAS NO CROSS SECTIONAL INFORMATIONS.',/'EXECUTION OF PROGRAM TERMINATED!')
+        CLOSE (75)
+        STOP
+      ELSE
+        !Interpolate cross sectional informations for midside nodes, if necessary
+        !EFa Nov06, Korrektur der Knoten (2.Knoten wird zwischen dem 1. und 3. Knoten interpoliert)
+        IF(WIDTH (nop(arc(i,3),2)) .eq. 0) THEN
+          width (nop(arc(i,3),2)) = 0.5 * (width (nop(arc(i,3),1)) + width (nop(arc(i,3),3)))
+          ss1 (nop(arc(i,3),2))   = 0.5 * (ss1 (nop(arc(i,3),1))   + ss1 (nop(arc(i,3),3)))
+          ss2 (nop(arc(i,3),2))   = 0.5 * (ss2 (nop(arc(i,3),1))   + ss2 (nop(arc(i,3),3)))
+          wids (nop(arc(i,3),2))  = 0.5 * (wids (nop(arc(i,3),1))  + wids (nop(arc(i,3),3)))
+          widbs (nop(arc(i,3),2)) = 0.5 * (widbs (nop(arc(i,3),1)) + widbs (nop(arc(i,3),3)))
+          wss (nop(arc(i,3),2))   = 0.5 * (wss (nop(arc(i,3),1))   + wss (nop(arc(i,3),3)))
+        ENDIF
+      ENDIF
+    ENDIF
   ENDIF
 ENDDO
 !-
@@ -2299,6 +2349,7 @@ do i=1,nodecnt
   nconnect(i) = 0       ! Anzahl der Nachbarknoten
 end do
 
+
 ! Jedes Element durchgehen
 neighbours: do i=1,elcnt
 
@@ -2375,11 +2426,16 @@ neighbours: do i=1,elcnt
 
     !nis,feb07: Here is a conflict!!!    
 
+!nis,may07
+!Add midside node for polynom approach; at the moment there neighbourhood relation between the nodes must not be calculated
     !nis,may07 Change if-question for numbered Polynom elements
     !EFa Nov06, gesonderte Berechnung für 1D-Teschke-Elemente
     !elseIF(nop(i,2).EQ.-9999) then
-    ELSEIF(nop(i,2) < -1000) then
+    !ELSEIF(nop(i,2) < -1000) then
+    ELSEIF(imat(i) == 889) then
     !-
+!Add midside node for polynom approach
+!-
       node1 = nop(i,1)
       node2 = nop(i,3)
       nconnect(node1) = nconnect(node1)+1
@@ -2473,6 +2529,7 @@ do i=1,nodecnt
   end do
 
 end do
+
 
 !NiS,mar06: unit name changed; changed iout to Lout
 WRITE (Lout, 111 )
