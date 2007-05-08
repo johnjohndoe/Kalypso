@@ -1,4 +1,4 @@
-!Last change:  K     8 May 2007    2:23 pm
+!Last change:  K     8 May 2007    3:50 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1400,7 +1400,7 @@ outer: DO I=1,NCN,2
 enddo outer
 
 !control output
-if (nn > -10) then
+if (nn < -10) then
   n3 = ncon(3)
   n1 = ncon(1)
   WRITE(*,*) '*************************'

@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  K     8 May 2007    2:31 pm
+C     Last change:  K     8 May 2007    3:43 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -88,6 +88,8 @@ C-
 C  Test for width > 0
       N1 = NOP(NN,1)
       N3 = NOP(NN,3)
+      !if it is a weir element, it must not be checked whether all informations are there
+      if (imat(nn) < 900) then
       IF (WIDTH(N1) .LE. 0.0  .OR.  WIDTH(N3) .LE. 0.0)  THEN
          WRITE(*,*) ' WIDTH MISSING FOR NODES ', N1,N3
 CIPK SEP04 CREATE ERROR FILE
@@ -96,6 +98,8 @@ CIPK SEP04 CREATE ERROR FILE
          WRITE(75,*) ' WIDTH MISSING FOR NODES ', N1,N3
          STOP  '  WIDTH MISSING FOR NODES '
       ENDIF
+      end if
+      !-
 C
       IF(ITEQV(MAXN) .EQ. 5) CALL ARAA(NN)
       TEL=AREA(NN)
@@ -1124,30 +1128,38 @@ C7778 FORMAT(1P5E12.4)
       !estifm-testoutput
       if (nn > 0) then
         WRITE(9919,*) 'Element ', nn, 'coef1Pol'
-        WRITE(9919,'(6x,12(1x,i10))') ( nbc (nop(nn,1), j), j=1, 4), 0, 0, 0, 0, ( nbc (nop(nn,3), j), j=1, 4)
+        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1, 4),
+     +        0, 0, 0, 0, ( nbc (nop(nn,3), j), j=1, 4)
         do i = 1,12
           if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
             if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
-              WRITE(9919,'(i6,13(1x,f10.2))') 0, (estifm(i,j), j=1, 12), f(i)
+              WRITE(9919, 1234)
+     +              0, (estifm(i,j), j=1, 12), f(i)
             else
-              WRITE(9919,'(i6,13(1x,f10.2))') nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1, 12), f(i)
+              WRITE(9919, 1234)
+     +              nbc( nop(nn, 1+(i-MOD(i,4))/ 4),
+     +              mod(i,4)), (estifm(i,j), j=1, 12), f(i)
             end if
           elseif (MOD(i,4) == 3 ) then
             if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
-              WRITE(9919,'(i6,13(1x,f10.2))') 0, (estifm(i,j), j=1, 12), f(i)
+              WRITE(9919, 1234) 0, (estifm(i,j), j=1, 12), f(i)
             else
-              WRITE(9919,'(i6,13(1x,f10.2))') nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1, 12), f(i)
+              WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4),
+     +              mod(i,4)), (estifm(i,j), j=1, 12), f(i)
             end if
           ELSE
             if (nop(nn, i/4 ) < 0) then
-              WRITE(9919,'(i6,13(1x,f10.2))') 0, (estifm(i,j), j=1, 12), f(i)
+              WRITE(9919, 1234) 0, (estifm(i,j), j=1, 12), f(i)
             else
-              WRITE(9919,'(i6,13(1x,f10.2))') nbc( nop(nn, i/4 ), 4), (estifm(i,j), j=1, 12), f(i)
+              WRITE(9919, 1234) nbc( nop(nn, i/4 ), 4),
+     +              (estifm(i,j), j=1, 12), f(i)
             end if
           endif
         end do
         WRITE(9919,*)
         WRITE(9919,*)
+ 1233 format (6x, 12(1x, i10))
+ 1234 format (i6, 13(1x, f10.2))
       endif
       !-
 

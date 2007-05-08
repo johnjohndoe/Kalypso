@@ -1,4 +1,4 @@
-!     Last change:  K     7 May 2007    1:53 am
+!     Last change:  K     8 May 2007    3:50 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -2110,7 +2110,7 @@ DO i = 1, arccnt
   !nis,feb07: Allow for numberes midside nodes of Flow1DFE elements
   !IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0.and. arc(i,5).NE.-9999) THEN
   !IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0.and. arc(i,5) > -1000) THEN
-  IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0) THEN
+  IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0 .and. imat(arc(i,3)) < 900) THEN
   !-
 
     if (imat (arc (i,3)) == 889) then
