@@ -126,7 +126,35 @@
     <section id="kalypso_1D2D-daten_laden">
       <title>Daten laden</title>
 
-      <para></para>
+      <section>
+        <title>Import von Hintergrundkarten</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Import von Höhendaten</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Import vonm Rauheitsshapes</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Import von Zeitreihen</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Import von Profildaten (Trippel)</title>
+
+        <para></para>
+      </section>
     </section>
 
     <section id="kalypso_1D2D-netzaufbau">
@@ -136,7 +164,7 @@
     </section>
 
     <section id="kalypso_1D2D-rauheitsmodellierung">
-      <title> Rauheitsmodellierung</title>
+      <title>Rauheitsmodellierung</title>
 
       <para></para>
     </section>
