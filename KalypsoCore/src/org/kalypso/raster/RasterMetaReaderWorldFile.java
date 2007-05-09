@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.raster;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
@@ -63,13 +63,13 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class RasterMetaReaderWorldFile implements IRasterMetaReader
 {
 
-  private final File m_worldFile;
+  private final URL m_worldFile;
 
   private WorldFile m_world = null;
 
-  private final File m_image;
+  private final URL m_image;
 
-  public RasterMetaReaderWorldFile( final File image, final File worldFile )
+  public RasterMetaReaderWorldFile( final URL image, final URL worldFile )
   {
     m_image = image;
     m_worldFile = worldFile;
@@ -78,7 +78,7 @@ public class RasterMetaReaderWorldFile implements IRasterMetaReader
 
   private void setup( )
   {
-    if( (m_worldFile == null) || !(m_worldFile.exists()) )
+    if( (m_worldFile == null) )
     {
       throw (new IllegalStateException());
     }
@@ -87,7 +87,7 @@ public class RasterMetaReaderWorldFile implements IRasterMetaReader
     try
     {
 
-      m_world = reader.readWorldFile( m_worldFile );
+      m_world = reader.readWorldFile( m_worldFile.openStream() );
     }
     catch( final IOException e )
     {
@@ -155,7 +155,7 @@ public class RasterMetaReaderWorldFile implements IRasterMetaReader
       throw (new IllegalStateException());
     }
     
-    final RenderedOp image = JAI.create( "fileload", m_image.toString() );
+    final RenderedOp image = JAI.create( "url", m_image );
     final TiledImage tiledImage = new TiledImage( image, true );
     final int height = tiledImage.getHeight();
     final int width = tiledImage.getWidth();
