@@ -62,6 +62,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -70,6 +71,7 @@ import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -174,11 +176,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
 
   private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
 
-  private BaseMapSchedulingRule m_mapSchedulingRule;
-
   private String m_message = "";
-
-  IWorkbenchPartSite m_site;
 
   public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
   {

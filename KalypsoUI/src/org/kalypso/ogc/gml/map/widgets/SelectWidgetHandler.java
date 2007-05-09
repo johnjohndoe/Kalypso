@@ -82,8 +82,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       abstractMapPart = (AbstractMapPart) mapView;
     }
 
-    // customized widget
-    customizedWidget( widget, applicationContext );
     if( abstractMapPart != null )
     {
       activePage.activate( abstractMapPart );
@@ -105,25 +103,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       }
     }
     return null;
-  }
-
-  private final void customizedWidget( IWidget widget, IEvaluationContext applicationContext )
-  {
-    if( widget instanceof IEvaluationContextConsumer )
-    {
-      try
-      {
-        ((IEvaluationContextConsumer) widget).setEvaluationContext( applicationContext );
-      }
-      catch( Throwable e )
-      {
-        e.printStackTrace();
-      }
-    }
-    else
-    {
-      // yes it is empty
-    }
   }
 
   private IWidget getWidgetFromBundle( final String pluginId, final String widgetName )
