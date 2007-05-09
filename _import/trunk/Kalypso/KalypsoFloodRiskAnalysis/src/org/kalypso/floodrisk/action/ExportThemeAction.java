@@ -79,8 +79,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.outline.MapModellViewActionDelegate;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Interval;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -102,19 +102,19 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
  * 
  * @author Nadja Peiler (14.06.2005)
  */
-public class ExportThemeAction implements PluginMapOutlineAction
+public class ExportThemeAction extends MapModellViewActionDelegate
 {
-
   private File m_targetFile;
 
   /**
    * @see org.kalypso.ogc.gml.outline.PluginMapOutlineAction#run(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
+  @Override
   public void run( IAction action )
   {
-    if( action instanceof PluginMapOutlineActionDelegate )
+    if( action instanceof PluginMapOutlineAction )
     {
-      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
+      PluginMapOutlineAction outlineaction = (PluginMapOutlineAction)action;
       IMapModellView viewer = outlineaction.getOutlineviewer();
       final IKalypsoTheme activeTheme = viewer.getMapPanel().getMapModell().getActiveTheme();
       final IWorkbench workbench = PlatformUI.getWorkbench();
