@@ -40,19 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.raster.IRasterMetaReader;
+import org.kalypso.raster.RasterDataFileVerifier;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -67,89 +65,48 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
-
+  
   public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system ) throws Exception
   {
     super( layerType, context, modell );
-   
-    
+
     final String href = layerType.getHref();
     if( (href == null) || !href.contains( "." ) )
     {
       throw (new IllegalStateException());
     }
 
-    final String[] arrFileName = href.split( "\\." );
-    if( arrFileName.length <= 1 )
+    final String[] arrFileName = href.split( "#" );
+    if( arrFileName.length != 2 )
     {
       throw (new IllegalStateException());
     }
 
-    String extension = null;
-    if( "tif".equals( getExtension( arrFileName[arrFileName.length - 1].toLowerCase() ) ) )
-    {
-      extension = WorldFileReader.SUFFIX_TIFF;
-    }
-    else if( "jpg".equals( getExtension( arrFileName[arrFileName.length - 1].toLowerCase() ) ) )
-    {
-      extension = WorldFileReader.SUFFIX_JPG;
-    }
-    else if( "png".equals( getExtension( arrFileName[arrFileName.length - 1].toLowerCase() ) ) )
-    {
-      extension = WorldFileReader.SUFFIX_PNG;
-    }
-    else
-    {
-      throw (new NotImplementedException());
-    }
-
-    if( extension == null )
-    {
-      throw (new IllegalStateException());
-    }
-
-    // TODO: foreach length-2
-    /* read world file */
-    final String wf = arrFileName[0] + "." + extension;
-
-    final URL worldfileUrl = UrlResolverSingleton.resolveUrl( context, wf );
-    final IProject project = ResourceUtilities.findProjectFromURL( worldfileUrl );
-    final IFile iFileWf = project.getFile( wf );
-
-    final File fileWf = iFileWf.getLocation().toFile();
-    final WorldFile wfReader = new WorldFileReader().readWorldFile( fileWf );
-
-    /* imgFile */
-    // RenderedOp image = JAI.create( "fileload", iFileImg.getLocation().toOSString() );
-    final URL imageUrl = UrlResolverSingleton.resolveUrl( context, getExtension( href ) );
-    final RenderedOp image = JAI.create( "url", imageUrl );
-    m_image = new TiledImage( image, true );
-
-    // TODO: the image keeps does not release the stream onto the tiff
-    // maybe we must call image.dispose in order to do this?
-    // can we do that here??
-    final int height = m_image.getHeight();
-    final int width = m_image.getWidth();
-
-    final GM_Point origin = GeometryFactory.createGM_Point( wfReader.getUlcx(), wfReader.getUlcy(), system );
-
-    final OffsetVector offsetX = new OffsetVector( wfReader.getRasterXGeoX(), wfReader.getRasterXGeoY() );
-    final OffsetVector offsetY = new OffsetVector( wfReader.getRasterYGeoX(), wfReader.getRasterYGeoY() );
-    final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
-
-    m_domain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+    final URL imageUrl = UrlResolverSingleton.resolveUrl( context, arrFileName[0] );
     
-  }
-
-  private String getExtension( final String string )
-  {
-    if( string.contains( "#" ) )
+    RasterDataFileVerifier verifier = new RasterDataFileVerifier();
+    
+    Path imagePath = new Path(imageUrl.getFile());
+    if (verifier.verify( imagePath ))
     {
-      final String[] arr = string.split( "\\#" );
-      return arr[0];
+      IRasterMetaReader reader = verifier.getRasterMetaReader( imagePath, system );  
+      
+      final RenderedOp image = JAI.create( "url", imageUrl );
+      m_image = new TiledImage( image, true );
+
+      // TODO: the image keeps does not release the stream onto the tiff
+      // maybe we must call image.dispose in order to do this?
+      // can we do that here??
+      final int height = m_image.getHeight();
+      final int width = m_image.getWidth();
+
+      final GM_Point origin = GeometryFactory.createGM_Point( new Double(reader.getUpperLeftCornerX()), new Double(reader.getUpperLeftCornerY()), system );
+
+      final OffsetVector offsetX = new OffsetVector( new Double(reader.getVectorXx()), new Double(reader.getVectorXy()) );
+      final OffsetVector offsetY = new OffsetVector( new Double(reader.getVectorYx()), new Double(reader.getVectorYy()) );
+      final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
+
+      m_domain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
     }
-
-    return string;
   }
-
 }
