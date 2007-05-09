@@ -41,10 +41,8 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.action.IAction;
-import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -60,35 +58,36 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final IKalypsoTheme selectedElement = getSelectedTheme();
-    
-    MapPanel panel = getView().getMapPanel();
-    
-//    // REMARK: throws a class cast exeption. There should be a better solution!
-//    final MapPanel panel  = (MapPanel) listManipulator;
-    
-    if( panel != null && selectedElement != null )
     {
-      final GM_Envelope zoomBox = selectedElement.getBoundingBox();
-      
-      GM_Envelope wishBBox = null;
+      final IKalypsoTheme selectedElement = getSelectedTheme();
+      final MapPanel panel = getView().getMapPanel();
 
-      final GM_Position zoomMax = zoomBox.getMax();
-      final GM_Position zoomMin = zoomBox.getMin();
-
-      final double newMaxX = zoomMax.getX() + (zoomMax.getX() - zoomMin.getX()) / 20;
-      final double newMinX = zoomMin.getX() - (zoomMax.getX() - zoomMin.getX()) / 20;
-      
-      final double newMaxY = zoomMax.getY() + (zoomMax.getY() - zoomMin.getY()) / 20;
-      final double newMinY = zoomMin.getY() - (zoomMax.getY() - zoomMin.getY()) / 20;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-      
-      panel.setBoundingBox( wishBBox );
+      if( panel != null && selectedElement != null )
+      {
+        final GM_Envelope zoomBox = selectedElement.getBoundingBox();
+        GM_Envelope wishBBox = calculateExtend( zoomBox );
+        panel.setBoundingBox( wishBBox );
+      }
     }
   }
 
+  private GM_Envelope calculateExtend( final GM_Envelope zoomBox )
+  {
+    GM_Envelope wishBBox = null;
+
+    final GM_Position zoomMax = zoomBox.getMax();
+    final GM_Position zoomMin = zoomBox.getMin();
+
+    final double newMaxX = zoomMax.getX() + (zoomMax.getX() - zoomMin.getX()) / 20;
+    final double newMinX = zoomMin.getX() - (zoomMax.getX() - zoomMin.getX()) / 20;
+
+    final double newMaxY = zoomMax.getY() + (zoomMax.getY() - zoomMin.getY()) / 20;
+    final double newMinY = zoomMin.getY() - (zoomMax.getY() - zoomMin.getY()) / 20;
+
+    final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+    final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    return wishBBox;
+  }
 }

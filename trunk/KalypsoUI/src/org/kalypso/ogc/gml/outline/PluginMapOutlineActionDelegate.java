@@ -1,3 +1,8 @@
+package org.kalypso.ogc.gml.outline;
+
+import org.eclipse.ui.IActionDelegate;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,53 +43,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.outline;
-
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.kalypso.commons.list.IListManipulator;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * Superclass for plugins that modify the map model
  * 
- * @author kuepfer
+ * PluginMapOutlineAction
+ * <p>
+ * interface to extention point for actions on Mapoutline
+ * 
+ * created by
+ * 
+ * @author doemming (25.05.2005)
  */
-public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
+public interface PluginMapOutlineActionDelegate extends IActionDelegate
 {
-  private final PluginMapOutlineAction m_innerAction;
-
-  public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView selectionProvider, PluginMapOutlineAction outlineAction, final IListManipulator listManip )
-  {
-    super( text, image, tooltipText, selectionProvider, listManip );
-    m_innerAction = outlineAction;
-  }
-
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
-  @Override
-  public void run( )
-  {
-    // m_innerAction.run( getOutlineviewer(), getListManipulator() );
-    m_innerAction.run( this );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  @Override
-  public void selectionChanged( SelectionChangedEvent event )
-  {
-    m_innerAction.selectionChanged( this, event.getSelection() );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#refresh()
-   */
-  @Override
-  protected void refresh( )
-  {
-    //
-  }
+  public void setView( final IMapModellView mapModellView );
+  
+  public IMapModellView getView( );
 }

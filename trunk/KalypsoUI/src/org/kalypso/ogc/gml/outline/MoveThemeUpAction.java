@@ -40,45 +40,52 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * @author belger
+ * @author Stefan Kurzbach
  */
-public class MoveThemeUpAction extends AbstractOutlineAction
+public class MoveThemeUpAction extends MapModellViewActionDelegate
 {
-  public MoveThemeUpAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer, final IListManipulator listManip )
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  @Override
+  public void run( final IAction action )
   {
-    super( text, image, tooltipText, outlineViewer, listManip );
+    IListManipulator listManipulator = getView();
+    IKalypsoTheme selectedElement = getSelectedTheme();
+    if( listManipulator != null && selectedElement != null )
+    {
+      listManipulator.moveElementUp( selectedElement );
+    }
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void run( )
+  public void selectionChanged( IAction action, ISelection selection )
   {
-    getListManipulator().moveElementUp( ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement() );
-  }
-
-  @Override
-  protected final void refresh( )
-  {
+    super.selectionChanged( action, selection );
+    final IKalypsoTheme selectedTheme = getSelectedTheme();
     boolean bEnable = false;
-
-    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
-    // if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme) )
-    if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
+    final IMapModellView view = getView();
+    if( selectedTheme != null && view != null )
     {
-      final Object[] elements = getOutlineviewer().getMapPanel().getMapModell().getAllThemes();
-
-      bEnable = (elements[0] != s.getFirstElement());
+      final IMapModell mapModell = view.getMapPanel().getMapModell();
+      if( mapModell != null )
+      {
+        final Object[] elements = mapModell.getAllThemes();
+        bEnable = elements[0] != selectedTheme;
+      }
     }
-
-    setEnabled( bEnable );
+    action.setEnabled( bEnable );
   }
 }

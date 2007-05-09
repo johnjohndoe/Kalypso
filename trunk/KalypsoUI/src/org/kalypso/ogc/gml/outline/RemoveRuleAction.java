@@ -40,13 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
@@ -55,64 +55,60 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 /**
  * @author belger
  */
-public class RemoveRuleAction extends AbstractOutlineAction
+public class RemoveRuleAction implements IActionDelegate
 {
-  public RemoveRuleAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer, final IListManipulator listManip )
-  {
-    super( text, image, tooltipText, outlineViewer, listManip );
-    refresh();
-  }
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public void run( )
+  public void run( IAction action )
   {
-    Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
-    if( o instanceof RuleTreeObject )
+    if( action instanceof PluginMapOutlineAction )
     {
-      RuleTreeObject obj = (RuleTreeObject) o;
-      KalypsoUserStyle userStyle = obj.getStyle();
-      userStyle.getFeatureTypeStyles()[0].removeRule( obj.getRule() );
-      userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+      PluginMapOutlineAction outlineaction = (PluginMapOutlineAction) action;
+      IMapModellView viewer = outlineaction.getOutlineviewer();
+      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+      if( o instanceof RuleTreeObject )
+      {
+        RuleTreeObject obj = (RuleTreeObject) o;
+        KalypsoUserStyle userStyle = obj.getStyle();
+        userStyle.getFeatureTypeStyles()[0].removeRule( obj.getRule() );
+        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
 
-      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      StyleEditorViewPart part;
-      try
-      {
-        part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
-        if( part != null )
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        StyleEditorViewPart part;
+        try
         {
-          part.setSelectionChangedProvider( getOutlineviewer() );
-          part.initStyleEditor( userStyle, obj.getTheme() );
+          part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+          if( part != null )
+          {
+            part.setSelectionChangedProvider( viewer );
+            part.initStyleEditor( userStyle, obj.getTheme() );
+          }
         }
-      }
-      catch( PartInitException e )
-      {
-        e.printStackTrace();
+        catch( PartInitException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
-  @Override
-  public void selectionChanged( final SelectionChangedEvent event )
-  {
-    refresh();
-  }
-
-  @Override
-  protected void refresh( )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     boolean bEnable = false;
 
-    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection s = (IStructuredSelection) selection;
 
-    if( s.getFirstElement() instanceof RuleTreeObject )
-      bEnable = true;
-    setEnabled( bEnable );
+      if( s.getFirstElement() instanceof RuleTreeObject )
+        bEnable = true;
+      action.setEnabled( bEnable );
+    }
   }
 }

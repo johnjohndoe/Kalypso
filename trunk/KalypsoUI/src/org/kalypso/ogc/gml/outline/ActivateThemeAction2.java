@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
@@ -51,17 +50,17 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 /**
  * @author belger
  */
-public class ActivateThemeAction2 implements PluginMapOutlineAction
+public class ActivateThemeAction2 extends MapModellViewActionDelegate
 {
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run( IAction action )
+  @Override
+  public void run( final IAction action )
   {
-    if( action instanceof PluginMapOutlineActionDelegate )
+    if( action instanceof PluginMapOutlineAction )
     {
-      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
-      IMapModellView viewer = outlineaction.getOutlineviewer();
+      final IMapModellView viewer = getView();
       final Object o = ( (IStructuredSelection)viewer.getSelection() ).getFirstElement();
 
       if( o instanceof IKalypsoTheme )
@@ -70,24 +69,5 @@ public class ActivateThemeAction2 implements PluginMapOutlineAction
         viewer.postCommand( new ActivateThemeCommand( mapModell, (IKalypsoTheme)o ), null );
       }
     }
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( IAction action, ISelection selection )
-  {
-    if( selection instanceof IStructuredSelection )
-    {
-      boolean bEnable = false;
-
-      final IStructuredSelection s = (IStructuredSelection)selection;
-
-      if( s.getFirstElement() instanceof IKalypsoTheme )
-        bEnable = true;
-      action.setEnabled( bEnable );
-    }
-
   }
 }

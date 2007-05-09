@@ -92,9 +92,9 @@ public class SaveStyleAction2 implements IActionDelegate
 
   public void run( IAction action )
   {
-    if( action instanceof PluginMapOutlineActionDelegate )
+    if( action instanceof PluginMapOutlineAction )
     {
-      IMapModellView viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
       Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
       if( o instanceof ThemeStyleTreeObject )
       {
@@ -183,18 +183,6 @@ public class SaveStyleAction2 implements IActionDelegate
       e.printStackTrace();
     }
   }
-
-  // protected final void refresh()
-  // {
-  // boolean bEnable = false;
-  //
-  // final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
-  //
-  // if( s.getFirstElement() instanceof ThemeStyleTreeObject )
-  // bEnable = true;
-  //
-  // setEnabled( bEnable );
-  // }
 
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
