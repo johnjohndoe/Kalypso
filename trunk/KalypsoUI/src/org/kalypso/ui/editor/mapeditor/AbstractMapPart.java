@@ -96,6 +96,7 @@ import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
+import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -176,6 +177,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private IResourceChangeListener m_resourceChangeListener;
 
   private boolean m_saving;
+  
+  private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
 
   /**
    *
@@ -242,7 +245,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
-    m_mapPanel.addMapPanelListener( this );
+    m_mapPanel.addMapPanelListener( this );          
 
     m_resourceChangeListener = new IResourceChangeListener()
     {
@@ -298,6 +301,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     IContextService contextService = (IContextService) site.getService( IContextService.class );
     if( contextService != null )
       contextService.activateContext( "org.kalypso.ogc.gml.map.context" );
+        
+    m_mapPanel.addModellListener( m_mapModellContextSwitcher );
+    m_mapModellContextSwitcher.addContextService( contextService );
   }
 
   /**
@@ -529,14 +535,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     // dispose old one
     if( m_mapModell != null )
     {
-      m_mapModell.dispose();
+      m_mapModell.dispose();      
     }
 
     m_mapModell = mapModell;
 
     if( m_mapPanel != null )
     {
-      m_mapPanel.setMapModell( m_mapModell );
+      m_mapPanel.setMapModell( m_mapModell );      
     }
 
     if( m_mapModellView != null )
