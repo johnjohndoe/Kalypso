@@ -6,11 +6,16 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 
+import de.renew.workflow.connector.context.ICaseManager;
+
+/**
+ * @author Stefan Kurzbach
+ *
+ */
 public class ScenarioContentProvider implements ITreeContentProvider
 {
   /**
@@ -33,10 +38,10 @@ public class ScenarioContentProvider implements ITreeContentProvider
           {
             // is of correct nature
             final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
-            final IScenarioManager scenarioManager = nature.getScenarioManager();
+            final ICaseManager<Scenario> scenarioManager = nature.getCaseManager();
             if( scenarioManager != null )
             {
-              final List<Scenario> data = scenarioManager.getRootScenarios();
+              final List<Scenario> data = scenarioManager.getCases();
               return data.toArray();
             }
           }
@@ -84,8 +89,8 @@ public class ScenarioContentProvider implements ITreeContentProvider
           if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
           {
             final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
-            final IScenarioManager workflowData = nature.getScenarioManager();
-            final List<Scenario> rootScenarios = workflowData.getRootScenarios();
+            final ICaseManager<Scenario> workflowData = nature.getCaseManager();
+            final List<Scenario> rootScenarios = workflowData.getCases();
             return rootScenarios != null && !rootScenarios.isEmpty();
           }
         }

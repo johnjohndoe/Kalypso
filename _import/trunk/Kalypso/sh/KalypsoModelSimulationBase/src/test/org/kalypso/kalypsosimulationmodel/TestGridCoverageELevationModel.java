@@ -40,15 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
+import junit.framework.TestCase;
+
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.GridCoverageElevationModelWrapper;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author Madan

@@ -45,11 +45,13 @@ import de.renew.workflow.cases.TaskExecutionException;
 
 /**
  * @author Stefan Kurzbach
- *
  */
 public interface ITaskExecutor
 {
 
+  /**
+   * Called when a task needs to be executed
+   */
   public void execute( final Task task ) throws TaskExecutionException;
 
 }

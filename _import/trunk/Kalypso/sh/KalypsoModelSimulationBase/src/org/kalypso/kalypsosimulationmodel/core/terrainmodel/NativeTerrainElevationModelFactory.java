@@ -41,13 +41,11 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.shiftone.cache.Cache;
-import org.shiftone.cache.CacheFactory;
 import org.shiftone.cache.adaptor.CacheMap;
 import org.shiftone.cache.policy.fifo.FifoCacheFactory;
 

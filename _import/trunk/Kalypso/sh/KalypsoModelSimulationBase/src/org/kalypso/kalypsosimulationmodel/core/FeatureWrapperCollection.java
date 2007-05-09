@@ -9,7 +9,6 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
-
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;

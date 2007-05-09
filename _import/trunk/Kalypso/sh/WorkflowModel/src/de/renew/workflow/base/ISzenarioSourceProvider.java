@@ -38,18 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.imports;
+package de.renew.workflow.base;
+
+import org.eclipse.ui.ISourceProvider;
 
 /**
- * @author w00t
- *
+ * Interface for case source provider
+ * 
+ * @author Stefan Kurzbach
  */
-public interface ISzenarioSourceProvider
+public interface ISzenarioSourceProvider extends ISourceProvider
 {
 
   public static final String ACTIVE_SZENARIO_DATA_PROVIDER_NAME = "activeSzenarioDataProvider";
 
   public static final String ACTIVE_SZENARIO_FOLDER_NAME = "activeSimulationModelBaseFolder";
-
-  public static final String ACTIVE_SCENARIO_CASEDATA_NAME = "activeScenarioCaseData";
 }

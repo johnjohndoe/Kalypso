@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import junit.framework.TestCase;
+
 import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.MultiPoint;
 import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
@@ -15,8 +17,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for {@link MultiPoint}

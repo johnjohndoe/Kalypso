@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -195,7 +196,7 @@ public class FEJunction1D2D<
                         String gmlID)
   {
     this(
-      org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
+      Util.createFeatureWithId( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D,
           parentFeature, 
           propQName, 

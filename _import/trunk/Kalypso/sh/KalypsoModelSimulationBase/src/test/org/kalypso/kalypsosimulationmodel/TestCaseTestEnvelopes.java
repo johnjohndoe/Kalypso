@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
+import junit.framework.TestCase;
+
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.GMRectanglesClip;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author Madanagopal

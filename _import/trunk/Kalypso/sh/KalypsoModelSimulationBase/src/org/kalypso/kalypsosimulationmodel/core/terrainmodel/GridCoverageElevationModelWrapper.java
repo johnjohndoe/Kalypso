@@ -44,14 +44,11 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gis.doubleraster.DoubleRaster;
 import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.opengis.cs.CS_CoordinateSystem;
 

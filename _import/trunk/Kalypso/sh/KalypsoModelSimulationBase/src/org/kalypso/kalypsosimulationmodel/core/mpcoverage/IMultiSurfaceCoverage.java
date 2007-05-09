@@ -3,9 +3,9 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Generic interface to be implemented by classes representing the

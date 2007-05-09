@@ -23,6 +23,7 @@ import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
+
 /**
  * Opens the feature view on a given template
  * 

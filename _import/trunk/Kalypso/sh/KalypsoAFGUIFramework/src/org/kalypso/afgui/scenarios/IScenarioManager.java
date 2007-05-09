@@ -3,12 +3,10 @@
  */
 package org.kalypso.afgui.scenarios;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.connector.context.ICaseManager;
 
 /**
  * An {@link IScenarioManager} manages all the scenarios in a project. It provides metadata about the scenarios and
@@ -16,45 +14,8 @@ import de.renew.workflow.base.Workflow;
  * 
  * @author Stefan Kurzbach
  */
-public interface IScenarioManager
+public interface IScenarioManager extends ICaseManager<Scenario>
 {
-  /**
-   * Returns the current scenario
-   */
-  public Scenario getCurrentScenario( );
-
-  /**
-   * Returns the workflow for the current scenario
-   */
-  public Workflow getCurrentWorkflow( );
-
-  /**
-   * Sets the current scenario
-   */
-  public void setCurrentScenario( final Scenario scenario );
-
-  /**
-   * Returns the scenarios that reside at the root of the project. All other scenarios are derived from any of the root
-   * scenarios. The result is never <code>null</code>, but it may be an empty list if there are no scenarios in the
-   * project.
-   */
-  public List<Scenario> getRootScenarios( );
-
-  /**
-   * Returns the scenario with the given uri. The scenario may either be a root scenario or a derived scenario. If no
-   * scenario with the given uri exists, <code>null</code> will be returned.
-   */
-  public Scenario getScenario( final String uri );
-
-  /**
-   * Removes the scenario and all contained data if the scenario has no derived scenarios.
-   */
-  public void removeScenario( final Scenario scenario, final IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * Creates a new base scenario with the given name.
-   */
-  public Scenario createBaseScenario( final String name ) throws CoreException;
 
   /**
    * Creates a new scenario with the given name. It is derived from <code>parentScenario</code>. The scenario
@@ -84,27 +45,4 @@ public interface IScenarioManager
    *              exception.</li>
    */
   public void persist( final IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * Registers <code>listener</code> with this scenario manager. If an identical listener is already registered, this
-   * method has no effect.
-   * 
-   * @param listener
-   *          the listener to be removed, must not be <code>null</code>
-   */
-  public void addScenarioManagerListener( final IScenarioManagerListener listener );
-
-  /**
-   * Removes <code>listener</code> from this scenario manager. If no identical listener was registered, this method
-   * has no effect.
-   * 
-   * @param listener
-   *          the listener to be removed
-   */
-  public void removeScenarioManagerListener( final IScenarioManagerListener listener );
-
-  /**
-   * Deregisters all listeners
-   */
-  public void dispose( );
 }

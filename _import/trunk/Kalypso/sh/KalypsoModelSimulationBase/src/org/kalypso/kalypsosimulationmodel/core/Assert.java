@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 

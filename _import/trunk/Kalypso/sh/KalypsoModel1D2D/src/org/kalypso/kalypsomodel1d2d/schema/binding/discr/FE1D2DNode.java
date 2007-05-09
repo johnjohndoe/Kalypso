@@ -14,6 +14,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -71,7 +72,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    */
   public FE1D2DNode( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
-    this( org.kalypso.kalypsosimulationmodel.core.Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) );
+    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) );
   }
 
   // TODO implements this constructor
@@ -80,7 +81,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    */
   public FE1D2DNode( Feature parentFeature, QName propQName, String gmlID )
   {
-    this( org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, parentFeature, propQName, gmlID ) );
+    this( Util.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, parentFeature, propQName, gmlID ) );
   }
 
   // private static final Feature createNodeById(

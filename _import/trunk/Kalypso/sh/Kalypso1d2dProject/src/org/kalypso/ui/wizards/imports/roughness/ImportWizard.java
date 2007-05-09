@@ -19,10 +19,10 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
+import de.renew.workflow.base.ISzenarioSourceProvider;
 import de.renew.workflow.cases.ICaseDataProvider;
 
 /**

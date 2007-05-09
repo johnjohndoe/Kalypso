@@ -1,7 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**

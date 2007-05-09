@@ -52,7 +52,6 @@ import org.kalypso.kalypsosimulationmodel.core.ICellDivisionControl;
 import org.kalypso.kalypsosimulationmodel.core.SurfaceCellDivision;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 

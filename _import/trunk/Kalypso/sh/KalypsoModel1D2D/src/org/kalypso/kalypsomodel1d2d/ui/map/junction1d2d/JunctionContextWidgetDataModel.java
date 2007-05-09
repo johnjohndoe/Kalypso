@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;

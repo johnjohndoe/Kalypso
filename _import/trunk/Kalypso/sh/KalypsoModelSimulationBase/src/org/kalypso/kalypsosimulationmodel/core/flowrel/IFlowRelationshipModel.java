@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;

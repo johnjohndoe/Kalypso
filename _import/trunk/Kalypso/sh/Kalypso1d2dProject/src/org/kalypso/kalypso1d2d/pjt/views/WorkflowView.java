@@ -2,7 +2,6 @@ package org.kalypso.kalypso1d2d.pjt.views;
 
 import java.util.logging.Logger;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
@@ -14,12 +13,14 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
-import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
-import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.ITaskExecutor;
 import de.renew.workflow.connector.TaskExecutionListener;
+import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.context.IActiveContextChangeListener;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
@@ -40,14 +41,14 @@ public class WorkflowView extends ViewPart
 
   private WorkflowControl m_workflowControl;
 
-  protected ActiveWorkContext m_activeWorkContext;
+  protected ActiveWorkContext<Scenario> m_activeWorkContext;
 
-  private final IActiveContextChangeListener m_contextListener = new IActiveContextChangeListener()
+  private final IActiveContextChangeListener<Scenario> m_contextListener = new IActiveContextChangeListener<Scenario>()
   {
     /**
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
-    public void activeContextChanged( final IProject newProject, final Scenario scenario )
+    public void activeContextChanged( final CaseHandlingProjectNature<Scenario> newProject, final Scenario scenario )
     {
       handleContextChanged( newProject, scenario );
     }
@@ -59,16 +60,16 @@ public class WorkflowView extends ViewPart
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_workflowControl.createControl( parent );    
-    handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentScenario() );
+    m_workflowControl.createControl( parent );
+    handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  private void handleContextChanged( final IProject newProject, final Scenario scenario )
+  protected void handleContextChanged( final CaseHandlingProjectNature newProject, final Case scenario )
   {
     if( scenario != null )
     {
-      setContentDescription( "Aktives Szenario: " + scenario.getName() + " (" + newProject.getName() + ")" );
-      m_workflowControl.setWorkflow( m_activeWorkContext.getScenarioManager().getCurrentWorkflow() );
+      setContentDescription( "Aktives Szenario: " + scenario.getName() + " (" + newProject.getProject().getName() + ")" );
+      m_workflowControl.setWorkflow( m_activeWorkContext.getCaseManager().getCurrentWorkflow() );
     }
     else
     {
@@ -100,8 +101,8 @@ public class WorkflowView extends ViewPart
     final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
     final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final TaskExecutionListener taskExecutionListener = new TaskExecutionListener( commandService);
-    final ITaskExecutor taskExecutor = new TaskExecutor(workflowContextHandlerFactory, m_activeWorkContext, commandService, handlerService ); 
+    new TaskExecutionListener( commandService );
+    final ITaskExecutor taskExecutor = new TaskExecutor( workflowContextHandlerFactory, new TaskExecutionAuthority(), commandService, handlerService );
     m_workflowControl = new WorkflowControl( taskExecutor );
     m_workflowControl.restoreState( memento );
   }

@@ -75,6 +75,10 @@ public interface ICaseDataProvider<T extends Object>
    * was retrieved.
    */
   public boolean isDirty( final Class< ? extends T> modelClass );
+  
+  public boolean isDirty( );
+  
+  public void reloadModel( );
 
   /**
    * Returns the {@link CaseData} object describing the current model state. This method may require information about

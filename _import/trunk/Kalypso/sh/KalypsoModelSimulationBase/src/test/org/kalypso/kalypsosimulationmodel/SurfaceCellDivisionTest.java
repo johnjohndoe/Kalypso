@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.kalypso.kalypsosimulationmodel.core.ICellDivisionControl;
 import org.kalypso.kalypsosimulationmodel.core.SurfaceCellDivision;
@@ -52,10 +52,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import com.vividsolutions.jts.util.Assert;
-
-import junit.framework.TestCase;
 
 /**
  * Test for {@link SurfaceCellDivision}

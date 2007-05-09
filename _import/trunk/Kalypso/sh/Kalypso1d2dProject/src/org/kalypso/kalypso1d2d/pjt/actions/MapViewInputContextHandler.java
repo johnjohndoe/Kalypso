@@ -25,6 +25,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
 
+
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
  * {@link ViewContextHandler} for this purpose.

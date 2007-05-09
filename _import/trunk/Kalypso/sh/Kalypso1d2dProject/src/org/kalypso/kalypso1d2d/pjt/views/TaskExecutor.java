@@ -55,7 +55,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 
-import de.renew.workflow.base.EActivityExeState;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.cases.TaskExecutionException;
@@ -105,24 +104,24 @@ public class TaskExecutor implements ITaskExecutor
     final String name = task.getURI();
     final Command command = getCommand( m_commandService, name, task instanceof TaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
     final ContextType context = task.getContext();
-    ContextActivation activateContext = null;
+    // ContextActivation activateContext = null;
     if( context != null )
     {
-      activateContext = activateContext( context );
+      activateContext( context );
       final Collection<String> viewsToKeep = collectOpenedViews( context );
       PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), viewsToKeep );
     }
-    Object result = null;
     try
     {
-      result = m_handlerService.executeCommand( command.getId(), null );
+      m_handlerService.executeCommand( command.getId(), null );
     }
     catch( final NotHandledException e )
     {
       // if not handled, last context activation gives result
-      if(activateContext != null) {
-        result = activateContext.getResult();
-      }
+      // if( activateContext != null )
+      // {
+      // result = activateContext.getResult();
+      // }
     }
     catch( final Throwable e )
     {

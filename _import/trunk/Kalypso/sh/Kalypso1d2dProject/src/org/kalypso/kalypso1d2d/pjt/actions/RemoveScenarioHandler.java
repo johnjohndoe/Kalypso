@@ -24,10 +24,10 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
-import org.kalypso.afgui.scenarios.ScenarioManager;
-import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+
+import de.renew.workflow.connector.context.ICaseManager;
 
 /**
  * @author pat_dev, Stefan Kurzbach
@@ -65,14 +65,14 @@ public class RemoveScenarioHandler extends AbstractHandler
           try
           {
             final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
-            final ScenarioManager scenarioManager = nature.getScenarioManager();
-            final List<Scenario> rootScenarios = scenarioManager.getRootScenarios();
+            final ICaseManager<Scenario> scenarioManager = nature.getCaseManager();
+            final List<Scenario> rootScenarios = scenarioManager.getCases();
             if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
             {
               MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das letzte Basisszenario kann nicht gelöscht werden." );
               return Status.CANCEL_STATUS;
             }
-            else if( Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getCurrentScenario() == scenario )
+            else if( Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
             {
               MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario ist zur Zeit aktiv. Bitte aktivieren Sie zuerst ein anderes Szenario." );
               return Status.CANCEL_STATUS;
@@ -89,7 +89,7 @@ public class RemoveScenarioHandler extends AbstractHandler
                 {
                   try
                   {
-                    scenarioManager.removeScenario( scenario, monitor );
+                    scenarioManager.removeCase( scenario, monitor );
                   }
                   catch( final CoreException e )
                   {

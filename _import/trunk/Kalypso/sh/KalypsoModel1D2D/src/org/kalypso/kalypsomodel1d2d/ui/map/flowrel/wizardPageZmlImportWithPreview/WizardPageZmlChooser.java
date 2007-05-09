@@ -47,7 +47,6 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ui.wizards.imports.observation.ImportObservationWizard;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**

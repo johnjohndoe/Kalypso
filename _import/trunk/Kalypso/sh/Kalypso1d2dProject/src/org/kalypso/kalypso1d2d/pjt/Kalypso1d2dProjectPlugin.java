@@ -9,8 +9,17 @@ import java.util.Properties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 import org.osgi.framework.BundleContext;
+
+import de.renew.workflow.base.ISzenarioSourceProvider;
+import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -30,7 +39,11 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
 
-  private ActiveWorkContext m_activeWorkContext;
+  private ActiveWorkContext<Scenario> m_activeWorkContext;
+  
+  private final PerspectiveWatcher<Scenario> m_perspectiveWatcher = new PerspectiveWatcher<Scenario>();
+
+  private SzenarioSourceProvider m_szenarioSourceProvider;
 
   /**
    * The constructor
@@ -54,7 +67,13 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     {
       properties.loadFromXML( new FileInputStream( file ) );
     }
-    m_activeWorkContext = new ActiveWorkContext( properties );
+    
+    m_activeWorkContext = new ActiveWorkContext<Scenario>( properties );
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );    
+    m_szenarioSourceProvider = new SzenarioSourceProvider(m_activeWorkContext);
+    handlerService.addSourceProvider( m_szenarioSourceProvider );
+    m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
   }
 
   /**
@@ -72,8 +91,11 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       file.delete();
     }
     properties.storeToXML( new FileOutputStream( file ), "" );
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    handlerService.removeSourceProvider( m_szenarioSourceProvider);
+    m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
     m_activeWorkContext.setActiveProject( null );
-    m_activeWorkContext.dispose();
     m_activeWorkContext = null;
     super.stop( context );
   }
@@ -109,8 +131,13 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     return getDefault().getImageRegistry().get( key );
   }
 
-  public ActiveWorkContext getActiveWorkContext( )
+  public ActiveWorkContext<Scenario> getActiveWorkContext( )
   {
     return m_activeWorkContext;
+  }
+  
+  public ICaseDataProvider getDataProvider( )
+  {
+    return (ICaseDataProvider) m_szenarioSourceProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
 }

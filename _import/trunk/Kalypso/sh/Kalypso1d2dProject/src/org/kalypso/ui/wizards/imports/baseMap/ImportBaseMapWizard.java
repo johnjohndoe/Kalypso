@@ -76,8 +76,9 @@ import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.ImportWmsWizardPage;
-import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+
+import de.renew.workflow.base.ISzenarioSourceProvider;
 
 enum SelectedPage
 {

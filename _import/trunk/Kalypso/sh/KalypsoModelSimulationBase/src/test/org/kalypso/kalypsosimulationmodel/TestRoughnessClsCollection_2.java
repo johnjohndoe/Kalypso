@@ -42,15 +42,14 @@ package test.org.kalypso.kalypsosimulationmodel;
 
 import java.net.URL;
 import java.util.Iterator;
-import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import junit.framework.TestCase;
 
 /**
  * @author madanago

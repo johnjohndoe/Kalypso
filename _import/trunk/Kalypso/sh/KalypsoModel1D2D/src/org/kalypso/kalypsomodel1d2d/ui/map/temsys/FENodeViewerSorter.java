@@ -51,8 +51,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
-import com.sun.xml.rpc.processor.util.CanonicalModelWriter.GetNameComparator;
-
 /**
  * @author Madanagopal
  *

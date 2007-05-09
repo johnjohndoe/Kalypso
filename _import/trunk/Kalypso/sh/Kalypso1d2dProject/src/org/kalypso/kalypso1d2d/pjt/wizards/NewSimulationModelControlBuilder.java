@@ -21,15 +21,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
+
+import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
  * @author Patrice Congo
@@ -225,14 +225,14 @@ public class NewSimulationModelControlBuilder
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject( projectName );
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
-        final ScenarioManager scenarioManager = nature.getScenarioManager();
+        final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
         if( scenario != null )
         {
           activeWorkContext.setCurrentSzenario( scenarioManager.deriveScenario( name, scenario ) );
         }
         else
         {
-          activeWorkContext.setCurrentSzenario( scenarioManager.createBaseScenario( name ) );
+          activeWorkContext.setCurrentSzenario( scenarioManager.createCase( name ) );
         }
       }
       catch( final CoreException e )

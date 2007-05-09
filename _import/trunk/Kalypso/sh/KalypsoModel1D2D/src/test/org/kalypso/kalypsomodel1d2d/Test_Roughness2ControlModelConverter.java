@@ -42,11 +42,11 @@ package test.org.kalypso.kalypsomodel1d2d;
 
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.kalypso.kalypsomodel1d2d.conv.Roughness2ControlModelConverter;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
-
-import junit.framework.TestCase;
 
 /**
  * @author Madanagopal

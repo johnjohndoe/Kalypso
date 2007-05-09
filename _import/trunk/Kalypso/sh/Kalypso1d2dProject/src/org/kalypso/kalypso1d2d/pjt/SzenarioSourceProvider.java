@@ -1,23 +1,22 @@
 package org.kalypso.kalypso1d2d.pjt;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
-import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 
-import de.renew.workflow.cases.CaseDataElement;
-import de.renew.workflow.cases.CaseDataMapWrapper;
+import de.renew.workflow.base.ISzenarioSourceProvider;
 import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 public class SzenarioSourceProvider extends AbstractSourceProvider implements ISzenarioSourceProvider
 {
@@ -30,17 +29,17 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
       LOGGER.setUseParentHandlers( false );
   }
 
-  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_SZENARIO_FOLDER_NAME, ACTIVE_SZENARIO_DATA_PROVIDER_NAME, ACTIVE_SCENARIO_CASEDATA_NAME };
+  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_SZENARIO_FOLDER_NAME, ACTIVE_SZENARIO_DATA_PROVIDER_NAME };
 
-  protected ActiveWorkContext activeWorkContext;
+  protected ActiveWorkContext<Scenario> activeWorkContext;
 
   /** data provider for the current szenario */
   private final SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
 
-  private IActiveContextChangeListener workContextChangeListener = new IActiveContextChangeListener()
+  private IActiveContextChangeListener<Scenario> workContextChangeListener = new IActiveContextChangeListener<Scenario>()
   {
     @SuppressWarnings("synthetic-access")
-    public void activeContextChanged( final IProject newProject, Scenario scenario )
+    public void activeContextChanged( final CaseHandlingProjectNature<Scenario> newProject, Scenario scenario )
     {
       m_dataProvider.setCurrent( getSzenarioFolder() );
 
@@ -48,7 +47,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
     }
   };
 
-  public SzenarioSourceProvider( final ActiveWorkContext context )
+  public SzenarioSourceProvider( final ActiveWorkContext<Scenario> context )
   {
     activeWorkContext = context;
     activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
@@ -71,7 +70,6 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
     final Map currentState = new TreeMap();
     currentState.put( ACTIVE_SZENARIO_FOLDER_NAME, getSzenarioFolder() );
     currentState.put( ACTIVE_SZENARIO_DATA_PROVIDER_NAME, getDataProvider() );
-    currentState.put( ACTIVE_SCENARIO_CASEDATA_NAME, getCaseDataMap() );
     return currentState;
   }
 
@@ -97,27 +95,16 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
       return findModelContext( (IFolder) parent, modelFile );
     else
       return null;
-    
+
   }
 
   private IFolder getSzenarioFolder( )
   {
-    return activeWorkContext.getCurrentScenarioFolder();
+    return activeWorkContext.getCurrentCaseFolder();
   }
 
   private ICaseDataProvider getDataProvider( )
   {
     return m_dataProvider;
-  }
-
-  private Map<String, CaseDataElement> getCaseDataMap( )
-  {
-    final Scenario currentScenario = activeWorkContext.getCurrentScenario();
-    if( currentScenario == null )
-    {
-      return new HashMap<String, CaseDataElement>();
-    }
-    final HashMap<String, CaseDataElement> result = new CaseDataMapWrapper( currentScenario.getCaseData() );
-    return result;
   }
 }

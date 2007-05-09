@@ -14,9 +14,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
+import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.contexts.IDialogWithResult;
 
 /**
@@ -87,7 +89,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
         Kalypso1D2DProjectNature.addNature( project );        
 
         /* Also activate new project */
-        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );        
+        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature<Scenario>) project.getNature( CaseHandlingProjectNature.ID ) );        
       }
       catch( CoreException e )
       {
@@ -103,7 +105,6 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
       }
       return true;
     }
-
   }
 
   /**

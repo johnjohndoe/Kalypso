@@ -51,6 +51,7 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.commands.ICommandService;
 
+
 /**
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
  * {@link ITaskExecutionListener} requests a work item from the workflow system after the command has been executed and

@@ -1,12 +1,11 @@
 package test.org.kalypso.kalypsosimulationmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
+import junit.framework.TestCase;
+
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import junit.framework.TestCase;
 
 /**
  * Test the {@link RoughnessClsCorrection} class by loading 

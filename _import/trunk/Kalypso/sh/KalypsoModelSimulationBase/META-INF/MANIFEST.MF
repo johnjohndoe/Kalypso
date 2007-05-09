@@ -28,11 +28,6 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.roughness,
  org.kalypso.kalypsosimulationmodel.core.terrainmodel,
  org.kalypso.kalypsosimulationmodel.schema,
- org.kalypso.ui.wizards.imports,
- org.kalypso.ui.wizards.imports.baseMap,
- org.kalypso.ui.wizards.imports.elevationmodel,
- org.kalypso.ui.wizards.imports.observation,
- org.kalypso.ui.wizards.imports.roughness,
  test.org.kalypso.kalypsosimulationmodel
 Eclipse-LazyStart: true 
 Bundle-Vendor: kalypso.org

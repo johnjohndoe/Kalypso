@@ -44,12 +44,16 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
+
+import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 
 /**
  * @author Gernot Belger
@@ -74,7 +78,15 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     final IIntroManager introManager = workbench.getIntroManager();
     introManager.closeIntro( introManager.getIntro() );
 
-    Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( project );
+    try
+    {
+      Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature) project.getNature( CaseHandlingProjectNature.ID ) );
+      workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
+    }
+    catch( final CoreException e )
+    {    
+      e.printStackTrace();
+    }
   }
 
 }

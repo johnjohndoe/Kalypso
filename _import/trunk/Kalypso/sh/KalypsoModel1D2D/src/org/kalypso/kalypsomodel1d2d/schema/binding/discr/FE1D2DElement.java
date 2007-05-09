@@ -116,7 +116,7 @@ public abstract class FE1D2DElement<    CT extends IFE1D2DComplexElement,
       String gmlID)
   {
     this(
-      org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
+      Util.createFeatureWithId( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT,
           parentFeature, 
           propQName, 

@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
@@ -55,19 +55,19 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.wizards.imports.ISzenarioSourceProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
+
+import de.renew.workflow.base.ISzenarioSourceProvider;
 
 /**
  * TODO: rename this class, its not nodal any more.
  * 
  * @author Gernot Belger
  */
-public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget implements IEvaluationContextConsumer
+public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
   // TODO: move this to the Nodal...Wizard
   public final static class TimeserieTypeDescription
@@ -93,8 +93,6 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     }
   }
 
-  private IFolder m_currentScenarioFolder;
-
   public CreateNodalBCFlowrelationWidget( )
   {
     super( "Randbedingung erzeugen", "Randbedinung für einen FE-Knoten erzeugen", IBoundaryCondition.QNAME );
@@ -111,7 +109,8 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
     final IBoundaryCondition[] bcresult = new IBoundaryCondition[1];
-    final IFolder scenarioFolder = m_currentScenarioFolder;
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IFolder scenarioFolder = (IFolder) handlerService.getCurrentState().getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
     display.syncExec( new Runnable()
     {
@@ -168,13 +167,5 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return DiscretisationModelUtils.findModelElementForBC( discModel, currentPos, grabDistance );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
-   */
-  public void setEvaluationContext( IEvaluationContext evaluationContext )
-  {
-    m_currentScenarioFolder = (IFolder) evaluationContext.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
   }
 }

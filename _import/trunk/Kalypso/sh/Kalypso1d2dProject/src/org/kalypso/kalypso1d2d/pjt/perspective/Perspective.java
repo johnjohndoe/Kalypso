@@ -12,6 +12,7 @@ import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.views.map.MapView;
 
+
 public class Perspective implements IPerspectiveFactory
 {
 

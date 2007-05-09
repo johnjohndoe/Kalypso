@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
+
 /**
  * Loads a template file in the current feature view. Requires that the current context contains the feature view. Use a
  * {@link ViewContextHandler} for this purpose.

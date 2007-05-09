@@ -16,11 +16,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -29,6 +27,7 @@ import org.kalypso.jwsdp.JaxbUtilities;
 import de.renew.workflow.base.IWorkflowSystem;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.WorkflowSystem;
+import de.renew.workflow.connector.context.ICaseManagerListener;
 
 /**
  * This implementation of {@link IScenarioManager} persists the scenario model data in the project workspace.
@@ -56,7 +55,7 @@ public class ScenarioManager implements IScenarioManager
 
   private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
 
-  private final List<IScenarioManagerListener> m_listeners = new ArrayList<IScenarioManagerListener>();
+  private final List<ICaseManagerListener<Scenario>> m_listeners = new ArrayList<ICaseManagerListener<Scenario>>();
 
   private ProjectScenarios m_projectScenarios;
 
@@ -93,7 +92,7 @@ public class ScenarioManager implements IScenarioManager
     if( !metadataFile.exists() )
     {
       m_projectScenarios = new org.kalypso.afgui.scenarios.ObjectFactory().createProjectScenarios();
-      createBaseScenario( "Basis" );
+      createCase( "Basis" );
     }
     else
     {
@@ -122,7 +121,7 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#getCurrentScenario()
    */
-  public Scenario getCurrentScenario( )
+  public Scenario getCurrentCase( )
   {
     return m_currentScenario;
   }
@@ -130,7 +129,7 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#setCurrentScenario(org.kalypso.scenarios.Scenario)
    */
-  public void setCurrentScenario( final Scenario scenario )
+  public void setCurrentCase( final Scenario scenario )
   {
     m_currentScenario = scenario;
   }
@@ -138,7 +137,7 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#createBaseScenario(java.lang.String)
    */
-  public Scenario createBaseScenario( final String name ) throws CoreException
+  public Scenario createCase( final String name ) throws CoreException
   {
     final Scenario newScenario = new Scenario();
     final String uri = SCENARIO_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${scenarioPath}" ), name );
@@ -175,7 +174,7 @@ public class ScenarioManager implements IScenarioManager
     return newScenario;
   }
 
-  public void removeScenario( final Scenario scenario, IProgressMonitor monitor ) throws CoreException
+  public void removeCase( final Scenario scenario, IProgressMonitor monitor ) throws CoreException
   {
     if( monitor == null )
     {
@@ -213,10 +212,10 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#getScenario(java.lang.String)
    */
-  public Scenario getScenario( final String id )
+  public Scenario getCase( final String id )
   {
     Scenario result = null;
-    for( final Scenario scenario : getRootScenarios() )
+    for( final Scenario scenario : getCases() )
     {
       result = findScenario( scenario, id );
       if( result != null )
@@ -262,7 +261,7 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#addScenarioManagerListener(org.kalypso.afgui.scenarios.IScenarioManagerListener)
    */
-  public void addScenarioManagerListener( final IScenarioManagerListener l )
+  public void addCaseManagerListener( final ICaseManagerListener<Scenario> l )
   {
     if( l == null )
     {
@@ -284,7 +283,7 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#removeScenarioManagerListener(org.kalypso.afgui.scenarios.IScenarioManagerListener)
    */
-  public void removeScenarioManagerListener( final IScenarioManagerListener l )
+  public void removeCaseManagerListener( final ICaseManagerListener<Scenario> l )
   {
     if( l == null )
     {
@@ -347,35 +346,24 @@ public class ScenarioManager implements IScenarioManager
   /**
    * @see org.kalypso.afgui.scenarios.IScenarioManager#getRootScenarios()
    */
-  public List<Scenario> getRootScenarios( )
+  public List<Scenario> getCases( )
   {
     return m_projectScenarios.getScenarios();
   }
 
-  /**
-   * Constructs a path for the scenario relative to the project location.
-   */
-  public IPath getProjectPath( final Scenario scenario )
-  {
-    if( scenario.getParentScenario() != null )
-      return getProjectPath( scenario.getParentScenario() ).append( scenario.getName() );
-    else
-      return new Path( scenario.getName() );
-  }
-
   void fireScenarioAdded( final Scenario scenario )
   {
-    for( final IScenarioManagerListener l : m_listeners )
+    for( final ICaseManagerListener<Scenario> l : m_listeners )
     {
-      l.scenarioAdded( scenario );
+      l.caseAdded( scenario );
     }
   }
 
   private void fireScenarioRemoved( final Scenario scenario )
   {
-    for( final IScenarioManagerListener l : m_listeners )
+    for( final ICaseManagerListener<Scenario> l : m_listeners )
     {
-      l.scenarioRemoved( scenario );
+      l.caseRemoved( scenario );
     }
   }
 

@@ -8,17 +8,12 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.FeatureRangeSet;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.gml.binding.math.Polynomial1D;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Test case for the feature range set.
