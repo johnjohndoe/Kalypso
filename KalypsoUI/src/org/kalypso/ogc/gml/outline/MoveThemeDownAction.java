@@ -1,85 +1,90 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
- 
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * @author belger
+ * @author Stefan Kurzbach
  */
-public class MoveThemeDownAction extends AbstractOutlineAction
+public class MoveThemeDownAction extends MapModellViewActionDelegate
 {
-  public MoveThemeDownAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer, final IListManipulator listManip )
-  {
-    super( text, image, tooltipText, outlineViewer, listManip );
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( )
+  public void run( final IAction action )
   {
-    getListManipulator().moveElementDown( ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement() );
-  }
-
-  @Override
-  protected final void refresh( )
-  {
-    boolean bEnable = false;
-
-    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
-
-    // if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme))
-    if( !s.isEmpty() && (s.getFirstElement() instanceof IKalypsoTheme) )
+    IListManipulator listManipulator = getView();
+    IKalypsoTheme selectedElement = getSelectedTheme();
+    if( listManipulator != null && selectedElement != null )
     {
-      final Object[] elements = getOutlineviewer().getMapPanel().getMapModell().getAllThemes();
-
-      bEnable = (elements[elements.length - 1] != s.getFirstElement());
+      listManipulator.moveElementDown( selectedElement );
     }
-
-    setEnabled( bEnable );
+  }
+  /**
+   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void selectionChanged( IAction action, ISelection selection )
+  {
+    super.selectionChanged( action, selection );
+    final IKalypsoTheme selectedTheme = getSelectedTheme();
+    boolean bEnable = false;
+    final IMapModellView view = getView();
+    if( selectedTheme != null && view != null )
+    {
+      final IMapModell mapModell = view.getMapPanel().getMapModell();
+      if( mapModell != null )
+      {
+        final Object[] elements = mapModell.getAllThemes();
+        bEnable = elements[0] != selectedTheme;
+      }
+    }
+    action.setEnabled( bEnable );
   }
 }

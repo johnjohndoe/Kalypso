@@ -47,20 +47,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.outline.MapModellViewActionDelegate;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 
-public class AddThemeAction implements PluginMapOutlineAction
+public class AddThemeAction extends MapModellViewActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( IAction action )
   {
-    if( action instanceof PluginMapOutlineActionDelegate )
+    if( action instanceof PluginMapOutlineAction )
     {
-      final IMapModellView viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      final IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
       final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
@@ -75,11 +76,12 @@ public class AddThemeAction implements PluginMapOutlineAction
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( IAction action, ISelection selection )
   {
-    if( action instanceof PluginMapOutlineActionDelegate )
+    if( action instanceof PluginMapOutlineAction )
     {
-      final IMapModellView viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      final IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
       if( viewer == null )
         action.setEnabled( false );
       else

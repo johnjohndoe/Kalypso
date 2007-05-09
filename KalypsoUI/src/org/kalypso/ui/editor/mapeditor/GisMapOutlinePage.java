@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuListener;
@@ -72,11 +71,10 @@ import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.AbstractOutlineAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -92,7 +90,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private final GisMapOutlineViewer m_modellView;
 
-  private List<PluginMapOutlineActionDelegate> m_actionDelegates = null;
+  private List<PluginMapOutlineAction> m_actionDelegates = null;
 
   public GisMapOutlineViewer getModellView( )
   {
@@ -134,12 +132,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_modellView.dispose();
     }
 
-    /** add registered PluginMapOutlineAction */
-    for( final Iterator iter = m_actionDelegates.iterator(); iter.hasNext(); )
-    {
-      final AbstractOutlineAction action = (AbstractOutlineAction) iter.next();
+    for( final AbstractOutlineAction action : m_actionDelegates )
       action.dispose();
-    }
   }
 
   /**
@@ -159,9 +153,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    for( final Iterator iter = m_actionDelegates.iterator(); iter.hasNext(); )
+    for( final AbstractOutlineAction action : m_actionDelegates )
     {
-      AbstractOutlineAction action = (AbstractOutlineAction) iter.next();
       toolBarManager.add( action );
     }
 

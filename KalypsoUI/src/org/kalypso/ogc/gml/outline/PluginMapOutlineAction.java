@@ -1,7 +1,3 @@
-package org.kalypso.ogc.gml.outline;
-
-import org.eclipse.ui.IActionDelegate;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -42,18 +38,46 @@ import org.eclipse.ui.IActionDelegate;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.outline;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.kalypso.commons.list.IListManipulator;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
+ * Superclass for plugins that modify the map model
  * 
- * PluginMapOutlineAction
- * <p>
- * interface to extention point for actions on Mapoutline
+ * TODO: merge with AbstractOutlineAction
  * 
- * created by
- * 
- * @author doemming (25.05.2005)
+ * @author kuepfer
  */
-public interface PluginMapOutlineAction extends IActionDelegate
+public class PluginMapOutlineAction extends AbstractOutlineAction
 {
-//nothing 
+  private final PluginMapOutlineActionDelegate m_innerAction;
+
+  public PluginMapOutlineAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView selectionProvider, PluginMapOutlineActionDelegate outlineAction, final IListManipulator listManip )
+  {
+    super( text, image, tooltipText, selectionProvider, listManip );
+    m_innerAction = outlineAction;
+    outlineAction.setView( selectionProvider );
+  }
+
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
+  @Override
+  public void run( )
+  {
+    // m_innerAction.run( getOutlineviewer(), getListManipulator() );
+    m_innerAction.run( this );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( SelectionChangedEvent event )
+  {
+    m_innerAction.selectionChanged( this, event.getSelection() );
+  }
 }

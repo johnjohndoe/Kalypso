@@ -40,8 +40,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -49,20 +49,18 @@ import org.kalypso.ui.ImageProvider;
  */
 public class GisMapOutlinePageExtension
 {
-  // private final static String GIS_MAP_OUTLINE_EXTENSION_POINT = "org.kalypso.ui.mapviewaction";
-
-  public static List<PluginMapOutlineActionDelegate> getRegisteredMapOutlineActions( final IMapModellView gisMapOutlineViewer )
+  public static List<PluginMapOutlineAction> getRegisteredMapOutlineActions( final IMapModellView gisMapOutlineViewer )
   {
-    final ArrayList<PluginMapOutlineActionDelegate> actions = new ArrayList<PluginMapOutlineActionDelegate>();
+    final ArrayList<PluginMapOutlineAction> actions = new ArrayList<PluginMapOutlineAction>();
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
     IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" );
     // check if extention point is registered on start up
     if( extensionPoint == null )
-      return new ArrayList<PluginMapOutlineActionDelegate>();
+      return new ArrayList<PluginMapOutlineAction>();
     IExtension[] extensions = extensionPoint.getExtensions();
     // no mapview extensions have been registered
     if( extensions == null )
-      return new ArrayList<PluginMapOutlineActionDelegate>();
+      return new ArrayList<PluginMapOutlineAction>();
     for( int i = 0; i < extensions.length; i++ )
     {
       IExtension extension = extensions[i];
@@ -83,11 +81,11 @@ public class GisMapOutlinePageExtension
           visible = true;
         String tooltip = configurationElement.getAttribute( "tooltip" );
         // create action delegate
-        PluginMapOutlineActionDelegate actionDelegate;
+        PluginMapOutlineAction actionDelegate;
         try
         {
-          PluginMapOutlineAction action = (PluginMapOutlineAction) configurationElement.createExecutableExtension( "class" );
-          actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, gisMapOutlineViewer, action, gisMapOutlineViewer );
+          PluginMapOutlineActionDelegate action = (PluginMapOutlineActionDelegate) configurationElement.createExecutableExtension( "class" );
+          actionDelegate = new PluginMapOutlineAction( title, icon, tooltip, gisMapOutlineViewer, action, gisMapOutlineViewer );
           actionDelegate.setEnabled( visible );
           actions.add( actionDelegate );
         }

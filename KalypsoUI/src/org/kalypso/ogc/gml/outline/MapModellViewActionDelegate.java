@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 /**
  * @author Stefan Kurzbach
  */
-public abstract class MapModellViewActionDelegate extends ActionDelegate implements IViewActionDelegate, PluginMapOutlineAction
+public abstract class MapModellViewActionDelegate extends ActionDelegate implements IViewActionDelegate, PluginMapOutlineActionDelegate
 {
   private IMapModellView m_view;
 
@@ -61,6 +61,11 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
   public IMapModellView getView( )
   {
     return m_view;
+  }
+
+  public void setView( final IMapModellView view )
+  {
+    m_view =  view;
   }
 
   public IKalypsoTheme getSelectedTheme( )
@@ -75,9 +80,10 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
   {
     if( view instanceof IMapModellView )
     {
-      m_view = (IMapModellView) view;
+      setView( (IMapModellView)view );
     }
   }
+
 
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
@@ -96,5 +102,14 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
         m_selectedElement = (IKalypsoTheme) firstElement;
       }
     }
+    boolean bEnable = false;
+
+    final IStructuredSelection s = (IStructuredSelection)selection;
+
+    if( s.getFirstElement() instanceof IKalypsoTheme )
+      bEnable = true;
+    action.setEnabled( bEnable );
+    
+    
   }
 }

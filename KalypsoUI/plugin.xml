@@ -683,7 +683,7 @@
 				label="%org.kalypso.ogc.gml.outline.RemoveRuleAction2.label"
 				tooltip="%org.kalypso.ogc.gml.outline.RemoveRuleAction2.tooltip"
 				icon="icons/full/elcl16/remove.gif"
-				class="org.kalypso.ogc.gml.outline.RemoveRuleAction2"
+				class="org.kalypso.ogc.gml.outline.RemoveRuleAction"
 				menubarPath="org.kalypso.objectclass.style.menu/styleops"
 				id="org.kalypso.ogc.gml.outline.RemoveRuleAction2" />
 			<menu label="%org.kalypso.objectclass.style.menu.label"
@@ -842,6 +842,12 @@
 	<extension id="org.kalypso.ui.mapview.action" name="mapviewoutline"
 		point="org.kalypso.ui.mapviewaction">
 		<MapviewAction
+			title="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label"
+			enabled="false"
+			tooltip="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"
+			icon="icons/full/elcl16/impl_co.gif"
+			class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"/>		
+		<MapviewAction
 			title="%org.kalypso.ogc.gml.outline.ActivateThemeAction2.label"
 			enabled="false"
 			tooltip="%org.kalypso.ogc.gml.outline.ActivateThemeAction2.tooltip"
@@ -852,25 +858,25 @@
 			enabled="false"
 			tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.tooltip"
 			icon="icons/full/elcl16/next_nav.gif"
-			class="org.kalypso.ogc.gml.outline.MoveThemeDownAction2" />
+			class="org.kalypso.ogc.gml.outline.MoveThemeDownAction" />
 		<MapviewAction
-			title="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.label"
+			title="%org.kalypso.ogc.gml.outline.MoveThemeUpAction3.label"
 			enabled="false"
-			tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.tooltip"
+			tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction3.tooltip"
 			icon="icons/full/elcl16/prev_nav.gif"
-			class="org.kalypso.ogc.gml.outline.MoveThemeUpAction2" />		
+			class="org.kalypso.ogc.gml.outline.MoveThemeUpAction" />		
 		<MapviewAction
-			title="%org.kalypso.ogc.gml.outline.RemoveThemeAction2.label"
+			title="%org.kalypso.ogc.gml.outline.RemoveThemeAction3.label"
 			enabled="false"
-			tooltip="%org.kalypso.ogc.gml.outline.RemoveThemeAction2.tooltip"
+			tooltip="%org.kalypso.ogc.gml.outline.RemoveThemeAction3.tooltip"
 			icon="icons/full/elcl16/remove.gif"
-			class="org.kalypso.ogc.gml.outline.RemoveThemeAction2" />
+			class="org.kalypso.ogc.gml.outline.RemoveThemeAction" />
 		<MapviewAction
 			title="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction2.label"
 			enabled="false"
 			tooltip="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction2.tooltip"
 			icon="icons/util/update.gif"
-			class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction2" />
+			class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction" />
 	</extension>
 	<!--setting this activity removes the compare functionality in application
 		<extension point="org.eclipse.ui.activities">
@@ -1170,7 +1176,7 @@ TODO: unfortunately the save button is always disabled
              toolbarPath="outline/tools"
              tooltip="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"/>
        <action
-             class="org.kalypso.ogc.gml.outline.MoveThemeUpAction3"
+             class="org.kalypso.ogc.gml.outline.MoveThemeUpAction"
              icon="icons/full/elcl16/prev_nav.gif"
              id="org.kalypso.ui.views.outline.moveThemeUp"
              label="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.label"
@@ -1178,7 +1184,7 @@ TODO: unfortunately the save button is always disabled
              toolbarPath="outline/tools"
              tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.tooltip"/>
        <action
-             class="org.kalypso.ogc.gml.outline.MoveThemeDownAction3"
+             class="org.kalypso.ogc.gml.outline.MoveThemeDownAction"
              icon="icons/full/elcl16/next_nav.gif"
              id="org.kalypso.ui.views.outline.moveThemeDown"
              label="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.label"

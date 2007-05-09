@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -208,7 +209,6 @@ public class SaveStyleAction extends AbstractOutlineAction
     }
   }
 
-  @Override
   protected final void refresh( )
   {
     boolean bEnable = false;
@@ -219,5 +219,14 @@ public class SaveStyleAction extends AbstractOutlineAction
       bEnable = true;
 
     setEnabled( bEnable );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( SelectionChangedEvent event )
+  {
+    // TODO Auto-generated method stub
+    
   }
 }
