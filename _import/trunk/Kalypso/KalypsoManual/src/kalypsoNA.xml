@@ -259,6 +259,56 @@
       wird die Quantifizierung des Zustromes von außen vollzogen.
       Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
       Tiefengrundwasserleiter.</para>
+
+      <para><table align="center" id="kalypso_na-mapping_teilgebiete">
+          <title>Mapping Shape-Datei - Modellelement (Teilgebiete)</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <thead>
+              <row>
+                <entry>Quelle</entry>
+
+                <entry>Ziel</entry>
+
+                <entry>Bedeutung</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>GEOM</entry>
+
+                <entry>Geometrie</entry>
+
+                <entry>Geometrie (Polygon)</entry>
+              </row>
+
+              <row>
+                <entry>TeilgebNr</entry>
+
+                <entry>name</entry>
+
+                <entry align="center">Teilgebietsnummer zur besseren Zuordnung
+                (optional)</entry>
+              </row>
+
+              <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung (optional), <abbrev>z. B.</abbrev> Name
+                des zugehörigen Gewässersystems</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
     </section>
 
     <section>
@@ -360,7 +410,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/boden_na.png" scale="100" />
+            <imagedata fileref="img/kalypso_na/Kapitel_2/bodenaufbau-na.png"
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -391,6 +442,11 @@
           <para>festlegen der Bodenschlüssel unter Einbeziehung der
           ADV-Bezeichnungen</para>
         </listitem>
+
+        <listitem>
+          <para>bei voliegender Geologie --&gt; verschneiden von Geologie und
+          Bodenart zu einer Shape-Datei Bodenprofil</para>
+        </listitem>
       </itemizedlist>
     </section>
 
@@ -413,6 +469,117 @@
       <para>Nach der Verschneidung können Hydrotope identischer Eigenschaften
       in einem Teilgebiet zusammengefast werden. Hierdurch kann die Rechenzeit
       des späteren Modells erheblich verringert werden.</para>
+
+      <table id="kalypso_na-mapping_hydrotope">
+        <title>Mapping Shape-Dateien - Modellelemente (Hydrotope)</title>
+
+        <tgroup align="center" cols="3">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" />
+
+          <colspec align="left" />
+
+          <thead>
+            <row>
+              <entry>Quelle</entry>
+
+              <entry>Ziel</entry>
+
+              <entry>Bedeutung</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>Beschr</entry>
+
+              <entry>description</entry>
+
+              <entry>Beschreibung (optional)</entry>
+            </row>
+
+            <row>
+              <entry>Name</entry>
+
+              <entry>name</entry>
+
+              <entry>Name (optional)</entry>
+            </row>
+
+            <row>
+              <entry>GEOM</entry>
+
+              <entry>Geometrie</entry>
+
+              <entry>Geometrie (Multipolygon)</entry>
+            </row>
+
+            <row>
+              <entry>NutzungALB</entry>
+
+              <entry>Nutzungsschlüssel</entry>
+
+              <entry>Kürzel der Landnutzung (Zuordnung zu den global
+              definierten Nutzungsparametern)</entry>
+            </row>
+
+            <row>
+              <entry>Bodentyp</entry>
+
+              <entry>Bodenschlüssel</entry>
+
+              <entry>Kürzel des Bodenaufbaus. (Zuordnung zu den global
+              definierten Bodenparametern)</entry>
+            </row>
+
+            <row>
+              <entry>VersiegKor</entry>
+
+              <entry>Faktor Versiegelung</entry>
+
+              <entry>Multiplikativer Korrekturfaktor des global definierten
+              Versiegelungsgrades einer Landnutzung</entry>
+            </row>
+
+            <row>
+              <entry>EntwArt</entry>
+
+              <entry>Entwässerung</entry>
+
+              <entry>Unterscheidung in besielte und unbesielte Flächen
+              (optional)</entry>
+            </row>
+
+            <row>
+              <entry>MaxPerRate</entry>
+
+              <entry>max. Perkolationsrate</entry>
+
+              <entry>Hydraulische Leitfähigkeit, mit der das aus der letzten
+              Bodenschicht perkolierte Wasser in das GW eindringen
+              kann.</entry>
+            </row>
+
+            <row>
+              <entry>GWFaktor</entry>
+
+              <entry>Zuflussanteil GW</entry>
+
+              <entry>Anteil des Grundwassers, das im oberen Grundwasserleiter
+              verbleibt. Der Differenzanteil wird in den
+              Tiefengrundwasserleiter abgeschlagen.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para><note>
+          <para>Nutzungs- und Bodenschlüssel dienen der Zuordnung der
+          Landnutzung und des Bodentypes zu den Attributen im
+          Parameterkatalog. Es ist daher auf eine korrekte Schreibweise zu
+          achten.</para>
+        </note></para>
     </section>
 
     <section id="kalypso_na-Systemelemente">
@@ -659,7 +826,9 @@
       Aufbereitung der geometrischen Eingangsdaten (Teilgebiete, Stränge und
       Knoten), sowie die Erstellung der hydrologischen Einheiten (Hydrotope)
       in einem GIS. Notwendige Inhalte der GIS Grundlagendateien sind in <xref
-      linkend="kalypso_na-mapping_teilgebiete" /> bis <xref
+      linkend="kalypso_na-mapping_teilgebiete" />,<xref
+      linkend="kalypso_na-mapping_straenge" />,<xref
+      linkend="kalypso_na-mapping_knoten" /> und <xref
       linkend="kalypso_na-mapping_hydrotope" /> zu finden. Im Kalypso Modeler
       (siehe <xref linkend="programm_start" />) können diese Daten dann in ein
       neues NA-Modell Projekt integriert werden. Um die Datenmenge und später
@@ -691,7 +860,7 @@
       und die Inhalte den Modellelementen zuzuordnen. Hierzu ist ein Mapping
       vorgesehen, welches auf der Seite der Quelle die Informationen aus der
       Shape-Datei vorhält, um diese den Elementen des Zieles (des neuen
-      Modelles) zuzuordnen. Die Zuordnung richtete sich nach den Inhalten der
+      Modelles) zuzuordnen. Die Zuordnung richtet sich nach den Inhalten der
       Shape Datei, wobei auch die Datentypen berücksichtigt werden, indem nur
       die möglichen Zuordnungen angezeigt werden.</para>
 
@@ -716,56 +885,6 @@
       Modellvervollständigung in entsprechenden Tabellen bearbeitet werden. Es
       ist aufgrund der Datenredundanz sinnvoll nur die vorgeschlagenen
       statischen Informationen durch die Shape-Dateien vorzuhalten.</para>
-
-      <table align="center" id="kalypso_na-mapping_teilgebiete">
-        <title>Mapping Shape-Datei - Modellelement (Teilgebiete)</title>
-
-        <tgroup align="center" cols="3">
-          <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" />
-
-          <colspec align="left" />
-
-          <thead>
-            <row>
-              <entry>Quelle</entry>
-
-              <entry>Ziel</entry>
-
-              <entry>Bedeutung</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry>GEOM</entry>
-
-              <entry>Geometrie</entry>
-
-              <entry>Geometrie (Polygon)</entry>
-            </row>
-
-            <row>
-              <entry>TeilgebNr</entry>
-
-              <entry>name</entry>
-
-              <entry align="center">Teilgebietsnummer zur besseren Zuordnung
-              (optional)</entry>
-            </row>
-
-            <row>
-              <entry>Beschr</entry>
-
-              <entry>description</entry>
-
-              <entry>Beschreibung (optional), <abbrev>z. B.</abbrev> Name des
-              zugehörigen Gewässersystems</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
 
       <table id="kalypso_na-mapping_straenge">
         <title>Mapping Shape-Datei - Modellelement (Straenge)</title>
@@ -825,7 +944,7 @@
         </tgroup>
       </table>
 
-      <table>
+      <table id="kalypso_na-mapping_knoten">
         <title>Mapping Shape-Datei - Modellelemente (Knoten)</title>
 
         <tgroup align="center" cols="3">
@@ -873,117 +992,6 @@
           </tbody>
         </tgroup>
       </table>
-
-      <table id="kalypso_na-mapping_hydrotope">
-        <title>Mapping Shape-Dateien - Modellelemente (Hydrotope)</title>
-
-        <tgroup align="center" cols="3">
-          <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" />
-
-          <colspec align="left" />
-
-          <thead>
-            <row>
-              <entry>Quelle</entry>
-
-              <entry>Ziel</entry>
-
-              <entry>Bedeutung</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry>Beschr</entry>
-
-              <entry>description</entry>
-
-              <entry>Beschreibung (optional)</entry>
-            </row>
-
-            <row>
-              <entry>Name</entry>
-
-              <entry>name</entry>
-
-              <entry>Name (optional)</entry>
-            </row>
-
-            <row>
-              <entry>GEOM</entry>
-
-              <entry>Geometrie</entry>
-
-              <entry>Geometrie (Multipolygon)</entry>
-            </row>
-
-            <row>
-              <entry>NutzungALB</entry>
-
-              <entry>Nutzungsschlüssel</entry>
-
-              <entry>Kürzel der Landnutzung (Zuordnung zu den global
-              definierten Nutzungsparametern)</entry>
-            </row>
-
-            <row>
-              <entry>Bodentyp</entry>
-
-              <entry>Bodenschlüssel</entry>
-
-              <entry>Kürzel des Bodenaufbaus. (Zuordnung zu den global
-              definierten Bodenparametern)</entry>
-            </row>
-
-            <row>
-              <entry>VersiegKor</entry>
-
-              <entry>Faktor Versiegelung</entry>
-
-              <entry>Multiplikativer Korrekturfaktor des global definierten
-              Versiegelungsgrades einer Landnutzung</entry>
-            </row>
-
-            <row>
-              <entry>EntwArt</entry>
-
-              <entry>Entwässerung</entry>
-
-              <entry>Unterscheidung in besielte und unbesielte Flächen
-              (optional)</entry>
-            </row>
-
-            <row>
-              <entry>MaxPerRate</entry>
-
-              <entry>max. Perkolationsrate</entry>
-
-              <entry>Hydraulische Leitfähigkeit, mit der das aus der letzten
-              Bodenschicht perkolierte Wasser in das GW eindringen
-              kann.</entry>
-            </row>
-
-            <row>
-              <entry>GWFaktor</entry>
-
-              <entry>Zuflussanteil GW</entry>
-
-              <entry>Anteil des Grundwassers, das im oberen Grundwasserleiter
-              verbleibt. Der Differenzanteil wird in den
-              Tiefengrundwasserleiter abgeschlagen.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
-
-      <para><note>
-          <para>Nutzungs- und Bodenschlüssel dienen der Zuordnung der
-          Landnutzung und des Bodentypes zu den Attributen im
-          Parameterkatalog. Es ist daher auf eine korrekte Schreibweise zu
-          achten.</para>
-        </note></para>
     </section>
 
     <section id="kalypso_na-systemvernetzung">
