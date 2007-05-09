@@ -364,23 +364,13 @@
     </itemizedlist>
 
     <figure>
-      <title>Kalypso-Startseite mit allen Plug-in Modulen</title>
+      <title>Kalypso-Startseite mit allen Plug-in Modulen (links): Welcome
+      Dialog (rechts)</title>
 
       <mediaobject>
         <imageobject>
           <imagedata align="center" fileref="img/WSPM/01_Willkommen.bmp"
-                     scale="50" />
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <figure>
-      <title>Welcome Dialog</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata align="center" fileref="img/WSPM/02_Aktionen.bmp"
-                     scale="80" />
+                     scale="90" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -394,9 +384,16 @@
       </listitem>
 
       <listitem>
-        <para>Neues Projekt erstellen: Über diese Option kann man ein neues
-        Kalypso-WSPM Projekt im referenzierten Workspace anlegen und erhält
-        ein leeres Projekt. (siehe Kapitel 3.2)</para>
+        <para><figure>
+            <mediaobject>
+              <imageobject>
+                <imagedata align="left"
+                           fileref="img/WSPM/Icon_NeuesProjekt.bmp" />
+              </imageobject>
+            </mediaobject>
+          </figure>Neues Projekt erstellen: Über diese Option kann man ein
+        neues Kalypso-WSPM Projekt im referenzierten Workspace anlegen und
+        erhält ein leeres Projekt. (siehe Kapitel 3.2)</para>
       </listitem>
 
       <listitem>
@@ -444,7 +441,17 @@
       ...</guimenuitem> kann auch die Perspektive
       <guimenu>Profileditor</guimenu> geöffnet werden. Der Wechsel zwischen
       den Perspektiven ist über die Reiter am oberen Rand (unterhalb der
-      Menuleiste) möglich. <emphasis role="bold">(BILD!!!)</emphasis></para>
+      Menuleiste) möglich.</para>
+
+      <figure>
+        <title>Wechsel zwischen den Perspektiven über Reiter</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/Reiter.bmp" />
+          </imageobject>
+        </mediaobject>
+      </figure>
 
       <section>
         <title>Perspektive "Spiegellinienberechnung"</title>
@@ -506,9 +513,20 @@
 
           <listitem>
             <para>FeatureView: für Bearbeitung von Features (Eigenschaften)
-            (rechts) <emphasis role="bold">(BILD!!!)</emphasis></para>
+            (rechts)</para>
           </listitem>
         </itemizedlist>
+
+        <figure>
+          <title>Perspektive "Spiegellinienberechnung"</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Perspektive_Spiegellinienberechnung.bmp"
+                         scale="100" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
@@ -567,9 +585,19 @@
 
           <listitem>
             <para>Profileditor- Diagramm: graphische Darstellung des Profils
-            (rechts unten) <emphasis role="bold">(BILD!!!)</emphasis></para>
+            (rechts unten)</para>
           </listitem>
         </itemizedlist>
+
+        <figure>
+          <title>Perspektive „Profileditor/ Profil Manager“</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Perspektive_ProfilManager.bmp" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
     </section>
 
@@ -591,13 +619,19 @@
       <guibutton>Neues Projekt erstellen</guibutton> zu wählen. Es erscheint
       folgendes Pop-up-window:</para>
 
+      <figure>
+        <title>Neues Kalypso-WSPM Projekt anlegen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/Popup_NeuesProjekt.bmp" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
       <itemizedlist>
         <listitem>
-          <para><emphasis role="bold">Bild einfügen</emphasis></para>
-        </listitem>
-
-        <listitem>
-          <para>Projektname eingeben z.B: FlussXXX</para>
+          <para>Projektname eingeben z.B: Testfluss</para>
         </listitem>
 
         <listitem>
@@ -609,10 +643,10 @@
       <para>Ein neues leeres Projekt wird im referenzierten Workspace
       erzeugt.</para>
 
-      <para>Es erscheint ein weiteres Pop-up-window mit der Frage, ob das neue
-      Datenmodell ein Spiegellinienmodell sei. Hier muss
-      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt werden <emphasis
-      role="bold">(BILD!!!!)</emphasis>.</para>
+      <para><emphasis>Es erscheint ein weiteres Pop-up-window mit der Frage,
+      ob das neue Datenmodell ein Spiegellinienmodell sei. Hier muss
+      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt werden</emphasis>
+      <emphasis role="bold">????</emphasis>.</para>
 
       <para>Kalypso1d hat das Projekt erzeugt und eine „Default“-Struktur
       angelegt (siehe Perspektive "Spiegellinienberechnung" <emphasis
@@ -626,8 +660,13 @@
 
       <itemizedlist>
         <listitem>
-          <para><guimenuitem>Datei &gt; Neu... &gt; TUHH
-          1d-Spiegellinienberechnung &gt; Projekt</guimenuitem></para>
+          <para>Klicken Sie mit der rechten Maustaste in den
+          Navigatorbereich.</para>
+        </listitem>
+
+        <listitem>
+          <para><guimenuitem>Neu... &gt; TUHH 1d-Spiegellinienberechnung &gt;
+          Projekt</guimenuitem></para>
         </listitem>
 
         <listitem>
@@ -636,10 +675,10 @@
         </listitem>
       </itemizedlist>
 
-      <para>Es erscheint ein Pop-up-window mit der Frage, ob das neue
-      Datenmodell ein Spiegellinienmodell sei. Hier muss
-      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt werden <emphasis
-      role="bold">(BILD!!!!)</emphasis>.</para>
+      <para><emphasis>Es erscheint ein Pop-up-window mit der Frage, ob das
+      neue Datenmodell ein Spiegellinienmodell sei. Hier muss
+      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt
+      werden</emphasis>.</para>
 
       <para>Kalypso1d hat das Projekt erzeugt und eine „Default“-Struktur
       angelegt (siehe Perspektive "Spiegellinienberechnung" <emphasis
@@ -653,10 +692,21 @@
         <itemizedlist>
           <listitem>
             <para>Geben Sie dem Projekt einen Namen und ggf eine Beschreibung
-            im FeatureView ein. <emphasis
-            role="bold">(BILD!!!)</emphasis></para>
+            im FeatureView ein.</para>
           </listitem>
+        </itemizedlist>
 
+        <figure>
+          <title>Definition des Projekt-Namens im FeatureView</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/FeatureView_Projektname.bmp" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <itemizedlist>
           <listitem>
             <para>Öffnen Sie im Bäumchen das Projekt</para>
           </listitem>
@@ -665,10 +715,22 @@
             <para>Gehen Sie mit der rechten Maustaste auf
             <guimenuitem>Gewässer &gt; Neu &gt; Gewässer</guimenuitem></para>
           </listitem>
+        </itemizedlist>
 
+        <figure>
+          <title>Einfügen eines neuen Gewässers im Bäumchen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="left" fileref="img/WSPM/NeuesGewaesser.bmp"
+                         scale="100" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <itemizedlist>
           <listitem>
-            <para>Nun kann ein neues Gewässer angelegt werden (<emphasis
-            role="bold">BILD!!!!)</emphasis></para>
+            <para>Nun kann ein neues Gewässer angelegt werden</para>
           </listitem>
 
           <listitem>
@@ -676,6 +738,16 @@
             im FeatureView ein</para>
           </listitem>
         </itemizedlist>
+
+        <figure>
+          <title>Definition eines neuen Gewässernamens im FeatureView</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/FeatureView_Gewaessername.bmp" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
@@ -767,12 +839,13 @@
 
       <para>Wählen Sie auf der Startseite den Button <emphasis role="bold">XXX
       </emphasis><guibutton>Bereits vorhandene Projekte bearbeiten</guibutton>
-      und gehen Sie anschließend in den Navigatorbereich um dort ein Projekt
-      zu importieren.</para>
+      und klicken Sie anschließend im Navigatorbereich mit der rechten
+      Maustaste. Führen Sie folgende Schritte durch, um ein Projekt zu
+      importieren.</para>
 
       <itemizedlist>
         <listitem>
-          <para><guimenuitem>Datei &gt; Neu... &gt; Projekt &gt; Kalypso &gt;
+          <para><guimenuitem>Neu... &gt; Projekt &gt; Kalypso &gt;
           Spiegellinienberechnung &gt; TUHH ... aus WspWinProjekt &gt;
           Weiter</guimenuitem></para>
         </listitem>
@@ -786,11 +859,20 @@
           <para>Projektname vergeben <guibutton>Fertig
           stellen</guibutton></para>
         </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">BILD!!!!!!!</emphasis></para>
-        </listitem>
       </itemizedlist>
+
+      <figure>
+        <title>Dialog für „neues Projekt anlegen“ und Browsen des
+        WspWin-Projektes</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="left"
+                       fileref="img/WSPM/Projekt_importierenWspWin.bmp"
+                       scale="95" />
+          </imageobject>
+        </mediaobject>
+      </figure>
 
       <para><emphasis role="bold">Haben Sie Probleme?</emphasis></para>
 
@@ -845,7 +927,15 @@
           <para>Nur der Prof-Ordner wird angelegt</para>
         </note>
 
-        <para><emphasis role="bold">Bilder!!!!!!!!!!!!!!</emphasis></para>
+        <figure>
+          <title>WspWin Projekt exportieren</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Projekt_exportierenWspWin.bmp" />
+            </imageobject>
+          </mediaobject>
+        </figure>
 
         <itemizedlist>
           <listitem>
@@ -895,14 +985,13 @@
             </listitem>
 
             <listitem>
-              <para>Nun gibt es zwei Möglichkeiten: <emphasis
-              role="bold">(BILDER!!!!)</emphasis></para>
+              <para>Nun gibt es zwei Möglichkeiten:</para>
 
               <orderedlist>
                 <listitem>
                   <para><itemizedlist>
                       <listitem>
-                        <para><guilabel>Stammverzeichnis auswählen</guilabel>
+                        <para><guilabel>Archivdatei auswählen</guilabel>
                         markieren, dann zum gewünschten Projekt-Ordner browsen
                         und auswählen mit <guibutton>OK</guibutton></para>
                       </listitem>
@@ -945,6 +1034,16 @@
               </orderedlist>
             </listitem>
           </itemizedlist></para>
+
+        <figure>
+          <title>WSPM-Projekt importieren über die Archivdatei</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Projekt_importierenWSPM.bmp" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
@@ -967,8 +1066,17 @@
         </orderedlist>
 
         <para>Jetzt kann die gewünschte Ansicht ausgewählt werden: Baum-,
-        Feature- oder Karten-Ansicht <emphasis
-        role="bold">(BILDER!!!!)</emphasis></para>
+        Feature- oder Karten-Ansicht.</para>
+
+        <figure>
+          <title>Öffnen eines Projektes aus dem Navigator</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Oeffnen_aus_Navigator_01.bmp" />
+            </imageobject>
+          </mediaobject>
+        </figure>
 
         <section>
           <title>Arbeiten in der Baum-Ansicht</title>
@@ -1016,60 +1124,136 @@
 
               <tbody>
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Observation.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Observation als Tabelle visualisieren</entry>
+                  <entry valign="middle">Observation als Tabelle
+                  visualisieren</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Editiert_als_Observation.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Editiert das ausgewählte Feature als
+                  <entry valign="middle">Editiert das ausgewählte Feature als
                   Observation</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_NeuesFeature.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Erstellt ein neues Feature/ neues default Feature
-                  wird eingefügt</entry>
+                  <entry valign="middle">Erstellt ein neues Feature/ neues
+                  default Feature wird eingefügt</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Feature_bearbeiten.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Feature editieren/ bearbeiten</entry>
+                  <entry valign="middle">Feature editieren/ bearbeiten</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Feature_loeschen.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Feature löschen</entry>
+                  <entry valign="middle">Feature löschen</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_InProfileditorAnsicht.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>In die Profileditor-Ansicht wechseln</entry>
+                  <entry valign="middle">In die Profileditor-Ansicht
+                  wechseln</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Feature_duplizieren.bmp"
+                                     role="" scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Feature duplizieren: markiertes Feature wird
-                  kopiert</entry>
+                  <entry valign="middle">Feature duplizieren: markiertes
+                  Feature wird kopiert</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Reihe_nach_oben.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Feature in der Reihe nach oben verschieben</entry>
+                  <entry valign="middle">Feature in der Reihe nach oben
+                  verschieben</entry>
                 </row>
 
                 <row>
-                  <entry></entry>
+                  <entry><figure>
+                      <mediaobject>
+                        <imageobject>
+                          <imagedata align="center"
+                                     fileref="img/WSPM/FeatureViewSymbole_Reihe_nach_unten.bmp"
+                                     scale="100" />
+                        </imageobject>
+                      </mediaobject>
+                    </figure></entry>
 
-                  <entry>Feature in der Reihe nach unten verschieben</entry>
+                  <entry valign="middle">Feature in der Reihe nach unten
+                  verschieben</entry>
                 </row>
               </tbody>
             </tgroup>
@@ -1283,7 +1467,7 @@
         </itemizedlist>
 
         <table align="center" id="symbolleiste im Profileditor wspm">
-          <title>Die Symbolleiste im Profileditor (Profil-Diagramm):</title>
+          <title>Die Symbolleiste im Profileditor (Profil-Diagramm)</title>
 
           <tgroup align="center" cols="3">
             <colspec align="left" colwidth="1*" />
@@ -1294,45 +1478,87 @@
 
             <tbody>
               <row>
-                <entry><emphasis role="bold">Lupe -</emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Lupe_Minus.bmp"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Vergrößert den Kartenausschnitt, herauszoomen</entry>
+                <entry valign="middle">Vergrößert den Kartenausschnitt,
+                herauszoomen</entry>
 
-                <entry>Ausschnitt wählen (ziehe Fenster von rechts unten und
-                links oben)</entry>
+                <entry valign="middle">Ausschnitt wählen (ziehe Fenster von
+                rechts unten und links oben)</entry>
               </row>
 
               <row>
-                <entry><emphasis role="bold">Lupe +</emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Lupe_Plus.bmp"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Verkleinert den Kartenausschnitt, hereinzoomen</entry>
+                <entry valign="middle">Verkleinert den Kartenausschnitt,
+                hereinzoomen</entry>
 
-                <entry align="left">Ausschnitt wählen (ziehe Fenster von links
-                oben und rechts unten)</entry>
+                <entry align="left" valign="middle">Ausschnitt wählen (ziehe
+                Fenster von links oben und rechts unten)</entry>
               </row>
 
               <row>
-                <entry><emphasis role="bold">Hand</emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Hand.bmp"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Verschieben</entry>
+                <entry valign="middle">Verschieben</entry>
 
-                <entry>Blatt anfassen und Bildausschnitt verschieben (z.B. von
-                links nach rechts)</entry>
+                <entry valign="middle">Blatt anfassen und Bildausschnitt
+                verschieben (z.B. von links nach rechts)</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Seitenverhaeltnisse_fixieren.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Seitenverhältnisse fixieren</entry>
+                <entry valign="middle">Seitenverhältnisse fixieren</entry>
 
-                <entry>Maßstab der aktuellen Darstellung wird
+                <entry valign="middle">Maßstab der aktuellen Darstellung wird
                 gespeichert</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Seitenverhaeltnisse.bmp"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry><para>1) zeigt gespeicherte
+                <entry valign="middle"><para>1) zeigt gespeicherte
                 Seitenverhältnisse</para><para>2) zeigt reale
                 Seitenverhältnisse</para><para>3) zeigt maximale
                 Breiteskala</para><para>4) zeigt maximale
@@ -1342,29 +1568,55 @@
               </row>
 
               <row>
-                <entry><emphasis role="bold">Stift</emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Stift.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Editieren und zeichnen der GOK (muss in der
-                Layeransicht aktiviert werden!)</entry>
+                <entry valign="middle">Editieren und zeichnen der GOK (muss in
+                der Layeransicht aktiviert werden!)</entry>
 
-                <entry>Vertikal fixiert, horizontal fixiert (Einstellung in
-                der Layeransicht möglich) oder frei in der Ebene</entry>
+                <entry valign="middle">Vertikal fixiert, horizontal fixiert
+                (Einstellung in der Layeransicht möglich) oder frei in der
+                Ebene</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Maximieren.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Maximieren der Kartenansicht</entry>
+                <entry valign="middle">Maximieren der Kartenansicht</entry>
 
-                <entry>Zeigt das gesamte Profil an</entry>
+                <entry valign="middle">Zeigt das gesamte Profil an</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Diagramm_Bildspeichern.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Aktuellen Ausschnitt als Bild speichern</entry>
+                <entry valign="middle">Aktuellen Ausschnitt als Bild
+                speichern</entry>
 
-                <entry>......</entry>
+                <entry valign="middle">......</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1513,110 +1765,211 @@
 
             <tbody>
               <row>
-                <entry>Geländehöhe</entry>
+                <entry>Geländehöhe <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Geländehöhe.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Geländeoberkante des Gewässerprofils</entry>
+                <entry valign="middle">Geländeoberkante des
+                Gewässerprofils</entry>
 
-                <entry>Editieren von Geländehöhe [mNN] und relativer Breite
-                [m] in Tabelle und Grafik</entry>
+                <entry valign="middle">Editieren von Geländehöhe [mNN] und
+                relativer Breite [m] in Tabelle und Grafik</entry>
               </row>
 
               <row>
-                <entry>Fließzonen</entry>
+                <entry>Fließzonen <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Fliesszonen.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Mit zwei Trennflächen und den Durchströmten
-                Bereich</entry>
+                <entry valign="middle">Mit zwei Trennflächen und den
+                Durchströmten Bereich</entry>
 
-                <entry align="left">Editieren in der Layeransicht und Grafik
-                oder Zuweisen über Polygone in der Karte</entry>
+                <entry align="left" valign="middle">Editieren in der
+                Layeransicht und Grafik oder Zuweisen über Polygone in der
+                Karte</entry>
               </row>
 
               <row>
-                <entry>Geokoordinaten RW/ HW</entry>
+                <entry>Geokoordinaten RW/ HW <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Geokoordinaten.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Zur Georeferenzierung der Geländepunkte des Profils
-                (wenn nicht vorhanden ist keine Triangulation und keine
-                Ansicht von Überschwemmungsflächen möglich)</entry>
+                <entry valign="middle">Zur Georeferenzierung der Geländepunkte
+                des Profils (wenn nicht vorhanden ist keine Triangulation und
+                keine Ansicht von Überschwemmungsflächen möglich)</entry>
 
-                <entry>Editieren nur in der Tabelle<para>Einheit in
-                [m]</para></entry>
+                <entry valign="middle">Editieren nur in der
+                Tabelle<para>Einheit in [m]</para></entry>
               </row>
 
               <row>
-                <entry>Rauheit ks</entry>
+                <entry>Rauheit ks <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Rauheit.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Rauheitsbeiwert in Form der äquivalenten Sandrauheit
-                nach COLEBROOK-WHITE für das Fließgesetzt nach
-                DARCY-WEISBACH</entry>
+                <entry valign="middle">Rauheitsbeiwert in Form der
+                äquivalenten Sandrauheit nach COLEBROOK-WHITE für das
+                Fließgesetzt nach DARCY-WEISBACH</entry>
 
-                <entry>Editieren in der Tabelle, vereinfachte Rauheiten über
-                Layeransicht oder Zuweisen über Polygone in der
+                <entry valign="middle">Editieren in der Tabelle, vereinfachte
+                Rauheiten über Layeransicht oder Zuweisen über Polygone in der
                 Karte<para>Einheit in [m]</para></entry>
               </row>
 
               <row>
-                <entry>Bewuchs</entry>
+                <entry>Bewuchs <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Bewuchs.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Bewuchsparameter ax, ay und dp für den Ansatz von
-                Raheit durch Bewuchs nach LINDER/ PASCHE</entry>
+                <entry valign="middle">Bewuchsparameter ax, ay und dp für den
+                Ansatz von Raheit durch Bewuchs nach LINDER/ PASCHE</entry>
 
-                <entry>Editieren nur in der Tabelle oder Zuweisen über
-                Polygone in der Karte<para>Einheit in [m]</para></entry>
+                <entry valign="middle">Editieren nur in der Tabelle oder
+                Zuweisen über Polygone in der Karte<para>Einheit in
+                [m]</para></entry>
               </row>
 
               <row>
-                <entry>Wehr</entry>
+                <entry>Wehr <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Wehr.bmp"
+                                   role="" scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Ein- oder mehrfeldiges Wehrbauwerk im Gewässer</entry>
+                <entry valign="middle">Ein- oder mehrfeldiges Wehrbauwerk im
+                Gewässer</entry>
 
-                <entry>Eiditieren der Geometrie in der Tabelle und zuweisen
-                der Parameter (Wehrtyp) in der Layeransicht</entry>
+                <entry valign="middle">Eiditieren der Geometrie in der Tabelle
+                und zuweisen der Parameter (Wehrtyp) in der
+                Layeransicht</entry>
               </row>
 
               <row>
-                <entry>Brücke</entry>
+                <entry>Brücke <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Bruecke.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Brückengeometrie über Definition der Ober- und
-                Unterkante der Brücke</entry>
+                <entry valign="middle">Brückengeometrie über Definition der
+                Ober- und Unterkante der Brücke</entry>
 
-                <entry>Editieren der Geometrie in der Tabelle und zuweisen der
-                Parameter in der Layeransicht</entry>
+                <entry valign="middle">Editieren der Geometrie in der Tabelle
+                und zuweisen der Parameter in der Layeransicht</entry>
               </row>
 
               <row>
-                <entry>Trapez</entry>
+                <entry>Trapez <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Trapezdurchlass.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Trapez-Durchlass statt offenes Gerinne</entry>
+                <entry valign="middle">Trapez-Durchlass statt offenes
+                Gerinne</entry>
 
-                <entry>Editieren der Geometrie und zuweisen der Parameter in
-                der Layeransicht (keine Spalte in der Tabelle)</entry>
+                <entry valign="middle">Editieren der Geometrie und zuweisen
+                der Parameter in der Layeransicht (keine Spalte in der
+                Tabelle)</entry>
               </row>
 
               <row>
-                <entry>Maulprofil</entry>
+                <entry>Maulprofil <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Mauldurchlass.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Maulprofil-Durchlass statt offenes Gerinne</entry>
+                <entry valign="middle">Maulprofil-Durchlass statt offenes
+                Gerinne</entry>
 
-                <entry>Editieren der Geometrie und zuweisen der Parameter in
-                der Layeransicht (keine Spalte in der Tabelle)</entry>
+                <entry valign="middle">Editieren der Geometrie und zuweisen
+                der Parameter in der Layeransicht (keine Spalte in der
+                Tabelle)</entry>
               </row>
 
               <row>
-                <entry>Eiprofil</entry>
+                <entry>Eiprofil <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Eiprofil.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Eiprofil-Durchlass statt offenes Gerinne</entry>
+                <entry valign="middle">Eiprofil-Durchlass statt offenes
+                Gerinne</entry>
 
-                <entry>Editieren der Geometrie und zuweisen der Parameter in
-                der Layeransicht (keine Spalte in der Tabelle)</entry>
+                <entry valign="middle">Editieren der Geometrie und zuweisen
+                der Parameter in der Layeransicht (keine Spalte in der
+                Tabelle)</entry>
               </row>
 
               <row>
-                <entry>Kreis</entry>
+                <entry>Kreis <figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Profillegende_Kreis.bmp"
+                                   scale="110" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Kreis-Durchlass statt offenes Gerinne</entry>
+                <entry valign="middle">Kreis-Durchlass statt offenes
+                Gerinne</entry>
 
-                <entry>Editieren der Geometrie und zuweisen der Parameter in
-                der Layeransicht (keine Spalte in der Tabelle)</entry>
+                <entry valign="middle">Editieren der Geometrie und zuweisen
+                der Parameter in der Layeransicht (keine Spalte in der
+                Tabelle)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -2012,7 +2365,7 @@
 
           <para><emphasis>Zum Beispiel:</emphasis></para>
 
-          <para>Rauheitsklasse 1: </para>
+          <para>Rauheitsklasse 1:</para>
 
           <itemizedlist>
             <listitem>
@@ -3279,7 +3632,7 @@
             </tgroup>
           </table>
 
-          <para> </para>
+          <para></para>
 
           <para><emphasis role="bold">Bordvollberechnung für
           stationär-ungleichförmige Abflussverhältnisse:</emphasis></para>
@@ -4306,125 +4659,242 @@
 
             <tbody>
               <row>
-                <entry><emphasis role="bold"></emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_gesamtesProfil.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Zeigt das gesamte Profil an, maximiert
+                <entry valign="middle">Zeigt das gesamte Profil an, maximiert
                 Kartenausschnitt</entry>
 
-                <entry>Für die gesamte Karte</entry>
+                <entry valign="middle">Für die gesamte Karte</entry>
               </row>
 
               <row>
-                <entry><emphasis role="bold"></emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_herauszoomen.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Verkleinert Kartenausschnitt mit herauszoomen</entry>
+                <entry valign="middle">Verkleinert Kartenausschnitt mit
+                herauszoomen</entry>
 
-                <entry>Ausschnitt wählen (Fenster ziehen von rechts unten und
-                links oben)</entry>
+                <entry valign="middle">Ausschnitt wählen (Fenster ziehen von
+                rechts unten und links oben)</entry>
               </row>
 
               <row>
-                <entry><emphasis role="bold"></emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_NeuerPunkt.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Neuen Punkt in der Karte auf das Skizzierthema
-                zeichnen</entry>
+                <entry valign="middle">Neuen Punkt in der Karte auf das
+                Skizzierthema zeichnen</entry>
 
-                <entry>Arbeitet auf dem Skizzierthema</entry>
+                <entry valign="middle">Arbeitet auf dem Skizzierthema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_NeueLinie.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Neue Linie in der Karte auf das Skizzierthema
-                zeichnen</entry>
+                <entry valign="middle">Neue Linie in der Karte auf das
+                Skizzierthema zeichnen</entry>
 
-                <entry>Arbeitet auf dem Skizzierthema</entry>
+                <entry valign="middle">Arbeitet auf dem Skizzierthema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_NeuesPolygon.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Neues Polygon in der Karte auf das Skizzierthema
-                zeichnen</entry>
+                <entry valign="middle">Neues Polygon in der Karte auf das
+                Skizzierthema zeichnen</entry>
 
-                <entry>Arbeitet auf dem Skizzierthema</entry>
+                <entry valign="middle">Arbeitet auf dem Skizzierthema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_NeueGeometrie.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Neue Geometrie in der Karte auf das Skizzierthema
-                zeichnen</entry>
+                <entry valign="middle">Neue Geometrie in der Karte auf das
+                Skizzierthema zeichnen</entry>
 
-                <entry>Arbeitet auf dem Skizzierthema</entry>
+                <entry valign="middle">Arbeitet auf dem Skizzierthema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Geometrie_editieren.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Geometrie editieren</entry>
+                <entry valign="middle">Geometrie editieren</entry>
 
-                <entry>Arbeitet auf dem aktiven Thema</entry>
+                <entry valign="middle">Arbeitet auf dem aktiven Thema</entry>
               </row>
 
               <row>
-                <entry>......</entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Punktinformation.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Abfragen einer Punktinformation zu einem
-                WMS-Thema</entry>
+                <entry valign="middle" vendor="">Abfragen einer
+                Punktinformation zu einem WMS-Thema</entry>
 
-                <entry>Arbeitet auf dem aktiven Thema</entry>
+                <entry valign="middle">Arbeitet auf dem aktiven Thema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Koordinateninformation.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Abfragen einer Koordinateninformation</entry>
+                <entry valign="middle">Abfragen einer
+                Koordinateninformation</entry>
 
-                <entry>Arbeitet auf dem aktiven Thema</entry>
+                <entry valign="middle">Arbeitet auf dem aktiven Thema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Relationen.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Setzen von Relationen</entry>
+                <entry valign="middle">Setzen von Relationen</entry>
 
-                <entry>Arbeitet auf dem aktiven Thema</entry>
+                <entry valign="middle">Arbeitet auf dem aktiven Thema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_hereinzoomen.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Vergrößert den Kartenausschnitt, hereinzoomen</entry>
+                <entry valign="middle">Vergrößert den Kartenausschnitt,
+                hereinzoomen</entry>
 
-                <entry>Ausschnitt wählen (Fenster ziehen von rechts unten und
-                links oben)</entry>
+                <entry valign="middle">Ausschnitt wählen (Fenster ziehen von
+                rechts unten und links oben)</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Feature_selektieren.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Selektiert ein Feature im aktiven Thema
+                <entry valign="middle">Selektiert ein Feature im aktiven Thema
                 bearbeitet</entry>
 
-                <entry>Arbeitet auf dem aktiven Thema</entry>
+                <entry valign="middle">Arbeitet auf dem aktiven Thema</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Kartenausschnitt_verschieben.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Verschieben des Kartenauschnittes</entry>
+                <entry valign="middle">Verschieben des
+                Kartenauschnittes</entry>
 
-                <entry>Blatt anfassen und verschieben (z.B. von links nach
-                rechts)</entry>
+                <entry valign="middle">Blatt anfassen und verschieben (z.B.
+                von links nach rechts)</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Kartensymbolleiste_Karte_exportieren.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Exportiert die Karte ins Dateisystem</entry>
+                <entry valign="middle">Exportiert die Karte ins
+                Dateisystem</entry>
 
-                <entry>Als jpg oder tif</entry>
+                <entry valign="middle">Als jpg oder tif</entry>
               </row>
             </tbody>
           </tgroup>
@@ -4512,69 +4982,119 @@
               </row>
 
               <row>
-                <entry><emphasis role="bold"></emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Gliederungssymbolde_Themen_hinzufügen.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Fügt Themen zur Karte hinzu. Auch Themen aus anderen
-                Projekten oder Unterordnern in im Navigator verfügbar sind,
-                können eingeladen werden.</entry>
+                <entry valign="middle">Fügt Themen zur Karte hinzu. Auch
+                Themen aus anderen Projekten oder Unterordnern in im Navigator
+                verfügbar sind, können eingeladen werden.</entry>
 
-                <entry>Einfügen von Shapes, von GML-dateien, von Images, von
-                Rasterdaten, von WebMaps und WebFeatures ist möglich.
-                (<emphasis role="bold">VERLINKUNG siehe Abbildung
+                <entry valign="middle">Einfügen von Shapes, von GML-dateien,
+                von Images, von Rasterdaten, von WebMaps und WebFeatures ist
+                möglich. (<emphasis role="bold">VERLINKUNG siehe Abbildung
                 70</emphasis>)</entry>
               </row>
 
               <row>
-                <entry><emphasis role="bold"></emphasis></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Gliederungssymbolde_Thema_aktivieren.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Aktiviert das markierte Thema. Erst mit der Aktivierung
-                ist eine Bearbeitung in der Karte möglich.</entry>
+                <entry valign="middle">Aktiviert das markierte Thema. Erst mit
+                der Aktivierung ist eine Bearbeitung in der Karte
+                möglich.</entry>
 
-                <entry>Die in <emphasis role="bold">Tabelle 4 XXX
-                </emphasis>beschriebenen Funktionen werden zum Teil erst nach
-                einer Aktivierung des Themas möglich.</entry>
+                <entry valign="middle">Die in <emphasis role="bold">Tabelle 4
+                XXX </emphasis>beschriebenen Funktionen werden zum Teil erst
+                nach einer Aktivierung des Themas möglich.</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Gliederungssymbolde_verschieben_nach_unten.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Verschiebt das markierte Thema um eine Ebene nach
-                unten, bzw. um eine Ebene auf der Karte in den
+                <entry valign="middle">Verschiebt das markierte Thema um eine
+                Ebene nach unten, bzw. um eine Ebene auf der Karte in den
                 Hintergrund</entry>
 
-                <entry>Hintergrundkarten sollten immer ganz unten angeordnet
-                werden.</entry>
+                <entry valign="middle">Hintergrundkarten sollten immer ganz
+                unten angeordnet werden.</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Gliederungssymbolde_verschieben_nach_oben.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Verschiebt das markierte Thema um eine Ebene nach oben,
-                bzw. um eine Ebene auf der Karte in den Vordergrund</entry>
+                <entry valign="middle">Verschiebt das markierte Thema um eine
+                Ebene nach oben, bzw. um eine Ebene auf der Karte in den
+                Vordergrund</entry>
 
-                <entry>Profile oder die Gewässerachse sollte immer ganz oben
-                angeordnet werden.</entry>
+                <entry valign="middle">Profile oder die Gewässerachse sollte
+                immer ganz oben angeordnet werden.</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Gliederungssymbolde_Thema_loeschen.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Entfernt ein Thema aus der Karte. Das Thema wird jedoch
-                nicht physisch gelöst!</entry>
+                <entry valign="middle">Entfernt ein Thema aus der Karte. Das
+                Thema wird jedoch nicht physisch gelöst!</entry>
 
-                <entry>Markiertes Thema wird aus der Kartenansicht
-                entfernt.</entry>
+                <entry valign="middle">Markiertes Thema wird aus der
+                Kartenansicht entfernt.</entry>
               </row>
 
               <row>
-                <entry></entry>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/WSPM/Gliederungssymbolde_Style_editieren.bmp"
+                                   scale="100" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
 
-                <entry>Style eines Shapes oder einer GML-Datei kann so
-                editiert werden</entry>
+                <entry valign="middle">Style eines Shapes oder einer GML-Datei
+                kann so editiert werden</entry>
 
-                <entry>Zur Bearbeitung ist das Bäumchen des Themas in der
-                Gliederung zu öffnen bis der Reiter Style erscheint.
-                (<emphasis role="bold">VERLINKUNG Abbildung
+                <entry valign="middle">Zur Bearbeitung ist das Bäumchen des
+                Themas in der Gliederung zu öffnen bis der Reiter Style
+                erscheint. (<emphasis role="bold">VERLINKUNG Abbildung
                 69</emphasis>)</entry>
               </row>
             </tbody>
