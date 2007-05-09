@@ -48,7 +48,6 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.runtime.IPath;
 import org.geotiff.image.jai.GeoTIFFDirectory;
 import org.kalypso.raster.RasterDataFileVerifier.IMAGE_TYPE;
 import org.kalypsodeegree.model.coverage.GridRange;
@@ -59,34 +58,22 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import com.sun.media.jai.codec.FileSeekableStream;
+import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * @author kuch
  */
 public class RasterMetaReaderGeo implements IRasterMetaReader
 {
-
-  private IPath m_docLocation;
-
-  private URL m_urlLocation;
-
   private final IMAGE_TYPE m_type;
 
   private GeoTIFFDirectory m_getTiffReader;
 
-  public RasterMetaReaderGeo( final IPath docLocation, final IMAGE_TYPE type )
-  {
-    m_docLocation = docLocation;
-    m_type = type;
+  private final URL m_urlImage;
 
-    // TODO: ATM we only supporting GeoTiffs - no fabrication needed!
-    setup();
-  }
-
-  public RasterMetaReaderGeo( final URL urlLocation, final IMAGE_TYPE type )
+  public RasterMetaReaderGeo( final URL urlImage, final IMAGE_TYPE type )
   {
-    m_urlLocation = urlLocation;
+    m_urlImage = urlImage;
     m_type = type;
 
     // TODO: ATM we only supporting GeoTiffs - no fabrication needed!
@@ -95,7 +82,7 @@ public class RasterMetaReaderGeo implements IRasterMetaReader
 
   private void setup( )
   {
-    if( (m_docLocation == null) || (m_type == null) )
+    if( (m_urlImage == null) || (m_type == null) )
     {
       throw (new IllegalStateException());
     }
@@ -104,21 +91,7 @@ public class RasterMetaReaderGeo implements IRasterMetaReader
     {
       try
       {
-        
-        final FileSeekableStream stream;
-        if (m_docLocation != null)
-        {
-          stream = new FileSeekableStream( m_docLocation.toFile() );  
-        }
-        else if (m_urlLocation != null)
-        {
-          stream = new FileSeekableStream( m_urlLocation.getFile() );
-        }
-        else
-        {
-          throw (new IllegalStateException());
-        }
-        
+        final SeekableStream stream = SeekableStream.wrapInputStream( m_urlImage.openStream(), true );
         m_getTiffReader = new GeoTIFFDirectory( stream, 0 );
       }
       catch( final IOException e )
@@ -272,8 +245,8 @@ public class RasterMetaReaderGeo implements IRasterMetaReader
     {
       throw (new IllegalStateException());
     }
-
-    final RenderedOp image = JAI.create( "fileload", m_docLocation.toFile().toString() );
+    
+    final RenderedOp image = JAI.create( "url", m_urlImage );
     final TiledImage tiledImage = new TiledImage( image, true );
     final int height = tiledImage.getHeight();
     final int width = tiledImage.getWidth();

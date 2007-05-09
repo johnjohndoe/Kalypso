@@ -40,16 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.raster;
 
-import java.io.File;
 import java.io.IOException;
-
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.IPath;
 import org.geotiff.image.jai.GeoTIFFDirectory;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.libtiff.jai.codec.XTIFFField;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import com.sun.media.jai.codec.FileSeekableStream;
+import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * @author kuch
@@ -75,27 +76,24 @@ public class RasterDataFileVerifier
     eTIFF
   }
 
-  public boolean verify( final IPath docLocation )
+  public boolean verify( final URL urlImage )
   {
     /* file exists? */
-    if( (docLocation == null) || !docLocation.toFile().exists() )
+    if( (urlImage == null) )
     {
       return false;
     }
 
-    /* is it a valid file or an dir? */
-    if( docLocation.toFile().isDirectory() )
-    {
-      return false;
-    }
+    final String file = urlImage.toString().toLowerCase();
+    final int index = file.lastIndexOf( "." );
 
     /* valid file extension */
-    if( !ArrayUtils.contains( RasterDataFileVerifier.validFileExtensions, docLocation.getFileExtension().toLowerCase() ) )
+    if( !ArrayUtils.contains( RasterDataFileVerifier.validFileExtensions, file.substring( index + 1 ) ) )
     {
       return false;
     }
 
-    final RASTER_TYPE raster_type = determineType( docLocation );
+    final RASTER_TYPE raster_type = determineType( urlImage );
     if( raster_type == null )
     {
       return false;
@@ -104,9 +102,9 @@ public class RasterDataFileVerifier
     return true;
   }
 
-  public IRasterMetaReader getRasterMetaReader( final IPath docLocation, final CS_CoordinateSystem cs  )
+  public IRasterMetaReader getRasterMetaReader( final URL urlImage, final CS_CoordinateSystem cs )
   {
-    final RASTER_TYPE raster_type = determineType( docLocation );
+    final RASTER_TYPE raster_type = determineType( urlImage );
     if( raster_type == null )
     {
       throw (new IllegalStateException());
@@ -115,31 +113,31 @@ public class RasterDataFileVerifier
     switch( raster_type )
     {
       case eAsciiGrid:
-        return new RasterMetaReaderAscii(docLocation, cs);
+        return new RasterMetaReaderAscii( urlImage, cs );
 
       case eImage:
         return null;
 
       case eImageGeo:
-        return new RasterMetaReaderGeo(docLocation, determineImageType( docLocation ));
+        return new RasterMetaReaderGeo( urlImage, determineImageType( urlImage ) );
 
       case eImageWorldFile:
-        return new RasterMetaReaderWorldFile(docLocation.toFile(), getWorldFile( docLocation ));
+        return new RasterMetaReaderWorldFile( urlImage, getWorldFile( urlImage ) );
 
       default:
         return null;
     }
   }
 
-  private RASTER_TYPE determineType( final IPath docLocation )
+  private RASTER_TYPE determineType( final URL urlImage )
   {
     /* determin image type */
-    final IMAGE_TYPE image_type = determineImageType( docLocation );
+    final IMAGE_TYPE image_type = determineImageType( urlImage );
 
     /* if it is an image, it can maybe have an world file with coordinates */
     if( !(IMAGE_TYPE.eNoImage.equals( image_type )) )
     {
-      final File worldFile = getWorldFile( docLocation );
+      final URL worldFile = getWorldFile( urlImage );
       if( worldFile != null )
       {
         return RASTER_TYPE.eImageWorldFile;
@@ -148,7 +146,7 @@ public class RasterDataFileVerifier
       if( worldFile == null )
       {
         /* is it an geodata image, like geotif? ATM only geotif is supported */
-        if( IMAGE_TYPE.eTIFF.equals( image_type ) && isGeoTiff( docLocation ) )
+        if( IMAGE_TYPE.eTIFF.equals( image_type ) && isGeoTiff( urlImage ) )
         {
           return RASTER_TYPE.eImageGeo;
         }
@@ -158,10 +156,10 @@ public class RasterDataFileVerifier
           return RASTER_TYPE.eImage;
         }
       }
-     
+
     }
 
-    if( isAsciGrid( docLocation ) )
+    if( isAsciGrid( urlImage ) )
     {
       return RASTER_TYPE.eAsciiGrid;
     }
@@ -169,9 +167,9 @@ public class RasterDataFileVerifier
     return null;
   }
 
-  private boolean isAsciGrid( final IPath docLocation )
+  private boolean isAsciGrid( final URL urlImage )
   {
-    if( docLocation == null )
+    if( urlImage == null )
     {
       throw (new IllegalStateException());
     }
@@ -179,7 +177,10 @@ public class RasterDataFileVerifier
     // TODO: mke a real inspection of file
     final String[] ascExtensions = new String[] { "asc", "dat" };
 
-    if( ArrayUtils.contains( ascExtensions, docLocation.getFileExtension().toLowerCase() ) )
+    final String file = urlImage.toString().toLowerCase();
+    final int index = file.lastIndexOf( "." );
+
+    if( ArrayUtils.contains( ascExtensions, file.substring( index + 1 ) ) )
     {
       return true;
     }
@@ -187,16 +188,16 @@ public class RasterDataFileVerifier
     return false;
   }
 
-  private boolean isGeoTiff( final IPath docLocation )
+  private boolean isGeoTiff( final URL urlImage )
   {
-    if( docLocation == null )
+    if( urlImage == null )
     {
       throw (new IllegalStateException());
     }
-    FileSeekableStream stream;
+    SeekableStream stream;
     try
     {
-      stream = new FileSeekableStream( docLocation.toFile() );
+      stream = SeekableStream.wrapInputStream( urlImage.openStream(), true );
       final GeoTIFFDirectory directory = new GeoTIFFDirectory( stream, 0 );
 
       final XTIFFField[] geoKeys = directory.getGeoKeys();
@@ -219,58 +220,54 @@ public class RasterDataFileVerifier
     return false;
   }
 
-  private File getWorldFile( final IPath docLocation )
+  private URL getWorldFile( final URL urlImage )
   {
-    if( docLocation == null )
+    if( urlImage == null )
     {
       throw (new IllegalStateException());
     }
 
-    final File file = docLocation.toFile();
-    final File dir = file.getParentFile();
-    final String fileName = file.getName();
-
-    if( (fileName == null) || !fileName.contains( "." ) )
-    {
-      throw (new IllegalStateException());
-    }
-
-    final String[] parts = fileName.split( "\\." );
-
-    String prefix = null;
-    if( parts.length == 2 )
-    {
-      prefix = parts[0];
-    }
-    else
-    {
-      for( int i = 0; i < parts.length - 1; i++ )
-      {
-        prefix = prefix + parts[i] + ".";
-      }
-    }
     final String[] worldFileExtensions = new String[] { "tfw", "gfw", "jpw" };
 
     for( final String extension : worldFileExtensions )
     {
-      final File worldFile = new File( dir + "/" + prefix + "." + extension );
-      if( worldFile.exists() )
+      final String wfName = FileUtilities.nameWithoutExtension( urlImage.toString() ) + "." + extension;
+
+      try
       {
-        return worldFile;
+        final URL url = new URL( wfName );
+
+        /* url is valid? -> try to open stream */
+        final InputStream stream = url.openStream();
+        stream.close();
+
+        return url;
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+      catch( final IOException e )
+      {
+        // file does not exists? -> exception is thrown, try next worldfile type
+        //e.printStackTrace();
       }
     }
 
     return null;
   }
 
-  private IMAGE_TYPE determineImageType( final IPath docLocation )
+  private IMAGE_TYPE determineImageType( final URL urlImage )
   {
-    if( docLocation == null )
+    if( urlImage == null )
     {
       throw (new IllegalStateException());
     }
 
-    final String fileExtension = docLocation.getFileExtension().toLowerCase();
+    final String file = urlImage.toString().toLowerCase();
+    final int index = file.lastIndexOf( "." );
+
+    final String fileExtension = file.substring( index + 1 );
 
     final String[] jpgTypes = new String[] { "jpg", "jpeg" };
     final String[] tifTypes = new String[] { "tif", "tiff" };

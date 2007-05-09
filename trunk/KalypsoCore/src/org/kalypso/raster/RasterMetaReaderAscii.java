@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.raster;
 
-import org.eclipse.core.runtime.IPath;
+import java.io.File;
+import java.net.URL;
+
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -55,30 +57,30 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class RasterMetaReaderAscii implements IRasterMetaReader
 {
-
-  private final IPath m_docLocation;
-
   private final CS_CoordinateSystem m_cs;
 
   private RectifiedGridCoverage2 m_coverage;
 
-  public RasterMetaReaderAscii( final IPath docLocation, final CS_CoordinateSystem cs )
+  private final URL m_urlImage;
+
+  public RasterMetaReaderAscii( final URL urlImage, final CS_CoordinateSystem cs )
   {
-    m_docLocation = docLocation;
+
+    m_urlImage = urlImage;
     m_cs = cs;
     setup();
   }
 
   private void setup( )
   {
-    if( m_docLocation == null )
+    if( m_urlImage == null )
     {
       throw (new IllegalStateException());
     }
 
     try
     {
-      m_coverage = GridUtils.importGridArc( m_docLocation.toFile(), m_cs );
+      m_coverage = GridUtils.importGridArc( new File( m_urlImage.getFile() ), m_cs );
     }
     catch( final Exception e )
     {

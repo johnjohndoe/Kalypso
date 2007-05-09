@@ -86,10 +86,9 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     
     RasterDataFileVerifier verifier = new RasterDataFileVerifier();
     
-    Path imagePath = new Path(imageUrl.getFile());
-    if (verifier.verify( imagePath ))
+    if (verifier.verify( imageUrl ))
     {
-      IRasterMetaReader reader = verifier.getRasterMetaReader( imagePath, system );  
+      IRasterMetaReader reader = verifier.getRasterMetaReader( imageUrl, system );  
       
       final RenderedOp image = JAI.create( "url", imageUrl );
       m_image = new TiledImage( image, true );
