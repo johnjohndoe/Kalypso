@@ -125,9 +125,9 @@ public class SelectionWidget extends AbstractWidget
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
       getMapPanel().setMessage( "Auswahl durchführen ..." );
     }
-    //TODO: check if this repaint is really necessary
+    // TODO: check if this repaint is really necessary
     MapPanel panel = getMapPanel();
-    if (panel != null)
+    if( panel != null )
       panel.repaint();
 
   }
@@ -176,15 +176,15 @@ public class SelectionWidget extends AbstractWidget
   {
     super.moved( p );
 
-    if( m_tooltipProvider != null )
+    if( m_tooltipProvider != null && getMapPanel() != null )
       m_tooltip = m_tooltipProvider.getTooltip( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
 
     m_current_point = p;
 
-    if ( m_tooltipProvider != null )
+    if( m_tooltipProvider != null )
     {
       MapPanel panel = getMapPanel();
-      if ( panel != null)
+      if( panel != null )
         panel.repaint();
     }
   }
