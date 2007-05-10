@@ -59,6 +59,12 @@ public interface IRoughnessEstimateSpec
 	 */
 	public IRoughnessCls[] mostSpreadRoughness();
 	
+    /**
+     * return the total part of most spread roughnesses
+     * in this estimate
+     */
+    public double getMostSpreadPart();
+    
 	/**
 	 * returns the most spread roughness using the specified selection
 	 * mechanism

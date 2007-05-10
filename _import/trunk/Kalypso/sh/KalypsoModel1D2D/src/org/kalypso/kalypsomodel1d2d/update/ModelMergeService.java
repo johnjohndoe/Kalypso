@@ -46,7 +46,9 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
@@ -58,8 +60,8 @@ public class ModelMergeService
 {
   private static final ModelMergeService modelMergeService = new ModelMergeService();
   
-  private final Map<String, IRoughnessCls> femRoughnessStyleMap = 
-                                      new HashMap<String, IRoughnessCls>();
+  private final Map<String, IRoughnessEstimateSpec> femRoughnessStyleMap = 
+                                      new HashMap<String, IRoughnessEstimateSpec>();
   private boolean doReInit = true;
   
   private boolean isRoughnessToBeDisplay = false;
@@ -71,15 +73,32 @@ public class ModelMergeService
   
   synchronized public String getRoughnessStyle( String elementID )
   {
-    IRoughnessCls cls = femRoughnessStyleMap.get( elementID );
-    if( cls == null )
+    IRoughnessCls roughnessById = getRoughnessFromCacheById( elementID );
+    if( roughnessById != null )
     {
-      return DEFAULT_STYLE;
+      return roughnessById.getName();
     }
     else
     {
-      return cls.getName();
+      return null;
     }
+  }
+  
+  private final IRoughnessCls getRoughnessFromCacheById( String elementID )
+  {
+    IRoughnessEstimateSpec spec = femRoughnessStyleMap.get( elementID );
+    if( spec != null )
+    {
+      IRoughnessCls[] clses = spec.mostSpreadRoughness();
+      if( clses != null )
+      {
+        if( clses.length > 0 )
+        {
+          return clses[0];
+        }        
+      }
+    }
+    return null;
   }
   
   synchronized public boolean getIsRoughnessToBeDisplay()
@@ -111,6 +130,74 @@ public class ModelMergeService
                                           IPolyElement polyElement
                                            )
   {
+//    if( doReInit )
+//    {
+//      femRoughnessStyleMap.clear();
+//      ITerrainModel terrainModel= Util.getModel( ITerrainModel.class );
+//      roughnessPolygonCollection = terrainModel.getRoughnessPolygonCollection();
+//      doReInit = false;
+//    }
+    try
+    {
+      if( polyElement == null )
+      {
+        System.out.println( "not a polyelement" );
+        return null;
+      }
+        final String polyElementID = polyElement.getGmlID();
+        if ( femRoughnessStyleMap.containsKey( polyElementID ) )
+        {
+          //already computed
+          //System.out.println("From Cache "+ polyElementID + clsName);
+          return getRoughnessFromCacheById( polyElementID );
+        }
+        else
+        {
+//          IRoughnessEstimateSpec roughnessEstimateSpec = null;
+//          if( !roughnessPolygonCollection.isEmpty() )
+//          {
+//            roughnessEstimateSpec = 
+//            roughnessPolygonCollection.getRoughnessEstimateSpec( 
+//                                  polyElement.recalculateElementGeometry() );          
+//          }
+//          else
+//          {
+//            System.out.println("roughness polygone collection is empty");
+//          }
+//          femRoughnessStyleMap.put( polyElementID, roughnessEstimateSpec );
+//          IRoughnessCls cls = getRoughnessFromCacheById( polyElementID );
+//          System.out.println( 
+//                  "StyleName=" + 
+//                          (cls==null ? null:cls.getGmlID()) );
+//          return cls; 
+          getElementRoughnessEstimate( polyElement );
+          return getRoughnessFromCacheById( polyElementID );
+        }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  
+  }
+  
+  public synchronized IRoughnessEstimateSpec 
+              getElementRoughnessEstimate( IFE1D2DElement element )
+  {
+    if( element instanceof IPolyElement )
+    {
+      return getElementRoughnessEstimate( (PolyElement) element );
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
+    }
+  }
+  
+  public synchronized IRoughnessEstimateSpec getElementRoughnessEstimate( 
+                                              IPolyElement polyElement )
+  {
     if( doReInit )
     {
       femRoughnessStyleMap.clear();
@@ -125,38 +212,29 @@ public class ModelMergeService
         System.out.println( "not a polyelement" );
         return null;
       }
-        final String polyElementID = polyElement.getGmlID();
-        if ( femRoughnessStyleMap.containsKey( polyElementID ) )
+      final String polyElementID = polyElement.getGmlID();
+      if ( femRoughnessStyleMap.containsKey( polyElementID ) )
+      {
+        //already computed
+        //System.out.println("From Cache "+ polyElementID + clsName);
+        return femRoughnessStyleMap.get( polyElementID );
+      }
+      else
+      {
+        IRoughnessEstimateSpec roughnessEstimateSpec = null;
+        if( !roughnessPolygonCollection.isEmpty() )
         {
-          //already computed
-          //System.out.println("From Cache "+ polyElementID + clsName);
-          return femRoughnessStyleMap.get( polyElementID );
+          roughnessEstimateSpec = 
+              roughnessPolygonCollection.getRoughnessEstimateSpec( 
+                              polyElement.recalculateElementGeometry() );          
         }
         else
         {
-          IRoughnessCls cls = null;
-          if( !roughnessPolygonCollection.isEmpty() )
-          {
-            IRoughnessEstimateSpec roughnessEstimateSpec = 
-            roughnessPolygonCollection.getRoughnessEstimateSpec( 
-                                  polyElement.recalculateElementGeometry() );
-            IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
-            if( classes.length >0 )
-            {
-              cls = classes[0];
-              
-            }          
-          }
-          else
-          {
-            System.out.println("roughness polygone collection is empty");
-          }
-          System.out.println( 
-                  "StyleName=" + 
-                          (cls==null ? null:cls.getGmlID()) );
-          femRoughnessStyleMap.put( polyElementID, cls );
-          return cls;  
+         System.out.println("roughness polygone collection is empty");
         }
+        femRoughnessStyleMap.put( polyElementID, roughnessEstimateSpec );
+        return roughnessEstimateSpec;
+      }
     }
     catch( GM_Exception e )
     {
@@ -164,8 +242,7 @@ public class ModelMergeService
       return null;
     }
   
-  }
-  
+  }  
   
   private ModelMergeService( )
   {
@@ -217,6 +294,18 @@ public class ModelMergeService
     }
 //    System.out.println("Color ="+color);
     return color;
+  }
+
+  public IRoughnessCls getElementRoughnessCls( IFE1D2DElement element )
+  {
+    if( element instanceof PolyElement )
+    {
+      return getElementRoughnessCls( (PolyElement)element );
+    }
+    else
+    {
+      throw new UnsupportedOperationException();      
+    }
   }
   
 }

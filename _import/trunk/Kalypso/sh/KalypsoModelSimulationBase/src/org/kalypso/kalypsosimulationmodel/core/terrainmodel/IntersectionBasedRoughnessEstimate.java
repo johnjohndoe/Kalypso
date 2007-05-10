@@ -78,6 +78,9 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   
   private Map<IRoughnessCls, Double> histogram = null; 
                         //new HashMap<IRoughnessCls, Double>();
+  private double mostSpreadPart;
+
+  private IRoughnessCls[] mostSpreadRoughnesses;
   
   public IntersectionBasedRoughnessEstimate(
                     IRoughnessPolygonCollection roughnessPolygonCollection, 
@@ -218,15 +221,69 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
    */
   public IRoughnessCls[] mostSpreadRoughness( )
   {
+//    final int size = contributingRP.size();
+//    if( size == 1 )
+//    {
+//      return new IRoughnessCls[]{ 
+//                  contributingRP.get( 0 ).getRoughnessCls() };
+//    }
+//    else if( size == 0 )
+//    {
+//      return new IRoughnessCls[]{};
+//    }
+//    else
+//    {
+//      if( histogram == null )
+//      {
+//        try
+//        {
+//          makeHistrogram();
+//        }
+//        catch( GM_Exception e )
+//        {
+//          e.printStackTrace();
+//          throw new RuntimeException(e);
+//        }
+//      }
+//      double[] retMostSpreadPart = { Double.NaN };
+//      mostSpreadRoughnesses = mostSpreadRoughness( histogram, retMostSpreadPart );
+//      
+//    }
+    if( mostSpreadRoughnesses == null )
+    {
+      initMostSpread();
+    }
+    return mostSpreadRoughnesses;
+    
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#getMostSpreadPart()
+   */
+  public double getMostSpreadPart( )
+  {
+    if( mostSpreadRoughnesses == null )
+    {
+      initMostSpread();
+    }
+    return mostSpreadPart;
+  }
+  
+  private final void initMostSpread()
+  {
     final int size = contributingRP.size();
     if( size == 1 )
     {
-      return new IRoughnessCls[]{ 
+      mostSpreadRoughnesses = 
+          new IRoughnessCls[]{ 
                   contributingRP.get( 0 ).getRoughnessCls() };
+      mostSpreadPart = 1 ;
     }
     else if( size == 0 )
     {
-      return new IRoughnessCls[]{};
+      mostSpreadRoughnesses = 
+                new IRoughnessCls[]{ };
+      mostSpreadPart = Double.NaN ;
     }
     else
     {
@@ -242,13 +299,14 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
           throw new RuntimeException(e);
         }
       }
-      return mostSpreadRoughness( histogram );
+      double[] retMostSpreadPart = { Double.NaN };
+      mostSpreadRoughnesses = mostSpreadRoughness( histogram, retMostSpreadPart );
+      mostSpreadPart = retMostSpreadPart[0]; 
     }
-    
   }
   
   public static final IRoughnessCls[] mostSpreadRoughness( 
-                                        Map <IRoughnessCls, Double> histogram)
+                                        Map <IRoughnessCls, Double> histogram, double[] mostSpreadPart)
   {
     List<IRoughnessCls> mostSpreads =  new ArrayList<IRoughnessCls>();
     Double max = Double.MIN_VALUE;
@@ -265,6 +323,13 @@ public class IntersectionBasedRoughnessEstimate implements IRoughnessEstimateSpe
         max = area;
         mostSpreads.clear();
         mostSpreads.add( entry.getKey() );
+        if( mostSpreadPart != null )
+        {
+          if( mostSpreadPart.length >0 )
+          {
+            mostSpreadPart[0] = max;
+          }
+        }
       }
       else //area<max
       {

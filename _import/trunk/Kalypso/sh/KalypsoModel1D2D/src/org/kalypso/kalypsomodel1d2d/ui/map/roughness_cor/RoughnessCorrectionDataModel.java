@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor;
 
+import java.util.Collection;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -64,6 +67,8 @@ public class RoughnessCorrectionDataModel extends KeyBasedDataModel
    */
   static final String KEY_MAP_MODELL = "_Map_Model_";
   
+  static final String KEY_SELECTION_ELEMENTS ="_sel_elements"; 
+  
   /**
    * Key for a boolean flag that govern the display of
    * roughess info while the mouse is moving on the map
@@ -71,6 +76,7 @@ public class RoughnessCorrectionDataModel extends KeyBasedDataModel
   static final String KEY_SHOWING_LIVE_ROUGHNESS_INFO ="_show_live_roughness_info";
   
   static final String KEY_CURRENT_WIDGET_STRATEGY = "_current_widget_strategy_";
+  
   
   /**
    * the data model key 
@@ -84,7 +90,8 @@ public class RoughnessCorrectionDataModel extends KeyBasedDataModel
     super( 
           new String[]{ 
               KEY_MAP_MODELL, KEY_MAP_PANEL, 
-              KEY_SHOWING_LIVE_ROUGHNESS_INFO}, 
+              KEY_SHOWING_LIVE_ROUGHNESS_INFO,
+              KEY_SELECTION_ELEMENTS}, 
           null );
     
   }
@@ -145,5 +152,13 @@ public class RoughnessCorrectionDataModel extends KeyBasedDataModel
     setData( KEY_CURRENT_WIDGET_STRATEGY, currentStrategy );
   }
   
+  public Collection<IFE1D2DElement> getSelectedElements()
+  {
+    return (Collection<IFE1D2DElement>) getData( KEY_SELECTION_ELEMENTS ); 
+  }
   
+  public void setSelectedElements( Collection<IFE1D2DElement> selected )
+  {
+    setData( KEY_SELECTION_ELEMENTS, selected ); 
+  }
 }

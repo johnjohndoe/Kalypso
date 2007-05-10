@@ -128,14 +128,34 @@ public class RoughnessCorrectionWidgetFace
     tableWrapData.grabVertical = true;
     styleControlSection.setLayoutData( tableWrapData );
     styleControlSection.setExpanded( true );
-    // Creates setion for editing roughness correction
-    
+    // Element wise roughness correction
+    Section eleWiseSection = 
+              toolkit.createSection( 
+                  scrolledForm.getBody(), 
+                  Section.TREE_NODE | Section.CLIENT_INDENT | 
+                    Section.TWISTIE | Section.DESCRIPTION | 
+                    Section.TITLE_BAR );
+    eleWiseSection.setText( "Elementweise Korrektur" );
+    tableWrapData = 
+        new TableWrapData( 
+              TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.grabVertical = true;
+    eleWiseSection.setLayoutData( tableWrapData );
+    eleWiseSection.setExpanded( false );
+    eleWiseSection.setEnabled( false );
     
     //sub controls
     stylingControl =
       new RoughnessStylingControl(
                     dataModel,toolkit,styleControlSection);
     stylingControl.createControl();
+
+    ElWiseRoughnessCorrectionControl eleWiseCC =
+      new ElWiseRoughnessCorrectionControl(
+                dataModel, toolkit, eleWiseSection);
+    eleWiseCC.createControl();
+    
     return rootPanel;
   }
 

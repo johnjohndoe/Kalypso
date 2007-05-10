@@ -255,6 +255,15 @@ public class CellDivisionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   }
 
   /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#getMostSpreadPart()
+   */
+  public double getMostSpreadPart( )
+  {
+    // TODO Auto-generated method stub
+    return Double.NaN;
+  }
+  
+  /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec#possibleRoughnesses()
    */
   public IRoughnessCls[] possibleRoughnesses( )
