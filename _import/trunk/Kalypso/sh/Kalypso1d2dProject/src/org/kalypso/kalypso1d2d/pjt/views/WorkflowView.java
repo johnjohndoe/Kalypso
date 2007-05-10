@@ -18,6 +18,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.ITaskExecutor;
 import de.renew.workflow.connector.TaskExecutionListener;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
@@ -95,7 +96,7 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
+    m_activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
     final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
     final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();

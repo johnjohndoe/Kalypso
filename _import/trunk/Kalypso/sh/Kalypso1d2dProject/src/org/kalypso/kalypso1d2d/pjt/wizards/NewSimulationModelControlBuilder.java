@@ -29,6 +29,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -218,7 +219,7 @@ public class NewSimulationModelControlBuilder
     {
       String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
-      final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
+      final ActiveWorkContext activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
       try
       {
         final String projectName = ScenarioHelper.getProjectName( scenario );

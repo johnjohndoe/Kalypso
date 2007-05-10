@@ -50,6 +50,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -69,7 +70,7 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
     if( !project.exists() )
       return;
 
-    final ActiveWorkContext activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
     final IProject currentProject = activeWorkContext.getCurrentProject().getProject();
     // TODO: better the workflow context should be a resource listener and deactivate it himself
     if( project.equals( currentProject ))

@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.actions;
+package de.renew.workflow.connector.context.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

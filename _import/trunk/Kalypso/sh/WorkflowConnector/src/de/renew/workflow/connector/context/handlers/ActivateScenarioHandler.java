@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.actions;
+package de.renew.workflow.connector.context.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -7,8 +7,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISources;
-import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+
+import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 public class ActivateScenarioHandler extends AbstractHandler
 {
@@ -21,10 +22,10 @@ public class ActivateScenarioHandler extends AbstractHandler
     {
       final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
       final Object firstElement = structuredSelection.getFirstElement();
-      if( firstElement instanceof Scenario )
+      if( firstElement instanceof Case )
       {
-        final Scenario scenario = (Scenario) firstElement;
-        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setCurrentSzenario( scenario );
+        final Case scenario = (Case) firstElement;
+        WorkflowConnectorPlugin.getDefault().getActiveWorkContext().setCurrentSzenario( scenario );
       }
     }
     return Status.OK_STATUS;

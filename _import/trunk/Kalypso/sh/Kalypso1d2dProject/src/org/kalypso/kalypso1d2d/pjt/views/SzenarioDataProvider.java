@@ -41,7 +41,6 @@ import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-import de.renew.workflow.cases.CaseData;
 import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
@@ -75,7 +74,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IOperationalModel1D2D.class, MODELS_FOLDER + "/operational.gml" );
     LOCATION_MAP.put( IControlModel1D2D.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
-    LOCATION_MAP.put( IRoughnessClsCollection.class,  "project:/.metadata/roughness.gml" );
+    LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
     // TODO: put the roughness database here, in order to have save mechanism...
     // LOCATION_MAP.put( ISimulationModel.class, MODELS_FOLDER + "/simulation.gml" );
     // TODO: add other model types here
@@ -204,15 +203,15 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
           context = ResourceUtilities.createURL( folder );
           newKey = new PoolableObjectType( "gml", gmlLocation, context );
         }
-        else if( gmlLocation.startsWith( "project:/" ))
+        else if( gmlLocation.startsWith( "project:/" ) )
         {
-          
+
           try
           {
-            IPath path = new Path(gmlLocation);
+            IPath path = new Path( gmlLocation );
             IFile file = szenarioFolder.getProject().getFile( path );
             URL url = FileLocator.resolve( file.getLocationURI().toURL() );
-            File gmlFile = new File(url.toURI());
+            File gmlFile = new File( url.toURI() );
             context = gmlFile.getParentFile().toURL();
             String fileName = gmlFile.getName();
             newKey = new PoolableObjectType( "gml", fileName, context );
@@ -352,15 +351,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     {
       monitor.done();
     }
-  }
-
-  /**
-   * @see de.renew.workflow.cases.ICaseDataProvider#getCaseData()
-   */
-  public CaseData getCaseData( )
-  {
-    // TODO fill case data with model information
-    return new CaseData();
   }
 
   public void saveModel( IProgressMonitor monitor ) throws CoreException

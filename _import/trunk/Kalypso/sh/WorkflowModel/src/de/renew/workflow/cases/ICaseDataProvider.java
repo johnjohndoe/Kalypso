@@ -79,10 +79,4 @@ public interface ICaseDataProvider<T extends Object>
   public boolean isDirty( );
   
   public void reloadModel( );
-
-  /**
-   * Returns the {@link CaseData} object describing the current model state. This method may require information about
-   * the validity of model elements.
-   */
-  public CaseData getCaseData( );
 }

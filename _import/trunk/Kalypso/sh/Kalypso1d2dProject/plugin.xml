@@ -173,10 +173,7 @@
             commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"/>      	 
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenarioHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"/>	 
-	     <handler
-            class="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenarioHandler"
-            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>      	 	               
+	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"/>	 	 	               
 
  	 <!--*** import handlers ***-->
 	     <handler
@@ -312,36 +309,14 @@
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
-      <viewer
-            popupMenuId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.menu"
-            viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
-      </viewer>
       <viewerContentBinding viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <includes>
-            <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
-            <contentExtension pattern="org.kalypso.kalypso1d2d.pjt.navigator.filters.*"/>
             <contentExtension pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"/>
          </includes>
       </viewerContentBinding>
-   </extension>
+   </extension>   
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
-      <commonFilter
-            activeByDefault="true"
-            description="Nur Kalypso1d2d-Projekte anzeigen"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.filters.Kalypso1d2dProjects"
-            name="Nur Kalypso1d2d-Projekte anzeigen">
-         <filterExpression>
-    	    <and>
-				<instanceof value="org.eclipse.core.resources.IProject"/>        
-				<not>
-					<test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-                </not>
-	        </and>
-         </filterExpression>
-      </commonFilter>
       <navigatorContent
             activeByDefault="true"
             contentProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ScenarioContentProvider"
@@ -367,23 +342,6 @@
             </or>
          </possibleChildren>
       </navigatorContent>
-      <commonFilter
-            activeByDefault="true"
-            description="Ressourcen ausblenden"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.filters.StarDotStarResources"
-            name="Ressourcen ausblenden">
-         <filterExpression>
-     		<or>
- 	        	<and>
-					<instanceof value="org.eclipse.core.resources.IFolder"/>
-    	     	</and>
- 				<test
-    	            forcePluginActivation="true"
-        	        property="org.eclipse.core.resources.name"
-            	    value=".*"/>    	     	
-     		</or>
-         </filterExpression>
-      </commonFilter>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
@@ -432,37 +390,10 @@
                      value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>
            </class>
          </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.kalypso.kalypso1d2d.pjt.natureActions"
-            objectClass="org.eclipse.core.resources.IProject">
-         <filter
-               name="nature"
-               value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-         <action
-               enablesFor="1"
-               icon="icons/nuvola_select/kaboodleloop.png"
-               id="org.kalypso.kalypso1d2d.pjt.natureActions.NewProject"
-               label="Verbinden"
-               tooltip="Projekt mit dem Workflowserver verbinden">
-			<class class="org.kalypso.ui.GenericCommandActionDelegate">
-      			<parameter name="commandId" 
-                 	value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"/>
-   			</class>               
-         </action>
-      </objectContribution>
+      </objectContribution>      
    </extension>
    <extension
          point="org.eclipse.ui.commands">
-      <command
-            categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"
-            name="Projekt mit Workflowserver verbinden"/>
-	  <command
-            categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DeleteProject"
-            name="Projekt von Workflowserver trennen"/>                     
       <command
             categoryId="de.renew.workflow.tasks.category"
             id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"
@@ -471,14 +402,6 @@
             categoryId="de.renew.workflow.tasks.category"
             id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
             name="Szenario löschen"/>
-      <category
-            description="Category for workflow tasks"
-            id="de.renew.workflow.tasks.category"
-            name="de.renew.workflow.tasks.category"/>
-      <category
-            description="Category for workflow task groups"
-            id="de.renew.workflow.taskgroups.category"
-            name="de.renew.workflow.taskgroups.category"/>
    </extension>
    
    <extension

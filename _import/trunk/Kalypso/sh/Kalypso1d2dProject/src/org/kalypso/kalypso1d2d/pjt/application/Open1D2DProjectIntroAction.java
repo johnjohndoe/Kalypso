@@ -53,6 +53,7 @@ import org.eclipse.ui.intro.config.IIntroAction;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 
 /**
@@ -80,7 +81,7 @@ public class Open1D2DProjectIntroAction implements IIntroAction
 
     try
     {
-      Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature) project.getNature( CaseHandlingProjectNature.ID ) );
+      WorkflowConnectorPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature) project.getNature( CaseHandlingProjectNature.ID ) );
       workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
     }
     catch( final CoreException e )

@@ -27,6 +27,7 @@ import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ICaseManager;
 
 /**
@@ -72,7 +73,7 @@ public class RemoveScenarioHandler extends AbstractHandler
               MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das letzte Basisszenario kann nicht gelöscht werden." );
               return Status.CANCEL_STATUS;
             }
-            else if( Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
+            else if( WorkflowConnectorPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
             {
               MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario ist zur Zeit aktiv. Bitte aktivieren Sie zuerst ein anderes Szenario." );
               return Status.CANCEL_STATUS;

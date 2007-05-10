@@ -1,10 +1,6 @@
 package org.kalypso.kalypso1d2d.pjt;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.net.URL;
-import java.util.Properties;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -19,6 +15,7 @@ import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ISzenarioSourceProvider;
 import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -37,10 +34,6 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   public static final String KEY_ICON_SIM_MODEL = "_ICON_SIM_MODEL_";
 
-  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
-
-  private ActiveWorkContext<Scenario> m_activeWorkContext;
-  
   private final PerspectiveWatcher<Scenario> m_perspectiveWatcher = new PerspectiveWatcher<Scenario>();
 
   private SzenarioSourceProvider m_szenarioSourceProvider;
@@ -60,20 +53,12 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    Properties properties = new Properties();
-    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
-    final File file = new File( fileName );
-    if( file.exists() )
-    {
-      properties.loadFromXML( new FileInputStream( file ) );
-    }
-    
-    m_activeWorkContext = new ActiveWorkContext<Scenario>( properties );
+    final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );    
-    m_szenarioSourceProvider = new SzenarioSourceProvider(m_activeWorkContext);
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    m_szenarioSourceProvider = new SzenarioSourceProvider( activeWorkContext );
     handlerService.addSourceProvider( m_szenarioSourceProvider );
-    m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
+    activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
   }
 
   /**
@@ -83,20 +68,13 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void stop( BundleContext context ) throws Exception
   {
     plugin = null;
-    final Properties properties = m_activeWorkContext.createProperties();
-    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
-    final File file = new File( fileName );
-    if( file.exists() )
-    {
-      file.delete();
-    }
-    properties.storeToXML( new FileOutputStream( file ), "" );
+
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    handlerService.removeSourceProvider( m_szenarioSourceProvider);
-    m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
-    m_activeWorkContext.setActiveProject( null );
-    m_activeWorkContext = null;
+    handlerService.removeSourceProvider( m_szenarioSourceProvider );
+    final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+    activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
+    activeWorkContext.setActiveProject( null );
     super.stop( context );
   }
 
@@ -124,18 +102,13 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       reg.put( KEY_ICON_SIM_MODEL, desc.createImage() );
     }
     return;
-  }  
+  }
 
   public static Image getImageDescriptor( String key )
   {
     return getDefault().getImageRegistry().get( key );
   }
 
-  public ActiveWorkContext<Scenario> getActiveWorkContext( )
-  {
-    return m_activeWorkContext;
-  }
-  
   public ICaseDataProvider getDataProvider( )
   {
     return (ICaseDataProvider) m_szenarioSourceProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
