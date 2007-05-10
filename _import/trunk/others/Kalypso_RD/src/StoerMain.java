@@ -81,8 +81,9 @@ public class StoerMain
             Calendar calendar=Calendar.getInstance(timeZone);
             dateFormat.setCalendar(calendar);
 //          Anfangs- und Enddatum  
-            Date startDate = dateFormat.parse("1971_01_01 00:00:00");
-            Date endDate = dateFormat.parse("2005_02_26 00:00:00");
+			Date startDate = dateFormat.parse("01_01_2005 00:00:00");
+            Date endDate = dateFormat.parse("30_01_2005 00:00:00");
+
             
             //5Minuten Schritte: 1440 in 5 ändern
             //Zeitschritt für Zeitschleife Zeitschritt in Minuten 24h = 1440min
