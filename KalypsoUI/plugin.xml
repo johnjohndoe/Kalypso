@@ -1034,6 +1034,16 @@
             name="Map View"
             parent="org.eclipse.ui.contexts.window"
             parentId="org.eclipse.ui.contexts.window"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            description="Zoom to selected features"
+            id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"
+            name="Zoom to selected features"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            description="Zoom to selected features of a layer"
+            id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"
+            name="Zoom to selected features of a layer"/>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1221,6 +1231,12 @@ TODO: unfortunately the save button is always disabled
     <handler
           class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
           commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"/>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures"
+          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"/>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer"
+          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"/>
  </extension>
  <extension
        point="org.eclipse.ui.bindings">
@@ -1259,5 +1275,15 @@ TODO: unfortunately the save button is always disabled
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+L"/>
+    <key
+          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"
+          contextId="org.kalypso.ogc.gml.map.context"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="M1+Q"/>
+    <key
+          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"
+          contextId="org.kalypso.ogc.gml.map.context"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="M1+E"/>
  </extension>
 </plugin>
