@@ -29,7 +29,8 @@ public class ZeitreihenFactory
     private static String aInteger = "([-|+]?[0-9]+)";
 
     private static String aFloat = "([-|+]?[0-9]+\\.[0-9]+)";
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH:mm:ss");
+    private static DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy HH:mm:ss");
+    //private static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH:mm:ss");
 
     //1975_01_02 00:00:00;000000000000.000;I
     private static String aDate = "([0-9|_|:|\\s]+)";
