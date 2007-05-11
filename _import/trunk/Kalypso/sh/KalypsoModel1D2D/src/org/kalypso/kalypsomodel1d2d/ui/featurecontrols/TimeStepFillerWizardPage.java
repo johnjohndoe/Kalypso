@@ -234,8 +234,20 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     m_dateTimeStep.addModifyListener( new ModifyListener()
        {
       public void modifyText( ModifyEvent e )
-      {
-        timeStep_val = Integer.parseInt( m_dateTimeStep.getText() );
+      {    
+        String numberPattern = "\\d+";
+        if( !m_dateTimeStep.getText().matches( numberPattern ) )
+        {
+          setMessage( null );
+          setErrorMessage( "Falsch Parameter" );
+          setPageComplete( false );
+        }
+        else {
+          timeStep_val = Integer.parseInt( m_dateTimeStep.getText() );
+          setMessage( null );
+          setErrorMessage(null);
+          setPageComplete( true );
+        }
       }
     } );
 
@@ -256,15 +268,27 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     m_uRelFactorCombo.select( 9 );
     m_uRelFactor = 1.0;
     m_uRelFactorCombo.setLayoutData( gridFillHorizontal );
-    m_uRelFactorCombo.addSelectionListener( this );
-
+    m_uRelFactorCombo.addModifyListener( new ModifyListener() {
+      public void modifyText( ModifyEvent e )
+      {
+        String comboPattern = "0.1|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.0";
+        if(!m_uRelFactorCombo.getText().matches( comboPattern )) {
+          setMessage( null );
+          setErrorMessage( "Falsch Relaxation Factor" );
+          setPageComplete( false );          
+        }
+        else {
+          m_uRelFactor = Double.parseDouble(m_uRelFactorCombo.getText() );
+          setMessage( null );
+          setErrorMessage(null);
+          setPageComplete( true );
+        }       
+      }      
+    });
     final Label emptylabel_2 = new Label( container, SWT.NONE );
     emptylabel_2.setLayoutData( gridEnd );
     emptylabel_2.setText( "" );
     container.layout();
-    // updatePageComplete();
-    // setPageComplete( true );
-
   }
 
   public void init( IStructuredSelection initialSelection )
