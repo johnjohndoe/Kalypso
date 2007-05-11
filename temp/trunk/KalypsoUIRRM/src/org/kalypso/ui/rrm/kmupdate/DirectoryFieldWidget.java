@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.rrm.Messages;
 
 /**
  * @author doemming
@@ -85,7 +86,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
     data.horizontalSpan = sp1;
     label1.setLayoutData( data );
     m_text = new Text( parent, SWT.NONE );
-    m_text.setToolTipText( "Verzeichnis" ); // TODO always show complete path as tooltip
+    m_text.setToolTipText( Messages.getString("DirectoryFieldWidget.0") ); // TODO always show complete path as tooltip //$NON-NLS-1$
     GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
     data2.horizontalSpan = sp2;
     data2.grabExcessHorizontalSpace = true;
@@ -100,7 +101,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
     } );
 
     final Button button = new Button( parent, SWT.NONE );
-    button.setText( "..." );
+    button.setText( Messages.getString("DirectoryFieldWidget.1") ); //$NON-NLS-1$
     GridData data3 = new GridData();
     data3.horizontalSpan = sp3;
     button.setLayoutData( data3 );
@@ -178,7 +179,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
   public void setSelection( ISelection selection )
   {
     if( selection.isEmpty() )
-      m_text.setText( "" );
+      m_text.setText( "" ); //$NON-NLS-1$
     if( selection instanceof IStructuredSelection )
     {
       final Object firstElement = ((IStructuredSelection) selection).getFirstElement();

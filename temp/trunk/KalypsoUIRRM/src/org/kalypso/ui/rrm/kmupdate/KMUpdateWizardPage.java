@@ -91,6 +91,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ui.rrm.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
@@ -128,8 +129,8 @@ public class KMUpdateWizardPage extends WizardPage
 
   public KMUpdateWizardPage( final CommandableWorkspace workspace, IFeatureSelection selection )
   {
-    super( "Kalinin-Miljukov-Parameter aktualisieren ",// 
-    "Berechnung und Export der Kalinin-Miljukov(KM) Parameter aus 1D-Simulationsergebnissen in die NA-Modelldaten", null );
+    super( Messages.getString("KMUpdateWizardPage.0"),//  //$NON-NLS-1$
+    Messages.getString("KMUpdateWizardPage.1"), null ); //$NON-NLS-1$
     m_workspace = workspace;
     final EasyFeatureWrapper[] allFeatures = selection.getAllFeatures();
     m_selection = new Feature[allFeatures.length];
@@ -161,7 +162,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     // column 1 tree-group
     final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( "Kalinin-Miljukov Stränge" );
+    treeGroup.setText( Messages.getString("KMUpdateWizardPage.2") ); //$NON-NLS-1$
     final GridData data2 = new GridData( GridData.FILL_BOTH );
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
@@ -169,7 +170,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     // column 2 KM detailed
     final Group kmGroup = new Group( m_top, SWT.NONE );
-    kmGroup.setText( "Kalinin-Miljukov Details" );
+    kmGroup.setText( Messages.getString("KMUpdateWizardPage.3") ); //$NON-NLS-1$
     GridData data4 = new GridData( GridData.FILL_BOTH );
     data4.grabExcessHorizontalSpace = true;
     data4.grabExcessVerticalSpace = true;
@@ -191,7 +192,7 @@ public class KMUpdateWizardPage extends WizardPage
     parent.setLayout( new GridLayout( 3, false ) );
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Konfiguration" );
+    label.setText( Messages.getString("KMUpdateWizardPage.4") ); //$NON-NLS-1$
     label.setLayoutData( new GridData() );
 
     final Text text = new Text( parent, SWT.READ_ONLY | SWT.BORDER );
@@ -200,7 +201,7 @@ public class KMUpdateWizardPage extends WizardPage
     text.setLayoutData( gridData );
 
     final Button loadButton = new Button( parent, SWT.PUSH );
-    loadButton.setText( "Laden...      " );
+    loadButton.setText( Messages.getString("KMUpdateWizardPage.5") ); //$NON-NLS-1$
 
     final Label space = new Label( parent, SWT.NONE );
     final GridData data = new GridData();
@@ -208,7 +209,7 @@ public class KMUpdateWizardPage extends WizardPage
     space.setLayoutData( data );
 
     final Button saveButton = new Button( parent, SWT.PUSH );
-    saveButton.setText( "Speichern..." );
+    saveButton.setText( Messages.getString("KMUpdateWizardPage.6") ); //$NON-NLS-1$
 
     loadButton.addSelectionListener( new SelectionAdapter()
     {
@@ -217,7 +218,7 @@ public class KMUpdateWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final FileDialog dialog = new FileDialog( parent.getShell(), SWT.OPEN );
-        dialog.setFilterExtensions( new String[] { "*.km_xml" } );
+        dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
         final String path = dialog.open();
         if( path != null && path.length() > 0 )
         {
@@ -238,7 +239,7 @@ public class KMUpdateWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final FileDialog dialog = new FileDialog( parent.getShell(), SWT.SAVE );
-        dialog.setFilterExtensions( new String[] { "*.km_xml" } );
+        dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
         final String path = dialog.open();
         if( path != null && path.length() > 0 )
         {
@@ -284,8 +285,8 @@ public class KMUpdateWizardPage extends WizardPage
 
     m_factory.createKalininMiljukovType();
     km.setId( feature.getId() );
-    km.setFilePattern( "*km" );
-    km.setPath( "" );
+    km.setFilePattern( "*km" ); //$NON-NLS-1$
+    km.setPath( "" ); //$NON-NLS-1$
 
     final Object propStart = feature.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
     final Object propEnd = feature.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
@@ -369,7 +370,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     catch( Exception ex )
     {
-      MessageDialog.openError( getShell(), "Kalinin-Miljukov-Zuordnung", "Fehler beim Laden der Konfiguration (" + path + ")" );
+      MessageDialog.openError( getShell(), Messages.getString("KMUpdateWizardPage.11"), Messages.getString("KMUpdateWizardPage.12") + path + Messages.getString("KMUpdateWizardPage.13") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       createNewKMGroup();
     }
   }
@@ -437,14 +438,14 @@ public class KMUpdateWizardPage extends WizardPage
     m_plugin.getDialogSettings().put( getResourceKey(), m_configPath );
 
     if( saveAs( m_configPath ) )
-      monitorLogger.log( "Dialogeinstellungen wurden gespeichert in " + m_configPath + "\n" );
+      monitorLogger.log( Messages.getString("KMUpdateWizardPage.14") + m_configPath + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
-      errorLogger.log( "Dialogeinstellungen konnten nicht gespeichert werden" );
+      errorLogger.log( Messages.getString("KMUpdateWizardPage.16") ); //$NON-NLS-1$
       if( m_configPath == null )
-        errorLogger.log( ", da keine Datei angegeben ist war.\n" );
+        errorLogger.log( Messages.getString("KMUpdateWizardPage.17") ); //$NON-NLS-1$
       else
-        errorLogger.log( " in: " + m_configPath + ".\n" );
+        errorLogger.log( Messages.getString("KMUpdateWizardPage.18") + m_configPath + ".\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
@@ -459,11 +460,11 @@ public class KMUpdateWizardPage extends WizardPage
         try
         {
           updateFeature( errorLogger, detailedLogger, monitorLogger, feature, changes );
-          monitorLogger.log( "Berechnung erfolgte fuer: " + m_KMUpdateLabelProvider.getText( feature ) + "\n" );
+          monitorLogger.log( Messages.getString("KMUpdateWizardPage.20") + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch( Exception e )
         {
-          errorLogger.log( "Fehler bei " + m_KMUpdateLabelProvider.getText( feature ) + "\n" );
+          errorLogger.log( Messages.getString("KMUpdateWizardPage.22") + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
           e.printStackTrace();
           susccess = false;
         }
@@ -471,7 +472,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     if( !susccess )
     {
-      MessageDialog.openError( getShell(), "Fehler bei Berechnung/Einlesen der KM-Parameter", errorBuffer.toString() );
+      MessageDialog.openError( getShell(), Messages.getString("KMUpdateWizardPage.24"), errorBuffer.toString() ); //$NON-NLS-1$
       return false;
     }
 
@@ -486,17 +487,17 @@ public class KMUpdateWizardPage extends WizardPage
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    final String separator = "\n-------------------------------------\n";
+    final String separator = "\n-------------------------------------\n"; //$NON-NLS-1$
     final String message = // 
-    "Monitor:\n" + monitorBuffer.toString()// 
+    Messages.getString("KMUpdateWizardPage.26") + monitorBuffer.toString()//  //$NON-NLS-1$
         + separator//
-        + "Fehler:\n" + errorBuffer.toString() // 
+        + Messages.getString("KMUpdateWizardPage.27") + errorBuffer.toString() //  //$NON-NLS-1$
         + separator //  
-        + "Details\n" + detailBuffer.toString() //
+        + Messages.getString("KMUpdateWizardPage.28") + detailBuffer.toString() // //$NON-NLS-1$
         + separator //
-        + "Profilauswahl\n" + selectionBuffer.toString();
+        + Messages.getString("KMUpdateWizardPage.29") + selectionBuffer.toString(); //$NON-NLS-1$
     // MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
-    Dialog dialog = new ScrolledTextInformationDialog( getShell(), "Erfolg der Berechnungen", "Log", message );
+    Dialog dialog = new ScrolledTextInformationDialog( getShell(), Messages.getString("KMUpdateWizardPage.30"), Messages.getString("KMUpdateWizardPage.31"), message ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.open();
     // StatusUtilities..
     return true;
@@ -518,7 +519,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   private List<FeatureChange> updateFeature( ILogger errorLogger, ILogger detailedLogger, ILogger monitorLogger, final Feature feature, final List<FeatureChange> changeList ) throws Exception
   {
-    final String log = "Bearbeitung " + m_KMUpdateLabelProvider.getText( feature ) + ":";
+    final String log = Messages.getString("KMUpdateWizardPage.32") + m_KMUpdateLabelProvider.getText( feature ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
     final List<FeatureChange> result;
     if( changeList == null )
       result = new ArrayList<FeatureChange>();
@@ -543,19 +544,19 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( km == null )
     {
-      errorLogger.log( log + " Kein Parametersatz gefunden\n" );
+      errorLogger.log( log + Messages.getString("KMUpdateWizardPage.34") ); //$NON-NLS-1$
       return result;
     }
     final Double kmStart = km.getKmStart();
     final Double kmEnd = km.getKmEnd();
     if( kmStart == null || kmEnd == null )
     {
-      errorLogger.log( log + " Kilometrierung (Start oder Ende) nicht vollstaendig\n" );
+      errorLogger.log( log + Messages.getString("KMUpdateWizardPage.35") ); //$NON-NLS-1$
       return result;
     }
     if( kmStart.compareTo( kmEnd ) > 0 )
     {
-      errorLogger.log( log + " Bei Kilometrierung wird die Regel 'start[km] < ende[km]' verletzt\n" );
+      errorLogger.log( log + Messages.getString("KMUpdateWizardPage.36") ); //$NON-NLS-1$
       return result;
     }
     final List<File> list = new ArrayList<File>();
@@ -573,7 +574,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     if( list.isEmpty() )
     {
-      errorLogger.log( log + " Es wurden keine Profildateien zugewiesen\n" );
+      errorLogger.log( log + Messages.getString("KMUpdateWizardPage.37") ); //$NON-NLS-1$
       return result;
     }
     final File[] files = list.toArray( new File[list.size()] );
@@ -589,29 +590,29 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( kmParameter.length < max )
     {
-      errorLogger.log( log + " Bestehendes Objekt hat noch keine KM-Parameter Eintraege. (Genau 5 sind gefordert). Abhilfe: Parameter in Tabelle hinzufuegen.\n" );
+      errorLogger.log( log + Messages.getString("KMUpdateWizardPage.38") ); //$NON-NLS-1$
       // TODO add new features
     }
     else
     {
-      detailedLogger.log( log + " Berechnete Parameter:\n" );
+      detailedLogger.log( log + Messages.getString("KMUpdateWizardPage.39") ); //$NON-NLS-1$
       for( int i = 0; i < kmParameter.length; i++ )
       {
         final Feature kmParameterFE = kmParameter[i];
         final AbstractKMValue value = values[i];
-        detailedLogger.log( (i + 1) + ". " + value.toString() + "\n" );
+        detailedLogger.log( (i + 1) + ". " + value.toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         // result.add( new FeatureChange( kmParameterFE, rkfPT, value.getK() ) );
         // result.add( new FeatureChange( kmParameterFE, rkvT, value.getKForeland() ) );
         // result.add( new FeatureChange( kmParameterFE, rnfPT, value.getN() ) );
         // result.add( new FeatureChange( kmParameterFE, rnvPT, value.getNForeland() ) );
         // result.add( new FeatureChange( kmParameterFE, qrkPT, value.getQSum() ) );
         // result.add( new FeatureChange( kmParameterFE, cPT, value.getAlpha() ) );
-        result.add( new FeatureChange( kmParameterFE, rkfPT, Double.parseDouble( FortranFormatHelper.printf( value.getK(), "f8.4" ) ) ) );
-        result.add( new FeatureChange( kmParameterFE, rkvT, Double.parseDouble( FortranFormatHelper.printf( value.getKForeland(), "f8.4" ) ) ) );
-        result.add( new FeatureChange( kmParameterFE, rnfPT, Double.parseDouble( FortranFormatHelper.printf( value.getN(), "f7.2" ) ) ) );
-        result.add( new FeatureChange( kmParameterFE, rnvPT, Double.parseDouble( FortranFormatHelper.printf( value.getNForeland(), "f7.2" ) ) ) );
-        result.add( new FeatureChange( kmParameterFE, qrkPT, Double.parseDouble( FortranFormatHelper.printf( value.getQSum(), "f8.3" ) ) ) );
-        result.add( new FeatureChange( kmParameterFE, cPT, Double.parseDouble( FortranFormatHelper.printf( value.getAlpha(), "f8.3" ) ) ) );
+        result.add( new FeatureChange( kmParameterFE, rkfPT, Double.parseDouble( FortranFormatHelper.printf( value.getK(), "f8.4" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, rkvT, Double.parseDouble( FortranFormatHelper.printf( value.getKForeland(), "f8.4" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, rnfPT, Double.parseDouble( FortranFormatHelper.printf( value.getN(), "f7.2" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, rnvPT, Double.parseDouble( FortranFormatHelper.printf( value.getNForeland(), "f7.2" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, qrkPT, Double.parseDouble( FortranFormatHelper.printf( value.getQSum(), "f8.3" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, cPT, Double.parseDouble( FortranFormatHelper.printf( value.getAlpha(), "f8.3" ) ) ) ); //$NON-NLS-1$
       }
     }
     return result;
@@ -628,7 +629,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   private String getResourceKey( )
   {
-    final String base = "kalypsoRRM.kmUpdate.configPath";
+    final String base = "kalypsoRRM.kmUpdate.configPath"; //$NON-NLS-1$
     final URL context = m_workspace.getContext();
     if( context != null )
       return base + context.toString();

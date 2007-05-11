@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class KMUpdateLabelProvider implements ILabelProvider
 {
-  private final QName m_gmlName = new QName( NS.GML2, "name" );
+  private final QName m_gmlName = new QName( NS.GML2, "name" ); //$NON-NLS-1$
 
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
@@ -95,10 +95,10 @@ public class KMUpdateLabelProvider implements ILabelProvider
 
       final Object name = feature.getProperty( m_gmlName );
       if( name != null && name instanceof String )
-        buffer.append( " \"" + name + "\"" );
+        buffer.append( " \"" + name + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
       else
-        buffer.append( " \"\"" );
-      buffer.append( "   (ID=#" + feature.getId() + ")" );
+        buffer.append( " \"\"" ); //$NON-NLS-1$
+      buffer.append( "   (ID=#" + feature.getId() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return buffer.toString();
   }

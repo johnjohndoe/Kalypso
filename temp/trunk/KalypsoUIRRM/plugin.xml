@@ -9,20 +9,16 @@
             adaptable="false"
             id="KalypsoUIRRM.kmContribution"
             objectClass="org.kalypsodeegree.model.feature.Feature">
-         <menu
-               id="KalypsoUIRRM.menu1"
-               label="RRM-tools"
-               path="additions">
-         </menu>
+         <filter
+               name="featureType"
+               value="http://www.tuhh.de/kalypsoNA#KMChannel"/>
          <action
                class="org.kalypso.ui.rrm.action.KMUpdateAction"
-               enablesFor="+"
                icon="icons/kmStrang.gif"
                id="KalypsoUIRRM.updateKMParameter"
-               label="UpdateKMParameter"
-               menubarPath="KalypsoUIRRM.menu1"
+               label="%KalypsoUIRRM.updateKMParameter.label"
                style="push"
-               />
+               tooltip="%KalypsoUIRRM.updateKMParameter.tooltip"/>
       </objectContribution>
    </extension>
    <extension
