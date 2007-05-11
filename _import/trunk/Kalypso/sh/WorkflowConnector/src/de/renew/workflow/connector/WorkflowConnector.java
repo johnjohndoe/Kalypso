@@ -48,7 +48,7 @@ public class WorkflowConnector
       logger.setUseParentHandlers( false );
   }
 
-  private static final boolean m_isWorkflowMode = true;
+  private static final boolean m_isWorkflowMode = false;
 
   private static WorkflowConnector _connector;
 
