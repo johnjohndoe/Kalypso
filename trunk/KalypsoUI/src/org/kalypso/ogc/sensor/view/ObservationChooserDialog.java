@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
 
 /**
  * A dialog for choosing an observation among the tree of repositories
@@ -54,7 +55,7 @@ public class ObservationChooserDialog extends ResizableDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite)super.createDialogArea( parent );
+    final Composite composite = (Composite) super.createDialogArea( parent );
 
     composite.setLayout( new FillLayout() );
     m_chooser = new ObservationChooser( composite );
@@ -79,17 +80,21 @@ public class ObservationChooserDialog extends ResizableDialog
   /**
    * @return the idenfitier of the selected observation or null if no observation is selected
    */
-  public String getSelectedObservation()
+  public String getSelectedObservation( )
   {
     if( m_chooser != null )
     {
-      final Object sel = ( (StructuredSelection)m_chooser.getSelection() ).getFirstElement();
+      final ZmlObservationItem sel = (ZmlObservationItem) ((StructuredSelection) m_chooser.getSelection()).getFirstElement();
 
-      if( sel instanceof IObservation )
+      if( sel != null )
       {
-        final IObservation obs = (IObservation)sel;
-        return obs.getIdentifier();
+        return sel.getIdentifier();
       }
+//      if( sel instanceof IObservation )
+//      {
+//        final IObservation obs = (IObservation) sel;
+//        return obs.getIdentifier();
+//      }
     }
     return null;
   }

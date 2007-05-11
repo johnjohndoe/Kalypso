@@ -132,7 +132,7 @@ public class ObservationViewer extends Composite
   public ObservationViewer( final Composite parent, final int style, final boolean header, final boolean chart, final boolean metaDataTable, final ButtonControl[] buttonControls )
   {
     super( parent, style );
-
+    // TODO: hier evtl. die komplette Zeitreiehe anzeigen?!?
     m_dr = DateRange.createFromPastDays( 5 );
 
     createControl( header, metaDataTable, chart, buttonControls );
@@ -237,6 +237,8 @@ public class ObservationViewer extends Composite
         try
         {
           final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
+          // TODO: choose for relative or absolute path of the result.
+//          final IContainer projectDir = contextIFile.getProject();
           final IContainer baseDir = contextIFile.getParent();
           final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" );
           dialog.setBlockOnOpen( true );
