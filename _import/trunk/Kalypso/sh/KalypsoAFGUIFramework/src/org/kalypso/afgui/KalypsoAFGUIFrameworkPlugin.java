@@ -3,8 +3,6 @@ package org.kalypso.afgui;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
 
 import de.renew.workflow.base.IWorkflowSystem;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -35,16 +33,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
    */
   public KalypsoAFGUIFrameworkPlugin( )
   {
-    plugin = this;
-    final Bundle workflowConnectorPlugin = Platform.getBundle( WorkflowConnectorPlugin.PLUGIN_ID );
-    try
-    {
-      workflowConnectorPlugin.start();
-    }
-    catch( final BundleException e )
-    {
-      e.printStackTrace();
-    }
+    plugin = this;    
   }
   
   /**

@@ -364,10 +364,6 @@
      <extension
            point="org.eclipse.ui.newWizards">
         <wizard
-              class="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardZmlChooser"
-              id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardZmlChooser"
-              name="ZmlChooser"/>
-        <wizard
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
               name="TimeStepWizard"/>

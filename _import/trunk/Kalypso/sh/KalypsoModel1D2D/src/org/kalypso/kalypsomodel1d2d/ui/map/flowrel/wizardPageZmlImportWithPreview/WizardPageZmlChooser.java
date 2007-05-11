@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -31,8 +34,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.jfree.chart.title.TextTitle;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -148,10 +156,21 @@ public class WizardPageZmlChooser extends WizardPage
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        final ImportObservationWizard wizard = new ImportObservationWizard();
-        wizard.setProject( m_currentSzenario.getProject() );
-        final WizardDialog dialog = new WizardDialog( topComposite.getShell(), wizard );
-        dialog.open();
+        final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard("org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" );        
+        IWorkbenchWizard wizard;
+        final Shell shell = topComposite.getShell();
+        try
+        {
+          wizard = wizardDesc.createWizard();
+          final WizardDialog dialog = new WizardDialog( shell, wizard );
+          dialog.open();
+        }
+        catch( final CoreException e1 )
+        {
+          final IStatus status = e1.getStatus();
+          ErrorDialog.openError( shell, "Fehler", "Konnte den Assistenten zum Import von Zeitreihen nicht starten", status );
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+        }
         treeViewer.refresh();
       }
     } );

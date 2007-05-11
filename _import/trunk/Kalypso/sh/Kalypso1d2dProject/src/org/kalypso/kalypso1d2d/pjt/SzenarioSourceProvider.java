@@ -51,6 +51,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
   {
     activeWorkContext = context;
     activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
+    m_dataProvider.setCurrent( getSzenarioFolder() );
   }
 
   /**
