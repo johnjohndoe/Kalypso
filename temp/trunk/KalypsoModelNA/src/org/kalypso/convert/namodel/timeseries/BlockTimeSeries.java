@@ -211,7 +211,7 @@ public class BlockTimeSeries
                 if( allowedKeys == null || allowedKeys.contains( key ) )
                 {
                   if( m_blocks.containsKey( key ) )
-                    timeSeries = (TreeMap<Date, String>) m_blocks.get( key );
+                    timeSeries = m_blocks.get( key );
                   else
                   {
                     timeSeries = new TreeMap<Date, String>();

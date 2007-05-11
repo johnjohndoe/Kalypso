@@ -169,6 +169,7 @@ public class IDManager
   {
     final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator()
     {
+      @Override
       public boolean equals( Object obj )
       {
         return false;
@@ -219,7 +220,9 @@ public class IDManager
 
     int asciiID;
 
-    public IDMap( int asciiID, int type )
+    public IDMap( @SuppressWarnings("hiding")
+    int asciiID, @SuppressWarnings("hiding")
+    int type )
     {
       this.type = type;
       this.asciiID = asciiID;

@@ -67,13 +67,13 @@ public class SwaleAndTrenchManager extends AbstractManager
 {
   private final NAConfiguration m_conf;
 
-  private final GMLSchema m_schema;
+  // private final GMLSchema m_schema;
 
   public SwaleAndTrenchManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
     super( conf.getSwaleAndTrenchFormatURL() );
     m_conf = conf;
-    m_schema = schema;
+    // m_schema = schema;
 
   }
 

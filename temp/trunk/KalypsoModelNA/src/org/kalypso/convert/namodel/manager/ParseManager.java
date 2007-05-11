@@ -70,7 +70,7 @@ public class ParseManager
 
   private final NetFileManager m_nodeManager;
 
-  private final RHBManager m_rhbManager;
+  // private final RHBManager m_rhbManager;
 
   private final BodenartManager m_bodartManager;
 
@@ -90,7 +90,7 @@ public class ParseManager
     m_nodeManager = nodeManager;
     m_schema = schema;
     m_paraSchema = paraSchema;
-    m_rhbManager = rhbManager;
+    // m_rhbManager = rhbManager;
     m_bodartManager = bodartManager;
     m_bodtypManager = bodtypManager;
     m_nutzManager = nutzManager;
@@ -104,7 +104,7 @@ public class ParseManager
     // get all FeatureTypes...
     IFeatureType naModellFT = m_schema.getFeatureType( NaModelConstants.NA_MODEL_ROOT_FT );
     IFeatureType catchmentCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CATCHMENT_COLLECTION_FT );
-    IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT);
+    IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
     IFeatureType nodeCollectionFT = m_schema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
 
     // create all Features (and FeatureCollections)
@@ -151,7 +151,6 @@ public class ParseManager
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
     IFeatureType naParaFT = m_paraSchema.getFeatureType( NaModelConstants.PARA_ROOT_FT );
-    
 
     // create all Features (and FeatureCollections)
     Feature naParaFe = modelManager.createFeature( naParaFT );
@@ -200,20 +199,18 @@ public class ParseManager
         FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     }
     System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
-    
-    
+
     final IPropertyType sealingMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SEALING_MEMBER );
     URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL();
-    features=m_idleLanduseManager.parseSealingFilecsv(csvsealingURL);
+    features = m_idleLanduseManager.parseSealingFilecsv( csvsealingURL );
     for( int f = 0; f < features.length; f++ )
       FeatureHelper.addProperty( naParaFe, sealingMemberRT, features[f] );
 
-    
     URL csvURL = new File( nutzungDir, "Klassen_KRUECK2007.csv" ).toURL();
-    features=m_idleLanduseManager.parseFilecsv(csvURL);
+    features = m_idleLanduseManager.parseFilecsv( csvURL );
     for( int f = 0; f < features.length; f++ )
       FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
-    
+
     final IPropertyType snowMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
     // complete Feature snowMember
     try
