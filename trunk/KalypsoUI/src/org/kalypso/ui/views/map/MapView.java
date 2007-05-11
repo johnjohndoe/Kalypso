@@ -86,11 +86,11 @@ public class MapView extends AbstractMapPart implements IViewPart
     super.createPartControl( parent );
 
     // Stefan: We probably do not want the file to be restored?
-    // final IFile file = getFile();
-    // if( file != null )
-    // {
-    // startLoadJob( file );
-    // }
+     final IFile file = getFile();
+    if( file != null )
+    {
+      startLoadJob( file );
+    }
   }
 
   /**
