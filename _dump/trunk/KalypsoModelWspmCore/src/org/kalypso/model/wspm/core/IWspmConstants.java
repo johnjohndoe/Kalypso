@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core;
 
-import java.math.MathContext;
-
 /**
  * Contains constants for the wspm models.
  * 
@@ -66,8 +64,6 @@ public interface IWspmConstants
   public static String NS_WSPM_BREAKLINE = "org.kalypso.model.wspmbreakline";
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary";
-  
-  public static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
 
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
