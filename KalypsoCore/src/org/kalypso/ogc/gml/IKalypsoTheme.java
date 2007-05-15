@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -50,9 +52,12 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
+ * Implements {@link org.eclipse.ui.model.IWorkbenchAdapter} in order to provider nice labels/images, ..... Does NOT
+ * implement {@link org.eclipse.ui.model.IWorkbenchAdapter2}. Fonts, and so on are decided outside of the theme scope.
+ * 
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
-public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener, IKalypsoThemeEventProvider, IAdaptable
+public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener, IKalypsoThemeEventProvider, IAdaptable, IWorkbenchAdapter
 {
   public void dispose( );
 
@@ -80,4 +85,6 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener,
    * Returns true if this theme is fully loaded
    */
   public boolean isLoaded( );
+
+  public IStatus getStatus( );
 }

@@ -737,7 +737,7 @@
      <action
            class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate"
            icon="icons/feature/gis_feature_down.gif"
-           id="KalypsoUI.action1"
+           id="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate"
            label="Feature &amp;Down"
            menubarPath="featureListMenu"
            tooltip="Moves the feature one position down"/>
@@ -756,6 +756,25 @@
            menubarPath="featureListMenu"
            style="push"
            tooltip="Dupliziert das selektierte Feature"/>
+  </objectContribution>
+  <objectContribution
+        id="org.kalypso.objectclass.theme"
+        objectClass="org.kalypso.ogc.gml.IKalypsoTheme">
+     <action
+           class="org.kalypso.ui.actions.OpenPropertyViewThemeAction"
+           icon="icons/full/elcl16/showThemeProps.gif"
+           id="org.kalypso.ui.actions.OpenPropertyViewThemeAction"
+           label="Eigenschaften (View)"
+           style="push"
+           tooltip="Die Eigenschaften des Themas in einer Ansicht anzeigen">
+     </action>
+     <action
+           class="org.kalypso.ui.actions.OpenPropertyDialogAction"
+           icon="icons/full/elcl16/showThemeProps.gif"
+           id="org.kalypso.ui.actions.OpenPropertyDialogAction"
+           label="Eigenschaften (Dialog)"
+           tooltip="Öffnet den Eigenschaftendialog für das selektierte Thema">
+     </action>
   </objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters"
@@ -898,6 +917,40 @@
         adaptableType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
         class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
      <adapter type="org.eclipse.ui.IActionFilter"/>
+  </factory>
+  <factory
+        adaptableType="org.kalypso.ogc.gml.outline.GisMapOutlineView"
+        class="org.kalypso.ui.views.properties.ContentOutlinePropertyAdapterFactory">
+     <adapter
+           type="org.eclipse.ui.views.properties.IPropertySheetPage">
+     </adapter>
+  </factory>
+  <factory
+        adaptableType="org.eclipse.ui.views.contentoutline.ContentOutline"
+        class="org.kalypso.ui.views.properties.ContentOutlinePropertyAdapterFactory">
+     <adapter
+           type="org.eclipse.ui.views.properties.IPropertySheetPage">
+     </adapter>
+  </factory>
+  <factory
+        adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor"
+        class="org.kalypso.ui.views.properties.ContentOutlinePropertyAdapterFactory">
+     <adapter
+           type="org.eclipse.ui.views.properties.IPropertySheetPage">
+     </adapter>
+  </factory>
+  <factory
+        adaptableType="org.kalypso.ogc.gml.IKalypsoTheme"
+        class="org.kalypso.ui.views.properties.ThemePropertyAdapterFactory">
+     <adapter
+           type="org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor">
+     </adapter>
+     <adapter
+           type="org.eclipse.ui.views.properties.IPropertySource">
+     </adapter>
+     <adapter
+           type="org.eclipse.ui.model.IWorkbenchAdapter2">
+     </adapter>
   </factory>
 	</extension>
 	<extension point="org.kalypso.contribs.eclipsercp.actionFilters">
@@ -1285,5 +1338,75 @@ TODO: unfortunately the save button is always disabled
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+E"/>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+    <propertyContributor
+          contributorId="org.kalypso.ui.ContentOutlinePropertyContributor">
+       <propertyCategory
+             category="outline"/>
+    </propertyContributor>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+    <propertyContributor
+          contributorId="org.kalypso.ui.ThemePropertyContributor">
+       <propertyCategory
+             category="theme"/>
+    </propertyContributor>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+    <propertyTabs
+          contributorId="org.kalypso.ui.ThemePropertyContributor">
+       <propertyTab
+             category="theme"
+             id="org.kalypso.ui.propertyTabs.ThemeGenerelTab"
+             indented="false"
+             label="Generel">
+       </propertyTab>
+       <propertyTab
+             afterTab="org.kalypso.ui.propertyTabs.ThemeGenerelTab"
+             category="theme"
+             id="org.kalypso.ui.propertyTabs.ThemeAdvancedTab"
+             indented="false"
+             label="Advanced">
+       </propertyTab>
+    </propertyTabs>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views.properties.tabbed.propertySections">
+    <propertySections
+          contributorId="org.kalypso.ui.ThemePropertyContributor">
+       <propertySection
+             class="org.kalypso.ui.views.properties.NamePropertySection"
+             id="org.kalypso.ui.propertySections.themes.NameSection"
+             tab="org.kalypso.ui.propertyTabs.ThemeGenerelTab">
+          <input
+                type="org.kalypso.ogc.gml.IKalypsoTheme">
+          </input>
+       </propertySection>
+       <propertySection
+             class="org.eclipse.ui.views.properties.tabbed.AdvancedPropertySection"
+             id="org.kalypso.ui.propertySections.themes.AdvancedSection"
+             tab="org.kalypso.ui.propertyTabs.ThemeAdvancedTab">
+          <input
+                type="org.kalypso.ogc.gml.IKalypsoTheme">
+          </input>
+       </propertySection>
+    </propertySections>
+ </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.kalypso.ui.views.properties.ThemePropertyPage"
+          id="org.kalypso.ui.themeBasicPage"
+          name="Thema">
+       <enabledWhen>
+          <instanceof
+                value="org.kalypso.ogc.gml.IKalypsoTheme">
+          </instanceof>
+       </enabledWhen>
+    </page>
  </extension>
 </plugin>

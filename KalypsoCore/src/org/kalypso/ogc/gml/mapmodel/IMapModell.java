@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.awt.Graphics;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
@@ -59,7 +60,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author belger
  */
-public interface IMapModell extends ModellEventProvider, ModellEventListener
+public interface IMapModell extends ModellEventProvider, ModellEventListener, IWorkbenchAdapter
 {
   /** dispose off all themes! */
   public void dispose();
@@ -117,6 +118,4 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public void setName( String name );
   
   public String getName ();
-  
-
 }

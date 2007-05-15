@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.sld.UserStyle;
@@ -68,9 +69,6 @@ public class MapModellLabelProvider implements ILabelProvider
   public Image getImage( Object element )
   {
     return null;
-    // ImageDescriptor descriptor = null;
-    // descriptor = ImageProvider.IMAGE_FEATURE;
-    // return descriptor.createImage();
   }
 
   /**
@@ -90,7 +88,8 @@ public class MapModellLabelProvider implements ILabelProvider
         sb.append( themeName );
 
       // falls aktiviert
-      if( m_mapModell != null && m_mapModell.getActiveTheme() == kalypsoTheme )
+      IMapModell mapModell = kalypsoTheme.getMapModell();
+      if( mapModell != null && mapModell.getActiveTheme() == kalypsoTheme )
         sb.append( " - aktiv" );
 
       // TODO: this should be managed by the feature-theme itself

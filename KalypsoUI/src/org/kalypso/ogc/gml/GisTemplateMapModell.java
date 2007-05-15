@@ -54,7 +54,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
@@ -65,7 +67,6 @@ import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -168,16 +169,16 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   {
     final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
 
+    final CS_CoordinateSystem defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( "wms".equals( layerType.getLinktype() ) ) //$NON-NLS-1$
     {
       final String layerName = layerType.getName();
       final String source = layerType.getHref();
-      final CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs, this );
+      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, defaultCS, this );
     }
     else if( ArrayUtils.contains( arrImgTypes, layerType.getLinktype().toLowerCase() ) )
     {
-      return KalypsoPictureTheme.getPictureTheme( layerType, context, this, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );
     }
     else if( "gmt".equals( layerType.getLinktype() ) )
     {
@@ -479,9 +480,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
    */
-  public void accept( KalypsoThemeVisitor visitor, int depth_infinite )
+  public void accept( KalypsoThemeVisitor visitor, int depth )
   {
-    m_modell.accept( visitor, depth_infinite );
+    m_modell.accept( visitor, depth );
 
   }
 
@@ -511,5 +512,37 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   {
     m_modell.accept( visitor, depth_infinite, theme );
 
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
+   */
+  public Object[] getChildren( final Object o )
+  {
+    return m_modell.getChildren( o );
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   */
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    return m_modell.getImageDescriptor( object );
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
+   */
+  public String getLabel( final Object o )
+  {
+    return m_modell.getLabel( o );
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
+   */
+  public Object getParent( final Object o )
+  {
+    return m_modell.getParent( o );
   }
 }

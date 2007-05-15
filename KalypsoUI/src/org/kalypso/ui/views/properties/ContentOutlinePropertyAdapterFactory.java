@@ -38,60 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.theme;
+package org.kalypso.ui.views.properties;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeListener;
-import org.kalypso.ogc.gml.KalypsoThemeEvent;
+import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Gernot Belger
  */
-public class GenerelThemeTab extends Composite implements IKalypsoThemeListener
+public class ContentOutlinePropertyAdapterFactory implements IAdapterFactory
 {
-  private final IKalypsoTheme m_theme;
+  private static final String CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ContentOutlinePropertyContributor";
 
-  private Text m_text;
-
-  public GenerelThemeTab( final TabFolder parent, final int style, final IKalypsoTheme theme )
+  /**
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
-    super( parent, style );
-
-    m_theme = theme;
-
-    m_theme.addKalypsoThemeListener( this );
-
-    setLayout( new GridLayout( 2, false ) );
-
-    /* Name */
-    final Label nameLabel = new Label( this, SWT.NONE );
-    nameLabel.setText( "Name: " );
-    final Text text = new Text( this, SWT.NONE );
-    m_text = text;
-    m_text.setText( m_theme.getName() );
-    m_text.addModifyListener( new ModifyListener()
+    if( adapterType == IPropertySheetPage.class )
     {
-      public void modifyText( final ModifyEvent e )
+      return new TabbedPropertySheetPage( new ITabbedPropertySheetPageContributor()
       {
-        theme.setName( text.getText() );
-      }
-    } );
+        public String getContributorId( )
+        {
+          return CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR;
+        }
+      } );
+    }
+
+    return null;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  public void kalypsoThemeChanged( final KalypsoThemeEvent event )
+  @SuppressWarnings("unchecked")
+  public Class[] getAdapterList( )
   {
-    m_text.setText( event.getSource().getName() );
+    return new Class[] { IPropertySheetPage.class };
   }
 
 }

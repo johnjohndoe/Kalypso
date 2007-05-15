@@ -48,6 +48,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.RuleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypsodeegree.model.feature.event.ModellEvent;

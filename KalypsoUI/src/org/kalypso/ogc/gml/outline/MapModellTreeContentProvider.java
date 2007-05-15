@@ -47,6 +47,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.RuleTreeObject;
+import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -107,7 +109,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
       ArrayList filteredRules = rulePatternCollection.getFilteredRuleCollection();
       final RuleTreeObject[] result = new RuleTreeObject[filteredRules.size()];
       for( int i = 0; i < result.length; i++ )
-        result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle, (IKalypsoFeatureTheme) theme );
+        result[i] = new RuleTreeObject( filteredRules.get( i ), obj );
       return result;
     }
     return null;

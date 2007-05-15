@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
@@ -351,5 +352,37 @@ public class MapModell implements IMapModell
   public void setName( String name )
   {
     m_name = name;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
+   */
+  public Object[] getChildren( final Object o )
+  {
+    return getAllThemes();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   */
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
+   */
+  public String getLabel( final Object o )
+  {
+    return getName();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
+   */
+  public Object getParent( final Object o )
+  {
+    return null;
   }
 }

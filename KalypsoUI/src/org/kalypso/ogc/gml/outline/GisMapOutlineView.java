@@ -107,6 +107,9 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     final IWorkbenchPage page = site.getPage();
     page.addPartListener( m_partListener );
     final IEditorPart activeEditor = page.getActiveEditor();
+    
+    // TODO: this leads to a PartInitException (recursive attemp...)
+    // maybe just start this search in a job?
     final IViewPart mapView = page.findView( MapView.ID );
     // try to find map editor first
     if( activeEditor != null && activeEditor instanceof AbstractMapPart )

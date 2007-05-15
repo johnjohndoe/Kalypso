@@ -508,4 +508,41 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     return m_selectionManager;
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLabel(java.lang.Object)
+   */
+  @Override
+  public String getLabel( final Object o )
+  {
+    final String label = super.getLabel( o );
+
+    final CommandableWorkspace workspace = getWorkspace();
+    // TODO: change this later to a label decorator?
+    if( workspace != null && workspace.isDirty() )
+      return label + "*";
+    
+    return label;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
+   */
+  @Override
+  public Object[] getChildren( final Object o )
+  {
+    if( o != this )
+      throw new IllegalStateException();
+    
+    final UserStyle[] styles = getStyles();
+    if( styles != null )
+    {
+      final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
+      for( int i = 0; i < styles.length; i++ )
+        result[i] = new ThemeStyleTreeObject( this, styles[i] );
+      return result;
+    }
+
+    return super.getChildren( o );
+  }
 }

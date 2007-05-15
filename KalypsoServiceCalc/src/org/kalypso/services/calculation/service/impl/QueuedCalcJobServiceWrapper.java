@@ -62,7 +62,6 @@ import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.RefactorThis;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -90,8 +89,6 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
   protected static final Logger LOGGER = Logger.getLogger( QueuedCalcJobServiceWrapper.class.getName() );
 
   private final ICalculationService m_service;
-
-  private GMLSchemaCatalog m_schemaCatalog;
 
   public QueuedCalcJobServiceWrapper( ) throws RemoteException
   {
@@ -177,7 +174,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       final AbstractUrlCatalog emptyCatalog = new AbstractUrlCatalog()
       {
         @Override
-        protected void fillCatalog( final Class myClass, final Map katalog, Map<String, String> prefixes )
+        protected void fillCatalog( final Class myClass, final Map<String, URL> katalog, Map<String, String> prefixes )
         {
           // nix, ist leer
         }
@@ -202,8 +199,6 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       // TODO: auch den catalog aus der schemaConf nehmen?
       final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
       cacheDir.mkdir();
-
-      m_schemaCatalog = new GMLSchemaCatalog( catalog, cacheDir );
 
       m_service = new QueuedCalcJobService( factory, catalog, maxThreads, schedulingPeriod );
     }
