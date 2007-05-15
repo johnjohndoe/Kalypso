@@ -13,7 +13,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.ITaskExecutor;
@@ -123,6 +122,7 @@ public class WorkflowView extends ViewPart
   @Override
   public void setFocus( )
   {
-
+    if( m_workflowControl != null )
+    m_workflowControl.setFocus();
   }
 }

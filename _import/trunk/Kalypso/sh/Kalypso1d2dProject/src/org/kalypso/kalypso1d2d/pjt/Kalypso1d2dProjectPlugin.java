@@ -53,12 +53,6 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    m_szenarioSourceProvider = new SzenarioSourceProvider( activeWorkContext );
-    handlerService.addSourceProvider( m_szenarioSourceProvider );
-    activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
   }
 
   /**
@@ -69,12 +63,19 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   {
     plugin = null;
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    handlerService.removeSourceProvider( m_szenarioSourceProvider );
-    final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
-    activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
-    activeWorkContext.setActiveProject( null );
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      if( handlerService != null )
+      {
+        handlerService.removeSourceProvider( m_szenarioSourceProvider );
+        final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+        activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
+        activeWorkContext.setActiveProject( null );
+      }
+    }
+
     super.stop( context );
   }
 
@@ -111,6 +112,17 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   public ICaseDataProvider getDataProvider( )
   {
+    if( m_szenarioSourceProvider == null )
+    {
+      // This can only be called if the platform has already been started
+      final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      m_szenarioSourceProvider = new SzenarioSourceProvider( activeWorkContext );
+      handlerService.addSourceProvider( m_szenarioSourceProvider );
+      activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
+    }
+
     return (ICaseDataProvider) m_szenarioSourceProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
 }

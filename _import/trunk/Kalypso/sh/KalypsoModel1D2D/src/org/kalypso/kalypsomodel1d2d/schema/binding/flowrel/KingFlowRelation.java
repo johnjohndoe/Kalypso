@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigDecimal;
+
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -48,7 +50,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class KingFlowRelation extends FlowRelationship implements IKingFlowRelation
 {
-
   public KingFlowRelation( final Feature featureToBind )
   {
     super( featureToBind, IKingFlowRelation.QNAME );
@@ -57,33 +58,32 @@ public class KingFlowRelation extends FlowRelationship implements IKingFlowRelat
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getWidth()
    */
-  public Double getWidth( )
+  public BigDecimal getWidth( )
   {
-    return (Double) getWrappedFeature().getProperty( QNAME_PROP_WIDTH );
+    return (BigDecimal) getWrappedFeature().getProperty( QNAME_PROP_WIDTH );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getBankSlopeLeft()
    */
-  public Double getBankSlopeLeft( )
+  public BigDecimal getBankSlopeLeft( )
   {
-    Double slopeLeft = (Double) ( getWrappedFeature().getProperty( QNAME_PROP_SS1 ));
+    final BigDecimal slopeLeft = (BigDecimal) ( getWrappedFeature().getProperty( QNAME_PROP_SS1 ));
     if( slopeLeft == null )
-    {
-      slopeLeft = 0.0;
-    }
+      return new BigDecimal( 0.0 );
+
     return slopeLeft; 
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getBankSlopeRight()
    */
-  public Double getBankSlopeRight( )
+  public BigDecimal getBankSlopeRight( )
   {
-    Double slopeRight = (Double) ( getWrappedFeature().getProperty( QNAME_PROP_SS2 ));
+    final BigDecimal slopeRight = (BigDecimal) ( getWrappedFeature().getProperty( QNAME_PROP_SS2 ));
     if( slopeRight == null )
     {
-      slopeRight = 0.0;
+      return new BigDecimal( 0.0 );
     }
     return slopeRight; 
   }
@@ -91,29 +91,30 @@ public class KingFlowRelation extends FlowRelationship implements IKingFlowRelat
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getHeightStorage()
    */
-  public Double getHeightStorage( )
+  public BigDecimal getHeightStorage( )
   {
-    return (Double) getWrappedFeature().getProperty( QNAME_PROP_WIDS );
+    return (BigDecimal) getWrappedFeature().getProperty( QNAME_PROP_WSS );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getSlopeStorage()
    */
-  public Double getSlopeStorage( )
+  public BigDecimal getSlopeStorage( )
   {
-    Double slopeStorage = (Double) ( getWrappedFeature().getProperty( QNAME_PROP_WIDBS ));
+    final BigDecimal slopeStorage = (BigDecimal) ( getWrappedFeature().getProperty( QNAME_PROP_WIDBS ));
     if( slopeStorage == null )
     {
-      slopeStorage = 0.0;
+      return new BigDecimal( 0.0 );
     }
+    
     return slopeStorage; 
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation#getWidthStorage()
    */
-  public Double getWidthStorage( )
+  public BigDecimal getWidthStorage( )
   {
-    return (Double) getWrappedFeature().getProperty( QNAME_PROP_WSS );
+    return (BigDecimal) getWrappedFeature().getProperty( QNAME_PROP_WIDS );
   }
 }

@@ -78,6 +78,12 @@
         <gft:validatorlabel property="wb1d2d:wss" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
+
+		<gft:extensioncontrol property="wb1d2d:pointsMember" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+			<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+			<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default" />
+			<gft:param name="featureKeyName" value="kingFeatureKey" />
+		</gft:extensioncontrol>
         
 </gft:featureview>
 

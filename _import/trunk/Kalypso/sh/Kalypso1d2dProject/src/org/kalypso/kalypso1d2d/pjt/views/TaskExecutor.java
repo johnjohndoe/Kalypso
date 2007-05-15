@@ -53,6 +53,7 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
 
 import de.renew.workflow.base.Task;
@@ -96,6 +97,10 @@ public class TaskExecutor implements ITaskExecutor
    */
   public void execute( final Task task ) throws TaskExecutionException
   {
+    // HACK: in order to make sure the SzenarioSourceProvider is initialized, call this method each time
+    // a task is executed. It would be better if this happened automatically on plug-in-start, but 
+    Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
+    
     if( m_activeTask != null )
     {
       if( !m_authority.canStopTask( m_activeTask ) )
@@ -104,7 +109,6 @@ public class TaskExecutor implements ITaskExecutor
     final String name = task.getURI();
     final Command command = getCommand( m_commandService, name, task instanceof TaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
     final ContextType context = task.getContext();
-    // ContextActivation activateContext = null;
     if( context != null )
     {
       activateContext( context );

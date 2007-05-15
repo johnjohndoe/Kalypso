@@ -1,11 +1,9 @@
 package org.kalypso.afgui;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import de.renew.workflow.base.IWorkflowSystem;
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -33,7 +31,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
    */
   public KalypsoAFGUIFrameworkPlugin( )
   {
-    plugin = this;    
+    plugin = this;
   }
   
   /**
@@ -58,6 +56,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     return imageDescriptorFromPlugin( PLUGIN_ID, path );
   }
 
+  // TODO: this is never called, remove it
   public IWorkflowSystem getWorkflowSystem( )
   {
     return this.workflowSystem;

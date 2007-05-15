@@ -234,7 +234,7 @@ public class CreateChannelData
     final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
     mapModell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
 
-    final IKalypsoTheme[] result = visitor.getFeatures();
+    final IKalypsoTheme[] result = visitor.getFoundThemes();
     final IKalypsoFeatureTheme[] resultThemes = new IKalypsoFeatureTheme[result.length];
     System.arraycopy( result, 0, resultThemes, 0, result.length );
 

@@ -2,15 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    
-   <extension
-         id="org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin">
-         </run>
-      </application>
-   </extension>
    
    
    <!-- Project extensions -->
@@ -107,6 +98,21 @@
    	
      
      <extension point="org.eclipse.ui.handlers">
+        <handler
+              class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+              commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#SelectOneProfile">
+           <activeWhen>
+              <with
+                    variable="activeContexts">
+                 <iterate
+                       operator="or">
+                    <equals
+                          value="{org.kalypso.model.wspmprofile}Profile">
+                    </equals>
+                 </iterate>
+              </with>
+           </activeWhen>
+        </handler>
      
      <!--*** Element2D context handler ***-->
 		 <handler

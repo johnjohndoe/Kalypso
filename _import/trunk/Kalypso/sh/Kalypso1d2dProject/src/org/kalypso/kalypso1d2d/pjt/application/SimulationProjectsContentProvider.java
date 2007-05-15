@@ -239,6 +239,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
    */
   public void createContent( final String id, final PrintWriter out )
   {
+    System.out.println();
   }
 
   /**
@@ -247,6 +248,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
    */
   public void createContent( final String id, final Composite parent, final FormToolkit toolkit )
   {
+    System.out.println();
   }
 
   /**

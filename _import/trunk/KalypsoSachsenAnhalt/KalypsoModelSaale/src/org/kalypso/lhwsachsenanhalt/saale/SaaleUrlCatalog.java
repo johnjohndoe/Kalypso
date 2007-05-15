@@ -29,6 +29,7 @@
  */
 package org.kalypso.lhwsachsenanhalt.saale;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
@@ -38,7 +39,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public final class SaaleUrlCatalog extends AbstractUrlCatalog
 {
-  protected final void fillCatalog( final Class myClass, final Map catalog, Map<String, String> prefixes )
+  protected final void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( "org.kalypso.saale.modell", myClass.getResource( "schemata/saalemodell.xsd" ) );
     catalog.put( "org.kalypso.saale.pegel", myClass.getResource( "schemata/pegel.xsd" ) );

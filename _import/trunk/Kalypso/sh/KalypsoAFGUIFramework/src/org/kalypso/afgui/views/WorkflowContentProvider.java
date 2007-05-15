@@ -25,7 +25,7 @@ public class WorkflowContentProvider implements ITreeContentProvider
     }    
     else
     {
-      return null;
+      return new Object[] {};
     }
   }
 

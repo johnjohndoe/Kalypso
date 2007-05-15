@@ -359,6 +359,23 @@
 	                     	value="NodalBCDef"/>
 	       			</class>
 			</action>
+   <action
+         disabledIcon="icons/dlcl16/select_profile_disable.gif"
+         icon="icons/elcl16/select_profile_enable.gif"
+         id="org.kalypso.kalypsomodel1d2d.ui.map.SelectProfileWidgetAction"
+         label="Profil selektieren"
+         style="radio"
+         toolbarPath="karte/edit"
+         tooltip="Profil selektieren und in der Karte anzeigen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model.wspm.ui"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="SelectOneProfile"/>
+	       			</class>
+   </action>
         </viewContribution>
      </extension>
      <extension
@@ -383,5 +400,12 @@
         <extensionControl
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"/>
+     </extension>
+     <extension
+           point="org.kalypso.chart.LayerProvider">
+        <provider
+              class="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider"
+              id="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider">
+        </provider>
      </extension>
 </plugin>

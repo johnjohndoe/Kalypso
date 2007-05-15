@@ -38,8 +38,9 @@
 	&file_modelle_NA;
 	&file_modelle_WSPM;
 	&file_modelle_1D2D;
-	&file_modelle_FM;
+	<!-- &file_modelle_FM;
 	&file_modelle_RM;
+	-->
 		
 	
 	<chapter vendor="sachsen;sachsen-anhalt" id="vorhersage_wizards">

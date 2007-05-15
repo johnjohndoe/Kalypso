@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -64,15 +66,15 @@ public interface IKingFlowRelation extends IFlowRelationship
 
   public static final QName QNAME_PROP_WSS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wss" );
 
-  public Double getWidth( );
+  public BigDecimal getWidth( );
 
-  public Double getBankSlopeLeft( );
+  public BigDecimal getBankSlopeLeft( );
 
-  public Double getBankSlopeRight( );
+  public BigDecimal getBankSlopeRight( );
 
-  public Double getWidthStorage( );
+  public BigDecimal getWidthStorage( );
 
-  public Double getHeightStorage( );
+  public BigDecimal getHeightStorage( );
 
-  public Double getSlopeStorage( );
+  public BigDecimal getSlopeStorage( );
 }

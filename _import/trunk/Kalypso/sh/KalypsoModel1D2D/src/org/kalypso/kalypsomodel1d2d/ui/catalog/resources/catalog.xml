@@ -32,7 +32,8 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TeschkeFlowRelation.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.gft" /> 
     
-    <!-- urn for chart configuration of TeschkeParameter-FeatureView -->
+    <!-- urn for chart configuration of King- and TeschkeParameter-FeatureView -->
     <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TeschkeFlowRelation.kod" />
+    <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.kod" />
     
 </catalog:catalog>

@@ -342,4 +342,10 @@ public class WorkflowControl implements IWorklistChangeListener
   {
     m_treeViewer.refresh();
   }
+
+  public void setFocus( )
+  {
+    if( m_treeViewer != null && !m_treeViewer.getControl().isDisposed() )
+      m_treeViewer.getControl().setFocus();
+  }
 }

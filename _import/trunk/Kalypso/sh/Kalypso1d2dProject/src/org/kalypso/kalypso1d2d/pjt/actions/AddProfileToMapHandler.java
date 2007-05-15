@@ -48,15 +48,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.SoureAndPathThemePredicate;
+import org.kalypso.ogc.gml.command.ActivateThemeCommand;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -83,7 +91,10 @@ public class AddProfileToMapHandler extends AbstractHandler
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+    if( mapModell == null )
+      throw new ExecutionException( "Kartenansicht nicht initialisiert, versuchen Sie es noch einmal." );
 
     /* Get network collection */
     final ITerrainModel terrainModel;
@@ -100,19 +111,29 @@ public class AddProfileToMapHandler extends AbstractHandler
 
     /* ask user and add everything to map */
     final Object[] result = showNetworksDialog( shell, riverProfileNetworkCollection );
-    if( result != null )
-    {
-      for( final Object object : result )
-      {
-        final IRiverProfileNetwork network = (IRiverProfileNetwork) object;
+    if( result == null )
+      return Status.CANCEL_STATUS;
 
-        final FeaturePath networkPath = new FeaturePath( network.getWrappedFeature() );
-        final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-        final String source = terrainModel.getWrappedFeature().getWorkspace().getContext().toString();
-        // TODO: aktivates the theme, is this ok?
-        final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source );
-        mapView.postCommand( command, null );
-      }
+    for( final Object object : result )
+    {
+      final IRiverProfileNetwork network = (IRiverProfileNetwork) object;
+
+      final FeaturePath networkPath = new FeaturePath( network.getWrappedFeature() );
+      final FeaturePath profilesFeaturePath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
+      final String profilesPath = profilesFeaturePath.toString();
+      final String source = terrainModel.getWrappedFeature().getWorkspace().getContext().toString();
+
+      /* Check if this theme is already present, if true, just activate it */
+      final IKalypsoThemePredicate predicate = new SoureAndPathThemePredicate( source, profilesPath );
+      final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+      mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+      final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
+      final ICommand command;
+      if( foundThemes.length == 0 )
+        command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath, source );
+      else
+        command = new ActivateThemeCommand( mapModell, foundThemes[0] );
+      mapView.postCommand( command, null );
     }
 
     return Status.OK_STATUS;
@@ -122,7 +143,7 @@ public class AddProfileToMapHandler extends AbstractHandler
   {
     final ListDialog dialog = new ListDialog( shell );
     dialog.setTitle( "Profile in Karte anzeigen" );
-    dialog.setMessage( "Wählen Sie die Profilnetzwerke aus, welche Sie als Themen in die Karte übernehmen möchten:" );
+    dialog.setMessage( "Wählen Sie das Profilthema aus, welches Sie in der Karte anzeigen möchten:" );
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {
@@ -142,10 +163,8 @@ public class AddProfileToMapHandler extends AbstractHandler
     if( riverProfileNetworkCollection.size() > 0 )
       dialog.setInitialSelections( new Object[] { riverProfileNetworkCollection.get( 0 ) } );
 
-    dialog.open();
-    // Stefan: this does not make sense to me, throwing an exception when the user cancelled
-    // if(dialog.open() != Window.OK )
-    // throw new CoreException( Status.CANCEL_STATUS );
+    if( dialog.open() != Window.OK )
+      return null;
 
     return dialog.getResult();
   }

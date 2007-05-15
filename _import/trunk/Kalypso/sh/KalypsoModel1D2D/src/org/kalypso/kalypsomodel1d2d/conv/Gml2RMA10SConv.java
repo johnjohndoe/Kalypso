@@ -45,9 +45,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Formatter;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
@@ -119,11 +117,9 @@ public class Gml2RMA10SConv
     m_flowrelationModel = (IFlowRelationshipModel) calculation.getFlowRelWorkspace().getRootFeature().getAdapter( IFlowRelationshipModel.class );
 
     // initialize Roughness IDs
-    List list = calculation.getRoughnessClassList();
-    Iterator iterator = list.iterator();
-    while( iterator.hasNext() )
+    for( final Object o : calculation.getRoughnessClassList() )
     {
-      final Feature roughnessCL = (Feature) iterator.next();
+      final Feature roughnessCL = (Feature) o;
       getID( m_roughnessIDProvider, roughnessCL.getId() );
     }
   }
@@ -275,13 +271,12 @@ public class Gml2RMA10SConv
         if( relationship instanceof IKingFlowRelation )
         {
           final IKingFlowRelation kingRelation = (IKingFlowRelation) relationship;
-          final Double width = kingRelation.getWidth();
-          Double bankSlopeLeft = kingRelation.getBankSlopeLeft();
-          Double bankSlopeRight = kingRelation.getBankSlopeRight();
-          Double widthStorage = kingRelation.getWidthStorage();
-          Double heightStorage = kingRelation.getHeightStorage();
-          Double slopeStorage = kingRelation.getSlopeStorage();
-          // TODO: get oparameters from king relation
+          final BigDecimal width = kingRelation.getWidth();
+          final BigDecimal bankSlopeLeft = kingRelation.getBankSlopeLeft();
+          final BigDecimal bankSlopeRight = kingRelation.getBankSlopeRight();
+          final BigDecimal widthStorage = kingRelation.getWidthStorage();
+          final BigDecimal heightStorage = kingRelation.getHeightStorage();
+          final BigDecimal slopeStorage = kingRelation.getSlopeStorage();
           formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft, bankSlopeRight, widthStorage, heightStorage, slopeStorage );
         }
         else if( relationship instanceof ITeschkeFlowRelation )
@@ -397,7 +392,7 @@ public class Gml2RMA10SConv
     // Probably we should throw an exception instead and stop calculation
 
     // YES, JUST DO IT:
-     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
+    throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
     // System.out.println( "Keine Rauheitszone gefunden: " + element );
     // return 0;
 
