@@ -494,9 +494,145 @@
 		</xs:complexContent>	
 	</xs:complexType>
 	
+	<!-- ============================================================
+                   Calculation Unit
+   ==============================================================-->
+   <xs:element
+       name="CalculationUnit"
+       type="wb1d2d:CalculationUnitType"
+       substitutionGroup="wb1d2d:ComplexElement"
+       abstract="true"/>
+          <xs:complexType
+       name="CalculationUnitType"
+       abstract="true">
+       <xs:annotation>
+           <xs:documentation>
+           </xs:documentation>
+       </xs:annotation>
+       <xs:complexContent>
+           <xs:extension
+               base="wb1d2d:ComplexElementType">
+           </xs:extension>
+       </xs:complexContent>       
+   </xs:complexType>
+   <xs:element 
+		name="calculationUnit"
+		type="wb1d2d:CalculationUnitPropertyType"
+		/>
 	
+	<xs:complexType name="CalculationUnitPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property type for defining calculation units
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence> 
+			<xs:element 
+				ref="wb1d2d:CalculationUnit"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+   <!-- ========================================================
+       Calculation Unit 1D
+   ========================================================= -->
+   <xs:element
+       name="CalculationUnit1D"
+       type="wb1d2d:ComplexElementType"
+       substitutionGroup="wb1d2d:ComplexElement"
+       abstract="true"/>
+  <xs:complexType
+    name="CalculationUnitType1D"
+    abstract="true">
+  <xs:annotation>
+        <xs:documentation>
+        		1D calculation unit with 1D elements only
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+        <xs:extension
+            base="wb1d2d:ComplexElementType">
+            <xs:sequence>
+	            <xs:element ref="wb1d2d:element1D"/>
+            </xs:sequence>
+        </xs:extension>
+    </xs:complexContent>       
+  </xs:complexType>
+
+  <xs:element
+       name="CalculationUnit2D"
+       type="wb1d2d:CalculationUnitType2D"
+       substitutionGroup="wb1d2d:CalculationUnit"/>
+  <xs:complexType
+    name="CalculationUnitType2D">
+  <xs:annotation>
+        <xs:documentation>
+        		2D calculation unit with 2D elements only
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+        <xs:extension
+            base="wb1d2d:CalculationUnitType">
+            <xs:sequence>
+	            <xs:element 
+	            	ref="wb1d2d:element2D"
+	            	minOccurs="0" maxOccurs="1"/>
+	            <xs:element
+	            	name="upstreamBoundaryLine"
+	            	type="wb1d2d:BoundaryLinePropertyType"
+	            	minOccurs="1" maxOccurs="1"/>
+	            <xs:element
+	            	name="downstreamBoundaryLine"
+	            	type="wb1d2d:BoundaryLinePropertyType"
+	            	minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:extension>
+    </xs:complexContent>       
+  </xs:complexType>
+
+	<xs:element
+       name="CalculationUnit1D2D"
+       type="wb1d2d:CalculationUnitType2D"
+       substitutionGroup="wb1d2d:CalculationUnit"/>
+  <xs:complexType
+    name="CalculationUnitType1D2D">
+  <xs:annotation>
+        <xs:documentation>
+        		calculation unit with 2D or 1D elements only
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+        <xs:extension
+            base="wb1d2d:CalculationUnitType">
+            <xs:sequence>
+	            <xs:element ref="wb1d2d:element" />
+	            <xs:element ref="wb1d2d:calculationUnit" />
+            </xs:sequence>
+        </xs:extension>
+    </xs:complexContent>       
+  </xs:complexType>	
 	
-	
+	<!--xs:element
+       name="CalculationUnitCombined"
+       type="wb1d2d:CalculationUnitTypeCombined"
+       substitutionGroup="wb1d2d:CalculationUnit"/>
+  <xs:complexType
+    name="CalculationUnitTypeCombined">
+  <xs:annotation>
+        <xs:documentation>
+        		calculation unit with 2D or 1D elements only
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+        <xs:extension
+            base="wb1d2d:CalculationUnitType">
+            <xs:sequence>
+	            <xs:element ref="wb1d2d:calculationUnit"/>
+            </xs:sequence>
+        </xs:extension>
+    </xs:complexContent>       
+  </xs:complexType -->	
+  
 	<!-- =================================================================
 		FE1D2DElementType
 	================================================================== -->
@@ -724,6 +860,57 @@
 			<xs:extension 
 				base="wb1d2d:ElementType">
 				</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	
+	<!-- ================================================================ 
+	Continiuty line element
+	==================================================================-->
+	
+	<xs:element 
+		name="boundaryLine"
+		type="wb1d2d:BoundaryLinePropertyType"/>
+		
+	<xs:complexType name="BoundaryLinePropertyType">
+		<xs:sequence>
+			<xs:element 
+				ref="wb1d2d:BoundaryLine"
+				minOccurs="0" maxOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:element 
+		name="BoundaryLine"
+		type="wb1d2d:BoundaryLineType"
+		substitutionGroup="wb1d2d:Element"/>
+	
+	<xs:complexType name="BoundaryLineType">
+		<xs:annotation>
+			<xs:documentation>
+				An 2D fe continuity line element 
+				is defined by succession of edges.				
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"
+					kapp:valueType="gml:LineStringPropertyType"
+					kapp:isVirtual="true"/>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:ElementType">
+					<xs:sequence>
+						<xs:element
+							ref="wb1d2d:directedEdge"
+							minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				
+			</xs:extension>			
 		</xs:complexContent>	
 	</xs:complexType>
 	

@@ -4,6 +4,7 @@
 	xmlns:gml="http://www.opengis.net/gml" xmlns:kapp="org.kalypso.appinfo"
 	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
 	xmlns:om="http://www.opengis.net/om"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
@@ -15,10 +16,18 @@
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<import namespace="http://www.opengis.net/om"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
+	<import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_finite_elements_discretisation.xsd"
+		/>	
+	
 	<!-- ==============================================================
 		global element declarations
 		============================================================== -->
-	<element name="Control" type="c1d2d:ControlType" />
+	<!--element 
+		name="ControlModel" 
+		type="c1d2d:ControlModelType" 
+		substitutionGroup="simBase:_Model"/>
 	<annotation>
 		<documentation xml:lang="de">
 			<label>Control Parameter</label>
@@ -27,10 +36,70 @@
 			<label>control parameter</label>
 		</documentation>
 	</annotation>
-	<complexType name="ControlType">
+	<complexType name="ControlModelType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension 
+				base="simBase:AbstractControlModelType">
 				<sequence>
+					<element ref="c1d2d:complexElementControlModel"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType -->
+	
+	<!-- =================================================================
+	
+	================================================================== -->
+	<element 
+			name="controlModel" 
+			type="c1d2d:ControlModelPropertyType" >
+		<annotation>
+			<documentation xml:lang="en">
+			</documentation>
+		</annotation>
+	</element>
+	<complexType 
+		name="ControlModelPropertyType">
+		<annotation>
+			<documentation xml:lang="en">
+			</documentation>
+		</annotation>
+		<sequence>
+			<element 
+				ref="c1d2d:Control" 
+				minOccurs="0" maxOccurs="1"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</complexType>
+	<!-- ============================================================
+	
+	============================================================= -->
+	<element 
+		name="Control" 
+		type="c1d2d:ControlModelType" 
+		substitutionGroup="simBase:_Model"/>
+	<annotation>
+		<documentation xml:lang="de">
+			<label>Control Parameter</label>
+		</documentation>
+		<documentation xml:lang="en">
+			<label>control parameter</label>
+		</documentation>
+	</annotation>
+	<complexType name="ControlModelType">
+		<complexContent>
+			<extension base="simBase:AbstractControlModelType">
+				<sequence>
+					<element
+						name="boundaryZone1"
+						type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="1"/>
+					<element
+						name="boundaryZone2"
+						type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="1"/>
+					<element ref="c1d2d:controlModel"/>
+						
 					<element name="Version" default="NEW">
 						<annotation>
 							<documentation xml:lang="de">

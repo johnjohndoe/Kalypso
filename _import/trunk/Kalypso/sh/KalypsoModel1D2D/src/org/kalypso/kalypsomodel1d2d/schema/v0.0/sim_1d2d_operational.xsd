@@ -40,6 +40,76 @@
 				base="simBase:AbstractOperationalModelType">
 				<xs:sequence>
 					<xs:element
+						name="boundaryZone1"
+						type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="1"/>
+					
+					<xs:element
+						name="boundaryZone2"
+						type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="1"/>
+						
+					<xs:element
+						ref="op1d2d:boundaryCondition"
+						minOccurs="0" maxOccurs="unbounded"/>
+						
+					<xs:element
+						ref="op1d2d:initialCondition"
+						minOccurs="0" maxOccurs="unbounded"/>
+						
+					<xs:element ref="op1d2d:operationalModel"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>		
+	</xs:complexType>
+	
+	<!-- =================================================================
+	
+	================================================================== -->
+	<xs:element 
+		name="operationalModel"
+		type="op1d2d:OperationalModelPropertyType"/>
+	<xs:complexType name="OperationalModelPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property to hold an InitialCondition
+				element, or a substitute
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="op1d2d:OperationalModel"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<!-- =================================================================
+	
+	================================================================== -->
+	<!--xs:element 
+			name="ComplexElementOperationalModel"
+			type="op1d2d:ComplexElementOperationalModelType"
+			substitutionGroup="simBase:OperationalModel">
+	</xs:element>
+	
+	<xs:complexType 
+		name="ComplexElementOperationalModelType">
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractOperationalModelType">
+				<xs:sequence>
+					<xs:element
+						name="boundaryZone1"
+						type="gml:PointPropertyType"
+						minOccurs="1" maxOccurs="1"/>
+					
+					<xs:element
+						name="boundaryZone2"
+						type="gml:PointPropertyType"
+						minOccurs="1" maxOccurs="1"/>
+						
+					<xs:element
 						ref="op1d2d:boundaryCondition"
 						minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element
@@ -48,7 +118,7 @@
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>		
-	</xs:complexType>
+	</xs:complexType -->
 	
 	
 	<!-- =======================================================
