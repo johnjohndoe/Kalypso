@@ -1,4 +1,4 @@
-!     Last change:  K    29 Jan 2007    6:00 pm
+!     Last change:  K    10 May 2007    8:00 pm
 !-----------------------------------------------------------------------
 ! This code, roughness.f90, computes the resistance factor lambda according
 ! the Darcy-Weissbahc-resistance law in the library 'Kalypso-2D'.
@@ -33,7 +33,12 @@
 ! Research Associate
 !
 !
-SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr)
+
+!nis,may07: Add switch for sort of calculation 1D or 2D
+!SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr)
+SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr, approxdim)
+!-
+
 !
 !
 !-----------------------------------------------------------------------
@@ -55,11 +60,14 @@ REAL(KIND=8)                                    :: h
 REAL(KIND=4), DIMENSION(1:mel,1:4), INTENT(IN) 	:: bedform
 REAL(KIND=4), INTENT(INOUT) 			:: c_wr
 
+!Add switch for approximation decision
+INTEGER                                         :: approxdim
+!-
+
 ! Local variables
 REAL 	:: lambdasand	= 0.0
 REAL 	:: lambdawald   = 0.0
 REAL 	:: lambdabedform= 0.0
-
 
 !NiS,may06: testing
  !IF (ks.le.0.0) stop 'ks.le.0'
@@ -68,26 +76,34 @@ IF (ks.le.0.0) then
   stop 'ks.le.0'
 endif
 !-
+
 IF (h.le.0.01) then
   lambda = 100000.0
   RETURN
 ENDIF
 
-! Bedform is not calculated when trees occur!
-if (nn/=0 .AND. morph /= 0 .and. dp /= 0.0) then
-  CALL formrauhheit (lambdabedform, nn, bedform, mel, h)
-else
-  lambdabedform = 0.0
-end if
-
 CALL cole (lambdasand, vecq, h, ks, nn)
+!hint: h is in case of 1D used as the hydraulic radius
 
-if (dp > 0.0 .and. h > 0.0) then
-  CALL wald (lambdawald, h, a, dp, c_wr)
-else
-  lambdawald = 0.0
-  c_wr = 0.0
-end if
+if (approxdim == 2) then
+  ! Bedform is not calculated when trees occur!
+  if (nn/=0 .AND. morph /= 0 .and. dp /= 0.0) then
+    CALL formrauhheit (lambdabedform, nn, bedform, mel, h)
+  else
+    lambdabedform = 0.0
+  end if
+
+
+  if (dp > 0.0 .and. h > 0.0) then
+    CALL wald (lambdawald, h, a, dp, c_wr)
+  else
+    lambdawald = 0.0
+    c_wr = 0.0
+  end if
+endif
+
+
+
 
 lambda = lambdasand + lambdawald + lambdabedform
 
@@ -111,8 +127,8 @@ implicit none
 REAL, INTENT(OUT) 	:: lambda       ! calculated roughness coefficient
 !NiS,jul06: Consistent variable types!
 !REAL, INTENT(IN)  	:: vecq, h, ks 	! velocity, flow depth, ks-value
-REAL, INTENT(IN)  	:: vecq, ks 	! flow depth, ks-value
-REAL(KIND=8), INTENT(IN):: h            ! velocity
+REAL, INTENT(IN)  	:: vecq, ks 	! velocity, ks-value
+REAL(KIND=8), INTENT(IN):: h            ! flow depth, hydraulic radius
 !-
 INTEGER, INTENT(IN) 	:: nn           ! active element
 
@@ -141,7 +157,7 @@ REAL, PARAMETER  :: f_r = 3.71
 INTEGER 	 :: i
 
 lalt = 10.0**6  	! initial lambda
-dhy = 4.0 * h   	! hydraulic diameter
+dhy  = 4.0 * h   	! hydraulic diameter
 
 !WP Reynolds number
 !WP ---------------
