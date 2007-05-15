@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  K     8 May 2007    3:43 pm
+C     Last change:  EF   15 May 2007   11:20 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -40,6 +40,10 @@ CIPK LAST UPDATED SEP 7 1995
 !           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
 !           also as real, kind=8.
       REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
+!-
+
+!nis,may07: Adding variables for use of resistance calculation with wetted perimeter
+      REAL(KIND=8) :: Perim, sslop1, sslop2
 !-
 
 C
@@ -271,10 +275,13 @@ C-
 CIPK JAN03
       EINA=EINX(NN)*CX+EINY(NN)*SA
 
-      DO 107 K=1,NCN
-C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
-C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
-  107 CONTINUE
+!nis,may07: deactivating loop because it doesn't do anything
+!      DO 107 K=1,NCN
+!C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
+!C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
+!  107 CONTINUE
+!-
+
 C-
 C-.....COMPUTE ELEMENT EQUATIONS.....
 C-
@@ -358,6 +365,12 @@ C-
       SSLOP=XM(1)*(SS1(N1)+SS2(N1))+XM(2)*(SS1(N2)+SS2(N2))
       DWIDX=(WIDTH(N2)-WIDTH(N1))/TEMP
       DSLOX=(SS1(N2)+SS2(N2)-SS1(N1)-SS2(N1))/TEMP
+
+      !nis,may07: Calculate wetted area of cross section
+      sslop1 = XM(1) * SS1(N1) + XM(2) * SS1(N2)
+      sslop2 = XM(1) * SS2(N1) + XM(2) * SS2(N2)
+      perim  = WID + H * (SQRT(1.+SSLOP1**2) + SQRT(1.+SSLOP2**2))
+      !-
 
 CIPK OCT02 GET GAUSS POINT ICE VALUES
       GSICE=GSICE+THKI(1)*XM(1)+THKI(3)*XM(2)
@@ -666,12 +679,18 @@ CIPK MAY06  MOVE NR TO MAT
       ELSEIF (ORT(MAT,5) == -1.0) THEN
       !ELSEIF (ORT(MAT,5) .lt. 0) THEN
       !-
+        !getting the hydraulic radius
+        PERIM = WID + H* (SQRT (1. + SSLOP1**2) + SQRT (1. + SSLOP2**2))
+        rhy = ACR/ PERIM
+        !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
         !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-        call darcy(lambda, vecq, h, ort(imat(nn),15),
+        !nis,may07: Add switch for approximation decision
+        call darcy(lambda, vecq, rhy, ort(imat(nn),15),
      +             abst(nn), durchbaum(nn),
         !-
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 1)
+        !-
         FFACT = lambda/8.0
 !-
       ENDIF

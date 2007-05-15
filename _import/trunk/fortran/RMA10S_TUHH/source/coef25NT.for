@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K     3 May 2007   10:11 am
+C     Last change:  K    10 May 2007    8:01 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -975,11 +975,12 @@ cipk mar05
         !WRITE(*,*) 'in coef25nt: ', ort(imat(nn),15)
         !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
-        !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+        !nis,may07: Add switch for approximation decision
         call darcy(lambda, vecq, h, ort(imat(nn),15),
      +             abst(nn), durchbaum(nn),
         !-
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 2)
+        !-
         FFACT = lambda/8.0
 
       !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative, not clear

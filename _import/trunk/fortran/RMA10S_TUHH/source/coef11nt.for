@@ -1,6 +1,6 @@
 cipk  last update feb 26 2006 add logic for loads from 1-d structures
 cipk  last update nov 28 2006 allow for 1-d control structures
-cipk  last update jul 05 2006 use perim for hydraulic radius in friction	      
+cipk  last update jul 05 2006 use perim for hydraulic radius in friction
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT AND H DEFINITION
 CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE mar 23 2006 correct ice initial values 
@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  K     8 May 2007    3:43 pm
+C     Last change:  EF   15 May 2007    2:39 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -84,19 +84,6 @@ cipk jan99 initialize AKE
       ELSE
         FCOEF = GRAV/2.208
       ENDIF
-
-
-!nis,may07: special testouput
-!      if (nn == 211) then
-!        do i = 1, 3
-!          WRITE(*,'(a9,2(1x,i4),3(1x, f9.3))') 'Element: ',
-!     +                                   nn, nop(nn,i),
-!     +                                   (vel(j, nop(nn,i)), j=1, 3)
-!        end do
-!        pause
-!      endif
-!nis,may07: special testouput-
-
 
 C-
 C-.....ASSIGN PROPER COEFS.....
@@ -287,10 +274,13 @@ C-
 CIPK JAN03
       EINA=EINX(NN)*CX+EINY(NN)*SA
 
-      DO 107 K=1,NCN
-C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
-C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
-  107 CONTINUE
+!nis,may07: deactivating loop because it doesn't do anything
+!      DO 107 K=1,NCN
+!C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
+!C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
+!  107 CONTINUE
+!-
+
 C-
 C-.....COMPUTE ELEMENT EQUATIONS.....
 C-
@@ -508,7 +498,7 @@ CIPK FEB07
           ENDIF
         ENDIF
         IF(ICYC.LT.1) GO TO 270
-        !nis,oct06,com: addition of nodal derivative, derivative is in velocity
+        !time derivative of velocity
         BETA1 = BETA1 + XN(M) * (VDX(M)*CX + VDY(M)*SA) * QFACT(M)
   270 CONTINUE
 C-
@@ -641,7 +631,7 @@ CIPK AUG95 DEFINE RATES
 cipk mar05
         DRDS=0.        
       ENDIF
-      DRODX=DRDS*DSALDX
+      DRODX = DRDS*DSALDX
       SIGMAX = SIGMAX/RHO
 
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
@@ -733,12 +723,18 @@ cipk jul06 use perim
       ELSEIF (ORT(MAT,5) == -1.0) THEN
       !ELSEIF (ORT(MAT,5) .lt. 0) THEN
       !-
+        !getting the hydraulic radius
+        PERIM = WID + H* (SQRT (1. + SSLOP1**2) + SQRT (1. + SSLOP2**2))
+        rhy = ACR/ PERIM
+        !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
         !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-        call darcy(lambda, vecq, h, ort(imat(nn),15),
+        !nis,may07: Add switch for approximation decision
+        call darcy(lambda, vecq, rhy, ort(imat(nn),15),
      +             abst(nn), durchbaum(nn),
         !-
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 1)
+        !-
         FFACT = lambda/8.0
 !-
       ENDIF
@@ -1106,11 +1102,6 @@ C-
 !        WRITE(*,*) 'Rand: ', na, f(na)
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
-        WRITE(*,*) 'Rand: ', na, f(na)
-        WRITE(*,*) -PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
-        WRITE(*,*) -PPL*SPEC(N1,3)/2.
-        WRITE(*,*) vel(3,n1), spec(n1,3)
-        pause
       ELSEIF((IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3)
      +    .AND. ISUBM(N1) .EQ. 0) THEN
 
@@ -1211,39 +1202,33 @@ C      ENDDO
 
       !estifm-testoutput
       if (nn > 0) then
-        WRITE(9919,*) 'Element ', nn, 'coef1Pol'
-        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1, 4),
-     +        0, 0, 0, 0, ( nbc (nop(nn,3), j), j=1, 4)
-        do i = 1,12
+        WRITE(9919,*) 'Element ', nn, 'coef1nt'
+        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2),
+     +                    nbc (nop(nn,2), 1),
+     +                    ( nbc (nop(nn,3), j), j=1,  3, 2)
+        writematrix: do i = 1,11, 2
+          if (i == 7) CYCLE writematrix
           if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
-            if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
-              WRITE(9919, 1234)
-     +              0, (estifm(i,j), j=1, 12), f(i)
-            else
-              WRITE(9919, 1234)
-     +              nbc( nop(nn, 1+(i-MOD(i,4))/ 4),
-     +              mod(i,4)), (estifm(i,j), j=1, 12), f(i)
-            end if
+            WRITE(9919, 1234)
+     +        nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
+     +        (estifm(i,j), j=1,  5, 2),
+     +        (estifm(i,j), j=9, 11, 2), f(i)
           elseif (MOD(i,4) == 3 ) then
-            if (nop(nn, 1+(i-MOD(i,4))/ 4) < 0) then
-              WRITE(9919, 1234) 0, (estifm(i,j), j=1, 12), f(i)
-            else
-              WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4),
-     +              mod(i,4)), (estifm(i,j), j=1, 12), f(i)
-            end if
+            WRITE(9919, 1234)
+     +        nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
+     +        (estifm(i,j), j=1,  5, 2),
+     +        (estifm(i,j), j=9, 11, 2), f(i)
           ELSE
-            if (nop(nn, i/4 ) < 0) then
-              WRITE(9919, 1234) 0, (estifm(i,j), j=1, 12), f(i)
-            else
-              WRITE(9919, 1234) nbc( nop(nn, i/4 ), 4),
-     +              (estifm(i,j), j=1, 12), f(i)
-            end if
+            WRITE(9919, 1234)
+     +        nbc( nop(nn, i/4 ), 4),
+     +        (estifm(i,j), j=1,  5, 2),
+     +        (estifm(i,j), j=9, 11, 2), f(i)
           endif
-        end do
+        end do writematrix
         WRITE(9919,*)
         WRITE(9919,*)
- 1233 format (6x, 12(1x, i10))
- 1234 format (i6, 13(1x, f10.2))
+ 1233 format (6x, 5(1x, i10))
+ 1234 format (i6, 6(1x, f10.2))
       endif
       !-
 

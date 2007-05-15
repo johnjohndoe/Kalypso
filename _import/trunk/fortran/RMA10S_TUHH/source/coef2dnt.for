@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    26 Jan 2007    5:01 pm
+C     Last change:  K    10 May 2007    8:03 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -894,10 +894,12 @@ cipk mar05
         !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
         !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+        !nis,may07: Add switch for approximation decision
         call darcy(lambda, vecq, h, ort(imat(nn),15),
      +             abst(nn), durchbaum(nn),
         !-
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 1)
+        !-
         FFACT = lambda/8.0
       !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative.
         DFFDH = 0.
