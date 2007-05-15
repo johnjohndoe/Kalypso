@@ -18,14 +18,13 @@ In order to use such functions, add appinfo elements to your gml application sch
    &lt;/kapp:parameter&gt;
 &lt;/kapp:functionProperty&gt;
 &lt;/pre&gt;
-
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="function"/>
+            <element ref="function" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -61,7 +60,6 @@ In order to use such functions, add appinfo elements to your gml application sch
          </appInfo>
          <documentation>
             This element registers a function property for gml types.
-
          </documentation>
       </annotation>
       <complexType>

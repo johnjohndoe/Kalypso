@@ -13,7 +13,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.kalypso.model.product.kalypsomodelapplication"
+            application="org.eclipse.ui.ide.workbench"
             name="Kalypso Simulation Platform">
          <property
                name="aboutImage"
@@ -31,8 +31,9 @@
                name="startupForegroundColor"
                value="000000"/>
          <property
-               name="startupProgressRect"
-               value="0,215,400,15"/>
+               name="appName"
+               value="Kalypso Simulation Platform">
+         </property>
       </product>
    </extension>
    <extension

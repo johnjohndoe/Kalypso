@@ -45,15 +45,15 @@ import java.util.Collections;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
+import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
-import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
  * @author albert
  */
 @SuppressWarnings("restriction")
-public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
+public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
 {
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#getInitialWindowPerspectiveId()
@@ -67,7 +67,7 @@ public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
   @Override
   public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer )
   {
-    return new KalypsoModelWorkbenchWindowAdvisor( this, configurer );
+    return new KalypsoModelWorkbenchWindowAdvisor( configurer );
   }
 
   /**

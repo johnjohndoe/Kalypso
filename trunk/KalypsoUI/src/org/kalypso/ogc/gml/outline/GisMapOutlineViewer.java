@@ -44,15 +44,19 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -70,9 +74,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
 {
   protected CheckboxTreeViewer m_viewer;
 
-  private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
+  private final ITreeContentProvider m_contentProvider = new WorkbenchContentProvider();
 
-  private final MapModellLabelProvider m_labelProvider = new MapModellLabelProvider();
+  private final ILabelProvider m_labelProvider = new WorkbenchLabelProvider();
 
   private MapPanel m_mapPanel;
 
@@ -146,8 +150,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
     m_mapPanel = panel;
 
     final IMapModell mapModell = panel == null ? null : panel.getMapModell();
-
-    m_labelProvider.setMapModell( mapModell );
 
     if( m_mapPanel != null )
       m_mapPanel.addModellListener( this );

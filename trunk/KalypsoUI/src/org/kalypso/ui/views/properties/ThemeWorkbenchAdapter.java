@@ -38,70 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.theme;
+package org.kalypso.ui.views.properties;
 
-import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.ui.model.WorkbenchAdapter;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
+ * Only the {@link org.eclipse.ui.model.IWorkbenchAdapter2} part is implemented here.
+ * <p>
+ * Everything what concerns the {@link org.eclipse.ui.model.IWorkbenchAdapter} interface is directly implemented by the
+ * {@link IKalypsoTheme} implementors.
+ * </p>
+ * 
  * @author Gernot Belger
  */
-public class KalypsoThemeDialog extends TitleAreaDialog 
+public class ThemeWorkbenchAdapter extends WorkbenchAdapter
 {
   private final IKalypsoTheme m_theme;
 
-  public KalypsoThemeDialog( final Shell parentShell, final IKalypsoTheme theme )
+  public ThemeWorkbenchAdapter( final IKalypsoTheme theme )
   {
-    super( parentShell );
     m_theme = theme;
-
-    setShellStyle( SWT.SHELL_TRIM );
   }
 
   /**
-   * @see org.eclipse.jface.dialogs.Dialog#create()
+   * Not loaded themes are shown with italic font.
+   * 
+   * @see org.eclipse.ui.model.WorkbenchAdapter#getFont(java.lang.Object)
    */
   @Override
-  public void create( )
+  public FontData getFont( final Object element )
   {
-    super.create();
+    final FontData defaultFont = super.getFont( element );
+    final FontData standardFont = defaultFont == null ? JFaceResources.getDialogFont().getFontData()[0] : defaultFont;
 
-    setMessage( "Hier können Sie die Themeneigenschaften einsehen und ändern." );
+    FontDescriptor fontDesc = FontDescriptor.createFrom( standardFont );
+
+    if( !m_theme.isLoaded() )
+      fontDesc = fontDesc.setStyle( SWT.ITALIC );
+
+    // falls aktiviert
+    final IMapModell mapModell = m_theme.getMapModell();
+    if( mapModell != null && mapModell.getActiveTheme() == m_theme )
+      fontDesc = fontDesc.setStyle( SWT.BOLD );
+
+    return fontDesc.getFontData()[0];
   }
 
-  /**
-   * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-   */
-  @Override
-  protected void configureShell( final Shell newShell )
-  {
-    super.configureShell( newShell );
-
-    newShell.setText( "Themen Eigenschaften: " + m_theme.getName() );
-
-    setBlockOnOpen( false );
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected Control createDialogArea( final Composite parent )
-  {
-    final Composite composite = (Composite) super.createDialogArea( parent );
-
-    final TabFolder folder = new TabFolder( composite, SWT.TOP );
-
-    final TabItem generelItem = new TabItem( folder, SWT.NONE );
-    generelItem.setText( "Generel" );
-    generelItem.setControl( new GenerelThemeTab( folder, SWT.NONE, m_theme ) );
-
-    return composite;
-  }
 }

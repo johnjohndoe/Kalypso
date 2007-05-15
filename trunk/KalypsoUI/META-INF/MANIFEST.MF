@@ -195,5 +195,6 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.kalypso.services.core.client,
  org.eclipse.ui.forms,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.eclipse.ui.views.properties.tabbed
 Eclipse-LazyStart: true

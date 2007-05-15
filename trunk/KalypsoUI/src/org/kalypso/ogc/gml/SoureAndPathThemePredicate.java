@@ -40,26 +40,49 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-/**
- * Provides the possibility to add listeners that need to be notified about changes in themes.
- * 
- * @author Stefan Kurzbach
- */
-public interface IKalypsoThemeEventProvider
-{
-  public void addKalypsoThemeListener( final IKalypsoThemeListener listener );
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypso.template.types.StyledLayerType;
 
-  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
+/**
+ * This predicates tests if a theme is a {@link GisTemplateFeatureTheme} which a given source and feature path.
+ * 
+ * @author Gernot Belger
+ */
+public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
+{
+  private org.kalypso.template.types.ObjectFactory m_templateFactory;
+  private final String m_href;
+  private final String m_featurePath;
+
+  public SoureAndPathThemePredicate( final String href, final String featurePath )
+  {
+    m_href = href;
+    m_featurePath = featurePath;
+    
+    m_templateFactory = new org.kalypso.template.types.ObjectFactory();
+    
+  }
 
   /**
-   * TODO: should not be public, check this
-   * 
-   * notifies all listeners about the change
-   * 
-   * @param event
-   *          must not be null
+   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void fireKalypsoThemeEvent( final KalypsoThemeEvent event );
+  public boolean decide( final IKalypsoTheme theme )
+  {
+    if( theme instanceof GisTemplateFeatureTheme )
+    {
+      final GisTemplateFeatureTheme gisTheme = (GisTemplateFeatureTheme) theme;
+      final StyledLayerType layer = m_templateFactory.createStyledLayerType();
+      gisTheme.fillLayerType( layer, "doesNotMatter", true );
+      
+      final EqualsBuilder equalsBuilder = new EqualsBuilder();
+      equalsBuilder.append( m_href, layer.getHref() );
+      equalsBuilder.append( m_featurePath, layer.getFeaturePath() );
+      
+      return equalsBuilder.isEquals();
+    }
 
-  public void dispose( );
+    return false;
+  }
+
 }

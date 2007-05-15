@@ -42,11 +42,8 @@ package org.kalypso.ui.views.map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
@@ -67,13 +64,7 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  */
 public class MapView extends AbstractMapPart implements IViewPart
 {
-  private static final String MEMENTO_FILE = "file";
-
-  private static final String MEMENTO_PARTNAME = "partName";
-
   public static final String ID = "org.kalypso.ui.views.mapView";
-
-  // public static final String JOB_FAMILY = "mapViewJobFamily";
 
   private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose";
 
@@ -86,11 +77,11 @@ public class MapView extends AbstractMapPart implements IViewPart
     super.createPartControl( parent );
 
     // Stefan: We probably do not want the file to be restored?
-     final IFile file = getFile();
-    if( file != null )
-    {
-      startLoadJob( file );
-    }
+    // final IFile file = getFile();
+    // if( file != null )
+    // {
+    // startLoadJob( file );
+    // }
   }
 
   /**
@@ -101,18 +92,6 @@ public class MapView extends AbstractMapPart implements IViewPart
   public void init( final IViewSite site, final IMemento memento )
   {
     super.init( site, memento );
-
-    if( memento != null )
-    {
-      final String fullPath = memento.getString( MEMENTO_FILE );
-      if( fullPath != null )
-      {
-        final IPath path = Path.fromPortableString( fullPath );
-        setFile( ResourcesPlugin.getWorkspace().getRoot().getFile( path ) );
-      }
-      final String partName = memento.getString( MEMENTO_PARTNAME );
-      setCustomName( partName );
-    }
   }
 
   /**
@@ -120,19 +99,7 @@ public class MapView extends AbstractMapPart implements IViewPart
    */
   public void saveState( final IMemento memento )
   {
-    final IFile file = getFile();
-    if( file != null )
-    {
-      final IPath fullPath = file.getFullPath();
-      if( fullPath != null )
-        memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
-    }
-
-    final String customName = getCustomName();
-    if( customName != null )
-    {
-      memento.putString( MEMENTO_PARTNAME, customName );
-    }
+    // nothing to do
   }
 
   /**

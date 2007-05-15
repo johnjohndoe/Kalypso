@@ -74,6 +74,7 @@ import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;

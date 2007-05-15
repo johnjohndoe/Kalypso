@@ -40,12 +40,20 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.resource.JFaceResources;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+
+import sun.awt.image.URLImageSource;
 
 /**
  * <p>
@@ -55,19 +63,27 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * Implements common features to all KalypsoTheme's
  * </p>
  * 
- * @author Belger
+ * @author Gernot Belger
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
-  private String m_name;
-
-  private String m_type;
+  protected static final Object[] EMPTY_CHILDREN = new Object[] {};
 
   private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
 
   private final KalypsoThemeEventProviderAdapter m_themeEventProvider = new KalypsoThemeEventProviderAdapter();
 
   private final IMapModell m_mapModel;
+
+  private String m_name;
+
+  private String m_type;
+
+  /**
+   * The status of this theme. Should be set of implementing classes whenever something unexpected occurs (e.g. error while
+   * loading the theme, ...).
+   */
+  private IStatus m_status = Status.OK_STATUS;
 
   public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel )
   {
@@ -124,7 +140,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_type;
   }
 
-  public void setType( String type )
+  public void setType( final String type )
   {
     m_type = type;
   }
@@ -182,12 +198,75 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_eventProvider.dispose();
     m_themeEventProvider.dispose();
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
    */
   public boolean isLoaded( )
-  {   
+  {
     return true;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
+   */
+  public String getLabel( final Object o )
+  {
+    final StringBuffer sb = new StringBuffer();
+
+    // REMARK: as the type is now clear from the properties view
+    // This is not needed any more
+//    final String type = getType();
+//    if( type != null && type.length() > 0 )
+//    {
+//      sb.append( "[" );
+//      sb.append( type );
+//      sb.append( "] " );
+//    }
+
+    final String themeName = getName();
+    sb.append( themeName );
+
+    if( !isLoaded() )
+      sb.append( " (wird geladen...)" );
+
+    return sb.toString();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   */
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
+   */
+  public Object[] getChildren( final Object o )
+  {
+    return EMPTY_CHILDREN;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
+   */
+  public Object getParent( Object o )
+  {
+    return m_mapModel;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getStatus()
+   */
+  public IStatus getStatus( )
+  {
+    return m_status;
+  }
+
+  protected void setStatus( final IStatus status )
+  {
+    m_status = status;
   }
 }

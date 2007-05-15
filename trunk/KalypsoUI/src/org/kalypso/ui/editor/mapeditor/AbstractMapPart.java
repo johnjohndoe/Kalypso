@@ -180,9 +180,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   
   private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
 
-  /**
-   *
-   */
   protected AbstractMapPart( )
   {
     super();
@@ -242,7 +239,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     /* Register this view at the mapPanel. */
 
-    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+    final KalypsoCorePlugin plugin = KalypsoCorePlugin.getDefault();
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( this );          
@@ -298,7 +295,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
 
     // activate MapView Context
-    IContextService contextService = (IContextService) site.getService( IContextService.class );
+    final IContextService contextService = (IContextService) site.getService( IContextService.class );
+    //  TODO: this context is never deaktivated..., is this right? If yes, please comment why.
     if( contextService != null )
       contextService.activateContext( "org.kalypso.ogc.gml.map.context" );
         
@@ -354,7 +352,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
-   * Loads a map (i.e. a .gmv file) from a storage inside a {@link Job}.
+   * Loads a map (i.e. a .gmt file) from a storage inside a {@link Job}.
    * <p>
    * The method starts a (user-)job, which loads the map.
    * </p>.

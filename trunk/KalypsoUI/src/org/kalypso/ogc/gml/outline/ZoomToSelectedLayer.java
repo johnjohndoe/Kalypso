@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -65,7 +66,14 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
       if( panel != null && selectedElement != null )
       {
         final GM_Envelope zoomBox = selectedElement.getBoundingBox();
-        GM_Envelope wishBBox = calculateExtend( zoomBox );
+        if( zoomBox == null )
+        {
+          // TODO: find a shell
+          MessageDialog.openWarning( null, action.getText(), "Selektiertes Thema hat keine Ausdehnung." );
+          return;
+        }
+        
+        final GM_Envelope wishBBox = calculateExtend( zoomBox );
         panel.setBoundingBox( wishBBox );
       }
     }

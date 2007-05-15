@@ -44,7 +44,6 @@ import java.awt.Graphics;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -116,15 +115,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final String m_featurePath;
 
-  // private final PoolableObjectType[] m_styleKeys;
-  // private final String[] m_styleNames;
   private KalypsoFeatureTheme m_theme = null;
 
   private boolean m_disposed = false;
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
+  private final List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
   public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
@@ -182,11 +179,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
     // remove styles
     final GisTemplateUserStyle[] templateStyles = m_gisTemplateUserStyles.toArray( new GisTemplateUserStyle[m_gisTemplateUserStyles.size()] );
-    for( int i = 0; i < templateStyles.length; i++ )
-    {
-      GisTemplateUserStyle style = templateStyles[i];
+    for( final GisTemplateUserStyle style : templateStyles )
       removeStyle( style );
-    }
 
     super.dispose();
   }
@@ -321,9 +315,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               }
               else
               {
-                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "style", " default style for " + featureType.getQName().getLocalPart(), fts ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "Default Style", " Default Style for " + featureType.getQName().getLocalPart(), fts ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
-              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, "default" ); //$NON-NLS-1$
+              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, userStyle.getTitle() ); //$NON-NLS-1$
               addStyle( kus );
             }
           }
@@ -449,9 +443,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   @Override
   public boolean isLoaded( )
   {
-    for( final Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
+    for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
     {
-      final GisTemplateUserStyle style = (GisTemplateUserStyle) iter.next();
       if( !style.isLoaded() )
         return false;
     }
@@ -495,5 +488,29 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return featureType.getQName().toString();
     else
       return super.getContext();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLabel(java.lang.Object)
+   */
+  @Override
+  public String getLabel( final Object o )
+  {
+    if( m_theme != null )
+      return m_theme.getLabel( m_theme );
+    
+    return super.getLabel( o );
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
+   */
+  @Override
+  public Object[] getChildren( final Object o )
+  {
+    if( m_theme == null )
+      return super.getChildren( o );
+    
+    return m_theme.getChildren( m_theme );
   }
 }

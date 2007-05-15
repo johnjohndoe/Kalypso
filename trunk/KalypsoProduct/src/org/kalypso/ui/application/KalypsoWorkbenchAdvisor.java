@@ -57,8 +57,8 @@ import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
+import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
@@ -79,7 +79,7 @@ import org.kalypso.simulation.ui.startscreen.PrognosePerspective;
  * 
  * @author belger
  */
-public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
+public class KalypsoWorkbenchAdvisor extends WorkbenchAdvisor
 {
   private final IKalypsoUser m_user;
 
@@ -93,6 +93,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.application.WorkbenchAdvisor#initialize(org.eclipse.ui.application.IWorkbenchConfigurer)
    */
+  @Override
   public void initialize( final IWorkbenchConfigurer configurer )
   {
     super.initialize( configurer );

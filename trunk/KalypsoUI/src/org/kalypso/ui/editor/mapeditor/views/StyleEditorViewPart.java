@@ -49,8 +49,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.outline.RuleTreeObject;
-import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
+import org.kalypso.ogc.gml.RuleTreeObject;
+import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
 import org.kalypsodeegree.graphics.sld.Rule;
 

@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -62,18 +63,16 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * 
  * @author doemming
  */
-public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IPooledObject
+public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IPooledObject, IWorkbenchAdapter
 {
   private final PoolableObjectType m_styleKey;
 
-  // private UserStyle m_userStyle = dummyStyle;
   private boolean m_loaded = false;
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName )
   {
     super( createDummyStyle( "loading..." ), styleName );
     m_styleKey = poolableStyleKey;
-    // m_styleName = styleName;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.addPoolListener( this, m_styleKey );
   }
@@ -90,6 +89,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     super( style, name );
     m_styleKey = null;
+    m_loaded = true;
   }
 
   /**
@@ -106,9 +106,9 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
         m_userStyle = sld.findUserStyle( m_styleName );
         if( m_userStyle == null )
         {
-            final String msg = "No user style with name: " + m_styleName + ". Dummy style created instead.";
-            System.out.println( msg);
-            m_userStyle = createDummyStyle( msg );
+          final String msg = "No user style with name: " + m_styleName + ". Dummy style created instead.";
+          System.out.println( msg );
+          m_userStyle = createDummyStyle( msg );
         }
       }
       catch( Exception e )
@@ -176,5 +176,19 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
   {
     // TODO change label according to dirty
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.KalypsoUserStyle#getLabel(java.lang.Object)
+   */
+  @Override
+  public String getLabel( final Object o )
+  {
+    final String label = super.getLabel( o );
+
+    if( isLoaded() )
+      return label;
+
+    return label + " (wird geladen...)";
   }
 }

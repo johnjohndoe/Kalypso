@@ -40,28 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.application;
 
-import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author albert
+ * @author Holger Albert
  */
-public class KalypsoModelApplication implements IPlatformRunnable
+public class KalypsoModelApplication implements IApplication
 {
   /**
-   * @see org.eclipse.core.runtime.IPlatformRunnable#run(java.lang.Object)
+   * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
    */
-  public Object run( Object args ) throws Exception
+  public Object start( IApplicationContext context ) throws Exception
   {
     final Display display = PlatformUI.createDisplay();
 
     final int returnCode = PlatformUI.createAndRunWorkbench( display, new KalypsoModelWorkbenchAdvisor() );
     if( returnCode == PlatformUI.RETURN_RESTART )
-      return IPlatformRunnable.EXIT_RESTART;
+      return IApplication.EXIT_RESTART;
 
     display.dispose();
 
-    return IPlatformRunnable.EXIT_OK;
+    return IApplication.EXIT_OK;
+  }
+
+  /**
+   * @see org.eclipse.equinox.app.IApplication#stop()
+   */
+  public void stop( )
+  {
+    // what to do??
   }
 }

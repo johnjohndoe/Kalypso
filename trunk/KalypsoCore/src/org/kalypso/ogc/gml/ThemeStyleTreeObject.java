@@ -38,124 +38,86 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
+/*
+ * Created on 22.07.2004
+ * 
+ * TODO To change the template for this generated file go to Window - Preferences - Java - Code Style - Code Templates
+ */
 package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-import org.kalypsodeegree.xml.Marshallable;
 
-/**
- * Wrapped UserStyle to provide fireModellEvent Method
- * 
- * @author bce
- */
-public class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable, IWorkbenchAdapter
+public class ThemeStyleTreeObject implements IWorkbenchAdapter
 {
-  private boolean m_disposed = false;
+  private final KalypsoUserStyle m_style;
 
-  protected UserStyle m_userStyle;
+  private final IKalypsoFeatureTheme m_theme;
 
-  protected final String m_styleName;
-
-  public KalypsoUserStyle( final UserStyle style, final String styleName )
+  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, final UserStyle style )
   {
-    m_userStyle = style;
-    m_styleName = styleName;
+    m_theme = theme;
+    m_style = (KalypsoUserStyle) style;
   }
 
   /**
-   * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
+   * @param theme
+   * @param style
    */
-  public String exportAsXML()
+  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, KalypsoUserStyle style )
   {
-    return ( (Marshallable)m_userStyle ).exportAsXML();
+    m_theme = theme;
+    m_style = style;
   }
 
-  public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  public KalypsoUserStyle getStyle( )
   {
-    m_userStyle.addFeatureTypeStyle( featureTypeStyle );
+    return m_style;
   }
 
-  public String getAbstract()
+  public IKalypsoFeatureTheme getTheme( )
   {
-    return m_userStyle.getAbstract();
-  }
-
-  public FeatureTypeStyle[] getFeatureTypeStyles()
-  {
-    return m_userStyle.getFeatureTypeStyles();
-  }
-
-  public String getName()
-  {
-    return m_userStyle.getName();
-  }
-
-  public String getTitle()
-  {
-    return m_userStyle.getTitle();
-  }
-
-  public boolean isDefault()
-  {
-    return m_userStyle.isDefault();
-  }
-
-  public void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
-  {
-    m_userStyle.removeFeatureTypeStyle( featureTypeStyle );
-  }
-
-  public void setAbstract( String abstract_ )
-  {
-    m_userStyle.setAbstract( abstract_ );
-  }
-
-  public void setDefault( boolean default_ )
-  {
-    m_userStyle.setDefault( default_ );
-  }
-
-  public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
-  {
-    m_userStyle.setFeatureTypeStyles( featureTypeStyles );
-  }
-
-  public void setName( String name )
-  {
-    m_userStyle.setName( name );
-  }
-
-  public void setTitle( String title )
-  {
-    m_userStyle.setTitle( title );
-  }
-
-  public boolean isDisposed()
-  {
-    return m_disposed;
+    return m_theme;
   }
 
   @Override
-  public void dispose()
+  public String toString( )
   {
-    m_disposed = true;
-    
-    super.dispose();
+    if( m_style == null )
+      return "<no styles set>";
+
+    if( m_style.getName() != null )
+      return m_style.getName();
+    return m_style.toString();
   }
 
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( final Object o )
+  public Object[] getChildren( Object o )
   {
     if( o != this )
       throw new IllegalStateException();
 
-    return m_userStyle.getFeatureTypeStyles()[0].getRules();
+    // TODO: is this right, always taking the first one?
+    final Rule[] rules = m_style.getFeatureTypeStyles()[0].getRules();
+
+// // need to parse all rules as some might belong to a filter-rule-pattern
+// RuleFilterCollection rulePatternCollection = RuleFilterCollection.getInstance();
+// for( int i = 0; i < rules.length; i++ )
+// {
+// rulePatternCollection.addRule( rules[i] );
+// }
+// ArrayList filteredRules = rulePatternCollection.getFilteredRuleCollection();
+// final RuleTreeObject[] result = new RuleTreeObject[filteredRules.size()];
+// for( int i = 0; i < result.length; i++ )
+// result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle, (IKalypsoFeatureTheme) theme );
+    final RuleTreeObject[] result = new RuleTreeObject[rules.length];
+    for( int i = 0; i < rules.length; i++ )
+      result[i] = new RuleTreeObject( rules[i], this );
+    return result;
   }
 
   /**
@@ -166,7 +128,9 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     if( object != this )
       throw new IllegalStateException();
 
-    return null;
+    final KalypsoUserStyle userStyle = getStyle();
+
+    return userStyle.getImageDescriptor( userStyle );
   }
 
   /**
@@ -177,10 +141,9 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     if( o != this )
       throw new IllegalStateException();
 
-    if( getName() != null )
-      return getName();
+    final KalypsoUserStyle userStyle = getStyle();
 
-    return toString();
+    return userStyle.getLabel( userStyle );
   }
 
   /**
@@ -188,6 +151,9 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
    */
   public Object getParent( final Object o )
   {
-    return null;
+    if( o != this )
+      throw new IllegalStateException();
+
+    return getTheme();
   }
 }

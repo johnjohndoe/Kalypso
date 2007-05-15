@@ -54,9 +54,5 @@ public interface IKalypsoThemeVisitor
   /** Also visit features contained in features of given type; doesn't follow Links */
   public final static int DEPTH_INFINITE = 1;
 
-  /** Even follow links (Attention, may cause in infinite loops!) */
-  public final static int DEPTH_INFINITE_LINKS = 2;
-
-
   public boolean visit( final IKalypsoTheme theme );
 }

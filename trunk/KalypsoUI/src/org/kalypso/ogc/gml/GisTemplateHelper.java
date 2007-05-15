@@ -67,6 +67,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.IActionBars;
 import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -80,7 +81,6 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -224,7 +224,7 @@ public class GisTemplateHelper
     {
       try
       {
-        final CS_CoordinateSystem targetSRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+        final CS_CoordinateSystem targetSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         if( orgSRSName != null && !orgSRSName.equals( targetSRS.getName() ) )
         {
           // if srs attribute exists and it is not the target srs we have to convert it
@@ -357,7 +357,7 @@ public class GisTemplateHelper
         final List list = (List) property;
         if( !list.isEmpty() )
         {
-          final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), (list).get( 0 ) );
+          final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), list.get( 0 ) );
           typeName = "[" + firstChild.getFeatureType().getQName().getLocalPart() + "]";
         }
       }

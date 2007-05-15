@@ -47,6 +47,8 @@ package org.kalypso.ogc.gml;
  */
 public class KalypsoThemeEvent
 {
+  // TODO: provide finer grained information
+  // TODO: context is not a thing themes should know about....
   public static final int CONTEXT_CHANGED = 1 << 1;
 
   public static final int CONTENT_CHANGED = 1 << 2;
