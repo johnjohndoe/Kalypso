@@ -43,7 +43,11 @@
     <target name="build-ant-task-jar" depends="deploy">
         <copy tofile="${project.lib}/${project-name}Task.jar" file="${project.deploy}/${project-name}.jar"/>
     </target>
-        
+
+	<target name="clean-ant-task-jar">
+		<delete file="${project.lib}/${project-name}Task.jar"/>
+	</target>
+	
     <!-- Specific Build for KalypsoDWDFileCopyServlet -->
     <target name="build-filecopyservlet-war" depends="prepare">
 
