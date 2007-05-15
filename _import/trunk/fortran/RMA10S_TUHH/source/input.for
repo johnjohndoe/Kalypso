@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    2:58 am
+C     Last change:  K    14 May 2007   11:27 am
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1642,7 +1642,7 @@ C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
 !        !nis,feb07: Allow for numbered FFF midsides
 !        !if (nop(j,2).NE.-9999) then
 !        if (nop(j,2) > -1000) then
-        if (imat(j) == 889) then
+        if (imat(j) == 89) then
 !        !-
 !Add midside node for polynom approach
 !-
@@ -1905,7 +1905,7 @@ cipk dec00 allow for gate option
       !nis,feb07: Allow for numbered FFF midsides and documentation, it wasn't documented before. This code is also questionable!
       !+    IGTP(N) .NE. 0).and.nop(n,2).NE.-9999) THEN
       !+    IGTP(N) .NE. 0) .and. nop(n,2) > -1000) THEN
-     +    IGTP(N) .NE. 0) .and. imat(n) /= 889) THEN
+     +    IGTP(N) .NE. 0) .and. imat(n) /= 89) THEN
       !-
 !add midside node for polynom approach
 !-
@@ -1919,7 +1919,7 @@ CIPK NOV97
       !nis,feb07: Allow for numbered FFF midsides
       !+    IGTP(N) .NE. 0).and.nop(n,2).eq.-9999) THEN
       !+    IGTP(N) .NE. 0) .and. nop(n,2) < -1000) THEN
-     +    IGTP(N) .NE. 0) .and. imat(n) == 889) THEN
+     +    IGTP(N) .NE. 0) .and. imat(n) == 89) THEN
       !-
 !add midside node for polynom approach
 !-

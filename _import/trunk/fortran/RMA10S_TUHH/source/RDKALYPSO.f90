@@ -1,4 +1,4 @@
-!     Last change:  K     8 May 2007    3:50 pm
+!     Last change:  K    14 May 2007   11:27 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -2113,7 +2113,7 @@ DO i = 1, arccnt
   IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0 .and. imat(arc(i,3)) < 900) THEN
   !-
 
-    if (imat (arc (i,3)) == 889) then
+    if (imat (arc (i,3)) == 89) then
       do j = 0, 12
         apoly   (nop (arc(i,3), 2), j) = 0.5 * (apoly   (arc(i,1), j) + apoly   (arc(i,2), j))
         qpoly   (nop (arc(i,3), 2), j) = 0.5 * (qpoly   (arc(i,1), j) + qpoly   (arc(i,2), j))
@@ -2432,7 +2432,7 @@ neighbours: do i=1,elcnt
     !EFa Nov06, gesonderte Berechnung für 1D-Teschke-Elemente
     !elseIF(nop(i,2).EQ.-9999) then
     !ELSEIF(nop(i,2) < -1000) then
-    ELSEIF(imat(i) == 889) then
+    ELSEIF(imat(i) == 89) then
     !-
 !Add midside node for polynom approach
 !-

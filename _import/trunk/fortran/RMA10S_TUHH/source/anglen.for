@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007   11:58 pm
+C     Last change:  K    14 May 2007   11:26 am
 cipk  last update dec 2003   add iedsw dependence
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 cipk  last update Jan 12 2001 add test for IMAT
@@ -23,7 +23,7 @@ C
 !      !nis,feb07: Allow for numbered midsides of FFF
 !      !if (nop(ll,2).eq.-9999) then
 !      if (nop(ll,2) < -1000) GOTO 90
-      if (imat(ll) == 889) GO TO 90
+      if (imat(ll) == 89) GO TO 90
 !      !-
 !      !-
 !Add midside node for polynom approach
@@ -232,7 +232,7 @@ CIPK NOV97     open(75,file='elemdir.dat')
 !           !nis,feb07: Allow for numbered FFF midsides
 !           !if (nop(j,2).NE.-9999) then
 !           if (nop(j,2) > -1000) then
-           if (imat(j) /= 889) then
+           if (imat(j) /= 89) then
 !           !-
 !           !-
 !Add midside node for polynom approach

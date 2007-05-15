@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  K     6 May 2007    1:46 am
+C     Last change:  K    14 May 2007   11:27 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -188,7 +188,7 @@ CIPK OCT98 CONVERT TO F90
 !Allow for polynom approach with turbulent exchange coefficient equal to zero
         !NiS,may06: if no turbulent exchange coefficient, jump over element
 !        IF(ORT(L,1) .EQ. 0.) GO TO 199
-        IF(ORT(L,1) .EQ. 0. .and. L /= 889) GO TO 199
+        IF(ORT(L,1) .EQ. 0. .and. L /= 89) GO TO 199
 !Allow for polynom approach with turbulent exchange coefficient equal to zero
 !-
         ILK=1
@@ -225,7 +225,9 @@ CIPK OCT98 CONVERT TO F90
 !          !nis,feb07: Cycle, if node is negative. It's only possible for midside nodes, which shouldn't be processed here
 !          if (n < 0) CYCLE NBCrelation
 !          !-
-           if (imat (j) == 889 .and. k == 2) CYCLE NBCrelation
+      !herehere: deactivating midside node of polynomial approach
+      !if (imat (j) == 89 .and. k == 2) CYCLE NBCrelation
+      !herehere-
 !Add midside node for polynom approach; at the moment only a linear approach is used for such elements, so the midsides must be cycled
 !-
 
@@ -587,7 +589,7 @@ C-
         if ((ncorn(nn).eq.5.or.ncorn(nn).eq.3).and.
       !+       nop(nn,2).EQ.-9999) then
       !+       nop(nn,2) < -1000) then
-     +       imat(nn) == 889) then
+     +       imat(nn) == 89) then
       !-
 
           nbc(nop(nn,1),2)=0 !EFa Dec06
@@ -850,7 +852,7 @@ CIPK DEC05 ADD QFACT
             !nis,feb07: Allow for numbered FFF midsides
             !if (n1.ne.-9999) then
             !if (n1 > -1000) THEN
-            if (imat(nn) /= 889) then
+            if (imat(nn) /= 89) then
             !-
 !add midside node for polynom approach
 !-
@@ -1166,7 +1168,7 @@ C-
             !nis,feb07: Allow for numbered FFF midsides
             !if (n2.NE.-9999) then
             !if (n2 > -1000) then
-            if (imat(n) /= 889) then
+            if (imat(n) /= 89) then
             !-
 !add midside node for polynom approach
 !-
@@ -1193,7 +1195,7 @@ C
             !nis,feb07: Allow for numbered FFF midsides
             !if (n2.NE.-9999) then
 !            if (n2 > -1000) then
-            if (imat(n) /= 889) then
+            if (imat(n) /= 89) then
             !-
 !add midside node for polynom approach
 !-

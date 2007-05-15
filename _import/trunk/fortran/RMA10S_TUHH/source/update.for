@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    2:53 am
+C     Last change:  K    14 May 2007   11:28 am
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -407,11 +407,12 @@ C-
       !if (nop(n,2).EQ.-9999) GOTO 240 !EFa Dec06
       !if (nop(n,2) < -1000) GOTO 240 !EFa Dec06
       !auxiliary update for velocities at linear-linear elements
-      if (imat(n) == 889) then
-        do i = 1, 2
-          vel(i,nop(n,2)) = 0.5 * (vel(i,nop(n,1)) + vel(i,nop(n,3)))
-        end do
-      end if
+
+!      if (imat(n) == 89) then
+!        do i = 1, 2
+!          vel(i,nop(n,2)) = 0.5 * (vel(i,nop(n,1)) + vel(i,nop(n,3)))
+!        end do
+!      end if
       !-
 !Add midside node for polynom approach
 !-

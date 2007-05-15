@@ -1,4 +1,4 @@
-C     Last change:  K     7 May 2007    1:19 am
+C     Last change:  K    14 May 2007   11:56 am
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -329,7 +329,7 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
 	ENDIF
 	DO 172 M=1,NLM
 	  NA=NOP(N,M)
-          if (imat(n) == 889) then
+          if (imat(n) == 89) then
             vel(3,na) = 0.5 * (hhmin(na) + hhmax(na))
           end if
 	  VEL(1,NA)=UNOM

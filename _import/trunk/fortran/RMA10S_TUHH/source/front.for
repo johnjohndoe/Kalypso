@@ -1,4 +1,4 @@
-C     Last change:  K     7 May 2007    1:01 am
+C     Last change:  EF   15 May 2007   10:53 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -256,7 +256,7 @@ CIPK MAR05
 !Add midside node for polynom approach
 !-
 
-              if ( imat(n) /= 889 ) then
+              if ( imat(n) /= 89 ) then
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
@@ -272,7 +272,7 @@ CIPK MAR05
 !Add midside node for polynom approach
 !-
 
-              ELSEif( imat(n) == 889 ) then
+              ELSEif( imat(n) == 89 ) then
                 call coef1dFE(n,nrx)
               endif
 
@@ -391,7 +391,7 @@ CIPK MAR05
 !nis,may07
 !Add midside node for polynom approach
 !              IF (nop(n,2) > -1000) THEN
-              IF (imat(n) /= 889) THEN
+              IF (imat(n) /= 89) THEN
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
@@ -401,7 +401,7 @@ CIPK MAR05
 !                !nis,feb07: Allow for numbered FFF midsides
 !                !if (nop(n,2).eq.-9999) then
 !              ELSEIF (nop(n,2) < -1000) THEN
-              ELSEIF (imat(n) == 889) THEN
+              ELSEIF (imat(n) == 89) THEN
                 CALL COEF1dFE(N,NRX)
               ENDIF
 !Add midside node for polynom approach
