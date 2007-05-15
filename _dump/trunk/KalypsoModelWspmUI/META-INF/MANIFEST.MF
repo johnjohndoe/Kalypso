@@ -34,5 +34,6 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.view.chart.action,
  org.kalypso.model.wspm.ui.view.chart.color,
  org.kalypso.model.wspm.ui.view.legend,
+ org.kalypso.model.wspm.ui.view.map,
  org.kalypso.model.wspm.ui.view.table,
  org.kalypso.model.wspm.ui.wizard
