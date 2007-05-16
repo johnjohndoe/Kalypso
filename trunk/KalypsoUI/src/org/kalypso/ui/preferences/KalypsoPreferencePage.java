@@ -43,7 +43,6 @@ package org.kalypso.ui.preferences;
 import java.util.Arrays;
 import java.util.TimeZone;
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
@@ -81,16 +80,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   {
     final StringFieldEditor sfeSrv = new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare KALYPSO-&Server:", getFieldEditorParent() );
     addField( sfeSrv );
-    sfeSrv.getLabelControl( getFieldEditorParent() ).setToolTipText( "Entweder nur ein Server oder eine Komma-getrennte Liste von Server (Beispiel: http://SERVER_NAME:8080/webdav/kalypso-client.ini)" );
-
-    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
-
-    // set echo char because it is a password field
-    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
-    editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
     m_sfeCrs = new StringFieldEditor( IKalypsoCorePreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() );
     addField( m_sfeCrs );
