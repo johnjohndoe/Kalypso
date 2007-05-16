@@ -644,8 +644,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     final HttpClient client = new HttpClient();
     client.getState().setAuthenticationPreemptive( true );
 
-    KalypsoGisPlugin.getDefault();
-
     if( Boolean.getBoolean( "proxySet" ) )
     {
       final String proxyHost = System.getProperty( "proxyHost" );
