@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
-import org.kalypso.contribs.java.net.IUrlCatalog;
 
 public class UrlCatalogDss extends AbstractUrlCatalog
 {
@@ -13,7 +12,7 @@ public class UrlCatalogDss extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
    */
   @Override
-  protected void fillCatalog( Class myClass, Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( Class<?> myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // no catalog used yet
   }

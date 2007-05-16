@@ -91,7 +91,7 @@ public class UrlCatalogGmlImitations extends AbstractUrlCatalog
 	 */
 	  @Override
 	  protected void fillCatalog( 
-			  				final Class myClass, 
+			  				final Class<?> myClass, 
 			  				final Map<String, URL> catalog, 
 			  				Map<String, String> prefixes )
 	  {  

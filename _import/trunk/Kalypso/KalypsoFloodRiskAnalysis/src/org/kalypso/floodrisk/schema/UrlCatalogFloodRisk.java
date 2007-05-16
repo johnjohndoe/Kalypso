@@ -72,7 +72,7 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( NS_CONTEXTMODEL,           myClass.getResource( "ContextModel.xsd" ) );
     catalog.put( NS_RISKCONTEXTMODEL,       myClass.getResource( "RiskContextModel.xsd" ) );

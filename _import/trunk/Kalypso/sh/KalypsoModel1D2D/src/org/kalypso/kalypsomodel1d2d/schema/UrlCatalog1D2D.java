@@ -73,7 +73,7 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( MODEL_1D2D_NS, myClass.getResource( "v0.0/sim_1d2d_model.xsd" ) );
     catalog.put( MODEL_1D2DControl_NS, myClass.getResource( "v0.0/sim_1d2d_control.xsd" ) );

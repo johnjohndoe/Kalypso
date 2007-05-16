@@ -46,7 +46,7 @@ public class URLCatalogFlows extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
    */
   @Override
-  protected void fillCatalog( Class myClass, Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( Class<?> myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // these are defines in UrlCatalogNA now.
     // catalog.put( "http://www.xplanung.de/bplangml", getClass()

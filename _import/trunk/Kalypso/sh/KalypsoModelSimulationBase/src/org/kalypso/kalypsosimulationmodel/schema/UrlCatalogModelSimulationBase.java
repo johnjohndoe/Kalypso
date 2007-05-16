@@ -102,7 +102,7 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog {
 	 *      java.util.Map)
 	 */
 	@Override
-	protected void fillCatalog(final Class myClass,
+	protected void fillCatalog(final Class<?> myClass,
 			final Map<String, URL> catalog, Map<String, String> prefixes) {
 
 		catalog.put(SIM_MODEL_NS, myClass.getResource(SIM_MODEL_REL_PATH));
