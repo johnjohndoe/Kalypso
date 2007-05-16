@@ -61,7 +61,7 @@ public class UrlCatalogDWD extends AbstractUrlCatalog
    *      java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "v0.1/dwdGeoLayer.xsd" ) );
   }

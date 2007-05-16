@@ -62,7 +62,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.9/control.xsd" ) );
     catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v1.0/namodell.xsd" ) );
