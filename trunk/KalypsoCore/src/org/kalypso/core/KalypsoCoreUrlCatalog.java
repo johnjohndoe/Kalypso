@@ -45,7 +45,7 @@ public class KalypsoCoreUrlCatalog extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( Class myClass, Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( Class<?> myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( "http://www.tuhh.de/kalypsoScrabLayer", getClass().getResource( "resources/scrablayer.xsd" ) );
   }

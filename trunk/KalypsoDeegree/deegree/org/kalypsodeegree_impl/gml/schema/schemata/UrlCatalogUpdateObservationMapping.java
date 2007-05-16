@@ -58,7 +58,7 @@ public class UrlCatalogUpdateObservationMapping extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( NS, getClass().getResource( "updateObservationMapping/V1.0/updateObservationMapping.xsd" ) );
   }
