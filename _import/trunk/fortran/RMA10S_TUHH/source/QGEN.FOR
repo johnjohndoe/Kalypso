@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    2:19 am
+C     Last change:  JAJ  15 May 2007   10:37 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -682,7 +682,7 @@ C-
                 !-
               CALL darcy (lambda, vecq, d1, ort(lineimat(j, k + 1), 15),
               !-
-     +                    0., 0., 0,  0,     gl_bedform, mel, cwr_line)
+     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
               !-
               !nis,sep06,com: teilline represents the Conveyance factor of the element part.
               teilline(k) = teilline(k) + xl*(d1** (3./2.)) *
@@ -723,7 +723,7 @@ C-
                 !-
               CALL darcy(lambda, vecq,d2_kind8, ort(lineimat(j,k+1),15),
               !-
-     +                    0., 0., 0,  0,    gl_bedform, mel, cwr_line)
+     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
               d2 = d2_kind8
               !-
               !nis,sep06,com: Calculate the Conveyance factor of the midside node of the actual CCL-segment
@@ -755,7 +755,7 @@ C-
                 !-
               CALL darcy (lambda, vecq, d3, ort(lineimat (j, k+1),15),
               !-
-     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line)
+     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
 !-
               !nis,sep06,com: Calculate the Connyance factor of the ending cornder node of the actual CCL-segment
               teilline (k + 2) = teilline (k + 2) + xl * (d3**(3./2.)) *

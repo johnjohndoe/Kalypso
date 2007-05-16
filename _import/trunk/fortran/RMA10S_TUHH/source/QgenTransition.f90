@@ -1,4 +1,4 @@
-!     Last change:  K    30 Apr 2007    5:00 pm
+!     Last change:  JAJ  15 May 2007   10:37 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -204,7 +204,7 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
     cwr_line = 1.0
     !CALL darcy (lambda, vecq, d1, ort (lineimat(TLine, k + 1), 5), 0., 0., 0,  0,     bedform, mel, cwr_line)
     !CALL darcy (lambda, vecq, d1, cniku (lineimat(TLine, k + 1)), 0., 0., 0,  0,     gl_bedform, mel, cwr_line)
-    CALL darcy (lambda, vecq, d1, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0,     gl_bedform, mel, cwr_line)
+    CALL darcy (lambda, vecq, d1, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
     !-
     !nis,sep06,com: Conveyance represents the Conveyance factor of the element part.
     Conveyance(k) = Conveyance(k) + xl*(d1** (3./2.)) * ((78.48/lambda)**0.5)
@@ -232,7 +232,7 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
     d2_kind8 = d2
     !CALL darcy (lambda, vecq, d2, ort (lineimat (TLine, k+1), 5), 0., 0., 0,  0, bedform, mel, 1.0)
     !CALL darcy(lambda, vecq, d2_kind8, cniku(lineimat(TLine,k+1)), 0., 0., 0,  0, gl_bedform, mel, cwr_line)
-    CALL darcy(lambda, vecq, d2_kind8, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line)
+    CALL darcy(lambda, vecq, d2_kind8, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
     d2 = d2_kind8
     !-
 
@@ -260,7 +260,7 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
     cwr_line = 1.0
     !CALL darcy (lambda, vecq, d3, ort (lineimat (TLine, k+1),5), 0., 0., 0,  0, bedform, mel, 1.0)
     !CALL darcy (lambda, vecq, d3, cniku(lineimat (TLine, k+1)), 0., 0., 0,  0, gl_bedform, mel, cwr_line)
-    CALL darcy (lambda, vecq, d3, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line)
+    CALL darcy (lambda, vecq, d3, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
     !-
     !nis,sep06,com: Calculate the Connyance factor of the ending cornder node of the actual CCL-segment
     Conveyance (k + 2) = Conveyance (k + 2) + xl * (d3**(3./2.)) * ((78.48/lambda)**0.5)
