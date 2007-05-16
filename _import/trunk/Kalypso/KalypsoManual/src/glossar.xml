@@ -1,332 +1,338 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glossary>
-    <title>Glossar</title>
+  <title>Glossar</title>
 
-    <glossdiv>
-      <title>A</title>
+  <glossdiv>
+    <title>A</title>
 
-      <glossentry>
-        <glossterm></glossterm>
+    <glossentry id="ALB">
+      <glossterm>Automatisierte Liegenschaftsbuch</glossterm>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+      <acronym>ALB</acronym>
 
-    <glossdiv>
-      <title>B</title>
+      <glossdef>
+        <para>Das ALB wurde aus dem früheren manuell geführten Katasterwerk
+        entwickelt und enthält dessen Inhalt in digitaler Form. Es gliedert
+        sich in Gemarkungen, Fluren und diese wiederum in Flurstücke. Diese
+        Flurstücke werden dann unter einer Nummer im ALB gebucht. Dabei kann
+        es in Flächen unterschiedlicher Nutzungsarten unterteilt sein.</para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>B</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>C</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>C</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>D</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>D</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>E</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry id="xml">
-        <glossterm>Extensible Markup Language</glossterm>
+  <glossdiv>
+    <title>E</title>
 
-        <acronym>XML</acronym>
+    <glossentry id="xml">
+      <glossterm>Extensible Markup Language</glossterm>
 
-        <glossdef>
-          <para>Some reasonable definition here.</para>
+      <acronym>XML</acronym>
 
-          <glossseealso otherterm="sgml">SGML</glossseealso>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+      <glossdef>
+        <para>Some reasonable definition here.</para>
 
-    <glossdiv>
-      <title>F</title>
+        <glossseealso otherterm="sgml">SGML</glossseealso>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>F</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>G</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>G</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>H</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>H</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
+
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-    <glossdiv>
-      <title>I</title>
+  <glossdiv>
+    <title>I</title>
 
-      <glossentry>
-        <glossterm></glossterm>
+    <glossentry>
+      <glossterm></glossterm>
+
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+  <glossdiv>
+    <title>J</title>
 
-    <glossdiv>
-      <title>J</title>
+    <glossentry>
+      <glossterm></glossterm>
+
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>K</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>K</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>L</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>L</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>M</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>M</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>N</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>N</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>O</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>O</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>P</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>P</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>Q</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>Q</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>R</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>R</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>S</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm>SGML</glossterm>
 
-    <glossdiv>
-      <title>S</title>
+      <glosssee otherterm="sgml"></glosssee>
+    </glossentry>
 
-      <glossentry>
-        <glossterm>SGML</glossterm>
+    <glossentry id="sgml">
+      <glossterm>Standard Generalized Markup Language</glossterm>
 
-        <glosssee otherterm="sgml"></glosssee>
-      </glossentry>
+      <acronym>SGML</acronym>
 
-      <glossentry id="sgml">
-        <glossterm>Standard Generalized Markup Language</glossterm>
+      <abbrev>ISO 8879:1986</abbrev>
 
-        <acronym>SGML</acronym>
+      <glossdef>
+        <para>Some reasonable definition here.</para>
 
-        <abbrev>ISO 8879:1986</abbrev>
+        <glossseealso otherterm="xml">XML</glossseealso>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-        <glossdef>
-          <para>Some reasonable definition here.</para>
+  <glossdiv>
+    <title>T</title>
 
-          <glossseealso otherterm="xml">XML</glossseealso>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm>aaaa</glossterm>
 
-    <glossdiv>
-      <title>T</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm>aaaa</glossterm>
+  <glossdiv>
+    <title>U</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>U</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>V</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>V</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>W</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>W</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>X</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>X</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>Y</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>Y</title>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
 
-      <glossentry>
-        <glossterm></glossterm>
+  <glossdiv>
+    <title>Z</title>
 
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
+    <glossentry>
+      <glossterm></glossterm>
 
-    <glossdiv>
-      <title>Z</title>
-
-      <glossentry>
-        <glossterm></glossterm>
-
-        <glossdef>
-          <para></para>
-        </glossdef>
-      </glossentry>
-    </glossdiv>
-  </glossary>
+      <glossdef>
+        <para></para>
+      </glossdef>
+    </glossentry>
+  </glossdiv>
+</glossary>
