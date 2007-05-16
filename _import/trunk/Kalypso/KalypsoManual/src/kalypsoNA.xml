@@ -116,7 +116,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/kalypso_na/Ausgangspunkt-na.png" scale="100" />
+          <imagedata fileref="img/kalypso_na/Kapitel_2/Ausgangspunkt-na.png"
+                     scale="100" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -204,7 +205,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/kalypso_na/Einzugsgebiet-na.png"
+                       fileref="img/kalypso_na/Kapitel_2/Einzugsgebiet-na.png"
                        scale="100" />
           </imageobject>
         </mediaobject>
@@ -224,7 +225,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/kalypso_na/Teileinzugsgebiete.png" />
+              <imagedata fileref="img/kalypso_na/Kapitel_2/Teileinzugsgebiete.png" />
             </imageobject>
           </mediaobject>
         </figure></para>
@@ -318,50 +319,46 @@
       <para>Die Landnutzung im Einzugsgebiet ist entscheidend zur Ableitung
       der Parameter des Versiegelungsgrades und der Vegetationsdaten. Sie kann
       aus Flächennutzungsplänen, topographischen Karten, Luftbildaufnahmen
-      oder änlichem entnommen werden. Ziel ist es ein Parameterkatalog
+      oder änlichem entnommen werden. Ziel ist es einen Parameterkatalog
       aufzustellen, welcher einer dem Hydrotop zugeordneten Landnutzung
       (Angabe eines Keys von maximal 10 Zeichen) die weiteren Eigenschaften
       zuweist. Hierzu sind zunächst Versiegelungsklassen zu bilden, welche die
       im Modellgebiet vorhandenen Landnutzungen zu Klassen gleicher
       Versiegelung gruppieren (z.B. Wald, Industrie, Einzelhausbebauung,...).
-      Weiterhin sind die auftretenden Landnutzungen nach natürlichen
-      Nutzungsklassen der auftretenden Vegetation zu untergliedern (z.B.
-      Nadelwald, Laubwald, Wiese, Acker, Bebauung,...). Teilweise ist die
-      Versiegelungsklasse und Bewuchsklasse identisch, es ergeben sich jedoch
-      bei sehr detaillierten Daten auch Unterschiede (z.B. kann bei Bebauungen
-      die Versiegelungsklasse differenziert werden – Industrie – Hochhaus -
-      Einzelhaus, wohingegen die Bewuchsklasse identisch bleibt). Sind die
-      Nutzungsdaten weniger detailliert, so kann auf diese Untergliederung
-      verzichtet werden und dem Hydrotop direkt eine identische Versiegelungs-
-      und Vegetationsklasse zugeordnet werden. Dies erleichtert die Erstellung
-      des Parameterkataloges.</para>
-
       <figure>
-        <title>Beispiel der Vegetationsklassen</title>
+          <title>Beispiel der Versiegelungs- und Vegetationsklassen</title>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/vegetation_na.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <figure>
-        <title>Beispiel der Versiegelungsklassen</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/versiegelung_na.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/kalypso_na/Kapitel_2/tabels.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>Weiterhin sind die auftretenden Landnutzungen nach
+      natürlichen Nutzungsklassen der auftretenden Vegetation in
+      Vegetationsklassen zu untergliedern (z.B. Nadelwald, Laubwald, Wiese,
+      Acker, Bebauung,...). Teilweise ist die Versiegelungsklasse und
+      Bewuchsklasse identisch, es ergeben sich jedoch bei sehr detaillierten
+      Daten auch Unterschiede, z.B. kann bei Bebauungen die
+      Versiegelungsklasse differenziert werden – Industrie – Hochhaus -
+      Einzelhaus, wohingegen die Bewuchsklasse identisch bleibt. Bei der
+      Bildung der Klassen zur Bebauung erfolgt die Belegung des
+      Versiegelungsgrades mit einem Korrekturfaktor. Sind die Nutzungsdaten
+      weniger detailliert, so kann auf diese Untergliederung verzichtet werden
+      und dem Hydrotop direkt eine identische Versiegelungs- und
+      Vegetationsklasse zugeordnet werden. Dies erleichtert die Erstellung des
+      Parameterkataloges. Der zuvor angelegte Key wird in diesem dann wieder
+      aufgeschlüsselt, wobei noch zu sagen ist, dass der Key in Hamburg nach
+      den Konventionen des <glossterm linkend="glossar.xml">ALB</glossterm>
+      zusammengestellt wird. Grundsätzlich aber ist der Key frei
+      zusammenstellbar.</para>
 
       <figure>
         <title>Landnutzung</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/landnutzung_na.png" scale="100" />
+            <imagedata fileref="img/kalypso_na/Kapitel_2/landnutzung_na.png"
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -399,11 +396,12 @@
       Feldkapazität und maximale Bodenfeuchte) zusammenzustellen. Außerdem ist
       der Bodenaufbau mit den verwendeten Schichten und Schichtdicken zu
       definieren und durch einen Bodenschlüssel, welcher in den Hydrotopen
-      referenziert wird zu bezeichnen. Dieser darf eine maximale Länge von 10
-      Zeichen besitzen. Anzumerken ist noch, dass es keine Konvention für die
-      Spaltenanzahl und deren Bezeichnung in den Shape Dateien gibt. Bei der
-      anschließenden Bearbeitung mit KalypsoNA wird einfach eine Auswahl aus
-      den vorliegenden Spalten getroffen.</para>
+      referenziert wird zu bezeichnen. Dieser darf, wie in Kapitel 2.2 schon
+      erwähnt, eine maximale Länge von 10 Zeichen besitzen. Anzumerken ist
+      noch, dass es keine Konvention für die Spaltenanzahl und deren
+      Bezeichnung in den Shape Dateien gibt. Bei der anschließenden
+      Bearbeitung mit KalypsoNA wird einfach eine Auswahl aus den vorliegenden
+      Spalten getroffen.</para>
 
       <figure>
         <title>Bodenaufbau</title>
@@ -461,14 +459,21 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/hydrotop_na.png" />
+            <imagedata fileref="img/kalypso_na/Kapitel_2/hydrotop_na.png" />
           </imageobject>
         </mediaobject>
       </figure>
 
+      <note>
+        <para>Aggregieren pro Teileinzugsgebiet im Hydrotop durch
+        Multipolygonfunktion</para>
+      </note>
+
       <para>Nach der Verschneidung können Hydrotope identischer Eigenschaften
       in einem Teilgebiet zusammengefast werden. Hierdurch kann die Rechenzeit
-      des späteren Modells erheblich verringert werden.</para>
+      des späteren Modells erheblich verringert werden. Auf weitere Parameter
+      wird in Kapitel 3.7 eingegangen (siehe <xref
+      linkend="kalypso_na-hydrotopparameter" /> )</para>
 
       <table id="kalypso_na-mapping_hydrotope">
         <title>Mapping Shape-Dateien - Modellelemente (Hydrotope)</title>
@@ -601,7 +606,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/netzplan_na.png" scale="70" />
+            <imagedata fileref="img/kalypso_na/Kapitel_2/netzplan_na.png"
+                       scale="70" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -664,7 +670,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kalypso_na/Systemelments-na.png"
+            <imagedata fileref="img/kalypso_na/Kapitel_2/Systemelments-na.png"
                        scale="70" />
           </imageobject>
         </mediaobject>
