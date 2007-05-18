@@ -29,7 +29,6 @@
          <bmp
             winSmallHigh="/KalypsoModelProduct/etc/launchericons/icon_16_32.bmp"
             winSmallLow="/KalypsoModelProduct/etc/launchericons/icon_16_8.bmp"
-            win24Low="/KalypsoModelProduct/etc/launchericons/icon_24_8.bmp"
             winMediumHigh="/KalypsoModelProduct/etc/launchericons/icon_32_32.bmp"
             winMediumLow="/KalypsoModelProduct/etc/launchericons/icon_32_8.bmp"
             winLargeHigh="/KalypsoModelProduct/etc/launchericons/icon_48_32.bmp"
@@ -45,10 +44,12 @@
       <plugin id="de.belger.swtchart.core"/>
       <plugin id="de.renew.workflow.connector"/>
       <plugin id="de.renew.workflow.model"/>
+      <plugin id="javax.servlet"/>
       <plugin id="org.apache.ant"/>
+      <plugin id="org.apache.commons.logging"/>
       <plugin id="org.apache.commons.vfs"/>
       <plugin id="org.apache.lucene"/>
-      <plugin id="org.apache.xerces"/>
+      <plugin id="org.apache.lucene.analysis"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.ant.core.nl1" fragment="true"/>
       <plugin id="org.eclipse.ant.ui"/>
@@ -59,6 +60,7 @@
       <plugin id="org.eclipse.core.commands.nl1" fragment="true"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.contenttype.nl1" fragment="true"/>
+      <plugin id="org.eclipse.core.databinding"/>
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.expressions.nl1" fragment="true"/>
       <plugin id="org.eclipse.core.filebuffers"/>
@@ -68,14 +70,13 @@
       <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.jobs.nl1" fragment="true"/>
+      <plugin id="org.eclipse.core.net"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
       <plugin id="org.eclipse.core.resources.nl1" fragment="true"/>
       <plugin id="org.eclipse.core.resources.win32" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.auth.nl1" fragment="true"/>
       <plugin id="org.eclipse.core.runtime.compatibility.nl1" fragment="true"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.core.runtime.nl1" fragment="true"/>
@@ -85,20 +86,23 @@
       <plugin id="org.eclipse.debug.core.nl1" fragment="true"/>
       <plugin id="org.eclipse.debug.ui"/>
       <plugin id="org.eclipse.debug.ui.nl1" fragment="true"/>
+      <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.common.nl1" fragment="true"/>
+      <plugin id="org.eclipse.equinox.http.jetty"/>
+      <plugin id="org.eclipse.equinox.http.servlet"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.preferences.nl1" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.registry.nl1" fragment="true"/>
       <plugin id="org.eclipse.help"/>
-      <plugin id="org.eclipse.help.appserver"/>
-      <plugin id="org.eclipse.help.appserver.nl1" fragment="true"/>
       <plugin id="org.eclipse.help.base"/>
       <plugin id="org.eclipse.help.base.nl1" fragment="true"/>
       <plugin id="org.eclipse.help.nl1" fragment="true"/>
       <plugin id="org.eclipse.help.ui"/>
       <plugin id="org.eclipse.help.ui.nl1" fragment="true"/>
+      <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
+      <plugin id="org.eclipse.jdt.compiler.tool" fragment="true"/>
       <plugin id="org.eclipse.jdt.core"/>
       <plugin id="org.eclipse.jdt.core.manipulation"/>
       <plugin id="org.eclipse.jdt.core.manipulation.nl1" fragment="true"/>
@@ -112,6 +116,8 @@
       <plugin id="org.eclipse.jdt.ui"/>
       <plugin id="org.eclipse.jdt.ui.nl1" fragment="true"/>
       <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.databinding.nl1" fragment="true"/>
       <plugin id="org.eclipse.jface.nl1" fragment="true"/>
       <plugin id="org.eclipse.jface.text"/>
       <plugin id="org.eclipse.jface.text.nl1" fragment="true"/>
@@ -121,6 +127,8 @@
       <plugin id="org.eclipse.ltk.ui.refactoring.nl1" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.nl1" fragment="true"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.osgi.services.nl1" fragment="true"/>
       <plugin id="org.eclipse.sdk"/>
       <plugin id="org.eclipse.sdk.nl1" fragment="true"/>
       <plugin id="org.eclipse.search"/>
@@ -148,6 +156,7 @@
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.forms.nl1" fragment="true"/>
       <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.ide.application"/>
       <plugin id="org.eclipse.ui.ide.nl1" fragment="true"/>
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.intro.nl1" fragment="true"/>
@@ -190,7 +199,6 @@
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.featureview"/>
       <plugin id="org.kalypso.gml.processes"/>
-      <plugin id="org.kalypso.gml.ui"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
       <plugin id="org.kalypso.kalypso1d2d.pjt"/>
@@ -212,11 +220,9 @@
       <plugin id="org.kalypso.simulation.ui"/>
       <plugin id="org.kalypso.ui"/>
       <plugin id="org.kalypso.ui.addlayer"/>
-      <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
-      <plugin id="org.kalypso.wizard.CreateNAProject"/>
-      <plugin id="org.kalypso.workflow"/>
       <plugin id="org.kalypso.wspwin.core"/>
+      <plugin id="org.mortbay.jetty"/>
    </plugins>
 
 </product>

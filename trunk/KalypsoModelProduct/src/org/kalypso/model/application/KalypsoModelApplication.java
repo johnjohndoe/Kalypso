@@ -40,10 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.application;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.product.KalypsoModelProductPlugin;
 
 /**
  * @author Holger Albert
@@ -57,6 +69,22 @@ public class KalypsoModelApplication implements IApplication
   {
     final Display display = PlatformUI.createDisplay();
 
+    final Shell shell = new Shell( display, SWT.ON_TOP );
+
+    try
+    {
+      if( !checkInstanceLocation( shell ) )
+      {
+        Platform.endSplash();
+        return EXIT_OK;
+      }
+    }
+    finally
+    {
+      if( shell != null )
+        shell.dispose();
+    }
+    
     final int returnCode = PlatformUI.createAndRunWorkbench( display, new KalypsoModelWorkbenchAdvisor() );
     if( returnCode == PlatformUI.RETURN_RESTART )
       return IApplication.EXIT_RESTART;
@@ -71,6 +99,70 @@ public class KalypsoModelApplication implements IApplication
    */
   public void stop( )
   {
-    // what to do??
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    if( workbench == null )
+      return;
+    final Display display = workbench.getDisplay();
+    display.syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        if( !display.isDisposed() )
+          workbench.close();
+      }
+    } );
+  }
+
+  /**
+   * Return true if a valid workspace path has been set and false otherwise. Prompt for and set the path if possible and
+   * required.
+   * 
+   * @return true if a valid instance location has been set and false otherwise
+   */
+  private boolean checkInstanceLocation( Shell shell )
+  {
+    // -data @none was specified but an ide requires workspace
+    final Location instanceLoc = Platform.getInstanceLocation();
+    final String dialogTitle = "Kalypso Simulation Platform";
+    if( instanceLoc == null )
+    {
+      MessageDialog.openError( shell, dialogTitle, "IDEs need a valid workspace. Restart without the @none option." );
+      return false;
+    }
+
+    // -data "/valid/path", workspace already set
+    if( instanceLoc.isSet() )
+    {
+      // at this point its valid, so try to lock it and update the
+      // metadata version information if successful
+      try
+      {
+        if( instanceLoc.lock() )
+          return true;
+
+        // we failed to create the directory.
+        // Two possibilities:
+        // 1. directory is already in use
+        // 2. directory could not be created
+        File workspaceDirectory = new File( instanceLoc.getURL().getFile() );
+        if( workspaceDirectory.exists() )
+          MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the associated workspace is currently in use by another INFORM.DSS application." );
+        else
+          MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the specified workspace cannot be created.  The specified workspace directory is either invalid or read-only." );
+      }
+      catch( final IOException e )
+      {
+        final String message = "Could not obtain lock for workspace location";
+        final IStatus status = StatusUtilities.createErrorStatus( message );
+        KalypsoModelProductPlugin.getDefault().getLog().log( status );
+        MessageDialog.openError( shell, dialogTitle, message );
+      }
+      return false;
+    }
+
+    /* No instance location is set, show error dialog. */
+    MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the there is no workspace specified." );
+
+    return false;
   }
 }
