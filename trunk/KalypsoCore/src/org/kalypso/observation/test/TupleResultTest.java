@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.test;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.kalypso.commons.xml.XmlTypes;
@@ -55,63 +56,63 @@ public class TupleResultTest extends TestCase
 {
   public void testGetComponents( )
   {
-    TupleResult result = new TupleResult();
-    assertEquals( 0, result.getComponents().length );
-    assertEquals( 0, result.size() );
+    final TupleResult result = new TupleResult();
+    Assert.assertEquals( 0, result.getComponents().length );
+    Assert.assertEquals( 0, result.size() );
 
-    final IComponent comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null );
+    final IComponent comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null, null );
     result.addComponent( comp );
-    assertEquals( 1, result.getComponents().length );
+    Assert.assertEquals( 1, result.getComponents().length );
 
-    IRecord r1 = result.createRecord();
+    final IRecord r1 = result.createRecord();
     result.add( r1 );
     result.setValue( r1, comp, 0 );
-    assertEquals( 0, r1.getValue( comp ) );
+    Assert.assertEquals( 0, r1.getValue( comp ) );
 
     try
     {
-      result.setValue( r1, new Component( "NONE", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null ), 0 );
+      result.setValue( r1, new Component( "NONE", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null, null ), 0 );
 
-      fail( "there should be an exception if we set a value of a nonexistent component" );
+      Assert.fail( "there should be an exception if we set a value of a nonexistent component" );
     }
-    catch( Exception ignored )
+    catch( final Exception ignored )
     {
     }
 
     try
     {
-      r1.setValue( new Component( "ID", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null ), 0 );
+      r1.setValue( new Component( "ID", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null, null ), 0 );
 
-      fail( "there should be an exception if we set a value of a nonexistent component" );
+      Assert.fail( "there should be an exception if we set a value of a nonexistent component" );
     }
-    catch( Exception ignored )
+    catch( final Exception ignored )
     {
     }
 
-    IRecord r2 = result.createRecord();
+    final IRecord r2 = result.createRecord();
     r2.setValue( comp, 1 );
     result.add( r2 );
 
-    IRecord r3 = result.createRecord();
+    final IRecord r3 = result.createRecord();
     result.add( r3 );
     r3.setValue( comp, 2 );
 
-    assertEquals( 3, result.size() );
+    Assert.assertEquals( 3, result.size() );
 
-    assertEquals( 0, result.getValue( r1, comp ) );
+    Assert.assertEquals( 0, result.getValue( r1, comp ) );
     result.setValue( r1, comp, 4 );
-    assertEquals( 4, result.getValue( r1, comp ) );
+    Assert.assertEquals( 4, result.getValue( r1, comp ) );
 
     result.removeComponent( comp );
-    assertEquals( 0, result.getComponents().length );
+    Assert.assertEquals( 0, result.getComponents().length );
   }
 
   public void testComponent( )
   {
-    final Component comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null );
-    assertEquals( "Abfluss", comp.getName() );
-    assertNull( comp.getDescription() );
-    assertEquals( "m³/s", comp.getUnit() );
-    assertEquals( XmlTypes.XS_DOUBLE, comp.getValueTypeName() );
+    final Component comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null, null );
+    Assert.assertEquals( "Abfluss", comp.getName() );
+    Assert.assertNull( comp.getDescription() );
+    Assert.assertEquals( "m³/s", comp.getUnit() );
+    Assert.assertEquals( XmlTypes.XS_DOUBLE, comp.getValueTypeName() );
   }
 }

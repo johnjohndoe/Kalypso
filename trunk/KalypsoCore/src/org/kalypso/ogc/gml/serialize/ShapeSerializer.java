@@ -72,9 +72,8 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Helper-Klasse zum lesen und schreiben von GML
- * 
- * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
+ * Helper-Klasse zum lesen und schreiben von GML TODO: Problem: reading/writing a shape will change the precision/size
+ * of the columns!
  * 
  * @author gernot
  */
@@ -88,7 +87,7 @@ public class ShapeSerializer
 
   private static final QName PROPERTY_TYPE = new QName( "namespace", "type" );
 
-//  private static final QName PROPERTY_BBOX = new QName( "namespace", "boundingBox" );
+// private static final QName PROPERTY_BBOX = new QName( "namespace", "boundingBox" );
 
   private static final QName ROOT_FEATURETYPE = new QName( "namespace", "featureCollection" );
 
@@ -100,7 +99,7 @@ public class ShapeSerializer
   public static void serialize( final GMLWorkspace workspace, final String filenameBase ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
-    final List<Feature> features = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
+    final List<Feature> features = (List<Feature>) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     try
     {
@@ -121,18 +120,20 @@ public class ShapeSerializer
    * sondern nur die über ein vorher festgelegt Mapping.
    * 
    * @param features
-   *          Properties dieser Features werden geschrieben.
+   *            Properties dieser Features werden geschrieben.
    * @param mapping
-   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
+   *            keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
    * @param geoName
-   *          Der Name der Property mit der Geometry
+   *            Der Name der Property mit der Geometry
    * @param filenameBase
-   *          Der Ausgabename für das Shape (.shp, .dbf, und. shx)
+   *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
   public static void serializeFeatures( final Feature[] features, final Map mapping, final String geoName, final String filenameBase ) throws GmlSerializeException
   {
     if( features.length == 0 )
+    {
       return;
+    }
 
     final IFeatureType featureType = features[0].getFeatureType();
 
@@ -159,7 +160,6 @@ public class ShapeSerializer
 
     // final IFeatureType shapeFeatureType = FeatureFactory.createFeatureType( "shapeType", null, ftps, occurs, occurs,
     // null, new HashMap() );
-
     final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "shapeType" ), ftps );
 
     try
@@ -201,18 +201,18 @@ public class ShapeSerializer
   public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs ) throws GmlSerializeException
   {
     ShapeFile sf = null;
-    
+
     try
     {
       sf = new ShapeFile( fileBase );
       final IFeatureType featureType = sf.getFeatureType();
-      
-      final Feature rootFeature = createShapeRootFeature( featureType );
-      
+
+      final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
+
       final int fileShapeType = sf.getFileShapeType();
-      rootFeature.setProperty( PROPERTY_TYPE, fileShapeType );
-      
-      final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
+      rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, fileShapeType );
+
+      final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
       final List list = (List) rootFeature.getProperty( listRelation );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher
@@ -223,12 +223,14 @@ public class ShapeSerializer
         final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
         GMLUtilities.setCrs( fe, sourceCrs );
         if( fe != null )
+        {
           list.add( fe );
+        }
       }
 
       final GMLSchema schema = null;
       final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null );
-      
+
       return workspace;
     }
     catch( final Exception e )
@@ -238,7 +240,9 @@ public class ShapeSerializer
     finally
     {
       if( sf != null )
+      {
         sf.close();
+      }
     }
   }
 
@@ -248,11 +252,11 @@ public class ShapeSerializer
     final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final ITypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
 
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
-    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, ft, 0, IRelationType.UNBOUND_OCCURENCY, false );
+    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
+    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, ft, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );
+    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
 
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true );
   }
@@ -292,7 +296,9 @@ public class ShapeSerializer
     finally
     {
       if( dbf != null )
+      {
         dbf.close();
+      }
     }
   }
 }

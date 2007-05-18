@@ -44,11 +44,13 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
  * @author schlienger
  */
-public class Component implements IComponent
+public class Component extends AbstractComponent
 {
   private final String m_name;
 
@@ -64,11 +66,10 @@ public class Component implements IComponent
 
   private final String m_id;
 
-  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue )
+  private final IPhenomenon m_phenomenon;
+
+  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon )
   {
-    m_id = id;
-    m_unit = unit;
-    m_frame = frame;
     if( name == null )
     {
       throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
@@ -78,6 +79,10 @@ public class Component implements IComponent
       throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
     }
 
+    m_id = id;
+    m_unit = unit;
+    m_frame = frame;
+    m_phenomenon = phenomenon;
     m_name = name;
     m_description = description;
     m_valueTypeName = valueTypeName;
@@ -123,25 +128,36 @@ public class Component implements IComponent
     builder.append( comp.getValueTypeName(), m_valueTypeName );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    final HashCodeBuilder builder = new HashCodeBuilder();
-
-    fillHashCodeBuilder( builder );
-
-    return builder.toHashCode();
-  }
-
   protected void fillHashCodeBuilder( final HashCodeBuilder builder )
   {
     builder.append( m_defaultValue );
     builder.append( m_description );
     builder.append( m_name );
     builder.append( m_valueTypeName );
+  }
+
+  /**
+   * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
+   */
+  public Object getDefaultValue( )
+  {
+    return m_defaultValue;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getDescription()
+   */
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getFrame()
+   */
+  public String getFrame( )
+  {
+    return m_frame;
   }
 
   /**
@@ -161,12 +177,16 @@ public class Component implements IComponent
   }
 
   /**
-   * @see java.lang.Object#toString()
+   * @see org.kalypso.observation.result.IComponent#getPhenomenon()
    */
-  @Override
-  public String toString( )
+  public IPhenomenon getPhenomenon( )
   {
-    return m_name + "[" + m_valueTypeName + "]";
+    return m_phenomenon;
+  }
+
+  public String getUnit( )
+  {
+    return m_unit;
   }
 
   /**
@@ -178,40 +198,32 @@ public class Component implements IComponent
   }
 
   /**
-   * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
+   * @see java.lang.Object#hashCode()
    */
-  public Object getDefaultValue( )
+  @Override
+  public int hashCode( )
   {
-    return m_defaultValue;
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    fillHashCodeBuilder( builder );
+
+    return builder.toHashCode();
   }
 
   /**
-   * @see org.kalypso.observation.result.IComponent#getDescription()
+   * @see java.lang.Object#toString()
    */
-  public String getDescription( )
+  @Override
+  public String toString( )
   {
-    return m_description;
-  }
-
-  public String getUnit( )
-  {
-    return m_unit;
+    return m_name + "[" + m_valueTypeName + "]";
   }
 
   /**
-   * @see org.kalypso.observation.result.IComponent#getFrame()
+   * @see org.kalypso.observation.result.IComponent#getRestrictions()
    */
-  public String getFrame( )
+  public IRestriction[] getRestrictions( )
   {
-    return m_frame;
-  }
-
-  /**
-   * @see org.kalypso.observation.result.IComponent#compare(java.lang.Object, java.lang.Object)
-   */
-  public int compare( final Object objFirst, final Object objSecond )
-  {
-    // TODO perhaps someday implement something meaningful
-    return ("" + objFirst).compareTo( "" + objSecond );
+    // TODO define restrictions for programmatically create components?
+    return new IRestriction[0];
   }
 }

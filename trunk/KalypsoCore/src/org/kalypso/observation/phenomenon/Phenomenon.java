@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation;
+package org.kalypso.observation.phenomenon;
 
 /**
  * @author Gernot Belger
@@ -47,7 +47,9 @@ package org.kalypso.observation;
 public class Phenomenon implements IPhenomenon
 {
   private final String m_description;
+
   private final String m_name;
+
   private final String m_id;
 
   public Phenomenon( final String id, final String name, final String description )

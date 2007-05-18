@@ -42,6 +42,10 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.adapter.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+
 /**
  * Utility methods for components
  * 
@@ -49,11 +53,11 @@ import javax.xml.namespace.QName;
  */
 public final class ComponentUtilities
 {
-  private ComponentUtilities()
+  private ComponentUtilities( )
   {
     // utility class
   }
-  
+
   /**
    * @return the first component of the given type if found, else null
    */
@@ -62,9 +66,11 @@ public final class ComponentUtilities
     for( int i = 0; i < comps.length; i++ )
     {
       if( comps[i].getValueTypeName().equals( typeName ) )
+      {
         return comps[i];
+      }
     }
-    
+
     return null;
   }
 
@@ -76,9 +82,11 @@ public final class ComponentUtilities
     for( int i = 0; i < comps.length; i++ )
     {
       if( !comps[i].getValueTypeName().equals( typeName ) )
+      {
         return comps[i];
+      }
     }
-    
+
     return null;
   }
 
@@ -90,9 +98,47 @@ public final class ComponentUtilities
     for( int i = 0; i < comps.length; i++ )
     {
       if( comps[i].equals( comp ) )
+      {
         return comps[i];
+      }
     }
-    
+
+    return null;
+  }
+
+  /**
+   * @author kuch
+   */
+  static public boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
+  {
+    for( final IRestriction restriction : restrictions )
+    {
+      if( restriction instanceof EnumerationRestriction )
+      {
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public static ILanguageAnnontationProvider getLanguageProvider( final IRestriction[] restrictions, final Object value )
+  {
+    for( final IRestriction restriction : restrictions )
+    {
+      if( restriction instanceof EnumerationRestriction )
+      {
+        final EnumerationRestriction r = (EnumerationRestriction) restriction;
+        final ILanguageAnnontationProvider provider = r.getMapping().get( value );
+
+        if( provider != null )
+        {
+          return provider;
+        }
+      }
+    }
+
     return null;
   }
 }

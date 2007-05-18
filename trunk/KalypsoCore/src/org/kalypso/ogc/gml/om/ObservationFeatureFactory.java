@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -57,13 +61,15 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.IPhenomenon;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.Phenomenon;
+import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.phenomenon.Phenomenon;
+import org.kalypso.observation.phenomenon.PhenomenonUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -73,6 +79,8 @@ import org.kalypso.ogc.swe.RepresentationType.KIND;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
@@ -173,6 +181,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final TupleResult tupleResult = new TupleResult( components );
     tupleResult.setSortComponents( sortComponents );
 
+    // TODO: move into own method
     final StringTokenizer tk = new StringTokenizer( result );
     int nb = 0;
     IRecord record = null;
@@ -189,15 +198,30 @@ public class ObservationFeatureFactory implements IAdapterFactory
       final XsdBaseTypeHandler handler = typeHandlers[nb];
       try
       {
-        final Object value;
+        Object value = null;
         if( "null".equals( token ) )
         {
           value = null;
         }
         else
         {
-          value = handler.convertToJavaValue( token );
+          // FIXME implement other type handlers over an fabrication method
+          if( handler instanceof XsdBaseTypeHandlerString )
+          {
+            final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+            value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
+          }
+          else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+          {
+            final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+            value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
+          }
+          else
+          {
+            value = handler.convertToJavaValue( token );
+          }
         }
+
         record.setValue( component, value );
       }
       catch( final NumberFormatException e )
@@ -205,7 +229,11 @@ public class ObservationFeatureFactory implements IAdapterFactory
         // TODO: set null here: Problem: the other components can't handle null now, they should
         record.setValue( component, null );
       }
-
+      catch( final UnsupportedEncodingException e )
+      {
+        e.printStackTrace();
+        record.setValue( component, null );
+      }
       nb++;
       nb = nb % components.length;
     }
@@ -219,12 +247,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   private static IComponent[] buildSortComponents( final Feature recordDefinition )
   {
-    if( recordDefinition == null || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), QNAME_F_SORTED_RECORD_DEFINITION ) )
+    if( (recordDefinition == null) || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION ) )
+    {
       return new IComponent[0];
+    }
 
     final List<IComponent> components = new ArrayList<IComponent>();
-    
-    final FeatureList comps = (FeatureList) recordDefinition.getProperty( QNAME_P_SORTED_COMPONENT );
+
+    final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
     for( int i = 0; i < comps.size(); i++ )
     {
       final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), comps.get( i ) );
@@ -373,7 +403,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * Helper: builds the record definition according to the components of the tuple result.
    * 
    * @param map
-   *          ATTENTION: the recordset is written in the same order as this map
+   *            ATTENTION: the recordset is written in the same order as this map
    */
   public static Feature buildRecordDefinition( final Feature targetObsFeature, final IRelationType targetObsFeatureRelation, final IComponent[] components, final IComponent[] sortComponents )
   {
@@ -381,9 +411,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IFeatureType recordDefinitionFT;
     if( sortComponents == null )
+    {
       recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE );
+    }
     else
-      recordDefinitionFT = schema.getFeatureType( QNAME_F_SORTED_RECORD_DEFINITION );
+    {
+      recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION );
+    }
 
     // set resultDefinition property, create RecordDefinition feature
     final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, targetObsFeatureRelation, recordDefinitionFT );
@@ -393,16 +427,20 @@ public class ObservationFeatureFactory implements IAdapterFactory
     for( final IComponent comp : components )
     {
       final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, itemDefRelation, schema, comp );
+
+      FeatureHelper.addProperty( featureItemDef, ObservationFeatureFactory.GML_NAME, comp.getName() );
+      FeatureHelper.addProperty( featureItemDef, ObservationFeatureFactory.GML_DESCRIPTION, comp.getDescription() );
+
       FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.SWE_COMPONENT, featureItemDef );
     }
 
     if( sortComponents != null )
     {
-      final IRelationType sortedItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( QNAME_P_SORTED_COMPONENT );
+      final IRelationType sortedItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
       for( final IComponent comp : sortComponents )
       {
         final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, sortedItemDefRelation, schema, comp );
-        FeatureHelper.addProperty( featureRD, QNAME_P_SORTED_COMPONENT, featureItemDef );
+        FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT, featureItemDef );
       }
     }
 
@@ -411,24 +449,20 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   private static Feature itemDefinitionFromComponent( final Feature recordDefinition, final IRelationType itemDefinitionRelation, final IGMLSchema schema, final IComponent comp )
   {
+    // TODO set name and description
     if( comp instanceof FeatureComponent )
     {
       final FeatureComponent fc = (FeatureComponent) comp;
-      final Feature itemDef = fc.getItemDefinition();
-
-      // TODO: clone feature and set new parent
-
-      return itemDef;
+      return fc.getItemDefinition();
     }
 
     final Feature itemDefinition = recordDefinition.getWorkspace().createFeature( recordDefinition, itemDefinitionRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION ) );
 
     /* Phenomenon */
-    final IFeatureType phenomenFT = schema.getFeatureType( ObservationFeatureFactory.SWE_PHENOMENONTYPE );
     final IRelationType phenomenonRelation = (IRelationType) itemDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_PROPERTY );
-    final Feature featurePhenomenon = recordDefinition.getWorkspace().createFeature( itemDefinition, phenomenonRelation, phenomenFT );
-    FeatureHelper.addProperty( featurePhenomenon, ObservationFeatureFactory.GML_NAME, comp.getName() );
-    featurePhenomenon.setProperty( ObservationFeatureFactory.GML_DESCRIPTION, comp.getDescription() );
+
+    final IPhenomenon phenomenon = comp.getPhenomenon();
+    final Feature featurePhenomenon = PhenomenonUtilities.createPhenomenonFeature( phenomenon, itemDefinition, phenomenonRelation );
     itemDefinition.setProperty( phenomenonRelation, featurePhenomenon );
 
     /* Representation type */
@@ -456,7 +490,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final String frame = component.getFrame();
 
-    return new RepresentationType( ObservationFeatureFactory.toKind( valueTypeName ), valueTypeName, unit, frame, classification );
+    return new RepresentationType( ObservationFeatureFactory.toKind( valueTypeName ), valueTypeName, unit, frame, new IRestriction[0], classification );
   }
 
   /**
@@ -502,18 +536,40 @@ public class ObservationFeatureFactory implements IAdapterFactory
           buffer.append( " " );
         }
 
-        final Object value = record.getValue( comp );
-        final String strValue;
+        String bufferValue = null;
+
+        Object value = record.getValue( comp );
         if( value == null )
         {
-          strValue = "null";
+          value = "null";
         }
-        else
+        // REMARK URLEncoder: encoding of xml file is not known - at this point we assume target encoding as "UTF-8".
+        // Windows Eclipse often creates Cp-1252 encoded files
+        try
         {
-          strValue = handler.convertToXMLString( value );
+          // FIXME implement other type handlers over an fabrication method
+          if( handler instanceof XsdBaseTypeHandlerString )
+          {
+            final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+            bufferValue = myHandler.convertToXMLString( URLEncoder.encode( (String) value, "UTF-8" ) );
+          }
+          else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+          {
+            final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+            final XMLGregorianCalendar cal = (XMLGregorianCalendar) value;
+            bufferValue = URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" );
+          }
+          else
+          {
+            bufferValue = handler.convertToXMLString( value );
+          }
+        }
+        catch( final UnsupportedEncodingException e )
+        {
+          e.printStackTrace();
         }
 
-        buffer.append( strValue );
+        buffer.append( bufferValue );
       }
 
       buffer.append( "\n" );

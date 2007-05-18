@@ -62,31 +62,31 @@ public class ObservationTest extends TestCase
 {
   public static IObservation<TupleResult> createTestObservation( )
   {
-    final Component dc = new Component( "DATE", "Date", "", null, null, XmlTypes.XS_DATE, null );
-    final Component vc = new Component( "VALUE", "Value", "", null, null, XmlTypes.XS_DOUBLE, "m" );
-    IComponent[] comps = { dc, vc };
-    TupleResult tupleResult = new TupleResult( comps );
+    final Component dc = new Component( "DATE", "Date", "", null, null, XmlTypes.XS_DATE, null, null );
+    final Component vc = new Component( "VALUE", "Value", "", null, null, XmlTypes.XS_DOUBLE, "m", null );
+    final IComponent[] comps = { dc, vc };
+    final TupleResult tupleResult = new TupleResult( comps );
 
-    Calendar cal = Calendar.getInstance();
-    
+    final Calendar cal = Calendar.getInstance();
+
     for( int i = 0; i < 10; i++ )
     {
-      IRecord record = tupleResult.createRecord();
+      final IRecord record = tupleResult.createRecord();
       record.setValue( dc, cal.getTime() );
       record.setValue( vc, i );
-      
+
       tupleResult.add( record );
-      
+
       cal.add( Calendar.HOUR_OF_DAY, 1 );
     }
 
-    List<MetadataObject> mdList = new ArrayList<MetadataObject>();
-    mdList.add( new MetadataObject( "Test", "Nothing") );
-    
+    final List<MetadataObject> mdList = new ArrayList<MetadataObject>();
+    mdList.add( new MetadataObject( "Test", "Nothing" ) );
+
     return new Observation<TupleResult>( "Test-Observation", "", tupleResult, mdList );
   }
-  
-  public void testDummy()
+
+  public void testDummy( )
   {
     // does not test anything, but junit complains if we have a test class without test
   }

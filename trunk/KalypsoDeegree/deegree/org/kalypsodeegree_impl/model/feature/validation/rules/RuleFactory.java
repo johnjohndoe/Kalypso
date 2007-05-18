@@ -73,11 +73,11 @@ public abstract class RuleFactory
    * This function creates a list of rules for a property, if it have any restrictions.
    * 
    * @param ftp
-   *          The GML schema that represents a feature property.
+   *            The GML schema that represents a feature property.
    */
   public static IRule[] getRules( final IPropertyType ftp )
   {
-    Vector<IRule> rules = new Vector<IRule>();
+    final Vector<IRule> rules = new Vector<IRule>();
 
     if( ftp instanceof IValuePropertyType )
     {
@@ -87,7 +87,7 @@ public abstract class RuleFactory
 
       for( int i = 0; i < restrictions.length; i++ )
       {
-        IRestriction restriction = restrictions[i];
+        final IRestriction restriction = restrictions[i];
 
         /* What restrictions do I have found here? */
 
@@ -95,7 +95,7 @@ public abstract class RuleFactory
         if( restriction instanceof MaxExclusiveRestriction )
         {
           /* Add the Rule. */
-          MaxExclusiveRestriction maxexclusiverestriction = (MaxExclusiveRestriction) restriction;
+          final MaxExclusiveRestriction maxexclusiverestriction = (MaxExclusiveRestriction) restriction;
           rules.add( new MaxExclusiveRule( maxexclusiverestriction.getMaxExclusive() ) );
         }
 
@@ -103,7 +103,7 @@ public abstract class RuleFactory
         if( restriction instanceof MinExclusiveRestriction )
         {
           /* Add the Rule. */
-          MinExclusiveRestriction minexclusiverestriction = (MinExclusiveRestriction) restriction;
+          final MinExclusiveRestriction minexclusiverestriction = (MinExclusiveRestriction) restriction;
           rules.add( new MinExclusiveRule( minexclusiverestriction.getMinExclusive() ) );
         }
 
@@ -111,7 +111,7 @@ public abstract class RuleFactory
         if( restriction instanceof MaxInclusiveRestriction )
         {
           /* Add the Rule. */
-          MaxInclusiveRestriction maxinclusiverestriction = (MaxInclusiveRestriction) restriction;
+          final MaxInclusiveRestriction maxinclusiverestriction = (MaxInclusiveRestriction) restriction;
           rules.add( new MaxInclusiveRule( maxinclusiverestriction.getMaxInclusive() ) );
         }
 
@@ -119,7 +119,7 @@ public abstract class RuleFactory
         if( restriction instanceof MinInclusiveRestriction )
         {
           /* Add the Rule. */
-          MinInclusiveRestriction mininclusiverestriction = (MinInclusiveRestriction) restriction;
+          final MinInclusiveRestriction mininclusiverestriction = (MinInclusiveRestriction) restriction;
           rules.add( new MinInclusiveRule( mininclusiverestriction.getMinInclusive() ) );
         }
 
@@ -127,7 +127,7 @@ public abstract class RuleFactory
         if( restriction instanceof RegExpRestriction )
         {
           /* Add the Rule. */
-          RegExpRestriction regexprestriction = (RegExpRestriction) restriction;
+          final RegExpRestriction regexprestriction = (RegExpRestriction) restriction;
           rules.add( new RegExpRule( regexprestriction.getPatterns() ) );
         }
 
@@ -135,7 +135,7 @@ public abstract class RuleFactory
         if( restriction instanceof MaxLengthRestriction )
         {
           /* Add the Rule. */
-          MaxLengthRestriction maxlengthrestriction = (MaxLengthRestriction) restriction;
+          final MaxLengthRestriction maxlengthrestriction = (MaxLengthRestriction) restriction;
           rules.add( new MaxLengthRule( maxlengthrestriction.getMaxLength() ) );
         }
 
@@ -143,7 +143,7 @@ public abstract class RuleFactory
         if( restriction instanceof MinLengthRestriction )
         {
           /* Add the Rule. */
-          MinLengthRestriction minlengthrestriction = (MinLengthRestriction) restriction;
+          final MinLengthRestriction minlengthrestriction = (MinLengthRestriction) restriction;
           rules.add( new MinLengthRule( minlengthrestriction.getMinLength() ) );
         }
 
@@ -153,22 +153,22 @@ public abstract class RuleFactory
           /* Add the Rule. */
           final EnumerationRestriction enumerationrestriction = (EnumerationRestriction) restriction;
           final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
-          final String[] enumValues = enumerationrestriction.getEnumeration();
+          final Object[] enumValues = enumerationrestriction.getEnumeration();
           final Object[] enumValueObjects = new Object[enumValues.length];
           for( int j = 0; j < enumValues.length; j++ )
           {
-            final String enumValue = enumValues[j];
+            final String enumValue = enumValues[j].toString();
             try
             {
               enumValueObjects[j] = typeHandler.parseType( enumValue );
             }
-            catch( ParseException e )
+            catch( final ParseException e )
             {
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
           }
-          
+
           rules.add( new EnumerationRule( enumValueObjects, enumerationrestriction.getLabels() ) );
         }
 

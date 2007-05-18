@@ -79,7 +79,7 @@ public class TupleResult implements List<IRecord>
 
   public TupleResult( final IComponent[] comps )
   {
-    for( IComponent element : comps )
+    for( final IComponent element : comps )
     {
       addComponent( element );
     }
@@ -470,6 +470,7 @@ public class TupleResult implements List<IRecord>
   }
 
   /** This method creates, but DOES NOT adds a record. */
+  // TODO its very confusing - create should add
   public IRecord createRecord( )
   {
     return new Record( this, m_components );

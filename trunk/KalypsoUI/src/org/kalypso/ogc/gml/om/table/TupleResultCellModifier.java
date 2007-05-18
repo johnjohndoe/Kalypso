@@ -52,7 +52,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler;
-import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
+import org.kalypso.template.featureview.ColumnDescriptor;
 
 public class TupleResultCellModifier implements ICellModifier
 {
@@ -63,9 +63,11 @@ public class TupleResultCellModifier implements ICellModifier
     m_provider = provider;
   }
 
-  public boolean canModify( final Object element, String property )
+  public boolean canModify( final Object element, final String property )
   {
-    return true;
+    final IComponent component = m_provider.getComponent( property );
+
+    return m_provider.isEditable( component );
   }
 
   public Object getValue( final Object element, final String property )
@@ -77,11 +79,13 @@ public class TupleResultCellModifier implements ICellModifier
 
     /* Empty elements are always edited as empty string */
     if( value == null )
+    {
       return "";
-    
+    }
+
     final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
     final String formatValue = TupleResultLabelProvider.formatValue( value, descriptor );
-    
+
     return formatValue == null ? "" : formatValue;
   }
 
@@ -91,7 +95,9 @@ public class TupleResultCellModifier implements ICellModifier
     final IRecord record = (IRecord) item.getData();
     final IComponent component = modifyRecord( record, property, value );
     if( component == null )
+    {
       return;
+    }
 
     final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, value ) };
     m_provider.getResult().fireValuesChanged( changes );
@@ -114,12 +120,14 @@ public class TupleResultCellModifier implements ICellModifier
       {
         final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
         final String formatHint = descriptor == null ? null : descriptor.getParseFormat();
-        
+
         final Object valueToSet = value == null ? null : handler.parseText( value.toString(), formatHint );
 
         final Object oldValue = record.getValue( component );
         if( ObjectUtils.equals( valueToSet, oldValue ) )
+        {
           return null;
+        }
 
         record.setValue( component, valueToSet );
       }
@@ -141,8 +149,10 @@ public class TupleResultCellModifier implements ICellModifier
     final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     final IGuiTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
     if( handler instanceof XsdBaseGuiTypeHandler )
-    return (XsdBaseGuiTypeHandler) handler;
-    
+    {
+      return (XsdBaseGuiTypeHandler) handler;
+    }
+
     return null;
   }
 }
