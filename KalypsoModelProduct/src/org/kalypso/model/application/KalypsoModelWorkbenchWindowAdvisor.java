@@ -42,22 +42,22 @@ package org.kalypso.model.application;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
-import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroPart;
 import org.eclipse.ui.intro.config.CustomizableIntroPart;
+import org.kalypso.contribs.eclipse.ui.ide.application.IDEWorkbenchWindowAdvisor;
 
 /**
- * @author albert
+ * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
+public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdvisor
 {
-  public KalypsoModelWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer )
+  public KalypsoModelWorkbenchWindowAdvisor( final KalypsoModelWorkbenchAdvisor advisor, final IWorkbenchWindowConfigurer configurer )
   {
-    super( configurer );
+    super( advisor, configurer );
   }
 
   @Override
