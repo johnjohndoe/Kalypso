@@ -49,6 +49,7 @@ import org.eclipse.ui.IPerspectiveFactory;
  * 
  * @author schlienger
  */
+@SuppressWarnings("restriction")
 public class ModelerPerspectiveFactory implements IPerspectiveFactory
 {
   public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory";

@@ -17,5 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
  org.kalypso.ui,
- org.eclipse.sdk
+ org.eclipse.sdk,
+ org.eclipse.ui.net,
+ org.kalypso.kalypso1d2d.pjt
 Eclipse-LazyStart: true

@@ -84,8 +84,10 @@ public class KalypsoModelApplication implements IApplication
       if( shell != null )
         shell.dispose();
     }
-    
-    final int returnCode = PlatformUI.createAndRunWorkbench( display, new KalypsoModelWorkbenchAdvisor() );
+
+    final boolean isExpert = Boolean.getBoolean( "kalypso.model.product.expert" );
+    final KalypsoModelWorkbenchAdvisor advisor = new KalypsoModelWorkbenchAdvisor( !isExpert );
+    final int returnCode = PlatformUI.createAndRunWorkbench( display, advisor );
     if( returnCode == PlatformUI.RETURN_RESTART )
       return IApplication.EXIT_RESTART;
 
