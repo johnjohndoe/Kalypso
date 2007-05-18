@@ -85,6 +85,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ColorLabelType;
+import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
@@ -105,7 +106,6 @@ import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.template.featureview.Extensioncontrol.Param;
-import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
@@ -143,13 +143,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * Constructs the FeatureComposite.
    * 
    * @param feature
-   *          If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
+   *            If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
    * @param selectionManager
-   *          A selection manager, which provides functionality for adding and removing a feature from an selection and
-   *          it handels the registration of listerners and so on. It has to implement IFeatureSelectionManager. You can
-   *          get a default one for the features here <strong>KalypsoCorePlugin.getDefault().getSelectionManager()</strong>.
+   *            A selection manager, which provides functionality for adding and removing a feature from an selection
+   *            and it handels the registration of listerners and so on. It has to implement IFeatureSelectionManager.
+   *            You can get a default one for the features here
+   *            <strong>KalypsoCorePlugin.getDefault().getSelectionManager()</strong>.
    * @param featureviewFactory
-   *          A factory which delivers feature-view-templates (e.g. FeatureviewHelper).
+   *            A factory which delivers feature-view-templates (e.g. FeatureviewHelper).
    */
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory featureviewFactory )
   {
@@ -192,7 +193,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IFeatureControl fc = (IFeatureControl) iter.next();
 
       if( !fc.isValid() )
+      {
         return false;
+      }
     }
 
     return true;
@@ -206,7 +209,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
+    {
       m_formToolkit.adapt( m_control, true, true );
+    }
 
     return m_control;
   }
@@ -239,7 +244,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     // einen bereits gesetzten Tooltip nicht überschreiben
     if( control.getToolTipText() == null )
+    {
       control.setToolTipText( controlType.getTooltip() );
+    }
 
     final JAXBElement< ? extends LayoutDataType> jaxLayoutData = controlType.getLayoutData();
     if( jaxLayoutData != null )
@@ -248,7 +255,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       control.setLayoutData( createLayoutData( layoutData ) );
     }
     else
+    {
       control.setLayoutData( new GridData() );
+    }
 
     return control;
   }
@@ -264,7 +273,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       // Layout setzen
       final LayoutType layoutType = compositeType.getLayout().getValue();
       if( layoutType != null )
+      {
         composite.setLayout( createLayout( layoutType ) );
+      }
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
@@ -274,16 +285,22 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       }
 
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
+      {
         createControl( composite, SWT.NONE, element.getValue() );
+      }
 
       return composite;
     }
 
     final IPropertyType ftp;
     if( controlType instanceof PropertyControlType )
+    {
       ftp = getProperty( feature, (PropertyControlType) controlType );
+    }
     else
+    {
       ftp = null;
+    }
 
     // control erzeugen!
     if( controlType instanceof LabelType )
@@ -294,11 +311,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final QName property = labelType.getProperty();
       if( property != null )
+      {
         applyAnnotation( label, property, feature );
+      }
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
+      {
         m_formToolkit.adapt( label, true, true );
+      }
 
       return label;
     }
@@ -319,7 +340,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
         /* If a toolkit is set, use it. */
         if( m_formToolkit != null )
+        {
           m_formToolkit.adapt( control, true, true );
+        }
 
         return control;
       }
@@ -333,7 +356,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
+      {
         m_formToolkit.adapt( control, true, true );
+      }
 
       return control;
     }
@@ -349,7 +374,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
+      {
         m_formToolkit.adapt( control, true, true );
+      }
 
       return control;
     }
@@ -483,7 +510,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final List<Param> param = extControl.getParam();
       final Properties parameters = new Properties();
       for( final Param controlParam : param )
+      {
         parameters.setProperty( controlParam.getName(), controlParam.getValue() );
+      }
 
       final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
       final IFeatureControl fc = controlFactory == null ? null : controlFactory.createFeatureControl( feature, ftp, parameters );
@@ -540,7 +569,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
+    {
       m_formToolkit.adapt( label, true, true );
+    }
 
     return label;
   }
@@ -678,7 +709,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           {
             final Method method = label.getClass().getMethod( "setText", new Class[] { String.class } ); //$NON-NLS-1$
             if( method != null )
+            {
               method.invoke( label, annotation.getLabel() );
+            }
           }
           catch( final Exception e )
           {
@@ -702,17 +735,21 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * the feature-template. Before, the propertyName was given as xs:string (only the local part), now it is a xs:QName.
    * So old entries are interpreted against the namespace of the featuretemplate.
    */
-  @SuppressWarnings("deprecation")//$NON-NLS-1$
+  @SuppressWarnings("deprecation")
   private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
   {
     if( property == null )
+    {
       return null;
+    }
 
     final IPropertyType propertyType = featureType.getProperty( property );
     if( propertyType != null )
+    {
       return propertyType;
+    }
 
-    if( property.getNamespaceURI().equals( FEATUREVIEW_NAMESPACE ) )
+    if( property.getNamespaceURI().equals( FeatureComposite.FEATUREVIEW_NAMESPACE ) )
     {
       final String localPart = property.getLocalPart();
       PluginUtilities.logToPlugin( KalypsoGisPlugin.getDefault(), IStatus.WARNING, "Still using localPart for property-name '" + localPart + "'. Use QName instead.", null ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -763,7 +800,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final Feature feature = getFeature();
     if( feature == null )
+    {
       return;
+    }
 
     final FeatureviewType type = m_featureviewFactory.get( feature.getFeatureType(), feature );
     types.add( type );
@@ -771,12 +810,16 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     for( final IFeatureControl control : m_featureControls )
     {
       if( control instanceof FeatureComposite )
+      {
         ((FeatureComposite) control).collectViewTypes( types );
+      }
       else if( control instanceof SubFeatureControl )
       {
         final IFeatureControl fc = ((SubFeatureControl) control).getFeatureControl();
         if( fc instanceof FeatureComposite )
+        {
           ((FeatureComposite) fc).collectViewTypes( types );
+        }
       }
     }
   }
@@ -796,9 +839,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * flag has only an effect, if the validator label is activated.
    * 
    * @param showOk
-   *          The flag, indicating, if the green hook should be displayed.
+   *            The flag, indicating, if the green hook should be displayed.
    */
-  public void setShowOk( boolean showOk )
+  public void setShowOk( final boolean showOk )
   {
     m_showOk = showOk;
   }

@@ -38,51 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.observation.phenomenon;
 
-import java.util.Comparator;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
- * Each component is a comparator of its own values. That is, if the tuple-result gets sorted by one columne (i.e.
- * component), the values of the records are sorted by this comparator.
- * 
- * @author Marc Schlienger
+ * @author Dirk Kuch
  */
-public interface IComponent extends Comparator<Object>
+public class FeaturePhenomenon implements IPhenomenon
 {
-  /**
-   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the corresponding dictionary entry.
-   */
-  public String getId( );
+  private final Feature m_feature;
+
+  public FeaturePhenomenon( final Feature feature )
+  {
+    m_feature = feature;
+  }
 
   /**
-   * User-fired name of this component.
+   * @see org.kalypso.observation.phenomenon.IPhenomenon#getDescription()
    */
-  public String getName( );
+  public String getDescription( )
+  {
+    return NamedFeatureHelper.getDescription( m_feature );
+  }
 
-  public String getDescription( );
+  /**
+   * @see org.kalypso.observation.phenomenon.IPhenomenon#getID()
+   */
+  public String getID( )
+  {
+    return m_feature.getId();
+  }
 
-  public String getUnit( );
+  /**
+   * @see org.kalypso.observation.phenomenon.IPhenomenon#getName()
+   */
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( m_feature );
+  }
 
-  public String getFrame( );
+  public Feature getFeature( )
+  {
+    return m_feature;
+  }
 
-  public QName getValueTypeName( );
-
-  public Object getDefaultValue( );
-
-  public IRestriction[] getRestrictions( );
-
-  public IPhenomenon getPhenomenon( );
-
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode( );
 }

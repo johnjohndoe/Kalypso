@@ -42,19 +42,22 @@ package org.kalypso.ogc.gml.om;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
+import org.kalypso.observation.phenomenon.FeaturePhenomenon;
+import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.result.AbstractComponent;
 import org.kalypso.ogc.swe.RepresentationType;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * A component wich was previously read from a feature.
  * 
  * @author schlienger
  */
-public class FeatureComponent implements IComponent
+public class FeatureComponent extends AbstractComponent
 {
   private final Feature m_itemDef;
 
@@ -63,10 +66,46 @@ public class FeatureComponent implements IComponent
     m_itemDef = itemDef;
   }
 
-  private Feature getPhenomenon( )
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
   {
-    final Feature phenomenon = FeatureHelper.resolveLink( m_itemDef, ObservationFeatureFactory.SWE_PROPERTY );
-    return phenomenon;
+    if( obj instanceof FeatureComponent )
+    {
+      return m_itemDef.equals( ((FeatureComponent) obj).m_itemDef );
+    }
+
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getDefaultValue()
+   */
+  public Object getDefaultValue( )
+  {
+    // REMARK: The ItemDefinition has no notion of default value, so for now we always return null.
+    // TODO: Maybe we can define a meaningful policy what to return as a default value (for example: first value of an
+    // enumeration)
+    return null;
+  }
+
+  public String getDescription( )
+  {
+    if( m_itemDef == null )
+    {
+      return "";
+    }
+    return NamedFeatureHelper.getDescription( m_itemDef );
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getFrame()
+   */
+  public String getFrame( )
+  {
+    return getRepresentationType().getFrame();
   }
 
   /**
@@ -82,20 +121,44 @@ public class FeatureComponent implements IComponent
     return m_itemDef.getId();
   }
 
-  public String getName( )
+  public Feature getItemDefinition( )
   {
-    final Feature phenomenon = getPhenomenon();
-    if( phenomenon == null )
-    {
-      return "<unknown phenomenon>";
-    }
-    return (String) FeatureHelper.getFirstProperty( phenomenon, ObservationFeatureFactory.GML_NAME );
+    return m_itemDef;
   }
 
-  public String getDescription( )
+  public String getName( )
   {
-    final Feature phenomenon = getPhenomenon();
-    return (String) FeatureHelper.getFirstProperty( phenomenon, ObservationFeatureFactory.GML_DESCRIPTION );
+    if( m_itemDef == null )
+    {
+      return "<no name>";
+    }
+    return NamedFeatureHelper.getName( m_itemDef );
+  }
+
+  public IPhenomenon getPhenomenon( )
+  {
+    final Object phenomProperty = m_itemDef.getProperty( ObservationFeatureFactory.SWE_PROPERTY );
+    if( phenomProperty instanceof String )
+    {
+      return new DictionaryPhenomenon( (String) phenomProperty, null, null );
+    }
+    else if( phenomProperty instanceof XLinkedFeature_Impl )
+    {
+      final String name = NamedFeatureHelper.getName( (Feature) phenomProperty );
+      final String description = NamedFeatureHelper.getDescription( (Feature) phenomProperty );
+      return new DictionaryPhenomenon( ((XLinkedFeature_Impl) phenomProperty).getHref(), name, description );
+    }
+    else if( phenomProperty instanceof Feature )
+    {
+      return new FeaturePhenomenon( (Feature) phenomProperty );
+    }
+
+    return null;
+  }
+
+  public RepresentationType getRepresentationType( )
+  {
+    return (RepresentationType) m_itemDef.getProperty( ObservationFeatureFactory.SWE_REPRESENTATION );
   }
 
   /**
@@ -107,73 +170,11 @@ public class FeatureComponent implements IComponent
   }
 
   /**
-   * @see org.kalypso.observation.result.IComponent#getFrame()
-   */
-  public String getFrame( )
-  {
-    return getRepresentationType().getFrame();
-  }
-
-  public RepresentationType getRepresentationType( )
-  {
-    return (RepresentationType) m_itemDef.getProperty( ObservationFeatureFactory.SWE_REPRESENTATION );
-  }
-
-  /**
    * @see org.kalypso.observation.result.IComponent#getValueTypeName()
    */
   public QName getValueTypeName( )
   {
     return getRepresentationType().getValueTypeName();
-  }
-
-  /**
-   * @see org.kalypso.observation.result.IComponent#getDefaultValue()
-   */
-  public Object getDefaultValue( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public Feature getItemDefinition( )
-  {
-    return m_itemDef;
-  }
-
-  /**
-   * @see org.kalypso.observation.result.IComponent#compare(java.lang.Object, java.lang.Object)
-   */
-  public int compare( final Object objFirst, final Object objSecond )
-  {
-    final XsdBaseTypeHandler handler = ObservationFeatureFactory.typeHanderForComponent( this );
-
-    if( objFirst == null && objSecond == null )
-    {
-      return 0; // equals
-    }
-    else if( objFirst == null )
-    {
-      return -1; // lesser
-    }
-    else if( objSecond == null )
-    {
-      return 1; // greater
-    }
-
-    return handler.compare( objFirst, objSecond );
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof FeatureComponent )
-      return m_itemDef.equals( ((FeatureComponent) obj).m_itemDef );
-
-    return false;
   }
 
   /**
@@ -183,5 +184,13 @@ public class FeatureComponent implements IComponent
   public int hashCode( )
   {
     return m_itemDef.hashCode();
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getRestrictions()
+   */
+  public IRestriction[] getRestrictions( )
+  {
+    return getRepresentationType().getRestrictions();
   }
 }

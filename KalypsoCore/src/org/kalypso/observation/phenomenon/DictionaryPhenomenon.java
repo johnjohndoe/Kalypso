@@ -38,17 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation;
+package org.kalypso.observation.phenomenon;
 
 /**
- * @author Gernot Belger
- * @author Thomas Jung
+ * An {@link IPhenomenon} implementation based on a dictionary entry.
+ * 
+ * @author dirk Kuch
  */
-public interface IPhenomenon
+public class DictionaryPhenomenon implements IPhenomenon
 {
-  public String getID( );
+  private final String m_urn;
 
-  public String getName( );
+  private final String m_name;
 
-  public String getDescription( );
+  private final String m_description;
+
+  public DictionaryPhenomenon( final String urn, final String name, final String description )
+  {
+    m_urn = urn;
+    m_name = name;
+    m_description = description;
+  }
+
+  /**
+   * @see org.kalypso.observation.IPhenomenon#getDescription()
+   */
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  /**
+   * @see org.kalypso.observation.IPhenomenon#getID()
+   */
+  public String getID( )
+  {
+    throw new UnsupportedOperationException( "TODO Load dict-feature and retrieve data from it" );
+  }
+
+  /**
+   * @see org.kalypso.observation.IPhenomenon#getName()
+   */
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  public String getDictionaryUrn( )
+  {
+    return m_urn;
+  }
+
 }

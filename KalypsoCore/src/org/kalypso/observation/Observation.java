@@ -43,6 +43,7 @@ package org.kalypso.observation;
 import java.util.List;
 
 import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
  * @author schlienger

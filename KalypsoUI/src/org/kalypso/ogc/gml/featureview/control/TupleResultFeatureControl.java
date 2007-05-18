@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -69,7 +70,8 @@ import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.template.featureview.TupleResult.ColumnDescriptor;
+import org.kalypso.template.featureview.ColumnDescriptor;
+import org.kalypso.template.featureview.ColumnTypeDescriptor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -81,7 +83,11 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private final Map<String, ColumnDescriptor> m_columnDescriptors = new HashMap<String, ColumnDescriptor>();
 
+  private final Map<String, ColumnTypeDescriptor> m_columnTypeDescriptors = new HashMap<String, ColumnTypeDescriptor>();
+
   private DefaultTableViewer m_viewer;
+
+  private ViewerFilter m_viewerFilter;
 
   private TupleResultContentProvider m_tupleResultContentProvider;
 
@@ -120,10 +126,15 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( m_columnDescriptors );
+    m_tupleResultContentProvider = new TupleResultContentProvider( m_columnDescriptors, m_columnTypeDescriptors );
     m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_columnDescriptors );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_columnDescriptors, m_columnTypeDescriptors );
     m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
+
+    if( m_viewerFilter != null )
+    {
+      m_viewer.addFilter( m_viewerFilter );
+    }
 
     final TupleResultCellModifier tupleResultCellModifier = new TupleResultCellModifier( m_tupleResultContentProvider );
 
@@ -135,7 +146,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       {
         final TupleResult result = tupleResultContentProvider.getResult();
         if( result != null )
+        {
           return result.createRecord();
+        }
 
         return null;
       }
@@ -201,13 +214,17 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final Feature feature = getFeature();
 
     if( m_tupleResult != null )
+    {
       m_tupleResult.removeChangeListener( this );
+    }
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
     m_tupleResult = obs == null ? null : obs.getResult();
 
     if( m_tupleResult != null )
+    {
       m_tupleResult.addChangeListener( this );
+    }
 
     m_viewer.setInput( m_tupleResult );
   }
@@ -249,7 +266,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
    *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
-  public void recordsChanged( final IRecord[] records, TYPE type )
+  public void recordsChanged( final IRecord[] records, final TYPE type )
   {
     fireChanges( false );
     // fireModified();
@@ -293,7 +310,25 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public void setColumnDescriptors( final ColumnDescriptor[] cd )
   {
     for( final ColumnDescriptor descriptor : cd )
+    {
       m_columnDescriptors.put( descriptor.getComponent(), descriptor );
+    }
   }
 
+  /** dto. for feature type comparement */
+  public void setColumnTypeDescriptor( final ColumnTypeDescriptor[] cd )
+  {
+    for( final ColumnTypeDescriptor descr : cd )
+    {
+      m_columnTypeDescriptors.put( descr.getComponent(), descr );
+    }
+  }
+
+  /**
+   * must be callen before createControl() is callen!
+   */
+  public void setViewerFilter( final ViewerFilter filter )
+  {
+    m_viewerFilter = filter;
+  }
 }
