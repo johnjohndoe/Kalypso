@@ -97,10 +97,10 @@ public class WMSCapabilitiesHelper
       inputStream = getter.getResult();
       final Reader urlReader = new InputStreamReader( inputStream );
 
-      // Uncomment following lines to dump capabilities
-      // final String capabilitiesAsString = IOUtils.toString( urlReader );
-      // final StringReader reader = new StringReader( capabilitiesAsString );
-      // System.out.println( capabilitiesAsString );
+// // Uncomment following lines to dump capabilities
+// final String capabilitiesAsString = IOUtils.toString( urlReader );
+// System.out.println( capabilitiesAsString );
+// final StringReader reader = new StringReader( capabilitiesAsString );
 
       final Reader reader = urlReader;
 

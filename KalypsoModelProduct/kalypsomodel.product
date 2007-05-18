@@ -164,6 +164,7 @@
       <plugin id="org.eclipse.ui.navigator.nl1" fragment="true"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.navigator.resources.nl1" fragment="true"/>
+      <plugin id="org.eclipse.ui.net"/>
       <plugin id="org.eclipse.ui.nl1" fragment="true"/>
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.views.nl1" fragment="true"/>

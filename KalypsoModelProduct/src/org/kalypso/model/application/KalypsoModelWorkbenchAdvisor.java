@@ -47,27 +47,37 @@ import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.kalypso.contribs.eclipse.ui.ide.application.IDEWorkbenchAdvisor;
-import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
 /**
- * @author albert
+ * @author Holger Albert
  */
 @SuppressWarnings("restriction")
 public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
 {
+  private final boolean m_restrictedAccess;
+
+  /**
+   * @param restrictedAccess See {@link KalypsoModelWorkbenchWindowAdvisor#KalypsoModelWorkbenchWindowAdvisor(KalypsoModelWorkbenchAdvisor, IWorkbenchWindowConfigurer, boolean)}
+   */
+  public KalypsoModelWorkbenchAdvisor( final boolean restrictedAccess )
+  {
+    m_restrictedAccess = restrictedAccess;
+  }
+
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#getInitialWindowPerspectiveId()
    */
   @Override
   public String getInitialWindowPerspectiveId( )
   {
-    return ModelerPerspectiveFactory.ID;
+    return Perspective.ID;
   }
 
   @Override
   public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer )
   {
-    return new KalypsoModelWorkbenchWindowAdvisor( this, configurer );
+    return new KalypsoModelWorkbenchWindowAdvisor( this, configurer, m_restrictedAccess );
   }
 
   /**
