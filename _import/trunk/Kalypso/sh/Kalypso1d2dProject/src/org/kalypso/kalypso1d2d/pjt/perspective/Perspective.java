@@ -4,6 +4,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
+import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
@@ -12,16 +13,20 @@ import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.views.map.MapView;
 
-
+// TODO: move the perspective to the KalypsoModelProduct
+@SuppressWarnings("restriction")
 public class Perspective implements IPerspectiveFactory
 {
-
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
 
   public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView";
 
   public void createInitialLayout( final IPageLayout layout )
   {
+    // HACK: make sure that all action sets are initially disabled for this perspective
+    final PageLayout pl = (PageLayout) layout;
+    pl.getActionSets().clear();
+
     // Get the editor area.
     final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );

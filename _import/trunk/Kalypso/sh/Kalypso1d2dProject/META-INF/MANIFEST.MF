@@ -25,7 +25,8 @@ Require-Bundle: org.junit4,
  org.eclipse.ui.navigator.resources,
  org.kalypso.simulation.ui
 Eclipse-LazyStart: true
-Export-Package: org.kalypso.ui.wizards.imports,
+Export-Package: org.kalypso.kalypso1d2d.pjt.perspective,
+ org.kalypso.ui.wizards.imports,
  org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,
  org.kalypso.ui.wizards.imports.observation,

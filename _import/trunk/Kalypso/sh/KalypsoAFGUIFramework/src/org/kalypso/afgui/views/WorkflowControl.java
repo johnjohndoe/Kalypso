@@ -325,7 +325,7 @@ public class WorkflowControl implements IWorklistChangeListener
       if( m_selectionFromMemento != null && workflow != null )
       {
         final TreePath findPart = findPart( m_selectionFromMemento, workflow );
-        if( findPart != null && findPart.getParentPath() != null )
+        if( findPart != null && findPart.getParentPath() != null && findPart.getParentPath().getSegmentCount() != 0 )
         {
           final TreeSelection newSelection = new TreeSelection( findPart.getParentPath() );
           m_treeViewer.setSelection( newSelection, true );
