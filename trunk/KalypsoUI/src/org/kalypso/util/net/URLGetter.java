@@ -50,6 +50,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -58,11 +59,11 @@ public class URLGetter implements ICoreRunnableWithProgress
 {
   public static URLGetter createURLGetter( final URL url, final int timeOut )
   {
-    final HttpClient client = KalypsoGisPlugin.getDefault().createConfiguredHttpClient( timeOut );
+    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut );
 
     return new URLGetter( client, url );
   }
-  
+
   private InputStream m_result = null;
 
   /** Will be returned by the execute method */
@@ -108,7 +109,7 @@ public class URLGetter implements ICoreRunnableWithProgress
     final HttpMethod method = new GetMethod( urlAsString );
     // do not forget the next line!
     method.setDoAuthentication( true );
-    
+
     final Thread thread = new Thread()
     {
       /**
@@ -126,7 +127,7 @@ public class URLGetter implements ICoreRunnableWithProgress
         catch( final IOException e )
         {
           final IStatus status;
-          
+
           String responseBodyAsString = "Response Body not available.";
           try
           {
@@ -138,7 +139,7 @@ public class URLGetter implements ICoreRunnableWithProgress
             KalypsoGisPlugin.getDefault().getLog().log( status2 );
           }
 
-          status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Zugriff auf: " + urlAsString + "\n" + responseBodyAsString , e );
+          status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Zugriff auf: " + urlAsString + "\n" + responseBodyAsString, e );
           setStatus( status );
         }
       }
@@ -158,7 +159,7 @@ public class URLGetter implements ICoreRunnableWithProgress
         // should never happen, ignore
         e1.printStackTrace();
       }
-      
+
       String statusText = "";
       try
       {
@@ -168,14 +169,14 @@ public class URLGetter implements ICoreRunnableWithProgress
       {
         statusText = "Verbinde ...";
       }
-      
+
       monitor.subTask( statusText );
       monitor.internalWorked( IProgressMonitor.UNKNOWN );
       if( monitor.isCanceled() )
       {
         // TODO: this does not stop the thread!
         thread.interrupt();
-        
+
         monitor.done();
         return Status.CANCEL_STATUS;
       }
