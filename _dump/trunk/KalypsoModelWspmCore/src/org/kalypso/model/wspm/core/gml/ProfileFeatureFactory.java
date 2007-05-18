@@ -67,9 +67,9 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.IPhenomenon;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.Phenomenon;
+import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -357,13 +357,13 @@ public class ProfileFeatureFactory implements IWspmConstants
       if( profil.getPropertyProviderFor( pp ) != null )
       {
         // TODO: Kim muss weg, besser wären zwei verschiedene Rauheits-Componenten bzw. Point-Properties
-//        if( pp == IWspmConstants.POINT_PROPERTY_RAUHEIT )
-//        {
-//          if( "ks".equals( component.getUnit() ) )
-//            profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KS );
-//          else
-//            profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KST );
-//        }
+// if( pp == IWspmConstants.POINT_PROPERTY_RAUHEIT )
+// {
+// if( "ks".equals( component.getUnit() ) )
+// profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KS );
+// else
+// profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KST );
+// }
 
         profil.addPointProperty( pp );
       }
