@@ -44,8 +44,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.MissingResourceException;
@@ -58,9 +56,6 @@ import java.util.logging.Logger;
 
 import javax.swing.UIManager;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -368,7 +363,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       ex.printStackTrace();
     }
 
-    registerGuiTypeHandler(  );
+    registerGuiTypeHandler();
     registerVirtualFeatureTypeHandler();
 
     try
@@ -391,11 +386,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     m_mainConf.clear();
 
     configure( m_mainConf );
-    configureProxy();
     configurePool();
     configureServiceProxyFactory( m_mainConf );
 
-    // muss NACH dem proxy und dem streamHandler konfiguriert werden!
+    // muss NACH dem streamHandler konfiguriert werden!
     configureDefaultStyleFactory();
 
     deleteTempDirs();
@@ -567,7 +561,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_tsRepositoryContainer;
   }
 
-  public void registerGuiTypeHandler(  )
+  public void registerGuiTypeHandler( )
   {
     try
     {
@@ -607,63 +601,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return 0x1;
   }
 
-  private void configureProxy( )
-  {
-    System.setProperty( "proxySet", getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USE ) );
-    System.setProperty( "proxyHost", getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_HOST ) );
-    System.setProperty( "proxyPort", getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PORT ) );
-
-    Authenticator.setDefault( new Authenticator()
-    {
-      /**
-       * @see java.net.Authenticator#getPasswordAuthentication()
-       */
-      @Override
-      protected PasswordAuthentication getPasswordAuthentication( )
-      {
-        return new PasswordAuthentication( getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER ), getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
-      }
-    } );
-  }
-
-  /**
-   * Creates a configured http client. The configuration includes setting of proxy settings.
-   * <p>
-   * IMPORTANT: to use proxy-authentication, you must use the setDoAuthetication Mehtod of the HttpMehthod you are going
-   * to use.
-   * </p>
-   * <p>
-   * Example: <code>
-   *    final HttpMethod method = new GetMethod( m_url.toString() );
-   *    method.setDoAuthentication( true );
-   * </code>
-   * </p>
-   */
-  public HttpClient createConfiguredHttpClient( final int timeout )
-  {
-    final HttpClient client = new HttpClient();
-    client.getState().setAuthenticationPreemptive( true );
-
-    if( Boolean.getBoolean( "proxySet" ) )
-    {
-      final String proxyHost = System.getProperty( "proxyHost" );
-      final String proxyPort = System.getProperty( "proxyPort" );
-      final String proxyUser = getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER );
-
-      // todo: this always gets the empty string, but proxy connection is working anyways
-      // what to do?
-      final String proxyPwd = getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS );
-
-      final Credentials defaultcreds = new UsernamePasswordCredentials( proxyUser, proxyPwd );
-
-      client.getState().setProxyCredentials( null, proxyHost, defaultcreds );
-      client.getHostConfiguration().setProxy( proxyHost, Integer.parseInt( proxyPort ) );
-    }
-
-    client.setTimeout( timeout );
-    return client;
-  }
-
   /**
    * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
    */
@@ -679,12 +616,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       {
         e.printStackTrace();
       }
-    }
-    if( event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_HOST ) || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PASS )
-        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PORT ) || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USER )
-        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USE ) )
-    {
-      configureProxy();
     }
   }
 
