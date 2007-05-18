@@ -56,7 +56,7 @@ public class WspmSobekUrlCatalog extends AbstractUrlCatalog implements IWspmSobe
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
    */
   @Override
-  protected void fillCatalog( Class myClass, Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( Class< ? > myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( NS_WSPM_SOBEK, myClass.getResource( "wspmSobekProj.xsd" ) );
     prefixes.put( NS_WSPM_SOBEK, "sobek" );
