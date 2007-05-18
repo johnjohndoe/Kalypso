@@ -536,39 +536,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
           buffer.append( " " );
         }
 
-        String bufferValue = null;
-
-        Object value = record.getValue( comp );
-        if( value == null )
-        {
-          value = "null";
-        }
-        // REMARK URLEncoder: encoding of xml file is not known - at this point we assume target encoding as "UTF-8".
-        // Windows Eclipse often creates Cp-1252 encoded files
-        try
-        {
-          // FIXME implement other type handlers over an fabrication method
-          if( handler instanceof XsdBaseTypeHandlerString )
-          {
-            final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-            bufferValue = myHandler.convertToXMLString( URLEncoder.encode( (String) value, "UTF-8" ) );
-          }
-          else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
-          {
-            final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-            final XMLGregorianCalendar cal = (XMLGregorianCalendar) value;
-            bufferValue = URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" );
-          }
-          else
-          {
-            bufferValue = handler.convertToXMLString( value );
-          }
-        }
-        catch( final UnsupportedEncodingException e )
-        {
-          e.printStackTrace();
-        }
-
+        final Object value = record.getValue( comp );
+        final String bufferValue = recordValueToString( value, handler );
         buffer.append( bufferValue );
       }
 
@@ -576,6 +545,38 @@ public class ObservationFeatureFactory implements IAdapterFactory
     }
 
     return XMLUtilities.encapsulateInCDATA( buffer.toString() );
+  }
+
+  private static String recordValueToString( final Object value, final XsdBaseTypeHandler handler )
+  {
+    if( value == null )
+      return "null";
+
+    // REMARK URLEncoder: encoding of xml file is not known - at this point we assume target encoding as "UTF-8".
+    // Windows Eclipse often creates Cp-1252 encoded files
+    try
+    {
+      // FIXME implement other type handlers over an fabrication method
+      if( handler instanceof XsdBaseTypeHandlerString )
+      {
+        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+        return myHandler.convertToXMLString( URLEncoder.encode( (String) value, "UTF-8" ) );
+      }
+
+      if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+      {
+        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+        final XMLGregorianCalendar cal = (XMLGregorianCalendar) value;
+        return URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" );
+      }
+
+      return handler.convertToXMLString( value );
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   /**
