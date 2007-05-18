@@ -1,4 +1,4 @@
-!Last change:  JAJ  15 May 2007   10:32 pm
+!Last change:  EF   16 May 2007    4:24 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -186,7 +186,6 @@ init3: DO i = 1, 2
 ENDDO init3
 
 
-
 !initialice gravitation factor for unit system
 IF (GRAV .LT. 32.)  THEN
   grav = GRAV
@@ -199,7 +198,7 @@ ENDIF
 !C-
 
 !Use no Differentiation by parts
-byparts = 2
+byparts = 1
 !byparts = 1: No differentiation by parts
 !byparts = 2: Apply Differentiation by parts
 
@@ -1445,35 +1444,17 @@ RETURN
 !*-
 !*...... Special case for junction element
 !*-
- 2000 CONTINUE
+
+!2000 CONTINUE
 !cipk dec00
 !C-
 !C...... Special cases for control structures or junction sources
 !C-
-IF(IMAT(NN) .GT. 903) THEN
-  !init A(h)
-  ah(n1) = 0.0
-  ah(n3) = 0.0
-  !init Q(h)
-  qh(n1) = 0.0
-  qh(n3) = 0.0
-  do k=0, 12
-    !A(h)
-    ah(n1) = ah(n1) + apoly(n1,k) * vel(3,n1)**(k)
-    ah(n3) = ah(n3) + apoly(n3,k) * vel(3,n3)**(k)
-  end do
-  !init dA(h)/dh
-  dahdh(n1) = 0.0
-  dahdh(n3) = 0.0
-  do k=1,12
-    !dA(h)/dh
-    dahdh(n1) = dahdh(n1) + (k) * apoly(n1,k) * h1**(k-1)
-    dahdh(n3) = dahdh(n3) + (k) * apoly(n3,k) * h3**(k-1)
-  end do
 
-  CALL CSTRC(NN)
-  GO TO 1320
-ENDIF
+!IF(IMAT(NN) .GT. 903) THEN
+!  CALL CSTRC(NN)
+!  GO TO 1320
+!ENDIF
 
 !*-
 !*...... Special case for junction element

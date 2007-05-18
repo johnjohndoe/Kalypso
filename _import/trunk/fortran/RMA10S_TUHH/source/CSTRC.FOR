@@ -1,4 +1,4 @@
-C     Last change:  EF    2 May 2007   11:12 am
+C     Last change:  EF   18 May 2007    2:59 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
@@ -25,6 +25,32 @@ C-
         HCUT=0.003
       ENDIF
       NCN=NCORN(NN)
+
+      if (width(nop(nn,1))==0) then
+      !init A(h)
+      ah(nop(nn,1)) = 0.0
+      ah(nop(nn,3)) = 0.0
+      !init Q(h)
+      qh(nop(nn,1)) = 0.0
+      qh(nop(nn,3)) = 0.0
+      do k=0, 12
+        !A(h)
+        ah(nop(nn,1)) = ah(nop(nn,1)) + apoly(nop(nn,1),k) *
+     +                  vel(3,nop(nn,1))**(k)
+        ah(nop(nn,3)) = ah(nop(nn,3)) + apoly(nop(nn,3),k) *
+     +                  vel(3,nop(nn,3))**(k)
+      end do
+      !init dA(h)/dh
+      dahdh(nop(nn,1)) = 0.0
+      dahdh(nop(nn,3)) = 0.0
+      do k=1,12
+        !dA(h)/dh
+        dahdh(nop(nn,1)) = dahdh(nop(nn,1)) + (k) * apoly(nop(nn,1),k) *
+     +                     vel(3,nop(nn,1))**(k-1)
+        dahdh(nop(nn,3)) = dahdh(nop(nn,3)) + (k) * apoly(nop(nn,3),k) *
+     +                     vel(3,nop(nn,3))**(k-1)
+      end do
+      endif
 
 c     form ave velocity
       DO N=1,NCN
@@ -81,14 +107,10 @@ c      allow for mid-side node
 c
 c      now do the middle of the element
 c
-      !EFa, Apr07, if-clause
-      if (nop(nn,2).gt.0) then
         F(5)=U(2)-(U(3)+U(1))/2.
         ESTIFM(5,1)=0.5
         ESTIFM(5,9)=0.5
         ESTIFM(5,5)=-1.0
-      end if
-      !-
 C-
 C...... The other is some kind elevation relationship
 C-
@@ -462,7 +484,7 @@ c
           if (width(n1)==0) then
             Q=(U(1)*VEL(3,N1)+U(3)*VEL(3,N2))/2.
           else
-            Q=(u(1)*ah(n1)+u(3)*ah(n2))/2.
+            Q=(U(1)*VEL(3,N1)+U(3)*VEL(3,N2))/2
           end if
      
           
@@ -471,11 +493,11 @@ c
 c      Derivative with respect to u1 and u2
 c
           if (width(n1)==0) then
-            ESTIFM(NB,NA)=-VEL(3,N1)/2.
-            ESTIFM(NB,NB)=-VEL(3,N2)/2.
-          else
             ESTIFM(NB,NA)=-ah(n1)/2.
             ESTIFM(NB,NB)=-ah(n2)/2.
+          else
+            ESTIFM(NB,NA)=-VEL(3,N1)/2.
+            ESTIFM(NB,NB)=-VEL(3,N2)/2.
           end if
 
 CIPK JAN06 ADD QFACT1
@@ -490,12 +512,8 @@ C              ESTIFM(NB,NA+2)=ESTIFM(NB,NA+2)+1.E6
 C              ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+1.E6
               VEL(1,NOP(NN,1))=0.
               VEL(2,NOP(NN,1))=0.
-              !EFa Apr07, if-clause
-              if (nop(nn,2).gt.0) then
-                VEL(1,NOP(NN,2))=0.
-                VEL(2,NOP(NN,2))=0.
-              end if
-              !-
+              VEL(1,NOP(NN,2))=0.
+              VEL(2,NOP(NN,2))=0.
               VEL(1,NOP(NN,3))=0.
               VEL(2,NOP(NN,3))=0.
               ESTIFM(1,1)=1.E6              
@@ -509,11 +527,11 @@ c
 c      Derivative with respect to h1 and h2  (first term)
 c
           if (width(n1)==0) then
-            ESTIFM(NB,NA+2)=-U(1)/2.
-            ESTIFM(NB,NB+2)=-U(3)/2.
-          else
             ESTIFM(NB,NA+2)=-U(1)*dahdh(n1)/2.
             ESTIFM(NB,NB+2)=-U(3)*dahdh(n2)/2.
+          else
+            ESTIFM(NB,NA+2)=-U(1)/2.
+            ESTIFM(NB,NB+2)=-U(3)/2.
           end if
 
 c
