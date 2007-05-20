@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.base.ISzenarioSourceProvider;
 import de.renew.workflow.cases.ICaseDataProvider;
@@ -50,9 +51,9 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
   public SzenarioSourceProvider( final ActiveWorkContext<Scenario> context )
   {
     activeWorkContext = context;
-    activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
-    
     m_dataProvider.setCurrent( getSzenarioFolder() );
+
+    activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
   }
 
   /**
@@ -105,7 +106,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider implements IS
     return activeWorkContext.getCurrentCaseFolder();
   }
 
-  private ICaseDataProvider getDataProvider( )
+  private ICaseDataProvider<IFeatureWrapper2> getDataProvider( )
   {
     return m_dataProvider;
   }

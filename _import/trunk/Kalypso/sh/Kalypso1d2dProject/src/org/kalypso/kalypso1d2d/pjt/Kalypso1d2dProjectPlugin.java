@@ -53,6 +53,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+    
+    startSzenarioSourceProvider();
   }
 
   /**
@@ -61,20 +63,9 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   @Override
   public void stop( BundleContext context ) throws Exception
   {
-    plugin = null;
+    stopSzenarioSourceProvider();
 
-    if( PlatformUI.isWorkbenchRunning() )
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      if( handlerService != null )
-      {
-        handlerService.removeSourceProvider( m_szenarioSourceProvider );
-        final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
-        activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
-        activeWorkContext.setActiveProject( null );
-      }
-    }
+    plugin = null;
 
     super.stop( context );
   }
@@ -110,7 +101,12 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     return getDefault().getImageRegistry().get( key );
   }
 
-  public ICaseDataProvider getDataProvider( )
+  public ICaseDataProvider<Scenario> getDataProvider( )
+  {
+    return (ICaseDataProvider<Scenario>) m_szenarioSourceProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+  }
+
+  private void startSzenarioSourceProvider( )
   {
     if( m_szenarioSourceProvider == null )
     {
@@ -122,7 +118,22 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       handlerService.addSourceProvider( m_szenarioSourceProvider );
       activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
-
-    return (ICaseDataProvider) m_szenarioSourceProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
   }
+  
+  private void stopSzenarioSourceProvider( )
+  {
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      if( handlerService != null )
+      {
+        handlerService.removeSourceProvider( m_szenarioSourceProvider );
+        final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+        activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
+        activeWorkContext.setActiveProject( null );
+      }
+    }
+  }
+
 }

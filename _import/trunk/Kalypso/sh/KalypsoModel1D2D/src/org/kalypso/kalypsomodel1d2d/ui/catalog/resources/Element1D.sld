@@ -5,20 +5,19 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>Element1D</Name>
-	<Title>Element1D</Title>
+	<Title>Stil für 1D-Elemente</Title>
+	<Abstract>Stil für 1D-Elemente</Abstract>
 	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D</FeatureTypeName>
 	<Rule>
 		<Name>Element1D</Name>
-		<Title>1D FE-Element</Title>
-		<Abstract>default</Abstract>
-		
+		<Title>1D Element</Title>
+		<Abstract>Eindimensionales Finites Element</Abstract>
 		<ogc:Filter>
 			<ogc:PropertyIsEqualTo>
 				<ogc:PropertyName>wb1d2d:isJunctionElement</ogc:PropertyName>
 				<ogc:Literal>false</ogc:Literal>
 			</ogc:PropertyIsEqualTo>
         </ogc:Filter>
-		
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<LineSymbolizer>
@@ -36,9 +35,9 @@
 	</Rule>
 	
 	<Rule>
-		<Name>Element1D</Name>
-		<Title>1D FE-Element</Title>
-		<Abstract>default</Abstract>
+		<Name>Junction1D</Name>
+		<Title>1D Junction</Title>
+		<Abstract>Eindimensionales Verknüpfungselement</Abstract>
 		
 		<ogc:Filter>
 			<ogc:PropertyIsEqualTo>

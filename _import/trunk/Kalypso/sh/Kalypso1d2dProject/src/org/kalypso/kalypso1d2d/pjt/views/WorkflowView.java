@@ -14,7 +14,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
 
-import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.ITaskExecutor;
 import de.renew.workflow.connector.TaskExecutionListener;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -64,7 +63,7 @@ public class WorkflowView extends ViewPart
     handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleContextChanged( final CaseHandlingProjectNature newProject, final Case scenario )
+  protected void handleContextChanged( final CaseHandlingProjectNature<Scenario> newProject, final Scenario scenario )
   {
     if( scenario != null )
     {

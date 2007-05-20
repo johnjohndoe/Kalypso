@@ -83,6 +83,7 @@ public class TaskExecutionListener implements IExecutionListener
   public TaskExecutionListener( final ICommandService commandService )
   {
     commandService.addExecutionListener( this );
+    // TODO when does this listener evers gets removed?
     m_commandService = commandService;
   }
 

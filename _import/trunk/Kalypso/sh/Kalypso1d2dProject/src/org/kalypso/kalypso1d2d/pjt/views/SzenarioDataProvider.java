@@ -60,7 +60,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private static final Map<Class, String> LOCATION_MAP = new HashMap<Class, String>();
+  private static final Map<Class< ? extends IFeatureWrapper2>, String> LOCATION_MAP = new HashMap<Class< ? extends IFeatureWrapper2>, String>();
 
   private static final String MODELS_FOLDER = "models";
 
@@ -138,7 +138,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private Map<Class, KeyPoolListener> m_keyMap = new HashMap<Class, KeyPoolListener>();
+  private Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
 
   public synchronized void setCurrent( final IFolder szenarioFolder )
   {
@@ -152,9 +152,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       th.printStackTrace();
     }
 
-    for( final Map.Entry<Class, String> entry : LOCATION_MAP.entrySet() )
+    for( final Map.Entry<Class< ? extends IFeatureWrapper2>, String> entry : LOCATION_MAP.entrySet() )
     {
-      final Class wrapperClass = entry.getKey();
+      final Class< ? extends IFeatureWrapper2> wrapperClass = entry.getKey();
       final String gmlLocation = entry.getValue();
 
       resetKeyForProject( szenarioFolder, wrapperClass, gmlLocation );
@@ -186,9 +186,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * Resets the pool-key for the given folder.
    * 
    * @param szenarioFolder
-   *          If <code>null</code>, just releases the existing key.
+   *            If <code>null</code>, just releases the existing key.
    */
-  private synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class wrapperClass, final String gmlLocation )
+  private synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IFeatureWrapper2> wrapperClass, final String gmlLocation )
   {
     IPoolableObjectType newKey = null;
 
@@ -289,7 +289,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
   public boolean isDirty( )
   {
-    for( final Class<IFeatureWrapper2> modelClass : m_keyMap.keySet() )
+    for( final Class< ? extends IFeatureWrapper2> modelClass : m_keyMap.keySet() )
     {
       if( isDirty( modelClass ) )
         return true;
@@ -362,7 +362,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     try
     {
       monitor.beginTask( "Modell speichern", m_keyMap.size() * 100 );
-      for( final Class<IFeatureWrapper2> modelClass : m_keyMap.keySet() )
+      for( final Class< ? extends IFeatureWrapper2> modelClass : m_keyMap.keySet() )
       {
         saveModel( modelClass, new SubProgressMonitor( monitor, 100 ) );
       }

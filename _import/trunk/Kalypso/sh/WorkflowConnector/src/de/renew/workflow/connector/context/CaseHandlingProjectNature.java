@@ -59,6 +59,9 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  * This project nature adds the possibility to handle cases inside the project and keep information about the current
  * workflow state of cases
  * 
+ * TODO: this is a nature which gets instantiated via extension point stuff. Is it really sensefull to have template
+ * parameters for that class?. The type of T is never decided on compile time....
+ * 
  * @author Stefan Kurzbach
  */
 public abstract class CaseHandlingProjectNature<T extends Case> implements IProjectNature, ICaseManagerListener<T>
