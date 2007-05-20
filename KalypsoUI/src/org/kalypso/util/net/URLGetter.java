@@ -120,7 +120,6 @@ public class URLGetter implements ICoreRunnableWithProgress
       {
         try
         {
-          // Thread.sleep( 10000 );
           getHttpClient().executeMethod( method );
           setResult( method.getResponseBodyAsStream() );
         }
@@ -145,8 +144,8 @@ public class URLGetter implements ICoreRunnableWithProgress
       }
     };
 
-    monitor.beginTask( "Verbinde zu " + urlAsString, 100 );
-    monitor.subTask( "Starte Verbindung..." );
+    monitor.beginTask( urlAsString, IProgressMonitor.UNKNOWN );
+    monitor.subTask( " - Initialisiere Verbindung..." );
     thread.start();
     while( thread.isAlive() )
     {
@@ -167,11 +166,11 @@ public class URLGetter implements ICoreRunnableWithProgress
       }
       catch( final Exception e )
       {
-        statusText = "Verbinde ...";
+        statusText = " - Verbindung wird aufgebaut ...";
       }
 
       monitor.subTask( statusText );
-      monitor.internalWorked( IProgressMonitor.UNKNOWN );
+      monitor.worked( 1 );
       if( monitor.isCanceled() )
       {
         // TODO: this does not stop the thread!

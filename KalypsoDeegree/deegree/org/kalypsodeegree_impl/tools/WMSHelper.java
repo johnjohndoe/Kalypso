@@ -5,9 +5,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -87,14 +87,14 @@ public class WMSHelper
    * client must choose one to transform it to the local coordiante system
    * 
    * @param localCRS
-   *          the local spatial reference system
+   *            the local spatial reference system
    * @param capabilities
-   *          the capabilites document of the web map service
+   *            the capabilites document of the web map service
    * @param layerNames
-   *          the layers that have to be matched to the local srs
+   *            the layers that have to be matched to the local srs
    * @return result an array of possible coordiante systems
    */
-  public static CS_CoordinateSystem[] negotiateCRS( final CS_CoordinateSystem localCRS, final WMSCapabilities capabilities, final String[] layerNames ) throws Exception
+  public static CS_CoordinateSystem[] negotiateCRS( final CS_CoordinateSystem localCRS, final WMSCapabilities capabilities, final String[] layerNames ) throws RemoteException 
   {
     final Layer topLayer = capabilities.getCapability().getLayer();
     final CS_CoordinateSystem crs = matchCrs( topLayer, layerNames, localCRS );
@@ -103,17 +103,14 @@ public class WMSHelper
     // get crs from top layer
     final String[] topLayerSRS = topLayer.getSrs();
     final List<CS_CoordinateSystem> result = new ArrayList<CS_CoordinateSystem>();
-    try
-    // try to create all coordinate systems
+    for( int i = 0; i < topLayerSRS.length; i++ )
     {
-      for( int i = 0; i < topLayerSRS.length; i++ )
-        result.add( ConvenienceCSFactory.getInstance().getOGCCSByName( topLayerSRS[i] ) );
+      final String srsName = topLayerSRS[i];
+      final CS_CoordinateSystem srsByName = ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+      if( srsByName != null )
+        result.add( srsByName );
     }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+
     return result.toArray( new CS_CoordinateSystem[result.size()] );
   }
 
@@ -121,23 +118,22 @@ public class WMSHelper
    * This method tries to match the local coordiante system to a given layer selection.
    * 
    * @param topLayer
-   *          the top layer of the layer structur of a web map service
+   *            the top layer of the layer structur of a web map service
    * @param layerSelection
-   *          layers to be matched
+   *            layers to be matched
    * @param localCRS
-   *          the local coordinate system
+   *            the local coordinate system
    * @return returns null if one element of the layers to be matched is not available in the local coordinate system,
    *         otherwise it returns the local crs
    */
 
-  private static CS_CoordinateSystem matchCrs( final Layer topLayer, final String[] layerSelection, final CS_CoordinateSystem localCRS ) throws Exception
+  private static CS_CoordinateSystem matchCrs( final Layer topLayer, final String[] layerSelection, final CS_CoordinateSystem localCRS ) throws RemoteException 
   {
     final HashSet<Layer> collector = new HashSet<Layer>();
 
     collect( collector, topLayer, layerSelection );
-    for( Iterator iter = collector.iterator(); iter.hasNext(); )
+    for( final Layer layer : collector )
     {
-      final Layer layer = (Layer) iter.next();
       final String[] layerSRS = layer.getSrs();
       if( contains( layerSRS, localCRS.getName() ) )
         continue;
@@ -151,9 +147,9 @@ public class WMSHelper
    * This method collects all layers from a capabilites document.
    * 
    * @param capabilites
-   *          wms capabilites document
+   *            wms capabilites document
    * @param set
-   *          the Set where the layers are collected in
+   *            the Set where the layers are collected in
    */
   public static void getAllLayers( final WMSCapabilities capabilites, final Set<Layer> set )
   {
@@ -174,11 +170,11 @@ public class WMSHelper
    * name as in the layerSelection.
    * 
    * @param collector
-   *          The set that collects the layers found.
+   *            The set that collects the layers found.
    * @param layer
-   *          the top layer of the wms capabilites document.
+   *            the top layer of the wms capabilites document.
    * @param layerSelection
-   *          an array of layer names to search for.
+   *            an array of layer names to search for.
    */
   private static void collect( final Set<Layer> collector, final Layer layer, final String[] layerSelection )
   {
@@ -206,9 +202,9 @@ public class WMSHelper
    * This method checks an array of Strings for a given String to match.
    * 
    * @param array
-   *          strings to check for a match.
+   *            strings to check for a match.
    * @param toMatch
-   *          the string to match
+   *            the string to match
    * @return boolean true if the String is the array, false otherwise
    */
 
@@ -224,7 +220,7 @@ public class WMSHelper
    * This method gets the max bounding box of a wms layer.
    * 
    * @param layers
-   *          the layers in the map in an array
+   *            the layers in the map in an array
    */
   public static GM_Envelope getMaxExtend( final String[] layers, final WMSCapabilities capabilites, final CS_CoordinateSystem srs ) throws Exception
   {
@@ -233,9 +229,8 @@ public class WMSHelper
     collect( layerCollector, topLayer, layers );
 
     GM_Envelope resultEnvelope = null;
-    for( Iterator iter = layerCollector.iterator(); iter.hasNext(); )
+    for( final Layer layer : layerCollector )
     {
-      final Layer layer = (Layer) iter.next();
       final LayerBoundingBox[] bbox = layer.getBoundingBox();
       for( int i = 0; i < bbox.length; i++ )
       {
@@ -270,16 +265,16 @@ public class WMSHelper
 
   /**
    * @param g2d
-   *          empty Graphics context
+   *            empty Graphics context
    * @param projection
-   *          World to screen projection (passed from MapPanel)
+   *            World to screen projection (passed from MapPanel)
    * @param rasterImage
-   *          image from server
+   *            image from server
    * @param gridDomain
-   *          image domain from server with geospatial ( real world ) context. CS from server and Envelope from server
-   *          (all layers)
+   *            image domain from server with geospatial ( real world ) context. CS from server and Envelope from server
+   *            (all layers)
    * @param targetCS
-   *          target coodriate system (local CS from client)
+   *            target coodriate system (local CS from client)
    */
   private static void internalTransformation( final Graphics2D g2d, final GeoTransform projection, final TiledImage rasterImage, final RectifiedGridDomain gridDomain, final CS_CoordinateSystem targetCS ) throws Exception
   {
@@ -393,17 +388,17 @@ public class WMSHelper
    * context g.
    * 
    * @param remoteImage
-   *          image to be transformed
+   *            image to be transformed
    * @param env
-   *          bounding box of the remoteMap
+   *            bounding box of the remoteMap
    * @param localCSR
-   *          target coodrdiante system
+   *            target coodrdiante system
    * @param remoteCSR
-   *          source coordiante system
+   *            source coordiante system
    * @param worldToScreenTransformation
-   *          transformation from target coordiante system to pixel unites
+   *            transformation from target coordiante system to pixel unites
    * @param g
-   *          graphics context to draw the transformed image to
+   *            graphics context to draw the transformed image to
    * @throws Exception
    */
 
@@ -427,96 +422,6 @@ public class WMSHelper
   public static String env2bboxString( final GM_Envelope env )
   {
     return env.getMin().getX() + "," + env.getMin().getY() + "," + env.getMax().getX() + "," + env.getMax().getY();
-
-    // do not remove next lines until checked that deegree-WMS is working
-    // without
-    // return round( env.getMin().getX() ) + "," + round(
-    // env.getMin().getY() ) + "," + round( env.getMax().getX() ) +
-    // ","
-    // + round( env.getMax().getY() );
   }
-
-  private static String round( final double value )
-  {
-    // do not remove method until checked that deegree-WMS is working
-    // without
-    // this is a dirty hack, as deegree-WMS server has problems with values
-    // more than 8 character
-    // TODO check with specs
-    // TODO check if it is working with current versions of deegree now
-    final String result = "" + value;
-    if( result.length() > 8 )
-      return result.substring( 0, 8 );
-    return result;
-  }
-
-  // private static void internalTransformation2( Graphics2D g2, GeoTransform
-  // projection, TiledImage rasterImage,
-  // RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
-  // {
-  //
-  // try
-  // {
-  // PlanarImage image = rasterImage;
-  //
-  // RectifiedGridDomain rgDomain = gridDomain;
-  //
-  // CS_CoordinateSystem cs = targetCS;
-  // GM_Surface destSurface = rgDomain.getGM_Surface( cs );
-  // GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
-  // GM_Position llCorner = destExtRing.getPositions()[0];
-  // GM_Position lrCorner = destExtRing.getPositions()[1];
-  // GM_Position urCorner = destExtRing.getPositions()[2];
-  // GM_Position ulCorner = destExtRing.getPositions()[3];
-  // GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
-  // GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
-  // GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
-  // GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
-  // double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
-  // double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
-  // double scaleX = destImageWidth / image.getWidth();
-  // double scaleY = destImageHeight / image.getHeight();
-  // double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
-  // double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
-  // AffineTransform trafo = new AffineTransform();
-  // trafo.scale( scaleX, scaleY );
-  // trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs(
-  // shearY ) / Math.abs( scaleY ) );
-  // trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
-  //
-  // GM_Position scaledImage_min = pixel_ulCorner;
-  // GM_Position scaledImage_max = GeometryFactory.createGM_Position(
-  // pixel_urCorner.getX(), pixel_llCorner.getY() );
-  //
-  // GM_Position buffImage_min = GeometryFactory.createGM_Position(
-  // scaledImage_min.getX() - Math.abs( shearX ),
-  // scaledImage_min.getY() - Math.abs( shearY ) );
-  // GM_Position buffImage_max = GeometryFactory.createGM_Position(
-  // scaledImage_max.getX() + Math.abs( shearX ),
-  // scaledImage_max.getY() + Math.abs( shearY ) );
-  // GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope(
-  // buffImage_min, buffImage_max );
-  //
-  // BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(),
-  // (int)buffImageEnv.getHeight(),
-  // BufferedImage.TYPE_INT_ARGB );
-  // Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
-  // //bufferGraphics.setColor(Color.GREEN);
-  // bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-  // bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(),
-  // (int)buffImageEnv.getHeight() );
-  // bufferGraphics.drawRenderedImage( image, trafo );
-  // // g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
-  // // (int)buffImageEnv.getMin().getY(),
-  // // null );
-  // g2.drawImage( buffer, 0, 0, null );
-  // }
-  //
-  // catch( Exception e )
-  // {
-  // // TODO: handle exception
-  // }
-  //
-  // }
 
 }// class WMSHelper

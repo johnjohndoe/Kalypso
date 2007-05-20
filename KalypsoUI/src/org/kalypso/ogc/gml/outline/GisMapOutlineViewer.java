@@ -195,6 +195,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
   }
 
   /**
+   * TODO: !!!use checkbox stuff in order to check/uncheck items
+   * 
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
@@ -202,10 +204,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
     // den Checkstate setzen!
     if( m_viewer != null )
     {
-      // final IMapModell mm = getMapModell();
-      // if( mm == null )
-      // return;
-
       final StructuredViewer viewer = m_viewer;
       final Tree tt = m_viewer.getTree();
       if( tt.isDisposed() )
@@ -234,10 +232,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
 
         private void processItems( final TreeItem[] items )
         {
-          for( int i = 0; i < items.length; i++ )
+          for( final TreeItem item : items )
           {
-            final TreeItem item = items[i];
-
             if( !item.isDisposed() )
             {
               final Object data = item.getData();
@@ -253,15 +249,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
         }
       } );
     }
-  }
-
-  /**
-   * @return object
-   * @see org.eclipse.jface.viewers.IInputProvider#getInput()
-   */
-  public Object getInput( )
-  {
-    return null;
   }
 
   /**
@@ -339,7 +326,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
     }
   }
 
-  public void setCommandTarget( JobExclusiveCommandTarget commandTarget )
+  public void setCommandTarget( final JobExclusiveCommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
   }
