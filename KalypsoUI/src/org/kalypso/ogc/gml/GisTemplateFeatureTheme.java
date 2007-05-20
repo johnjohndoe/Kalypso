@@ -315,7 +315,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               }
               else
               {
-                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "Default Style", " Default Style for " + featureType.getQName().getLocalPart(), fts ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                /* Create a user style that wraps the catalog-based Feature Type Style. Inherit name, title and abstract. */
+                final String name = fts.getName();
+                final String title = fts.getTitle();
+//                final String description = " Default Style for " + featureType.getQName().getLocalPart();
+                final String description = fts.getAbstract();
+                userStyle = (UserStyle_Impl) StyleFactory.createStyle( name, title, description, fts ); 
               }
               final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, userStyle.getTitle() ); //$NON-NLS-1$
               addStyle( kus );

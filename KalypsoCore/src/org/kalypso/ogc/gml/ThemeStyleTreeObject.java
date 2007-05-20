@@ -47,10 +47,11 @@ package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 
-public class ThemeStyleTreeObject implements IWorkbenchAdapter
+public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 {
   private final KalypsoUserStyle m_style;
 
@@ -155,5 +156,16 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter
       throw new IllegalStateException();
 
     return getTheme();
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
+   */
+  public String getTooltip( final Object element )
+  {
+    if( element != this )
+      throw new IllegalStateException();
+
+    return getStyle().getAbstract();
   }
 }

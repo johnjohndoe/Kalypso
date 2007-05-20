@@ -155,6 +155,7 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     if( o != this )
       throw new IllegalStateException();
 
+    // TODO: chech this..
     return m_userStyle.getFeatureTypeStyles()[0].getRules();
   }
 
@@ -177,10 +178,15 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     if( o != this )
       throw new IllegalStateException();
 
+    /* If present, the title is the user-firendly label. */
+    if( getTitle() != null )
+      return getTitle();
+
+    /* Fallback: if no titel is present, take the name (id like). */
     if( getName() != null )
       return getName();
-
-    return toString();
+    
+    return "KalypsoUserStyle: no 'title' or 'name' set.";
   }
 
   /**

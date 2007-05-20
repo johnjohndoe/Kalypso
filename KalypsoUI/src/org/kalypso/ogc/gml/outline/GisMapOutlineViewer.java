@@ -51,14 +51,19 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -70,6 +75,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListener, ICommandTarget
 {
   protected CheckboxTreeViewer m_viewer;
@@ -109,6 +115,25 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
           final ICommand command = new EnableThemeCommand( mm, theme, event.getChecked() );
           postCommand( command, null );
         }
+      }
+    } );
+
+    final Tree tree = m_viewer.getTree();
+    tree.addMouseMoveListener( new MouseMoveListener()
+    {
+      public void mouseMove( final MouseEvent e )
+      {
+        final TreeItem item = tree.getItem( new Point( e.x, e.y ) );
+        final String text;
+        if( item == null )
+          text = null; // remove tooltip
+        else
+        {
+          final Object data = item.getData();
+          final ITooltipProvider ttProvider = (ITooltipProvider) Util.getAdapter( data, ITooltipProvider.class );
+          text = ttProvider == null ? null : ttProvider.getTooltip( data );
+        }
+        tree.setToolTipText( text );
       }
     } );
 
@@ -283,7 +308,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
    * Adds a listener for double-clicks in this viewer. Has no effect if an identical listener is already registered.
    * 
    * @param listener
-   *          a double-click listener
+   *            a double-click listener
    */
   public void addDoubleClickListener( final IDoubleClickListener listener )
   {
@@ -294,7 +319,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ModellEventListe
    * Removes the given double-click listener from this viewer. Has no affect if an identical listener is not registered.
    * 
    * @param listener
-   *          a double-click listener
+   *            a double-click listener
    */
   public void removeDoubleClickListener( final IDoubleClickListener listener )
   {

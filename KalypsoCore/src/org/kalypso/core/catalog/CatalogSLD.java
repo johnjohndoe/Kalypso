@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.catalog;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringReader;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -55,6 +52,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.tools.ant.filters.StringInputStream;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.xml.XMLTools;
@@ -77,23 +75,13 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
    * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
    */
   @Override
-  protected FeatureTypeStyle read( IUrlResolver2 urlResolver, InputStream ins )
+  protected FeatureTypeStyle read( final IUrlResolver2 urlResolver, final InputStream ins )
   {
     try
     {
-      InputStreamReader reader = null;
-      try
-      {
-        reader = new InputStreamReader( ins );
-        final BufferedReader br = new BufferedReader( reader );
-        final Document doc = XMLTools.parse( br );
-        final Element documentElement = doc.getDocumentElement();
-        return SLDFactory.createFeatureTypeStyle( urlResolver, documentElement );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( reader );
-      }
+      final Document doc = XMLTools.parse( ins );
+      final Element documentElement = doc.getDocumentElement();
+      return SLDFactory.createFeatureTypeStyle( urlResolver, documentElement );
     }
     catch( Exception e )
     {
@@ -109,7 +97,7 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
     final Document doc;
     try
     {
-      doc = XMLTools.parse( new StringReader( ftStyleAsString ) );
+      doc = XMLTools.parse( new StringInputStream( ftStyleAsString ) );
       final Source source = new DOMSource( doc );
 
       final Transformer t = TransformerFactory.newInstance().newTransformer();
