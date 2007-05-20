@@ -564,6 +564,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     {
       /* Reset wms access on error in order to try reload */
       setWms( null, null );
+
+      /* Deaktivate on error. */
+      // TODO: make this optional?
       getMapModell().enableTheme( this, false );
     }
   }
