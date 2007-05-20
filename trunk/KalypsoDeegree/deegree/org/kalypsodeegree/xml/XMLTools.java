@@ -78,7 +78,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -110,7 +109,7 @@ public class XMLTools
    * <p>
    * 
    * @param cdata
-   *          value to be used
+   *            value to be used
    * @return the very same value (but escaped if necessary)
    */
   public static StringBuffer validateCDATA( String cdata )
@@ -137,14 +136,14 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child element
+   *            name of the child element
    * @param namespace
-   *          namespace of the child element
+   *            namespace of the child element
    * @param node
-   *          current element
+   *            current element
    * @return the element or null, if it is missing
    * @throws XMLParsingException
-   *           specified child element is missing and required is true
+   *             specified child element is missing and required is true
    */
   public static Element getRequiredChildByName( String name, String namespace, Node node ) throws XMLParsingException
   {
@@ -186,11 +185,11 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child element
+   *            name of the child element
    * @param namespace
-   *          namespace of the child element
+   *            namespace of the child element
    * @param node
-   *          current element
+   *            current element
    * @return the element or null, if it is missing
    */
   public static Element getChildByName( String name, String namespace, Node node )
@@ -230,11 +229,11 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child elements
+   *            name of the child elements
    * @param namespace
-   *          namespace of the child elements
+   *            namespace of the child elements
    * @param node
-   *          current element
+   *            current element
    * @return the list of matching child elements
    */
   public static ElementList getChildElementsByName( String name, String namespace, Node node )
@@ -273,7 +272,7 @@ public class XMLTools
    * <p>
    * 
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the element or null, if it is missing
    */
   public static String getStringValue( Node node )
@@ -299,13 +298,13 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child element
+   *            name of the child element
    * @param namespace
-   *          namespace of the child element
+   *            namespace of the child element
    * @param node
-   *          current element
+   *            current element
    * @param defaultValue
-   *          default value if element is missing
+   *            default value if element is missing
    * @return the textual contents of the element or the given default value, if missing
    */
   public static String getStringValue( String name, String namespace, Node node, String defaultValue )
@@ -369,11 +368,11 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child element
+   *            name of the child element
    * @param namespace
-   *          namespace of the child element
+   *            namespace of the child element
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the element or null, if it is missing
    */
   public static String getRequiredStringValue( String name, String namespace, Node node ) throws XMLParsingException
@@ -388,13 +387,13 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child element
+   *            name of the child element
    * @param namespace
-   *          namespace of the child element
+   *            namespace of the child element
    * @param node
-   *          current element
+   *            current element
    * @param defaultValue
-   *          value to be used if the specified element is missing or it's value is not numerical
+   *            value to be used if the specified element is missing or it's value is not numerical
    * @return the textual contents of the element as a double-value
    */
   public static double getDoubleValue( String name, String namespace, Node node, double defaultValue )
@@ -423,14 +422,14 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          name of the child element
+   *            name of the child element
    * @param namespace
-   *          namespace of the child element
+   *            namespace of the child element
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the element as a double-value
    * @throws XMLParsingException
-   *           specified child element is missing or the contained text does not denote a double value
+   *             specified child element is missing or the contained text does not denote a double value
    */
   public static double getRequiredDoubleValue( String name, String namespace, Node node ) throws XMLParsingException
   {
@@ -453,9 +452,9 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          (local) name of attribute
+   *            (local) name of attribute
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the attribute or null
    */
   public static String getAttrValue( String name, Node node )
@@ -480,12 +479,12 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          (local) name of attribute
+   *            (local) name of attribute
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the attribute
    * @throws XMLParsingException
-   *           if specified attribute is missing
+   *             if specified attribute is missing
    */
   public static String getRequiredAttrValue( String name, Node node ) throws XMLParsingException
   {
@@ -514,14 +513,14 @@ public class XMLTools
    * <p>
    * 
    * @param name
-   *          (local) name of attribute
+   *            (local) name of attribute
    * @param namespace
-   *          namespace of attribute
+   *            namespace of attribute
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the attribute
    * @throws XMLParsingException
-   *           if specified attribute is missing
+   *             if specified attribute is missing
    */
   public static String getRequiredAttrValue( String name, String namespace, Node node ) throws XMLParsingException
   {
@@ -632,7 +631,7 @@ public class XMLTools
    * Parses a XML document and returns a DOM object.
    * 
    * @param fileName
-   *          the filename of the XML file to be parsed
+   *            the filename of the XML file to be parsed
    * @return a DOM object
    * @throws IOException
    * @throws SAXException
@@ -670,12 +669,16 @@ public class XMLTools
    * Parses a XML document and returns a DOM object.
    * 
    * @param reader
-   *          accessing the resource to parse
+   *            accessing the resource to parse
    * @return a DOM object
    * @throws IOException
    * @throws SAXException
+   * @deprecated Probably code which uses this method is not safe for two reasons: the reader only gets closed if no
+   *             exception is thrown, second probably the charset is not correctly set. Use {@link #parse(InputStream)}
+   *             instead, charset encoding is set inside the xml-file.
    */
-  public static Document parse( Reader reader ) throws IOException, SAXException
+  @Deprecated
+  public static Document parse( final Reader reader ) throws IOException, SAXException
   {
     javax.xml.parsers.DocumentBuilder parser = null;
 
@@ -696,6 +699,36 @@ public class XMLTools
     reader.close();
 
     return doc;
+  }
+
+  /**
+   * Parses a XML document and returns a DOM object.
+   * <p>The stream is NOT closed by this method.
+   * 
+   * @param reader
+   *            accessing the resource to parse
+   * @return a DOM object
+   * @throws IOException
+   * @throws SAXException
+   */
+  public static Document parse( final InputStream is ) throws IOException, SAXException
+  {
+    try
+    {
+      final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+      fac.setNamespaceAware( true );
+      fac.setValidating( false );
+      javax.xml.parsers.DocumentBuilder parser = fac.newDocumentBuilder();
+      final Document doc = parser.parse( new InputSource( is ) );
+
+      return doc;
+    }
+    catch( final ParserConfigurationException ex )
+    {
+      ex.printStackTrace();
+
+      throw new IOException( "Unable to initialize DocumentBuilder: " + ex.getMessage() );
+    }
   }
 
   /**

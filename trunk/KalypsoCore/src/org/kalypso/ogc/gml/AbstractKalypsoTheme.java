@@ -43,17 +43,14 @@ package org.kalypso.ogc.gml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceColors;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-
-import sun.awt.image.URLImageSource;
 
 /**
  * <p>
@@ -80,8 +77,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   private String m_type;
 
   /**
-   * The status of this theme. Should be set of implementing classes whenever something unexpected occurs (e.g. error while
-   * loading the theme, ...).
+   * The status of this theme. Should be set of implementing classes whenever something unexpected occurs (e.g. error
+   * while loading the theme, ...).
    */
   private IStatus m_status = Status.OK_STATUS;
 
@@ -216,19 +213,26 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     // REMARK: as the type is now clear from the properties view
     // This is not needed any more
-//    final String type = getType();
-//    if( type != null && type.length() > 0 )
-//    {
-//      sb.append( "[" );
-//      sb.append( type );
-//      sb.append( "] " );
-//    }
+// final String type = getType();
+// if( type != null && type.length() > 0 )
+// {
+// sb.append( "[" );
+// sb.append( type );
+// sb.append( "] " );
+// }
 
     final String themeName = getName();
     sb.append( themeName );
 
-    if( !isLoaded() )
-      sb.append( " (wird geladen...)" );
+// if( !isLoaded() )
+// sb.append( " (wird geladen...)" );
+
+    final IStatus status = getStatus();
+    if( !status.isOK() )
+    {
+      sb.append( " - " );
+      sb.append( status.getMessage() );
+    }
 
     return sb.toString();
   }
@@ -238,6 +242,22 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   public ImageDescriptor getImageDescriptor( final Object object )
   {
+    final IStatus status = getStatus();
+    if( !status.isOK() )
+    {
+      final ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+
+      switch( status.getSeverity() )
+      {
+        case IStatus.ERROR:
+          return sharedImages.getImageDescriptor( "IMG_OBJS_ERROR_PATH" );
+        case IStatus.WARNING:
+          return sharedImages.getImageDescriptor( "IMG_OBJS_WARNING_PATH" );
+        case IStatus.INFO:
+          return sharedImages.getImageDescriptor( "IMG_OBJS_INFO_PATH" );
+      }
+    }
+
     return null;
   }
 
@@ -268,5 +288,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   protected void setStatus( final IStatus status )
   {
     m_status = status;
+
+    fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTENT_CHANGED ) );
   }
 }

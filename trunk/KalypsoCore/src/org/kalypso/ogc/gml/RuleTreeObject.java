@@ -42,9 +42,10 @@ package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypsodeegree.graphics.sld.Rule;
 
-public class RuleTreeObject implements IWorkbenchAdapter
+public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 {
   private static final Object[] EMPTY_CHILDREN = new Object[] {};
 
@@ -118,10 +119,11 @@ public class RuleTreeObject implements IWorkbenchAdapter
 
     if( m_rule.getTitle() != null )
       return m_rule.getTitle();
-    else if( m_rule.getName() != null )
+    
+    if( m_rule.getName() != null )
       return m_rule.getName();
-    else
-      return "rule";
+
+    return "Rule: neither 'title' nor 'name' defined.";
   }
 
   /**
@@ -143,5 +145,16 @@ public class RuleTreeObject implements IWorkbenchAdapter
   public IKalypsoFeatureTheme getTheme( )
   {
     return m_parent.getTheme();
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
+   */
+  public String getTooltip( final Object element )
+  {
+    if( element != this )
+      throw new IllegalStateException();
+
+    return m_rule.getAbstract();
   }
 }

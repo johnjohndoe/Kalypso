@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.catalog;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -65,10 +66,10 @@ public abstract class ObjectCatalog<O> extends Storage
 {
   private final CatalogManager m_manager;
 
-  private final Class m_supportingClass;
+  private final Class<O> m_supportingClass;
 
   @SuppressWarnings("unchecked")
-  public ObjectCatalog( File repositoryBase, CatalogManager manager, Class supportingClass )
+  public ObjectCatalog( File repositoryBase, CatalogManager manager, Class<O> supportingClass )
   {
     super( repositoryBase );
     m_manager = manager;
@@ -77,6 +78,7 @@ public abstract class ObjectCatalog<O> extends Storage
 
   public O getValue( IUrlResolver2 resolver, String systemID, String publicID )
   {
+    InputStream is = null;
     try
     {
       final ICatalog baseCatalog = m_manager.getBaseCatalog();
@@ -97,7 +99,9 @@ public abstract class ObjectCatalog<O> extends Storage
         }
       };
 
-      final O object = read( catalogResolver, urlFeatureStyle.openStream() );
+      is = new BufferedInputStream( urlFeatureStyle.openStream() );
+      final O object = read( catalogResolver, is );
+      is.close();
       return object;
     }
     catch( final Exception e )
@@ -105,6 +109,10 @@ public abstract class ObjectCatalog<O> extends Storage
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoCorePlugin.getDefault().getLog().log( status );
       return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
     }
   }
 

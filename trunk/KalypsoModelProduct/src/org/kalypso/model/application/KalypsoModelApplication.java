@@ -63,6 +63,19 @@ import org.kalypso.model.product.KalypsoModelProductPlugin;
 public class KalypsoModelApplication implements IApplication
 {
   /**
+   * System property which determines the mode in which this application will run.
+   * <p>
+   * Ifset to false (or not defined), the user interface will be restricted to only those perspectives which are
+   * automatically opened by the welcome page actions. Especially, the toolbars are hidden and the menu is restricted to
+   * very view items like 'about'.
+   * </p>
+   * <p>
+   * If set to true, the normal IDE-menues and toolbar is shown.
+   * </p>
+   */
+  private static final String SYSPROP_EXPERT_MODE = "kalypso.model.product.expert";
+
+  /**
    * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
    */
   public Object start( IApplicationContext context ) throws Exception
@@ -85,7 +98,7 @@ public class KalypsoModelApplication implements IApplication
         shell.dispose();
     }
 
-    final boolean isExpert = Boolean.getBoolean( "kalypso.model.product.expert" );
+    final boolean isExpert = Boolean.getBoolean( SYSPROP_EXPERT_MODE );
     final KalypsoModelWorkbenchAdvisor advisor = new KalypsoModelWorkbenchAdvisor( !isExpert );
     final int returnCode = PlatformUI.createAndRunWorkbench( display, advisor );
     if( returnCode == PlatformUI.RETURN_RESTART )
