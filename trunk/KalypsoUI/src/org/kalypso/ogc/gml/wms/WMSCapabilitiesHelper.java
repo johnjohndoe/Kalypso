@@ -50,9 +50,11 @@ import org.apache.commons.io.IOUtils;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.xml.XMLParsingException;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.util.net.URLGetter;
 
@@ -92,7 +94,10 @@ public class WMSCapabilitiesHelper
       final URLGetter getter = URLGetter.createURLGetter( urlGetCapabilities, timeOut );
       final IStatus status = getter.execute( monitor );
       if( !status.isOK() )
-        throw new CoreException( status );
+      {
+        final IStatus errorStatus = new Status( IStatus.ERROR, status.getPlugin(), "Fehler beim Zugriff auf " + service, status.getException() );
+        throw new CoreException( errorStatus );
+      }
 
       inputStream = getter.getResult();
       final Reader urlReader = new InputStreamReader( inputStream );
@@ -105,7 +110,13 @@ public class WMSCapabilitiesHelper
       final Reader reader = urlReader;
 
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-      return wmsCapFac.createCapabilities( reader );
+
+      final WMSCapabilities createCapabilities = wmsCapFac.createCapabilities( reader );
+
+      /* This should nver happen */
+      Assert.isNotNull( createCapabilities );
+
+      return createCapabilities;
     }
     catch( final XMLParsingException e )
     {
