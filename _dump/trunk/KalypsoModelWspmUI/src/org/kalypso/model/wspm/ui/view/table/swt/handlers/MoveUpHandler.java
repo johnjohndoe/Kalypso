@@ -40,52 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.swt.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import java.util.LinkedList;
+
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointMove;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.view.table.TableView;
 import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 
 /**
  * @author kimwerner
  */
-public class MoveUpHandler extends AbstractHandler implements IHandler
+public class MoveUpHandler extends AbstractSWTTableHandler implements IHandler
 {
 
+ 
   /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList, org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( "No active part." );
-
-    final Object adapterObject = part.getAdapter( TableView.class );
-    if( adapterObject instanceof TableView )
-    {
-      final ProfilSWTTableView tableView = ((TableView) adapterObject).getTableView();
-      if( tableView != null )
-      {
-        final IStructuredSelection selection = (IStructuredSelection) tableView.getSelectionProvider().getSelection();
-        final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection.toList(), -1 ), true );
-        new ProfilOperationJob( operation ).schedule();
-        return Status.OK_STATUS;
-      }
-    }
-    throw new ExecutionException( "Active part has no Table." );
+    final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection, -1 ), true );
+    new ProfilOperationJob( operation ).schedule();
+    return Status.OK_STATUS;
   }
 
 }

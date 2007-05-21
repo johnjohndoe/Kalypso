@@ -71,7 +71,7 @@ public class PasteFromClipboardHandler extends AbstractSWTTableHandler implement
    *      java.util.LinkedList, org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
   @Override
-  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public final IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
     final Clipboard clp = Toolkit.getDefaultToolkit().getSystemClipboard();
     try

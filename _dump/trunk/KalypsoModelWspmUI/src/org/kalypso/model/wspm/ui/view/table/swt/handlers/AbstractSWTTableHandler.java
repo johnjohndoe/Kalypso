@@ -47,10 +47,19 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.ui.view.table.TableView;
 import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
@@ -58,9 +67,69 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public abstract class AbstractSWTTableHandler extends AbstractHandler implements IHandler
+public abstract class AbstractSWTTableHandler extends AbstractHandler implements IHandler, IViewActionDelegate
 {
-  
+  // private ProfilSWTTableView m_tableView = null;
+  //
+  // private LinkedList<IProfilPoint> m_selection = new LinkedList<IProfilPoint>();
+
+  private IHandlerService m_handlerService = null;
+
+  private String m_commandId = null;
+
+  /**
+   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+   */
+  public void init( IViewPart view )
+  {
+    if( m_handlerService == null )
+    {
+      final IWorkbenchWindow window = view.getSite().getWorkbenchWindow();
+      m_handlerService = (IHandlerService) window.getService( IHandlerService.class );
+    }
+    if( m_commandId == null )
+    {
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.eclipse.ui.handlers" );
+      for( final IConfigurationElement element : elements )
+      {
+        final String handler = element.getAttribute( "class" );
+        final String className = getClass().getName();
+        if( className.equals( handler ) )
+          m_commandId = element.getAttribute( "commandId" );
+      }
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run( IAction action )
+  {
+    if( (m_handlerService == null) || (m_commandId == null) )
+    {
+      return;
+    }
+    try
+    {
+      m_handlerService.executeCommand( m_commandId, null );
+    }
+
+    catch( Exception e )
+    {
+      // do nothing
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+
+  public void selectionChanged( IAction action, ISelection selection )
+  {
+    // not needed
+  }
 
   public abstract IStatus doAction( final LinkedList<IProfilPoint> selection, final ProfilSWTTableView tableView ) throws ExecutionException;
 
@@ -71,30 +140,26 @@ public abstract class AbstractSWTTableHandler extends AbstractHandler implements
   @Override
   public Object execute( ExecutionEvent event ) throws ExecutionException
   {
+    Object adapterObject = null;
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( part == null )
+      throw new ExecutionException( "No active part." );
+    adapterObject = part.getAdapter( TableView.class );
+
+    if( adapterObject instanceof TableView )
     {
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-      if( part == null )
-        throw new ExecutionException( "No active part." );
-
-      final Object adapterObject = part.getAdapter( TableView.class );
-      if( adapterObject instanceof TableView )
+      final ProfilSWTTableView swtTableView = ((TableView) adapterObject).getTableView();
+      final IStructuredSelection selection = (IStructuredSelection) swtTableView.getSelectionProvider().getSelection();
+      final Object selObj = selection.getFirstElement();
+      if( selObj instanceof IProfilPoint )
       {
-        final ProfilSWTTableView tableView = ((TableView) adapterObject).getTableView();
-        if( tableView != null )
-        {
-
-          final IStructuredSelection selection = (IStructuredSelection) tableView.getSelectionProvider().getSelection();
-          final Object selObj = selection.getFirstElement();
-          if( selObj instanceof IProfilPoint )
-          {
-            final LinkedList<IProfilPoint> pntLst = new LinkedList<IProfilPoint>();
-            pntLst.addAll( selection.toList() );
-            return doAction( pntLst, tableView );
-          }
-        }
+        final LinkedList<IProfilPoint> pntLst = new LinkedList<IProfilPoint>();
+        pntLst.addAll( selection.toList() );
+        return doAction( pntLst, swtTableView );
       }
     }
+
     throw new ExecutionException( "Active part has no Table." );
   }
 }

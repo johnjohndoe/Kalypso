@@ -12,7 +12,8 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.featureview,
  org.kalypso.model.wspm.schema,
  org.kalypso.chart.ui,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.eclipse.core.commands
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,

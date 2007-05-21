@@ -60,8 +60,9 @@ public class CopyToClipboardHandler extends AbstractSWTTableHandler implements I
    * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList,
    *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
+
   @Override
-  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public final IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
     final Object[] activeCell = tableView.getActiveCell();
     final StringBuffer sbf = new StringBuffer();

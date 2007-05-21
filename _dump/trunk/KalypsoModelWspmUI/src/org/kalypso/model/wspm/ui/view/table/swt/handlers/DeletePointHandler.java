@@ -45,8 +45,12 @@ import java.util.LinkedList;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.changes.PointMove;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointRemove;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
@@ -54,18 +58,25 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public class MoveDownHandler extends AbstractSWTTableHandler implements IHandler
+public class DeletePointHandler extends AbstractSWTTableHandler implements IHandler
 {
 
-  
-
   /**
-   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList, org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
+   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList,
+   *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
   @Override
   public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
-    final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection, 1 ), true );
+    final IProfilChange[] changes = new IProfilChange[selection.size() + 1];
+    final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( tableView.getProfil(), selection.getFirst() );
+    int i = 0;
+    for( final IProfilPoint point : selection )
+    {
+      changes[i++] = new PointRemove( tableView.getProfil(), point );
+    }
+    changes[i] = new ActiveObjectEdit( tableView.getProfil(), thePointBefore, IWspmConstants.POINT_PROPERTY_BREITE );
+    final ProfilOperation operation = new ProfilOperation( "Punkte löschen", tableView.getProfilEventManager(), changes, false );
     new ProfilOperationJob( operation ).schedule();
     return Status.OK_STATUS;
   }
