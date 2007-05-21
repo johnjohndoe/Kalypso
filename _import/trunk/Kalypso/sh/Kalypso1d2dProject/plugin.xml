@@ -251,6 +251,18 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
+		<!-- // Handler for "Berechnungseinheiten Modellieren"--> 
+	     <handler
+	       	   commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalculationUnit">
+               <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
  	 <!--*** 1D/2D transition handlers CreateJunctionContext1dToCLineFromSelectedEdges ***-->	     	     	     	     	     	     	     
 	     <!--handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">

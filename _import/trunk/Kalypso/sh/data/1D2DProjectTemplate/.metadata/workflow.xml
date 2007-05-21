@@ -158,6 +158,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Bandgenerator</Name>
 				</Task>
+				
 				<Task context="2dElementTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
 					<Help>
@@ -165,6 +166,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Höhen zuweisen</Name>
 				</Task>
+			<Task context="2dElementTheme"
+					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalculationUnit">
+				<Help>
+					<![CDATA[Berechnungseinheiten Modellieren]]>
+				</Help>
+				<Name>Berechnungseinheiten Modellieren</Name>
+			</Task>	
 			</TaskGroup>
 			<!--
 				<TaskGroup context="FenetMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CntrStrcGroup">
@@ -228,6 +236,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Rauheitskorrektur modellieren</Name>
 			</Task>
+
 		</TaskGroup>
 		<TaskGroup context="BoundaryConditionTheme"
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
