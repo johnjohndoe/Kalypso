@@ -869,6 +869,79 @@ public class FeatureHelper
   }
 }
   
+  public static final <T> T resolveLink(
+      IFeatureWrapper2 featureWrapper,
+      QName propertyQName,
+      Class<T> adapterTargetClass
+       )
+  {
+    if( 
+        featureWrapper == null || 
+        propertyQName == null || 
+        adapterTargetClass == null )
+    {
+      String message =
+          String.format( 
+              "All argument must not be null:"+
+                "\n\tfeatureWrapper=%s"+
+                "\n\tpropertyQname = %s"+
+                "\n\tadapterTargetClass = %s", 
+              featureWrapper, 
+              propertyQName, 
+              adapterTargetClass );
+      throw new IllegalArgumentException( message );
+    }
+    
+    final Feature wrappedFeature = featureWrapper.getWrappedFeature();
+    T resolvedLink =
+        resolveLink( 
+              wrappedFeature, 
+              propertyQName, 
+              adapterTargetClass );
+    return resolvedLink;
+  }
+  
+  /**
+   * set a workspace local link between 2 feature wrappers;
+   * i.e. the object feature is set as property with the given
+   * name of the subject feature.<br/>
+   * <b>Note that no check is made to assert whether the property
+   *  exists or is not a list feature</b>
+   *  @param subjectFeature the feature wrapper whose property is 
+   *            to be set
+   *  @param propertyQName the q-name denoting the property type
+   *  @param objectFeature the feature to set as property
+   *  @throws IllegalArgumentException if subjectFeature or 
+   *            property q-name is null
+   */
+  public static final <T> void setLocalLink(
+      IFeatureWrapper2 subjectFeature, 
+      QName propertyQName,
+      IFeatureWrapper2 objectFeature
+       )
+  {
+    if( 
+        subjectFeature == null || 
+        propertyQName ==null  )
+    {
+      String message =
+        String.format( 
+            "Argument subjectFeature and propertyName "+
+             "must not be null:"+
+             "\n\tsubjectFeature=%s"+
+             "propertyName=%s", 
+             subjectFeature,
+             objectFeature );
+      throw new IllegalArgumentException( message );
+    }
+    
+    //get object id 
+    String objectID = 
+        ( objectFeature!=null )?objectFeature.getGmlID():null;
+    final Feature subjWF = subjectFeature.getWrappedFeature();
+    subjWF.setProperty( propertyQName, objectID );
+  }
+  
   public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
   {
     if( rt.isList() )
