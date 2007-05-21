@@ -47,6 +47,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
  * @author Patrice Congo
  *
  */
+@SuppressWarnings("unchecked")
 public interface ICalculationUnit<T extends IFE1D2DElement> 
                           extends IFE1D2DComplexElement<T>
                           
@@ -54,6 +55,9 @@ public interface ICalculationUnit<T extends IFE1D2DElement>
   
   public IBoundaryLine getUpStreamBoundaryLine();
   
+  public void setUpStreamBoundaryLine( IBoundaryLine line);
+  
   public IBoundaryLine getDownStreamBoundaryLine();
   
+  public void setDownStreamBoundaryLine( IBoundaryLine line);
 }

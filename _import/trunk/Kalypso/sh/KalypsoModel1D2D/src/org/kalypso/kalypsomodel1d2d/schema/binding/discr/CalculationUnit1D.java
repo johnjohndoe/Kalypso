@@ -40,16 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Interface for classes representing a wb1d2d:CalculationUnit2D
+ * Default implementation of {@link ICalculationUnit1D}
+ * 
  * @author Patrice Congo
  *
  */
 @SuppressWarnings("unchecked")
-public interface ICalculationUnit1D2D<T extends IFE1D2DElement>
-                                  extends ICalculationUnit<T>
+public class CalculationUnit1D<ET extends IElement1D>
+                        extends CalculationUnit<ET>
+                        implements ICalculationUnit1D<ET>
 {
-  IFeatureWrapperCollection<ICalculationUnit> getSubUnits();
+
+  public CalculationUnit1D( 
+                Feature featureToBind )
+  {
+    this(
+        featureToBind,
+        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D,
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
+        (Class<ET>)IElement1D.class );
+    
+  }
+  
+  public CalculationUnit1D( 
+              Feature featureToBind, 
+              QName qnameToBind, 
+              QName elementListPropQName, 
+              Class<ET> wrapperClass )
+  {
+    super( 
+        featureToBind, 
+        qnameToBind, 
+        elementListPropQName, 
+        wrapperClass );
+    
+  }
+  
+
 }

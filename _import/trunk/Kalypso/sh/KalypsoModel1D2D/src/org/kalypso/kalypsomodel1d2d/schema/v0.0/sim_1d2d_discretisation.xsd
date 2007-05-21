@@ -502,7 +502,7 @@
        type="wb1d2d:CalculationUnitType"
        substitutionGroup="wb1d2d:ComplexElement"
        abstract="true"/>
-          <xs:complexType
+   <xs:complexType
        name="CalculationUnitType"
        abstract="true">
        <xs:annotation>
@@ -512,6 +512,16 @@
        <xs:complexContent>
            <xs:extension
                base="wb1d2d:ComplexElementType">
+               <xs:sequence>
+		            <xs:element
+		            	name="upstreamBoundaryLine"
+		            	type="wb1d2d:BoundaryLinePropertyType"
+		            	minOccurs="1" maxOccurs="1"/>
+		            <xs:element
+		            	name="downstreamBoundaryLine"
+		            	type="wb1d2d:BoundaryLinePropertyType"
+		            	minOccurs="1" maxOccurs="1"/>
+		    	</xs:sequence>
            </xs:extension>
        </xs:complexContent>       
    </xs:complexType>
@@ -576,7 +586,7 @@
             <xs:sequence>
 	            <xs:element 
 	            	ref="wb1d2d:element2D"
-	            	minOccurs="0" maxOccurs="1"/>
+	            	minOccurs="0" maxOccurs="unbounded"/>
 	            <xs:element
 	            	name="upstreamBoundaryLine"
 	            	type="wb1d2d:BoundaryLinePropertyType"

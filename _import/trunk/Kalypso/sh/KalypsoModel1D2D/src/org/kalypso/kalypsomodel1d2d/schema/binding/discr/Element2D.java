@@ -18,7 +18,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
  * Provide the default implementation for 
  * {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
- * Those classes kann be used as java abtract for the subtituable of 
+ * Those classes can be used as java abstract for the substituable of 
  * wb1d2d:FE1D2D_2DElement:  wb1d2d:FE1D2DQuadriElement, 
  *  wb1d2d:FE1D2DTriElement and 
  * wb1d2d:FE1D2DContinuityLine 
@@ -37,6 +37,50 @@ public abstract class Element2D<
 {
   private final IFeatureWrapperCollection<ET> edges;
 
+  /**
+   * Creates an element with a specified GML ID.
+   * The parent feature respectively its link to the newly 
+   * created element the the actual feature q-name and the
+   * binding classes for edges and container complex elements
+   * are specified as parameters.
+   * 
+   * @param parentFeature the parent feature
+   * @param propQName the q-name of the property linking the
+   *            parent feature to the continuity line
+   * @param gmlID the gml id for the newly created feature
+   * @param featureQName the q-name of the feature to create
+   * @param complexElementClass the target binding class for
+   *            container complex elements
+   * @param edgeClass the target binding class for the edges
+   * @throws IllegalArgumentException if any argument is null 
+   */
+  public Element2D( 
+      Feature parentFeature,
+      QName propQName,
+      String gmlID,
+      QName featureQName,
+      Class<CT> complexElementClass,
+      Class<ET> edgeClass )
+  {
+    this(
+      Util.createFeatureWithId( 
+          featureQName,
+          parentFeature, 
+          propQName, 
+          gmlID ),
+      featureQName,
+      complexElementClass,
+      edgeClass );
+  }
+  
+  /**
+   * Creates a new element binding the specified feature
+   * @param featureToBind the feature to bind
+   * @param featureQName the required feature q-name
+   * @param complexElementClass the target binding class for
+   *            containing complex element
+   * @param edgeClass the target binding class for edges
+   */
   public Element2D( 
       final Feature featureToBind, 
       QName featureQName,
@@ -222,9 +266,7 @@ public abstract class Element2D<
     
     List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
     IFE1D2DNode lasAddedNode=null;
-//    IFE1D2DNode actualNode;
-//    IFE1D2DNode nextNode;
-    
+
     for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
     {
       if(edge instanceof IEdgeInv)

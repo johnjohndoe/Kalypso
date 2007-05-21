@@ -40,16 +40,64 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Interface for classes representing a wb1d2d:CalculationUnit2D
+ * Default implementation of {@link ICalculationUnit2D}
+ * 
  * @author Patrice Congo
  *
  */
 @SuppressWarnings("unchecked")
-public interface ICalculationUnit1D2D<T extends IFE1D2DElement>
-                                  extends ICalculationUnit<T>
+public class CalculationUnit1D2D<ET extends IFE1D2DElement>
+                        extends CalculationUnit<ET>
+                        implements ICalculationUnit1D2D<ET>
 {
-  IFeatureWrapperCollection<ICalculationUnit> getSubUnits();
+
+  private final IFeatureWrapperCollection<ICalculationUnit> subUnits;
+
+  public CalculationUnit1D2D( 
+                Feature featureToBind )
+  {
+    this(
+        featureToBind,
+        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D,
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
+        (Class<ET>)IFE1D2DElement.class );
+    
+  }
+  
+  public CalculationUnit1D2D( 
+              Feature featureToBind, 
+              QName qnameToBind, 
+              QName elementListPropQName, 
+              Class<ET> wrapperClass )
+  {
+    super( 
+        featureToBind, 
+        qnameToBind, 
+        elementListPropQName, 
+        wrapperClass );
+    subUnits = Util.<ICalculationUnit>get( 
+        featureToBind, 
+        qnameToBind, 
+        elementListPropQName, 
+        ICalculationUnit.class, 
+        true); 
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#getSubUnits()
+   */
+  public IFeatureWrapperCollection<ICalculationUnit> getSubUnits( )
+  {
+    return subUnits;
+  }
+  
+
 }

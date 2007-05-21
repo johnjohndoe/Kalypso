@@ -45,6 +45,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
  * @author Patrice Congo
  *
  */
+@SuppressWarnings("unchecked")
 public interface ICalculationUnit2D<T extends IElement2D>
                                   extends ICalculationUnit<T>
 {

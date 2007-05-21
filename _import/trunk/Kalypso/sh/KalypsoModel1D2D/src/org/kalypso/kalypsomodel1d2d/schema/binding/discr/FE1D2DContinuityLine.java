@@ -40,21 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 @SuppressWarnings("unchecked")
 /**
@@ -66,10 +56,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class FE1D2DContinuityLine<    
                               CT extends IFE1D2DComplexElement, 
                               ET extends IFE1D2DEdge> 
-                  extends Element2D<CT,ET> 
+                  extends LineElement<CT,ET>//Element2D<CT,ET> 
                   implements IFE1D2DContinuityLine<CT,ET> 
 {
-//  private static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
   public FE1D2DContinuityLine( 
       final Feature featureToBind, 
@@ -79,6 +68,7 @@ public class FE1D2DContinuityLine<
   {
     super(featureToBind, featureQName, complexElementClass,edgeClass);
   }
+  
   /**
    * Create a new continuity line binding the provided feature.
    * @param featureToBind the feature to bind. null values are illegal
@@ -164,89 +154,74 @@ public class FE1D2DContinuityLine<
           gmlID ));
   }
 
-  /**
-   * TODO: comment: why is not the super implementation used?
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement#getNodes()
-   */
-  @Override
-  public List<IFE1D2DNode> getNodes( )
-  {
-    IFeatureWrapperCollection<ET> edges = super.getEdges();
-    List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
-    IFE1D2DNode lastAddedNode=null;
-    
-    for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
-    {
-      IFE1D2DNode<IFE1D2DEdge> node0=edge.getNode( 0 );
-      IFE1D2DNode<IFE1D2DEdge> node1=edge.getNode( 1 );
-      
-      if(node0.equals( lastAddedNode ))
-      {
-        //skip because expected
-      }
-      else
-      {
-        if(lastAddedNode==null)
-        {
-          //first node
-          nodes.add( node0 );
-          lastAddedNode=node0;
-        }
-        else
-        {
-          //bad list not following each other
-          throw new RuntimeException("Continuity line node is bad:"+edges);
-        }
-      }
-      nodes.add( node1 );
-      lastAddedNode=node1;
-    }
-    return nodes;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#recalculateGeometry()
-   */
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
-  {
-      List<IFE1D2DNode> nodes=getNodes();
-      
-      final int SIZE=nodes.size();
-      
-      final GM_Position[] poses = new GM_Position[SIZE];
-
-      if( SIZE <= 1 )
-      {
-        return null;
-      }
-
-      final CS_CoordinateSystem crs = 
-        nodes.get(0).getPoint().getCoordinateSystem();
-
-      for( int i = 0; i < poses.length; i++ )
-      {
-        final GM_Point point = nodes.get( i ).getPoint();
-        poses[i] = point.getPosition();
-      }
-      
-      return GeometryFactory.createGM_Curve( poses, crs );
-  }
-  
 //  /**
-//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#getLine()
+//   * TODO: comment: why is not the super implementation used?
+//   * 
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement#getNodes()
 //   */
-//  public GM_Curve getGeometry( )
+//  @Override
+//  public List<IFE1D2DNode> getNodes( )
 //  {
-//    return (GM_Curve) getWrappedFeature().getProperty( QNAME_PROP_GEOMETRY );
+//    IFeatureWrapperCollection<ET> edges = super.getEdges();
+//    List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
+//    IFE1D2DNode lastAddedNode=null;
+//    
+//    for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
+//    {
+//      IFE1D2DNode<IFE1D2DEdge> node0=edge.getNode( 0 );
+//      IFE1D2DNode<IFE1D2DEdge> node1=edge.getNode( 1 );
+//      
+//      if(node0.equals( lastAddedNode ))
+//      {
+//        //skip because expected
+//      }
+//      else
+//      {
+//        if(lastAddedNode==null)
+//        {
+//          //first node
+//          nodes.add( node0 );
+//          lastAddedNode=node0;
+//        }
+//        else
+//        {
+//          //bad list not following each other
+//          throw new RuntimeException("Continuity line node is bad:"+edges);
+//        }
+//      }
+//      nodes.add( node1 );
+//      lastAddedNode=node1;
+//    }
+//    return nodes;
 //  }
-
+//
 //  /**
-//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#setGeometry(org.kalypsodeegree.model.geometry.GM_Curve)
+//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine#recalculateGeometry()
 //   */
-//  public void setGeometry( final GM_Curve curve )
+//  public GM_Object recalculateElementGeometry( ) throws GM_Exception
 //  {
-//    getWrappedFeature().setProperty( QNAME_PROP_GEOMETRY, curve );
+//      List<IFE1D2DNode> nodes=getNodes();
+//      
+//      final int SIZE=nodes.size();
+//      
+//      final GM_Position[] poses = new GM_Position[SIZE];
+//
+//      if( SIZE <= 1 )
+//      {
+//        return null;
+//      }
+//
+//      final CS_CoordinateSystem crs = 
+//        nodes.get(0).getPoint().getCoordinateSystem();
+//
+//      for( int i = 0; i < poses.length; i++ )
+//      {
+//        final GM_Point point = nodes.get( i ).getPoint();
+//        poses[i] = point.getPosition();
+//      }
+//      
+//      return GeometryFactory.createGM_Curve( poses, crs );
 //  }
   
+
 }
