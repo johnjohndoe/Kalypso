@@ -48,6 +48,7 @@ package org.kalypso.ogc.gml;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 
@@ -67,7 +68,7 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
    * @param theme
    * @param style
    */
-  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, KalypsoUserStyle style )
+  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, final KalypsoUserStyle style )
   {
     m_theme = theme;
     m_style = style;
@@ -87,23 +88,39 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public String toString( )
   {
     if( m_style == null )
+    {
       return "<no styles set>";
+    }
 
     if( m_style.getName() != null )
+    {
       return m_style.getName();
+    }
     return m_style.toString();
   }
 
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object o )
+  public Object[] getChildren( final Object o )
   {
     if( o != this )
+    {
       throw new IllegalStateException();
+    }
 
     // TODO: is this right, always taking the first one?
-    final Rule[] rules = m_style.getFeatureTypeStyles()[0].getRules();
+    final FeatureTypeStyle[] styles = m_style.getFeatureTypeStyles();
+
+    final Rule[] rules;
+    if( styles.length > 0 )
+    {
+      rules = m_style.getFeatureTypeStyles()[0].getRules();
+    }
+    else
+    {
+      rules = new Rule[0];
+    }
 
 // // need to parse all rules as some might belong to a filter-rule-pattern
 // RuleFilterCollection rulePatternCollection = RuleFilterCollection.getInstance();
@@ -117,7 +134,9 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 // result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle, (IKalypsoFeatureTheme) theme );
     final RuleTreeObject[] result = new RuleTreeObject[rules.length];
     for( int i = 0; i < rules.length; i++ )
+    {
       result[i] = new RuleTreeObject( rules[i], this );
+    }
     return result;
   }
 
@@ -127,7 +146,9 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public ImageDescriptor getImageDescriptor( final Object object )
   {
     if( object != this )
+    {
       throw new IllegalStateException();
+    }
 
     final KalypsoUserStyle userStyle = getStyle();
 
@@ -137,10 +158,12 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
    */
-  public String getLabel( Object o )
+  public String getLabel( final Object o )
   {
     if( o != this )
+    {
       throw new IllegalStateException();
+    }
 
     final KalypsoUserStyle userStyle = getStyle();
 
@@ -153,7 +176,9 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public Object getParent( final Object o )
   {
     if( o != this )
+    {
       throw new IllegalStateException();
+    }
 
     return getTheme();
   }
@@ -164,7 +189,9 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public String getTooltip( final Object element )
   {
     if( element != this )
+    {
       throw new IllegalStateException();
+    }
 
     return getStyle().getAbstract();
   }
