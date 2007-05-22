@@ -244,9 +244,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
     areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    areaSelectSection.setText("Knoten bearbeiten" 
-          //"Selectiere  A Region" 
-        );
+    areaSelectSection.setText("Knoten bearbeiten"  );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;

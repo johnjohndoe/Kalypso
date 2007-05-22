@@ -120,7 +120,7 @@ public class CalculationUnitWidget
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
-  {
+    {
     try
     {
       return widgetFace.createControl( parent );
@@ -204,13 +204,5 @@ public class CalculationUnitWidget
    super.leftClicked(p);
 // @TODO
   }
-  
- /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
-   */
-  @Override
-  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
-  {
-    return true;
   }
-}
+  

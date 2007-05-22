@@ -40,18 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -59,29 +54,14 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetDataModel;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * 
@@ -98,9 +78,13 @@ class CalculationUnitWidgetFace
   private Section elevationColorSection;
 
   private TableViewer elevationListTableViewer;
-  private Section calculationUnitSectionStatus;
+  private Section calculationUnitSection;
   private CalculationUnitComponent calcGUI;
   private CalculationUnitDataModel dataModel;
+  private Section calculationElementUnitSection;
+  private Composite sectionFirstComposite;
+  private Composite sectionSecondComposite;
+  private CalculationElementComponent calcElementGUI;
   public CalculationUnitWidgetFace( )
   {
     
@@ -125,39 +109,63 @@ class CalculationUnitWidgetFace
 
     scrolledForm.getBody().setLayout( new TableWrapLayout() );
 
-    
-    calculationUnitSectionStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationUnitSectionStatus.setText( "Berechnungseinheiten Modellieren" );
+    // Calculation Unit Section     
+    calculationUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    calculationUnitSection.setText( "Berechnungseinheiten Modellieren" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    calculationUnitSectionStatus.setLayoutData( tableWrapData );
-    calculationUnitSectionStatus.setExpanded( true );
+    calculationUnitSection.setLayoutData( tableWrapData );
+    calculationUnitSection.setExpanded( true );
 
-    createSelectElevationModel( calculationUnitSectionStatus );
+    // Creates Section for "Calculation Elements Unit"
+    calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    calculationElementUnitSection.setText( "Calculation Elements" );
+    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.grabVertical = true;
+    calculationElementUnitSection.setLayoutData( tableWrapData );
+    calculationElementUnitSection.setExpanded( true );
+    
+    createCalculationUnit( calculationUnitSection );
+    createCalculationElements(calculationElementUnitSection);
 
     return rootPanel;
   }
 
-  private final void createSelectElevationModel( Section workStatusSection )
+  private final void createCalculationUnit( Section workStatusSection )
   {
     workStatusSection.setLayout( new FillLayout() );
-
-    Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
-    workStatusSection.setClient( clientComposite );
+    sectionFirstComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
+    workStatusSection.setClient( sectionFirstComposite );
     // clientComposite.setSize( 400, 300 );
     FormLayout formLayout = new FormLayout();
-    clientComposite.setLayout( formLayout );
+    sectionFirstComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 5 );
-    clientComposite.setLayoutData( formData );
+    //formData.bottom = new FormAttachment( sectionSecondComposite, 5 );
+    sectionFirstComposite.setLayoutData( formData );
     calcGUI= new CalculationUnitComponent();    
-    calcGUI.createControl( dataModel, toolkit, clientComposite );
-
+    calcGUI.createControl( dataModel, toolkit, sectionFirstComposite );
   }
 
+  private void createCalculationElements( Section elementStatusSection )
+  {
+    
+    elementStatusSection.setLayout( new FillLayout() );
+    sectionSecondComposite = toolkit.createComposite( elementStatusSection, SWT.FLAT );
+    elementStatusSection.setClient( sectionSecondComposite );
+    FormLayout formLayout = new FormLayout();
+    sectionSecondComposite.setLayout( formLayout );
+    FormData formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( sectionSecondComposite, 5 );
+    formData.bottom = new FormAttachment( 100, 5 );
+    sectionSecondComposite.setLayoutData( formData );
+    calcElementGUI= new CalculationElementComponent();    
+    calcElementGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
+  }
 
   public void disposeControl( )
   {

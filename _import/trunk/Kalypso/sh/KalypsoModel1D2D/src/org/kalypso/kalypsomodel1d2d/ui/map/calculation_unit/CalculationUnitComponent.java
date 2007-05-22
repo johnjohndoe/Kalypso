@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 
@@ -49,18 +51,27 @@ import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
  * @author Patrice Congo
  *
  */
-public class CalculationUnitComponent extends FeatureWrapperListEditor implements IButtonConstants
+public class CalculationUnitComponent 
+      extends FeatureWrapperListEditor 
+      implements IButtonConstants
 {
 
   public CalculationUnitComponent()
   {
     super(null,null,null);
-    
-    setRequiredButtons( BTN_MOVE_UP,
-                        BTN_MOVE_DOWN,
-                        BTN_CLICK_TO_RUN,
+    setRequiredButtons( BTN_CLICK_TO_RUN,
                         BTN_REMOVE,
                         BTN_ADD);
   }
-  
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor#templateDialog()
+   */
+  @Override
+  public void createFeatureWrapper()
+  {
+      final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+      CreateCalculationUnitDialog calculationDialog = new CreateCalculationUnitDialog(shell);
+      calculationDialog.open();    
+  }  
 }

@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -56,20 +59,26 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
@@ -79,38 +88,36 @@ import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
  */
 public class FeatureWrapperListEditor implements IButtonConstants
 {
-
-  class ElevationListLabelProvider extends LabelProvider
+  class ListLabelProvider extends LabelProvider
   {
-
     public Image getImage( Object element )
     {
-
       return null;
     }
 
     public String getText( Object element )
     {
-      if( element instanceof ITerrainElevationModel )
+      if( element instanceof IFeatureWrapper2 )
       {
 
-        String name = ((ITerrainElevationModel) element).getName();
+        String name = ((IFeatureWrapper2) element).getName();
         if( name != null )
         {
           return name;
         }
         else
         {
-          return ((ITerrainElevationModel) element).getGmlID();
+          return ((IFeatureWrapper2) element).getGmlID();
         }
       }
       else
       {
-        throw new RuntimeException( "Only terrain elevation model are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+        throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
       }
     }
   }
 
+  
   /* ======================================================================== */
   private TableViewer tableViewer;
 
@@ -149,6 +156,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
   final String deleteSelected = "Geländemodell löschen";
 
   final String defaultTestDecription = "Wählen Sie ein Modell aus.";
+  
+  final String saveToolTip = "Deskription Sichern";
 
   final String titleDescriptionGroup = "Beschreibung";
 
@@ -156,7 +165,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
   {
     public void widgetSelected( SelectionEvent event )
     {
-
       System.out.println( "MoveUp:" + tableViewer.getSelection() );
       moveSelection( -1 );
       tableViewer.refresh();
@@ -189,12 +197,13 @@ public class FeatureWrapperListEditor implements IButtonConstants
           throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
         else
         {
-          if( selection.getFirstElement() instanceof ITerrainElevationModel )
+          if( selection.getFirstElement() instanceof IFeatureWrapper2 )
           {
-            ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
+            IFeatureWrapper2 firstElement = (IFeatureWrapper2) selection.getFirstElement();
             dataModel.setData( idSselection, firstElement );
             descriptionText.setText( firstElement.getDescription() );
             descriptionText.redraw();
+            setCurrentSelection(firstElement);
           }
         }
       }
@@ -202,8 +211,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
       {
         th.printStackTrace();
       }
-
     }
+
   };
 
   private Label descriptionLabel;
@@ -213,6 +222,10 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private Text descriptionText;
 
   private String[] buttonsList;
+
+  private Button saveButton;
+
+  private IFeatureWrapper2 currentElementSelection;
 
   public FeatureWrapperListEditor( String selectionID, String inputID, String mapPanelID )
   {
@@ -236,8 +249,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     Label terrainModelLabel = new Label( parent, SWT.NONE );
-    // GridData labelGridData = new GridData( GridData.FILL_BOTH );
-    // labelGridData.horizontalSpan = 2;
     terrainModelLabel.setText( mainGroupTitle );
     terrainModelLabel.setLayoutData( formData );
 
@@ -249,13 +260,18 @@ public class FeatureWrapperListEditor implements IButtonConstants
     tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
     Table table = tableViewer.getTable();
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new ElevationListLabelProvider() );
+    tableViewer.setLabelProvider( new ListLabelProvider() );
     table.setLinesVisible( true );
     table.setLayoutData( formData );
 
-//    Object inputData = dataModel.getData( idInput );
-//    List<IFeatureWrapper2> featureWrappers = inputProvider.toInputArray( inputData );
-//    tableViewer.setInput( featureWrappers );
+   
+    Object inputData = dataModel.getData( CalculationUnitDataModel.CALCULATION_UNITS );
+
+    if (inputData == null)
+    {
+      inputData = new ArrayList<IFeatureWrapper2>();
+    }
+    tableViewer.setInput((List<ICalculationUnit>)inputData );
     tableViewer.addSelectionChangedListener( this.elevationModelSelectListener );
 
     formData = new FormData();
@@ -265,19 +281,18 @@ public class FeatureWrapperListEditor implements IButtonConstants
     
     Composite btnComposite = new Composite(parent,SWT.NONE);
     btnComposite.setLayout( new GridLayout(1,false));
-    btnComposite.setLayoutData( formData );
+    btnComposite.setLayoutData( formData );   
+    if (searchForThisString( IButtonConstants.BTN_MOVE_UP ))
+    {        
+      Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
+      imageUp = new Image( btnComposite.getDisplay(), 
+          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+              "icons/elcl16/list_up.gif" ).getImageData() );
+      moveUpBtn.setImage( imageUp );
+      moveUpBtn.addSelectionListener( this.moveUpListener );
+    }
     
-    
-      if (searchForThisString( IButtonConstants.BTN_MOVE_UP ))
-      {        
-        Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
-        imageUp = new Image( btnComposite.getDisplay(), 
-            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-                PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                "icons/elcl16/list_up.gif" ).getImageData() );
-        moveUpBtn.setImage( imageUp );
-        moveUpBtn.addSelectionListener( this.moveUpListener );
-      }
     if (searchForThisString( IButtonConstants.BTN_MOVE_DOWN ))
       {
         Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
@@ -288,6 +303,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         moveDownBtn.setImage( imageDown );
         moveDownBtn.addSelectionListener( this.moveDownListener );
       }
+    
     if (searchForThisString( IButtonConstants.BTN_CLICK_TO_RUN ))
       {
         Button showTerrain = new Button( btnComposite, SWT.PUSH );
@@ -339,7 +355,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
       image = new Image( btnComposite.getDisplay(),
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
               PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-              "icons/elcl16/remove.gif" ).getImageData() );
+              "icons/elcl16/add.gif" ).getImageData() );
       addButton.setImage( image );
       addButton.addSelectionListener( new SelectionAdapter()
       {
@@ -347,8 +363,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         {
           try
           {
-            //@TODO
-            tableViewer.refresh();
+          createFeatureWrapper();
           }
           catch( Throwable th )
           {
@@ -364,23 +379,44 @@ public class FeatureWrapperListEditor implements IButtonConstants
     formData.left = new FormAttachment( btnComposite, 5 );
     formData.top = new FormAttachment( terrainModelLabel, 10 );
     formData.bottom = new FormAttachment( 100, 0 );
-    formData.right = new FormAttachment( 100, 0 );
     descriptionGroupText.setLayoutData( formData );
 
     FormLayout formDescription = new FormLayout();
     descriptionGroupText.setLayout( formDescription );
+    
     descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
     descriptionText.setText( defaultTestDecription );
+    
     FormData formDescripData = new FormData();
     formDescripData.left = new FormAttachment( 0, 0 );
     formDescripData.right = new FormAttachment( 100, 0 );
     formDescripData.top = new FormAttachment( 0, 0 );
-    formDescripData.bottom = new FormAttachment( 100, 0 );
-//    Menu menu = descriptionText.getMenu();
-//    MenuItem saveMenuItem = new MenuItem( menu, SWT.PUSH );
-//    saveMenuItem.setText( "save" );
+    //formDescripData.bottom = new FormAttachment( 100, 0 );
     descriptionText.setLayoutData( formDescripData );
     
+    saveButton = new Button (descriptionGroupText,SWT.PUSH);
+    saveButton.setText( "Sichern" );
+    saveButton.setToolTipText( saveToolTip );
+    image = new Image( descriptionGroupText.getDisplay(),
+        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+            "icons/elcl16/save.gif" ).getImageData() );
+    saveButton.setImage( image );
+    formData = new FormData();
+    //formData.left = new FormAttachment(descriptionGroupText,5);
+    formData.right = new FormAttachment(100,0);
+    formData.bottom = new FormAttachment(100,0);
+    saveButton.setLayoutData( formData ); 
+    saveButton.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent event )
+      {
+          if (getCurrentSelection()!= null)
+          {
+            getCurrentSelection().setDescription( descriptionText.getText() );          
+          }        
+      }
+    } );        
   }
 
   protected final void deleteElevationModel( ) throws Exception
@@ -408,4 +444,19 @@ public class FeatureWrapperListEditor implements IButtonConstants
     }
     return false;
   }
+  
+  private void setCurrentSelection( IFeatureWrapper2 firstElement )
+  {
+    currentElementSelection = firstElement;    
+  }
+  
+  
+  private IFeatureWrapper2 getCurrentSelection(){
+    
+    return currentElementSelection;
+  }
+  
+  public void createFeatureWrapper()
+  {
+  } 
 }
