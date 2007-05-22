@@ -47,8 +47,7 @@
 	<xs:complexType name="TerrainModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
-				Property type to defined terrain model of a 1d 2d static
-				model
+				Property type to defined terrain model of a 1d 2d static model
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -313,7 +312,7 @@
 	<xs:complexType name="RoughnessLayerPolygonCollectionType">
 		<xs:complexContent>
 			<xs:restriction
-				base=" gml:AbstractFeatureCollectionType ">
+				base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
 					<xs:element ref="simBase:roughnessLayerMember"
 						minOccurs="0" maxOccurs="unbounded" />

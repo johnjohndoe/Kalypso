@@ -1,105 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:kapp="org.kalypso.appinfo"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns:kapp="org.kalypso.appinfo"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
-	xmlns:om="http://www.opengis.net/om"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
+
 	<import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<import namespace="http://www.opengis.net/om"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
-	<import
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
-		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_finite_elements_discretisation.xsd"
-		/>	
-	
-	<!-- ==============================================================
-		global element declarations
-		============================================================== -->
-	<!--element 
-		name="ControlModel" 
-		type="c1d2d:ControlModelType" 
-		substitutionGroup="simBase:_Model"/>
-	<annotation>
-		<documentation xml:lang="de">
-			<label>Control Parameter</label>
-		</documentation>
-		<documentation xml:lang="en">
-			<label>control parameter</label>
-		</documentation>
-	</annotation>
-	<complexType name="ControlModelType">
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd"/>
+	<import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model.xsd" />
+
+	<!-- =================================================================
+		ControlModelGroup
+		================================================================== -->
+	<element name="ControlModelGroup"
+		type="c1d2d:ControlModelGroupType" substitutionGroup="simBase:_Model">
+	</element>
+
+	<complexType name="ControlModelGroupType">
+		<annotation>
+			<documentation>Defined a ...</documentation>
+		</annotation>
 		<complexContent>
-			<extension 
-				base="simBase:AbstractControlModelType">
+			<extension base="simBase:AbstractModelType">
 				<sequence>
-					<element ref="c1d2d:complexElementControlModel"/>
+					<element ref="c1d2d:controlModelCollection"
+						minOccurs="1" maxOccurs="1" />
 				</sequence>
 			</extension>
 		</complexContent>
-	</complexType -->
-	
-	<!-- =================================================================
-	
-	================================================================== -->
-	<element 
-			name="controlModel" 
-			type="c1d2d:ControlModelPropertyType" >
-		<annotation>
-			<documentation xml:lang="en">
-			</documentation>
-		</annotation>
-	</element>
-	<complexType 
-		name="ControlModelPropertyType">
-		<annotation>
-			<documentation xml:lang="en">
-			</documentation>
-		</annotation>
-		<sequence>
-			<element 
-				ref="c1d2d:Control" 
-				minOccurs="0" maxOccurs="1"/>
-		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
-	<!-- ============================================================
-	
-	============================================================= -->
-	<element 
-		name="Control" 
-		type="c1d2d:ControlModelType" 
-		substitutionGroup="simBase:_Model"/>
-	<annotation>
-		<documentation xml:lang="de">
-			<label>Control Parameter</label>
-		</documentation>
-		<documentation xml:lang="en">
-			<label>control parameter</label>
-		</documentation>
-	</annotation>
+
+	<!-- =================================================================
+		controlModelCollection property
+		================================================================== -->
+	<element name="controlModelCollection">
+		<complexType>
+			<sequence>
+				<element ref="c1d2d:ControlModelCollection"
+					minOccurs="0" maxOccurs="1" />
+			</sequence>
+			<attributeGroup ref="gml:AssociationAttributeGroup" />
+		</complexType>
+	</element>
+
+	<!-- =================================================================
+		ControlModelCollectionType
+		================================================================== -->
+	<element name="ControlModelCollection"
+		type="c1d2d:ControlModelCollectionType"
+		substitutionGroup="gml:_Feature">
+
+	</element>
+	<complexType name="ControlModelCollectionType">
+		<complexContent>
+			<restriction
+				base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element ref="c1d2d:controlModelMember"
+						minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<!-- =================================================================
+		Rougthness layer polynom member or property 
+		===================================================================-->
+	<element name="controlModelMember"
+		type="c1d2d:ControlModelMemberPropertyType" />
+
+	<complexType name="ControlModelMemberPropertyType">
+		<sequence>
+			<element ref="c1d2d:ControlModel" minOccurs="0"
+				maxOccurs="1" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+	<!-- =================================================================
+		
+		================================================================== -->
+	<element name="ControlModel" type="c1d2d:ControlModelType"
+		substitutionGroup="gml:_Feature" />
+
 	<complexType name="ControlModelType">
 		<complexContent>
 			<extension base="simBase:AbstractControlModelType">
 				<sequence>
-					<element
-						name="boundaryZone1"
-						type="gml:PointPropertyType"
-						minOccurs="0" maxOccurs="1"/>
-					<element
-						name="boundaryZone2"
-						type="gml:PointPropertyType"
-						minOccurs="0" maxOccurs="1"/>
-					<element ref="c1d2d:controlModel"/>
-						
+					<element name="boundaryZone1"
+						type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+					<element name="boundaryZone2"
+						type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+
 					<element name="Version" default="NEW">
 						<annotation>
 							<documentation xml:lang="de">
@@ -113,10 +116,12 @@
 							<restriction base="string">
 								<enumeration value="NEW">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>Neueste</label>
 										</documentation>
-										<documentation xml:lang="en">
+										<documentation
+											xml:lang="en">
 											<label>latest</label>
 										</documentation>
 									</annotation>
@@ -131,7 +136,9 @@
 						default="true">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Berücksichtigung Bewuchs</label>
+								<label>
+									Berücksichtigung Bewuchs
+								</label>
 								<tooltip>
 									Berücksichtigung der
 									Bewuchsparameter bei der Berechnung
@@ -195,14 +202,18 @@
 							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
-										<documentation xml:lang="de">
-											<label>ohne Marsh</label>
+										<documentation
+											xml:lang="de">
+											<label>
+												ohne Marsh
+											</label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="-1">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
 												Default Werte nutzen
 											</label>
@@ -217,7 +228,8 @@
 								</enumeration>
 								<enumeration value="-2">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
 												Eingabewerte nutzen
 											</label>
@@ -246,7 +258,9 @@
 					<element name="IEDSW" default="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wirbelviskositätsansatz</label>
+								<label>
+									Wirbelviskositätsansatz
+								</label>
 								<tooltip>
 									Wirbelviskositätsansatz
 								</tooltip>
@@ -254,14 +268,18 @@
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-									<enumeration value="0">
+								<enumeration value="0">
 									<annotation>
-									<documentation xml:lang="de">
-									<label>konstante Eingabedaten ohne Skalierung</label>
-									</documentation>
+										<documentation
+											xml:lang="de">
+											<label>
+												konstante Eingabedaten
+												ohne Skalierung
+											</label>
+										</documentation>
 									</annotation>
-									</enumeration>
-									<!--
+								</enumeration>
+								<!--
 									<enumeration value="1">
 									<annotation>
 									<documentation xml:lang="de">
@@ -292,16 +310,19 @@
 									</enumeration>-->
 								<enumeration value="5">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
-												Konstante Wirbelviskosität
+												Konstante
+												Wirbelviskosität
 											</label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="6">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
 												free shear-layer
 											</label>
@@ -310,7 +331,8 @@
 								</enumeration>
 								<enumeration value="2">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
 												Smagorinsky-Ansatz
 											</label>
@@ -327,7 +349,8 @@
 									Faktor Smagorinsky-Ansatz [-]
 								</label>
 								<tooltip>
-									Alfa Wert des Smagorinsky Ansatzes [-]
+									Alfa Wert des Smagorinsky Ansatzes
+									[-]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -338,14 +361,16 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="TBMIN" type="double" default="2">
+					<element name="TBMIN" type="double"
+						default="2">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
 									Min. Wirbelviskosität [m²/s]
 								</label>
 								<tooltip>
-									Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]
+									Minimale Wirbelviskosität beim
+									Smagorinsky-Ansatz [m²/s]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -391,7 +416,8 @@
 							<documentation xml:lang="de">
 								<label>Breitengrad [°]</label>
 								<tooltip>
-									Breitengrad zur Ermittlung der Corioliskraft [°]
+									Breitengrad zur Ermittlung der
+									Corioliskraft [°]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -399,15 +425,19 @@
 					<element name="ELEV" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Anfangswasserspiegel [m]</label>
+								<label>
+									Anfangswasserspiegel [m]
+								</label>
 								<tooltip>
-									Anfangswert des Wasserstandes über jeden Knoten [m]
+									Anfangswert des Wasserstandes über
+									jeden Knoten [m]
 								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
 					<!--C3-->
-					<element name="UNOM" type="double" default="0.5">
+					<element name="UNOM" type="double"
+						default="0.5">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -423,7 +453,9 @@
 									Geschwindigkeitsrichtung [°]
 								</label>
 								<tooltip>
-									Ungefähre Fließrichtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [°]
+									Ungefähre Fließrichtung im
+									Gegenuhrzeigersinn auf die globale
+									x-Achse bezogen [°]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -441,7 +473,8 @@
 									Min. Anfangswassertiefe [m]
 								</label>
 								<tooltip>
-									Minimale Wassertiefe bei Simulationsstart [m]
+									Minimale Wassertiefe bei
+									Simulationsstart [m]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -449,9 +482,12 @@
 					<element name="DSET" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Trockenfalltiefe [m]</label>
+								<label>
+									Trockenfalltiefe [m]
+								</label>
 								<tooltip>
-									Wassertiefe ab welcher Knoten trocken fällt [m].
+									Wassertiefe ab welcher Knoten
+									trocken fällt [m].
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -459,9 +495,12 @@
 					<element name="DSETD" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wiederbenetzungstiefe [m]</label>
+								<label>
+									Wiederbenetzungstiefe [m]
+								</label>
 								<tooltip>
-									Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m].
+									Wassertiefe bei welcher trockener
+									Knoten wiederbenetzt wird [m].
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -471,10 +510,13 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
-									Max. Anzahl Interationsschritte	(stationär)
+									Max. Anzahl Interationsschritte
+									(stationär)
 								</label>
 								<tooltip>
-									Maximale Anzahl der Interationen für stationäre Berechnung (0 - ohne stationäre Berechnung).
+									Maximale Anzahl der Interationen für
+									stationäre Berechnung (0 - ohne
+									stationäre Berechnung).
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -489,7 +531,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
-									Anzahl der Zeitschritte (instationär)
+									Anzahl der Zeitschritte
+									(instationär)
 								</label>
 							</documentation>
 						</annotation>
@@ -498,10 +541,12 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
-									Max. Anzahl Interationsschritte (instationär)
+									Max. Anzahl Interationsschritte
+									(instationär)
 								</label>
 								<tooltip>
-									Maximale Anzahl der Interationen für instationäre Berechnung.
+									Maximale Anzahl der Interationen für
+									instationäre Berechnung.
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -517,9 +562,12 @@
 						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Konvergenzschranke vx [-]</label>
+								<label>
+									Konvergenzschranke vx [-]
+								</label>
 								<tooltip>
-									Maximale Änderung der Geschwindigkeit in x-Richtung [-]
+									Maximale Änderung der
+									Geschwindigkeit in x-Richtung [-]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -528,9 +576,12 @@
 						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Konvergenzschranke vy [-]</label>
+								<label>
+									Konvergenzschranke vy [-]
+								</label>
 								<tooltip>
-									Maximale Änderung der Geschwindigkeit in y-Richtung [-]
+									Maximale Änderung der
+									Geschwindigkeit in y-Richtung [-]
 								</tooltip>
 								<tooltip />
 							</documentation>
@@ -540,9 +591,12 @@
 						default="0.001">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Konvergenzschranke h [-]</label>
+								<label>
+									Konvergenzschranke h [-]
+								</label>
 								<tooltip>
-									Maximale Änderung der Wassertiefe [-]
+									Maximale Änderung der Wassertiefe
+									[-]
 								</tooltip>
 								<tooltip />
 							</documentation>
@@ -551,9 +605,13 @@
 					<element name="IDRPT" default="1">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Gleichungsdeaktivierung</label>
+								<label>
+									Gleichungsdeaktivierung
+								</label>
 								<tooltip>
-									Deaktivierung von nicht benötigten Gleichungen (konvergente Freiheitsgrade)
+									Deaktivierung von nicht benötigten
+									Gleichungen (konvergente
+									Freiheitsgrade)
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -561,7 +619,8 @@
 							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
 												Keine Deaktivierung
 											</label>
@@ -573,12 +632,17 @@
 								</enumeration>
 								<enumeration value="1">
 									<annotation>
-										<documentation xml:lang="de">
+										<documentation
+											xml:lang="de">
 											<label>
 												Mögliche deaktivieren
 											</label>
 											<tooltip>
-												Gleichungsdeaktivierung nach Deaktivierungskriterium (konvergente Freiheitsgrade)
+												Gleichungsdeaktivierung
+												nach
+												Deaktivierungskriterium
+												(konvergente
+												Freiheitsgrade)
 											</tooltip>
 										</documentation>
 									</annotation>
@@ -594,33 +658,41 @@
 									Deaktivierungskriterium [-]
 								</label>
 								<tooltip>
-									Deaktivierungskriterium für Gleichungen [-]
+									Deaktivierungskriterium für
+									Gleichungen [-]
 								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
 					<!--MP-->
-					<element name="AC1" type="double" default="1.5">
+					<element name="AC1" type="double"
+						default="1.5">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Deaktivierungstiefe [m]</label>
 								<label>
-									Tiefe unter der Oberfläche zur deaktivierung von Knoten [m]
+									Deaktivierungstiefe [m]
+								</label>
+								<label>
+									Tiefe unter der Oberfläche zur
+									deaktivierung von Knoten [m]
 								</label>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="AC2" type="double" default="0.67">
+					<element name="AC2" type="double"
+						default="0.67">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Übergangstiefe [m]</label>
 								<tooltip>
-									Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m].
+									Wassertiefe ab der Marsh-Algorithmus
+									aktiviert wird [m].
 								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="AC3" type="double" default="0.04">
+					<element name="AC3" type="double"
+						default="0.04">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Porosität [-]</label>
@@ -637,7 +709,9 @@
 							<documentation xml:lang="de">
 								<label>Restart</label>
 								<tooltip>
-									Angabe des Restart Zeitschrittes (bei 0 wird eine neue Berechnung gestartet).
+									Angabe des Restart Zeitschrittes
+									(bei 0 wird eine neue Berechnung
+									gestartet).
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -647,7 +721,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zeitschritte</label>
-								<tooltip>Time Steps Entries</tooltip>
+								<tooltip>
+									Time Steps Entries
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -663,137 +739,134 @@
 	</complexType>
 
 	<!--quasi Stationär Zeitschrittvorgabe -->
-	<element name="TimestepsObservation" type="om:ObservationType"
-		substitutionGroup="om:Observation">
+	<element name="TimestepsObservation" type="om:ObservationType" substitutionGroup="om:Observation">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Zeitschrittvorgabe</label>
-				<tooltip>
-					Zeitschrittvorgabe der quasi stationären Berechnung
-				</tooltip>
+				<tooltip>Zeitschrittvorgabe der quasi stationären Berechnung</tooltip>
 			</documentation>
 		</annotation>
 	</element>
 
-<!-- 
-	<complexType name="TimestepsObservationType">
+	<!-- 
+		<complexType name="TimestepsObservationType">
 		<annotation>
-			<documentation>
-				Observation event. carries a generic "result" properties of type "anyType".
-			</documentation>
+		<documentation>
+		Observation event. carries a generic "result" properties of type "anyType".
+		</documentation>
 		</annotation>
 		<complexContent>
-			<extension base="om:ObservationType">
-				<sequence>
-					<element name="myResult" type="anyType"
-						nillable="true">
-						<annotation>
-							<documentation>
-								an xsi:type attribute may appear in the instance to indicate the type of the result
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
- -->
-
-<!-- 
-	<element name="Timesteps" 
-					type="c1d2d:TimeserieType" 
-					substitutionGroup="om:Observation"/>
-	<complexType name="TimeserieType">
-		<complexContent>
-			<extension base="om:ObservationType">
-				<sequence>
-					<element name="date" type="date">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Datum</label>
-							</documentation>
-							<documentation  xml:lang="en">								
-								<label>Date</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="hValue" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>H Value</label>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>H Value</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="qValue" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Q Value</label>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Q Value</label>
-							</documentation>
-						</annotation>
-					</element>					
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>	
--->
-<!-- 
-	<xs:element name="Timeserie" type="op1d2d:TimeserieType" substitutionGroup="om:Observation" />
-
-	<xs:complexType name="TimeserieType">
-		<xs:complexContent>
-			<xs:extension base="om:ObservationType">
-				<xs:sequence>
-					<xs:element name="dataSourceURI" type="xs:anyURI">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Quelle</xs:label>
-								<xs:tooltip>Herkunft der Zeitreihe</xs:tooltip>
-								<xs:description>
-									Beschreibt woher die Zeitreihe ursprünglich kam.
-								</xs:description>
-							</xs:documentation>
-							<xs:documentation>
-								The source where the timeserie came from. TODO: maybe put it into
-								the timeserie definition?
-								<xs:label>Source</xs:label>
-								<xs:tooltip>Origin of the Timeserie</xs:tooltip>
-								<xs:description>
-									Describes where this timeserie came from.
-								</xs:description>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<complexType name="TableTimeStepPropertyType">
+		<extension base="om:ObservationType">
 		<sequence>
-			<element ref="c1d2d:TableTimeStep" minOccurs="0"/>
+		<element name="myResult" type="anyType"
+		nillable="true">
+		<annotation>
+		<documentation>
+		an xsi:type attribute may appear in the instance to indicate the type of the result
+		</documentation>
+		</annotation>
+		</element>
+		</sequence>
+		</extension>
+		</complexContent>
+		</complexType>
+	-->
+
+	<!-- 
+		<element name="Timesteps" 
+		type="c1d2d:TimeserieType" 
+		substitutionGroup="om:Observation"/>
+		<complexType name="TimeserieType">
+		<complexContent>
+		<extension base="om:ObservationType">
+		<sequence>
+		<element name="date" type="date">
+		<annotation>
+		<documentation xml:lang="de">
+		<label>Datum</label>
+		</documentation>
+		<documentation  xml:lang="en">								
+		<label>Date</label>
+		</documentation>
+		</annotation>
+		</element>
+		<element name="hValue" type="double">
+		<annotation>
+		<documentation xml:lang="de">
+		<label>H Value</label>
+		</documentation>
+		<documentation xml:lang="en">
+		<label>H Value</label>
+		</documentation>
+		</annotation>
+		</element>
+		<element name="qValue" type="double">
+		<annotation>
+		<documentation xml:lang="de">
+		<label>Q Value</label>
+		</documentation>
+		<documentation xml:lang="en">
+		<label>Q Value</label>
+		</documentation>
+		</annotation>
+		</element>					
+		</sequence>
+		</extension>
+		</complexContent>
+		</complexType>	
+	-->
+	<!-- 
+		<element name="Timeserie" type="op1d2d:TimeserieType" substitutionGroup="om:Observation" />
+		
+		<complexType name="TimeserieType">
+		<complexContent>
+		<extension base="om:ObservationType">
+		<sequence>
+		<element name="dataSourceURI" type="anyURI">
+		<annotation>
+		<documentation xml:lang="de">
+		<label>Quelle</label>
+		<tooltip>Herkunft der Zeitreihe</tooltip>
+		<description>
+		Beschreibt woher die Zeitreihe ursprünglich kam.
+		</description>
+		</documentation>
+		<documentation>
+		The source where the timeserie came from. TODO: maybe put it into
+		the timeserie definition?
+		<label>Source</label>
+		<tooltip>Origin of the Timeserie</tooltip>
+		<description>
+		Describes where this timeserie came from.
+		</description>
+		</documentation>
+		</annotation>
+		</element>
+		</sequence>
+		</extension>
+		</complexContent>
+		</complexType>
+		
+		<complexType name="TableTimeStepPropertyType">
+		<sequence>
+		<element ref="c1d2d:TableTimeStep" minOccurs="0"/>
 		</sequence>
 		<attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</complexType>
-	
-	<element name= "TableTimeStep" type="c1d2d:TimeType" substitutionGroup="gml:_Feature"/>
-	<complexType name = "TimeType">
+		</complexType>
+		
+		<element name= "TableTimeStep" type="c1d2d:TimeType" substitutionGroup="gml:_Feature"/>
+		<complexType name = "TimeType">
 		<complexContent>
-			<extension base = "gml:AbstractFeatureType">
-				<sequence>
-					<element name = "date" type = "date"/>
-					<element name = "hValue" type = "double"/>
-					<element name = "qValue" type = "double"/>
-				</sequence>
-			</extension>
+		<extension base = "gml:AbstractFeatureType">
+		<sequence>
+		<element name = "date" type = "date"/>
+		<element name = "hValue" type = "double"/>
+		<element name = "qValue" type = "double"/>
+		</sequence>
+		</extension>
 		</complexContent>
-	</complexType>	
--->	
+		</complexType>	
+	-->
 
 
 </schema>
