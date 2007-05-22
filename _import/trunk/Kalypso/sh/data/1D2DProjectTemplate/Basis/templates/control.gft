@@ -19,7 +19,7 @@
 		</gft:extensioncontrol>
     </gft:view>
     
-    <gft:view typename="c1d2d:Control" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
+    <gft:view typename="c1d2d:ControlModel" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
                 
