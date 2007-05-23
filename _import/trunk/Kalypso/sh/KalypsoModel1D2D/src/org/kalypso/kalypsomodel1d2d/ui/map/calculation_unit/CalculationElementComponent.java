@@ -104,65 +104,24 @@ public class CalculationElementComponent
   
   /* ======================================================================== */
   private TableViewer tableViewer;
-
-  private KeyBasedDataModel dataModel;
-
-  private Image image;
-
-  private Image imageDown;
-
   private Image imageBoundaryUp;
-
-  private FormToolkit toolkit;
-
-  private Composite parent;
-
-  /**
-   * The id for the selection in the data model
-   */
-  
-
-  /**
-   * The id for the input in the data model
-   */
-
-
   final String mainGroupTitle = "Bitte Höhenmodell auswählen";
-
   final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
-
   final String deleteSelected = "Geländemodell löschen";
-
   final String defaultTestDecription = "Wählen Sie ein Modell aus.";
-  
   final String saveToolTip = "Deskription Sichern";
-
   final String titleDescriptionGroup = "Beschreibung";
-
-
-  private Label descriptionLabel;
-
   private Group descriptionGroupText;
-
   private Text descriptionText;
-
-  private String[] buttonsList;
-
-  private Button saveButton;
-
-  private IFeatureWrapper2 currentElementSelection;
-
   private Text _2dElementField;
-
   private Text _1dElementField;
-
   private GridData data;
-
   private boolean boundaryUPState = false;
-
   private boolean boundaryDownState = false;
-
   private Image imageBoundaryDown;
+  private FormToolkit toolkit;
+  private Composite parent;
+  private KeyBasedDataModel dataModel;
 
   public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -184,6 +143,7 @@ public class CalculationElementComponent
     _1dElementLabel.setText("1D Element: ");
     
     _1dElementField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
+    _1dElementField.setEditable( false );
     data = new GridData(GridData.FILL_HORIZONTAL);
     _1dElementField.setLayoutData(data);
     
@@ -191,6 +151,7 @@ public class CalculationElementComponent
     _2dELementLabel.setText("2D Element: ");
     
     _2dElementField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
+    _2dElementField.setEditable( false );
     data = new GridData(GridData.FILL_HORIZONTAL);
     _2dElementField.setLayoutData(data);
     
