@@ -40,19 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -68,12 +59,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListInputProvider;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
 /**
  * @author Madanagopsl
@@ -82,6 +69,8 @@ import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 public class CalculationElementComponent
 {
 
+
+  private static final String SUB_CALCULATION_UNIT_Title = "Sub Calculation Unit";
 
   class ListLabelProvider extends LabelProvider
   {
@@ -122,7 +111,7 @@ public class CalculationElementComponent
 
   private Image imageDown;
 
-  private Image imageUp;
+  private Image imageBoundaryUp;
 
   private FormToolkit toolkit;
 
@@ -169,6 +158,12 @@ public class CalculationElementComponent
 
   private GridData data;
 
+  private boolean boundaryUPState = false;
+
+  private boolean boundaryDownState = false;
+
+  private Image imageBoundaryDown;
+
   public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
     this.toolkit = toolkit;
@@ -179,7 +174,10 @@ public class CalculationElementComponent
   
   private void guiSelectFromList( Composite parent )
   {
-    Composite optionsComposite = new Composite(parent,SWT.FLAT);
+    Composite rootComposite = new Composite (parent,SWT.FLAT);
+    rootComposite.setLayout( new GridLayout(1,false) );
+    
+    Composite optionsComposite = new Composite(rootComposite,SWT.FLAT);
     optionsComposite.setLayout( new GridLayout(2,false));
     
     Label _1dElementLabel = new Label(optionsComposite, SWT.RIGHT);
@@ -199,177 +197,88 @@ public class CalculationElementComponent
     Label BoundaryUpLabel = new Label(optionsComposite, SWT.RIGHT);
     BoundaryUpLabel.setText("Boundary Up: ");
     
-    //TODO Have the Image here. 
-      
+    Button BoundaryUpBtn = new Button(optionsComposite,SWT.CENTER|SWT.PUSH);
+    
+    if (boundaryUPState)
+    {
+      imageBoundaryUp = new Image( optionsComposite.getDisplay(), 
+        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+            "icons/elcl16/inputOk.gif" ).getImageData() );
+    }
+    else
+    {
+      imageBoundaryUp = new Image( optionsComposite.getDisplay(), 
+          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+              "icons/elcl16/inputError.gif" ).getImageData() );      
+    }
+    
+    BoundaryUpBtn.setImage( imageBoundaryUp );
+    
     Label BoundaryDownLabel = new Label(optionsComposite, SWT.RIGHT);
     BoundaryDownLabel.setText("Boundary Down: ");
     
+    Button BoundaryDownBtn = new Button(optionsComposite,SWT.CENTER|SWT.PUSH);
     
-    // @TODO Madan Continue the GUI Work
+    if (boundaryDownState )
+    {
+      imageBoundaryDown = new Image( optionsComposite.getDisplay(), 
+        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+            "icons/elcl16/inputOk.gif" ).getImageData() );
+    }
+    else
+    {
+      imageBoundaryDown = new Image( optionsComposite.getDisplay(), 
+          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+              "icons/elcl16/inputError.gif" ).getImageData() );      
+    }
+    
+    BoundaryDownBtn.setImage( imageBoundaryDown );   
+    
+    Composite subCalculationComposite = new Composite(rootComposite,SWT.FLAT);
+    subCalculationComposite.setLayout( new FormLayout() );
+    
+    Label titleSubCalculation = new Label(subCalculationComposite,SWT.NONE);
+    titleSubCalculation.setText(SUB_CALCULATION_UNIT_Title);
+    FormData formData = new FormData();
+    formData.top = new FormAttachment(optionsComposite,5);
+    titleSubCalculation.setLayoutData( formData );
     
     
+    tableViewer = new TableViewer( subCalculationComposite, SWT.FILL | SWT.BORDER );
+    Table table = tableViewer.getTable();
+    tableViewer.setContentProvider( new ArrayContentProvider() );
+    tableViewer.setLabelProvider( new ListLabelProvider() );
+    table.setLinesVisible( true );
     
- 
-//    FormData formData;
-//    formData = new FormData();
-//    formData.left = new FormAttachment( 0, 5 );
-//    formData.top = new FormAttachment( 0, 5 );
-//    Label terrainModelLabel = new Label( parent, SWT.NONE );
-//    terrainModelLabel.setText( mainGroupTitle );
-//    terrainModelLabel.setLayoutData( formData );
-//
-//    formData = new FormData();
-//    formData.left = new FormAttachment( 0, 10 );
-//    formData.top = new FormAttachment( terrainModelLabel, 5 );
-//    formData.bottom = new FormAttachment(100,0);
-//
-//    tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
-//    Table table = tableViewer.getTable();
-//    tableViewer.setContentProvider( new ArrayContentProvider() );
-//    tableViewer.setLabelProvider( new ListLabelProvider() );
-//    table.setLinesVisible( true );
-//    table.setLayoutData( formData );
-//
-//   
-//    Object inputData = dataModel.getData( CalculationUnitDataModel.CALCULATION_UNITS );
-//
-//    if (inputData == null)
-//    {
-//      inputData = new ArrayList<IFeatureWrapper2>();
-//    }
-//    tableViewer.setInput((List<ICalculationUnit>)inputData );
-//    tableViewer.addSelectionChangedListener( this.elevationModelSelectListener );
-//
-//    formData = new FormData();
-//    formData.left = new FormAttachment(table, 5);
-//    formData.bottom = new FormAttachment( 100, 0 );
-//    formData.top = new FormAttachment( terrainModelLabel, 5 );
-//    
-//    Composite btnComposite = new Composite(parent,SWT.NONE);
-//    btnComposite.setLayout( new GridLayout(1,false));
-//    btnComposite.setLayoutData( formData );   
-//    if (searchForThisString( IButtonConstants.BTN_MOVE_UP ))
-//    {        
-//      Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
-//      imageUp = new Image( btnComposite.getDisplay(), 
-//          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-//              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-//              "icons/elcl16/list_up.gif" ).getImageData() );
-//      moveUpBtn.setImage( imageUp );
-//      moveUpBtn.addSelectionListener( this.moveUpListener );
-//    }
-//    
-//    if (searchForThisString( IButtonConstants.BTN_MOVE_DOWN ))
-//      {
-//        Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
-//        imageDown = new Image( btnComposite.getDisplay(),
-//            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-//                PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-//                "icons/elcl16/list_down.gif" ).getImageData() );
-//        moveDownBtn.setImage( imageDown );
-//        moveDownBtn.addSelectionListener( this.moveDownListener );
-//      }
-//    
-//    if (searchForThisString( IButtonConstants.BTN_CLICK_TO_RUN ))
-//      {
-//        Button showTerrain = new Button( btnComposite, SWT.PUSH );
-//        showTerrain.setToolTipText( bTextMaximizeSelected );
-//        image = new Image( btnComposite.getDisplay(),
-//            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-//                PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-//                "icons/elcl16/goTo_Terrain.gif" ).getImageData() );
-//        showTerrain.setImage( image );
-//        showTerrain.addSelectionListener( new SelectionAdapter()
-//        {
-//          public void widgetSelected( SelectionEvent event )
-//          {            
-//            maximizeSelected();
-//          }        
-//        } );      
-//      }
-//    
-//    if (searchForThisString( IButtonConstants.BTN_REMOVE ))
-//      {
-//       Button deleteButton = new Button( btnComposite, SWT.PUSH );
-//        deleteButton.setToolTipText( deleteSelected );
-//        image = new Image( btnComposite.getDisplay(),
-//            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-//                PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-//                "icons/elcl16/remove.gif" ).getImageData() );
-//        deleteButton.setImage( image );
-//        deleteButton.addSelectionListener( new SelectionAdapter()
-//        {
-//          public void widgetSelected( SelectionEvent event )
-//          {
-//            try
-//            {
-//            }
-//            catch( Throwable th )
-//            {
-//              th.printStackTrace();
-//            }
-//          }
-//        } );     
-//      }
-//    
-//    if (searchForThisString( IButtonConstants.BTN_ADD ))
-//    {
-//      Button addButton = new Button( btnComposite, SWT.PUSH );
-//      addButton.setToolTipText( deleteSelected );
-//      image = new Image( btnComposite.getDisplay(),
-//          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-//              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-//              "icons/elcl16/add.gif" ).getImageData() );
-//      addButton.setImage( image );
-//      addButton.addSelectionListener( new SelectionAdapter()
-//      {
-//        public void widgetSelected( SelectionEvent event )
-//        {
-//
-//        }
-//      } );           
-//    }
-//    
-//    descriptionGroupText = new Group( parent, SWT.NONE );
-//    descriptionGroupText.setText( titleDescriptionGroup );
-//    formData = new FormData();
-//    formData.left = new FormAttachment( btnComposite, 5 );
-//    formData.top = new FormAttachment( terrainModelLabel, 10 );
-//    formData.bottom = new FormAttachment( 100, 0 );
-//    descriptionGroupText.setLayoutData( formData );
-//
-//    FormLayout formDescription = new FormLayout();
-//    descriptionGroupText.setLayout( formDescription );
-//    
-//    descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
-//    descriptionText.setText( defaultTestDecription );
-//    
-//    FormData formDescripData = new FormData();
-//    formDescripData.left = new FormAttachment( 0, 0 );
-//    formDescripData.right = new FormAttachment( 100, 0 );
-//    formDescripData.top = new FormAttachment( 0, 0 );
-//    //formDescripData.bottom = new FormAttachment( 100, 0 );
-//    descriptionText.setLayoutData( formDescripData );
-//    
-//    saveButton = new Button (descriptionGroupText,SWT.PUSH);
-//    saveButton.setText( "Sichern" );
-//    saveButton.setToolTipText( saveToolTip );
-//    image = new Image( descriptionGroupText.getDisplay(),
-//        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-//            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-//            "icons/elcl16/save.gif" ).getImageData() );
-//    saveButton.setImage( image );
-//    formData = new FormData();
-//    //formData.left = new FormAttachment(descriptionGroupText,5);
-//    formData.right = new FormAttachment(100,0);
-//    formData.bottom = new FormAttachment(100,0);
-//    saveButton.setLayoutData( formData ); 
-//    saveButton.addSelectionListener( new SelectionAdapter()
-//    {
-//      public void widgetSelected( SelectionEvent event )
-//      {
-//      }
-//    } );        
-  }
+    formData = new FormData();
+    formData.top = new FormAttachment(titleSubCalculation,5);
+    formData.left = new FormAttachment(0,5);
+    formData.bottom = new FormAttachment(100,0);
+    table.setLayoutData( formData );
+    
+    descriptionGroupText = new Group( subCalculationComposite, SWT.NONE );
+    descriptionGroupText.setText( titleDescriptionGroup );
+    formData = new FormData();
+    formData.left = new FormAttachment( table, 5 );
+    formData.top = new FormAttachment( titleSubCalculation, 10 );
+    formData.right = new FormAttachment(100,0);
+    formData.bottom = new FormAttachment( 100, 0 );
+    descriptionGroupText.setLayoutData( formData );
 
+    FormLayout formDescription = new FormLayout();
+    descriptionGroupText.setLayout( formDescription );
+    
+    descriptionText = new Text( descriptionGroupText, SWT.MULTI|SWT.WRAP );
+    descriptionText.setText( defaultTestDecription );
+    descriptionText.setEditable( false );
+    
+    FormData formDescripData = new FormData();
+    formDescripData.left = new FormAttachment( 0, 0 );
+    formDescripData.right = new FormAttachment( 100, 0 );
+    descriptionText.setLayoutData(formDescripData);    
+  }
 }
