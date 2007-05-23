@@ -96,6 +96,9 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>         
       </factory>
    </extension>
      

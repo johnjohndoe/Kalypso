@@ -106,8 +106,14 @@ public class Kalypso1D2DSchemaConstants
   public static final QName WB1D2D_F_CALCULATION_UNIT = 
     new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit" );
   
+  public static final QName WB1D2D_F_CALC_UNIT_1D2D = 
+    new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D2D" );
+  
   public static final QName WB1D2D_F_CALC_UNIT_1D = 
     new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" );
+  
+  public static final QName WB1D2D_F_CALC_UNIT_2D = 
+    new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit2D" );
 
   public static final QName WB1D2D_F_RIVER_CHANNEL1D = 
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "RiverChannel1D" );

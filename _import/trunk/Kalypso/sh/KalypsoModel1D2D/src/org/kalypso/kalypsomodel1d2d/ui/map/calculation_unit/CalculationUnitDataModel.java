@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
 /**
@@ -53,48 +54,52 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 @SuppressWarnings("unchecked")
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
-  /**
-   * Key for the current selected calculation unit
-   */
-  public static final String SELECTED_CALCULATION_UNIT= "_sel_cal_unit_";
+//  /**
+//   * Key for the current selected calculation unit
+//   */
+//  public static final String SELECTED_CALCULATION_UNIT= "_sel_cal_unit_";
   
-  /**
-   * Key for data entry representing the list of calculaton unit
-   */
-  public static final String CALCULATION_UNITS = "_calculation_units_";
+//  /**
+//   * Key for data entry representing the list of calculaton unit
+//   */
+//  public static final String CALCULATION_UNITS = "_calculation_units_";
   
   public CalculationUnitDataModel( )
   {
     super( 
         new String[]{
-              CALCULATION_UNITS, 
-              SELECTED_CALCULATION_UNIT}, 
+              ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
+              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
+              ICommonKeys.KEY_DISCRETISATION_MODEL,
+              ICommonKeys.KEY_MAP_PANEL,
+              ICommonKeys.KEY_COMMAND_TARGET
+              }, 
         null 
         );
   }
   
   public ICalculationUnit getSelectedCalculationUnit()
   {
-    Object data2 = getData( SELECTED_CALCULATION_UNIT );
+    Object data2 = getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     return (ICalculationUnit)data2;
   }
   
   public void setSelectedCalculationUnit(
                                   ICalculationUnit calculationUnit )
   {
-    setData( SELECTED_CALCULATION_UNIT, calculationUnit );
+    setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
   }
   
   public List<ICalculationUnit> getCalculationUnits()
   {
-    Object data2 = getData( CALCULATION_UNITS );
+    Object data2 = getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     return (List<ICalculationUnit>)data2;
   }
   
   public void setSelectedCalculationUnit(
                                   List<ICalculationUnit> calculationUnits )
   {
-    setData( CALCULATION_UNITS, calculationUnits );
+    setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calculationUnits );
   }
   
 }

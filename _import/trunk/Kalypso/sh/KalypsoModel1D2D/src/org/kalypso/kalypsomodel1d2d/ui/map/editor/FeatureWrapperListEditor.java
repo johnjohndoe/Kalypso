@@ -78,6 +78,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
@@ -265,7 +266,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
     table.setLayoutData( formData );
 
    
-    Object inputData = dataModel.getData( CalculationUnitDataModel.CALCULATION_UNITS );
+    Object inputData = 
+      dataModel.getData( 
+        ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
 
     if (inputData == null)
     {
@@ -459,4 +462,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
   public void createFeatureWrapper()
   {
   } 
+  
+  public KeyBasedDataModel getDataModel()
+  {
+    return dataModel;
+  }
 }

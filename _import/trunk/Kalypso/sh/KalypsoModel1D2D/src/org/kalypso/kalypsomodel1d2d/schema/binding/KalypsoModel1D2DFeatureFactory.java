@@ -14,6 +14,9 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement;
@@ -26,6 +29,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEEdgeToEdgeJunction1D2
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -453,6 +459,21 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 {
                   return new JunctionContext1DToCLine(feature);
                 }
+                else if( featureQName.equals( 
+                      Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D ))
+                {
+                  return new CalculationUnit1D( feature );
+                }
+                else if( featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D ))
+                {
+                  return new CalculationUnit2D( feature );
+                }
+                else if( featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D ))
+                {
+                    return new CalculationUnit1D2D( feature );
+                }
                 else
                 {
                   warnUnableToAdapt( feature, featureQName, IFE1D2DComplexElement.class );
@@ -463,6 +484,9 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         cMap.put( IFE1D2DComplexElement.class, cTor );
         cMap.put( IJunctionContext1DTo2D.class, cTor );
         cMap.put( IJunctionContext1DToCLine.class, cTor );
+        cMap.put( ICalculationUnit.class, cTor );
+        cMap.put( ICalculationUnit1D.class, cTor );
+        cMap.put( ICalculationUnit2D.class, cTor );
  
         // RiverChannel1D
         cTor = new AdapterConstructor()

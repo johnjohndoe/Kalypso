@@ -71,7 +71,8 @@ public class CalculationUnitComponent
   public void createFeatureWrapper()
   {
       final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-      CreateCalculationUnitDialog calculationDialog = new CreateCalculationUnitDialog(shell);
+      CreateCalculationUnitDialog calculationDialog = 
+                    new CreateCalculationUnitDialog( shell, getDataModel() );
       calculationDialog.open();    
   }  
 }

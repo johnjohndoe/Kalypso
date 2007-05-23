@@ -48,6 +48,7 @@ import java.awt.event.KeyEvent;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 
+import org.apache.commons.collections.MapUtils;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
@@ -91,7 +93,7 @@ public class CalculationUnitWidget
   
   
     
-  CalculationUnitDataModel dataModel= new CalculationUnitDataModel();
+  private CalculationUnitDataModel dataModel= new CalculationUnitDataModel();
   private CalculationUnitWidgetFace widgetFace = new CalculationUnitWidgetFace(dataModel);
 
   public CalculationUnitWidget()
@@ -113,6 +115,14 @@ public class CalculationUnitWidget
   {
     super.activate(commandPoster, mapPanel);
     // @TODO do all initilization here
+    dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET, commandPoster );
+    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
+    IFEDiscretisationModel1d2d model1d2d =
+        UtilMap.findFEModelTheme( mapPanel.getMapModell() );
+    //TODO check model1d2d for null and do something
+    
+    dataModel.setData( 
+        ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
   }
   
   

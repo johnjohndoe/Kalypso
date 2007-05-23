@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  *
  */
 @SuppressWarnings("unchecked")
-public class CreateCalculationUnit implements IDiscrModel1d2dChangeCommand
+public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
   /**
    *QName of the calculation unit to create 
@@ -98,7 +98,7 @@ public class CreateCalculationUnit implements IDiscrModel1d2dChangeCommand
    * @throws IllegalArgumentException if cuFeatureQName or model1d2d is null
    */
   @SuppressWarnings("hiding")
-  public CreateCalculationUnit(
+  public CreateCalculationUnitCmd(
               QName cuFeatureQName, 
               IFEDiscretisationModel1d2d model1d2d,
               String name, 

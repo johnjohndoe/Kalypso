@@ -38,49 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypsodeegree.model.feature.Feature;
+package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
 /**
- * Default implementation of {@link ICalculationUnit2D}
+ * Hold often used keys
  * 
  * @author Patrice Congo
- *
  */
-@SuppressWarnings("unchecked")
-public class CalculationUnit2D<ET extends IElement2D>
-                        extends CalculationUnit<ET>
-                        implements ICalculationUnit2D<ET>
+public interface ICommonKeys
 {
-
-  public CalculationUnit2D( 
-                Feature featureToBind )
-  {
-    this(
-        featureToBind,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
-        (Class<ET>)IElement2D.class );
-    
-  }
+  /**
+   * Key for data entry holding the map panel
+   */
+  public static final String KEY_MAP_PANEL ="_map_panel_";
   
-  public CalculationUnit2D( 
-              Feature featureToBind, 
-              QName qnameToBind, 
-              QName elementListPropQName, 
-              Class<ET> wrapperClass )
-  {
-    super( 
-        featureToBind, 
-        qnameToBind, 
-        elementListPropQName, 
-        wrapperClass );
-    
-  }
+  /**
+   * Key used in the context of feature wrapper list editor
+   * denoting the data the list of feature wrapper which is
+   * to be shown in the list
+   */
+  public static final String KEY_FEATURE_WRAPPER_LIST = "_feature_wrapper_list_";
   
-
+  /**
+   * Key used in the context of feature wrapper list editor
+   * denoting the currently selected feature wrapper
+   */
+  public static final String KEY_SELECTED_FEATURE_WRAPPER = "_sel_feature_wrapper_";
+  
+  /**
+   * Key for data entry holding the discretisation model
+   */
+  public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_"; 
+  
+  /**
+   * Data entry holding the {@link org.kalypso.commons.command.ICommandTarget}
+   * used to post command
+   */
+  public static final String KEY_COMMAND_TARGET ="_command target_";
+  
 }

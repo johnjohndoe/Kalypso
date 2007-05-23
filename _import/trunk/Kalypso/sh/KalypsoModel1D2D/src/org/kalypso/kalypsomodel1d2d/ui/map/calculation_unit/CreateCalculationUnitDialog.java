@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -51,12 +53,29 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
+
+import sun.text.Trie.DataManipulate;
 
 /**
  * @author Madanagopal
  *
  */
 class CreateCalculationUnitDialog extends Dialog{
+  
+  private static final String QNAME_KEY_1D2D = "1D/2D";
+
+  private static final String QNAME_KEY_2D = "2D";
+
+  private static final String QNAME_KEY_1D = "1D";
   
   private static final int RESET_ID = IDialogConstants.NO_TO_ALL_ID + 1;
   public static final int OK_APPLIED = IDialogConstants.OK_ID;
@@ -67,11 +86,14 @@ class CreateCalculationUnitDialog extends Dialog{
   private Combo typeCombo;
   private Text descriptionText;
 
-  protected CreateCalculationUnitDialog( Shell parentShell )
+  private final KeyBasedDataModel dataModel;
+
+  protected CreateCalculationUnitDialog( 
+                            Shell parentShell,
+                            KeyBasedDataModel dataModel )
   {
-    
     super( parentShell );
-    // TODO Auto-generated constructor stub
+    this.dataModel =  dataModel;
   }
   
   protected Control createDialogArea(Composite parent)
@@ -94,9 +116,9 @@ class CreateCalculationUnitDialog extends Dialog{
     //@TODO A Combo Field
     
     typeCombo = new Combo(comp, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
-    typeCombo.add( "1D" );
-    typeCombo.add( "2D" );
-    typeCombo.add("1d/2D");
+    typeCombo.add( QNAME_KEY_1D );
+    typeCombo.add( QNAME_KEY_2D );
+    typeCombo.add(QNAME_KEY_1D2D);
     data = new GridData(GridData.FILL_HORIZONTAL);
     typeCombo.setLayoutData( data );      
     
@@ -128,15 +150,61 @@ class CreateCalculationUnitDialog extends Dialog{
     if (buttonId == OK_APPLIED)
     {
       System.out.println(nameField.getText()+","+typeCombo.getText()+","+descriptionText.getText());
-      nameField.getText();
-      typeCombo.getText();
-      descriptionText.getText();
-    //@TODO Add to the discretisation Model 1d2d
+      final String name = nameField.getText();
+      final String qNameKey = typeCombo.getText();
+      final String desc = descriptionText.getText();
+      
+      //model is taken from the current context
+      CreateCalculationUnitCmd cmd = 
+          new CreateCalculationUnitCmd(
+                  getCUnitQName( qNameKey ),
+          Util.getModel( IFEDiscretisationModel1d2d.class ),
+          name,
+          desc );
+      ICommandTarget cmdTarget =
+        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+      if( cmdTarget == null )
+      {
+        throw new RuntimeException(
+            "Could not found command target; not set in the data model" );
+      }
+      cmdTarget.postCommand( cmd, null );
+      
       super.okPressed();       
     }
     else
     {
       super.buttonPressed(buttonId);
     }
-  }    
+  }   
+  
+  /**
+   * Return the QNane associated with the given key
+   * @param qNameKey the q-name key
+   * @return return the QName for the given key
+   * @throws RuntimeException if qNameKey is an unknown key
+   */
+  private static final QName getCUnitQName( 
+                              String qNameKey )
+                              throws RuntimeException
+  {
+    if( QNAME_KEY_1D.equals( qNameKey ))
+    {
+      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D;
+    }
+    else if( QNAME_KEY_2D.equals( qNameKey ) )
+    {
+      
+      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D;
+    }
+    else if( QNAME_KEY_1D2D.equals( qNameKey ) )
+    {
+      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D;
+    }
+    else
+    {
+      throw new RuntimeException("Unknown qNameKey:"+qNameKey);
+    }
+  }
+  
 }  

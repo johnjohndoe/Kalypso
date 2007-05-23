@@ -549,11 +549,9 @@
    <xs:element
        name="CalculationUnit1D"
        type="wb1d2d:ComplexElementType"
-       substitutionGroup="wb1d2d:ComplexElement"
-       abstract="true"/>
+       substitutionGroup="wb1d2d:ComplexElement" />
   <xs:complexType
-    name="CalculationUnitType1D"
-    abstract="true">
+    name="CalculationUnitType1D">
   <xs:annotation>
         <xs:documentation>
         		1D calculation unit with 1D elements only
@@ -561,7 +559,7 @@
     </xs:annotation>
     <xs:complexContent>
         <xs:extension
-            base="wb1d2d:ComplexElementType">
+            base="wb1d2d:CalculationUnitType">
             <xs:sequence>
 	            <xs:element ref="wb1d2d:element1D"/>
             </xs:sequence>
@@ -587,14 +585,14 @@
 	            <xs:element 
 	            	ref="wb1d2d:element2D"
 	            	minOccurs="0" maxOccurs="unbounded"/>
-	            <xs:element
+	            <!--xs:element
 	            	name="upstreamBoundaryLine"
 	            	type="wb1d2d:BoundaryLinePropertyType"
 	            	minOccurs="1" maxOccurs="1"/>
 	            <xs:element
 	            	name="downstreamBoundaryLine"
 	            	type="wb1d2d:BoundaryLinePropertyType"
-	            	minOccurs="1" maxOccurs="1"/>
+	            	minOccurs="1" maxOccurs="1"/ -->
             </xs:sequence>
         </xs:extension>
     </xs:complexContent>       
