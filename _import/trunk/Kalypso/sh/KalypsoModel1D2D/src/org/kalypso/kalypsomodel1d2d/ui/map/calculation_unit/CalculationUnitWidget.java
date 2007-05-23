@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -123,6 +124,9 @@ public class CalculationUnitWidget
     
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
+    dataModel.setData(
+        ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
+        CalUnitOps.getModelCalculationUnits( model1d2d ) );
   }
   
   

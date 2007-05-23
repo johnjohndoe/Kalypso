@@ -54,12 +54,11 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Patrice Congo
  *
  */
-public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET extends IFE1D2DElement>
+public class FE1D2DComplexElement <ET extends IFE1D2DElement>
         extends AbstractFeatureBinder 
-        implements IFE1D2DComplexElement</*CT,*/ ET> 
+        implements IFE1D2DComplexElement< ET> 
 {
   
-//  private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
   private final IFeatureWrapperCollection<ET> elements;
   
   /**
@@ -74,27 +73,10 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
   public FE1D2DComplexElement( 
                           Feature featureToBind, 
                           QName qnameToBind ,
-                          /*QName containerListPropQName,*/
                           QName elementListPropQName,
                           Class<ET> wrapperClass)
   {
     super(featureToBind, qnameToBind);
-    /*if(containerListPropQName==null)
-    {
-      containers= null;
-    }
-    else
-    {
-      containers=
-          Util.get( 
-            featureToBind, 
-            qnameToBind, 
-            containerListPropQName, 
-            IFE1D2DComplexElement.class, 
-            true);
-    }
-    */
-    //TODO Patrice pass the right et class
     elements = Util.<ET>get( 
         featureToBind, 
         qnameToBind, 
@@ -102,18 +84,6 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
         wrapperClass,//IFE1D2DElement.class, 
         true);    
   }
-
-
-
-//  /**
-//   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getContainers()
-//   */
-//  public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
-//  {
-//    return containers;
-//  }
-
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
@@ -140,12 +110,6 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
    */
   public boolean addElementAsRef( ET element )
   {
-//    Assert.throwIAEOnNullParam( element, "element" );
-//    if(elements.contains( element ))
-//    {
-//      return false;
-//    }
-//    return elements.getWrappedList().add(element.getGmlID());
     Assert.throwIAEOnNullParam( element, "element" );
     return elements.addRef( element );
   }
@@ -160,15 +124,5 @@ public class FE1D2DComplexElement </*CT extends IFE1D2DComplexElement,*/ ET exte
     Assert.throwIAEOnNullParam( element, "element" );
     return elements.removeAllRefs( element );
   }
-   
-//  /**
-//   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
-//   */
-//  public String getGmlID( )
-//  {
-//    return getFeature().getId();
-//  }
-  
-  
 
 }

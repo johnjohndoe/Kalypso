@@ -48,8 +48,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -80,6 +80,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
@@ -89,36 +90,6 @@ import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
  */
 public class FeatureWrapperListEditor implements IButtonConstants
 {
-  class ListLabelProvider extends LabelProvider
-  {
-    public Image getImage( Object element )
-    {
-      return null;
-    }
-
-    public String getText( Object element )
-    {
-      if( element instanceof IFeatureWrapper2 )
-      {
-
-        String name = ((IFeatureWrapper2) element).getName();
-        if( name != null )
-        {
-          return name;
-        }
-        else
-        {
-          return ((IFeatureWrapper2) element).getGmlID();
-        }
-      }
-      else
-      {
-        throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
-      }
-    }
-  }
-
-  
   /* ======================================================================== */
   private TableViewer tableViewer;
 
@@ -201,9 +172,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
           if( selection.getFirstElement() instanceof IFeatureWrapper2 )
           {
             IFeatureWrapper2 firstElement = (IFeatureWrapper2) selection.getFirstElement();
-            dataModel.setData( idSselection, firstElement );
-            descriptionText.setText( firstElement.getDescription() );
-            descriptionText.redraw();
+//            dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
+//            descriptionText.setText( firstElement.getDescription() );
+//            descriptionText.redraw();
             setCurrentSelection(firstElement);
           }
         }
@@ -226,7 +197,36 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   private Button saveButton;
 
-  private IFeatureWrapper2 currentElementSelection;
+//  private IFeatureWrapper2 currentElementSelection;
+
+  private KeyBasedDataModelChangeListener dataModelListener = 
+      new KeyBasedDataModelChangeListener()
+      {
+
+        @SuppressWarnings("synthetic-access")
+        public void dataChanged( String key, Object newValue )
+        {
+          if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
+          {
+//            tableViewer.setInput( newValue );
+            updateOnNewInput( newValue );
+          }
+          else if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+          {
+//            IStructuredSelection selection =
+//              new StructuredSelection(
+//                  newValue==null ? new Object[]{}:new Object[]{newValue} );
+//            
+//            tableViewer.setSelection( selection );
+            updateOnNewSelection( newValue );
+          }
+          else
+          {
+            //uninteresting key
+          }
+        }
+    
+      };
 
   public FeatureWrapperListEditor( String selectionID, String inputID, String mapPanelID )
   {
@@ -241,6 +241,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     this.parent = parent;
     this.dataModel = dataModel;
     guiSelectFromList( parent );
+    dataModel.addKeyBasedDataChangeListener( this.dataModelListener );
   }
 
   private void guiSelectFromList( Composite parent )
@@ -261,7 +262,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
     Table table = tableViewer.getTable();
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new ListLabelProvider() );
+    tableViewer.setLabelProvider( new ListLabelProvider( ) );
     table.setLinesVisible( true );
     table.setLayoutData( formData );
 
@@ -450,13 +451,16 @@ public class FeatureWrapperListEditor implements IButtonConstants
   
   private void setCurrentSelection( IFeatureWrapper2 firstElement )
   {
-    currentElementSelection = firstElement;    
+    dataModel.setData(
+        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
+//    currentElementSelection = firstElement;    
   }
   
   
   private IFeatureWrapper2 getCurrentSelection(){
     
-    return currentElementSelection;
+    return (IFeatureWrapper2) 
+        dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
   
   public void createFeatureWrapper()
@@ -467,4 +471,61 @@ public class FeatureWrapperListEditor implements IButtonConstants
   {
     return dataModel;
   }
+  
+  /**
+   * Update the gui components to reflect the table new input
+   */
+  final void updateOnNewInput( Object input )
+  {
+    if( input == null )
+    {
+      input = new Object[]{};
+    }
+    tableViewer.setInput( input );
+    IFeatureWrapper2 currentSelection = getCurrentSelection();
+//    final IStructuredSelection selection;
+//    if( currentSelection != null )
+//    {
+//      selection = 
+//        new StructuredSelection( new Object[]{ currentSelection } );
+//    }
+//    else
+//    {
+//      selection = 
+//        new StructuredSelection( new Object[]{ } );
+//    }
+//    tableViewer.setSelection( selection );
+    updateOnNewSelection( currentSelection );
+  }
+  
+  final void updateOnNewSelection( Object currentSelection  )
+  {
+    if( currentSelection instanceof IFeatureWrapper2 )
+    {
+      final IStructuredSelection selection;
+      final String desc;
+      if( currentSelection != null )
+      {
+        selection = 
+          new StructuredSelection( new Object[]{ currentSelection } );
+        desc = ((IFeatureWrapper2)currentSelection).getDescription();
+      }
+      else
+      {
+        selection = 
+          new StructuredSelection( new Object[]{ } );
+        desc = "";
+      }
+//      tableViewer.setSelection( selection );
+      descriptionText.setText( desc );
+      descriptionText.redraw();
+    }
+    else
+    {
+      throw new IllegalArgumentException(
+          "IfeatureWrapper2 expected but got:"+currentSelection);
+    }
+    
+  }
+  
 }

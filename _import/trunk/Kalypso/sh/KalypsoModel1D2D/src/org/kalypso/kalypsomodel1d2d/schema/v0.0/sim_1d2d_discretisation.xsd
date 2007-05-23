@@ -602,7 +602,7 @@
 
 	<xs:element
        name="CalculationUnit1D2D"
-       type="wb1d2d:CalculationUnitType2D"
+       type="wb1d2d:CalculationUnitType1D2D"
        substitutionGroup="wb1d2d:CalculationUnit"/>
   <xs:complexType
     name="CalculationUnitType1D2D">

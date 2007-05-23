@@ -470,7 +470,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                   return new CalculationUnit2D( feature );
                 }
                 else if( featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D ))
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D ))
                 {
                     return new CalculationUnit1D2D( feature );
                 }
