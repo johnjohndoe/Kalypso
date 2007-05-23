@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -49,6 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+
 
 /**
  * Provide utility methods around calculation units
@@ -95,6 +97,28 @@ public class CalUnitOps
       }
     }
     return parents;
+  }
+  
+  /**
+   * To get the all calculation units of the given discretisation model
+   * @param model1d2d the discretisation model
+   * @return a collection containing the calculation unit of the dicretisation 
+   *            model
+   */
+  public static final List<ICalculationUnit> getModelCalculationUnits(
+                              IFEDiscretisationModel1d2d model1d2d )
+  {
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    final List<ICalculationUnit> calUnits = new ArrayList<ICalculationUnit>();
+    IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
+    for(IFE1D2DComplexElement ce : complexElements )
+    {
+      if( ce instanceof ICalculationUnit )
+      {
+        calUnits.add( (ICalculationUnit) ce );
+      }
+    }
+    return calUnits;
   }
   
 }

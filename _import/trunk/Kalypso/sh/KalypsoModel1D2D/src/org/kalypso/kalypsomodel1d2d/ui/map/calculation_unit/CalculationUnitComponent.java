@@ -40,10 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
 /**
  * 
@@ -73,6 +83,19 @@ public class CalculationUnitComponent
       final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
       CreateCalculationUnitDialog calculationDialog = 
                     new CreateCalculationUnitDialog( shell, getDataModel() );
-      calculationDialog.open();    
+      int answer = calculationDialog.open();
+      if( answer == Window.OK )
+      {
+        KeyBasedDataModel dataModel = getDataModel();
+        dataModel.setData( 
+            ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
+            calculationDialog.getCreatedCalculationUnit() );
+        IFEDiscretisationModel1d2d model1d2d =
+          (IFEDiscretisationModel1d2d) 
+              dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+        List<ICalculationUnit> calUnits = 
+                          CalUnitOps.getModelCalculationUnits( model1d2d );
+        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+      }
   }  
 }

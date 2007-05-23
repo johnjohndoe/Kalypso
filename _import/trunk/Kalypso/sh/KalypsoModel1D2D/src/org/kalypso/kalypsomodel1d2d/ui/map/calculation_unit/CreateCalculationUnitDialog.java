@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -87,6 +88,8 @@ class CreateCalculationUnitDialog extends Dialog{
   private Text descriptionText;
 
   private final KeyBasedDataModel dataModel;
+
+  private ICalculationUnit createdCalculationUnit;
 
   protected CreateCalculationUnitDialog( 
                             Shell parentShell,
@@ -170,7 +173,8 @@ class CreateCalculationUnitDialog extends Dialog{
       }
       cmdTarget.postCommand( cmd, null );
       
-      super.okPressed();       
+      super.okPressed();   
+      this.createdCalculationUnit = cmd.getCreatedCalculationUnit();
     }
     else
     {
@@ -207,4 +211,8 @@ class CreateCalculationUnitDialog extends Dialog{
     }
   }
   
+  public ICalculationUnit getCreatedCalculationUnit()
+  {
+    return createdCalculationUnit;
+  }
 }  

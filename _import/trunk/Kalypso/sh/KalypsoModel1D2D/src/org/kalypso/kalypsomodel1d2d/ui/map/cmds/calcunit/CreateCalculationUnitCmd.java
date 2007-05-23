@@ -233,5 +233,10 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     fireProcessChanges( deletedCreatedCU, true );
     
   }
-
+  
+  
+  public ICalculationUnit getCreatedCalculationUnit()
+  {
+    return createdCU;
+  }
 }

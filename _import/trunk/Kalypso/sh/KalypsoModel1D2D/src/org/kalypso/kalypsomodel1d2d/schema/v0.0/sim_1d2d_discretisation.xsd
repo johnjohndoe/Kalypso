@@ -548,7 +548,7 @@
    ========================================================= -->
    <xs:element
        name="CalculationUnit1D"
-       type="wb1d2d:ComplexElementType"
+       type="wb1d2d:CalculationUnitType1D"
        substitutionGroup="wb1d2d:ComplexElement" />
   <xs:complexType
     name="CalculationUnitType1D">
@@ -561,7 +561,9 @@
         <xs:extension
             base="wb1d2d:CalculationUnitType">
             <xs:sequence>
-	            <xs:element ref="wb1d2d:element1D"/>
+	            <xs:element 
+	            	ref="wb1d2d:element1D"
+	            	minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:extension>
     </xs:complexContent>       
@@ -613,8 +615,12 @@
         <xs:extension
             base="wb1d2d:CalculationUnitType">
             <xs:sequence>
-	            <xs:element ref="wb1d2d:element" />
-	            <xs:element ref="wb1d2d:calculationUnit" />
+	            <xs:element 
+	            	ref="wb1d2d:element" 
+	            	minOccurs="0" maxOccurs="unbounded"/>
+	            <xs:element 
+	            	ref="wb1d2d:calculationUnit"  
+	            	minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:extension>
     </xs:complexContent>       
