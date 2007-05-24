@@ -47,8 +47,14 @@ package org.kalypso.ogc.gml;
  */
 public interface IKalypsoThemeListener
 {
+  /** Occurs if the value of {@link IKalypsoTheme#getContext()} has changed. */
+  public void contextChanged( final IKalypsoTheme source );
+
   /**
-   * A theme has changed
+   * Occurs if either the value of {@link IKalypsoTheme#getName()}, {@link IKalypsoTheme#getType()} or
+   * {@link IKalypsoTheme#getStatus()} has changed.
    */
-  public void kalypsoThemeChanged( final KalypsoThemeEvent event );
+  public void statusChanged( final IKalypsoTheme source );
+
+  public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility );
 }

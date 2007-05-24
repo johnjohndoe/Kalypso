@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -72,7 +73,7 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    *  
    */
-  public DialogCellEditor( final Composite parent, int style )
+  public DialogCellEditor( final Composite parent, final int style )
   {
     super( parent, style );
   }
@@ -104,13 +105,31 @@ public abstract class DialogCellEditor extends CellEditor
   @Override
   protected void doSetFocus( )
   {
-    if( openDialog( getControl() ) )
+    final Control control = getControl();
+    final Display display = control.getDisplay();
+    if( openDialog( control ) )
     {
       setValueValid( true );
-      fireApplyEditorValue();
+      display.asyncExec( new Runnable()
+      {
+        @SuppressWarnings("synthetic-access")
+        public void run( )
+        {
+          fireApplyEditorValue();
+        }
+      } );
     }
     else
-      fireCancelEditor();
+    {
+      display.asyncExec( new Runnable()
+      {
+        @SuppressWarnings("synthetic-access")
+        public void run( )
+        {
+          fireCancelEditor();
+        }
+      } );
+    }
   }
 
   protected abstract boolean openDialog( final Control control );

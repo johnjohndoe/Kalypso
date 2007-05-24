@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -63,8 +62,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -113,15 +110,13 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
  * @author Belger
  */
-public class LayerTableViewer extends TableViewer implements ModellEventListener, ICommandTarget, ModellEventProvider, ICellModifier
+public class LayerTableViewer extends TableViewer implements ModellEventListener, ICommandTarget, ICellModifier
 {
   protected Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
@@ -135,9 +130,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureModifierFactory m_featureControlFactory;
 
-  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
-
-  private ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
+  private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   final TableCursor m_tableCursor;
 
@@ -297,7 +290,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleTableCursorPostSelected();
       }
@@ -305,66 +298,68 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   }
 
-  @Override
-  protected void hookControl( final Control control )
-  {
-    // unhook the mouseDownEvent because we do not want to start editing
-    // if we click anywhere in the table
-    // only clicking on the table cursor starts editing
-    // Table tableControl = (Table)control;
-    // tableControl.addMouseListener( new MouseAdapter()
-    // {
-    // public void mouseDown( MouseEvent e )
-    // {
-    // tableViewerImpl.handleMouseDown( e );
-    // }
-    // } );
-
-    // copy hooking from super-classes
-    control.addDisposeListener( new DisposeListener()
-    {
-      @SuppressWarnings("synthetic-access")
-      // suppressed, because we can't change super-class
-      public void widgetDisposed( DisposeEvent event )
-      {
-        handleDispose( event );
-      }
-    } );
-
-    OpenStrategy handler = new OpenStrategy( control );
-    handler.addSelectionListener( new SelectionListener()
-    {
-      @SuppressWarnings("synthetic-access")
-      // suppressed, because we can't change super-class
-      public void widgetSelected( SelectionEvent e )
-      {
-        handleSelect( e );
-      }
-
-      @SuppressWarnings("synthetic-access")
-      // suppressed, because we can't change super-class
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        handleDoubleSelect( e );
-      }
-    } );
-    handler.addPostSelectionListener( new SelectionAdapter()
-    {
-      @SuppressWarnings("synthetic-access")
-      // suppressed, because we can't change super-class
-      @Override
-      public void widgetSelected( SelectionEvent e )
-      {
-        handlePostSelect( e );
-      }
-    } );
-    // leider privat
-    // handler.addOpenListener(new IOpenEventListener() {
-    // public void handleOpen(SelectionEvent e) {
-    // StructuredViewer.this.handleOpen(e);
-    // }
-    // });
-  }
+// @Override
+// protected void hookControl( final Control control )
+// {
+// // unhook the mouseDownEvent because we do not want to start editing
+// // if we click anywhere in the table
+// // only clicking on the table cursor starts editing
+// // Table tableControl = (Table)control;
+// // tableControl.addMouseListener( new MouseAdapter()
+// // {
+// // public void mouseDown( MouseEvent e )
+// // {
+// // tableViewerImpl.handleMouseDown( e );
+// // }
+// // } );
+//
+//
+//    
+// // copy hooking from super-classes
+// control.addDisposeListener( new DisposeListener()
+// {
+// @SuppressWarnings("synthetic-access")
+// // suppressed, because we can't change super-class
+// public void widgetDisposed( final DisposeEvent event )
+// {
+// handleDispose( event );
+// }
+// } );
+//
+// final OpenStrategy handler = new OpenStrategy( control );
+// handler.addSelectionListener( new SelectionListener()
+// {
+// @SuppressWarnings("synthetic-access")
+// // suppressed, because we can't change super-class
+// public void widgetSelected( final SelectionEvent e )
+// {
+// handleSelect( e );
+// }
+//
+// @SuppressWarnings("synthetic-access")
+// // suppressed, because we can't change super-class
+// public void widgetDefaultSelected( final SelectionEvent e )
+// {
+// handleDoubleSelect( e );
+// }
+// } );
+// handler.addPostSelectionListener( new SelectionAdapter()
+// {
+// @SuppressWarnings("synthetic-access")
+// // suppressed, because we can't change super-class
+// @Override
+// public void widgetSelected( final SelectionEvent e )
+// {
+// handlePostSelect( e );
+// }
+// } );
+// // leider privat
+// // handler.addOpenListener(new IOpenEventListener() {
+// // public void handleOpen(SelectionEvent e) {
+// // StructuredViewer.this.handleOpen(e);
+// // }
+// // });
+// }
 
   protected void handleTableCursorPostSelected( )
   {
@@ -458,9 +453,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       m_sorter.setPropertyName( sort.getPropertyName() );
       m_sorter.setInverse( sort.isInverse() );
     }
-    for( final Iterator<Column> iter = columnList.iterator(); iter.hasNext(); )
+    for( final Column ct : columnList )
     {
-      final Column ct = iter.next();
       addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
     }
   }
@@ -477,11 +471,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       return;
 
     final TableColumn[] columns = table.getColumns();
-    for( int i = 0; i < columns.length; i++ )
-      columns[i].dispose();
+    for( final TableColumn element : columns )
+      element.dispose();
   }
 
-  public void addColumn( final String propertyName, final boolean isEditable, final int width, final String alignment, String format, final boolean bRefreshColumns )
+  public void addColumn( final String propertyName, final boolean isEditable, final int width, final String alignment, final String format, final boolean bRefreshColumns )
   {
     final Table table = getTable();
 
@@ -512,7 +506,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   protected void setColumnText( final TableColumn tc )
   {
-//    System.out.println("");
+// System.out.println("");
     final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
     final String sortPropertyName = m_sorter.getPropertyName();
     String text;
@@ -527,7 +521,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       text = annotation.getLabel();
       tooltip = annotation.getTooltip();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // if data is not loaded yet, we provide the propertyname
       e.printStackTrace();
@@ -555,9 +549,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final TableColumn[] columns = table.getColumns();
     boolean changed = false;
 
-    for( int i = 0; i < columns.length; i++ )
+    for( final TableColumn column : columns )
     {
-      final TableColumn column = columns[i];
       if( column != null )
       {
         final String propName = column.getData( COLUMN_PROP_NAME ).toString();
@@ -599,8 +592,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     checkColumns();
     // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
     final TableColumn[] columns = getTable().getColumns();
-    for( int i = 0; i < columns.length; i++ )
-      setColumnText( columns[i] );
+    for( final TableColumn element : columns )
+      setColumnText( element );
     super.refresh();
   }
 
@@ -614,10 +607,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final CellEditor[] oldEditors = getCellEditors();
     if( oldEditors != null )
     {
-      for( int i = 0; i < oldEditors.length; i++ )
+      for( final CellEditor element : oldEditors )
       {
-        if( oldEditors[i] != null )
-          oldEditors[i].dispose();
+        if( element != null )
+          element.dispose();
       }
     }
 
@@ -675,9 +668,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( getTheme() == null )
       return;
-    if( (modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == getTheme().getWorkspace()) ||
-
-    (modellEvent != null && modellEvent.getEventSource() == getTheme() && modellEvent.isType( ModellEvent.THEME_ADDED )) )
+    if( (modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == getTheme().getWorkspace()) )
     {
       if( !isDisposed() )
         getControl().getDisplay().asyncExec( new Runnable()
@@ -701,18 +692,18 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         } );
       }
     }
-    fireModellEvent( modellEvent );
   }
 
   protected void handleModelChanged( final ModellEvent event )
   {
-    // TODO theme add
-    if( event != null && event.getEventSource() == getTheme() && event.isType( ModellEvent.THEME_ADDED ) )
-    {
-      refreshCellEditors();
-      refreshColumnProperties();
-      refresh();
-    }
+// // TODO theme add
+// if( event != null && event.getEventSource() == getTheme() && event.isType( ModellEvent.THEME_ADDED ) )
+// {
+// refreshCellEditors();
+// refreshColumnProperties();
+// refresh();
+// }
+
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
     if( theme == null )
       return;
@@ -734,9 +725,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( event instanceof FeatureStructureChangeModellEvent )
     {
       final Feature[] features = ((FeatureStructureChangeModellEvent) event).getParentFeatures();
-      for( int i = 0; i < features.length; i++ )
+      for( final Feature feature : features )
       {
-        final Feature feature = features[i];
         if( feature == theme.getFeatureList().getParentFeature() )
         {
           refresh();
@@ -793,11 +783,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   private TableColumn getColumn( final String property )
   {
     final TableColumn[] columns = getTable().getColumns();
-    for( int i = 0; i < columns.length; i++ )
+    for( final TableColumn element : columns )
     {
-      final String name = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      final String name = element.getData( COLUMN_PROP_NAME ).toString();
       if( property.equals( name ) )
-        return columns[i];
+        return element;
     }
 
     return null;
@@ -848,10 +838,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final List<Column> columns = layer.getColumn();
 
     final TableColumn[] tableColumns = getTable().getColumns();
-    for( int i = 0; i < tableColumns.length; i++ )
+    for( final TableColumn tc : tableColumns )
     {
-      final TableColumn tc = tableColumns[i];
-
       final Column columnType = m_gistableviewFactory.createGistableviewLayerColumn();
 
       columnType.setName( tc.getData( COLUMN_PROP_NAME ).toString() );
@@ -908,32 +896,17 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       firstLine[j] = (String) columns[j].getData( COLUMN_PROP_NAME );
     lines.add( firstLine );
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Object element : features )
     {
       final String[] line = new String[columns.length];
 
       for( int j = 0; j < columns.length; j++ )
-        line[j] = labelProvider.getColumnText( features[i], j );
+        line[j] = labelProvider.getColumnText( element, j );
 
       lines.add( line );
     }
 
     return lines.toArray( new String[features.length][] );
-  }
-
-  public void addModellListener( ModellEventListener listener )
-  {
-    m_modellEventProvider.addModellListener( listener );
-  }
-
-  public void fireModellEvent( ModellEvent event )
-  {
-    m_modellEventProvider.fireModellEvent( event );
-  }
-
-  public void removeModellListener( ModellEventListener listener )
-  {
-    m_modellEventProvider.removeModellListener( listener );
   }
 
   public IFeatureModifier getModifier( final int columnIndex )
@@ -976,7 +949,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Feature feature = (Feature) ti.getData();
       // as result==null does not explicitly mean that
       // the value is invalid, we have to ask the celleditor for invalidity
-      int columnID = getColumnID( property );
+      final int columnID = getColumnID( property );
       if( !getCellEditors()[columnID].isValueValid() )
         return;
 
@@ -1010,9 +983,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( m_modifier != null )
     {
-      for( int i = 0; i < m_modifier.length; i++ )
+      for( final IFeatureModifier fm : m_modifier )
       {
-        final IFeatureModifier fm = m_modifier[i];
         if( fm != null )
         {
           final IPropertyType ftp = fm.getFeatureTypeProperty();
@@ -1048,18 +1020,18 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     clearColumns();
 
-    final IKalypsoTheme theme = (IKalypsoTheme) input;
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) input;
     if( theme != null )
-      theme.addModellListener( this );
+      theme.getWorkspace().addModellListener( this );
   }
 
   private void disposeTheme( final Object oldInput )
   {
-    final IKalypsoTheme oldTheme = (IKalypsoTheme) oldInput;
+    final IKalypsoFeatureTheme oldTheme = (IKalypsoFeatureTheme) oldInput;
 
     if( oldTheme != null )
     {
-      oldTheme.removeModellListener( this );
+      oldTheme.getWorkspace().removeModellListener( this );
       oldTheme.dispose();
     }
   }

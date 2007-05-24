@@ -77,7 +77,6 @@ import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
@@ -95,7 +94,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 
   private int selectionIndex = 0;
 
-  public PointSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
+  public PointSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -115,7 +114,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     tabFolderComposite.layout();
 
     final TabFolder markExtGraphicTabFolder = new TabFolder( tabFolderComposite, SWT.NULL );
-    FormData markExtGraphicTabFolderData = new FormData();
+    final FormData markExtGraphicTabFolderData = new FormData();
     markExtGraphicTabFolderData.height = 133;
     markExtGraphicTabFolderData.width = 208;
     markExtGraphicTabFolderData.left = new FormAttachment( 10, 1000, 0 );
@@ -123,18 +122,18 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     markExtGraphicTabFolder.setLayoutData( markExtGraphicTabFolderData );
 
     // ***** Graphic-Detail Section after TabFolder
-    Composite graphicDetailComposite = new Composite( tabFolderComposite, SWT.NULL );
-    FormLayout formLayout = new FormLayout();
+    final Composite graphicDetailComposite = new Composite( tabFolderComposite, SWT.NULL );
+    final FormLayout formLayout = new FormLayout();
     graphicDetailComposite.setLayout( formLayout );
-    FormData labelData = new FormData();
+    final FormData labelData = new FormData();
     labelData.height = 92;
     labelData.width = 198;
     labelData.left = new FormAttachment( 72, 1000, 0 );
     labelData.top = new FormAttachment( 650, 1000, 0 );
     graphicDetailComposite.setLayoutData( labelData );
 
-    Composite graphicDetails = new Composite( graphicDetailComposite, SWT.NULL );
-    GridLayout graphicDetailsLayout = new GridLayout();
+    final Composite graphicDetails = new Composite( graphicDetailComposite, SWT.NULL );
+    final GridLayout graphicDetailsLayout = new GridLayout();
     graphicDetails.setLayout( graphicDetailsLayout );
     graphicDetailsLayout.marginHeight = 0;
     graphicDetailsLayout.marginWidth = 0;
@@ -142,21 +141,21 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 
     final Object objects[] = graphic.getMarksAndExtGraphics();
 
-    for( int i = 0; i < objects.length; i++ )
+    for( final Object element : objects )
     {
-      drawTabItem( markExtGraphicTabFolder, objects[i] );
+      drawTabItem( markExtGraphicTabFolder, element );
     }
     if( selectionIndex < objects.length )
       markExtGraphicTabFolder.setSelection( selectionIndex );
 
-    SliderPanel graphicSizePanel = new SliderPanel( graphicDetails, MessageBundle.STYLE_EDITOR_SIZE, 1, 15, 1, SliderPanel.INTEGER, graphic.getSize( null ) );
+    final SliderPanel graphicSizePanel = new SliderPanel( graphicDetails, MessageBundle.STYLE_EDITOR_SIZE, 1, 15, 1, SliderPanel.INTEGER, graphic.getSize( null ) );
     graphicSizePanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double size = ((SliderPanel) event.getSource()).getSelection();
+        final double size = ((SliderPanel) event.getSource()).getSelection();
         graphic.setSize( size );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
@@ -174,54 +173,54 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     // }
     // } );
 
-    SliderPanel rotationPanel = new SliderPanel( graphicDetails, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, graphic.getRotation( null ) * 180 );
+    final SliderPanel rotationPanel = new SliderPanel( graphicDetails, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, graphic.getRotation( null ) * 180 );
     rotationPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double rotation = ((SliderPanel) event.getSource()).getSelection();
+        final double rotation = ((SliderPanel) event.getSource()).getSelection();
         graphic.setRotation( rotation );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
-    ConfigurePointSymbolizerPanel configurePointSymbolizerPanel = new ConfigurePointSymbolizerPanel( graphicDetails, objects.length );
+    final ConfigurePointSymbolizerPanel configurePointSymbolizerPanel = new ConfigurePointSymbolizerPanel( graphicDetails, objects.length );
     configurePointSymbolizerPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int action = ((ConfigurePointSymbolizerPanel) event.getSource()).getAction();
+        final int action = ((ConfigurePointSymbolizerPanel) event.getSource()).getAction();
         if( action == ConfigurePointSymbolizerPanel.ADD_MARK )
         {
           try
           {
-            Mark newMark = StyleFactory.createMark( "square" );
+            final Mark newMark = StyleFactory.createMark( "square" );
             pointSymbolizer.getGraphic().addMarksAndExtGraphic( newMark );
             setSelectionIndex( graphic.getMarksAndExtGraphics().length - 1 );
             draw();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            userStyle.fireStyleChanged();
           }
-          catch( FilterEvaluationException e )
+          catch( final FilterEvaluationException e )
           {
             e.printStackTrace();
           }
         }
         else if( action == ConfigurePointSymbolizerPanel.REM_MARK )
         {
-          int index = markExtGraphicTabFolder.getSelectionIndex();
+          final int index = markExtGraphicTabFolder.getSelectionIndex();
           if( objects.length > 0 )
           {
-            Object object = objects[index];
+            final Object object = objects[index];
             pointSymbolizer.getGraphic().removeMarksAndExtGraphic( object );
             setSelectionIndex( index - 1 );
             if( getSelectionIndex() < 0 )
               setSelectionIndex( 0 );
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            userStyle.fireStyleChanged();
             try
             {
               draw();
             }
-            catch( FilterEvaluationException e )
+            catch( final FilterEvaluationException e )
             {
               e.printStackTrace();
             }
@@ -229,11 +228,11 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         }
         else if( action == ConfigurePointSymbolizerPanel.FOR_MARK )
         {
-          int index = markExtGraphicTabFolder.getSelectionIndex();
+          final int index = markExtGraphicTabFolder.getSelectionIndex();
           if( index == (objects.length - 1) )
             return;
 
-          Object newOrderedObjects[] = new Object[objects.length];
+          final Object newOrderedObjects[] = new Object[objects.length];
           for( int i = 0; i < objects.length; i++ )
           {
             if( i == index )
@@ -245,23 +244,23 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           }
           graphic.setMarksAndExtGraphics( newOrderedObjects );
           setSelectionIndex( index + 1 );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
           try
           {
             draw();
           }
-          catch( FilterEvaluationException e )
+          catch( final FilterEvaluationException e )
           {
             e.printStackTrace();
           }
         }
         else if( action == ConfigurePointSymbolizerPanel.BAK_MARK )
         {
-          int index = markExtGraphicTabFolder.getSelectionIndex();
+          final int index = markExtGraphicTabFolder.getSelectionIndex();
           if( index == 0 )
             return;
 
-          Object newOrderedObjects[] = new Object[objects.length];
+          final Object newOrderedObjects[] = new Object[objects.length];
           for( int i = 0; i < objects.length; i++ )
           {
             if( i == index )
@@ -273,12 +272,12 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           }
           graphic.setMarksAndExtGraphics( newOrderedObjects );
           setSelectionIndex( index - 1 );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
           try
           {
             draw();
           }
-          catch( FilterEvaluationException e )
+          catch( final FilterEvaluationException e )
           {
             e.printStackTrace();
           }
@@ -289,12 +288,12 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     tabFolderComposite.pack( true );
   }
 
-  private void drawTabItem( TabFolder markExtGraphicTabFolder, Object object ) throws FilterEvaluationException
+  private void drawTabItem( final TabFolder markExtGraphicTabFolder, final Object object ) throws FilterEvaluationException
   {
-    TabItem tabItem = new TabItem( markExtGraphicTabFolder, SWT.NULL );
-    Composite tabItemComposite = new Composite( markExtGraphicTabFolder, SWT.NULL );
+    final TabItem tabItem = new TabItem( markExtGraphicTabFolder, SWT.NULL );
+    final Composite tabItemComposite = new Composite( markExtGraphicTabFolder, SWT.NULL );
 
-    GridLayout compositeLayout = new GridLayout();
+    final GridLayout compositeLayout = new GridLayout();
     tabItemComposite.setLayout( compositeLayout );
     compositeLayout.marginHeight = 0;
     compositeLayout.marginWidth = 0;
@@ -303,12 +302,12 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 
     // ***** Fill Group
 
-    GridLayout groupLayout = new GridLayout();
+    final GridLayout groupLayout = new GridLayout();
     groupLayout.marginHeight = 2;
 
-    Group group = new Group( tabItemComposite, SWT.NULL );
+    final Group group = new Group( tabItemComposite, SWT.NULL );
     group.setText( "" );
-    GridData fillGroupData = new GridData();
+    final GridData fillGroupData = new GridData();
     fillGroupData.widthHint = 202;
     group.setLayoutData( fillGroupData );
     group.setLayout( groupLayout );
@@ -319,14 +318,14 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     {
       final Mark mark = (Mark) object;
       tabItem.setText( "Mark" + (markCounter++) );
-      ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
+      final ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
       wellKnownNameComboBox.addPanelListener( new PanelListener()
       {
-        public void valueChanged( PanelEvent event )
+        public void valueChanged( final PanelEvent event )
         {
-          int index = ((ComboPanel) event.getSource()).getSelection();
+          final int index = ((ComboPanel) event.getSource()).getSelection();
           mark.setWellKnownName( WellKnownNameComboPanel.getWellKnownNameByIndex( index ) );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
         }
       } );
 
@@ -335,25 +334,25 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         markFill = StyleFactory.createFill();
       else
         markFill = mark.getFill();
-      ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( group, MessageBundle.STYLE_EDITOR_FILL_COLOR, markFill.getFill( null ) );
+      final ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( group, MessageBundle.STYLE_EDITOR_FILL_COLOR, markFill.getFill( null ) );
       fillColorChooserPanel.addColorChooserListener( new PanelListener()
       {
-        public void valueChanged( PanelEvent event )
+        public void valueChanged( final PanelEvent event )
         {
-          Color color = ((ColorChooserPanel) event.getSource()).getColor();
+          final Color color = ((ColorChooserPanel) event.getSource()).getColor();
           markFill.setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
         }
       } );
 
-      SliderPanel fillOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markFill.getOpacity( null ) );
+      final SliderPanel fillOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markFill.getOpacity( null ) );
       fillOpacityPanel.addPanelListener( new PanelListener()
       {
-        public void valueChanged( PanelEvent event )
+        public void valueChanged( final PanelEvent event )
         {
-          double opacity = ((SliderPanel) event.getSource()).getSelection();
+          final double opacity = ((SliderPanel) event.getSource()).getSelection();
           markFill.setOpacity( opacity );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
         }
       } );
 
@@ -362,14 +361,14 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         markStroke = StyleFactory.createStroke();
       else
         markStroke = mark.getStroke();
-      ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( group, MessageBundle.STYLE_EDITOR_COLOR, markStroke.getStroke( null ) );
+      final ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( group, MessageBundle.STYLE_EDITOR_COLOR, markStroke.getStroke( null ) );
       strokeColorChooserPanel.addColorChooserListener( new PanelListener()
       {
-        public void valueChanged( PanelEvent event )
+        public void valueChanged( final PanelEvent event )
         {
-          Color color = ((ColorChooserPanel) event.getSource()).getColor();
+          final Color color = ((ColorChooserPanel) event.getSource()).getColor();
           markStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
         }
       } );
 
@@ -387,14 +386,14 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       // }
       // } );
 
-      SliderPanel strokeOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markStroke.getOpacity( null ) );
+      final SliderPanel strokeOpacityPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, markStroke.getOpacity( null ) );
       strokeOpacityPanel.addPanelListener( new PanelListener()
       {
-        public void valueChanged( PanelEvent event )
+        public void valueChanged( final PanelEvent event )
         {
-          double opacity = ((SliderPanel) event.getSource()).getSelection();
+          final double opacity = ((SliderPanel) event.getSource()).getSelection();
           markStroke.setOpacity( opacity );
-          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          userStyle.fireStyleChanged();
         }
       } );
     }
@@ -405,19 +404,19 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       UrlInputPanel urlInputPanel;
       try
       {
-        URL onlineResourceURL = externalGraphic.getOnlineResourceURL();
+        final URL onlineResourceURL = externalGraphic.getOnlineResourceURL();
         urlInputPanel = new UrlInputPanel( group, MessageBundle.STYLE_EDITOR_URL, onlineResourceURL );
         urlInputPanel.addPanelListener( new PanelListener()
         {
-          public void valueChanged( PanelEvent event )
+          public void valueChanged( final PanelEvent event )
           {
-            URL url = ((UrlInputPanel) event.getSource()).getURL();
+            final URL url = ((UrlInputPanel) event.getSource()).getURL();
             externalGraphic.setOnlineResource( url.toString() );
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            userStyle.fireStyleChanged();
           }
         } );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
       }
@@ -430,7 +429,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     return selectionIndex;
   }
 
-  public void setSelectionIndex( int m_selectionIndex )
+  public void setSelectionIndex( final int m_selectionIndex )
   {
     this.selectionIndex = m_selectionIndex;
   }

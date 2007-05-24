@@ -84,14 +84,9 @@ public class MapView extends AbstractMapPart implements IViewPart
     // }
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-   */
-  @SuppressWarnings("restriction")
-  @Override
   public void init( final IViewSite site, final IMemento memento )
   {
-    super.init( site, memento );
+    init( site );
   }
 
   /**

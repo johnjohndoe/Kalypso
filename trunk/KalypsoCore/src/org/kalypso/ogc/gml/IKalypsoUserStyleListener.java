@@ -41,25 +41,11 @@
 package org.kalypso.ogc.gml;
 
 /**
- * Provides the possibility to add listeners that need to be notified about changes in themes.
+ * A listener for events from {@link KalypsoUserStyle}.
  * 
- * @author Stefan Kurzbach
+ * @author Gernot Belger
  */
-public interface IKalypsoThemeEventProvider
+public interface IKalypsoUserStyleListener
 {
-  public void addKalypsoThemeListener( final IKalypsoThemeListener listener );
-
-  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
-
-  /**
-   * TODO: should not be public, check this
-   * 
-   * notifies all listeners about the change
-   * 
-   * @param event
-   *          must not be null
-   */
-  public void fireKalypsoThemeEvent( final KalypsoThemeEvent event );
-
-  public void dispose( );
+  public void styleChanged( final KalypsoUserStyle source );
 }

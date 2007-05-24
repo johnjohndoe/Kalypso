@@ -40,19 +40,22 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -65,32 +68,47 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.list.IListManipulator;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
-import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
-import org.kalypso.ogc.gml.command.RemoveThemeCommand;
+import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanelAdapter;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.mapmodel.IMapModellViewListener;
 import org.kalypso.ogc.gml.outline.AbstractOutlineAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * OutlinePage für das MapView-Template
  * 
  * @author gernot
  */
-public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener, IMapModellView, IListManipulator, ISelectionChangedListener
+public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener, IMapModellView
 {
   private final JobExclusiveCommandTarget m_commandTarget;
 
   private final GisMapOutlineViewer m_modellView;
 
+  private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+     *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    {
+      handleMapModelChanged( newModel );
+    }
+  };
+
+  private MapPanel m_panel = null;
+
   private List<PluginMapOutlineAction> m_actionDelegates = null;
+
+  private final Set<IMapModellViewListener> m_mapModellViewListeners = new HashSet<IMapModellViewListener>();
 
   public GisMapOutlineViewer getModellView( )
   {
@@ -117,8 +135,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_modellView.addDoubleClickListener( this );
 
     m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( this );
-
-    onModellChange( null );
   }
 
   /**
@@ -128,7 +144,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     if( m_modellView != null )
     {
-      m_modellView.removeDoubleClickListener( this );      
+      m_modellView.removeDoubleClickListener( this );
       m_modellView.dispose();
     }
 
@@ -164,7 +180,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
-      public void menuAboutToShow( IMenuManager manager )
+      public void menuAboutToShow( final IMenuManager manager )
       {
         manager.add( new Separator() );
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -223,7 +239,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_modellView.removeSelectionChangedListener( listener );
   }
@@ -231,7 +247,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     m_modellView.setSelection( selection );
   }
@@ -252,99 +268,77 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public MapPanel getMapPanel( )
   {
-    return m_modellView.getMapPanel();
+    return m_panel;
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
   public void setMapPanel( final MapPanel panel )
-  {   
-    m_modellView.setMapPanel( panel );   
-  }
-
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#moveElementDown(java.lang.Object)
-   */
-  public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element );
-    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
-  }
+    final MapPanel oldPanel = m_panel;
 
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#moveElementUp(java.lang.Object)
-   */
-  public void moveElementUp( final Object element )
-  {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
-  }
+    if( m_panel != null )
+      m_panel.removeMapPanelListener( m_mapPanelListener );
 
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#removeElement(java.lang.Object)
-   */
-  public void removeElement( final Object element )
-  {
-    m_commandTarget.postCommand( new RemoveThemeCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
-  }
+    m_panel = panel;
 
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#addElement(java.lang.Object)
-   */
-  public void addElement( final Object element )
-  {
-    // m_commandTarget.postCommand( new AddThemeCommand( getMapModell(),
-    // (IKalypsoTheme)element ),
-    // new SelectThemeRunner( (IKalypsoTheme)element ) );
-  }
-
-  private final class SelectThemeRunner implements Runnable
-  {
-    public final IKalypsoTheme m_theme;
-
-    public SelectThemeRunner( final IKalypsoTheme theme )
+    if( m_panel != null )
     {
-      m_theme = theme;
+      m_panel.addMapPanelListener( m_mapPanelListener );
+      m_modellView.setMapModel( m_panel.getMapModell() );
     }
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run( )
-    {
-      getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          setSelection( new StructuredSelection( m_theme ) );
-        }
-      } );
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    //
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  public void selectionChanged( final SelectionChangedEvent event )
-  {
-    // 
+    fireMapModellViewChanged( oldPanel, panel );
   }
 
   /**
    * @param command
    * @param runnable
-   * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
-  public void postCommand( ICommand command, Runnable runnable )
+  public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
+  }
+
+  protected void handleMapModelChanged( final IMapModell newModel )
+  {
+    if( m_modellView != null )
+      m_modellView.setMapModel( newModel );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#addMapModellViewListener(org.kalypso.ogc.gml.mapmodel.IMapModellViewListener)
+   */
+  public void addMapModellViewListener( final IMapModellViewListener l )
+  {
+    m_mapModellViewListeners.add( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#removeMapModellViewListener(org.kalypso.ogc.gml.mapmodel.IMapModellViewListener)
+   */
+  public void removeMapModellViewListener( final IMapModellViewListener l )
+  {
+    m_mapModellViewListeners.remove( l );
+  }
+
+  private void fireMapModellViewChanged( final MapPanel oldPanel, final MapPanel newPanel )
+  {
+    final IMapModellViewListener[] listeners = m_mapModellViewListeners.toArray( new IMapModellViewListener[m_mapModellViewListeners.size()] );
+    for( final IMapModellViewListener l : listeners )
+    {
+      final ISafeRunnable code = new SafeRunnable()
+      {
+        public void run( ) throws Exception
+        {
+          l.onMapPanelChanged( GisMapOutlinePage.this, oldPanel, newPanel );
+        }
+      };
+
+      SafeRunner.run( code );
+    }
   }
 }

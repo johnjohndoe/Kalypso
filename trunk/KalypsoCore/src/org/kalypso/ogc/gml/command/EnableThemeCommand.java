@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * @author bce
@@ -53,11 +52,8 @@ public class EnableThemeCommand implements ICommand
 
   private final IKalypsoTheme m_theme;
 
-  private final IMapModell m_mapModell;
-
-  public EnableThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme, final boolean bEnable )
+  public EnableThemeCommand( final IKalypsoTheme theme, final boolean bEnable )
   {
-    m_mapModell = mapModell;
     m_theme = theme;
     m_bEnable = bEnable;
   }
@@ -65,7 +61,7 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -73,33 +69,33 @@ public class EnableThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
-    m_mapModell.enableTheme( m_theme, m_bEnable );
+    m_theme.setVisible( m_bEnable );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
-    m_mapModell.enableTheme( m_theme, m_bEnable );
+    m_theme.setVisible( m_bEnable );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
-    m_mapModell.enableTheme( m_theme, !m_bEnable );
+    m_theme.setVisible( !m_bEnable );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
-    return "Theme " + ( m_bEnable ? "anzeigen" : "verstecken" );
+    return "Theme " + (m_bEnable ? "anzeigen" : "verstecken");
   }
 
 }

@@ -85,7 +85,13 @@ public class ResourcePool
   private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
 
   /**
-   * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
+   * TODO: shafft fürs Lanu1d2d projekt Probleme, weil dort durch gml laden das 1d2dPRojekt samt Workflow stuff
+   * initialisiert wird.
+   * <p>
+   * Es folgt ein rule-konflikt, weil die workflow initialisierung auf eine resource zugreift. Rule für die KeyInfos.
+   * Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
+   * <p>
+   * Könnte man nicht einfach die Datei als Rule nehmen?
    */
   private final ISchedulingRule m_mutex = new MutexRule();
 

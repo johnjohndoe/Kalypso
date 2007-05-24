@@ -57,14 +57,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
@@ -80,12 +80,8 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   /**
    * @author Stefan Kurzbach
    */
-  private final class GmtFileChangeListener implements IResourceChangeListener
+  protected final class GmtFileChangeListener implements IResourceChangeListener
   {
-    GmtFileChangeListener( )
-    {
-    }
-
     /**
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
@@ -116,9 +112,96 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     }
   }
 
-  private GisTemplateMapModell m_innerMapModel;
+  private final IMapModellListener m_modelListener = new MapModellAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
+    {
+      CascadingKalypsoTheme.this.invalidate( theme.getBoundingBox() );
+    }
 
-  private String m_mapViewRefUrl;
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void themeOrderChanged( final IMapModell source )
+    {
+      CascadingKalypsoTheme.this.invalidate( getBoundingBox() );
+
+      // TODO: HACK, still looking for a better way to forward theme events to all modell listeners
+      handleThemeStatusChanged();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
+    {
+      if( lastVisibility )
+        CascadingKalypsoTheme.this.invalidate( theme.getBoundingBox() );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
+    {
+      CascadingKalypsoTheme.this.invalidate( theme.getBoundingBox() );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      handleThemeStatusChanged();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      handleThemeContextChanged();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
+    {
+      handleThemeActivated();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#repaintRequested(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypsodeegree.model.geometry.GM_Envelope)
+     */
+    @Override
+    public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
+    {
+      CascadingKalypsoTheme.this.invalidate( bbox );
+    }
+
+  };
+
+  private final GisTemplateMapModell m_innerMapModel;
+
+  private final String m_mapViewRefUrl;
 
   private IResourceChangeListener m_resourceChangeListener;
 
@@ -127,34 +210,50 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
     super( layerType.getHref(), "Cascading", mapModel );
+
     m_mapViewRefUrl = layerType.getHref();
-    URL url = null;
-    try
+
+    final URL url = resolveUrl( context, m_mapViewRefUrl );
+    m_innerMapModel = new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
-      url = new URL( context, m_mapViewRefUrl );
-    }
-    catch( final MalformedURLException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Kein gültiger Kontext " + context + " oder Kartenreferenz " + m_mapViewRefUrl ) );
-    }
-    if( url != null )
-    {
-      m_innerMapModel = new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager );
-      m_file = ResourceUtilities.findFileFromURL( url );
-      if( m_file != null )
+      /**
+       * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
+       */
+      @Override
+      public Object getThemeParent( final IKalypsoTheme theme )
       {
-        m_resourceChangeListener = new GmtFileChangeListener();
-        m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
-        startLoadJob();
+        return CascadingKalypsoTheme.this;
       }
-      else
-      {
-        throw new CoreException( StatusUtilities.createErrorStatus( "Kann " + url.toExternalForm() + " nicht finden." ) );
-      }
+    };
+
+    m_innerMapModel.addMapModelListener( m_modelListener );
+
+    m_file = ResourceUtilities.findFileFromURL( url );
+    if( m_file != null )
+    {
+      m_resourceChangeListener = new GmtFileChangeListener();
+      m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
+      startLoadJob();
+    }
+    else
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( "Kann " + url.toExternalForm() + " nicht finden." ) );
     }
   }
 
-  void startLoadJob( ) throws Exception
+  private static URL resolveUrl( final URL context, final String viewRefUrl ) throws CoreException
+  {
+    try
+    {
+      return new URL( context, viewRefUrl );
+    }
+    catch( final MalformedURLException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Kein gültiger Kontext " + context + " oder Kartenreferenz " + viewRefUrl ) );
+    }
+  }
+
+  protected void startLoadJob( ) throws Exception
   {
     m_file.refreshLocal( IResource.DEPTH_ZERO, null );
     final InputSource inputSource = new InputSource( m_file.getContents() );
@@ -162,10 +261,11 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     try
     {
       innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-      ((IMapModell)this).setName(innerGisView.getName());
-      ((IKalypsoTheme)this).setName(innerGisView.getName());
+      ((IMapModell) this).setName( innerGisView.getName() );
+      ((IKalypsoTheme) this).setName( innerGisView.getName() );
       m_innerMapModel.createFromTemplate( innerGisView );
-      fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTENT_CHANGED ) );
+      fireContextChanged();
+      fireStatusChanged();
     }
     catch( final JAXBException e )
     {
@@ -213,7 +313,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
   {
     if( m_innerMapModel != null )
     {
@@ -260,7 +360,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void activateTheme( IKalypsoTheme theme )
+  public void activateTheme( final IKalypsoTheme theme )
   {
     m_innerMapModel.activateTheme( theme );
   }
@@ -269,19 +369,9 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void addTheme( IKalypsoTheme theme )
+  public void addTheme( final IKalypsoTheme theme )
   {
     m_innerMapModel.addTheme( theme );
-  }
-
-  /**
-   * @param theme
-   * @param status
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#enableTheme(org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-   */
-  public void enableTheme( IKalypsoTheme theme, boolean status )
-  {
-    m_innerMapModel.enableTheme( theme, status );
   }
 
   /**
@@ -343,7 +433,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getTheme(int)
    */
-  public IKalypsoTheme getTheme( int pos )
+  public IKalypsoTheme getTheme( final int pos )
   {
     return m_innerMapModel.getTheme( pos );
   }
@@ -362,26 +452,16 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isThemeActivated(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public boolean isThemeActivated( IKalypsoTheme theme )
+  public boolean isThemeActivated( final IKalypsoTheme theme )
   {
     return m_innerMapModel.isThemeActivated( theme );
   }
 
   /**
    * @param theme
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isThemeEnabled(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
-  public boolean isThemeEnabled( IKalypsoTheme theme )
-  {
-    return m_innerMapModel.isThemeEnabled( theme );
-  }
-
-  /**
-   * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#moveDown(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void moveDown( IKalypsoTheme theme )
+  public void moveDown( final IKalypsoTheme theme )
   {
     m_innerMapModel.moveDown( theme );
   }
@@ -390,7 +470,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#moveUp(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void moveUp( IKalypsoTheme theme )
+  public void moveUp( final IKalypsoTheme theme )
   {
     m_innerMapModel.moveUp( theme );
   }
@@ -405,7 +485,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
    *      double, boolean)
    */
-  public void paint( Graphics g, GeoTransform p, GM_Envelope bbox, double scale, boolean select )
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean select )
   {
     m_innerMapModel.paint( g, p, bbox, scale, select );
   }
@@ -414,19 +494,9 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void removeTheme( IKalypsoTheme theme )
+  public void removeTheme( final IKalypsoTheme theme )
   {
     m_innerMapModel.removeTheme( theme );
-  }
-
-  /**
-   * @param crs
-   * @throws Exception
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#setCoordinateSystem(org.opengis.cs.CS_CoordinateSystem)
-   */
-  public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception
-  {
-    m_innerMapModel.setCoordinateSystem( crs );
   }
 
   /**
@@ -435,45 +505,15 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme,
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 )
+  public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_innerMapModel.swapThemes( theme1, theme2 );
   }
 
   /**
-   * @param listener
-   * @see org.kalypso.ogc.gml.GisTemplateMapModell#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
-  @Override
-  public void addModellListener( ModellEventListener listener )
-  {
-    m_innerMapModel.addModellListener( listener );
-  }
-
-  /**
-   * @param modellEvent
-   * @see org.kalypso.ogc.gml.GisTemplateMapModell#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void onModellChange( ModellEvent modellEvent )
-  {
-    m_innerMapModel.onModellChange( modellEvent );
-  }
-
-  /**
-   * @param listener
-   * @see org.kalypso.ogc.gml.GisTemplateMapModell#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
-  @Override
-  public void removeModellListener( ModellEventListener listener )
-  {
-    m_innerMapModel.removeModellListener( listener );
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
    */
-  public void accept( KalypsoThemeVisitor visitor, int depth_infinite )
+  public void accept( final KalypsoThemeVisitor visitor, final int depth_infinite )
   {
     m_innerMapModel.accept( visitor, depth_infinite );
 
@@ -482,27 +522,70 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
    */
-  public void insertTheme( IKalypsoTheme theme, int position )
+  public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_innerMapModel.insertTheme( theme, position );
-    
+
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int, org.kalypso.ogc.gml.IKalypsoTheme)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int,
+   *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void accept( KalypsoThemeVisitor visitor, int depth_infinite, IKalypsoTheme theme )
+  public void accept( final KalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
   {
     m_innerMapModel.accept( visitor, depth_infinite, theme );
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
    */
   @Override
-  public Object[] getChildren( Object o )
+  public Object[] getChildren( final Object o )
   {
     return m_innerMapModel.getChildren( o );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
+   */
+  public void addMapModelListener( final IMapModellListener l )
+  {
+    m_innerMapModel.addMapModelListener( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
+   */
+  public void removeMapModelListener( final IMapModellListener l )
+  {
+    m_innerMapModel.removeMapModelListener( l );
+  }
+
+  protected void handleThemeStatusChanged( )
+  {
+    CascadingKalypsoTheme.this.fireStatusChanged();
+  }
+
+  protected void handleThemeContextChanged( )
+  {
+    CascadingKalypsoTheme.this.fireContextChanged();
+  }
+
+  protected void handleThemeActivated( )
+  {
+    CascadingKalypsoTheme.this.fireStatusChanged();
+  }
+
+  /**
+   * Overwritten in order to have corrct parent for tree strcutures.
+   * 
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public Object getThemeParent( final IKalypsoTheme theme )
+  {
+    // do not delegate to inner model, this would be wrong.
+    return this;
   }
 
 }

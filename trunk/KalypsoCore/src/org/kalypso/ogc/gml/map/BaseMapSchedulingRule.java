@@ -58,6 +58,9 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
 
   public BaseMapSchedulingRule( final MapPanel mapPanel, final IResource mapFile )
   {
+// Assert.isNotNull( mapPanel );
+// Assert.isNotNull( mapFile );
+
     m_mapPanel = mapPanel;
     m_mapFile = mapFile;
   }
@@ -102,14 +105,13 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     if( rule instanceof IMapSchedulingRule )
     {
       // contains all other instances of IMapSchedulingRule with the same map panel
-      IMapSchedulingRule other = (IMapSchedulingRule) rule;
+      final IMapSchedulingRule other = (IMapSchedulingRule) rule;
       return getMapPanel() == other.getMapPanel();
     }
-    else if( rule instanceof IResource )
+    else if( rule instanceof IResource && m_mapFile != null )
     {
       // contains the underlying file
-      final IResource other = (IResource) rule;
-      return other.equals( getMapFile() );
+      return rule.contains( m_mapFile );
     }
     return false;
   }
@@ -125,11 +127,10 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       final IMapSchedulingRule other = (IMapSchedulingRule) rule;
       return getMapPanel() == other.getMapPanel();
     }
-    else if( rule instanceof IResource )
+    else if( rule instanceof IResource && m_mapFile != null )
     {
       // conflicts with the underlying file
-      final IResource other = (IResource) rule;
-      return other.equals( m_mapFile );
+      return rule.isConflicting( m_mapFile );
     }
     else
       return false;
@@ -161,7 +162,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       if( rule instanceof ActivateLayerSchedulingRule )
       {
         // contains only instances of ActivateLayerSchedulingRule with the same map panel
-        ActivateLayerSchedulingRule other = (ActivateLayerSchedulingRule) rule;
+        final ActivateLayerSchedulingRule other = (ActivateLayerSchedulingRule) rule;
         return getMapPanel() == other.getMapPanel();
       }
       return false;
@@ -208,7 +209,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       if( rule instanceof SelectWidgetSchedulingRule )
       {
         // contains only instances of SelectWidgetSchedulingRule with the same map panel
-        SelectWidgetSchedulingRule other = (SelectWidgetSchedulingRule) rule;
+        final SelectWidgetSchedulingRule other = (SelectWidgetSchedulingRule) rule;
         return getMapPanel() == other.getMapPanel();
       }
       return false;

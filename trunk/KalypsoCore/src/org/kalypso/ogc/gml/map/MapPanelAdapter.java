@@ -1,8 +1,3 @@
-package org.kalypso.ogc.gml.outline;
-
-import org.eclipse.ui.IActionDelegate2;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,17 +38,39 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.map;
+
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * PluginMapOutlineAction
- * <p>
- * interface to extention point for actions on Mapoutline created by
+ * Base implementation for the {@link IMapPanelListener}, implements everything empty.
  * 
- * @author doemming (25.05.2005)
+ * @author Gernot Belger
  */
-public interface PluginMapOutlineActionDelegate extends IActionDelegate2
+public abstract class MapPanelAdapter implements IMapPanelListener
 {
-  public void setView( final IMapModellView mapModellView );
+  /**
+   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+  {
+  }
 
-  public IMapModellView getView( );
+  /**
+   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
+   */
+  public void onMessageChanged( final MapPanel source, final String message )
+  {
+  }
+
 }

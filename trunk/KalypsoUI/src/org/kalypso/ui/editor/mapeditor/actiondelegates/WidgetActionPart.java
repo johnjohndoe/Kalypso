@@ -110,7 +110,7 @@ public class WidgetActionPart implements ICommandTarget
 
     return m_part.getSite();
   }
-  
+
   public IWorkbenchPart getPart( )
   {
     return m_part;
@@ -120,7 +120,7 @@ public class WidgetActionPart implements ICommandTarget
   {
     if( m_part == null )
       return null;
-    
+
     return (CommandableWorkspace) m_part.getAdapter( CommandableWorkspace.class );
   }
 

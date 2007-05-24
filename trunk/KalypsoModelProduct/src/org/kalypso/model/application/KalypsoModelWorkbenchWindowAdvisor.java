@@ -62,7 +62,7 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
 {
   private final boolean m_restrictedAccess;
 
-  private String m_defaultPerspective;
+  private final String m_defaultPerspective;
 
   /**
    * @param restrictedAccess
@@ -142,19 +142,24 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
     final IWorkbench workbench = getWindowConfigurer().getWorkbenchConfigurer().getWorkbench();
     final IIntroManager introManager = workbench.getIntroManager();
 
-    final IIntroPart part = introManager.showIntro( null, false );
-    if( part instanceof CustomizableIntroPart )
+    final IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
+    /* Do not show intro if we have no perspective (throws an exception). What to do in that case? */
+    if( activePage.getOpenPerspectives().length > 0 )
     {
-      final CustomizableIntroPart customIntro = (CustomizableIntroPart) part;
-      customIntro.getControl().setData( CustomizableIntroPart.SHOW_STANDBY_PART, null );
+      final IIntroPart part = introManager.showIntro( null, false );
+      if( part instanceof CustomizableIntroPart )
+      {
+        final CustomizableIntroPart customIntro = (CustomizableIntroPart) part;
+        customIntro.getControl().setData( CustomizableIntroPart.SHOW_STANDBY_PART, null );
+      }
+
+      if( part != null )
+        part.standbyStateChanged( false );
+
+      // always start with the main page
+      final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+      if( model != null )
+        model.setCurrentPageId( "rootPage" );
     }
-
-    if( part != null )
-      part.standbyStateChanged( false );
-
-    // always start with the main page
-    final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-    if( model != null )
-      model.setCurrentPageId( "rootPage" );
   }
 }

@@ -40,11 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.xml.Marshallable;
 
 /**
@@ -52,13 +57,15 @@ import org.kalypsodeegree.xml.Marshallable;
  * 
  * @author bce
  */
-public class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable, IWorkbenchAdapter
+public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdapter
 {
+  private final Collection<IKalypsoUserStyleListener> m_listeners = new HashSet<IKalypsoUserStyleListener>();
+
+  protected final String m_styleName;
+
   private boolean m_disposed = false;
 
   protected UserStyle m_userStyle;
-
-  protected final String m_styleName;
 
   public KalypsoUserStyle( final UserStyle style, final String styleName )
   {
@@ -69,82 +76,80 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
   /**
    * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
-    return ( (Marshallable)m_userStyle ).exportAsXML();
+    return ((Marshallable) m_userStyle).exportAsXML();
   }
 
-  public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  public void addFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
     m_userStyle.addFeatureTypeStyle( featureTypeStyle );
   }
 
-  public String getAbstract()
+  public String getAbstract( )
   {
     return m_userStyle.getAbstract();
   }
 
-  public FeatureTypeStyle[] getFeatureTypeStyles()
+  public FeatureTypeStyle[] getFeatureTypeStyles( )
   {
     return m_userStyle.getFeatureTypeStyles();
   }
 
-  public String getName()
+  public String getName( )
   {
     return m_userStyle.getName();
   }
 
-  public String getTitle()
+  public String getTitle( )
   {
     return m_userStyle.getTitle();
   }
 
-  public boolean isDefault()
+  public boolean isDefault( )
   {
     return m_userStyle.isDefault();
   }
 
-  public void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  public void removeFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
     m_userStyle.removeFeatureTypeStyle( featureTypeStyle );
   }
 
-  public void setAbstract( String abstract_ )
+  public void setAbstract( final String abstract_ )
   {
     m_userStyle.setAbstract( abstract_ );
   }
 
-  public void setDefault( boolean default_ )
+  public void setDefault( final boolean default_ )
   {
     m_userStyle.setDefault( default_ );
   }
 
-  public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
+  public void setFeatureTypeStyles( final FeatureTypeStyle[] featureTypeStyles )
   {
     m_userStyle.setFeatureTypeStyles( featureTypeStyles );
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_userStyle.setName( name );
   }
 
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
     m_userStyle.setTitle( title );
   }
 
-  public boolean isDisposed()
+  public boolean isDisposed( )
   {
     return m_disposed;
   }
 
-  @Override
-  public void dispose()
+  public void dispose( )
   {
     m_disposed = true;
-    
-    super.dispose();
+    m_listeners.clear();
   }
 
   /**
@@ -173,7 +178,7 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
    */
-  public String getLabel( Object o )
+  public String getLabel( final Object o )
   {
     if( o != this )
       throw new IllegalStateException();
@@ -185,7 +190,7 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     /* Fallback: if no titel is present, take the name (id like). */
     if( getName() != null )
       return getName();
-    
+
     return "KalypsoUserStyle: no 'title' or 'name' set.";
   }
 
@@ -196,4 +201,41 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
   {
     return null;
   }
+
+  /**
+   * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
+   */
+  public void addStyleListener( final IKalypsoUserStyleListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  /**
+   * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
+   */
+  public void removeStyleListener( final IKalypsoUserStyleListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  /**
+   * Runns the given runnable on every listener in a safe way.
+   */
+  public void fireStyleChanged( )
+  {
+    final IKalypsoUserStyleListener[] listeners = m_listeners.toArray( new IKalypsoUserStyleListener[m_listeners.size()] );
+    for( final IKalypsoUserStyleListener l : listeners )
+    {
+      final ISafeRunnable code = new SafeRunnable()
+      {
+        public void run( ) throws Exception
+        {
+          l.styleChanged( KalypsoUserStyle.this );
+        }
+      };
+
+      SafeRunner.run( code );
+    }
+  }
+
 }

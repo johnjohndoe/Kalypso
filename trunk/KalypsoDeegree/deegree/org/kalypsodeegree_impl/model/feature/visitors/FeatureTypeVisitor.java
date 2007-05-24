@@ -28,14 +28,14 @@ public class FeatureTypeVisitor implements FeatureVisitor
     this( visitor, ft.getQName().getLocalPart(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final FeatureVisitor visitor, String typeLocalPart, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final String typeLocalPart, final boolean acceptIfSubstituting )
   {
     m_visitor = visitor;
     m_typename = typeLocalPart;
     m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
-  public void setVisitor( FeatureVisitor visitor )
+  public void setVisitor( final FeatureVisitor visitor )
   {
     m_visitor = visitor;
   }
@@ -53,6 +53,9 @@ public class FeatureTypeVisitor implements FeatureVisitor
 
   public boolean matchesType( final Feature f )
   {
+    if( f == null )
+      return false;
+
     final IFeatureType featureType = f.getFeatureType();
     // final FeatureType[] substituts = f.getFeatureType().getSubstituts( m_context, false, true );
 

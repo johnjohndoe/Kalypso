@@ -235,7 +235,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     m_lockRequestEnvLocalSRS = null;
 
     /* Force repaint */
-    fireModellEvent( null );
+    invalidate( getBoundingBox() );
   }
 
   /**
@@ -404,8 +404,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       m_bufferEnvLocalSRS = null;
       throw e;
     }
+
     // inform to paint new image
-    fireModellEvent( null );
+    invalidate( getBoundingBox() );
   }
 
   /**
@@ -567,7 +568,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
       /* Deaktivate on error. */
       // TODO: make this optional?
-      getMapModell().enableTheme( this, false );
+      setVisible( false );
     }
   }
 }

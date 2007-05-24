@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.outline;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -53,52 +54,50 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class OpenStyleDialogAction extends MapModellViewActionDelegate
 {
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void run( IAction action )
+  public void runWithEvent( final IAction action, final Event event )
   {
-    if( action instanceof PluginMapOutlineAction )
+    final IMapModellView viewer = getView();
+    if( viewer == null )
+      return;
+
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    final Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+
+    try
     {
-      PluginMapOutlineAction actionDelegate = (PluginMapOutlineAction) action;
-      IMapModellView viewer = actionDelegate.getOutlineviewer();
-      StyleEditorViewPart part = null;
-      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+      final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+      if( part != null )
+        // ARG! The style view should find its own selection provider...!
+        part.setSelectionChangedProvider( viewer );
 
-      try
+      // if UserStyle selected path that on to styleeditor
+      if( o instanceof ThemeStyleTreeObject )
       {
-        part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+        final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
 
-        if( part != null )
-          part.setSelectionChangedProvider( viewer );
-
-        // if UserStyle selected path that on to styleeditor
-        if( o instanceof ThemeStyleTreeObject )
+        if( part != null && theme instanceof IKalypsoFeatureTheme )
         {
-          final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
-
-          if( part != null && theme instanceof IKalypsoFeatureTheme )
-          {
-            KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
-            part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme) theme );
-          }
-          else
-            part.initStyleEditor( null, null );
+          final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
+          part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme) theme );
         }
-        else if( o instanceof IKalypsoTheme )
+        else
           part.initStyleEditor( null, null );
       }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
+      else if( o instanceof IKalypsoTheme )
+        part.initStyleEditor( null, null );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
   }
 
@@ -107,13 +106,14 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     super.selectionChanged( action, selection );
+
     boolean bEnable = false;
     if( selection instanceof IStructuredSelection )
     {
-      IStructuredSelection s = (IStructuredSelection) selection;
+      final IStructuredSelection s = (IStructuredSelection) selection;
       if( s.getFirstElement() instanceof ThemeStyleTreeObject )
         bEnable = true;
       action.setEnabled( bEnable );

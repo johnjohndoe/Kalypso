@@ -40,17 +40,21 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * <p>
@@ -64,11 +68,14 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
+  private static interface IListenerRunnable
+  {
+    public void visit( final IKalypsoThemeListener l );
+  }
+
+  private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
+
   protected static final Object[] EMPTY_CHILDREN = new Object[] {};
-
-  private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
-
-  private final KalypsoThemeEventProviderAdapter m_themeEventProvider = new KalypsoThemeEventProviderAdapter();
 
   private final IMapModell m_mapModel;
 
@@ -82,8 +89,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   private IStatus m_status = Status.OK_STATUS;
 
+  private boolean m_isVisible = true;
+
   public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel )
   {
+    Assert.isNotNull( mapModel );
+
     m_name = name;
     m_type = type;
     m_mapModel = mapModel;
@@ -100,30 +111,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public void setName( final String name )
   {
     m_name = name;
-    fireModellEvent( null );
-  }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( ModellEvent modellEvent )
-  {
-    fireModellEvent( modellEvent );
-  }
-
-  public void addModellListener( ModellEventListener listener )
-  {
-    m_eventProvider.addModellListener( listener );
-  }
-
-  public void fireModellEvent( ModellEvent event )
-  {
-    m_eventProvider.fireModellEvent( event );
-  }
-
-  public void removeModellListener( ModellEventListener listener )
-  {
-    m_eventProvider.removeModellListener( listener );
+    fireStatusChanged();
   }
 
   @Override
@@ -140,6 +129,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public void setType( final String type )
   {
     m_type = type;
+
+    fireStatusChanged();
   }
 
   /**
@@ -161,30 +152,81 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @param listener
-   * @see org.kalypso.ogc.gml.KalypsoThemeEventProviderAdapter#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
    */
-  public void addKalypsoThemeListener( IKalypsoThemeListener listener )
+  public void addKalypsoThemeListener( final IKalypsoThemeListener listener )
   {
-    m_themeEventProvider.addKalypsoThemeListener( listener );
+    m_listeners.add( listener );
   }
 
   /**
-   * @param listener
-   * @see org.kalypso.ogc.gml.KalypsoThemeEventProviderAdapter#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
    */
-  public void removeKalypsoThemeListener( IKalypsoThemeListener listener )
+  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener )
   {
-    m_themeEventProvider.removeKalypsoThemeListener( listener );
+    m_listeners.remove( listener );
   }
 
   /**
-   * @param event
-   * @see org.kalypso.ogc.gml.KalypsoThemeEventProviderAdapter#fireKalypsoThemeEvent(org.kalypso.ogc.gml.KalypsoThemeEvent)
+   * Runns the given runnable on every listener in a safe way.
    */
-  public void fireKalypsoThemeEvent( KalypsoThemeEvent event )
+  private void acceptListenersRunnable( final IListenerRunnable r )
   {
-    m_themeEventProvider.fireKalypsoThemeEvent( event );
+    final IKalypsoThemeListener[] listeners = m_listeners.toArray( new IKalypsoThemeListener[m_listeners.size()] );
+    for( final IKalypsoThemeListener l : listeners )
+    {
+      final ISafeRunnable code = new SafeRunnable()
+      {
+        public void run( ) throws Exception
+        {
+          r.visit( l );
+        }
+      };
+
+      SafeRunner.run( code );
+    }
+  }
+
+  /**
+   * Fire the given event to my registered listeners.
+   */
+  protected void fireContextChanged( )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      public void visit( final IKalypsoThemeListener l )
+      {
+        l.contextChanged( AbstractKalypsoTheme.this );
+      }
+    } );
+  }
+
+  /**
+   * Fire the given event to my registered listeners.
+   */
+  protected void fireStatusChanged( )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      public void visit( final IKalypsoThemeListener l )
+      {
+        l.statusChanged( AbstractKalypsoTheme.this );
+      }
+    } );
+  }
+
+  /**
+   * Fire the given event to my registered listeners.
+   */
+  protected void fireVisibilityChanged( final boolean newVisibility )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      public void visit( final IKalypsoThemeListener l )
+      {
+        l.visibilityChanged( AbstractKalypsoTheme.this, newVisibility );
+      }
+    } );
   }
 
   /**
@@ -192,8 +234,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   public void dispose( )
   {
-    m_eventProvider.dispose();
-    m_themeEventProvider.dispose();
+    m_listeners.clear();
   }
 
   /**
@@ -272,9 +313,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
    */
-  public Object getParent( Object o )
+  public Object getParent( final Object o )
   {
-    return m_mapModel;
+    Assert.isTrue( o == this );
+
+    return m_mapModel.getThemeParent( this );
   }
 
   /**
@@ -289,6 +332,31 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     m_status = status;
 
-    fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTENT_CHANGED ) );
+    fireStatusChanged();
+  }
+
+  public void invalidate( final GM_Envelope bbox )
+  {
+    m_mapModel.invalidate( bbox );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#isVisible()
+   */
+  public boolean isVisible( )
+  {
+    return m_isVisible;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setVisible(boolean)
+   */
+  public void setVisible( final boolean visible )
+  {
+    if( visible != m_isVisible )
+    {
+      m_isVisible = visible;
+      fireVisibilityChanged( visible );
+    }
   }
 }

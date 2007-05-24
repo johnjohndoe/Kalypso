@@ -181,7 +181,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     // TODO: move into own method
     // TODO: be more robust against inconsistency between resultDefinition and result
-    final StringTokenizer tk = new StringTokenizer( result.trim() );
+    final StringTokenizer tk = new StringTokenizer( result == null ? "" : result.trim() );
     int nb = 0;
     IRecord record = null;
     while( tk.hasMoreElements() )

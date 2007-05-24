@@ -2,7 +2,6 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -15,18 +14,19 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -80,11 +80,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     setFeature( getFeature() );
 
     /**/
-    MenuManager menuManager = new MenuManager();
+    final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
-      public void menuAboutToShow( IMenuManager manager )
+      public void menuAboutToShow( final IMenuManager manager )
       {
         manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( new Separator() );
@@ -94,7 +94,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-    final IWorkbenchPart activeEditor = activePage.getActivePart();    
+    final IWorkbenchPart activeEditor = activePage.getActivePart();
     if( activeEditor != null )
     {
       m_viewer.setMenu( menuManager );
@@ -134,6 +134,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     if( m_kft != null )
     {
+      m_kft.getWorkspace().removeModellListener( this );
+      m_kft.getMapModell().dispose(); // we made the modell, so we dispose it
       m_kft.dispose();
       m_kft = null;
     }
@@ -151,14 +153,19 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       else
         c_workspace = new CommandableWorkspace( workspace );
 
-      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager, null );
-      m_kft.addModellListener( this );
+      final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
+
+      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager, pseudoModell );
+
+      pseudoModell.addTheme( m_kft );
+
+      c_workspace.addModellListener( this );
       m_viewer.setInput( m_kft );
 
       // create columns
       // add all columns
       if( m_tableView != null )
-      {        
+      {
         m_viewer.applyTableTemplate( m_tableView, workspace.getContext(), false );
       }
       else
@@ -230,8 +237,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
             {
               event.widget = control;
               final ModifyEvent me = new ModifyEvent( event );
-              for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
-                ((ModifyListener) mIt.next()).modifyText( me );
+              for( final Object element : m_listeners )
+                ((ModifyListener) element).modifyText( me );
 
             }
           } );

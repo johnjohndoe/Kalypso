@@ -55,6 +55,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -68,7 +70,9 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -78,10 +82,6 @@ import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -93,7 +93,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author vdoemming
  */
-public class MapPanel extends Canvas implements ModellEventListener, ComponentListener, ModellEventProvider, ISelectionProvider
+public class MapPanel extends Canvas implements ComponentListener, ISelectionProvider
 {
   // TODO: put this concept into a separate class, in preference an extra map layer
   public List<PointOfinterest> m_pointofInterests = new ArrayList<PointOfinterest>();
@@ -115,8 +115,6 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
       globalSelectionChanged( selection );
     }
   };
-
-  private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
 
   private static final long serialVersionUID = 1L;
 
@@ -175,6 +173,61 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
 
   private String m_message = "";
 
+  private final IMapModellListener m_modellListener = new MapModellAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
+    {
+      if( theme.isVisible() )
+        forceRepaint();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, boolean lastVisibility )
+    {
+      if( lastVisibility )
+        forceRepaint();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void themeOrderChanged( final IMapModell source )
+    {
+      forceRepaint();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, boolean visibility )
+    {
+      forceRepaint();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#repaintRequested(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypsodeegree.model.geometry.GM_Envelope)
+     */
+    @Override
+    public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
+    {
+      forceRepaint();
+    }
+
+  };
+
   public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
@@ -201,17 +254,17 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
     setMapModell( null );
 
-    m_modellEventProvider.dispose();
     m_widgetManager.dispose();
 
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
     // TODO: where is this ma panel still referenced from?
     m_selectionListeners.clear();
+    m_mapPanelListeners.clear();
     m_mapImage = null;
 
   }
 
-  public void setOffset( int dx, int dy ) // used by pan method
+  public void setOffset( final int dx, final int dy ) // used by pan method
   {
     xOffset = dx;
     yOffset = dy;
@@ -325,12 +378,12 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   }
 
   @Override
-  public void update( Graphics g )
+  public void update( final Graphics g )
   {
     paint( g );
   }
 
-  private void paintWidget( Graphics g )
+  private void paintWidget( final Graphics g )
   {
     // final Color color = Color.red;
     final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
@@ -340,7 +393,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     m_widgetManager.paintWidget( g );
   }
 
-  public void setValidMap( boolean status )
+  public void setValidMap( final boolean status )
   {
     validMap = status;
   }
@@ -350,7 +403,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     return validMap;
   }
 
-  private void setValidAll( boolean status )
+  private void setValidAll( final boolean status )
   {
     setValidMap( status );
   }
@@ -368,42 +421,40 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
    */
   public void setMapModell( final IMapModell modell )
   {
+    final IMapModell oldModel = m_model;
+
     if( m_model != null )
-    {
-      m_model.removeModellListener( this );
-    }
+      m_model.removeMapModelListener( m_modellListener );
 
     m_model = modell;
 
     if( m_model != null )
-    {
-      m_model.addModellListener( this );
-    }
+      m_model.addMapModelListener( m_modellListener );
+
+    fireMapModelChanged( oldModel, m_model );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  public void onModellChange( final ModellEvent modellEvent )
+  protected final void forceRepaint( )
   {
     setValidAll( false );
     clearOffset();
-    // inform my listeners
-    fireModellEvent( modellEvent );
   }
 
-  public GM_Envelope getPanToLocationBoundingBox( double gisMX, double gisMY )
+  public GM_Envelope getPanToLocationBoundingBox( final double gisMX, final double gisMY )
   {
     final double ratio = m_height / m_width;
 
     final GeoTransform transform = getProjection();
 
-    double gisDX = (transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ));
-    double gisDY = gisDX * ratio;
-    double gisX1 = gisMX - gisDX;
-    double gisX2 = gisMX + gisDX;
-    double gisY1 = gisMY - gisDY;
-    double gisY2 = gisMY + gisDY;
+    final double gisDX = (transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ));
+    final double gisDY = gisDX * ratio;
+    final double gisX1 = gisMX - gisDX;
+    final double gisX2 = gisMX + gisDX;
+    final double gisY1 = gisMY - gisDY;
+    final double gisY2 = gisMY + gisDY;
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
@@ -412,8 +463,8 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   {
     final GeoTransform transform = getProjection();
 
-    double gisMX = transform.getSourceX( mx );
-    double gisMY = transform.getSourceY( my );
+    final double gisMX = transform.getSourceX( mx );
+    final double gisMY = transform.getSourceY( my );
     return getPanToLocationBoundingBox( gisMX, gisMY );
   }
 
@@ -440,32 +491,34 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   public synchronized void setBoundingBox( final GM_Envelope wishBBox )
   {
     m_wishBBox = wishBBox;
+
+    final GM_Envelope oldExtent = m_boundingBox;
     m_boundingBox = adjustBoundingBox( m_wishBBox );
 
-    if( m_boundingBox == null )
-      return;
+    if( m_boundingBox != null )
+    {
+      // TODO: introduce a trace option for this
+      // final StringBuffer dump = new StringBuffer();
+      // dump.append( "MinX:" + m_boundingBox.getMin().getX() );
+      // dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
+      // dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
+      // dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
+      // dump.append( "\n" );
+      // System.out.println( dump.toString() );
 
-    // TODO: introduce a trace option for this
-    // final StringBuffer dump = new StringBuffer();
-    // dump.append( "MinX:" + m_boundingBox.getMin().getX() );
-    // dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
-    // dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
-    // dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
-    // dump.append( "\n" );
-    // System.out.println( dump.toString() );
+      m_projection.setSourceRect( m_boundingBox );
 
-    m_projection.setSourceRect( m_boundingBox );
+      // dont call onModellChange and inform the listeners
+      // this is dangerous (dead lock!) inside a synchronized method
+      // onModellChange( null );
 
-    // dont call onModellChange and inform the listeners
-    // this is dangerous (dead lock!) inside a synchronized method
-    // onModellChange( null );
+      // instead invalidate the map yourself
+      setValidAll( false );
+      clearOffset();
+      repaint();
+    }
 
-    // instead invalidate the map yourself
-    setValidAll( false );
-    clearOffset();
-
-    // has been already called by onModellChange
-    // repaint();
+    fireExtentChanged( oldExtent, m_boundingBox );
   }
 
   private GM_Envelope adjustBoundingBox( GM_Envelope env )
@@ -475,16 +528,16 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     if( env == null )
       return null;
 
-    double ratio = getRatio();
+    final double ratio = getRatio();
     // todo besser loesen
     if( Double.isNaN( ratio ) )
       return env;
 
-    double minX = env.getMin().getX();
-    double minY = env.getMin().getY();
+    final double minX = env.getMin().getX();
+    final double minY = env.getMin().getY();
 
-    double maxX = env.getMax().getX();
-    double maxY = env.getMax().getY();
+    final double maxX = env.getMax().getX();
+    final double maxY = env.getMax().getY();
 
     double dx = (maxX - minX) / 2d;
     double dy = (maxY - minY) / 2d;
@@ -494,8 +547,8 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     else
       dx = dy / ratio;
 
-    double mx = (maxX + minX) / 2d;
-    double my = (maxY + minY) / 2d;
+    final double mx = (maxX + minX) / 2d;
+    final double my = (maxY + minY) / 2d;
 
     return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
@@ -507,17 +560,17 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
 
   public GM_Envelope getZoomOutBoundingBox( )
   {
-    GeoTransform transform = getProjection();
-    double ratio = getRatio();
-    double gisMX = transform.getSourceX( getWidth() / 2d );
-    double gisMY = transform.getSourceY( getHeight() / 2d );
+    final GeoTransform transform = getProjection();
+    final double ratio = getRatio();
+    final double gisMX = transform.getSourceX( getWidth() / 2d );
+    final double gisMY = transform.getSourceY( getHeight() / 2d );
 
-    double gisDX = 2 * (gisMX - transform.getSourceX( 0 ));
-    double gisDY = gisDX * ratio;
-    double gisX1 = gisMX - gisDX;
-    double gisX2 = gisMX + gisDX;
-    double gisY1 = gisMY - gisDY;
-    double gisY2 = gisMY + gisDY;
+    final double gisDX = 2 * (gisMX - transform.getSourceX( 0 ));
+    final double gisDY = gisDX * ratio;
+    final double gisX1 = gisMX - gisDX;
+    final double gisX2 = gisMX + gisDX;
+    final double gisY1 = gisMY - gisDY;
+    final double gisY2 = gisMY + gisDY;
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
@@ -530,7 +583,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   /**
    * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
    */
-  public void componentHidden( ComponentEvent e )
+  public void componentHidden( final ComponentEvent e )
   {
     //  
   }
@@ -538,7 +591,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   /**
    * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
    */
-  public void componentMoved( ComponentEvent e )
+  public void componentMoved( final ComponentEvent e )
   {
     //  
   }
@@ -546,7 +599,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   /**
    * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
    */
-  public void componentResized( ComponentEvent e )
+  public void componentResized( final ComponentEvent e )
   {
     if( m_wishBBox != null )
       setBoundingBox( m_wishBBox );
@@ -557,27 +610,12 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   /**
    * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
    */
-  public void componentShown( ComponentEvent e )
+  public void componentShown( final ComponentEvent e )
   {
     if( m_wishBBox != null )
       setBoundingBox( m_wishBBox );
     else
       setBoundingBox( getBoundingBox() );
-  }
-
-  public void addModellListener( ModellEventListener listener )
-  {
-    m_modellEventProvider.addModellListener( listener );
-  }
-
-  public void fireModellEvent( ModellEvent event )
-  {
-    m_modellEventProvider.fireModellEvent( event );
-  }
-
-  public void removeModellListener( ModellEventListener listener )
-  {
-    m_modellEventProvider.removeModellListener( listener );
   }
 
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
@@ -641,15 +679,15 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
 
     if( startPoint != null )
     {
-      double g1x = transform.getSourceX( startPoint.getX() );
-      double g1y = transform.getSourceY( startPoint.getY() );
+      final double g1x = transform.getSourceX( startPoint.getX() );
+      final double g1y = transform.getSourceY( startPoint.getY() );
 
       if( endPoint == null ) // not dragged
       {
         // TODO depend on featuretype
         // line and point with radius
         // polygon without radius
-        double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
+        final double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
 
         final JMSelector selector = new JMSelector();
 
@@ -673,10 +711,10 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
         if( endPoint.getX() > startPoint.getX() && endPoint.getY() > startPoint.getY() )
           withinStatus = true;
 
-        double minX = g1x < g2x ? g1x : g2x;
-        double maxX = g1x > g2x ? g1x : g2x;
-        double minY = g1y < g2y ? g1y : g2y;
-        double maxY = g1y > g2y ? g1y : g2y;
+        final double minX = g1x < g2x ? g1x : g2x;
+        final double maxX = g1x > g2x ? g1x : g2x;
+        final double minY = g1y < g2y ? g1y : g2y;
+        final double maxY = g1y > g2y ? g1y : g2y;
 
         if( minX != maxX && minY != maxY )
         {
@@ -764,10 +802,8 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
-    for( int i = 0; i < listenersArray.length; i++ )
+    for( final ISelectionChangedListener l : listenersArray )
     {
-      // TODO: fire selection change event in the display thread
-      final ISelectionChangedListener l = listenersArray[i];
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
         public void run( )
@@ -819,35 +855,35 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
     thread.start();
   }
 
-  public void removePointOfInterest( PointOfinterest pointOfInterest )
+  public void removePointOfInterest( final PointOfinterest pointOfInterest )
   {
     m_pointofInterests.remove( pointOfInterest );
     setValidAll( false );
     repaint();
   }
 
-  private void paintPointOfInterests( Graphics g )
+  private void paintPointOfInterests( final Graphics g )
   {
-    Graphics2D g2d = (Graphics2D) g;
+    final Graphics2D g2d = (Graphics2D) g;
     final Color color = Color.red;
     final Color innerColor = new Color( Color.yellow.getRed(), Color.yellow.getGreen(), Color.yellow.getBlue(), 150 );
 
     final List<PointOfinterest> toRemove = new ArrayList<PointOfinterest>();
     final GeoTransform projection = getProjection();
-    for( PointOfinterest poi : m_pointofInterests )
+    for( final PointOfinterest poi : m_pointofInterests )
     {
       final GM_Point geometry = poi.getGeometry();
       final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
-      int r = 10;
-      int x = (int) screenPoint.getX();
-      int y = (int) screenPoint.getY();
-      String title = poi.getTitle();
+      final int r = 10;
+      final int x = (int) screenPoint.getX();
+      final int y = (int) screenPoint.getY();
+      final String title = poi.getTitle();
       g2d.drawString( title, x + 2 * r, y + 2 * r );
-      Font font = g2d.getFont();
-      FontRenderContext frc = g2d.getFontRenderContext();
-      Rectangle2D bounds = font.getStringBounds( title, frc );
-      int bw = (int) bounds.getWidth();
-      int bh = (int) bounds.getHeight();
+      final Font font = g2d.getFont();
+      final FontRenderContext frc = g2d.getFontRenderContext();
+      final Rectangle2D bounds = font.getStringBounds( title, frc );
+      final int bw = (int) bounds.getWidth();
+      final int bh = (int) bounds.getHeight();
       // inner
       g2d.setColor( innerColor );
       g2d.fillOval( x - r, y - r, r * 2, r * 2 );
@@ -860,7 +896,7 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
       g2d.drawOval( x - r, y - r, r * 2, r * 2 );
       g2d.drawString( title, x + 2 * r, y + 2 * r );
     }
-    for( PointOfinterest ofinterest : toRemove )
+    for( final PointOfinterest ofinterest : toRemove )
     {
       m_pointofInterests.remove( ofinterest );
     }
@@ -889,21 +925,79 @@ public class MapPanel extends Canvas implements ModellEventListener, ComponentLi
   }
 
   /**
-   * Must be invoked, if the message of the mapPanel has changed.
-   */
-  private void fireMessageChanged( )
-  {
-    for( IMapPanelListener l : m_mapPanelListeners )
-      l.onMessageChanged( m_message );
-  }
-
-  /**
    * Sets the message of this mapPanel. Some widgets update it, so that the MapView could update the status-bar text.
    */
-  public void setMessage( String message )
+  public void setMessage( final String message )
   {
     m_message = message;
 
-    fireMessageChanged();
+    fireMessageChanged( message );
   }
+
+  public String getMessage( )
+  {
+    return m_message;
+  }
+
+  private static interface IListenerRunnable
+  {
+    public void visit( final IMapPanelListener l );
+  }
+
+  /**
+   * Runns the given runnable on every listener in a safe way.
+   */
+  private void acceptListenersRunnable( final IListenerRunnable r )
+  {
+    final IMapPanelListener[] listeners = m_mapPanelListeners.toArray( new IMapPanelListener[m_mapPanelListeners.size()] );
+    for( final IMapPanelListener l : listeners )
+    {
+      final ISafeRunnable code = new SafeRunnable()
+      {
+        public void run( ) throws Exception
+        {
+          r.visit( l );
+        }
+      };
+
+      SafeRunner.run( code );
+    }
+  }
+
+  /**
+   * Must be invoked, if the message of the mapPanel has changed.
+   */
+  private void fireMessageChanged( final String message )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      public void visit( final IMapPanelListener l )
+      {
+        l.onMessageChanged( MapPanel.this, message );
+      }
+    } );
+  }
+
+  protected void fireExtentChanged( final GM_Envelope oldExtent, final GM_Envelope newExtent )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      public void visit( final IMapPanelListener l )
+      {
+        l.onExtentChanged( MapPanel.this, oldExtent, newExtent );
+      }
+    } );
+  }
+
+  protected void fireMapModelChanged( final IMapModell oldModel, final IMapModell newModel )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      public void visit( final IMapPanelListener l )
+      {
+        l.onMapModelChanged( MapPanel.this, oldModel, newModel );
+      }
+    } );
+  }
+
 }

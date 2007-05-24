@@ -89,7 +89,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -136,13 +135,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   EditRelationOptionsLabelProvider m_labelProvider = null;
 
-  public EditRelationWidget( String name, String toolTip )
+  public EditRelationWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
   }
 
   @Override
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     if( m_srcFE != null && m_targetFE != null )
     {
@@ -192,9 +191,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       return fitList;
     final GMLWorkspace workspace = ((IKalypsoFeatureTheme) activeTheme).getWorkspace();
     final IRelationType[] relations = m_contentProvider.getCheckedRelations();
-    for( int i = 0; i < relations.length; i++ )
+    for( final IRelationType relation : relations )
     {
-      final IRelationType relation = relations[i];
       if( relation.fitsTypes( fromFE.getFeatureType(), toFE.getFeatureType() ) )
       {
         final String fitProblems = relation.getFitProblems( workspace, fromFE, toFE, getModificationMode() == MODE_ADD );
@@ -215,12 +213,12 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   }
 
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     moved( p );
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
@@ -229,7 +227,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     super.moved( p );
     if( m_srcFE == null )
@@ -238,7 +236,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
-    double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
+    final double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = (Feature) selector.selectNearest( point, r, m_allowedFeatureList, false );
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
@@ -251,15 +249,15 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
     updateInfoText();
     updateProblemsText();
-    
-//  TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
-    if ( panel != null)
+
+// TODO: check if this repaint is necessary for the widget
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
   }
 
   @Override
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     perform();
     finish();
@@ -269,13 +267,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     finish();
   }
 
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     if( m_srcFE == null || m_targetFE == null )
       return;
@@ -287,10 +285,10 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final GM_Point toCenter = toGeom.getCentroid();
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    int x1 = (int) transform.getDestX( fromCenter.getX() );
-    int y1 = (int) transform.getDestY( fromCenter.getY() );
-    int x2 = (int) transform.getDestX( toCenter.getX() );
-    int y2 = (int) transform.getDestY( toCenter.getY() );
+    final int x1 = (int) transform.getDestX( fromCenter.getX() );
+    final int y1 = (int) transform.getDestY( fromCenter.getY() );
+    final int x2 = (int) transform.getDestX( toCenter.getX() );
+    final int y2 = (int) transform.getDestY( toCenter.getY() );
     g.drawLine( x1, y1, x2, y2 );
   }
 
@@ -306,26 +304,16 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final IKalypsoFeatureTheme activeFeatureTheme = (IKalypsoFeatureTheme) activeTheme;
     final GMLWorkspace workspace = activeFeatureTheme.getWorkspace();
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( int i = 0; i < allThemes.length; i++ )
+    for( final IKalypsoTheme element : allThemes )
     {
-      if( allThemes[i] != null && allThemes[i] instanceof IKalypsoFeatureTheme )
+      if( element != null && element instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme kalypsoFeatureTheme = (IKalypsoFeatureTheme) allThemes[i];
+        final IKalypsoFeatureTheme kalypsoFeatureTheme = (IKalypsoFeatureTheme) element;
         if( kalypsoFeatureTheme.getWorkspace() == workspace )
           result.add( (kalypsoFeatureTheme).getFeatureList() );
       }
     }
     return new CascadingFeatureList( result.toArray( new FeatureList[result.size()] ) );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    super.onModellChange( modellEvent );
-    refreshSettings();
   }
 
   private void refreshSettings( )
@@ -361,9 +349,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       public void run( )
       {
-        for( Iterator iter = fitList.iterator(); iter.hasNext(); )
+        for( final Iterator iter = fitList.iterator(); iter.hasNext(); )
         {
-          IRelationType element = (IRelationType) iter.next();
+          final IRelationType element = (IRelationType) iter.next();
           System.out.println( element.toString() );
         }
         // TODO handle fitList.size()>1 with dialog
@@ -407,7 +395,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           Object[] result = null;
           while( !correct )
           {
-            int answer = dialog.open();
+            final int answer = dialog.open();
             if( answer == Window.CANCEL )
               return;
             result = dialog.getResult();
@@ -416,7 +404,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           relation = (IRelationType) result[0];
         }
 
-        CommandableWorkspace workspace = ((IKalypsoFeatureTheme) getActiveTheme()).getWorkspace();
+        final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) getActiveTheme()).getWorkspace();
         final ICommand command;
         switch( getModificationMode() )
         {
@@ -438,9 +426,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
             {
               final HeavyRelationType heavyRealtion = (HeavyRelationType) relation;
 
-              FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, heavyRealtion );
+              final FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, heavyRealtion );
               visitor.visit( srcFeature );
-              Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( targetFeature );
+              final Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( targetFeature );
               if( bodyFeatureFor.length > 0 )
                 command = new RemoveHeavyRelationCommand( workspace, srcFeature, heavyRealtion.getLink1(), bodyFeatureFor[0], heavyRealtion.getLink2(), targetFeature );
               else
@@ -459,7 +447,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         {
           workspace.postCommand( command );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -475,7 +463,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       {
         public void run( )
         {
-          String problems = m_fitProblems.toString();
+          final String problems = m_fitProblems.toString();
           if( m_textProblem != null && !m_textProblem.isDisposed() )
           {
             if( problems.length() == 0 )
@@ -582,7 +570,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
-    Layout gridLayout = new GridLayout( 1, false );
+    final Layout gridLayout = new GridLayout( 1, false );
 
     m_topLevel.setLayout( gridLayout );
 
@@ -599,7 +587,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     m_modeCombo.setLayoutData( data3 );
     m_modeCombo.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         m_modificationMode = ((Combo) e.getSource()).getSelectionIndex();
         m_srcFE = null;
@@ -657,7 +645,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       }
     } );
     refreshSettings();
-    
+
     return m_topLevel;
   }
 }

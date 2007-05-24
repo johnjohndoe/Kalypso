@@ -42,7 +42,6 @@ package org.kalypso.ui.editor.mapeditor;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 
 /**
  * <p>
@@ -55,8 +54,6 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
   public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor";
 
-  private GisMapOutlinePage m_gisMapOutlinePage;
-
   /**
    * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#getAdapter(java.lang.Class)
    */
@@ -65,39 +62,11 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      if( m_gisMapOutlinePage == null )
-      {
-        m_gisMapOutlinePage = new GisMapOutlinePage( getCommandTarget() );
-      }
-      m_gisMapOutlinePage.setMapPanel( getMapPanel() );
-      return m_gisMapOutlinePage;
+      final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
+      page.setMapPanel( getMapPanel() );
+      return page;
     }
+
     return super.getAdapter( adapter );
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#setMapModell(org.kalypso.ogc.gml.GisTemplateMapModell)
-   */
-  @Override
-  protected void setMapModell( final GisTemplateMapModell mapModell )
-  {
-    super.setMapModell( mapModell );
-    if( m_gisMapOutlinePage != null )
-    {
-      m_gisMapOutlinePage.setMapPanel( getMapPanel() );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( m_gisMapOutlinePage != null )
-    {
-      m_gisMapOutlinePage.dispose();
-    }
-    super.dispose();
   }
 }

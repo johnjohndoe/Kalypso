@@ -63,13 +63,9 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
- * 
- * class WMSGetFeatureInfoWidget
- * 
- * created by
+ * class WMSGetFeatureInfoWidget created by
  * 
  * @author doemming (19.04.2005)
  */
@@ -87,17 +83,16 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
 
   private final String COORD_FORMAT = "%10.4f";
 
-  public WMSGetFeatureInfoWidget( String name, String toolTip )
+  public WMSGetFeatureInfoWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
   }
 
   /**
-   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     m_pointOfInterest = p;
     updateInfoText();
@@ -107,7 +102,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
   @Override
-  public void finish()
+  public void finish( )
   {
     super.finish();
     m_pointOfInterest = null;
@@ -115,16 +110,15 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   }
 
   /**
-   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     m_movePoint = p;
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
@@ -133,62 +127,60 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     m_movePoint = null;
-//  TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
-    if ( panel != null)
+// TODO: check if this repaint is necessary for the widget
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
   }
 
   /**
-   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
   @Override
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
-  // nothing to do here
+    // nothing to do here
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
-  //    m_pointOfInterest = null;
-  //    m_p2 = null;
-  //    updateInfoText();
+    // m_pointOfInterest = null;
+    // m_p2 = null;
+    // updateInfoText();
   }
 
   /**
-   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     final MapPanel mapPanel = getMapPanel();
     if( m_pointOfInterest != null )
     {
       final GeoTransform transform = mapPanel.getProjection();
-      int x1 = (int)transform.getDestX( m_pointOfInterest.getX() );
-      int y1 = (int)transform.getDestY( m_pointOfInterest.getY() );
-      int radius = 3;
+      final int x1 = (int) transform.getDestX( m_pointOfInterest.getX() );
+      final int y1 = (int) transform.getDestY( m_pointOfInterest.getY() );
+      final int radius = 3;
       g.drawRect( x1 - 3, y1 - 3, 2 * radius, 2 * radius );
     }
     if( m_movePoint != null )
     {
-      int width = mapPanel.getWidth();
-      int height = mapPanel.getHeight();
-      g.drawLine( 0, (int)m_movePoint.getY(), width, (int)m_movePoint.getY() );
-      g.drawLine( (int)m_movePoint.getX(), 0, (int)m_movePoint.getX(), height );
+      final int width = mapPanel.getWidth();
+      final int height = mapPanel.getHeight();
+      g.drawLine( 0, (int) m_movePoint.getY(), width, (int) m_movePoint.getY() );
+      g.drawLine( (int) m_movePoint.getX(), 0, (int) m_movePoint.getX(), height );
     }
   }
 
-  private void updateInfoText()
+  private void updateInfoText( )
   {
     final String themeName;
     final MapPanel mapPanel = getMapPanel();
@@ -230,7 +222,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
             pw.printf( Locale.US, COORD_FORMAT, y1 );
           }
           pw.print( "\n Information vom WebMapServer:" );
-          pw.print( "\n " + message );          
+          pw.print( "\n " + message );
         }
         catch( Exception e )
         {
@@ -245,7 +237,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
         {
           m_textInfo.getDisplay().asyncExec( new Runnable()
           {
-            public void run()
+            public void run( )
             {
               if( m_textInfo != null && !m_textInfo.isDisposed() )
               {
@@ -261,25 +253,25 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
 
     if( pointOfInterest == null )
       processor.write( "keine Position ausgewählt" );
-    else if( !( activeTheme instanceof KalypsoWMSTheme ) )
+    else if( !(activeTheme instanceof KalypsoWMSTheme) )
       processor.write( "keine WMS-Thema ausgewählt" );
     else
     {
-      final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme)activeTheme;
+      final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) activeTheme;
       m_formatCombo.getDisplay().asyncExec( new Runnable()
       {
-        public void run()
+        public void run( )
         {
           try
           {
-            if( m_formatCombo != null && !( m_formatCombo.isDisposed() ) )
+            if( m_formatCombo != null && !(m_formatCombo.isDisposed()) )
             {
               final int selectionIndex = m_formatCombo.getSelectionIndex();
               final String format = m_formatCombo.getItem( selectionIndex );
               wmsTheme.performGetFeatureinfoRequest( pointOfInterest, format, processor );
             }
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
           }
@@ -291,7 +283,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
-  public void disposeControl()
+  public void disposeControl( )
   {
     if( m_topLevel != null && !m_topLevel.isDisposed() )
       m_topLevel.dispose();
@@ -318,11 +310,10 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_formatCombo = new Combo( m_topLevel, SWT.SINGLE );
     m_formatCombo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL ) );
     // formats are not queryable (bug in deegree, Collection of formats does not support toArray() )
-    final String[] formats = new String[]
-    { "application/vnd.ogc.gml"
-    //        ,
-    //        "text/plain",
-    //        "text/html"
+    final String[] formats = new String[] { "application/vnd.ogc.gml"
+    // ,
+    // "text/plain",
+    // "text/html"
     };
     m_formatCombo.setItems( formats );
     m_formatCombo.select( 0 );
@@ -332,37 +323,5 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return m_topLevel;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-  //    super.onModellChange( modellEvent );
-  //    final IKalypsoTheme activeTheme = getMapPanel().getMapModell().getActiveTheme();
-  //    m_lastActiveTheme = activeTheme;
-  //    if( m_lastActiveTheme == activeTheme )
-  //    {
-  //      m_lastActiveTheme = activeTheme;
-  //      if( activeTheme instanceof KalypsoWMSTheme )
-  //      {
-  //        if( m_formatCombo != null && !m_formatCombo.isDisposed() )
-  //        {
-  //          // TODO check if WMS teheme supports getfeatureInfo at all ?
-  //
-  //          final KalypsoWMSTheme wmsTheme = ( (KalypsoWMSTheme)activeTheme );
-  //          final String[] formats = wmsTheme.getFeatureInfoRequestFormats();
-  //          m_formatCombo.getDisplay().asyncExec( new Runnable()
-  //          {
-  //            public void run()
-  //            {
-  //              m_formatCombo.setItems( formats );
-  //            }
-  //          } );
-  //        }
-  //      }
-  //    }
   }
 }

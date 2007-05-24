@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+
 /**
  * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
  * 
@@ -51,7 +54,11 @@ public interface IMapPanelListener
    * This function is invoked from the mapPanel, in cases its message has changed.
    * 
    * @param message
-   *          The new message, which is set in the mapPanel.
+   *            The new message, which is set in the mapPanel.
    */
-  public void onMessageChanged( String message );
+  public void onMessageChanged( final MapPanel source, final String message );
+
+  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel );
+
+  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
 }

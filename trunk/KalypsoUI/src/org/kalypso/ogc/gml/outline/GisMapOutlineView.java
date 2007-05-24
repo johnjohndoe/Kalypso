@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -59,17 +64,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
-import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
-import org.kalypso.ogc.gml.command.RemoveThemeCommand;
+import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.mapmodel.IMapModellViewListener;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * A legend view that uses the {@link GisMapOutlineViewer}. Provides the same view on a {@link IMapModell} as a
@@ -82,6 +85,21 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 {
   public static final String ID = "org.kalypso.ui.views.outline";
 
+  private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+     *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    {
+      handleMapModelChanged( newModel );
+    }
+  };
+
+  private final Set<IMapModellViewListener> m_mapModellViewListeners = new HashSet<IMapModellViewListener>();
+
   protected GisMapOutlineViewer m_viewer;
 
   private JobExclusiveCommandTarget m_commandTarget;
@@ -89,6 +107,8 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   protected AbstractMapPart m_mapPart;
 
   private IPartListener m_partListener;
+
+  private MapPanel m_panel;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -107,16 +127,16 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     final IWorkbenchPage page = site.getPage();
     page.addPartListener( m_partListener );
     final IEditorPart activeEditor = page.getActiveEditor();
-    
+
     // TODO: this leads to a PartInitException (recursive attemp...)
     // maybe just start this search in a job?
     final IViewPart mapView = page.findView( MapView.ID );
     // try to find map editor first
-    if( activeEditor != null && activeEditor instanceof AbstractMapPart )
+    if( activeEditor instanceof AbstractMapPart )
     {
       setMapPart( (AbstractMapPart) activeEditor );
     }
-    else if( mapView != null )
+    else if( mapView instanceof AbstractMapPart )
     {
       setMapPart( (AbstractMapPart) mapView );
     }
@@ -189,7 +209,11 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 
   protected void setMapPart( final AbstractMapPart mapPart )
   {
+    if( m_mapPart == mapPart )
+      return;
+
     m_mapPart = mapPart;
+
     String newName = Messages.GisMapOutlineView_1;
     if( m_mapPart != null )
     {
@@ -200,12 +224,13 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
         m_commandTarget = commandTarget;
         m_viewer.setCommandTarget( commandTarget );
       }
-      m_mapPart.setMapModellView( this );
+      setMapPanel( (MapPanel) m_mapPart.getAdapter( MapPanel.class ) );
     }
     else
     {
-      m_viewer.setMapPanel( null );
+      setMapPanel( null );
     }
+
     setPartName( newName );
   }
 
@@ -220,10 +245,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       getSite().setSelectionProvider( null );
       m_viewer.dispose();
     }
-    if( m_mapPart != null )
-    {
-      m_mapPart.setMapModellView( null );
-    }
+
     super.dispose();
   }
 
@@ -242,7 +264,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public MapPanel getMapPanel( )
   {
-    return m_viewer.getMapPanel();
+    return m_panel;
   }
 
   /**
@@ -250,102 +272,26 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    */
   public void setMapPanel( final MapPanel panel )
   {
-    m_viewer.setMapPanel( panel );
-  }
+    final MapPanel oldPanel = m_panel;
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    // TODO Auto-generated method stub
+    if( m_panel != null )
+      m_panel.removeMapPanelListener( m_mapPanelListener );
 
-  }
+    m_panel = panel;
 
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#moveElementDown(java.lang.Object)
-   */
-  public void moveElementDown( final Object element )
-  {
-    IMapModell mapModell = getMapPanel().getMapModell();
-
-    IKalypsoTheme theme = (IKalypsoTheme) element;
-    IMapModell themeMapModell = theme.getMapModell();
-
-    final MoveThemeUpCommand moveThemeUpCommand;
-    if( !themeMapModell.equals( mapModell ) )
-      moveThemeUpCommand = new MoveThemeUpCommand( themeMapModell, (IKalypsoTheme) element );
-    else
-      moveThemeUpCommand = new MoveThemeUpCommand( mapModell, (IKalypsoTheme) element );
-
-    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
-  }
-
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#moveElementUp(java.lang.Object)
-   */
-  public void moveElementUp( final Object element )
-  {
-    IMapModell mapModell = getMapPanel().getMapModell();
-
-    IKalypsoTheme theme = (IKalypsoTheme) element;
-    IMapModell themeMapModell = theme.getMapModell();
-
-    final MoveThemeDownCommand moveThemeDownCommand;
-    if( !themeMapModell.equals( mapModell ) )
-      moveThemeDownCommand = new MoveThemeDownCommand( themeMapModell, (IKalypsoTheme) element );
-    else
-      moveThemeDownCommand = new MoveThemeDownCommand( mapModell, (IKalypsoTheme) element );
-
-    m_commandTarget.postCommand( moveThemeDownCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
-  }
-
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#removeElement(java.lang.Object)
-   */
-  public void removeElement( final Object element )
-  {
-    m_commandTarget.postCommand( new RemoveThemeCommand( getMapPanel().getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
-  }
-
-  /**
-   * @see org.kalypso.commons.list.IListManipulator#addElement(java.lang.Object)
-   */
-  public void addElement( final Object element )
-  {
-    // m_commandTarget.postCommand( new AddThemeCommand( getMapModell(),
-    // (IKalypsoTheme)element ),
-    // new SelectThemeRunner( (IKalypsoTheme)element ) );
-  }
-
-  private final class SelectThemeRunner implements Runnable
-  {
-    public final IKalypsoTheme m_theme;
-
-    public SelectThemeRunner( final IKalypsoTheme theme )
+    if( m_panel != null )
     {
-      m_theme = theme;
+      m_panel.addMapPanelListener( m_mapPanelListener );
+      m_viewer.setMapModel( m_panel.getMapModell() );
     }
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run( )
-    {
-      getSite().getWorkbenchWindow().getWorkbench().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          setSelection( new StructuredSelection( m_theme ) );
-        }
-      } );
-    }
+    fireMapModellViewChanged( oldPanel, panel );
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_viewer.addSelectionChangedListener( listener );
   }
@@ -361,7 +307,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_viewer.removeSelectionChangedListener( listener );
   }
@@ -369,7 +315,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     m_viewer.setSelection( selection );
   }
@@ -380,7 +326,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
    * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
-  public void postCommand( ICommand command, Runnable runnable )
+  public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
   }
@@ -393,4 +339,42 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     return m_mapPart;
   }
 
+  protected void handleMapModelChanged( final IMapModell newModel )
+  {
+    if( m_viewer != null )
+      m_viewer.setMapModel( newModel );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#addMapModellViewListener(org.kalypso.ogc.gml.mapmodel.IMapModellViewListener)
+   */
+  public void addMapModellViewListener( final IMapModellViewListener l )
+  {
+    m_mapModellViewListeners.add( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#removeMapModellViewListener(org.kalypso.ogc.gml.mapmodel.IMapModellViewListener)
+   */
+  public void removeMapModellViewListener( final IMapModellViewListener l )
+  {
+    m_mapModellViewListeners.remove( l );
+  }
+
+  private void fireMapModellViewChanged( final MapPanel oldPanel, final MapPanel newPanel )
+  {
+    final IMapModellViewListener[] listeners = m_mapModellViewListeners.toArray( new IMapModellViewListener[m_mapModellViewListeners.size()] );
+    for( final IMapModellViewListener l : listeners )
+    {
+      final ISafeRunnable code = new SafeRunnable()
+      {
+        public void run( ) throws Exception
+        {
+          l.onMapPanelChanged( GisMapOutlineView.this, oldPanel, newPanel );
+        }
+      };
+
+      SafeRunner.run( code );
+    }
+  }
 }

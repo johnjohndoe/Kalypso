@@ -40,10 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.commons.list.IListManipulator;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
@@ -53,38 +61,92 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 public class MoveThemeDownAction extends MapModellViewActionDelegate
 {
   /**
-   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void run( final IAction action )
+  public void runWithEvent( final IAction action, final Event event )
   {
-    IListManipulator listManipulator = getView();
-    IKalypsoTheme selectedElement = getSelectedTheme();
-    if( listManipulator != null && selectedElement != null )
+    final IMapModellView view = getView();
+    if( view == null )
+      return;
+
+    /* Order the selection as the themes are ordered in the outline. */
+    final IKalypsoTheme[] selectedThemesInOrder = getSelectedThemesInOrder( getSelection() );
+
+    /* Move down in reverse order, else it wont happen. */
+    for( int i = selectedThemesInOrder.length; i > 0; i-- )
     {
-      listManipulator.moveElementDown( selectedElement );
+      final IKalypsoTheme kalypsoTheme = selectedThemesInOrder[i - 1];
+      moveElementDown( kalypsoTheme, event.display );
     }
   }
+
+  private void moveElementDown( final IKalypsoTheme theme, final Display display )
+  {
+    final IMapModellView view = getView();
+    if( view == null )
+      return;
+
+    final IMapModell themeMapModell = theme.getMapModell();
+
+    final MoveThemeDownCommand moveThemeDownCommand = new MoveThemeDownCommand( themeMapModell, theme );
+    view.postCommand( moveThemeDownCommand, new SelectThemeRunner( theme, view, display ) );
+  }
+
+  public static IKalypsoTheme[] getSelectedThemesInOrder( final ISelection selection )
+  {
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( selection );
+    /* Wen can only sort within one map model */
+    final IMapModell[] selectedModels = getSelectedModels( selectedThemes );
+    if( selectedModels.length != 1 )
+      return new IKalypsoTheme[0];
+
+    final IMapModell mapModell = selectedModels[0];
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    final List<IKalypsoTheme> allThemesList = new ArrayList<IKalypsoTheme>( Arrays.asList( allThemes ) );
+
+    final List<IKalypsoTheme> selectedThemesList = Arrays.asList( selectedThemes );
+    allThemesList.retainAll( selectedThemesList );
+
+    return allThemesList.toArray( new IKalypsoTheme[allThemesList.size()] );
+  }
+
   /**
    * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     super.selectionChanged( action, selection );
-    final IKalypsoTheme selectedTheme = getSelectedTheme();
-    boolean bEnable = false;
-    final IMapModellView view = getView();
-    if( selectedTheme != null && view != null )
+
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final IMapModell[] selectedModels = getSelectedModels( selectedThemes );
+
+    final boolean bEnable;
+    if( selectedModels.length != 1 )
+      bEnable = false;
+    else if( selectedThemes.length > 0 )
     {
-      final IMapModell mapModell = view.getMapPanel().getMapModell();
-      if( mapModell != null )
-      {
-        final Object[] elements = mapModell.getAllThemes();
-        bEnable = elements[0] != selectedTheme;
-      }
+      final IMapModell mapModell = selectedModels[0];
+      final Object[] elements = mapModell.getAllThemes();
+      bEnable = !(elements.length == 0) && !Arrays.asList( selectedThemes ).contains( elements[elements.length - 1] );
     }
+    else
+      bEnable = false;
+
     action.setEnabled( bEnable );
+  }
+
+  /** Returns the modells (=parents) of the given themes. Filters all duplicates. */
+  public static IMapModell[] getSelectedModels( final IKalypsoTheme[] themes )
+  {
+    final Set<IMapModell> models = new HashSet<IMapModell>( themes.length );
+
+    for( final IKalypsoTheme kalypsoTheme : themes )
+      models.add( kalypsoTheme.getMapModell() );
+
+    return models.toArray( new IMapModell[models.size()] );
   }
 }

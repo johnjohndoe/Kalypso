@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -68,15 +69,13 @@ import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
-public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
+public class GisTemplateMapModell implements IMapModell
 {
   private final IMapModell m_modell;
 
@@ -84,18 +83,25 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
 
   private final IFeatureSelectionManager m_selectionManager;
 
+  /**
+   * Special constructor for use only by the {@link CascadingKalypsoTheme}. Sets a special model as parent to use for
+   * creation of themes.
+   * <p>
+   * This is needed in order to return the correct parent for the cascaded themes, so the outline view behaves
+   * correctly.
+   */
   public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
+
     // layer 1 is legend
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
-    enableTheme( legendTheme, false );
+    legendTheme.setVisible( false );
     // layer 2 is scrablayer
     final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
-    // m_modell.addModellListener( m_scrabLayer );
     addTheme( scrabLayer );
   }
 
@@ -103,7 +109,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
    * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
    * 
    * @throws CoreException
-   *           if a theme in the {@link Gismapview} cannot be loaded.
+   *             if a theme in the {@link Gismapview} cannot be loaded.
    */
   public void createFromTemplate( final Gismapview gisview ) throws Exception
   {
@@ -130,7 +136,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     }
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_modell.setName( name );
   }
@@ -141,7 +147,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     if( theme != null )
     {
       addTheme( theme );
-      enableTheme( theme, layer.isVisible() );
+      theme.setVisible( layer.isVisible() );
     }
     return theme;
   }
@@ -152,17 +158,14 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     if( theme != null )
     {
       insertTheme( theme, position );
-      enableTheme( theme, layer.isVisible() );
+      theme.setVisible( layer.isVisible() );
     }
     return theme;
   }
 
   public void dispose( )
   {
-    if( m_modell != null )
-    {
-      m_modell.dispose();
-    }
+    m_modell.dispose();
   }
 
   private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
@@ -186,7 +189,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     }
     else
     {
-      // TODO: returns handling of gml files - part of else?!? dont assume it, proofe it!
+      // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
       return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
     }
   }
@@ -244,30 +247,29 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
         final IKalypsoTheme kalypsoTheme = themes[i];
         if( kalypsoTheme instanceof GisTemplateFeatureTheme )
         {
-          ((GisTemplateFeatureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
-          .isThemeEnabled( kalypsoTheme ) );
+          ((GisTemplateFeatureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, kalypsoTheme.isVisible() );//$NON-NLS-1$
           layerList.add( layer );
           monitor.worked( 1000 );
         }
         else if( kalypsoTheme instanceof KalypsoWMSTheme )
         {
           final String name = kalypsoTheme.getName();
-          GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), //$NON-NLS-1$
+          GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, kalypsoTheme.isVisible(), //$NON-NLS-1$
           (KalypsoWMSTheme) kalypsoTheme );
           layerList.add( layer );
           monitor.worked( 1000 );
         }
         else if( kalypsoTheme instanceof KalypsoPictureTheme )
         {
-          ((KalypsoPictureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) ); //$NON-NLS-1$
+          ((KalypsoPictureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, kalypsoTheme.isVisible() ); //$NON-NLS-1$
           layerList.add( layer );
           monitor.worked( 1000 );
         }
         else if( kalypsoTheme instanceof CascadingKalypsoTheme )
         {
           final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) kalypsoTheme);
-          cascadingKalypsoTheme.fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
-          .isThemeEnabled( kalypsoTheme ) );
+          cascadingKalypsoTheme.fillLayerType( layer, "ID_" + i, kalypsoTheme.isVisible() ); //$NON-NLS-1$
+
           layerList.add( layer );
 
           cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
@@ -314,25 +316,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     m_modell.activateTheme( theme );
   }
 
-  public void addModellListener( final ModellEventListener listener )
-  {
-    m_modell.addModellListener( listener );
-  }
-
   public void addTheme( final IKalypsoTheme theme )
   {
-    theme.addModellListener( this );
     m_modell.addTheme( theme );
-  }
-
-  public void enableTheme( final IKalypsoTheme theme, final boolean status )
-  {
-    m_modell.enableTheme( theme, status );
-  }
-
-  public void fireModellEvent( final ModellEvent event )
-  {
-    m_modell.fireModellEvent( event );
   }
 
   public IKalypsoTheme getActiveTheme( )
@@ -370,11 +356,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     return m_modell.isThemeActivated( theme );
   }
 
-  public boolean isThemeEnabled( final IKalypsoTheme theme )
-  {
-    return m_modell.isThemeEnabled( theme );
-  }
-
   public void moveDown( final IKalypsoTheme theme )
   {
     m_modell.moveDown( theme );
@@ -395,20 +376,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     m_modell.paint( g, p, bbox, scale, selected );
   }
 
-  public void removeModellListener( final ModellEventListener listener )
-  {
-    m_modell.removeModellListener( listener );
-  }
-
   public void removeTheme( final IKalypsoTheme theme )
   {
     m_modell.removeTheme( theme );
     theme.dispose();
-  }
-
-  public void setCoordinateSystem( final CS_CoordinateSystem crs ) throws Exception
-  {
-    m_modell.setCoordinateSystem( crs );
   }
 
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
@@ -416,6 +387,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     m_modell.swapThemes( theme1, theme2 );
   }
 
+  // TODO: remove this from the interface, better: support theme specific actions
   public void saveTheme( final ITemplateTheme theme, final IProgressMonitor monitor ) throws CoreException
   {
     theme.saveFeatures( monitor );
@@ -429,14 +401,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
     // else
     // throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() );
     // //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    fireModellEvent( modellEvent );
   }
 
   public URL getContext( )
@@ -466,21 +430,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
-   */
-  public void kalypsoThemeChanged( final KalypsoThemeEvent event )
-  {
-    // TODO this hack is for getting a repaint when a theme changes
-    if( event.isType( KalypsoThemeEvent.CONTENT_CHANGED ) )
-    {
-      fireModellEvent( null );
-    }
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
    */
-  public void accept( KalypsoThemeVisitor visitor, int depth )
+  public void accept( final KalypsoThemeVisitor visitor, final int depth )
   {
     m_modell.accept( visitor, depth );
 
@@ -489,7 +441,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
    */
-  public void insertTheme( IKalypsoTheme theme, int position )
+  public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_modell.insertTheme( theme, position );
 
@@ -500,15 +452,14 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_modell.getName();
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int,
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void accept( KalypsoThemeVisitor visitor, int depth_infinite, IKalypsoTheme theme )
+  public void accept( final KalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
   {
     m_modell.accept( visitor, depth_infinite, theme );
 
@@ -544,5 +495,37 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoThemeListener
   public Object getParent( final Object o )
   {
     return m_modell.getParent( o );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
+   */
+  public void addMapModelListener( final IMapModellListener l )
+  {
+    m_modell.addMapModelListener( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
+   */
+  public void removeMapModelListener( final IMapModellListener l )
+  {
+    m_modell.removeMapModelListener( l );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#invalidate(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public void invalidate( final GM_Envelope bbox )
+  {
+    m_modell.invalidate( bbox );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public Object getThemeParent( final IKalypsoTheme theme )
+  {
+    return this;
   }
 }

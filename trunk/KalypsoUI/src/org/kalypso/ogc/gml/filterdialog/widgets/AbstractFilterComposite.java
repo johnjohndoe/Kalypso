@@ -49,9 +49,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypsodeegree.filterencoding.Expression;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
@@ -60,7 +57,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author kuepfer
  */
-public abstract class AbstractFilterComposite extends Composite implements IErrorMessageReciever, ModellEventProvider
+public abstract class AbstractFilterComposite extends Composite implements IErrorMessageReciever
 {
   final protected IErrorMessageReciever m_errorMessageReciever;
 
@@ -74,14 +71,14 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
 
   static final int STANDARD_WIDTH_HEIGHT = 200;
 
-  public AbstractFilterComposite( final Composite parent, int style, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
+  public AbstractFilterComposite( final Composite parent, final int style, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
   {
     super( parent, style );
     m_errorMessageReciever = errorMessageReciever;
     m_ft = ft;
     m_validator = new TextFieldToPropertyTypeValidator();
     setLayout( new GridLayout( 2, false ) );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.horizontalIndent = 10;
     data.verticalIndent = 10;
     data.widthHint = STANDARD_WIDTH_FIELD;
@@ -91,10 +88,12 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
 
   protected ModellEventProviderAdapter m_ModelEventProvider = new ModellEventProviderAdapter();
 
+  private org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog m_dialog;
+
   /**
    * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#setErrorMessage(java.lang.String)
    */
-  public void setErrorMessage( String message )
+  public void setErrorMessage( final String message )
   {
     m_errorMessageReciever.setErrorMessage( message );
 
@@ -108,7 +107,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     return m_errorMessageReciever;
   }
 
-  public boolean validate( IValuePropertyType vpt, String toValidate )
+  public boolean validate( final IValuePropertyType vpt, final String toValidate )
   {
     m_validator.setValueProptery( vpt );
     final String errorMessage = m_validator.isValid( toValidate );
@@ -119,21 +118,6 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     return false;
   }
 
-  public void addModellListener( final ModellEventListener listener )
-  {
-    m_ModelEventProvider.addModellListener( listener );
-  }
-
-  public void removeModellListener( final ModellEventListener listener )
-  {
-    m_ModelEventProvider.removeModellListener( listener );
-  }
-
-  public void fireModellEvent( final ModellEvent event )
-  {
-    m_ModelEventProvider.fireModellEvent( event );
-  }
-
   protected class TextFieldToPropertyTypeValidator implements IInputValidator
   {
     private IValuePropertyType i_ftp = null;
@@ -142,12 +126,12 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     {
     }
 
-    public void setValueProptery( IValuePropertyType vpt )
+    public void setValueProptery( final IValuePropertyType vpt )
     {
       i_ftp = vpt;
     }
 
-    TextFieldToPropertyTypeValidator( IValuePropertyType featureTypeProperty )
+    TextFieldToPropertyTypeValidator( final IValuePropertyType featureTypeProperty )
     {
       i_ftp = featureTypeProperty;
     }
@@ -155,9 +139,9 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     /**
      * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
      */
-    public String isValid( String newText )
+    public String isValid( final String newText )
     {
-      Class clazz = i_ftp.getValueClass();
+      final Class clazz = i_ftp.getValueClass();
       if( clazz != null )
       {
         try
@@ -173,7 +157,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
           if( GeometryUtilities.isGeometry( i_ftp ) )
           {
             // TODO Christoph was macht das ?
-            String geomString = clazz.getName().replaceAll( ".+\\.", "" );
+            final String geomString = clazz.getName().replaceAll( ".+\\.", "" );
             if( newText.equals( geomString ) )
             {
               return "Falscher Geometerie-Typ gewählt!";
@@ -185,7 +169,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
               return "Das Werte Feld darf nicht leer sein, bitte Text eingeben";
           }
         }
-        catch( NumberFormatException e )
+        catch( final NumberFormatException e )
         {
           return "Format Fehler! Es wird ein Wert vom Typ: " + clazz.getName().replaceAll( ".+\\.", "" ) + " erwartet";
         }
@@ -196,7 +180,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     }
   }
 
-  protected Object[] setPropertySelection( Expression expression )
+  protected Object[] setPropertySelection( final Expression expression )
   {
     String value = null;
     if( expression != null )
@@ -206,13 +190,23 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
       else if( expression instanceof PropertyName )
         value = ((PropertyName) expression).getValue();
 
-      IPropertyType[] properties = m_ft.getProperties();
-      for( IPropertyType type : properties )
+      final IPropertyType[] properties = m_ft.getProperties();
+      for( final IPropertyType type : properties )
       {
         if( type.getQName().getLocalPart().equals( value ) )
           return new Object[] { type };
       }
     }
     return new Object[] { m_ft.getProperties( 0 ) };
+  }
+
+  public void setFilterDialog( final org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog dialog )
+  {
+    m_dialog = dialog;
+  }
+
+  protected void refresh( )
+  {
+    m_dialog.refresh();
   }
 }

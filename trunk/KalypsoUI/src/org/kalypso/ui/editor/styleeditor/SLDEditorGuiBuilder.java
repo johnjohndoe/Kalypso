@@ -75,7 +75,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
@@ -99,13 +98,13 @@ public class SLDEditorGuiBuilder
 
   private RuleFilterCollection rulePatternCollection = null;
 
-  public SLDEditorGuiBuilder( Composite m_parent )
+  public SLDEditorGuiBuilder( final Composite m_parent )
   {
     this.parent = m_parent;
     buildSWTGui( null, null );
   }
 
-  public void buildSWTGui( final KalypsoUserStyle userStyle, IKalypsoFeatureTheme theme )
+  public void buildSWTGui( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
   {
     buildSWTGui( userStyle, theme, -1 );
   }
@@ -122,7 +121,7 @@ public class SLDEditorGuiBuilder
       featureType = theme.getFeatureType();
 
     scrollComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
-    Composite mainComposite = new Composite( scrollComposite, SWT.NONE );
+    final Composite mainComposite = new Composite( scrollComposite, SWT.NONE );
     mainComposite.setLayout( new GridLayout() );
     mainComposite.layout();
     scrollComposite.setContent( mainComposite );
@@ -146,18 +145,17 @@ public class SLDEditorGuiBuilder
     final Rule[] rules = getRules( userStyle );
     rulePatternCollection = RuleFilterCollection.getInstance();
     // filter patterns from rules and draw them afterwards
-    for( int i = 0; i < rules.length; i++ )
+    for( final Rule element : rules )
     {
-      rulePatternCollection.addRule( rules[i] );
+      rulePatternCollection.addRule( element );
     }
 
     // check whether there are featureTypes that have numeric properties to be
     // used by a pattern-filter
     final ArrayList<IPropertyType> numericFeatureTypePropertylist = new ArrayList<IPropertyType>();
     final IPropertyType[] ftp = getFeatureType().getProperties();
-    for( int i = 0; i < ftp.length; i++ )
+    for( final IPropertyType propertyType : ftp )
     {
-      final IPropertyType propertyType = ftp[i];
       if( propertyType instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) propertyType;
@@ -180,25 +178,25 @@ public class SLDEditorGuiBuilder
           numericFeatureTypePropertylist.add( propertyType );
       }
     }
-    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE, rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
+    final ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE, rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
 
     final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite, rulePatternCollection, userStyle, theme, numericFeatureTypePropertylist );
 
     controlRulePanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int action = ((ControlRulePanel) event.getSource()).getAction();
+        final int action = ((ControlRulePanel) event.getSource()).getAction();
         switch( action )
         {
           case ControlRulePanel.ADD_RULE:
           {
-            Symbolizer symbolizers[] = null;
-            Rule rule = StyleFactory.createRule( symbolizers );
+            final Symbolizer symbolizers[] = null;
+            final Rule rule = StyleFactory.createRule( symbolizers );
             addRule( rule, userStyle );
             setFocusedRuleItem( getRulePatternCollection().size() );
             buildSWTGui( userStyle, theme );
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            userStyle.fireStyleChanged();
             break;
           }
           case ControlRulePanel.REM_RULE:
@@ -206,14 +204,14 @@ public class SLDEditorGuiBuilder
             int index2 = ruleTabItemBuilder.getSelectedRule();
             if( index2 > -1 && index2 < getRulePatternCollection().size() )
             {
-              Object ruleObject = getRulePatternCollection().getFilteredRuleCollection().get( index2 );
+              final Object ruleObject = getRulePatternCollection().getFilteredRuleCollection().get( index2 );
               if( ruleObject instanceof Rule )
               {
                 removeRule( (Rule) ruleObject, userStyle );
               }
               else if( ruleObject instanceof RuleCollection )
               {
-                RuleCollection ruleCollection = (RuleCollection) ruleObject;
+                final RuleCollection ruleCollection = (RuleCollection) ruleObject;
                 for( int i = 0; i < ruleCollection.size(); i++ )
                   removeRule( ruleCollection.get( i ), userStyle );
               }
@@ -221,13 +219,13 @@ public class SLDEditorGuiBuilder
               if( index2 >= 0 )
                 setFocusedRuleItem( --index2 );
               buildSWTGui( userStyle, theme );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+              userStyle.fireStyleChanged();
             }
             break;
           }
           case ControlRulePanel.BAK_RULE:
           {
-            int index3 = ruleTabItemBuilder.getSelectedRule();
+            final int index3 = ruleTabItemBuilder.getSelectedRule();
             if( index3 > 0 )
             {
               final ArrayList<Object> newOrdered = new ArrayList<Object>();
@@ -243,13 +241,13 @@ public class SLDEditorGuiBuilder
               setRules( newOrdered, userStyle );
               setFocusedRuleItem( index3 - 1 );
               buildSWTGui( userStyle, theme );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+              userStyle.fireStyleChanged();
             }
             break;
           }
           case ControlRulePanel.FOR_RULE:
           {
-            int index4 = ruleTabItemBuilder.getSelectedRule();
+            final int index4 = ruleTabItemBuilder.getSelectedRule();
             if( index4 == (getRulePatternCollection().size() - 1) || index4 < 0 )
             {
               // nothing
@@ -269,7 +267,7 @@ public class SLDEditorGuiBuilder
               setRules( newOrdered, userStyle );
               setFocusedRuleItem( index4 + 1 );
               buildSWTGui( userStyle, theme );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+              userStyle.fireStyleChanged();
             }
             break;
           }
@@ -280,20 +278,20 @@ public class SLDEditorGuiBuilder
             {
               final ArrayList<Rule> ruleList = new ArrayList<Rule>();
               // set by default first featuretypeproperty
-              IPropertyType prop = numericFeatureTypePropertylist.get( 0 );
+              final IPropertyType prop = numericFeatureTypePropertylist.get( 0 );
               BoundaryExpression upperBoundary = null;
               BoundaryExpression lowerBoundary = null;
-              PropertyName propertyName = new PropertyName( prop.getName() );
+              final PropertyName propertyName = new PropertyName( prop.getName() );
               PropertyIsBetweenOperation operation = null;
 
-              List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(), null );
+              final List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(), null );
               // geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames(
               // getFeatureType().getVirtuelFeatureTypeProperty(),geometryObjects );
 
               if( geometryObjects.size() > 0 )
               {
-                Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String) geometryObjects.get( 0 ), "Point", getFeatureType() );
-                String patternName = "-name-" + new Date().getTime();
+                final Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String) geometryObjects.get( 0 ), "Point", getFeatureType() );
+                final String patternName = "-name-" + new Date().getTime();
                 lowerBoundary = new BoundaryExpression( "0" );
                 upperBoundary = new BoundaryExpression( "1" );
                 operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
@@ -302,7 +300,7 @@ public class SLDEditorGuiBuilder
                 userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
               }
               setFocusedRuleItem( getRulePatternCollection().size() );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+              userStyle.fireStyleChanged();
               buildSWTGui( userStyle, theme );
             }
             break;
@@ -323,17 +321,17 @@ public class SLDEditorGuiBuilder
     saveButton.setToolTipText( MessageBundle.STYLE_EDITOR_SAVE_STYLE );
     saveButton.addMouseListener( new MouseListener()
     {
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         SaveStyleAction.saveUserStyle( userStyle, buttonComposite.getShell() );
       }
 
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
         // nothing
       }
@@ -345,21 +343,21 @@ public class SLDEditorGuiBuilder
     mainComposite.pack( true );
   }
 
-  private Rule[] getRules( UserStyle style )
+  private Rule[] getRules( final UserStyle style )
   {
-    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     return fts[0].getRules();
   }
 
-  void removeRule( Rule rule, UserStyle style )
+  void removeRule( final Rule rule, final UserStyle style )
   {
-    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     fts[0].removeRule( rule );
   }
 
-  void setRules( ArrayList ruleObjects, UserStyle style )
+  void setRules( final ArrayList ruleObjects, final UserStyle style )
   {
-    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     final ArrayList<Rule> ruleInstances = new ArrayList<Rule>();
     for( int i = 0; i < ruleObjects.size(); i++ )
     {
@@ -368,20 +366,20 @@ public class SLDEditorGuiBuilder
         ruleInstances.add( (Rule) object );
       else if( object instanceof RuleCollection )
       {
-        RuleCollection ruleCollection = (RuleCollection) object;
+        final RuleCollection ruleCollection = (RuleCollection) object;
         for( int j = 0; j < ruleCollection.size(); j++ )
           ruleInstances.add( ruleCollection.get( j ) );
       }
     }
-    Rule[] ruleArray = new Rule[ruleInstances.size()];
+    final Rule[] ruleArray = new Rule[ruleInstances.size()];
     for( int c = 0; c < ruleInstances.size(); c++ )
       ruleArray[c] = ruleInstances.get( c );
     fts[0].setRules( ruleArray );
   }
 
-  void addRule( Rule rule, UserStyle style )
+  void addRule( final Rule rule, final UserStyle style )
   {
-    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     fts[0].addRule( rule );
   }
 
@@ -390,7 +388,7 @@ public class SLDEditorGuiBuilder
     return focusedRuleItem;
   }
 
-  public void setFocusedRuleItem( int m_focusedRuleItem )
+  public void setFocusedRuleItem( final int m_focusedRuleItem )
   {
     this.focusedRuleItem = m_focusedRuleItem;
   }
@@ -400,7 +398,7 @@ public class SLDEditorGuiBuilder
     return rulePatternCollection;
   }
 
-  public void setRulePatternCollection( RuleFilterCollection m_rulePatternCollection )
+  public void setRulePatternCollection( final RuleFilterCollection m_rulePatternCollection )
   {
     this.rulePatternCollection = m_rulePatternCollection;
   }
@@ -410,7 +408,7 @@ public class SLDEditorGuiBuilder
     return featureType;
   }
 
-  public void setFeatureType( IFeatureType m_featureType )
+  public void setFeatureType( final IFeatureType m_featureType )
   {
     this.featureType = m_featureType;
   }

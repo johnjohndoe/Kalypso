@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GmlWorkspaceListenerProxy;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 import org.kalypsodeegree.model.feature.validation.IFeatureRule;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
@@ -94,9 +95,8 @@ public class KalypsoDeegreeExtensions
     {
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       FUNCTION_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
-      for( int i = 0; i < configurationElements.length; i++ )
+      for( final IConfigurationElement element : configurationElements )
       {
-        final IConfigurationElement element = configurationElements[i];
         final String configid = element.getAttribute( "id" );
         FUNCTION_MAP.put( configid, element );
       }
@@ -124,25 +124,16 @@ public class KalypsoDeegreeExtensions
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( LISTENER_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       final Map<QName, List<IGmlWorkspaceListener>> listeners = new HashMap<QName, List<IGmlWorkspaceListener>>( configurationElements.length );
-      for( int i = 0; i < configurationElements.length; i++ )
+      for( final IConfigurationElement element : configurationElements )
       {
-        final IConfigurationElement element = configurationElements[i];
-        try
+        final IGmlWorkspaceListener listener = new GmlWorkspaceListenerProxy( element );
+        final QName[] qnames = listener.getQNames();
+        if( qnames.length == 0 )
+          addQName( listeners, listener, null );
+        else
         {
-          final IGmlWorkspaceListener listener = (IGmlWorkspaceListener) element.createExecutableExtension( "class" );
-          final QName[] qnames = listener.getQNames();
-          if( qnames.length == 0 )
-            addQName( listeners, listener, null );
-          else
-          {
-            for( final QName qname : qnames )
-              addQName( listeners, listener, qname );
-          }
-        }
-        catch( final CoreException e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to instantiate gmlWorkspaceListener: " + element.getAttribute( "id" ) );
-          KalypsoDeegreePlugin.getDefault().getLog().log( status );
+          for( final QName qname : qnames )
+            addQName( listeners, listener, qname );
         }
       }
 
@@ -176,7 +167,7 @@ public class KalypsoDeegreeExtensions
    * Get all listeners which are associated with the given qname.
    * 
    * @param qname
-   *          If null, the listeners are returned which are not associated with any qname.
+   *            If null, the listeners are returned which are not associated with any qname.
    */
   public static IGmlWorkspaceListener[] getGmlWorkspaceListeners( final QName qname )
   {

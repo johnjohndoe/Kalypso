@@ -1,8 +1,3 @@
-package org.kalypso.ogc.gml.outline;
-
-import org.eclipse.ui.IActionDelegate2;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,17 +38,40 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.outline;
 
-/**
- * PluginMapOutlineAction
- * <p>
- * interface to extention point for actions on Mapoutline created by
- * 
- * @author doemming (25.05.2005)
- */
-public interface PluginMapOutlineActionDelegate extends IActionDelegate2
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+
+public final class SelectThemeRunner implements Runnable
 {
-  public void setView( final IMapModellView mapModellView );
+  public final IKalypsoTheme m_theme;
 
-  public IMapModellView getView( );
+  private final ISelectionProvider m_selProvider;
+
+  private final Display m_display;
+
+  public SelectThemeRunner( final IKalypsoTheme theme, final ISelectionProvider selProvider, final Display display )
+  {
+    m_theme = theme;
+    m_selProvider = selProvider;
+    m_display = display;
+  }
+
+  /**
+   * @see java.lang.Runnable#run()
+   */
+  public void run( )
+  {
+    final ISelectionProvider selProvider = m_selProvider;
+    m_display.asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        selProvider.setSelection( new StructuredSelection( m_theme ) );
+      }
+    } );
+  }
 }

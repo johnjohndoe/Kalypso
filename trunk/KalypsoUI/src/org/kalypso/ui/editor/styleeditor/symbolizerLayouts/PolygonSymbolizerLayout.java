@@ -66,12 +66,10 @@ import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
- *  
  */
 
 public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
@@ -79,7 +77,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
 
   private Fill polygonFill = null;
 
-  public PolygonSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
+  public PolygonSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -87,15 +85,15 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
   @Override
   public void draw( ) throws FilterEvaluationException
   {
-    PolygonSymbolizer polygonSymbolizer = (PolygonSymbolizer)symbolizer;
+    final PolygonSymbolizer polygonSymbolizer = (PolygonSymbolizer) symbolizer;
 
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** Fill Group
-    Group fillGroup = new Group( composite, SWT.NULL );
+    final Group fillGroup = new Group( composite, SWT.NULL );
     fillGroup.setText( MessageBundle.STYLE_EDITOR_FILL );
-    GridData fillGroupData = new GridData();
+    final GridData fillGroupData = new GridData();
     fillGroupData.widthHint = 210;
     fillGroup.setLayoutData( fillGroupData );
     fillGroup.setLayout( compositeLayout );
@@ -107,27 +105,25 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       polygonFill = StyleFactory.createFill( java.awt.Color.WHITE, 0.0 );
       polygonSymbolizer.setFill( polygonFill );
     }
-    ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_COLOR,
-        polygonFill.getFill( null ) );
+    final ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_COLOR, polygonFill.getFill( null ) );
     fillColorChooserPanel.addColorChooserListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        Color color = ( (ColorChooserPanel)event.getSource() ).getColor();
+        final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         getPolygonFill().setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
-    SliderPanel fillOpacityPanel = new SliderPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1,
-        SliderPanel.DECIMAL, polygonFill.getOpacity( null ) );
+    final SliderPanel fillOpacityPanel = new SliderPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, polygonFill.getOpacity( null ) );
     fillOpacityPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
+        final double opacity = ((SliderPanel) event.getSource()).getSelection();
         getPolygonFill().setOpacity( opacity );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
@@ -135,9 +131,9 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
-    Group strokeGroup = new Group( composite, SWT.NULL );
+    final Group strokeGroup = new Group( composite, SWT.NULL );
     strokeGroup.setText( MessageBundle.STYLE_EDITOR_STROKE );
-    GridData strokeGroupData = new GridData();
+    final GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
     strokeGroupData.heightHint = 179;
     strokeGroup.setLayoutData( strokeGroupData );
@@ -145,103 +141,96 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     strokeGroup.layout();
 
     final Stroke polygonStroke = polygonSymbolizer.getStroke();
-    ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR,
-        polygonStroke.getStroke( null ) );
+    final ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR, polygonStroke.getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        Color color = ( (ColorChooserPanel)event.getSource() ).getColor();
+        final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         polygonStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
-    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
-        SliderPanel.INTEGER, polygonStroke.getWidth( null ) );
+    final SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1, SliderPanel.INTEGER, polygonStroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double width = ( (SliderPanel)event.getSource() ).getSelection();
+        final double width = ((SliderPanel) event.getSource()).getSelection();
         polygonStroke.setWidth( width );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
-    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1,
-        SliderPanel.DECIMAL, polygonStroke.getOpacity( null ) );
+    final SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, polygonStroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
+        final double opacity = ((SliderPanel) event.getSource()).getSelection();
         polygonStroke.setOpacity( opacity );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke Linejoin ComboPanel
-    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINEJOIN,
-        polygonStroke.getLineJoin( null ) );
+    final ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINEJOIN, polygonStroke.getLineJoin( null ) );
     polygonStroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int lineJoin = ( (StrokeLinejoinComboPanel)event.getSource() ).getSelection();
+        final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
         polygonStroke.setLineJoin( lineJoin );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke Linecap ComboPanel
-    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINECAP,
-        polygonStroke.getLineCap( null ) );
+    final ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINECAP, polygonStroke.getLineCap( null ) );
     polygonStroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int lineCap = ( (StrokeLinecapComboPanel)event.getSource() ).getSelection();
+        final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
         polygonStroke.setLineCap( lineCap );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke DashOffset
-    StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_DASHOFFSET, polygonStroke.getDashOffset( null ) );
+    final StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHOFFSET, polygonStroke.getDashOffset( null ) );
     strokeDashoffsetPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        float dashOffset = ( (StrokeDashoffsetPanel)event.getSource() ).getValue();
+        final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
         polygonStroke.setDashOffset( dashOffset );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke DashArray
-    StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_DASHARRAY, polygonStroke.getDashArray( null ) );
+    final StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHARRAY, polygonStroke.getDashArray( null ) );
     strokeDasharrayPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        float dashArray[] = ( (StrokeDasharrayPanel)event.getSource() ).getValue();
+        final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();
         polygonStroke.setDashArray( dashArray );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
   }
 
-  public Fill getPolygonFill()
+  public Fill getPolygonFill( )
   {
     return polygonFill;
   }
 
-  public void setPolygonFill( Fill m_polygonFill )
+  public void setPolygonFill( final Fill m_polygonFill )
   {
     this.polygonFill = m_polygonFill;
   }

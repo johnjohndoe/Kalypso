@@ -74,7 +74,6 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -84,7 +83,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class RulePatternTabItem
 {
@@ -102,8 +100,7 @@ public class RulePatternTabItem
 
   private String[] numericFeatureTypePropertylist = null;
 
-  public RulePatternTabItem( TabFolder m_ruleTabFolder, KalypsoUserStyle m_userStyle, IFeatureType m_featureType,
-      RuleFilterCollection m_rulePatternCollection, ArrayList m_numericFeatureTypePropertylist )
+  public RulePatternTabItem( final TabFolder m_ruleTabFolder, final KalypsoUserStyle m_userStyle, final IFeatureType m_featureType, final RuleFilterCollection m_rulePatternCollection, final ArrayList m_numericFeatureTypePropertylist )
   {
     this.ruleTabFolder = m_ruleTabFolder;
     setUserStyle( m_userStyle );
@@ -118,7 +115,7 @@ public class RulePatternTabItem
 
   double step = -1;
 
-  public void drawPatternRule( final RuleCollection ruleCollection, int index )
+  public void drawPatternRule( final RuleCollection ruleCollection, final int index )
   {
 
     if( ruleCollection.size() == 0 )
@@ -126,8 +123,7 @@ public class RulePatternTabItem
 
     final Rule tmpRule = ruleCollection.get( 0 );
     // PatternRule only possible for PropertyIsBetweenOperation
-    if( tmpRule.getFilter() == null
-        || !( ( ( (ComplexFilter)tmpRule.getFilter() ).getOperation() ) instanceof PropertyIsBetweenOperation ) )
+    if( tmpRule.getFilter() == null || !((((ComplexFilter) tmpRule.getFilter()).getOperation()) instanceof PropertyIsBetweenOperation) )
     {
       return;
     }
@@ -139,13 +135,13 @@ public class RulePatternTabItem
       rulePatternName = MessageBundle.STYLE_EDITOR_SET_VALUE;
       tmpRule.setTitle( rulePatternName );
     }
-    double rulePatternMinDenom = tmpRule.getMinScaleDenominator();
-    double rulePatternMaxDenom = tmpRule.getMaxScaleDenominator();
+    final double rulePatternMinDenom = tmpRule.getMinScaleDenominator();
+    final double rulePatternMaxDenom = tmpRule.getMaxScaleDenominator();
 
     // 2. Begin to draw the first lines
     final TabItem tabItem = new TabItem( ruleTabFolder, SWT.NULL );
     final Composite composite = new Composite( ruleTabFolder, SWT.NULL );
-    GridLayout compositeLayout = new GridLayout();
+    final GridLayout compositeLayout = new GridLayout();
     composite.setSize( 270, 230 );
     composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 5;
@@ -157,16 +153,15 @@ public class RulePatternTabItem
     final TabFolder symbolizerTabFolder;
     RulePatternInputPanel rulePatternInputPanel = null;
 
-    TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rulePatternName );
+    final TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rulePatternName );
     titleInputPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        String name = ( (TextInputPanel)event.getSource() ).getLabelText();
+        final String name = ((TextInputPanel) event.getSource()).getLabelText();
         if( name == null || name.trim().length() == 0 )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
+          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
         }
         else
@@ -175,26 +170,24 @@ public class RulePatternTabItem
           {
             ruleCollection.get( counter6 ).setTitle( name );
           }
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireStyleChanged();
         }
         tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + name );
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
-    final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite,
-        MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom );
+    final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom );
     minDenominatorPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double min = ( (DenominatorInputPanel)event.getSource() ).getDenominator();
-        double max = tmpRule.getMaxScaleDenominator();
+        final double min = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        final double max = tmpRule.getMaxScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
+          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
           minDenominatorPanel.setDenominator( tmpRule.getMinScaleDenominator() );
         }
@@ -203,13 +196,13 @@ public class RulePatternTabItem
           for( int counter7 = 0; counter7 < ruleCollection.size(); counter7++ )
           {
             ruleCollection.get( counter7 ).setMinScaleDenominator( min );
-            Symbolizer symbolizers[] = ruleCollection.get( counter7 ).getSymbolizers();
-            for( int i = 0; i < symbolizers.length; i++ )
+            final Symbolizer symbolizers[] = ruleCollection.get( counter7 ).getSymbolizers();
+            for( final Symbolizer element : symbolizers )
             {
-              symbolizers[i].setMinScaleDenominator( min );
+              element.setMinScaleDenominator( min );
             }
           }
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireStyleChanged();
         }
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
@@ -226,25 +219,23 @@ public class RulePatternTabItem
       else
         tmpRule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
-    final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite,
-        MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom );
+    final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom );
     maxDenominatorPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double max = ( (DenominatorInputPanel)event.getSource() ).getDenominator();
-        double min = tmpRule.getMinScaleDenominator();
+        double max = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        final double min = tmpRule.getMinScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
+          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
           maxDenominatorPanel.setDenominator( tmpRule.getMaxScaleDenominator() );
         }
         else
         {
-          //add a minimum to max in order to be a little bit larger than the
+          // add a minimum to max in order to be a little bit larger than the
           // current scale and
           // to keep the current view -> otherwise the rule would automatically
           // exculde this configuration
@@ -252,54 +243,50 @@ public class RulePatternTabItem
           for( int counter8 = 0; counter8 < ruleCollection.size(); counter8++ )
           {
             ruleCollection.get( counter8 ).setMaxScaleDenominator( max );
-            Symbolizer symbolizers[] = ruleCollection.get( counter8 ).getSymbolizers();
-            for( int i = 0; i < symbolizers.length; i++ )
+            final Symbolizer symbolizers[] = ruleCollection.get( counter8 ).getSymbolizers();
+            for( final Symbolizer element : symbolizers )
             {
-              symbolizers[i].setMaxScaleDenominator( max );
+              element.setMaxScaleDenominator( max );
             }
           }
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireStyleChanged();
         }
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
-    final AddFilterPropertyPanel addFilterPropertyPanel = new AddFilterPropertyPanel( composite,
-        MessageBundle.STYLE_EDITOR_FILTER_PROPERTY, getNumericFeatureTypePropertylist() );
+    final AddFilterPropertyPanel addFilterPropertyPanel = new AddFilterPropertyPanel( composite, MessageBundle.STYLE_EDITOR_FILTER_PROPERTY, getNumericFeatureTypePropertylist() );
     // necessary if focus had been changed and rule-pattern is redrawn
-    addFilterPropertyPanel.setSelection( ( (PropertyIsBetweenOperation)( (ComplexFilter)tmpRule.getFilter() )
-        .getOperation() ).getPropertyName().getValue() );
+    addFilterPropertyPanel.setSelection( ((PropertyIsBetweenOperation) ((ComplexFilter) tmpRule.getFilter()).getOperation()).getPropertyName().getValue() );
     // if numeric Property selection for Filter has changed -> need to change it
     // for every rule of the pattern
     addFilterPropertyPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        String filterPropertyName = addFilterPropertyPanel.getSelection();
+        final String filterPropertyName = addFilterPropertyPanel.getSelection();
         for( int i = 0; i < ruleCollection.size(); i++ )
         {
-          ComplexFilter filter = (ComplexFilter)ruleCollection.get( i ).getFilter();
-          PropertyIsBetweenOperation oldOperation = (PropertyIsBetweenOperation)filter.getOperation();
-          PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation(
-              new PropertyName( filterPropertyName ), oldOperation.getLowerBoundary(), oldOperation.getUpperBoundary() );
+          final ComplexFilter filter = (ComplexFilter) ruleCollection.get( i ).getFilter();
+          final PropertyIsBetweenOperation oldOperation = (PropertyIsBetweenOperation) filter.getOperation();
+          final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( new PropertyName( filterPropertyName ), oldOperation.getLowerBoundary(), oldOperation.getUpperBoundary() );
           ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
         }
-        getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+        getUserStyle().fireStyleChanged();
       }
     } );
 
-    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER,
-        featureType, false );
+    final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, featureType, false );
 
     // 3. getFilterType -> at the moment we assume only a pattern of
     // PropertyIsBetween
     // draw the pattern line
-    Filter filter = tmpRule.getFilter();
+    final Filter filter = tmpRule.getFilter();
     // must be a complex filter -> then we can find out what operation-id is has
     if( filter instanceof ComplexFilter )
     {
       // if PropertyIsBetween
-      if( ( (ComplexFilter)filter ).getOperation().getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
+      if( ((ComplexFilter) filter).getOperation().getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
       {
         // find out the settings of the filter - min, max and step values
 
@@ -309,24 +296,20 @@ public class RulePatternTabItem
           // Between for every rule
           if( ruleCollection.get( j ).getFilter() instanceof ComplexFilter )
           {
-            Operation ruleOperation = ( (ComplexFilter)ruleCollection.get( j ).getFilter() ).getOperation();
+            final Operation ruleOperation = ((ComplexFilter) ruleCollection.get( j ).getFilter()).getOperation();
             if( ruleOperation.getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
             {
-              PropertyIsBetweenOperation isBetweenOperation = (PropertyIsBetweenOperation)ruleOperation;
+              final PropertyIsBetweenOperation isBetweenOperation = (PropertyIsBetweenOperation) ruleOperation;
               if( j == 0 )
               {
-                minValue = Double
-                    .parseDouble( ( (BoundaryExpression)isBetweenOperation.getLowerBoundary() ).getValue() );
-                maxValue = Double
-                    .parseDouble( ( (BoundaryExpression)isBetweenOperation.getUpperBoundary() ).getValue() );
+                minValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getLowerBoundary()).getValue() );
+                maxValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getUpperBoundary()).getValue() );
                 step = maxValue - minValue;
               }
               else
               {
-                double tmpMinValue = Double.parseDouble( ( (BoundaryExpression)isBetweenOperation.getLowerBoundary() )
-                    .getValue() );
-                double tmpMaxValue = Double.parseDouble( ( (BoundaryExpression)isBetweenOperation.getUpperBoundary() )
-                    .getValue() );
+                final double tmpMinValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getLowerBoundary()).getValue() );
+                final double tmpMaxValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getUpperBoundary()).getValue() );
                 if( tmpMinValue < minValue )
                   minValue = tmpMinValue;
                 if( tmpMaxValue > maxValue )
@@ -335,8 +318,7 @@ public class RulePatternTabItem
             }
           }
         }
-        rulePatternInputPanel = new RulePatternInputPanel( composite, MessageBundle.STYLE_EDITOR_PATTERN, minValue,
-            maxValue, step );
+        rulePatternInputPanel = new RulePatternInputPanel( composite, MessageBundle.STYLE_EDITOR_PATTERN, minValue, maxValue, step );
       }
     }
     else
@@ -348,18 +330,17 @@ public class RulePatternTabItem
 
     addSymbolizerPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        Symbolizer symbolizer = ( (AddSymbolizerPanel)event.getSource() ).getSelection();
+        final Symbolizer symbolizer = ((AddSymbolizerPanel) event.getSource()).getSelection();
         if( symbolizer != null )
         {
           for( int i = 0; i < ruleCollection.size(); i++ )
           {
-            Symbolizer[] symb =
-            { symbolizer };
+            final Symbolizer[] symb = { symbolizer };
             ruleCollection.get( i ).addSymbolizer( cloneSymbolizer( symb )[0] );
           }
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireStyleChanged();
           setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
           editSymbolizerPanel.update( ruleCollection.get( 0 ).getSymbolizers().length );
           drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
@@ -372,9 +353,9 @@ public class RulePatternTabItem
     {
       rulePatternInputPanel.addPanelListener( new PanelListener()
       {
-        public void valueChanged( PanelEvent event )
+        public void valueChanged( final PanelEvent event )
         {
-          RulePatternInputPanel panel = (RulePatternInputPanel)event.getSource();
+          final RulePatternInputPanel panel = (RulePatternInputPanel) event.getSource();
           // reset the values for all rules in this pattern if step did not
           // change !!!!
           minValue = panel.getMin();
@@ -385,28 +366,28 @@ public class RulePatternTabItem
           BoundaryExpression upperBoundary = null;
           BoundaryExpression lowerBoundary = null;
           final ArrayList<Rule> ruleList = new ArrayList<Rule>();
-          PropertyName propertyName = new PropertyName( addFilterPropertyPanel.getSelection() );
+          final PropertyName propertyName = new PropertyName( addFilterPropertyPanel.getSelection() );
           PropertyIsBetweenOperation operation = null;
 
           // only need to take first rule and duplicate it
           // plus apply the pattern
           // there needs to be at least one rule, otherwise no pattern rule
           // visible !!!!
-          int patternRuleNumber = (int)Math.ceil( ( maxValue - minValue ) / step );
-          Symbolizer[] symbolizer = tmpRule.getSymbolizers();
+          final int patternRuleNumber = (int) Math.ceil( (maxValue - minValue) / step );
+          final Symbolizer[] symbolizer = tmpRule.getSymbolizers();
 
           // first add those that are existing and are to be kept
-          int currentSize = ruleCollection.size();
+          final int currentSize = ruleCollection.size();
 
           if( patternRuleNumber <= currentSize )
           {
             for( int i = 0; i < patternRuleNumber; i++ )
             {
-              lowerBoundary = new BoundaryExpression( "" + ( minValue + ( i * step ) ) );
-              if( ( minValue + ( ( i + 1 ) * step ) ) > maxValue )
+              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) );
+              if( (minValue + ((i + 1) * step)) > maxValue )
                 upperBoundary = new BoundaryExpression( "" + maxValue );
               else
-                upperBoundary = new BoundaryExpression( "" + ( minValue + ( ( i + 1 ) * step ) ) );
+                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) );
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
               ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
               ruleList.add( ruleCollection.get( i ) );
@@ -416,31 +397,29 @@ public class RulePatternTabItem
           {
             for( int i = 0; i < currentSize; i++ )
             {
-              lowerBoundary = new BoundaryExpression( "" + ( minValue + ( i * step ) ) );
-              if( ( minValue + ( ( i + 1 ) * step ) ) > maxValue )
+              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) );
+              if( (minValue + ((i + 1) * step)) > maxValue )
                 upperBoundary = new BoundaryExpression( "" + maxValue );
               else
-                upperBoundary = new BoundaryExpression( "" + ( minValue + ( ( i + 1 ) * step ) ) );
+                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) );
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
               ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
               ruleList.add( ruleCollection.get( i ) );
             }
             for( int i = currentSize; i < patternRuleNumber; i++ )
             {
-              lowerBoundary = new BoundaryExpression( "" + ( minValue + ( i * step ) ) );
-              if( ( minValue + ( ( i + 1 ) * step ) ) > maxValue )
+              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) );
+              if( (minValue + ((i + 1) * step)) > maxValue )
                 upperBoundary = new BoundaryExpression( "" + maxValue );
               else
-                upperBoundary = new BoundaryExpression( "" + ( minValue + ( ( i + 1 ) * step ) ) );
+                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) );
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
-              ruleList.add( StyleFactory.createRule( cloneSymbolizer( symbolizer ), tmpRule.getName(), "-name-" + i,
-                  "abstract", null, new ComplexFilter( operation ), false, tmpRule.getMinScaleDenominator(), tmpRule
-                      .getMaxScaleDenominator() ) );
+              ruleList.add( StyleFactory.createRule( cloneSymbolizer( symbolizer ), tmpRule.getName(), "-name-" + i, "abstract", null, new ComplexFilter( operation ), false, tmpRule.getMinScaleDenominator(), tmpRule.getMaxScaleDenominator() ) );
             }
           }
 
           // then remove old ones
-          int collSize = ruleCollection.size() - 1;
+          final int collSize = ruleCollection.size() - 1;
           for( int i = collSize; i >= 0; i-- )
           {
             removeRule( ruleCollection.get( i ), getUserStyle() );
@@ -455,38 +434,38 @@ public class RulePatternTabItem
           }
           // update
           drawSymbolizerTabItems( tmpRule, symbolizerTabFolder, ruleCollection );
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireStyleChanged();
         }
       } );
     }
     editSymbolizerPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int action = ( (EditSymbolizerPanel)event.getSource() ).getAction();
+        final int action = ((EditSymbolizerPanel) event.getSource()).getAction();
 
         if( action == EditSymbolizerPanel.REM_SYMB )
         {
-          int index1 = symbolizerTabFolder.getSelectionIndex();
+          final int index1 = symbolizerTabFolder.getSelectionIndex();
           if( index1 >= 0 )
           {
             for( int i = 0; i < ruleCollection.size(); i++ )
             {
-              Symbolizer s[] = ruleCollection.get( i ).getSymbolizers();
+              final Symbolizer s[] = ruleCollection.get( i ).getSymbolizers();
               ruleCollection.get( i ).removeSymbolizer( s[index1] );
             }
             symbolizerTabFolder.getItem( index1 ).dispose();
             setFocusedSymbolizerItem( index1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireStyleChanged();
           }
           drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
           symbolizerTabFolder.setSelection( index1 - 1 );
         }
         else if( action == EditSymbolizerPanel.FOR_SYMB )
         {
-          int index1 = symbolizerTabFolder.getSelectionIndex();
-          if( index1 == ( ruleCollection.get( 0 ).getSymbolizers().length - 1 ) || index1 < 0 )
+          final int index1 = symbolizerTabFolder.getSelectionIndex();
+          if( index1 == (ruleCollection.get( 0 ).getSymbolizers().length - 1) || index1 < 0 )
           {
             // nothing
           }
@@ -494,12 +473,12 @@ public class RulePatternTabItem
           {
             for( int i = 0; i < ruleCollection.size(); i++ )
             {
-              Symbolizer newOrderedObjects[] = new Symbolizer[ruleCollection.get( i ).getSymbolizers().length];
+              final Symbolizer newOrderedObjects[] = new Symbolizer[ruleCollection.get( i ).getSymbolizers().length];
               for( int counter4 = 0; counter4 < ruleCollection.get( i ).getSymbolizers().length; counter4++ )
               {
                 if( counter4 == index1 )
                   newOrderedObjects[counter4] = ruleCollection.get( i ).getSymbolizers()[counter4 + 1];
-                else if( counter4 == ( index1 + 1 ) )
+                else if( counter4 == (index1 + 1) )
                   newOrderedObjects[counter4] = ruleCollection.get( i ).getSymbolizers()[counter4 - 1];
                 else
                   newOrderedObjects[counter4] = ruleCollection.get( i ).getSymbolizers()[counter4];
@@ -508,24 +487,24 @@ public class RulePatternTabItem
             }
             setFocusedSymbolizerItem( index1 + 1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireStyleChanged();
             drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
             symbolizerTabFolder.setSelection( index1 + 1 );
           }
         }
         else if( action == EditSymbolizerPanel.BAK_SYMB )
         {
-          int index1 = symbolizerTabFolder.getSelectionIndex();
+          final int index1 = symbolizerTabFolder.getSelectionIndex();
           if( index1 > 0 )
           {
             for( int i = 0; i < ruleCollection.size(); i++ )
             {
-              Symbolizer newOrderedObjects[] = new Symbolizer[ruleCollection.get( i ).getSymbolizers().length];
+              final Symbolizer newOrderedObjects[] = new Symbolizer[ruleCollection.get( i ).getSymbolizers().length];
               for( int counter5 = 0; counter5 < ruleCollection.get( i ).getSymbolizers().length; counter5++ )
               {
                 if( counter5 == index1 )
                   newOrderedObjects[counter5] = ruleCollection.get( i ).getSymbolizers()[counter5 - 1];
-                else if( counter5 == ( index1 - 1 ) )
+                else if( counter5 == (index1 - 1) )
                   newOrderedObjects[counter5] = ruleCollection.get( i ).getSymbolizers()[counter5 + 1];
                 else
                   newOrderedObjects[counter5] = ruleCollection.get( i ).getSymbolizers()[counter5];
@@ -534,7 +513,7 @@ public class RulePatternTabItem
             }
             setFocusedSymbolizerItem( index1 - 1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireStyleChanged();
             drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
             symbolizerTabFolder.setSelection( index1 - 1 );
           }
@@ -549,10 +528,10 @@ public class RulePatternTabItem
     composite.pack( true );
   }
 
-  void drawSymbolizerTabItems( Rule rule, TabFolder symbolizerTabFolder, RuleCollection ruleCollection )
+  void drawSymbolizerTabItems( final Rule rule, final TabFolder symbolizerTabFolder, final RuleCollection ruleCollection )
   {
     // remove all existing items from tab folder
-    TabItem[] items = symbolizerTabFolder.getItems();
+    final TabItem[] items = symbolizerTabFolder.getItems();
     for( int i = 0; i < items.length; i++ )
     {
       items[i].dispose();
@@ -569,8 +548,7 @@ public class RulePatternTabItem
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
       {
-        new FilterPatternSymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], userStyle,
-            ruleCollection, j );
+        new FilterPatternSymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], userStyle, ruleCollection, j );
       }
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 259 );
@@ -578,12 +556,12 @@ public class RulePatternTabItem
     }
   }
 
-  Symbolizer[] cloneSymbolizer( Symbolizer[] symbolizers )
+  Symbolizer[] cloneSymbolizer( final Symbolizer[] symbolizers )
   {
-    Symbolizer[] returnArray = new Symbolizer[symbolizers.length];
+    final Symbolizer[] returnArray = new Symbolizer[symbolizers.length];
     for( int i = 0; i < symbolizers.length; i++ )
     {
-      String geomPropertyName = symbolizers[i].getGeometry().getPropertyName();
+      final String geomPropertyName = symbolizers[i].getGeometry().getPropertyName();
       if( symbolizers[i] instanceof PointSymbolizer )
       {
         returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Point", getFeatureType() );
@@ -606,81 +584,81 @@ public class RulePatternTabItem
     return returnArray;
   }
 
-  void removeRule( Rule rule, UserStyle style )
+  void removeRule( final Rule rule, final UserStyle style )
   {
-    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     fts[0].removeRule( rule );
   }
 
-  public int getFocusedRuleItem()
+  public int getFocusedRuleItem( )
   {
     return focusedRuleItem;
   }
 
-  public void setFocusedRuleItem( int m_focusedRuleItem )
+  public void setFocusedRuleItem( final int m_focusedRuleItem )
   {
     this.focusedRuleItem = m_focusedRuleItem;
   }
 
-  public TabFolder getRuleTabFolder()
+  public TabFolder getRuleTabFolder( )
   {
     return ruleTabFolder;
   }
 
-  public void setRuleTabFolder( TabFolder m_ruleTabFolder )
+  public void setRuleTabFolder( final TabFolder m_ruleTabFolder )
   {
     this.ruleTabFolder = m_ruleTabFolder;
   }
 
-  public int getFocusedSymbolizerItem()
+  public int getFocusedSymbolizerItem( )
   {
     return focusedSymbolizerItem;
   }
 
-  public void setFocusedSymbolizerItem( int m_focusedSymbolizerItem )
+  public void setFocusedSymbolizerItem( final int m_focusedSymbolizerItem )
   {
     this.focusedSymbolizerItem = m_focusedSymbolizerItem;
   }
 
-  public RuleFilterCollection getRulePatternCollection()
+  public RuleFilterCollection getRulePatternCollection( )
   {
     return rulePatternCollection;
   }
 
-  public void setRulePatternCollection( RuleFilterCollection m_rulePatternCollection )
+  public void setRulePatternCollection( final RuleFilterCollection m_rulePatternCollection )
   {
     this.rulePatternCollection = m_rulePatternCollection;
   }
 
-  public IFeatureType getFeatureType()
+  public IFeatureType getFeatureType( )
   {
     return featureType;
   }
 
-  public void setFeatureType( IFeatureType m_featureType )
+  public void setFeatureType( final IFeatureType m_featureType )
   {
     this.featureType = m_featureType;
   }
 
-  public String[] getNumericFeatureTypePropertylist()
+  public String[] getNumericFeatureTypePropertylist( )
   {
     return numericFeatureTypePropertylist;
   }
 
-  public void setNumericFeatureTypePropertylist( ArrayList m_numericFeatureTypePropertylist )
+  public void setNumericFeatureTypePropertylist( final ArrayList m_numericFeatureTypePropertylist )
   {
-    String[] tmpList = new String[m_numericFeatureTypePropertylist.size()];
+    final String[] tmpList = new String[m_numericFeatureTypePropertylist.size()];
     for( int i = 0; i < m_numericFeatureTypePropertylist.size(); i++ )
-      tmpList[i] = ( (IPropertyType)m_numericFeatureTypePropertylist.get( i ) ).getName();
+      tmpList[i] = ((IPropertyType) m_numericFeatureTypePropertylist.get( i )).getName();
     this.numericFeatureTypePropertylist = tmpList;
   }
 
-  public KalypsoUserStyle getUserStyle()
+  public KalypsoUserStyle getUserStyle( )
   {
     return userStyle;
   }
 
-  public void setUserStyle( KalypsoUserStyle m_userStyle )
+  public void setUserStyle( final KalypsoUserStyle m_userStyle )
   {
     this.userStyle = m_userStyle;
   }

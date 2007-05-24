@@ -50,11 +50,12 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
@@ -66,17 +67,61 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class KalypsoLegendTheme extends AbstractKalypsoTheme
 {
-  private Image m_Image = null;
+  private final Color backColor = new Color( 240, 240, 240 );
 
-  private Color backColor = new Color( 240, 240, 240 );
+  private final int m_styleHeight = 50;
 
-  private int m_styleHeight = 50;
+  private final Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
 
-  private Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
+  private final IMapModellListener m_modellListener = new MapModellAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    {
+      invalidateLegend();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
+    {
+      invalidateLegend();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void themeOrderChanged( IMapModell source )
+    {
+      invalidateLegend();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void themeVisibilityChanged( IMapModell source, IKalypsoTheme theme, boolean visibility )
+    {
+      invalidateLegend();
+    }
+  };
+
+  private Image m_image = null;
 
   public KalypsoLegendTheme( final IMapModell mapModell )
   {
     super( "Legende", "Legende", mapModell );
+
+    mapModell.addMapModelListener( m_modellListener );
   }
 
   /**
@@ -85,7 +130,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   @Override
   public void dispose( )
   {
-    getMapModell().removeModellListener( this );
+    getMapModell().removeMapModelListener( m_modellListener );
     super.dispose();
   }
 
@@ -94,34 +139,28 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
   {
     if( selected )
       return;
     final int wMax = g.getClipBounds().width;
     final int hMax = g.getClipBounds().height;
-    System.out.println( "w:" + wMax + "\nh:" + hMax );
-    if( m_Image == null )
+// System.out.println( "w:" + wMax + "\nh:" + hMax );
+    if( m_image == null )
       updateLegend( wMax, hMax );
-    if( m_Image != null )
+    if( m_image != null )
     {
       g.setPaintMode();
-      final int widthIamge = m_Image.getWidth( null );
-      final int heightImage = m_Image.getHeight( null );
-      g.drawImage( m_Image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
+      final int widthIamge = m_image.getWidth( null );
+      final int heightImage = m_image.getHeight( null );
+      g.drawImage( m_image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void onModellChange( final ModellEvent modellEvent )
+  protected final void invalidateLegend( )
   {
-    if( modellEvent != null && modellEvent.isType( ModellEvent.LEGEND_UPDATED ) )
-      return;
-    m_Image = null;
-    // updateLegend();
+    m_image = null;
+    invalidate( getBoundingBox() );
   }
 
   private void updateLegend( int widthPerLegend, final int hMax )
@@ -134,10 +173,13 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     {
       final IKalypsoTheme theme = mapModell.getTheme( i );
 
-      if( mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
+      if( theme.isVisible() && theme instanceof IKalypsoFeatureTheme )
         visibleThemes.add( (IKalypsoFeatureTheme) theme );
     }
     final int legendSize = visibleThemes.size();
+    if( legendSize == 0 )
+      return;
+
     int heightPerLegend = hMax / legendSize;
     if( heightPerLegend > 40 )
       heightPerLegend = 40;
@@ -152,7 +194,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       final UserStyle[] styles = featureTheme.getStyles();
       if( styles.length == 0 )
         return;
-      
+
       final IFeatureType ft = featureTheme.getFeatureType();
       final int width = widthPerLegend / styles.length;
       for( int n = 0; n < styles.length; n++ )
@@ -181,7 +223,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
     // draw bufferedImage...
 
-    int xMax = (legendSize * heightPerLegend) / hMax + 1;
+    final int xMax = (legendSize * heightPerLegend) / hMax + 1;
     int yMax = hMax / heightPerLegend;
     if( yMax > legendSize )
       yMax = legendSize;
@@ -197,7 +239,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       for( int y = 0; y < yMax; y++ )
       {
         System.out.println( "x" + x + " y" + y );
-        int legendIndex = x * yMax + y;
+        final int legendIndex = x * yMax + y;
         if( legendIndex < stylesCol.size() )
         {
           final Image styleImage = stylesCol.get( legendSize - legendIndex - 1 );
@@ -210,20 +252,19 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     // border
     g.setColor( Color.DARK_GRAY );
     g.drawRect( 0, 0, xMax * widthPerLegend - 1, yMax * heightPerLegend - 1 );
-    m_Image = tmpImage;
-    fireModellEvent( new ModellEvent( this, ModellEvent.LEGEND_UPDATED ) );
+    m_image = tmpImage;
   }
 
-  private Image getLegend( IFeatureType ft, UserStyle style, int width, int height )
+  private Image getLegend( final IFeatureType ft, final UserStyle style, final int width, final int height )
   {
-    double yborder = m_font.getSize() + 3;
-    double xborder = width / 3;
-    GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
-    GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder, height - yborder );
-    GeoTransform transform = new WorldToScreenTransform( srcEnv, destEnv );
+    final double yborder = m_font.getSize() + 3;
+    final double xborder = width / 3;
+    final GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
+    final GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder, height - yborder );
+    final GeoTransform transform = new WorldToScreenTransform( srcEnv, destEnv );
 
-    Image image = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
-    Graphics g = image.getGraphics();
+    final Image image = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
+    final Graphics g = image.getGraphics();
     g.setColor( backColor );
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
@@ -231,10 +272,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     g.clipRect( 0, 0, width, height );
     final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
-    DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style }, null );
-    for( int i = 0; i < des.length; i++ )
+    final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style }, null );
+    for( final DisplayElement de : des )
     {
-      DisplayElement de = des[i];
       de.paint( g, transform );
     }
     return image;

@@ -55,7 +55,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
@@ -82,7 +81,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
    */
   private static UserStyle createDummyStyle( final String name )
   {
-    return new UserStyle_Impl( name, "title", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return new UserStyle_Impl( name, "title", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$ 
   }
 
   public GisTemplateUserStyle( final UserStyle style, final String name )
@@ -111,12 +110,13 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
           m_userStyle = createDummyStyle( msg );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
       m_loaded = true;
-      fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
+
+      fireStyleChanged();
     }
   }
 
@@ -129,7 +129,8 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     {
       m_loaded = false;
       m_userStyle = createDummyStyle( "Pool object was invalidated..." );
-      fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
+
+      fireStyleChanged();
     }
   }
 
@@ -173,7 +174,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
-  public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO change label according to dirty
   }

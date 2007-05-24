@@ -62,7 +62,7 @@ public class URLActionEnableOrDisableThemes extends AbstractURLAction
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
-  public boolean run( ICommandURL commandURL )
+  public boolean run( final ICommandURL commandURL )
   {
     final String themesAsString = commandURL.getParameter( IURLActionConstants.PARAM_THEME_LIST );
     final String[] themes;
@@ -83,25 +83,25 @@ public class URLActionEnableOrDisableThemes extends AbstractURLAction
     else
       return generateMessageDialog( "No active Map available.", IStatus.CANCEL );
     if( themes.length < 1 )
-      return disableAll( kThemes, mapModell, !doDisable );
+      return disableAll( kThemes, !doDisable );
     else
-      return disableThemes( kThemes, mapModell, themes, !doDisable );
+      return disableThemes( kThemes, themes, !doDisable );
   }
 
-  private boolean disableThemes( IKalypsoTheme[] kThemes, IMapModell mapModell, String[] themes, boolean doDisable )
+  private boolean disableThemes( final IKalypsoTheme[] kThemes, final String[] themes, final boolean doDisable )
   {
-    for( IKalypsoTheme kTheme : kThemes )
+    for( final IKalypsoTheme kTheme : kThemes )
     {
       if( ArrayUtils.contains( themes, kTheme.getName() ) )
-        mapModell.enableTheme( kTheme, doDisable );
+        kTheme.setVisible( doDisable );
     }
     return true;
   }
 
-  private boolean disableAll( IKalypsoTheme[] themes, IMapModell modell, boolean doDisable )
+  private boolean disableAll( final IKalypsoTheme[] themes, final boolean doDisable )
   {
-    for( IKalypsoTheme theme : themes )
-      modell.enableTheme( theme, doDisable );
+    for( final IKalypsoTheme theme : themes )
+      theme.setVisible( doDisable );
     return true;
   }
 

@@ -40,10 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.commons.list.IListManipulator;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
@@ -53,17 +57,30 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 public class MoveThemeUpAction extends MapModellViewActionDelegate
 {
   /**
-   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void run( final IAction action )
+  public void runWithEvent( final IAction action, final Event event )
   {
-    IListManipulator listManipulator = getView();
-    IKalypsoTheme selectedElement = getSelectedTheme();
-    if( listManipulator != null && selectedElement != null )
-    {
-      listManipulator.moveElementUp( selectedElement );
-    }
+    /* Order the selection as the themes are ordered in the outline. */
+    final IKalypsoTheme[] selectedThemesInOrder = MoveThemeDownAction.getSelectedThemesInOrder( getSelection() );
+
+    /* Move up in original order, else it wont happen. */
+    for( final IKalypsoTheme theme : selectedThemesInOrder )
+      moveElementUp( theme, event.display );
+  }
+
+  private void moveElementUp( final IKalypsoTheme theme, final Display display )
+  {
+    final IMapModellView view = getView();
+    if( view == null )
+      return;
+
+    final IMapModell themeMapModell = theme.getMapModell();
+
+    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( themeMapModell, theme );
+    view.postCommand( moveThemeUpCommand, new SelectThemeRunner( theme, view, display ) );
   }
 
   /**
@@ -71,21 +88,25 @@ public class MoveThemeUpAction extends MapModellViewActionDelegate
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     super.selectionChanged( action, selection );
-    final IKalypsoTheme selectedTheme = getSelectedTheme();
-    boolean bEnable = false;
-    final IMapModellView view = getView();
-    if( selectedTheme != null && view != null )
+
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final IMapModell[] selectedModels = MoveThemeDownAction.getSelectedModels( selectedThemes );
+
+    final boolean bEnable;
+    if( selectedModels.length != 1 )
+      bEnable = false;
+    else if( selectedThemes.length > 0 )
     {
-      final IMapModell mapModell = view.getMapPanel().getMapModell();
-      if( mapModell != null )
-      {
-        final Object[] elements = mapModell.getAllThemes();
-        bEnable = elements[0] != selectedTheme;
-      }
+      final IMapModell mapModell = selectedModels[0];
+      final Object[] elements = mapModell.getAllThemes();
+      bEnable = !(elements.length == 0) && !Arrays.asList( selectedThemes ).contains( elements[0] );
     }
+    else
+      bEnable = false;
+
     action.setEnabled( bEnable );
   }
 }

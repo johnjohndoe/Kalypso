@@ -47,8 +47,6 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
@@ -87,7 +85,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
       final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL, null );
       workspace = new CommandableWorkspace( createGMLWorkspace );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO what is to be done??
       e.printStackTrace();
@@ -100,13 +98,13 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
     m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager, mapModel );
     // add styles for visualisation
-    ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
+    final ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), POINT_GEOM_PROP_NAME ) );
     symbolizers.add( StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), LINESTRING_GEOM_PROP_NAME ) );
     symbolizers.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.5d ), POLYGON_GEOM_PROP_NAME ) );
     // Added/commented by Dejan //symbolizers.add( StyleFactory.createRasterSymbolizer() );
-    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( STYLE_NAME, symbolizers.toArray( new Symbolizer[symbolizers.size()] ) );
-    UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( STYLE_NAME, STYLE_NAME, "empty Abstract", featureTypeStyle );
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( STYLE_NAME, symbolizers.toArray( new Symbolizer[symbolizers.size()] ) );
+    final UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( STYLE_NAME, STYLE_NAME, "empty Abstract", featureTypeStyle );
     m_scrabLayerTheme.addStyle( new KalypsoUserStyle( style, style.getName() ) );
   }
 
@@ -143,7 +141,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void addStyle( KalypsoUserStyle style )
+  public void addStyle( final KalypsoUserStyle style )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.addStyle( style );
@@ -152,7 +150,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void removeStyle( KalypsoUserStyle style )
+  public void removeStyle( final KalypsoUserStyle style )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.removeStyle( style );
@@ -182,7 +180,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public FeatureList getFeatureListVisible( GM_Envelope env )
+  public FeatureList getFeatureListVisible( final GM_Envelope env )
   {
     if( m_scrabLayerTheme != null )
       return m_scrabLayerTheme.getFeatureListVisible( env );
@@ -205,7 +203,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.paint( g, p, scale, bbox, selected );
@@ -227,7 +225,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
    */
   @Override
-  public void setName( String name )
+  public void setName( final String name )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.setName( name );
@@ -253,50 +251,10 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
-  @Override
-  public void addModellListener( ModellEventListener listener )
-  {
-    if( m_scrabLayerTheme != null )
-      m_scrabLayerTheme.addModellListener( listener );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
-  @Override
-  public void removeModellListener( ModellEventListener listener )
-  {
-    if( m_scrabLayerTheme != null )
-      m_scrabLayerTheme.removeModellListener( listener );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void fireModellEvent( ModellEvent event )
-  {
-    if( m_scrabLayerTheme != null )
-      m_scrabLayerTheme.fireModellEvent( event );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void onModellChange( ModellEvent modellEvent )
-  {
-    if( m_scrabLayerTheme != null )
-      m_scrabLayerTheme.onModellChange( modellEvent );
-  }
-
-  /**
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
    */
-  public void postCommand( ICommand command, Runnable runnable )
+  public void postCommand( final ICommand command, final Runnable runnable )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.postCommand( command, runnable );
