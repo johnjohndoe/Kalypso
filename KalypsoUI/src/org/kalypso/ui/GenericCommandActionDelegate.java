@@ -41,6 +41,8 @@
 package org.kalypso.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.Command;
@@ -79,6 +81,9 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
+ * TODO this class is duplicate with de.renew.workflow.connector.context.handlers.GenericCommandActionDelegate
+ * Move it into one of the contribution plug-ins
+ * 
  * @author Stefan Kurzbach
  */
 public class GenericCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
@@ -124,7 +129,6 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       m_bars.updateActionBars();
       
       
-      
       return Status.OK_STATUS;
     }
   }
@@ -141,7 +145,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
 
   private String m_commandId;
 
-  private Map<String, String> m_parameterMap;
+  private final Map<String, String> m_parameterMap = new HashMap<String, String>();
 
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
@@ -180,9 +184,9 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     {
       m_commandId = (String) data;
     }
-    if( data instanceof Map )
+    else if( data instanceof Map )
     {
-      m_parameterMap = (Map<String, String>) data;
+      m_parameterMap.putAll( (Map<String, String>) data );
       m_commandId = m_parameterMap.get( PARAM_COMMAND_ID );
     }
   }
@@ -309,8 +313,8 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       if( !command.isDefined() )
         command.define( m_commandId, m_commandId, commandService.getCategory( "org.kalypso.ui.commands.default" ) );
 
-      final ArrayList<Parameterization> parameters = new ArrayList<Parameterization>();
-      for( String parmName : m_parameterMap.keySet() )
+      final List<Parameterization> parameters = new ArrayList<Parameterization>();
+      for( final String parmName : m_parameterMap.keySet() )
       {
         if( PARAM_COMMAND_ID.equals( parmName ) )
           continue;
