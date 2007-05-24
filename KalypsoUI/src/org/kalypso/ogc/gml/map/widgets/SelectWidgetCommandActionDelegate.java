@@ -88,15 +88,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * </activeWhen> </handler> </blockcode>
  */
 public class SelectWidgetCommandActionDelegate extends GenericCommandActionDelegate
-{
-  private static final String COMMAND_ID = "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand";
-
-  private static final String PARAM_CONTEXT = COMMAND_ID + ".context";
-
-  public static final String PARAM_WIDGET_CLASS = COMMAND_ID + ".widget";
-
-  public static final String PARAM_PLUGIN_ID = COMMAND_ID + ".plugin";
-
+{  
   private String m_context = null;
 
   private String m_widgetClass = null;
@@ -116,9 +108,9 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
     if( data instanceof Map )
     {
       final Map<String, String> parameterMap = (Map<String, String>) data;
-      m_widgetClass = parameterMap.get( PARAM_WIDGET_CLASS );
-      m_context = parameterMap.get( PARAM_CONTEXT );
-      m_pluginId = parameterMap.get( PARAM_PLUGIN_ID );
+      m_widgetClass = parameterMap.get( SelectWidgetHandler.PARAM_WIDGET_CLASS );
+      m_context = parameterMap.get( SelectWidgetHandler.PARAM_CONTEXT );
+      m_pluginId = parameterMap.get( SelectWidgetHandler.PARAM_PLUGIN_ID );
     }
 
     if( m_widgetClass == null || m_context == null || m_pluginId == null )
@@ -137,18 +129,18 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
   @Override
   protected ParameterizedCommand createCommand( final ICommandService commandService )
   {
-    final String cmdName = COMMAND_ID + "#" + m_context;
+    final String cmdName = SelectWidgetHandler.COMMAND_ID + "#" + m_context;
     final Command command = commandService.getCommand( cmdName );
     try
     {
       if( !command.isDefined() )
       {
-        final Command selectWidgetCmd = commandService.getCommand( COMMAND_ID );
+        final Command selectWidgetCmd = commandService.getCommand( SelectWidgetHandler.COMMAND_ID );
         command.define( cmdName, cmdName, selectWidgetCmd.getCategory(), selectWidgetCmd.getParameters() );
       }
       
-      return new ParameterizedCommand( command, new Parameterization[] { new Parameterization( command.getParameter( PARAM_WIDGET_CLASS ), m_widgetClass ),
-          new Parameterization( command.getParameter( PARAM_PLUGIN_ID ), m_pluginId ) } );
+      return new ParameterizedCommand( command, new Parameterization[] { new Parameterization( command.getParameter( SelectWidgetHandler.PARAM_WIDGET_CLASS ), m_widgetClass ),
+          new Parameterization( command.getParameter( SelectWidgetHandler.PARAM_PLUGIN_ID ), m_pluginId ) } );
     }
     catch( final NotDefinedException e )
     {

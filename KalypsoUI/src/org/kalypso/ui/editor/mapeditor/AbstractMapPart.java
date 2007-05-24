@@ -297,13 +297,17 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     site.setSelectionProvider( m_mapPanel );
 
     // activate MapView Context
-    final IContextService contextService = (IContextService) site.getService( IContextService.class );
     // TODO: this context is never deaktivated..., is this right? If yes, please comment why.
+    final IContextService contextService = (IContextService) site.getService( IContextService.class );
     if( contextService != null )
       contextService.activateContext( "org.kalypso.ogc.gml.map.context" );
 
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
-    m_mapModellContextSwitcher.addContextService( contextService );
+
+    final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
+    final IContextService workbenchContextService = (IContextService) workbench.getService( IContextService.class );
+    if( workbenchContextService != null )
+      m_mapModellContextSwitcher.addContextService( workbenchContextService );
   }
 
   /**

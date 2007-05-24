@@ -305,7 +305,7 @@ public class EditGeometryWidget extends AbstractWidget
       if( distance <= m_gisRadiusTopology )
         collector.add( handle );
     }
-    System.out.println( collector.size() );
+    
     return collector;
   }
 
