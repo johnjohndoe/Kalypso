@@ -76,7 +76,7 @@ public class GMLSAXFactory
 {
   private final NSPrefixProvider m_nsMapper = NSUtilities.getNSProvider();
 
-  private List<String> m_usedPrefixes = new ArrayList<String>();
+  private final List<String> m_usedPrefixes = new ArrayList<String>();
 
   private final QName m_xlinkQN;
 
@@ -89,14 +89,17 @@ public class GMLSAXFactory
    */
   private final Map<String, String> m_idMap;
 
+  private final LexicalHandler m_lexHandler;
+
   /**
    * @param idMap
-   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLSAXFactory( final ContentHandler handler, Map<String, String> idMap ) throws SAXException
+  public GMLSAXFactory( final ContentHandler handler, final Map<String, String> idMap, final LexicalHandler lexHandler ) throws SAXException
   {
     m_handler = handler;
     m_idMap = idMap;
+    m_lexHandler = lexHandler;
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
   }
@@ -114,9 +117,9 @@ public class GMLSAXFactory
     final GMLSchema gmlSchema = (GMLSchema) workspace.getGMLSchema();
     m_gmlVersion = gmlSchema.getGMLVersion();
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
+    for( final IFeatureType element : featureTypes )
     {
-      final QName qName = featureTypes[i].getQName();
+      final QName qName = element.getQName();
       // generate used prefixes
       getPrefixedQName( qName );
     }
@@ -167,9 +170,8 @@ public class GMLSAXFactory
     final String uri = prefixedQName.getNamespaceURI();
     // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
     m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType pt : properties )
     {
-      final IPropertyType pt = properties[i];
       if( pt instanceof IRelationType )
         process( feature, (IRelationType) pt );
       else if( pt instanceof IValuePropertyType )
@@ -181,7 +183,7 @@ public class GMLSAXFactory
     m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
   }
 
-  private QName getPrefixedQName( QName qName ) throws SAXException
+  private QName getPrefixedQName( final QName qName ) throws SAXException
   {
     final String uri = qName.getNamespaceURI();
     final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
@@ -234,7 +236,7 @@ public class GMLSAXFactory
           else
             th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context, m_gmlVersion );
         }
-        catch( TypeRegistryException e )
+        catch( final TypeRegistryException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -245,10 +247,9 @@ public class GMLSAXFactory
     {
       final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
       final URL context = null;
-      final LexicalHandler lexicalHandler = null;
       try
       {
-        th.marshal( prefixedQName, value, m_handler, lexicalHandler, context, m_gmlVersion );
+        th.marshal( prefixedQName, value, m_handler, m_lexHandler, context, m_gmlVersion );
       }
       catch( final TypeRegistryException e )
       {
