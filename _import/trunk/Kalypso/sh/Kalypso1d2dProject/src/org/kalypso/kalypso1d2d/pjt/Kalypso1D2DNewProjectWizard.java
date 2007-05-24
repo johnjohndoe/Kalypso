@@ -18,7 +18,6 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.contexts.IDialogWithResult;
 
@@ -90,7 +89,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
         Kalypso1D2DProjectNature.addNature( project );        
 
         /* Also activate new project */
-        WorkflowConnectorPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature<Scenario>) project.getNature( CaseHandlingProjectNature.ID ) );        
+        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature<Scenario>) project.getNature( Kalypso1D2DProjectNature.ID ) );        
       }
       catch( CoreException e )
       {

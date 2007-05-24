@@ -82,10 +82,12 @@ import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 /**
  * Project Nature for 1d 2d simulation
  * 
- * @author Patrice Congo
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature<Scenario>
 {
+  public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
+  
   private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );

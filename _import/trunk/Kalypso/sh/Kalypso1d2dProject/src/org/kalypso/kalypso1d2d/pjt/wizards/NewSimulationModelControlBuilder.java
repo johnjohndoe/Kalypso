@@ -3,8 +3,6 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -26,10 +24,8 @@ import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -186,7 +182,7 @@ public class NewSimulationModelControlBuilder
     this.updateListener = updateListener;
   }
 
-  public static void startWizard( final Shell shell, final Scenario scenario )
+  public static void startWizard( final Shell shell, final Scenario scenario, final IProject project )
   {
     logger.info( "starting wizard" ); //$NON-NLS-1$
     final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( "Neues Simulation Model", scenario );
@@ -219,21 +215,18 @@ public class NewSimulationModelControlBuilder
     {
       String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
-      final ActiveWorkContext activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+      final ActiveWorkContext<Scenario> activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
       try
       {
-        final String projectName = ScenarioHelper.getProjectName( scenario );
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final IProject project = workspace.getRoot().getProject( projectName );
         final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
         final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
         if( scenario != null )
         {
-          activeWorkContext.setCurrentSzenario( scenarioManager.deriveScenario( name, scenario ) );
+          activeWorkContext.setCurrentCase( scenarioManager.deriveScenario( name, scenario ) );
         }
         else
         {
-          activeWorkContext.setCurrentSzenario( scenarioManager.createCase( name ) );
+          activeWorkContext.setCurrentCase( scenarioManager.createCase( name ) );
         }
       }
       catch( final CoreException e )

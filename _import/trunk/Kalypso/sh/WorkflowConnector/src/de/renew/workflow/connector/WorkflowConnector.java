@@ -11,9 +11,10 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.access.LoginInfo;
 import de.renew.access.Manager;
@@ -48,7 +49,7 @@ public class WorkflowConnector
       logger.setUseParentHandlers( false );
   }
 
-  private static final boolean m_isWorkflowMode = false;
+  private static final boolean m_isWorkflowMode = true;
 
   private static WorkflowConnector _connector;
 
@@ -111,12 +112,12 @@ public class WorkflowConnector
     catch( final IOException e )
     {
       logger.log( Level.SEVERE, "IOException occurred", e );
-      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
     }
     catch( final NotBoundException e )
     {
       logger.log( Level.SEVERE, "Server not bound", e );
-      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
     }
 
     _connected = success;
@@ -192,7 +193,7 @@ public class WorkflowConnector
      * Creates a new agenda change listener.
      * 
      * @exception RemoteException
-     *              An RMI problem occurred.
+     *                An RMI problem occurred.
      */
     AgendaChangeListenerProxy( ) throws RemoteException
     {
@@ -204,9 +205,9 @@ public class WorkflowConnector
      * Notifies the listener about a change in an agenda.
      * 
      * @param event
-     *          The agenda change event.
+     *            The agenda change event.
      * @exception RemoteException
-     *              An RMI problem occurred.
+     *                An RMI problem occurred.
      */
     public void notifyAgendaChange( final AgendaChangeEvent event )
     {
@@ -425,13 +426,13 @@ public class WorkflowConnector
   private void handleRemoteException( final RemoteException e )
   {
     logger.log( Level.SEVERE, "connection problem", e );
-    WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
   }
 
   private void handleSecurityException( final SecurityException e )
   {
     logger.log( Level.SEVERE, "security violation", e );
-    WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
   }
 
   public boolean isWorkflowMode( )

@@ -49,8 +49,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
 
+import de.renew.workflow.base.WorkflowModelPlugin;
 import de.renew.workflow.contexts.ExtensionContext;
 
 /**
@@ -93,9 +94,8 @@ public class ContextHandlerFactoryExtension
         }
         catch( final CoreException e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to create contextHandlerFactory extension for id: " + id );
-          e.printStackTrace();
-          // TODO log
+          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create contextHandlerFactory extension for id: " + id, e );
+          WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }
     }

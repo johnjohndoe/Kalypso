@@ -44,13 +44,14 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -70,12 +71,21 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
     if( !project.exists() )
       return;
 
-    final ActiveWorkContext activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext<Scenario> activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     final IProject currentProject = activeWorkContext.getCurrentProject().getProject();
     // TODO: better the workflow context should be a resource listener and deactivate it himself
-    if( project.equals( currentProject ))
-      activeWorkContext.setActiveProject( null );
-    
+    if( project.equals( currentProject ) )
+    {
+      try
+      {
+        activeWorkContext.setActiveProject( null );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
     final DeleteResourceAction deleteResourceAction = new DeleteResourceAction( site.getShell() );
     deleteResourceAction.selectionChanged( new StructuredSelection( project ) );
     deleteResourceAction.run();

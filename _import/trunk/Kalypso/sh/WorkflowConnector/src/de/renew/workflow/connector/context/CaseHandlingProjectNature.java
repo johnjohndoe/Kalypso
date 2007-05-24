@@ -47,10 +47,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -61,13 +61,11 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  * 
  * TODO: this is a nature which gets instantiated via extension point stuff. Is it really sensefull to have template
  * parameters for that class?. The type of T is never decided on compile time....
- * 
+ *
  * @author Stefan Kurzbach
  */
 public abstract class CaseHandlingProjectNature<T extends Case> implements IProjectNature, ICaseManagerListener<T>
 {
-  public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
-
   private ICaseManager<T> m_caseManager;
 
   private IProject m_project;
@@ -77,27 +75,12 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
    */
   protected abstract ICaseManager<T> createCaseManager( final IProject project ) throws CoreException;
 
-  private void init( )
-  {
-    try
-    {
-      m_caseManager = createCaseManager( m_project );
-      m_caseManager.addCaseManagerListener( this );
-    }
-    catch( final CoreException e )
-    {
-      final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final IStatus status = e.getStatus();
-      ErrorDialog.openError( activeShell, "Problem", "Konnte neue Falldaten nicht erzeugen.", status );
-      WorkflowConnectorPlugin.getDefault().getLog().log( status );
-    }
-  }
-
-  synchronized public ICaseManager<T> getCaseManager( )
+  public ICaseManager<T> getCaseManager( ) throws CoreException
   {
     if( m_caseManager == null )
     {
-      init();
+      m_caseManager = createCaseManager( m_project );
+      m_caseManager.addCaseManagerListener( this );
     }
     return m_caseManager;
   }
@@ -136,7 +119,7 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
   }
 
   /**
-   * Constructs a path for the scenario relative to the project location.
+   * Constructs a path for the case relative to the project location.
    */
   public IPath getProjectPath( final T caze )
   {
@@ -159,7 +142,7 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
       catch( final CoreException e )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        final Status status = new Status( IStatus.ERROR,WorkflowConnectorPlugin.PLUGIN_ID,0, "", e);
         ErrorDialog.openError( activeShell, "Problem", "Konnte neue Falldaten nicht erzeugen.", status );
         WorkflowConnectorPlugin.getDefault().getLog().log( status );
       }
@@ -176,7 +159,7 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
     catch( final CoreException e )
     {
       final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      final Status status = new Status( IStatus.ERROR,WorkflowConnectorPlugin.PLUGIN_ID,0, "", e);
       ErrorDialog.openError( activeShell, "Problem", "Konnte Falldaten nicht löschen.", status );
       WorkflowConnectorPlugin.getDefault().getLog().log( status );
     }

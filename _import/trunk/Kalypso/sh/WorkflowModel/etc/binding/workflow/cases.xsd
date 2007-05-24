@@ -8,4 +8,16 @@
 		<attribute name="URI" type="ID" use="required" />
 	</complexType>	
 	
+	<element name="CaseList">
+		<complexType>	
+			<sequence>
+				<annotation>
+					<appinfo>
+						<jaxb:property name="Cases" />
+					</appinfo>
+				</annotation>
+				<element name="Case" type="rwf:Case" minOccurs="1" maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+	</element>	
 </schema>

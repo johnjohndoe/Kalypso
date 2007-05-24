@@ -38,7 +38,7 @@ public class ActiveWorkContext<T extends Case>
 
   private static final String MEMENTO_PROJECT = "project";
 
-  private static final String MEMENTO_CASE = "scenario";
+  private static final String MEMENTO_CASE = "case";
 
   private ICaseManager<T> m_caseManager;
 
@@ -46,11 +46,14 @@ public class ActiveWorkContext<T extends Case>
 
   private final List<IActiveContextChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveContextChangeListener<T>>();
 
+  private final String m_natureID;
+
   /**
    * Creates a new work context and restores the previous state from the given properties
    */
-  public ActiveWorkContext( final Properties properties )
+  public ActiveWorkContext( final Properties properties, final String natureID )
   {
+    m_natureID = natureID;
     restoreState( properties );
   }
 
@@ -66,19 +69,26 @@ public class ActiveWorkContext<T extends Case>
         final IProject project = (IProject) resource;
         try
         {
-          setActiveProject( (CaseHandlingProjectNature<T>) project.getNature( CaseHandlingProjectNature.ID ) );
+          setActiveProject( (CaseHandlingProjectNature<T>) project.getNature( m_natureID ) );
         }
         catch( final CoreException e )
         {
           log( e );
         }
 
-        final String scenarioString = properties.getProperty( MEMENTO_CASE );
-        if( scenarioString != null )
+        final String caseId = properties.getProperty( MEMENTO_CASE );
+        if( caseId != null )
         {
-          final ICaseManager<T> scenarioManager = getCaseManager();
-          final T scenario = scenarioManager.getCase( scenarioString );
-          setCurrentSzenario( scenario );
+          final ICaseManager<T> caseManager = getCaseManager();
+          final T caze = caseManager.getCase( caseId );
+          try
+          {
+            setCurrentCase( caze );
+          }
+          catch( final CoreException e )
+          {
+            log( e );
+          }
         }
       }
     }
@@ -92,7 +102,7 @@ public class ActiveWorkContext<T extends Case>
   /**
    * Sets the active case handling project
    */
-  synchronized public void setActiveProject( final CaseHandlingProjectNature<T> activeProject )
+  public void setActiveProject( final CaseHandlingProjectNature<T> activeProject ) throws CoreException
   {
     if( m_activeProject == activeProject )
     {
@@ -118,7 +128,7 @@ public class ActiveWorkContext<T extends Case>
     fireActiveContextChanged( m_activeProject, caseToActivate );
   }
 
-  synchronized public CaseHandlingProjectNature<T> getCurrentProject( )
+  public CaseHandlingProjectNature<T> getCurrentProject( )
   {
     return m_activeProject;
   }
@@ -131,7 +141,7 @@ public class ActiveWorkContext<T extends Case>
   /**
    * The same as {@link #getCaseManager()#getCurrentCase()}
    */
-  synchronized public T getCurrentCase( )
+  public T getCurrentCase( )
   {
     if( m_caseManager == null )
     {
@@ -140,7 +150,7 @@ public class ActiveWorkContext<T extends Case>
     return m_caseManager.getCurrentCase();
   }
 
-  synchronized public IFolder getCurrentCaseFolder( )
+  public IFolder getCurrentCaseFolder( )
   {
     if( m_caseManager == null )
     {
@@ -196,7 +206,7 @@ public class ActiveWorkContext<T extends Case>
     }
   }
 
-  public void setCurrentSzenario( final T caze )
+  public void setCurrentCase( final T caze ) throws CoreException
   {
     final T currentCase = m_caseManager.getCurrentCase();
     if( currentCase == null && caze == null )
@@ -217,7 +227,7 @@ public class ActiveWorkContext<T extends Case>
   /**
    * Sets the project to the project of the case if it has that information
    */
-  private void ensureProject( final T caze )
+  private void ensureProject( final T caze ) throws CoreException
   {
     try
     {
@@ -229,16 +239,12 @@ public class ActiveWorkContext<T extends Case>
         final String projectName = uri.getHost();
         final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
         if( project.exists() && project.isOpen() )
-          setActiveProject( (CaseHandlingProjectNature<T>) project.getNature( CaseHandlingProjectNature.ID ) );
+          setActiveProject( (CaseHandlingProjectNature<T>) project.getNature( m_natureID ) );
       }
     }
     catch( final URISyntaxException e )
     {
       e.printStackTrace();
-    }
-    catch( final CoreException e )
-    {
-      log( e );
     }
   }
 

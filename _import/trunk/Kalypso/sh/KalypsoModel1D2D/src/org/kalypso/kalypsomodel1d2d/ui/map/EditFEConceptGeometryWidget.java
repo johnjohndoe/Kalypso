@@ -140,9 +140,7 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
     invalidateLists();
     
     Collection<Feature> list = super.perform();
-    Set<Feature> affectedFeatures= new HashSet<Feature>();//ArrayList<Feature>();
-    
-    System.out.println("List:"+list);
+    Set<Feature> affectedFeatures= new HashSet<Feature>();//ArrayList<Feature>();    
     
     for(Feature changedFeature:list)
     {

@@ -16,6 +16,19 @@
             class="de.renew.workflow.connector.debug.DebugView"
             id="WorkflowConnector.debugView"
             name="Debug View"/>
+	  <view
+             allowMultiple="false"
+             class="org.eclipse.ui.navigator.CommonNavigator"
+             icon="icons/tree.gif"
+             id="de.renew.workflow.connector.CaseView"
+             name="Szenarien"/>
+   <view
+         allowMultiple="false"
+         class="de.renew.workflow.connector.WorklistView"
+         icon="icons/connect.png"
+         id="de.renew.workflow.WorklistView"
+         name="Tätigkeiten">
+   </view>            
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
@@ -26,37 +39,10 @@
          <action
                class="de.renew.workflow.connector.debug.RequestWorkItemActionDelegate"
                id="WorkflowConnector.RequestWorkItemAction"
-               label="Request Workitem"/>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.kalypso.kalypso1d2d.pjt.natureActions"
-            objectClass="org.eclipse.core.resources.IProject">
-         <filter
-               name="nature"
-               value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-         <action
-               enablesFor="1"
-               icon="icons/connect.png"
-               id="org.kalypso.kalypso1d2d.pjt.natureActions.NewProject"
-               label="Verbinden"
-               tooltip="Projekt mit dem Workflowserver verbinden">
-			<class class="de.renew.workflow.connector.context.handlers.GenericCommandActionDelegate">
-      			<parameter name="commandId" 
-                 	value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"/>
-   			</class>               
+               label="Request Workitem">
          </action>
       </objectContribution>
    </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
- 	     <handler
-			class="de.renew.workflow.connector.context.handlers.ActivateScenarioHandler"
-			commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>      
- 	     <handler
-			class="de.renew.workflow.connector.context.handlers.NewProjectHandler"
-			commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"/>      			
-   </extension>   
    <extension
          point="org.eclipse.ui.commands">
       <category
@@ -69,23 +55,26 @@
             name="de.renew.workflow.taskgroups.category"/>            
       <command
             categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NewProject"
+            defaultHandler="de.renew.workflow.connector.context.handlers.NewProjectHandler"
+            id="de.renew.workflow.connector.NewProject"
             name="Projekt mit Workflowserver verbinden"/>
 	  <command
             categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#DeleteProject"
+            id="de.renew.workflow.connector.DeleteProject"
             name="Projekt von Workflowserver trennen"/>                     
    </extension>
 	<extension
          point="org.eclipse.ui.navigator.viewer">
       <viewer
-            popupMenuId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.menu"
-            viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+            viewerId="de.renew.workflow.connector.CaseView">
       </viewer>
-      <viewerContentBinding viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+      <viewerContentBinding viewerId="de.renew.workflow.connector.CaseView">
          <includes>
-            <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
-            <contentExtension pattern="org.kalypso.kalypso1d2d.pjt.navigator.filters.*"/>            
+            <contentExtension pattern="de.renew.workflow.connector.filters.*"/>
+            <contentExtension
+                  isRoot="true"
+                  pattern="de.renew.workflow.connector.scenarioContent">
+            </contentExtension>            
          </includes>
       </viewerContentBinding>
    </extension>
@@ -94,7 +83,7 @@
       <commonFilter
             activeByDefault="true"
             description="Nur Workflow-Projekte anzeigen"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.filters.Kalypso1d2dProjects"
+            id="de.renew.workflow.connector.filters.CaseHandlingProjects"
             name="Nur Workflow-Projekte anzeigen">
          <filterExpression>
     	    <and>
@@ -102,28 +91,134 @@
 				<not>
 					<test
                         property="org.eclipse.core.resources.projectNature"
-                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+                        value="de.renew.workflow.connector.simpleCaseHandlingProjectNature"/>
                 </not>
 	        </and>
          </filterExpression>
       </commonFilter>      
-      <commonFilter
+      <navigatorContent
             activeByDefault="true"
-            description="Ressourcen ausblenden"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.filters.StarDotStarResources"
-            name="Ressourcen ausblenden">
-         <filterExpression>
-     		<or>
- 	        	<and>
-					<instanceof value="org.eclipse.core.resources.IFolder"/>
-    	     	</and>
- 				<test
-    	            forcePluginActivation="true"
-        	        property="org.eclipse.core.resources.name"
-            	    value=".*"/>    	     	
-     		</or>
-         </filterExpression>
-      </commonFilter>
+            contentProvider="de.renew.workflow.connector.CaseHandlingProjectContentProvider"
+            id="de.renew.workflow.connector.scenarioContent"
+            labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
+            name="Fälle"
+            priority="higher"
+            providesSaveables="false">
+         <triggerPoints>
+            <or>
+               <and>
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="de.renew.workflow.connector.simpleCaseHandlingProjectNature">
+                  </test>
+               </and>
+               <instanceof
+                     value="org.eclipse.core.resources.IFolder">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IFile">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IWorkspaceRoot">
+               </instanceof>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IFolder">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IFile">
+               </instanceof>
+               <instanceof
+                     value="de.renew.workflow.cases.Case">
+               </instanceof>
+            </or>
+         </possibleChildren>
+      </navigatorContent>
+   </extension>
+   <extension
+         id="simpleCaseHandlingProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="de.renew.workflow.connector.context.SimpleCaseHandlingProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.renew.workflow.connector.CaseHandlingPerspectiveFactory"
+            fixed="false"
+            icon="icons/connect.png"
+            id="de.renew.workflow.connector.caseHandlingPerspective"
+            name="Case Handling">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="de.renew.workflow.connector.newWizards"
+            class="de.renew.workflow.connector.context.NewSimpleProjectWizard"
+            finalPerspective="de.renew.workflow.connector.caseHandlingPerspective"
+            hasPages="true"
+            icon="icons/connect.png"
+            id="de.renew.workflow.connector.newSimpleProjectWizard"
+            name="Neues Beispielprojekt"
+            project="true">
+      </wizard>
+      <category
+            id="de.renew.workflow.connector.newWizards"
+            name="Case Handling">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="de.renew.workflow.cases.Case"
+            class="de.renew.workflow.connector.CaseAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter2">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any">
+         <command
+               commandId="de.renew.workflow.connector.NewProject"
+               icon="icons/connect.png"
+               label="Verbinden"
+               style="push"
+               tooltip="Mit dem Workflowserver verbinden">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     operator="and">
+                  <adapt
+                        type="org.eclipse.core.resources.IProject">
+                     <test
+                           property="org.eclipse.core.resources.projectNature"
+                           value="de.renew.workflow.connector.simpleCaseHandlingProjectNature">
+                     </test>
+                  </adapt>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
 
 

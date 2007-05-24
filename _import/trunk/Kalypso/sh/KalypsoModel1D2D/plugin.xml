@@ -15,12 +15,6 @@
               id="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"/>
      </extension>
      <extension
-           point="org.kalypso.core.catalogContribution">
-        <catalogContribution
-              class="org.kalypso.kalypsomodel1d2d.ui.catalog.Model1d2dCatalogContribution"
-              name="Model1d2dCatalogContribution"/>
-     </extension>
-     <extension
            point="org.kalypso.deegree.functionProperty">
         <function
               class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometryFunction"
@@ -113,145 +107,7 @@
            point="org.eclipse.ui.viewActions">
         <viewContribution
               id="org.kalypso.ui.views.mapView.widgets1d2d"
-              targetID="org.kalypso.ui.views.mapView">
-         	<action
-	           icon="icons/elcl16/add_2delement.gif"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementDelegate"               
-	           label="2D-FE-Element hinzufügen"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="Ein neues FE-Element erzeugen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element2D"/>
-	       			</class>
-			</action>
-			
-			<action
-	           icon="icons/elcl16/edit1d2d.gif"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"               
-	           label="FE-Knoten bewegen"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="FE-Knote bewegen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element2D"/>
-	       			</class>
-			</action>
-			
-			
-			<action
-	           icon="icons/elcl16/cut.png"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE2DElement"               
-	           label="Del FE 2D"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="FE-Element markieren und entfernen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element2D"/>
-	       			</class>
-			</action>
-			
-         	<action
-                icon="icons/elcl16/add_contiline.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineDelegate"
-                label="Kontinuitätslinie hinzufügen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Eine neue Kontinuitätslinie definieren">
-               		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineWidget"/>
- 	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="ContinuityLine"/>
-	       			</class>
-         	</action>
-
-
-         	<action
-                icon="icons/elcl16/cut_contiline.png"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.cline.DeleteFEContlineDelegate"
-                label="Kontinuitätslinie löschen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Eine neue Kontinuitätslinie definieren">
-               		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget"/>
- 	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="ContinuityLine"/>
-	       			</class>
-         	</action>
-
-
-          <action
-                icon="icons/elcl16/add_1delement.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE1DElementDelegate"
-                label="1D-FE-Element hinzufügen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Ein neues FE-Element erzeugen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element1D"/>
-	       			</class>
-			</action>    
-
-			<action
-	           icon="icons/elcl16/edit1d2d.gif"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget_1d"               
-	           label="FE-Knoten bewegen"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="FE-Knote bewegen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element1D"/>
-	       			</class>
-			</action>
-			
-			<action
-	           icon="icons/elcl16/cut.png"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE1DElement"               
-	           label="Del FE 1D"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="FE-Element markieren und entfernen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Element1D"/>
-	       			</class>
-			</action>
+              targetID="org.kalypso.ui.views.mapView">         	
           <action
                 icon="icons/elcl16/flowRelation_add_teschke.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"
@@ -316,54 +172,6 @@
 	                     	value="Parameters1D"/>
 	       			</class>
 			</action>
-          <action
-                icon="icons/elcl16/flowrelation_addNodalBC.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidgetAction"
-                label="Randbedingung hinzufügen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="neue Randbedinung einem FE-Element zuordnen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="NodalBCDef"/>
-	       			</class>
-			</action>    
-          <action
-                icon="icons/elcl16/flowRelation_editNodalBC.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditNodalBCFlowrelationWidget"
-                label="Randbedingung bearbeiten"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Zugeordnete Randbedinung eines FE-Elements bearbeiten">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="NodalBCDef"/>
-	       			</class>
-			</action>    
-			<action
-	           icon="icons/elcl16/flowRelation_deleteNodalBC.png"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteNodalBCFlowrelationWidgetAction"               
-	           label="Randbedingung löschen"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="einem FE-Element zugeordnete Randbedinung löschen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="NodalBCDef"/>
-	       			</class>
-			</action>
    <action
          disabledIcon="icons/dlcl16/select_profile_disable.gif"
          icon="icons/elcl16/select_profile_enable.gif"
@@ -399,6 +207,9 @@
         <catalogContribution
               class="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"
               name="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"/>
+        <catalogContribution
+              class="org.kalypso.kalypsomodel1d2d.ui.catalog.Model1d2dCatalogContribution"
+              name="Model1d2dCatalogContribution"/>              
      </extension>
      <extension
            point="org.kalypso.ui.featureViewExtensionControl">
@@ -413,4 +224,247 @@
               id="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider">
         </provider>
      </extension>
+     <extension
+           point="org.eclipse.ui.handlers">
+        <!--*** CreateElement handlers ***-->		
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/add_1delement.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Ein neues 1d-Element erzeugen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/add_2delement.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="2d-Elemente erzeugen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/add_contiline.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Kontinuitätslinie erzeugen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/flowrelation_addNodalBC.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Eine neue Randbedingung zuordnen"/>              
+            </class>
+		 </handler>
+		 <!--*** DeleteElement handlers ***-->
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/cut.png"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="2d-Elemente markieren und entfernen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/cut.png"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="1d-Elemente markieren und entfernen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/cut.png"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Kontinuitätslinien markieren und entfernen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/flowRelation_deleteNodalBC.png"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Randbedingungen markieren und löschen"/>              
+            </class>
+		 </handler>
+		 <!--*** EditElement handlers ***-->
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">		                     
+               		 <or>
+               			<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
+                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>                  
+                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>                  
+               		 </or>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/edit1d2d.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Knoten bewegen"/>              
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">		                                    		 
+               		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/flowRelation_editNodalBC.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Zugeordnete Randbedingungen bearbeiten"/>              
+            </class>
+		 </handler>		 
+     </extension>
+     <extension
+           point="org.eclipse.ui.commands">
+	  <command
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
+            name="Element erzeugen"/>                   
+	  <command
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
+            name="Element entfernen"/>
+      <command
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement"
+            name="Element editieren"/>           
+     </extension>
+	 <extension
+           point="org.eclipse.ui.menus">
+        <menuContribution
+              locationURI="toolbar:org.kalypso.ui.views.mapView">
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
+                 icon="icons/elcl16/add.gif"
+                 label="Element erzeugen"
+                 style="radio"
+                 tooltip="Ein neues Element erzeugen">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
+                 icon="icons/elcl16/cut.png"
+                 label="Element entfernen"
+                 style="radio"
+                 tooltip="Ein Element entfernen">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement"
+                 icon="icons/elcl16/edit.gif"
+                 label="Element editieren"
+                 style="radio"
+                 tooltip="Ein Element editieren">
+           </command>
+           <separator
+                 name="editSep"
+                 visible="true">
+           </separator>
+        </menuContribution>
+     </extension>     
 </plugin>

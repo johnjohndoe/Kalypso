@@ -62,9 +62,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
-
 
 /**
  * @author madanago
@@ -103,8 +101,8 @@ public class ImportElevationHandler extends AbstractHandler
       {
         final SelectWidgetHandler handler = new SelectWidgetHandler();
         final Map<String, String> newParameterMap = new HashMap<String, String>();
-        newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
-        newParameterMap.put( SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
+        newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
+        newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
         handler.setInitializationData( null, null, newParameterMap );
         final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
         handler.execute( exc );

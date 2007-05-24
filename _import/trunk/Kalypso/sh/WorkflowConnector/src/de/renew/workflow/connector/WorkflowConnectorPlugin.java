@@ -8,7 +8,9 @@ import java.util.Properties;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.SimpleCaseHandlingProjectNature;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -23,7 +25,7 @@ public class WorkflowConnectorPlugin extends Plugin
 
   private static WorkflowConnectorPlugin plugin;
 
-  private ActiveWorkContext m_activeWorkContext;
+  private ActiveWorkContext<Case> m_activeWorkContext;
 
   /**
    * The constructor
@@ -47,7 +49,7 @@ public class WorkflowConnectorPlugin extends Plugin
     {
       properties.loadFromXML( new FileInputStream( file ) );
     }
-    m_activeWorkContext = new ActiveWorkContext( properties );
+    m_activeWorkContext = new ActiveWorkContext<Case>( properties, SimpleCaseHandlingProjectNature.ID );
   }
 
   /**
@@ -79,7 +81,7 @@ public class WorkflowConnectorPlugin extends Plugin
     return plugin;
   }
 
-  public ActiveWorkContext getActiveWorkContext( )
+  public ActiveWorkContext<Case> getActiveWorkContext( )
   {
     return m_activeWorkContext;
   }

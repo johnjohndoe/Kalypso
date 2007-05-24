@@ -22,12 +22,18 @@ Bundle-Localization: plugin
 Export-Package: de.renew.workflow.connector,
  de.renew.workflow.connector.context,
  de.renew.workflow.connector.event
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui,
+Require-Bundle: de.renew.workflow.model,
+ org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.ui.ide,
- org.kalypso.contribs.eclipsercp,
- de.renew.workflow.model,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.eclipse.ui,
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.ide
 Eclipse-LazyStart: true
 Bundle-Activator: de.renew.workflow.connector.WorkflowConnectorPlugin
+Import-Package: javax.xml.bind;version="2.0.0",
+ javax.xml.bind.annotation;version="2.0.0",
+ javax.xml.bind.annotation.adapters;version="2.0.0",
+ javax.xml.bind.attachment;version="2.0.0",
+ javax.xml.bind.helpers;version="2.0.0",
+ javax.xml.bind.util;version="2.0.0"

@@ -6,6 +6,10 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -28,31 +32,30 @@ public class AddScenarioHandler extends AbstractHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-    createWorkflowData( shell, canHandle( selection ) );
-    return Status.OK_STATUS;
-  }
-
-  private Scenario canHandle( final ISelection selection )
-  {
     if( selection instanceof IStructuredSelection )
     {
       IStructuredSelection structSel = ((IStructuredSelection) selection);
 
       if( !structSel.isEmpty() )
       {
-        final Object object = structSel.getFirstElement();
-        if( object instanceof Scenario )
-          return (Scenario) object;
-        else
-          return null;
+        final Object o = structSel.getFirstElement();
+        final IProject project;
+        if( o instanceof Scenario )
+        {
+          final Scenario scenario = (Scenario) o;
+          final String projectName = ScenarioHelper.getProjectName( scenario );
+          final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+          project = workspace.getRoot().getProject( projectName );
+          NewSimulationModelControlBuilder.startWizard( shell, scenario, project );
+        }
+        else if( o instanceof IResource )
+        {
+          IResource res = (IResource) o;
+          project = res.getProject();
+          NewSimulationModelControlBuilder.startWizard( shell, null, project );
+        }
       }
     }
-    return null;
+    return Status.OK_STATUS;
   }
-
-  private void createWorkflowData( final Shell shell, final Scenario scenario )
-  {
-    NewSimulationModelControlBuilder.startWizard( shell, scenario );
-  }
-
 }

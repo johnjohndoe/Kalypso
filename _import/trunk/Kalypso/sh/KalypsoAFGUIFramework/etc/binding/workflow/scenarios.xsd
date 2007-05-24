@@ -26,7 +26,8 @@
 		</complexContent>
 	</complexType>
 
-	<complexType name="ScenarioList">
+	
+	<complexType name="ScenarioList">		
 		<sequence>
 			<annotation>
 				<appinfo>
@@ -34,15 +35,7 @@
 				</appinfo>
 			</annotation>
 			<element name="Scenario" type="scm:Scenario" minOccurs="1" maxOccurs="unbounded" />
-		</sequence>
-	</complexType>
-
-	<element name="ProjectScenarios">
-		<complexType>
-			<complexContent>
-				<extension base="scm:ScenarioList" />
-			</complexContent>
-		</complexType>
-	</element>
-
+		</sequence>									
+	</complexType>	
+	
 </schema>

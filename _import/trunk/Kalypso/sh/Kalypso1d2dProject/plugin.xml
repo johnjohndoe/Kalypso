@@ -92,12 +92,16 @@
              class="org.eclipse.ui.navigator.CommonNavigator"
              icon="icons/tree.gif"
              id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"
-             name="Szenarien"/>         
+             name="Szenarien">
+       </view>               
    </extension>
    
-   	
-     
+   	     
      <extension point="org.eclipse.ui.handlers">
+        <handler
+			class="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenarioHandler"
+			commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>
+			 		 		 		 		  			
         <handler
               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
               commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#SelectOneProfile">
@@ -113,32 +117,6 @@
               </with>
            </activeWhen>
         </handler>
-     
-     <!--*** Element2D context handler ***-->
-		 <handler
-		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Element2D">
-		    <activeWhen>   
-		       <with variable="activeContexts">
-		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
-		          </iterate>
-		       </with>
-		     </activeWhen>
-		 </handler>
-		 
-     <!--*** Element1D context handler ***-->
-		 <handler
-		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Element1D">
-		    <activeWhen>   
-		       <with variable="activeContexts">
-		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
-		          </iterate>
-		       </with>
-		    </activeWhen>
-		 </handler>
 		 
      <!--*** _FlowRelationship (Parameters1D) context handler ***-->		 
 		 <handler
@@ -154,28 +132,6 @@
 		 </handler>
 	
 	 <!--*** BoundaryCondition context handler ***-->	 
-		 <handler
-		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#NodalBCDef">
-              <activeWhen>
-                 <with variable="activeContexts">
-                    <iterate operator="or">
-                       <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
-                    </iterate>
-                 </with>
-              </activeWhen>
-         </handler>
-		 <handler
-		       class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#ContinuityLine">
-		    <activeWhen>   
-		        <with variable="activeContexts">
-		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
-		          </iterate>
-		       </with>
-		    </activeWhen>
-		 </handler>
 
  	 <!--*** handlers for scenario management ***-->			   
 	     <handler
@@ -251,6 +207,7 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
+	     
 		<!-- // Handler for "Berechnungseinheiten Modellieren"--> 
 	     <handler
 	       	   commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalculationUnit">
@@ -263,6 +220,7 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
+	     
  	 <!--*** 1D/2D transition handlers CreateJunctionContext1dToCLineFromSelectedEdges ***-->	     	     	     	     	     	     	     
 	     <!--handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -308,13 +266,7 @@
       </handler>
       <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
-            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation"/>
-	     
- 	 <!--*** roughness handlers ***-->	     	     	     	     	     	     
-	     
- 	 <!--*** boundary conditions handlers ***-->	     	     	     	     	     	     	     
-
- 	 <!--*** calculation handlers ***-->	     	     	     	     	     	     	     
+            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation"/>  	     	     	     	     	     	     
 	</extension>
     
    <extension
@@ -333,7 +285,12 @@
          point="org.eclipse.ui.navigator.viewer">
       <viewerContentBinding viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <includes>
-            <contentExtension pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"/>
+            <contentExtension
+                  isRoot="true"
+                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"/>
+            <contentExtension
+                  pattern="de.renew.workflow.connector.filters.kalypso.*">
+            </contentExtension>
          </includes>
       </viewerContentBinding>
    </extension>   
@@ -344,9 +301,10 @@
             contentProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ScenarioContentProvider"
             icon="icons/nuvola_select/ledblue.png"
             id="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"
-            labelProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ScenarioLabelProvider"
+            labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
             name="Szenario"
-            priority="normal">
+            priority="highest"
+            providesSaveables="false">
          <triggerPoints>
             <or>
 	        	<and>
@@ -364,12 +322,46 @@
             </or>
          </possibleChildren>
       </navigatorContent>
+      <commonFilter
+            activeByDefault="true"
+            description="Nur Workflow-Projekte anzeigen"
+            id="de.renew.workflow.connector.filters.kalypso.projects"
+            name="Nur Workflow-Projekte anzeigen">
+         <filterExpression>
+    	    <and>
+				<instanceof value="org.eclipse.core.resources.IProject"/>        
+				<not>
+					<test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+                </not>
+	        </and>
+         </filterExpression>
+      </commonFilter>
+      <commonFilter
+            id="de.renew.workflow.connector.filters.kalypso.noresources"
+            name="Ressourcen ausblenden">
+         <filterExpression>
+            <and>
+               <not>
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </not>
+               <not>
+                  <instanceof
+                        value="org.kalypso.afgui.scenarios.Scenario">
+                  </instanceof>
+               </not>
+            </and>
+         </filterExpression>
+      </commonFilter>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.popupActions"
-            targetID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.menu">
+            targetID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <action
                enablesFor="?"
                icon="icons/nuvola_select/edit_add.png"
@@ -413,7 +405,7 @@
            </class>
          </action>
       </objectContribution>      
-   </extension>
+   </extension>     
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -423,9 +415,8 @@
       <command
             categoryId="de.renew.workflow.tasks.category"
             id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
-            name="Szenario löschen"/>
-   </extension>
-   
+            name="Szenario löschen"/>      
+   </extension>   
    <extension
          point="org.kalypso.deegree.functionProperty">
       <function

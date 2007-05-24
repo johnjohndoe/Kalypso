@@ -43,6 +43,9 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
 
 /**
@@ -57,6 +60,34 @@ public class ScenarioHelper
     {
       final URI uri = new URI( name );
       return uri.getHost();
+    }
+    catch( final URISyntaxException e )
+    {
+      return null;
+    }
+  }
+
+  public static IProject getProject( final Scenario scenario )
+  {
+    final String name = scenario.getURI();
+    try
+    {
+      final URI uri = new URI( name );
+      return ResourcesPlugin.getWorkspace().getRoot().getProject( uri.getHost() );
+    }
+    catch( final URISyntaxException e )
+    {
+      return null;
+    }
+  }
+
+  public static IFolder getFolder( final Scenario scenario )
+  {
+    final String name = scenario.getURI();
+    try
+    {
+      final URI uri = new URI( name );
+      return getProject( scenario ).getFolder( uri.getPath() );
     }
     catch( final URISyntaxException e )
     {

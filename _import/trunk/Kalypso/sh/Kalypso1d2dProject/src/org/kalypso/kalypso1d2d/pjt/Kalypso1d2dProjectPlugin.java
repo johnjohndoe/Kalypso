@@ -1,7 +1,11 @@
 package org.kalypso.kalypso1d2d.pjt;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Properties;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -15,7 +19,6 @@ import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ISzenarioSourceProvider;
 import de.renew.workflow.cases.ICaseDataProvider;
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -27,8 +30,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   // The plug-in ID
   public static final String PLUGIN_ID = "org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject";
 
+  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
+
   // The shared instance
-  static Kalypso1d2dProjectPlugin plugin;
+  private static Kalypso1d2dProjectPlugin plugin;
 
   private static final String ICON_SIM_MODEL_PATH = "/icons/nuvola_select/ledblue.png";
 
@@ -38,12 +43,19 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private SzenarioSourceProvider m_szenarioSourceProvider;
 
+  private ActiveWorkContext<Scenario> m_activeWorkContext;
+
   /**
    * The constructor
    */
   public Kalypso1d2dProjectPlugin( )
   {
     plugin = this;
+  }
+
+  public ActiveWorkContext<Scenario> getActiveWorkContext( )
+  {
+    return m_activeWorkContext;
   }
 
   /**
@@ -53,7 +65,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    
+
     startSzenarioSourceProvider();
   }
 
@@ -110,16 +122,30 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   {
     if( m_szenarioSourceProvider == null )
     {
+      final Properties properties = new Properties();
+      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+      final File file = new File( fileName );
+      if( file.exists() )
+      {
+        try
+        {
+          properties.loadFromXML( new FileInputStream( file ) );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
       // This can only be called if the platform has already been started
-      final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
+      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, Kalypso1D2DProjectNature.ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      m_szenarioSourceProvider = new SzenarioSourceProvider( activeWorkContext );
+      m_szenarioSourceProvider = new SzenarioSourceProvider( m_activeWorkContext );
       handlerService.addSourceProvider( m_szenarioSourceProvider );
-      activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
+      m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
   }
-  
+
   private void stopSzenarioSourceProvider( )
   {
     if( PlatformUI.isWorkbenchRunning() )
@@ -129,9 +155,15 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       if( handlerService != null )
       {
         handlerService.removeSourceProvider( m_szenarioSourceProvider );
-        final ActiveWorkContext<Scenario> activeWorkContext = WorkflowConnectorPlugin.getDefault().getActiveWorkContext();
-        activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
-        activeWorkContext.setActiveProject( null );
+        m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
+        try
+        {
+          m_activeWorkContext.setActiveProject( null );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
   }
