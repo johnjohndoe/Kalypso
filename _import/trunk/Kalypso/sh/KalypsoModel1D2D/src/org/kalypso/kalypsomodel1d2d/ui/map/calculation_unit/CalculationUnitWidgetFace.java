@@ -50,10 +50,13 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -70,6 +73,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  */
 class CalculationUnitWidgetFace
 {
+  
   static int index = 0;
   private Composite rootPanel;
   private FormToolkit toolkit;
@@ -81,10 +85,17 @@ class CalculationUnitWidgetFace
   private Section calculationUnitSection;
   private CalculationUnitComponent calcGUI;
   private CalculationUnitDataModel dataModel;
-  private Section calculationElementUnitSection;
+  private Section calculationSettingsSection;
   private Composite sectionFirstComposite;
-  private Composite sectionSecondComposite;
+  private Composite sectionThirdComposite;
   private CalculationElementComponent calcElementGUI;
+  private Section calculationElementUnitSection;
+  private Composite sectionSecondComposite;
+  private Combo elementsCombo;
+  private Combo actionsCombo;
+  private Button goButton;
+  private Image goImage;
+  private CalculationUnitComplexSelectionsComponent calcComplexSelectionGUI;
   public CalculationUnitWidgetFace( )
   {
     
@@ -118,9 +129,18 @@ class CalculationUnitWidgetFace
     calculationUnitSection.setLayoutData( tableWrapData );
     calculationUnitSection.setExpanded( true );
 
+ // Creates Section for "Calculation Settings Unit"
+    calculationSettingsSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    calculationSettingsSection.setText( "Complex Unit Verwalten" );
+    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData.grabHorizontal = true;
+    tableWrapData.grabVertical = true;
+    calculationSettingsSection.setLayoutData( tableWrapData );
+    calculationSettingsSection.setExpanded( true );
     // Creates Section for "Calculation Elements Unit"
+    
     calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationElementUnitSection.setText( "Calculation Elements" );
+    calculationElementUnitSection.setText( "Selectierte Bereichnungseinheit Verwalten" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -128,6 +148,7 @@ class CalculationUnitWidgetFace
     calculationElementUnitSection.setExpanded( true );
     
     createCalculationUnit( calculationUnitSection );
+    createCalculationSettingsSection(calculationSettingsSection);
     createCalculationElements(calculationElementUnitSection);
 
     return rootPanel;
@@ -138,33 +159,50 @@ class CalculationUnitWidgetFace
     workStatusSection.setLayout( new FillLayout() );
     sectionFirstComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
     workStatusSection.setClient( sectionFirstComposite );
-    // clientComposite.setSize( 400, 300 );
     FormLayout formLayout = new FormLayout();
     sectionFirstComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
-    //formData.bottom = new FormAttachment( sectionSecondComposite, 5 );
     sectionFirstComposite.setLayoutData( formData );
     calcGUI= new CalculationUnitComponent();    
     calcGUI.createControl( dataModel, toolkit, sectionFirstComposite );
+  }
+  
+  private void createCalculationSettingsSection( Section settingsSection )
+  {
+    settingsSection.setLayout( new FillLayout() );
+    sectionSecondComposite = toolkit.createComposite( settingsSection, SWT.FLAT );
+    settingsSection.setClient( sectionSecondComposite );
+    
+    FormLayout formLayout = new FormLayout();
+    sectionSecondComposite.setLayout( formLayout );
+    FormData formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( sectionFirstComposite, 5 );
+    //formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
+    sectionSecondComposite.setLayoutData( formData );
+    
+    calcComplexSelectionGUI = new CalculationUnitComplexSelectionsComponent();
+    calcComplexSelectionGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
   }
 
   private void createCalculationElements( Section elementStatusSection )
   {
     
     elementStatusSection.setLayout( new FillLayout() );
-    sectionSecondComposite = toolkit.createComposite( elementStatusSection, SWT.FLAT );
-    elementStatusSection.setClient( sectionSecondComposite );
+    sectionThirdComposite = toolkit.createComposite( elementStatusSection, SWT.FLAT );
+    elementStatusSection.setClient( sectionThirdComposite );
     FormLayout formLayout = new FormLayout();
-    sectionSecondComposite.setLayout( formLayout );
+    sectionThirdComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( sectionSecondComposite, 5 );
-    formData.bottom = new FormAttachment( 100, 5 );
-    sectionSecondComposite.setLayoutData( formData );
+    formData.top = new FormAttachment( sectionThirdComposite, 5 );
+    formData.bottom = new FormAttachment( 100, -5 );
+    sectionThirdComposite.setLayoutData( formData );
+    
     calcElementGUI= new CalculationElementComponent();    
-    calcElementGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
+    calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );    
   }
 
   public void disposeControl( )

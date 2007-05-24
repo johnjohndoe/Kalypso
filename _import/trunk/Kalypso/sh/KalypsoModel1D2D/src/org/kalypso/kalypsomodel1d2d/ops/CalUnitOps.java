@@ -61,7 +61,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
  *  
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked")
+
 public class CalUnitOps
 {
   private CalUnitOps( )
@@ -138,7 +138,7 @@ public class CalUnitOps
    *        unit 2d element
    * @throws IllegalArgumentException if calUnit is null
    */
-  public int getNum2DElement( ICalculationUnit calUnit )
+  public static int getNum2DElement( ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     if( calUnit instanceof ICalculationUnit1D )
@@ -176,7 +176,7 @@ public class CalUnitOps
    *        unit 1d element
    * @throws IllegalArgumentException if calUnit is null
    */
-  public int getNum1DElement( 
+  public static int getNum1DElement( 
                     ICalculationUnit calUnit )
                     throws IllegalArgumentException
   {
@@ -217,7 +217,7 @@ public class CalUnitOps
    *            line otherwise false
    * @throws IllegalArgumentException if the argument calUnit is null
    */
-  public boolean hasUpBoundary( 
+  public static boolean hasUpBoundary( 
                       ICalculationUnit calUnit )
                       throws IllegalArgumentException
   {

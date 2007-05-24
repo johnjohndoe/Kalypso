@@ -342,7 +342,7 @@ class ApplyElevationWidgetFace
   private Table table;
   
   private AssignNodeElevationFaceComponent assignNodeElevationFaceComponent;
- private TableViewer nodeElevationViewer;
+  private TableViewer nodeElevationViewer;
   private void initStoreDefaults( )
   {
 

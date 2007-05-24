@@ -97,5 +97,13 @@ public class CalculationUnitComponent
                           CalUnitOps.getModelCalculationUnits( model1d2d );
         dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
       }
-  }  
+  } 
+  
+  @Override
+  public void refreshOtherSections(){
+    
+    
+    
+  }
+  
 }

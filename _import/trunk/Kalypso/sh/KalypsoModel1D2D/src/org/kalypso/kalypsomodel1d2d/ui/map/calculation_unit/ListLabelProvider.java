@@ -38,41 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
-/**
- * Hold often used keys
- * 
- * @author Patrice Congo
- */
-public interface ICommonKeys
+package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
+
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
+class ListLabelProvider extends LabelProvider
 {
-  /**
-   * Key for data entry holding the map panel
-   */
-  public static final String KEY_MAP_PANEL ="_map_panel_";
-  
-  /**
-   * Key used in the context of feature wrapper list editor
-   * denoting the data the list of feature wrapper which is
-   * to be shown in the list
-   */
-  public static final String KEY_FEATURE_WRAPPER_LIST = "_feature_wrapper_list_";
-  
-  /**
-   * Key used in the context of feature wrapper list editor
-   * denoting the currently selected feature wrapper
-   */
-  public static final String KEY_SELECTED_FEATURE_WRAPPER = "_sel_feature_wrapper_";
-  
-  /**
-   * Key for data entry holding the discretisation model
-   */
-  public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_"; 
-  
-  /**
-   * Data entry holding the {@link org.kalypso.commons.command.ICommandTarget}
-   * used to post command
-   */
-  public static final String KEY_COMMAND_TARGET ="_command target_";
-  
+  private final CalculationElementComponent ListLabelProvider;
+
+  ListLabelProvider( CalculationElementComponent calculationElementComponent )
+  {
+    ListLabelProvider = calculationElementComponent;
+  }
+
+  public Image getImage( Object element )
+  {
+    return null;
+  }
+
+  public String getText( Object element )
+  {
+    if( element instanceof IFeatureWrapper2 )
+    {
+
+      String name = ((IFeatureWrapper2) element).getName();
+      if( name != null )
+      {
+        return name;
+      }
+      else
+      {
+        return ((IFeatureWrapper2) element).getGmlID();
+      }
+    }
+    else
+    {
+      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+    }
+  }
 }

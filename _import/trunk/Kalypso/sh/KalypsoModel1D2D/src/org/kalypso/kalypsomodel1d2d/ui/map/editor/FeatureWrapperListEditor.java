@@ -77,6 +77,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationElementComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
@@ -395,7 +396,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
     formDescripData.left = new FormAttachment( 0, 0 );
     formDescripData.right = new FormAttachment( 100, 0 );
     formDescripData.top = new FormAttachment( 0, 0 );
-    //formDescripData.bottom = new FormAttachment( 100, 0 );
     descriptionText.setLayoutData( formDescripData );
     
     saveButton = new Button (descriptionGroupText,SWT.PUSH);
@@ -453,19 +453,18 @@ public class FeatureWrapperListEditor implements IButtonConstants
   {
     dataModel.setData(
         ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
-//    currentElementSelection = firstElement;    
   }
   
   
-  private IFeatureWrapper2 getCurrentSelection(){
-    
+  private IFeatureWrapper2 getCurrentSelection(){    
     return (IFeatureWrapper2) 
         dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
   
   public void createFeatureWrapper()
   {
-  } 
+  }
+  
   
   public KeyBasedDataModel getDataModel()
   {
@@ -500,14 +499,13 @@ public class FeatureWrapperListEditor implements IButtonConstants
   
   final void updateOnNewSelection( Object currentSelection  )
   {
+    final IStructuredSelection selection;
+    final String desc;
     if( currentSelection instanceof IFeatureWrapper2 )
     {
-      final IStructuredSelection selection;
-      final String desc;
       if( currentSelection != null )
       {
-        selection = 
-          new StructuredSelection( new Object[]{ currentSelection } );
+        selection = new StructuredSelection( new Object[]{ currentSelection } );
         desc = ((IFeatureWrapper2)currentSelection).getDescription();
       }
       else
@@ -519,12 +517,19 @@ public class FeatureWrapperListEditor implements IButtonConstants
 //      tableViewer.setSelection( selection );
       descriptionText.setText( desc );
       descriptionText.redraw();
+      //refreshOtherSections();
+//      CalculationElementComponent calc = new CalculationElementComponent(); 
+//      calc.createControl( dataModel, toolkit, parent );      
     }
     else
     {
       throw new IllegalArgumentException(
           "IfeatureWrapper2 expected but got:"+currentSelection);
     }
+    
+  }
+  
+  public void refreshOtherSections(){
     
   }
   
