@@ -130,10 +130,10 @@ public class MapModellHelper
       gr.fillRect( 0, 0, width, height );
       gr.setColor( Color.black );
       gr.setClip( 0, 0, width, height );
-      int x = bounds.x;
-      int y = bounds.y;
-      int w = bounds.width;
-      int h = bounds.height;
+      final int x = bounds.x;
+      final int y = bounds.y;
+      final int w = bounds.width;
+      final int h = bounds.height;
 
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
@@ -143,15 +143,14 @@ public class MapModellHelper
         // TODO How to initialize the themes without painting?
         model.paint( gr, p, bbox, scale, false );
 
-        IKalypsoTheme[] allThemes = model.getAllThemes();
+        final IKalypsoTheme[] allThemes = model.getAllThemes();
         int timeout = 0;
         boolean isLoading = true;
         while( isLoading )
         {
           isLoading = false;
-          for( int i = 0; i < allThemes.length; i++ )
+          for( final IKalypsoTheme theme : allThemes )
           {
-            IKalypsoTheme theme = allThemes[i];
             if( theme.isLoaded() == false )
               isLoading = true;
           }
@@ -170,7 +169,7 @@ public class MapModellHelper
 
         model.paint( gr, p, bbox, scale, false );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         System.out.println( e.getMessage() );
@@ -202,10 +201,10 @@ public class MapModellHelper
       gr.fillRect( 0, 0, width, height );
       gr.setColor( Color.black );
       gr.setClip( 0, 0, width, height );
-      int x = bounds.x;
-      int y = bounds.y;
-      int w = bounds.width;
-      int h = bounds.height;
+      final int x = bounds.x;
+      final int y = bounds.y;
+      final int w = bounds.width;
+      final int h = bounds.height;
 
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
@@ -214,7 +213,7 @@ public class MapModellHelper
       {
         model.paint( gr, p, bbox, scale, false );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         System.out.println( e.getMessage() );
@@ -234,14 +233,14 @@ public class MapModellHelper
   /**
    * calculates the distance in meters between two points in EPSG:4326 coodinates .
    */
-  private static double calcDistance( double lon1, double lat1, double lon2, double lat2 )
+  private static double calcDistance( final double lon1, final double lat1, final double lon2, final double lat2 )
   {
-    double r = 6378.137;
-    double rad = Math.PI / 180d;
+    final double r = 6378.137;
+    final double rad = Math.PI / 180d;
     double cose = 0;
 
     cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 ) * Math.cos( rad * lon2 ) * Math.cos( rad * (lat1 - lat2) );
-    double dist = r * Math.acos( cose );
+    final double dist = r * Math.acos( cose );
 
     return dist * 1000;
   }
@@ -257,6 +256,34 @@ public class MapModellHelper
     }
 
     return themes.toArray( new IKalypsoTheme[themes.size()] );
+  }
+
+  /**
+   * Calculates the common extent o fall given themes.
+   * 
+   * @param predicate
+   *            If not <code>null</code>, only themes applying to the predicate are considered.
+   * @return <code>null</code>, if the array of themes is empty or null.
+   */
+  public static GM_Envelope calculateExtent( final IKalypsoTheme[] themes, final IKalypsoThemePredicate predicate )
+  {
+    if( themes == null )
+      return null;
+
+    GM_Envelope result = null;
+    for( final IKalypsoTheme kalypsoTheme : themes )
+    {
+      if( predicate == null || predicate.decide( kalypsoTheme ) )
+      {
+        final GM_Envelope boundingBox = kalypsoTheme.getBoundingBox();
+        if( result == null )
+          result = boundingBox;
+        else
+          result = result.getMerged( boundingBox );
+      }
+    }
+
+    return result;
   }
 
 }

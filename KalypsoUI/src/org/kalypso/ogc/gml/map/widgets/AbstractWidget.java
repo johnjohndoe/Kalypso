@@ -51,8 +51,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -60,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author bce
  */
-public abstract class AbstractWidget implements IWidget, ModellEventListener
+public abstract class AbstractWidget implements IWidget
 {
   private MapPanel m_mapPanel = null;
 
@@ -70,7 +68,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   private final String m_toolTip;
 
-  public AbstractWidget( String name, String toolTip )
+  public AbstractWidget( final String name, final String toolTip )
   {
     m_name = name;
     m_toolTip = toolTip;
@@ -82,18 +80,8 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
-    // unregister Modelllistener
-    if( m_mapPanel != null )
-      m_mapPanel.removeModellListener( this );
-
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
-
-    // registerModelllistener
-    if( m_mapPanel != null )
-      m_mapPanel.addModellListener( this );
-    // force modellchange
-    onModellChange( null );
   }
 
   /**
@@ -105,9 +93,9 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   }
 
   /**
-   * @param selection The selection of the part, here the selection of the map which is the selection of the active theme
-   * TODO: maybe it is better to give the whole selection
-   * 
+   * @param selection
+   *            The selection of the part, here the selection of the map which is the selection of the active theme
+   *            TODO: maybe it is better to give the whole selection
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
   public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
@@ -120,15 +108,15 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     m_commandPoster.postCommand( command, runAfterCommand );
   }
 
-  protected final GM_Position getPosition( Point pixelPoint )
+  protected final GM_Position getPosition( final Point pixelPoint )
   {
     final GeoTransform transform = m_mapPanel.getProjection();
-    GM_Position pixelPos = GeometryFactory.createGM_Position( pixelPoint.getX(), pixelPoint.getY() );
+    final GM_Position pixelPos = GeometryFactory.createGM_Position( pixelPoint.getX(), pixelPoint.getY() );
     return transform.getSourcePoint( pixelPos );
   }
 
   // Helper
-  protected final GM_Envelope getDragbox( int mx, int my, int dx )
+  protected final GM_Envelope getDragbox( final int mx, final int my, final int dx )
   {
     if( m_mapPanel == null )
       return null;
@@ -136,17 +124,17 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     final double ratio = getRatio();
 
     final GeoTransform transform = m_mapPanel.getProjection();
-    double gisMX = transform.getSourceX( mx );
-    double gisMY = transform.getSourceY( my );
+    final double gisMX = transform.getSourceX( mx );
+    final double gisMY = transform.getSourceY( my );
 
-    double gisX1 = transform.getSourceX( mx - dx );
-    double gisDX = gisMX - gisX1;
+    final double gisX1 = transform.getSourceX( mx - dx );
+    final double gisDX = gisMX - gisX1;
 
-    double gisDY = gisDX * ratio;
+    final double gisDY = gisDX * ratio;
 
-    double gisX2 = gisMX + gisDX;
-    double gisY1 = gisMY - gisDY;
-    double gisY2 = gisMY + gisDY;
+    final double gisX2 = gisMX + gisDX;
+    final double gisY1 = gisMY - gisDY;
+    final double gisY2 = gisMY + gisDY;
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
@@ -162,7 +150,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /*
    * returns GM_Envelope for the pixel xmin, ymin, xmax, ymax.
    */
-  protected final GM_Envelope getBox( double x, double y, double x2, double y2 )
+  protected final GM_Envelope getBox( final double x, final double y, final double x2, final double y2 )
   {
 
     final GeoTransform gt = m_mapPanel.getProjection();
@@ -172,7 +160,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
     // not implemented by default
   }
@@ -180,7 +168,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     // not implemented by default
 
@@ -191,14 +179,12 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void finish( )
   {
-    if( m_mapPanel != null )
-      m_mapPanel.removeModellListener( this );
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     // not implemented by default
 
@@ -207,7 +193,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     // not implemented by default
   }
@@ -215,7 +201,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     // not implemented by default
   }
@@ -223,7 +209,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
-  public void middleClicked( Point p )
+  public void middleClicked( final Point p )
   {
     // not implemented by default
   }
@@ -231,7 +217,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
-  public void middlePressed( Point p )
+  public void middlePressed( final Point p )
   {
     // not implemented by default
   }
@@ -239,7 +225,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
-  public void middleReleased( Point p )
+  public void middleReleased( final Point p )
   {
     // not implemented by default
   }
@@ -247,7 +233,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     // not implemented by default
   }
@@ -255,7 +241,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     // not implemented by default
   }
@@ -263,7 +249,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
-  public void rightPressed( Point p )
+  public void rightPressed( final Point p )
   {
     // not implemented by default
   }
@@ -271,7 +257,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
-  public void rightReleased( Point p )
+  public void rightReleased( final Point p )
   {
     // not implemented by default
   }
@@ -279,7 +265,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     // not implemented by default
   }
@@ -292,11 +278,6 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public ICommandTarget getCommandTarget( )
   {
     return m_commandPoster;
-  }
-
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    // not implemented by default
   }
 
   public IKalypsoTheme getActiveTheme( )
@@ -329,7 +310,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
-  public void doubleClickedLeft( Point p )
+  public void doubleClickedLeft( final Point p )
   {
     // not implemented by default
 
@@ -338,7 +319,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
-  public void doubleClickedRight( Point p )
+  public void doubleClickedRight( final Point p )
   {
     // not implemented by default
 
@@ -347,7 +328,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
     // not implemented by default
   }
@@ -355,7 +336,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
    */
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     // not implemented by default
   }
@@ -363,7 +344,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
     // not implemented by default
   }

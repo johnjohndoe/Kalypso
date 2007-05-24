@@ -53,17 +53,15 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
- *  
  */
 
 public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  public RasterSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
+  public RasterSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -71,14 +69,14 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
   @Override
   public void draw( )
   {
-    final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer)symbolizer;
+    final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer) symbolizer;
 
-    GridLayout compositeLayout = new GridLayout();
+    final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** ColorMap Group
-    Group colorMapGroup = new Group( composite, SWT.NULL );
-    GridData colorMapGroupData = new GridData();
+    final Group colorMapGroup = new Group( composite, SWT.NULL );
+    final GridData colorMapGroupData = new GridData();
     colorMapGroupData.widthHint = 210;
     colorMapGroupData.heightHint = 246;
     colorMapGroup.setLayoutData( colorMapGroupData );
@@ -88,20 +86,19 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
     // ***** ComboBox Mode Panel
 
-    ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:", rasterSymbolizer
-        .getMode() );
+    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:", rasterSymbolizer.getMode() );
     modeComboPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int mode = ( (ModeSelectionComboPanel)event.getSource() ).getSelection();
+        final int mode = ((ModeSelectionComboPanel) event.getSource()).getSelection();
         rasterSymbolizer.setMode( mode );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // ***** Table
-    Composite tableComposite = new Composite( colorMapGroup, SWT.NULL );
+    final Composite tableComposite = new Composite( colorMapGroup, SWT.NULL );
     new ColorMapEntryTable( tableComposite, userStyle, rasterSymbolizer );
   }
 }

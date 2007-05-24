@@ -52,7 +52,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -69,7 +68,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     setup();
@@ -79,7 +78,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
   @Override
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
     if( myWidget != null )
       myWidget.clickPopup( p );
@@ -89,14 +88,14 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     if( myWidget != null )
       myWidget.dragged( p );
-    
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
@@ -105,7 +104,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     if( myWidget != null )
       myWidget.leftClicked( p );
@@ -115,7 +114,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     if( myWidget != null )
       myWidget.leftPressed( p );
@@ -125,7 +124,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
   @Override
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     if( myWidget != null )
       myWidget.leftReleased( p );
@@ -135,7 +134,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
   @Override
-  public void middleClicked( Point p )
+  public void middleClicked( final Point p )
   {
     if( myWidget != null )
       myWidget.middleClicked( p );
@@ -145,7 +144,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
   @Override
-  public void middlePressed( Point p )
+  public void middlePressed( final Point p )
   {
     if( myWidget != null )
       myWidget.middlePressed( p );
@@ -155,7 +154,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
   @Override
-  public void middleReleased( Point p )
+  public void middleReleased( final Point p )
   {
     if( myWidget != null )
       myWidget.middleReleased( p );
@@ -165,24 +164,24 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     if( myWidget != null )
-      {
+    {
       myWidget.moved( p );
-//    TODO: check if this repaint is necessary for the widget
-      MapPanel panel = getMapPanel();
-      if ( panel != null)
+// TODO: check if this repaint is necessary for the widget
+      final MapPanel panel = getMapPanel();
+      if( panel != null )
         panel.repaint();
-      }
-    
+    }
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     if( myWidget != null )
       myWidget.paint( g );
@@ -192,7 +191,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     if( myWidget != null )
       myWidget.rightClicked( p );
@@ -202,7 +201,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
   @Override
-  public void rightPressed( Point p )
+  public void rightPressed( final Point p )
   {
     if( myWidget != null )
       myWidget.rightPressed( p );
@@ -212,13 +211,13 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
   @Override
-  public void rightReleased( Point p )
+  public void rightReleased( final Point p )
   {
     if( myWidget != null )
       myWidget.rightReleased( p );
   }
 
-  public CreateGeometryFeatureWidget( String name, String tooltip )
+  public CreateGeometryFeatureWidget( final String name, final String tooltip )
   {
     super( name, tooltip );
     setup();
@@ -234,10 +233,10 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
       final IPropertyType[] ftps = ft.getProperties();
       final List<IPropertyType> geoFtps = new ArrayList<IPropertyType>();
       // collect available geometry properties
-      for( int i = 0; i < ftps.length; i++ )
+      for( final IPropertyType element : ftps )
       {
-        if( GeometryUtilities.isGeometry( ftps[i] ) )
-          geoFtps.add( ftps[i] );
+        if( GeometryUtilities.isGeometry( element ) )
+          geoFtps.add( element );
       }
 
       if( geoFtps.size() > 0 )
@@ -249,15 +248,5 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   {
     if( GeometryUtilities.isPointGeometry( ftp ) )
       myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getQName().getLocalPart(), this, theme, ftp );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  @Override
-  public void onModellChange( ModellEvent modellEvent )
-  {
-    super.onModellChange( modellEvent );
-    setup();
   }
 }

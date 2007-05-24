@@ -1,8 +1,3 @@
-package org.kalypso.ogc.gml.outline;
-
-import org.eclipse.ui.IActionDelegate2;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,17 +38,16 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellView;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.mapmodel;
+
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
- * PluginMapOutlineAction
- * <p>
- * interface to extention point for actions on Mapoutline created by
+ * Listeners on the {@link IMapModellView}, gets informed if the associated map panel changes.
  * 
- * @author doemming (25.05.2005)
+ * @author Gernot Belger
  */
-public interface PluginMapOutlineActionDelegate extends IActionDelegate2
+public interface IMapModellViewListener
 {
-  public void setView( final IMapModellView mapModellView );
-
-  public IMapModellView getView( );
+  public void onMapPanelChanged( final IMapModellView source, final MapPanel oldPanel, final MapPanel newPanel );
 }

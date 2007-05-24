@@ -51,7 +51,6 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.RuleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author belger
@@ -62,21 +61,21 @@ public class RemoveRuleAction implements IActionDelegate
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( action instanceof PluginMapOutlineAction )
     {
-      PluginMapOutlineAction outlineaction = (PluginMapOutlineAction) action;
-      IMapModellView viewer = outlineaction.getOutlineviewer();
-      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+      final PluginMapOutlineAction outlineaction = (PluginMapOutlineAction) action;
+      final IMapModellView viewer = outlineaction.getOutlineviewer();
+      final Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
       if( o instanceof RuleTreeObject )
       {
-        RuleTreeObject obj = (RuleTreeObject) o;
-        KalypsoUserStyle userStyle = obj.getStyle();
+        final RuleTreeObject obj = (RuleTreeObject) o;
+        final KalypsoUserStyle userStyle = obj.getStyle();
         userStyle.getFeatureTypeStyles()[0].removeRule( obj.getRule() );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
 
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         StyleEditorViewPart part;
         try
         {
@@ -87,7 +86,7 @@ public class RemoveRuleAction implements IActionDelegate
             part.initStyleEditor( userStyle, obj.getTheme() );
           }
         }
-        catch( PartInitException e )
+        catch( final PartInitException e )
         {
           e.printStackTrace();
         }

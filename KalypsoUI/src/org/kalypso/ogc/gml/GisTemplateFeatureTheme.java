@@ -79,7 +79,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
@@ -173,7 +172,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_commandTarget.dispose();
     if( m_theme != null )
     {
-      m_theme.removeModellListener( this );
       m_theme.dispose();
       m_theme = null;
     }
@@ -249,7 +247,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       styledLayerType.setVisible( isVisible );
       styledLayerType.getDepends();
       final List<Style> stylesList = styledLayerType.getStyle();
-      for( GisTemplateUserStyle style : m_gisTemplateUserStyles )
+      for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
       {
         final Style styleType = extentFac.createStyledLayerTypeStyle();
         style.fillStyleType( stylesList, styleType );
@@ -273,7 +271,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         // clear the theme
         if( m_theme != null )
         {
-          m_theme.removeModellListener( this );
           m_theme.dispose();
           m_theme = null;
         }
@@ -281,11 +278,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         {
           final CommandableWorkspace commandableWorkspace = (CommandableWorkspace) newValue;
           m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
-          m_theme.addModellListener( this );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
           // TODO is this really necessary?
-          fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
+          invalidate( getBoundingBox() );
           for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
             addStyle( style );
 
@@ -315,14 +311,17 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               }
               else
               {
-                /* Create a user style that wraps the catalog-based Feature Type Style. Inherit name, title and abstract. */
+                /*
+                 * Create a user style that wraps the catalog-based Feature Type Style. Inherit name, title and
+                 * abstract.
+                 */
                 final String name = fts.getName();
                 final String title = fts.getTitle();
-//                final String description = " Default Style for " + featureType.getQName().getLocalPart();
+// final String description = " Default Style for " + featureType.getQName().getLocalPart();
                 final String description = fts.getAbstract();
-                userStyle = (UserStyle_Impl) StyleFactory.createStyle( name, title, description, fts ); 
+                userStyle = (UserStyle_Impl) StyleFactory.createStyle( name, title, description, fts );
               }
-              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, userStyle.getTitle() ); //$NON-NLS-1$
+              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, userStyle.getTitle() );
               addStyle( kus );
             }
           }
@@ -337,15 +336,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
     // ModellEvent event = new ModellEvent( this,null ) ;
     // ModellEvent event = new ModellEvent( this, ModellEvent.FULL_CHANGE ) ;
-    if( m_theme != null )
-    {
-      m_theme.fireModellEvent( null );
-    }
-    else
-    {
-      fireModellEvent( null );
-    }
-    fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTEXT_CHANGED ) );
+    invalidate( getBoundingBox() );
+    fireContextChanged();
   }
 
   /**
@@ -357,12 +349,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // clear the theme
-      m_theme.removeModellListener( this );
       m_theme.dispose();
       m_theme = null;
     }
+
     // schon mal mitteilen, dass sich das Thema geändert hat
-    fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
+    fireContextChanged();
+    invalidate( getBoundingBox() );
   }
 
   /**
@@ -494,7 +487,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     else
       return super.getContext();
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLabel(java.lang.Object)
    */
@@ -503,10 +496,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getLabel( m_theme );
-    
+
     return super.getLabel( o );
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
    */
@@ -515,7 +508,79 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme == null )
       return super.getChildren( o );
-    
+
     return m_theme.getChildren( m_theme );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getName()
+   */
+  @Override
+  public String getName( )
+  {
+    if( m_theme != null )
+      return m_theme.getName();
+
+    return super.getName();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setName(java.lang.String)
+   */
+  @Override
+  public void setName( final String name )
+  {
+    if( m_theme != null )
+      m_theme.setName( name );
+
+    super.setName( name );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getType()
+   */
+  @Override
+  public String getType( )
+  {
+    if( m_theme != null )
+      return super.getType();
+
+    return super.getType();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setType(java.lang.String)
+   */
+  @Override
+  public void setType( final String type )
+  {
+    if( m_theme != null )
+      m_theme.setType( type );
+
+    super.setType( type );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getStatus()
+   */
+  @Override
+  public IStatus getStatus( )
+  {
+    if( m_theme != null )
+      return m_theme.getStatus();
+
+    return super.getStatus();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setStatus(org.eclipse.core.runtime.IStatus)
+   */
+  @Override
+  protected void setStatus( final IStatus status )
+  {
+    if( m_theme != null )
+      m_theme.setStatus( status );
+
+    super.setStatus( status );
   }
 }

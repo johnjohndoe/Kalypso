@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
@@ -75,7 +74,6 @@ import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ogc.gml.filterdialog.model.GeometryPropertyFilter;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
@@ -114,7 +112,7 @@ class SpatialComposite extends AbstractFilterComposite
 
   private ComboViewer m_propViewer;
 
-  public SpatialComposite( final Composite parent, final int style, final SpatialOperation operation, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft, Feature spatialOperators, String[] supportedOps )
+  public SpatialComposite( final Composite parent, final int style, final SpatialOperation operation, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft, final Feature spatialOperators, final String[] supportedOps )
   {
     super( parent, style, errorMessageReciever, ft );
     m_operation = operation;
@@ -131,7 +129,7 @@ class SpatialComposite extends AbstractFilterComposite
       m_errorMessageReciever.setErrorMessage( "Diese Operation ist nur mit einer in der Karte selektierten Geometrie möglich!" );
       return;
     }
-    String opsName = m_operation.getOperatorName();
+    final String opsName = m_operation.getOperatorName();
     // Top-Group
     // possible oprations (they have been initialized when calling the factory)
     m_supportedOpsLable = new Label( this, SWT.NULL );
@@ -139,7 +137,7 @@ class SpatialComposite extends AbstractFilterComposite
     m_supportedOpsLable.setText( "Operation:" );
     m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
     // m_supportedOpsCombo.setLayout( new GridLayout() );
-    GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
     data1.widthHint = STANDARD_WIDTH_FIELD;
     m_supportedOpsCombo.setLayoutData( data1 );
     String[] namesOps = null;
@@ -149,26 +147,26 @@ class SpatialComposite extends AbstractFilterComposite
       namesOps = m_supportedOps;
     m_supportedOpsCombo.setItems( namesOps );
     // set the selection to the current operation type, if not availabel a blank is selected by default (Combo)
-    int j = ArrayUtils.indexOf( namesOps, opsName );
+    final int j = ArrayUtils.indexOf( namesOps, opsName );
     m_supportedOpsCombo.select( j );
     m_supportedOpsCombo.addSelectionListener( new SelectionAdapter()
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
-        int newOperationId = OperationDefines.getIdByName( item );
+        final String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
+        final int newOperationId = OperationDefines.getIdByName( item );
         m_operation.setOperatorId( newOperationId );
-        fireModellEvent( new ModellEvent( SpatialComposite.this, ModellEvent.WIDGET_CHANGE ) );
+        refresh();
       }
     } );
     // set Geometry
     m_spatialLabel = new Label( this, SWT.NULL );
     m_spatialLabel.setText( "Geometrie:" );
 
-    Combo combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final Combo combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
     combo.setLayoutData( data );
     m_propViewer = new ComboViewer( combo );
@@ -179,12 +177,12 @@ class SpatialComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          QName propName = ((IValuePropertyType) firstElement).getQName();
+          final QName propName = ((IValuePropertyType) firstElement).getQName();
           m_operation.setProperty( new PropertyName( propName ) );
           // fireModellEvent( new ModellEvent( SpatialComposite.this, ModellEvent.WIDGET_CHANGE ) );
           // updateOperation( null );
@@ -215,7 +213,7 @@ class SpatialComposite extends AbstractFilterComposite
       final GM_Object[] geometryProperties = m_newGeometryOp.getGeometryProperties();
       for( int i = 0; i < geometryProperties.length; i++ )
       {
-        GM_Object geom = geometryProperties[i];
+        final GM_Object geom = geometryProperties[i];
         m_geomOpsCombo.setItems( new String[] { id + i } );
         m_hash.put( id + i, geom );
       }
@@ -227,12 +225,12 @@ class SpatialComposite extends AbstractFilterComposite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
 
-        int selectionIndex = m_geomOpsCombo.getSelectionIndex();
-        String item = m_geomOpsCombo.getItem( selectionIndex );
-        GM_Object geom = m_hash.get( item );
+        final int selectionIndex = m_geomOpsCombo.getSelectionIndex();
+        final String item = m_geomOpsCombo.getItem( selectionIndex );
+        final GM_Object geom = m_hash.get( item );
         updateOperation( geom );
       }
     } );
@@ -243,11 +241,11 @@ class SpatialComposite extends AbstractFilterComposite
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
-        int selectionIndex = m_geomOpsCombo.getSelectionIndex();
-        String item = m_geomOpsCombo.getItem( selectionIndex );
-        GM_Object geom = m_hash.get( item );
+        final int selectionIndex = m_geomOpsCombo.getSelectionIndex();
+        final String item = m_geomOpsCombo.getItem( selectionIndex );
+        final GM_Object geom = m_hash.get( item );
         updateOperation( geom );
 
       }
@@ -256,7 +254,7 @@ class SpatialComposite extends AbstractFilterComposite
        * @see org.eclipse.swt.events.FocusAdapter#focusGained(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         focusLost( e );
       }
@@ -269,25 +267,25 @@ class SpatialComposite extends AbstractFilterComposite
   private int setGeomOperator( )
   {
     String key = null;
-    GM_Object geometryLiteral = m_operation.getGeometryLiteral();
+    final GM_Object geometryLiteral = m_operation.getGeometryLiteral();
     if( m_hash.containsValue( geometryLiteral ) )
     {
-      Set<Entry<String, GM_Object>> mapEntries = m_hash.entrySet();
-      for( Iterator iter = mapEntries.iterator(); iter.hasNext(); )
+      final Set<Entry<String, GM_Object>> mapEntries = m_hash.entrySet();
+      for( final Object element2 : mapEntries )
       {
-        Entry element = (Entry) iter.next();
+        final Entry element = (Entry) element2;
         if( element.getValue().equals( geometryLiteral ) )
           key = (String) element.getKey();
       }
     }
-    String[] items = m_geomOpsCombo.getItems();
-    int index = ArrayUtils.indexOf( items, key );
+    final String[] items = m_geomOpsCombo.getItems();
+    final int index = ArrayUtils.indexOf( items, key );
     if( index == -1 )
       return 0;
     return index;
   }
 
-  private void setSupportedOps( String[] supportedOps )
+  private void setSupportedOps( final String[] supportedOps )
   {
     if( supportedOps != null && supportedOps.length > 0 )
       m_supportedOps = supportedOps;
@@ -308,7 +306,7 @@ class SpatialComposite extends AbstractFilterComposite
 
   }
 
-  boolean updateOperation( GM_Object newGeometry )
+  boolean updateOperation( final GM_Object newGeometry )
   {
     try
     {
@@ -321,9 +319,9 @@ class SpatialComposite extends AbstractFilterComposite
       // PropertyName newPropertyName = new PropertyName( m_propViewer.getSelection() );
       // m_operation.setProperty( newPropertyName );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      IStatus status = StatusUtilities.statusFromThrowable( e );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
       ErrorDialog.openError( getShell(), "Fehler beim erstellen des Geometrie-Operators", e.getMessage(), status );
       return false;
     }

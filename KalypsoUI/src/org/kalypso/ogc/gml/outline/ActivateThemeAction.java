@@ -41,16 +41,16 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class ActivateThemeAction2 extends MapModellViewActionDelegate
+public class ActivateThemeAction extends MapModellViewActionDelegate
 {
   /**
    * @see org.eclipse.jface.action.Action#run()
@@ -58,16 +58,26 @@ public class ActivateThemeAction2 extends MapModellViewActionDelegate
   @Override
   public void run( final IAction action )
   {
-    if( action instanceof PluginMapOutlineAction )
-    {
-      final IMapModellView viewer = getView();
-      final Object o = ( (IStructuredSelection)viewer.getSelection() ).getFirstElement();
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    if( selectedThemes.length == 0 )
+      return;
 
-      if( o instanceof IKalypsoTheme )
-      {
-        final IMapModell mapModell = viewer.getMapPanel().getMapModell();
-        viewer.postCommand( new ActivateThemeCommand( mapModell, (IKalypsoTheme)o ), null );
-      }
-    }
+    final IKalypsoTheme themeToActivate = selectedThemes[0];
+
+    final IMapModellView viewer = getView();
+    final IMapModell mapModell = viewer.getMapPanel().getMapModell();
+    viewer.postCommand( new ActivateThemeCommand( mapModell, themeToActivate ), null );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void selectionChanged( final IAction action, final ISelection selection )
+  {
+    super.selectionChanged( action, selection );
+
+    action.setEnabled( getSelectedThemes( selection ).length == 1 );
   }
 }

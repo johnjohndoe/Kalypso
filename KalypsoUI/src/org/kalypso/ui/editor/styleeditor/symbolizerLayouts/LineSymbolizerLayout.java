@@ -61,17 +61,15 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
- *  
  */
 
 public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  public LineSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
+  public LineSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -79,14 +77,14 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
   @Override
   public void draw( ) throws FilterEvaluationException
   {
-    LineSymbolizer lineSymbolizer = (LineSymbolizer)symbolizer;
+    final LineSymbolizer lineSymbolizer = (LineSymbolizer) symbolizer;
     final Stroke stroke = lineSymbolizer.getStroke();
 
-    GridLayout compositeLayout = new GridLayout();
+    final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
-    Group strokeGroup = new Group( composite, SWT.NULL );
-    GridData strokeGroupData = new GridData();
+    final Group strokeGroup = new Group( composite, SWT.NULL );
+    final GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
     strokeGroupData.heightHint = 244;
     strokeGroup.setLayoutData( strokeGroupData );
@@ -95,95 +93,88 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Stroke ColorChooser
     ColorChooserPanel strokeColorChooserPanel = null;
-    strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR, stroke
-        .getStroke( null ) );
+    strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR, stroke.getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        Color color = ( (ColorChooserPanel)event.getSource() ).getColor();
+        final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         stroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke Width Slider
-    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
-        SliderPanel.INTEGER, stroke.getWidth( null ) );
+    final SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1, SliderPanel.INTEGER, stroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double width = ( (SliderPanel)event.getSource() ).getSelection();
+        final double width = ((SliderPanel) event.getSource()).getSelection();
         stroke.setWidth( width );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke Opacity Slider
-    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1,
-        SliderPanel.DECIMAL, stroke.getOpacity( null ) );
+    final SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, stroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
+        final double opacity = ((SliderPanel) event.getSource()).getSelection();
         stroke.setOpacity( opacity );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke Linejoin ComboPanel
-    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINEJOIN,
-        stroke.getLineJoin( null ) );
+    final ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINEJOIN, stroke.getLineJoin( null ) );
     stroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int lineJoin = ( (StrokeLinejoinComboPanel)event.getSource() ).getSelection();
+        final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
         stroke.setLineJoin( lineJoin );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke Linecap ComboPanel
-    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINECAP,
-        stroke.getLineCap( null ) );
+    final ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINECAP, stroke.getLineCap( null ) );
     stroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        int lineCap = ( (StrokeLinecapComboPanel)event.getSource() ).getSelection();
+        final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
         stroke.setLineCap( lineCap );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke DashOffset
-    StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_DASHOFFSET, stroke.getDashOffset( null ) );
+    final StrokeDashoffsetPanel strokeDashoffsetPanel = new StrokeDashoffsetPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHOFFSET, stroke.getDashOffset( null ) );
     strokeDashoffsetPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        float dashOffset = ( (StrokeDashoffsetPanel)event.getSource() ).getValue();
+        final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
         stroke.setDashOffset( dashOffset );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
 
     // Stroke DashArray
-    StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_DASHARRAY, stroke.getDashArray( null ) );
+    final StrokeDasharrayPanel strokeDasharrayPanel = new StrokeDasharrayPanel( strokeGroup, MessageBundle.STYLE_EDITOR_DASHARRAY, stroke.getDashArray( null ) );
     strokeDasharrayPanel.addPanelListener( new PanelListener()
     {
-      public void valueChanged( PanelEvent event )
+      public void valueChanged( final PanelEvent event )
       {
-        float dashArray[] = ( (StrokeDasharrayPanel)event.getSource() ).getValue();
+        final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();
         stroke.setDashArray( dashArray );
-        userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+        userStyle.fireStyleChanged();
       }
     } );
   }

@@ -70,7 +70,6 @@ import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ogc.gml.filterdialog.model.NonGeometryPropertyFilter;
 import org.kalypsodeegree.filterencoding.Expression;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.ArithmeticExpression;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -106,7 +105,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
 
   private ComboViewer m_propViewer;
 
-  public PropertyIsCOMPOperationComposite( final Composite parent, final int style, final PropertyIsCOMPOperation operation, String[] supportedOperations, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
+  public PropertyIsCOMPOperationComposite( final Composite parent, final int style, final PropertyIsCOMPOperation operation, final String[] supportedOperations, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
   {
     super( parent, style, errorMessageReciever, ft );
     m_operation = operation;
@@ -115,7 +114,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     setControl();
   }
 
-  private void setSupportedOperations( String[] supportedOps )
+  private void setSupportedOperations( final String[] supportedOps )
   {
     if( supportedOps != null && supportedOps.length > 0 )
       m_supportedOps = supportedOps;
@@ -161,20 +160,20 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     else
       namesOps = m_supportedOps;
 
-    int j = ArrayUtils.indexOf( namesOps, m_operation.getOperatorName() );
+    final int j = ArrayUtils.indexOf( namesOps, m_operation.getOperatorName() );
     m_supportedOpsCombo.setItems( namesOps );
     m_supportedOpsCombo.select( j );
     m_supportedOpsCombo.addSelectionListener( new SelectionAdapter()
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
-        int newOperationId = OperationDefines.getIdByName( item );
+        final int newOperationId = OperationDefines.getIdByName( item );
         final PropertyIsCOMPOperation comparisonOperation = m_operation;
         comparisonOperation.setOperatorId( newOperationId );
-        fireModellEvent( new ModellEvent( PropertyIsCOMPOperationComposite.this, ModellEvent.WIDGET_CHANGE ) );
+        refresh();
       }
 
     } );
@@ -192,9 +191,9 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
           final IValuePropertyType vtp = ((IValuePropertyType) firstElement);
@@ -210,12 +209,12 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_secondRowText.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_secondRowText.addFocusListener( new FocusListener()
     {
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         // do nothing
       }
 
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         updateOperation();
         m_secondRowTextModified = false;
@@ -224,12 +223,12 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_secondRowText.addKeyListener( new KeyListener()
     {
 
-      public void keyPressed( KeyEvent e )
+      public void keyPressed( final KeyEvent e )
       {
         // do nothing
       }
 
-      public void keyReleased( KeyEvent e )
+      public void keyReleased( final KeyEvent e )
       {
         if( e.keyCode == SWT.CR && m_secondRowTextModified )
         {
@@ -242,7 +241,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_secondRowText.addModifyListener( new ModifyListener()
     {
 
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         m_secondRowTextModified = true;
       }

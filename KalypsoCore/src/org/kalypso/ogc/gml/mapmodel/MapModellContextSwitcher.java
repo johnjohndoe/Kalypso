@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -53,18 +51,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeListener;
-import org.kalypso.ogc.gml.KalypsoThemeEvent;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author Stefan Kurzbach
  */
-public class MapModellContextSwitcher implements ModellEventListener, IKalypsoThemeListener
+public class MapModellContextSwitcher
 {
-
   private final class ContextSwitcherThread extends Thread
   {
     private IContextService m_contextService;
@@ -89,13 +81,10 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
     @Override
     public void run( )
     {
-      // TODO: it sometimes happens thatz the old context is not deactivated, howmay this happen?
-      // concurrent access problems?
-      
       if( m_oldContext != null )
       {
         logger.info( "Deactivating context: " + m_oldContext.getContextId() );
-        m_contextService.deactivateContext( m_oldContext );        
+        m_contextService.deactivateContext( m_oldContext );
       }
       if( m_theme == null )
       {
@@ -131,13 +120,32 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
   static final Logger logger = Logger.getLogger( MapModellContextSwitcher.class.getName() );
 
-  private final Collection<IKalypsoTheme> m_themes = new ArrayList<IKalypsoTheme>();
+  private final Map<IContextService, ContextSwitcherThread> m_contextSwitcherThreads = new HashMap<IContextService, ContextSwitcherThread>();
 
-  private Map<IContextService, ContextSwitcherThread> m_contextSwitcherThreads = new HashMap<IContextService, ContextSwitcherThread>();
+  private IMapModell m_mapModell = null;
 
-  public MapModellContextSwitcher( )
+  private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
-  }
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
+    {
+      activateContextFor( nowActive );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#contextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      if( source.getActiveTheme() == theme )
+        activateContextFor( theme );
+    }
+  };
 
   public void addContextService( final IContextService contextService )
   {
@@ -156,60 +164,7 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    if( modellEvent == null )
-    {
-      return;
-    }
-    final ModellEventProvider eventSource = modellEvent.getEventSource();
-    IMapModell mapModell = null;
-    if( eventSource instanceof IMapModell )
-    {
-      mapModell = (IMapModell) eventSource;
-    }
-    else
-    {
-      // ignore,this must be wrong
-      return;
-    }
-
-    if( modellEvent.isType( ModellEvent.THEME_ACTIVATED ) )
-    {
-      final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-      activateContextFor( activeTheme );
-    }
-    else if( modellEvent.isType( ModellEvent.THEME_ADDED ) )
-    {
-      for( IKalypsoTheme theme : mapModell.getAllThemes() )
-      {
-        if( !m_themes.contains( theme ) )
-        {
-          m_themes.add( theme );
-          theme.addKalypsoThemeListener( this );
-        }
-      }
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
-   */
-  public void kalypsoThemeChanged( final KalypsoThemeEvent event )
-  {
-    if( event.isType( KalypsoThemeEvent.CONTEXT_CHANGED ) )
-    {
-      final IKalypsoTheme theme = event.getSource();
-      final IMapModell mapModell = theme.getMapModell();
-      if( mapModell != null && mapModell.getActiveTheme() == theme )
-        activateContextFor( theme );
-    }
-  }
-
-  private synchronized void activateContextFor( final IKalypsoTheme theme )
+  protected synchronized void activateContextFor( final IKalypsoTheme theme )
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
     if( display.isDisposed() )
@@ -225,14 +180,20 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
   public void dispose( )
   {
     activateContextFor( null );
-    for( ContextSwitcherThread thread : m_contextSwitcherThreads.values() )
+    for( final ContextSwitcherThread thread : m_contextSwitcherThreads.values() )
     {
       thread.dispose();
     }
-    for( IKalypsoTheme theme : m_themes )
-    {
-      theme.removeKalypsoThemeListener( this );
-    }
-    m_themes.clear();
+  }
+
+  public void setMapModell( final IMapModell mapModell )
+  {
+    if( m_mapModell != null )
+      m_mapModell.removeMapModelListener( m_modelListener );
+
+    m_mapModell = mapModell;
+
+    if( m_mapModell != null )
+      m_mapModell.addMapModelListener( m_modelListener );
   }
 }

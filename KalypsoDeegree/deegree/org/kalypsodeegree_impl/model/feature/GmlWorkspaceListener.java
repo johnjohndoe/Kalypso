@@ -83,7 +83,7 @@ public abstract class GmlWorkspaceListener implements IGmlWorkspaceListener, IEx
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#getQNames()
    */
-  public QName[] getQNames( )
+  public final QName[] getQNames( )
   {
     return m_qnames;
   }

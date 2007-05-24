@@ -42,20 +42,24 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
+ * TODO: name and comment wrong. This is something which holds a MapPanel, not a MapModell.
+ * <p>
  * Provides a view on a {@link IMapModell} and can handle selections on that model.
  * 
  * @author doemming, Stefan Kurzbach
  */
-public interface IMapModellView extends ModellEventListener, ISelectionProvider, IListManipulator, ICommandTarget
+public interface IMapModellView extends ISelectionProvider, ICommandTarget
 {
   public MapPanel getMapPanel( );
 
   public void setMapPanel( final MapPanel panel );
 
   public void dispose( );
+
+  public void addMapModellViewListener( final IMapModellViewListener l );
+
+  public void removeMapModellViewListener( final IMapModellViewListener l );
 }

@@ -42,13 +42,11 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.kalypso.commons.list.IListManipulator;
+import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * Superclass for plugins that modify the map model
- * 
- * TODO: merge with AbstractOutlineAction
+ * Superclass for plugins that modify the map model TODO: merge with AbstractOutlineAction
  * 
  * @author kuepfer
  */
@@ -56,10 +54,11 @@ public class PluginMapOutlineAction extends AbstractOutlineAction
 {
   private final PluginMapOutlineActionDelegate m_innerAction;
 
-  public PluginMapOutlineAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView selectionProvider, PluginMapOutlineActionDelegate outlineAction, final IListManipulator listManip )
+  public PluginMapOutlineAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView selectionProvider, final PluginMapOutlineActionDelegate outlineAction )
   {
-    super( text, image, tooltipText, selectionProvider, listManip );
+    super( text, image, tooltipText, selectionProvider );
     m_innerAction = outlineAction;
+    m_innerAction.init( this );
     outlineAction.setView( selectionProvider );
   }
 
@@ -69,14 +68,22 @@ public class PluginMapOutlineAction extends AbstractOutlineAction
   @Override
   public void run( )
   {
-    // m_innerAction.run( getOutlineviewer(), getListManipulator() );
     m_innerAction.run( this );
+  }
+
+  /**
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   */
+  @Override
+  public void runWithEvent( final Event event )
+  {
+    m_innerAction.runWithEvent( this, event );
   }
 
   /**
    * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     m_innerAction.selectionChanged( this, event.getSelection() );
   }

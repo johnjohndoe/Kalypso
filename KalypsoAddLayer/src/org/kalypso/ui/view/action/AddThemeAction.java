@@ -41,7 +41,6 @@
 package org.kalypso.ui.view.action;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -57,7 +56,7 @@ public class AddThemeAction extends MapModellViewActionDelegate
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( action instanceof PluginMapOutlineAction )
     {
@@ -71,22 +70,4 @@ public class AddThemeAction extends MapModellViewActionDelegate
       dialog.open();
     }
   }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void selectionChanged( IAction action, ISelection selection )
-  {
-    if( action instanceof PluginMapOutlineAction )
-    {
-      final IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
-      if( viewer == null )
-        action.setEnabled( false );
-      else
-        action.setEnabled( true );
-    }
-  }
-
 }

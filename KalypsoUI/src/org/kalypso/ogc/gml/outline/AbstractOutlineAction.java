@@ -42,41 +42,31 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public abstract class AbstractOutlineAction extends FullAction implements ISelectionChangedListener
 {
   private final IMapModellView m_outlineViewer;
 
-  private IListManipulator m_listManipulator;
-
-  public AbstractOutlineAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final IMapModellView mapModellView, final IListManipulator listManip )
+  public AbstractOutlineAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView mapModellView )
   {
     super( text, image, tooltipText );
 
     m_outlineViewer = mapModellView;
-    m_listManipulator = listManip;
 
     m_outlineViewer.addSelectionChangedListener( this );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_outlineViewer.removeSelectionChangedListener( this );
   }
 
-  protected IListManipulator getListManipulator()
-  {
-    return m_listManipulator;
-  }
-
-  public IMapModellView getOutlineviewer()
+  public IMapModellView getOutlineviewer( )
   {
     return m_outlineViewer;
   }

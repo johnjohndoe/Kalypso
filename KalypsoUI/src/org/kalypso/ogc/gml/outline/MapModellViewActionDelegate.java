@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,30 +50,159 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanelListener;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanelAdapter;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.mapmodel.IMapModellViewListener;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
+ * TODO: merge into PluginMapOutlineAction
+ * 
  * @author Stefan Kurzbach
  */
-public abstract class MapModellViewActionDelegate extends ActionDelegate implements IViewActionDelegate, PluginMapOutlineActionDelegate
+public abstract class MapModellViewActionDelegate extends ActionDelegate implements IViewActionDelegate, PluginMapOutlineActionDelegate, IMapModellViewListener
 {
+  private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+     *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    {
+      setMapModell( newModel );
+    }
+  };
+
+  private final IMapModellListener m_mapModellListener = new IMapModellListener()
+  {
+    public void repaintRequested( IMapModell source, GM_Envelope bbox )
+    {
+      handleModellChanged();
+    }
+
+    public void themeActivated( IMapModell source, IKalypsoTheme previouslyActive, IKalypsoTheme nowActive )
+    {
+      handleModellChanged();
+    }
+
+    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    {
+      handleModellChanged();
+    }
+
+    public void themeContextChanged( IMapModell source, IKalypsoTheme theme )
+    {
+      handleModellChanged();
+    }
+
+    public void themeOrderChanged( IMapModell source )
+    {
+      handleModellChanged();
+    }
+
+    public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
+    {
+      handleModellChanged();
+    }
+
+    public void themeStatusChanged( IMapModell source, IKalypsoTheme theme )
+    {
+      handleModellChanged();
+    }
+
+    public void themeVisibilityChanged( IMapModell source, IKalypsoTheme theme, boolean visibility )
+    {
+      handleModellChanged();
+    }
+  };
+
   private IMapModellView m_view;
 
-  private IKalypsoTheme m_selectedElement;
+  private ISelection m_selection;
+
+  private MapPanel m_panel;
+
+  private IMapModell m_modell;
+
+  private IAction m_action;
 
   public IMapModellView getView( )
   {
     return m_view;
   }
 
-  public void setView( final IMapModellView view )
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#init(org.eclipse.jface.action.IAction)
+   */
+  @Override
+  public void init( final IAction action )
   {
-    m_view =  view;
+    m_action = action;
   }
 
-  public IKalypsoTheme getSelectedTheme( )
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#dispose()
+   */
+  @Override
+  public void dispose( )
   {
-    return m_selectedElement;
+    if( m_view != null )
+      m_view.removeMapModellViewListener( this );
+
+    if( m_panel != null )
+      m_panel.removeMapPanelListener( m_mapPanelListener );
+
+    if( m_modell != null )
+      m_modell.removeMapModelListener( m_mapModellListener );
+
+    m_view = null;
+    m_panel = null;
+    m_modell = null;
+
+    super.dispose();
+  }
+
+  public void setView( final IMapModellView view )
+  {
+    if( m_view != null )
+      m_view.removeMapModellViewListener( this );
+
+    m_view = view;
+
+    if( m_view != null )
+      m_view.addMapModellViewListener( this );
+
+    onMapPanelChanged( view, null, view.getMapPanel() );
+  }
+
+  protected ISelection getSelection( )
+  {
+    return m_selection;
+  }
+
+  public static IKalypsoTheme[] getSelectedThemes( final ISelection selection )
+  {
+    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection s = (IStructuredSelection) selection;
+      final Object[] elements = s.toArray();
+      for( final Object element : elements )
+      {
+        if( element instanceof IKalypsoTheme )
+          themes.add( (IKalypsoTheme) element );
+      }
+
+    }
+
+    return themes.toArray( new IKalypsoTheme[themes.size()] );
   }
 
   /**
@@ -80,36 +212,55 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
   {
     if( view instanceof IMapModellView )
     {
-      setView( (IMapModellView)view );
+      setView( (IMapModellView) view );
     }
   }
-
 
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
-    if( selection instanceof IStructuredSelection )
-    {
-      final IStructuredSelection s = (IStructuredSelection) selection;
-
-      final Object firstElement = s.getFirstElement();
-      if( !s.isEmpty() && firstElement instanceof IKalypsoTheme )
-      {
-        m_selectedElement = (IKalypsoTheme) firstElement;
-      }
-    }
-    boolean bEnable = false;
-
-    final IStructuredSelection s = (IStructuredSelection)selection;
-
-    if( s.getFirstElement() instanceof IKalypsoTheme )
-      bEnable = true;
-    action.setEnabled( bEnable );
-    
-    
+    m_action = action;
+    m_selection = selection;
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellViewListener#onMapPanelChanged(org.kalypso.ogc.gml.mapmodel.IMapModellView,
+   *      org.kalypso.ogc.gml.map.MapPanel, org.kalypso.ogc.gml.map.MapPanel)
+   */
+  public void onMapPanelChanged( final IMapModellView source, final MapPanel oldPanel, final MapPanel newPanel )
+  {
+    /* Register as listener to the current map-modell, on every change, give actions chance to refresh */
+
+    if( m_panel != null )
+      m_panel.removeMapPanelListener( m_mapPanelListener );
+
+    m_panel = newPanel;
+
+    if( m_panel != null )
+      m_panel.addMapPanelListener( m_mapPanelListener );
+
+    setMapModell( m_panel == null ? null : m_panel.getMapModell() );
+  }
+
+  protected final void setMapModell( final IMapModell mapModell )
+  {
+    if( m_modell != null )
+      m_modell.removeMapModelListener( m_mapModellListener );
+
+    m_modell = mapModell;
+
+    if( m_modell != null )
+      m_modell.addMapModelListener( m_mapModellListener );
+  }
+
+  protected void handleModellChanged( )
+  {
+    /* Just call selectionChanged, so the action will recalculate if it is still enabled. */
+    selectionChanged( m_action, getSelection() );
+  }
+
 }

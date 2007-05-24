@@ -47,8 +47,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -57,8 +55,18 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
-public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener, IKalypsoThemeEventProvider, IAdaptable, IWorkbenchAdapter
+public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
 {
+  /**
+   * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
+   */
+  public void addKalypsoThemeListener( final IKalypsoThemeListener listener );
+
+  /**
+   * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
+   */
+  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
+
   public void dispose( );
 
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected );
@@ -87,4 +95,8 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener,
   public boolean isLoaded( );
 
   public IStatus getStatus( );
+
+  public boolean isVisible( );
+
+  public void setVisible( final boolean visible );
 }

@@ -90,7 +90,7 @@ public class SaveStyleAction extends AbstractOutlineAction
 {
   public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText, final IMapModellView outlineViewer )
   {
-    super( text, image, tooltipText, outlineViewer, null );
+    super( text, image, tooltipText, outlineViewer );
   }
 
   /**
@@ -100,19 +100,19 @@ public class SaveStyleAction extends AbstractOutlineAction
   @Override
   public void run( )
   {
-    Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
+    final Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
     if( o instanceof ThemeStyleTreeObject )
     {
       final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
+        final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
         saveUserStyle( kalypsoStyle, PlatformUI.getWorkbench().getDisplay().getActiveShell() );
       }
     }
   }
 
-  public static void saveUserStyle( KalypsoUserStyle userStyle, Shell shell )
+  public static void saveUserStyle( final KalypsoUserStyle userStyle, final Shell shell )
   {
     File knownFilename = null;
     URL url = null;
@@ -120,7 +120,7 @@ public class SaveStyleAction extends AbstractOutlineAction
     {
       try
       {
-        GisTemplateUserStyle tus = (GisTemplateUserStyle) userStyle;
+        final GisTemplateUserStyle tus = (GisTemplateUserStyle) userStyle;
         final PoolableObjectType poolKey = tus.getPoolKey();
         final URL context = poolKey == null ? null : poolKey.getContext();
         final String location = poolKey == null ? null : poolKey.getLocation();
@@ -132,14 +132,14 @@ public class SaveStyleAction extends AbstractOutlineAction
           knownFilename = ResourceUtilities.makeFileFromPath( file.getFullPath() );
         }
       }
-      catch( Exception e1 )
+      catch( final Exception e1 )
       {
         e1.printStackTrace();
       }
     }
     final URL context = url;
     final String[] filterExtension = { "*.sld" };
-    FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
+    final FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
 
     if( knownFilename != null )
@@ -162,14 +162,14 @@ public class SaveStyleAction extends AbstractOutlineAction
       final String filename = saveDialog.open();
       if( filename != null )
       {
-        Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+        final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
         final Source source = new DOMSource( doc );
         File file = null;
         if( filename.indexOf( "." ) == -1 )
           file = new File( filename + ".sld" );
         else
           file = new File( filename );
-        IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
+        final IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
 
         if( iFile != null )
         {
@@ -191,8 +191,8 @@ public class SaveStyleAction extends AbstractOutlineAction
         else if( file != null )
         {
           // outside workspace
-          Result result = new StreamResult( file );
-          Transformer t = TransformerFactory.newInstance().newTransformer();
+          final Result result = new StreamResult( file );
+          final Transformer t = TransformerFactory.newInstance().newTransformer();
           t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
           t.setOutputProperty( OutputKeys.INDENT, "yes" );
           t.transform( source, result );
@@ -204,7 +204,7 @@ public class SaveStyleAction extends AbstractOutlineAction
       ce.printStackTrace();
       ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern des Styles", ce.getStatus() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -225,9 +225,9 @@ public class SaveStyleAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     // TODO Auto-generated method stub
-    
+
   }
 }

@@ -78,7 +78,7 @@ public class KalypsoModelApplication implements IApplication
   /**
    * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
    */
-  public Object start( IApplicationContext context ) throws Exception
+  public Object start( final IApplicationContext context ) throws Exception
   {
     final Display display = PlatformUI.createDisplay();
 
@@ -134,7 +134,7 @@ public class KalypsoModelApplication implements IApplication
    * 
    * @return true if a valid instance location has been set and false otherwise
    */
-  private boolean checkInstanceLocation( Shell shell )
+  private boolean checkInstanceLocation( final Shell shell )
   {
     // -data @none was specified but an ide requires workspace
     final Location instanceLoc = Platform.getInstanceLocation();
@@ -159,9 +159,9 @@ public class KalypsoModelApplication implements IApplication
         // Two possibilities:
         // 1. directory is already in use
         // 2. directory could not be created
-        File workspaceDirectory = new File( instanceLoc.getURL().getFile() );
+        final File workspaceDirectory = new File( instanceLoc.getURL().getFile() );
         if( workspaceDirectory.exists() )
-          MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the associated workspace is currently in use by another INFORM.DSS application." );
+          MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the associated workspace is currently in use by another Kalypso application." );
         else
           MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the specified workspace cannot be created.  The specified workspace directory is either invalid or read-only." );
       }

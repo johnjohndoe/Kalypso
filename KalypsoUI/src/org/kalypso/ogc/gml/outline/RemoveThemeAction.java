@@ -42,30 +42,33 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.KalypsoPictureTheme;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.eclipse.swt.widgets.Event;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.RemoveThemeCommand;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class RemoveThemeAction extends MapModellViewActionDelegate
 {
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void run( IAction action )
+  public void runWithEvent( final IAction action, final Event event )
   {
-    if( action instanceof PluginMapOutlineAction )
-    {
-      PluginMapOutlineAction outlineaction = (PluginMapOutlineAction)action;
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    for( final IKalypsoTheme theme : selectedThemes )
+      removeElement( theme );
+  }
 
-      // TODO: call gettheme instead
-      outlineaction.getListManipulator().removeElement(
-          ( (IStructuredSelection)outlineaction.getOutlineviewer().getSelection() ).getFirstElement() );
-    }
+  private void removeElement( final IKalypsoTheme theme )
+  {
+    final IMapModellView view = getView();
+    if( view != null )
+      view.postCommand( new RemoveThemeCommand( theme.getMapModell(), theme ), null );
   }
 
   /**
@@ -76,15 +79,9 @@ public class RemoveThemeAction extends MapModellViewActionDelegate
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     super.selectionChanged( action, selection );
-    
-    if( selection instanceof IStructuredSelection )
-    {
-      // delegate this question to the theme: 'theme.isDeletable()' or something
-      final IStructuredSelection s = (IStructuredSelection)selection;
-      action
-          .setEnabled( !s.isEmpty()
-              && ( ( s.getFirstElement() instanceof IKalypsoFeatureTheme )
-                  || ( s.getFirstElement() instanceof KalypsoWMSTheme ) || ( s.getFirstElement() instanceof KalypsoPictureTheme ) ) );
-    }
+
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final boolean enabled = selectedThemes.length > 0;
+    action.setEnabled( enabled );
   }
 }

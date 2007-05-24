@@ -45,24 +45,24 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class MoveThemeDownCommand implements ICommand
 {
-  private final IMapModell m_MapModell;
+  private final IMapModell m_mapModell;
 
   private final IKalypsoTheme m_theme;
 
   public MoveThemeDownCommand( final IMapModell mapModell, final IKalypsoTheme theme )
   {
-    m_MapModell = mapModell;
+    m_mapModell = mapModell;
     m_theme = theme;
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -70,31 +70,31 @@ public class MoveThemeDownCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
-    m_MapModell.moveDown( m_theme );
+    m_mapModell.moveUp( m_theme );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
-    m_MapModell.moveDown( m_theme );
+    m_mapModell.moveUp( m_theme );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
-    m_MapModell.moveUp( m_theme );
+    m_mapModell.moveDown( m_theme );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Thema nach unten verschieben";
   }

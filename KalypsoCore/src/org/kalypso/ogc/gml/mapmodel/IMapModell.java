@@ -48,8 +48,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -58,42 +56,48 @@ import org.opengis.cs.CS_CoordinateSystem;
  * MapPanel, die paint Mehtode hier sollte bereits mit Geokoordinaten arbeiten d.h. der Grafik-Kontext wird schon mit
  * umgerechneten Koordinaten übergeben
  * 
- * @author belger
+ * @author Gernot Belger
  */
-public interface IMapModell extends ModellEventProvider, ModellEventListener, IWorkbenchAdapter
+public interface IMapModell extends IWorkbenchAdapter
 {
+  /**
+   * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
+   */
+  public void addMapModelListener( final IMapModellListener l );
+
+  /**
+   * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
+   */
+  public void removeMapModelListener( final IMapModellListener l );
+
   /** dispose off all themes! */
-  public void dispose();
+  public void dispose( );
 
   public void activateTheme( final IKalypsoTheme theme );
 
-  public IKalypsoTheme getActiveTheme();
+  public IKalypsoTheme getActiveTheme( );
 
   public void addTheme( final IKalypsoTheme theme );
-  
-  public void insertTheme( final IKalypsoTheme theme, final int position );  
 
-  public void enableTheme( IKalypsoTheme theme, boolean status );
+  public void insertTheme( final IKalypsoTheme theme, final int position );
 
-  public IKalypsoTheme[] getAllThemes();
+  public IKalypsoTheme[] getAllThemes( );
 
-  public CS_CoordinateSystem getCoordinatesSystem();
+  public CS_CoordinateSystem getCoordinatesSystem( );
 
   /**
    * renders the map to the passed graphic context
    * 
    * @param g
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
-      final boolean select );
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean select );
 
-  public IKalypsoTheme getTheme( int pos );
+  // TODO: remove position stuff
+  public IKalypsoTheme getTheme( final int pos );
 
-  public int getThemeSize();
+  public int getThemeSize( );
 
-  public boolean isThemeActivated( IKalypsoTheme theme );
-
-  public boolean isThemeEnabled( IKalypsoTheme theme );
+  public boolean isThemeActivated( final IKalypsoTheme theme );
 
   public void moveDown( IKalypsoTheme theme );
 
@@ -101,21 +105,30 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener, IW
 
   public void removeTheme( final IKalypsoTheme theme );
 
-  public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception;
-
   public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 );
 
-  public GM_Envelope getFullExtentBoundingBox();
+  public GM_Envelope getFullExtentBoundingBox( );
 
-  public IProject getProject();
+  public IProject getProject( );
 
-  public IKalypsoFeatureTheme getScrabLayer();
+  // TODO: move to utility class
+  public IKalypsoFeatureTheme getScrabLayer( );
 
-  public void accept( KalypsoThemeVisitor visitor, int depth_infinite );
-  
-  public void accept( KalypsoThemeVisitor visitor, int depth_infinite, IKalypsoTheme theme );
+  public void accept( KalypsoThemeVisitor visitor, int depth );
 
-  public void setName( String name );
-  
-  public String getName ();
+  /**
+   * Iterates through all themes of this modell, starting at the given theme.
+   * 
+   * @see #accept(KalypsoThemeVisitor, int).
+   */
+  public void accept( final KalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
+
+  public void setName( final String name );
+
+  public String getName( );
+
+  public void invalidate( final GM_Envelope bbox );
+
+  // HACK In order to have nice parents for outline tree even for cascading themes, we something like this...
+  public Object getThemeParent( final IKalypsoTheme theme );
 }

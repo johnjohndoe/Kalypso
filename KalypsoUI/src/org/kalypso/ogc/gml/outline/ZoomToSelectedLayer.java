@@ -42,8 +42,11 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -54,29 +57,39 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class ZoomToSelectedLayer extends MapModellViewActionDelegate
 {
   /**
-   * @see org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction)
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void run( final IAction action )
+  public void runWithEvent( final IAction action, final Event event )
   {
-    {
-      final IKalypsoTheme selectedElement = getSelectedTheme();
-      final MapPanel panel = getView().getMapPanel();
+    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final MapPanel panel = getView().getMapPanel();
 
-      if( panel != null && selectedElement != null )
+    if( panel != null && selectedThemes.length > 0 )
+    {
+      final GM_Envelope zoomBox = MapModellHelper.calculateExtent( selectedThemes, null );
+      if( zoomBox == null )
       {
-        final GM_Envelope zoomBox = selectedElement.getBoundingBox();
-        if( zoomBox == null )
-        {
-          // TODO: find a shell
-          MessageDialog.openWarning( null, action.getText(), "Selektiertes Thema hat keine Ausdehnung." );
-          return;
-        }
-        
-        final GM_Envelope wishBBox = calculateExtend( zoomBox );
-        panel.setBoundingBox( wishBBox );
+        MessageDialog.openWarning( event.display.getActiveShell(), action.getText(), "Die selektierten Themen haben keine Ausdehnung." );
+        return;
       }
+
+      final GM_Envelope wishBBox = calculateExtend( zoomBox );
+      panel.setBoundingBox( wishBBox );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void selectionChanged( final IAction action, final ISelection selection )
+  {
+    super.selectionChanged( action, selection );
+
+    action.setEnabled( getSelectedThemes( getSelection() ) != null );
   }
 
   private GM_Envelope calculateExtend( final GM_Envelope zoomBox )

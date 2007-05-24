@@ -40,8 +40,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -52,44 +52,42 @@ public class GisMapOutlinePageExtension
   public static List<PluginMapOutlineAction> getRegisteredMapOutlineActions( final IMapModellView gisMapOutlineViewer )
   {
     final ArrayList<PluginMapOutlineAction> actions = new ArrayList<PluginMapOutlineAction>();
-    IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-    IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" );
+    final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" );
     // check if extention point is registered on start up
     if( extensionPoint == null )
       return new ArrayList<PluginMapOutlineAction>();
-    IExtension[] extensions = extensionPoint.getExtensions();
+    final IExtension[] extensions = extensionPoint.getExtensions();
     // no mapview extensions have been registered
     if( extensions == null )
       return new ArrayList<PluginMapOutlineAction>();
-    for( int i = 0; i < extensions.length; i++ )
+    for( final IExtension extension : extensions )
     {
-      IExtension extension = extensions[i];
-      IConfigurationElement[] configurationElements = extension.getConfigurationElements();
-      for( int j = 0; j < configurationElements.length; j++ )
+      final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+      for( final IConfigurationElement configurationElement : configurationElements )
       {
-        IConfigurationElement configurationElement = configurationElements[j];
-        String title = configurationElement.getAttribute( "title" );
-        String resource = configurationElement.getAttribute( "icon" );
+        final String title = configurationElement.getAttribute( "title" );
+        final String resource = configurationElement.getAttribute( "icon" );
         // gets the parent of this element (the plugin which implements this extension)
-        IExtension parent = (IExtension) configurationElement.getParent();
+        final IExtension parent = (IExtension) configurationElement.getParent();
         // gets the plugin id of the parent plugin
-        String pluginID = parent.getNamespace();
-        ImageDescriptor icon = ImageProvider.id( pluginID, resource );
-        String enabled = configurationElement.getAttribute( "enabled" );
+        final String pluginID = parent.getNamespace();
+        final ImageDescriptor icon = ImageProvider.id( pluginID, resource );
+        final String enabled = configurationElement.getAttribute( "enabled" );
         boolean visible = false;
         if( enabled != null && enabled.equals( "true" ) )
           visible = true;
-        String tooltip = configurationElement.getAttribute( "tooltip" );
+        final String tooltip = configurationElement.getAttribute( "tooltip" );
         // create action delegate
         PluginMapOutlineAction actionDelegate;
         try
         {
-          PluginMapOutlineActionDelegate action = (PluginMapOutlineActionDelegate) configurationElement.createExecutableExtension( "class" );
-          actionDelegate = new PluginMapOutlineAction( title, icon, tooltip, gisMapOutlineViewer, action, gisMapOutlineViewer );
+          final PluginMapOutlineActionDelegate action = (PluginMapOutlineActionDelegate) configurationElement.createExecutableExtension( "class" );
+          actionDelegate = new PluginMapOutlineAction( title, icon, tooltip, gisMapOutlineViewer, action );
           actionDelegate.setEnabled( visible );
           actions.add( actionDelegate );
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           e.printStackTrace();
         }

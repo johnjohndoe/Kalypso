@@ -38,53 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.ogc.gml.outline;
+
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
- * This event encapsulates information about the kind of change that has occured in an IKalypsoTheme
- * 
- * @author Stefan Kurzbach
+ * @author Gernot Belger
  */
-public class KalypsoThemeEvent
+public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 {
-  // TODO: provide finer grained information
-  // TODO: context is not a thing themes should know about....
-  public static final int CONTEXT_CHANGED = 1 << 1;
-
-  public static final int CONTENT_CHANGED = 1 << 2;
-
-  private final IKalypsoTheme m_source;
-
-  private final int m_type;
-
-  /**
-   * Create a new KalypsoThemeEvent
-   * 
-   * @param source
-   *          the theme that has changed
-   * @param type
-   *          a bitmask constant denoting the kind of change
-   */
-  public KalypsoThemeEvent( final IKalypsoTheme source, final int type )
+  public void elementsChanged( final Object... elements )
   {
-    m_source = source;
-    m_type = type;
+    super.fireLabelProviderChanged( new LabelProviderChangedEvent( this, elements ) );
   }
-
-  /**
-   * returns the theme that has changed
-   */
-  public IKalypsoTheme getSource( )
-  {
-    return m_source;
-  }
-
-  /**
-   * true if the event is of the given type
-   */
-  public boolean isType( final int type )
-  {
-    return (m_type & type) == type;
-  }
-
 }

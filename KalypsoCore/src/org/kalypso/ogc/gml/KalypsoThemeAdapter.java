@@ -40,50 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
- * Convenience class for adding theme listener support
+ * Empty default implementation of {@link IKalypsoThemeListener}.
  * 
- * @author Stefan Kurzbach
+ * @author Gernot Belger
  */
-public class KalypsoThemeEventProviderAdapter implements IKalypsoThemeEventProvider
+public class KalypsoThemeAdapter implements IKalypsoThemeListener
 {
-
-  private final Collection<IKalypsoThemeListener> m_listeners = new ArrayList<IKalypsoThemeListener>();
-
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#contextChanged(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void addKalypsoThemeListener( final IKalypsoThemeListener listener )
+  public void contextChanged( final IKalypsoTheme source )
   {
-    m_listeners.add( listener );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#statusChanged(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener )
+  public void statusChanged( final IKalypsoTheme source )
   {
-    m_listeners.remove( listener );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#fireKalypsoThemeEvent(org.kalypso.ogc.gml.KalypsoThemeEvent)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#visibilityChanged(org.kalypso.ogc.gml.IKalypsoTheme, boolean)
    */
-  public void fireKalypsoThemeEvent( final KalypsoThemeEvent event )
+  public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility )
   {
-    final IKalypsoThemeListener[] listeners = m_listeners.toArray( new IKalypsoThemeListener[m_listeners.size()] );
-    for( int i = 0; i < listeners.length; i++ )
-      listeners[i].kalypsoThemeChanged( event );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeEventProvider#dispose()
-   */
-  public void dispose( )
-  {
-    m_listeners.clear();
   }
 }
