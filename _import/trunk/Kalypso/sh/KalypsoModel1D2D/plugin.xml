@@ -119,7 +119,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementDelegate"               
 	           label="2D-FE-Element hinzufügen"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="Ein neues FE-Element erzeugen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -136,7 +136,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"               
 	           label="FE-Knoten bewegen"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="FE-Knote bewegen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -154,7 +154,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE2DElement"               
 	           label="Del FE 2D"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="FE-Element markieren und entfernen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -171,7 +171,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineDelegate"
                 label="Kontinuitätslinie hinzufügen"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="Eine neue Kontinuitätslinie definieren">
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -189,7 +189,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.cline.DeleteFEContlineDelegate"
                 label="Kontinuitätslinie löschen"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="Eine neue Kontinuitätslinie definieren">
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -207,7 +207,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE1DElementDelegate"
                 label="1D-FE-Element hinzufügen"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="Ein neues FE-Element erzeugen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -224,7 +224,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget_1d"               
 	           label="FE-Knoten bewegen"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="FE-Knote bewegen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -241,7 +241,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.DeleteFE1DElement"               
 	           label="Del FE 1D"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="FE-Element markieren und entfernen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -257,7 +257,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"
                 label="Teschke Parameter hinzufügen"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="Teschke Parameter einem FE-Knoten zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -273,7 +273,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidgetAction"
                 label="King Parameter hinzufügen"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="King Parameter einem FE-Knoten zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -289,7 +289,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"
                 label="Parameter bearbeiten"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="Zugeordnete Parameter eines FE-Knoten bearbeiten">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -305,7 +305,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidgetAction"               
 	           label="Parameter löschen"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="einem FE-Koten zugeordnete Parameter löschen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -321,7 +321,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidgetAction"
                 label="Randbedingung hinzufügen"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="neue Randbedinung einem FE-Element zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -337,7 +337,7 @@
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditNodalBCFlowrelationWidget"
                 label="Randbedingung bearbeiten"
                 style="radio"
-                toolbarPath="karte/edit"
+                toolbarPath="tools"
                 tooltip="Zugeordnete Randbedinung eines FE-Elements bearbeiten">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -353,7 +353,7 @@
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteNodalBCFlowrelationWidgetAction"               
 	           label="Randbedingung löschen"
 	           style="radio"
-	           toolbarPath="karte/edit"
+	           toolbarPath="tools"
 	           tooltip="einem FE-Element zugeordnete Randbedinung löschen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
@@ -370,7 +370,7 @@
          id="org.kalypso.kalypsomodel1d2d.ui.map.SelectProfileWidgetAction"
          label="Profil selektieren"
          style="radio"
-         toolbarPath="karte/edit"
+         toolbarPath="tools"
          tooltip="Profil selektieren und in der Karte anzeigen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 

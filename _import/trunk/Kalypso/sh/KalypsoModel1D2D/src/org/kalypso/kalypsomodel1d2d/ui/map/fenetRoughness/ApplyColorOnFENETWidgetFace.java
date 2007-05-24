@@ -71,38 +71,36 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class ApplyColorOnFENETWidgetFace
 {
 
-
   private Composite rootPanel;
-  private FormToolkit toolkit;
 
+  private FormToolkit toolkit;
 
   private Section colorAndButtonSection;
 
-  private RoughnessCorrectionDataModel dataModel;
+  private final RoughnessCorrectionDataModel dataModel;
 
-
-  public ApplyColorOnFENETWidgetFace( RoughnessCorrectionDataModel feDataModel )
+  public ApplyColorOnFENETWidgetFace( final RoughnessCorrectionDataModel feDataModel )
   {
-   this.dataModel = feDataModel;
+    this.dataModel = feDataModel;
   }
 
   private RoughnessStylingControl roughnessStylingControl;
-  
-  public Control createControl( Composite parent )
+
+  public Control createControl( final Composite parent )
   {
-//    this.dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
+// this.dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
     initStoreDefaults();
 
     parent.setLayout( new FillLayout() );
     rootPanel = new Composite( parent, SWT.FILL );
     rootPanel.setLayout( new FillLayout() );
     toolkit = new FormToolkit( parent.getDisplay() );
-    ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
+    final ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
 
     TableWrapData tableWrapData;
 
@@ -117,99 +115,88 @@ public class ApplyColorOnFENETWidgetFace
     colorAndButtonSection.setLayoutData( tableWrapData );
     colorAndButtonSection.setExpanded( true );
 
-    roughnessStylingControl = 
-                  new RoughnessStylingControl( 
-                        dataModel,
-                        toolkit,
-                        colorAndButtonSection 
-                        );
+    roughnessStylingControl = new RoughnessStylingControl( dataModel, toolkit, colorAndButtonSection );
     roughnessStylingControl.createControl();
-//    createSelectElevationModel( colorAndButtonSection );
+// createSelectElevationModel( colorAndButtonSection );
     return rootPanel;
   }
 
-   private final void createSelectElevationModel( Section workStatusSection )
+  private final void createSelectElevationModel( final Section workStatusSection )
   {
     workStatusSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
+    final Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
     workStatusSection.setClient( clientComposite );
     // clientComposite.setSize( 400, 300 );
-    FormLayout formLayout = new FormLayout();
+    final FormLayout formLayout = new FormLayout();
     clientComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 5 );
     clientComposite.setLayoutData( formData );
-       
-    final Button activateColorBtn = 
-          new Button(clientComposite,SWT.CHECK/*PUSH*/);
+
+    final Button activateColorBtn = new Button( clientComposite, SWT.CHECK/* PUSH */);
     formData = new FormData();
-    formData.top = new FormAttachment(0,5);
-    formData.left = new FormAttachment(0,5);
+    formData.top = new FormAttachment( 0, 5 );
+    formData.left = new FormAttachment( 0, 5 );
     activateColorBtn.setText( "Rauheitsanzeige für 2D-Elemente aktivieren" );
     activateColorBtn.setLayoutData( formData );
-    ModelMergeService mergeService = 
-                  ModelMergeService.getInstance();
-    //TODO Patrice put this into preferences or ..
-    final boolean isRoughnessToBeDisplay = 
-                    mergeService.getIsRoughnessToBeDisplay();
+    final ModelMergeService mergeService = ModelMergeService.getInstance();
+    // TODO Patrice put this into preferences or ..
+    final boolean isRoughnessToBeDisplay = mergeService.getIsRoughnessToBeDisplay();
     activateColorBtn.setSelection( isRoughnessToBeDisplay );
     toggleMap( isRoughnessToBeDisplay );
-    
-    activateColorBtn.addSelectionListener( new SelectionAdapter(){
-      public void widgetSelected( SelectionEvent e )
+
+    activateColorBtn.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
         toggleMap( activateColorBtn.getSelection() );
-      }  
-    });
-    
-    Composite newComposite = new Composite(clientComposite,SWT.None);
+      }
+    } );
+
+    final Composite newComposite = new Composite( clientComposite, SWT.None );
     formData = new FormData();
-    formData.left = new FormAttachment(0,5);
-    formData.top = new FormAttachment(activateColorBtn,5);
-    formData.bottom = new FormAttachment(100, -5);
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( activateColorBtn, 5 );
+    formData.bottom = new FormAttachment( 100, -5 );
     newComposite.setLayoutData( formData );
-    newComposite.setLayout( new GridLayout(1,false) );
-    
-//    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( "All Color", "Select Farbe", newComposite);
-//    Button buttonMax = maxColorSelector.getColorSelector().getButton();
-//    buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
-    
+    newComposite.setLayout( new GridLayout( 1, false ) );
+
+// final ColorFieldEditor maxColorSelector = new ColorFieldEditor( "All Color", "Select Farbe", newComposite);
+// Button buttonMax = maxColorSelector.getColorSelector().getButton();
+// buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
+
   }
 
-   private final void toggleMap(boolean selected )
-   {
-     
-     final ModelMergeService mergeService = ModelMergeService.getInstance();
-     
-     mergeService.doReInit();     
-     mergeService.setIsRoughnessToBeDisplay( selected );
-     
-     IMapModell mapModell = dataModel.getMapModell();        
-     Model1D2DElementRoughnessTheme theme = 
-       UtilMap.findTheme( 
-         mapModell, Model1D2DElementRoughnessTheme.class );
-     if( theme == null )
-     {
-       theme = new Model1D2DElementRoughnessTheme(
-                           "Element+Rauhheiten",mapModell);
-       mapModell.addTheme( theme );
-     }
-     if( selected )
-     {
-       IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
-       theme.setStaticModel( staticModel );
-     }
-     else
-     {
-       mapModell.removeTheme( theme );//theme.setStaticModel( null );
-     }
-     mapModell.fireModellEvent( null );
-   }
+  private final void toggleMap( final boolean selected )
+  {
 
- 
+    final ModelMergeService mergeService = ModelMergeService.getInstance();
+
+    mergeService.doReInit();
+    mergeService.setIsRoughnessToBeDisplay( selected );
+
+    final IMapModell mapModell = dataModel.getMapModell();
+    Model1D2DElementRoughnessTheme theme = UtilMap.findTheme( mapModell, Model1D2DElementRoughnessTheme.class );
+    if( theme == null )
+    {
+      theme = new Model1D2DElementRoughnessTheme( "Element+Rauhheiten", mapModell );
+      mapModell.addTheme( theme );
+    }
+    if( selected )
+    {
+      final IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
+      theme.setStaticModel( staticModel );
+    }
+    else
+    {
+      mapModell.removeTheme( theme );// theme.setStaticModel( null );
+    }
+    mapModell.invalidate( null );
+  }
 
   public void disposeControl( )
   {
@@ -217,7 +204,7 @@ public class ApplyColorOnFENETWidgetFace
     {
       roughnessStylingControl.dispose();
     }
-    
+
     if( rootPanel == null )
     {
       System.out.println( "Disposing null root panel" );
@@ -228,30 +215,30 @@ public class ApplyColorOnFENETWidgetFace
       rootPanel.dispose();
       toolkit.dispose();
     }
-//    MapPanel mapPanel = dataModel.getMapPanel();
-//    if( mapPanel != null )
-//    {
-//      mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
-//    }
-    
+// MapPanel mapPanel = dataModel.getMapPanel();
+// if( mapPanel != null )
+// {
+// mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
+// }
+
   }
-  
+
   public static final String HANDLE_WIDTH_NAME = "x.handleWidth";
- 
+
   private void initStoreDefaults( )
   {
 
   }
-  
-   private IPropertyChangeListener createPropertyChangeLis( )
+
+  private IPropertyChangeListener createPropertyChangeLis( )
   {
     return new IPropertyChangeListener()
     {
 
-      public void propertyChange( PropertyChangeEvent event )
+      public void propertyChange( final PropertyChangeEvent event )
       {
-        Object source = event.getSource();
-        String property = event.getProperty();
+        final Object source = event.getSource();
+        final String property = event.getProperty();
 
         if( source instanceof FieldEditor )
         {

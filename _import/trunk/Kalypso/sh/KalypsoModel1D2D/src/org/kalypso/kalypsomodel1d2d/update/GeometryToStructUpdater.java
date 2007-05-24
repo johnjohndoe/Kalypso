@@ -56,109 +56,107 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  * Listen to a workspace and given and update the roughness style store
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class GeometryToStructUpdater implements IGmlWorkspaceListener
 {
   private final ModelMergeService mergeService = ModelMergeService.getInstance();
+
   /**
    * Work space which is monitored
    */
   private GMLWorkspace workspace;
-  
-  
-  public GeometryToStructUpdater()
+
+  public GeometryToStructUpdater( )
   {
-    
+
   }
-  
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#getQNames()
    */
   public QName[] getQNames( )
   {
-    return new QName[]{
-//        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
-//        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
-        //Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
-        };
+    return new QName[] {
+// Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
+// Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
+    };
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
-  public void init( GMLWorkspace workspace )
+  public void init( final GMLWorkspace workspace )
   {
     this.workspace = workspace;
     final Feature rootFeature = workspace.getRootFeature();
     final QName rootFeatureQname = rootFeature.getFeatureType().getQName();
-    
-   if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( rootFeatureQname ) )
+
+    if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( rootFeatureQname ) )
     {
-     System.out.println("Update roughness merge because of ne dicr-model");
-//      ElementRoughnessStyleFunc.clear( );
-       mergeService.doReInit();
+      System.out.println( "Update roughness merge because of ne dicr-model" );
+// ElementRoughnessStyleFunc.clear( );
+      mergeService.doReInit();
     }
-   else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL.equals( rootFeature ) )
-   {
-     System.out.println("Update roughness merge because of new terrain-model");
-//     ElementRoughnessStyleFunc.clear();
-     mergeService.doReInit();
-   }
-   else
-   {
-     ///
-   }
-    
+    else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL.equals( rootFeature ) )
+    {
+      System.out.println( "Update roughness merge because of new terrain-model" );
+// ElementRoughnessStyleFunc.clear();
+      mergeService.doReInit();
+    }
+    else
+    {
+      // /
+    }
+
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
     final Feature[] changedFeatures;
     if( modellEvent instanceof FeaturesChangedModellEvent )
     {
-       changedFeatures = 
-           ((FeaturesChangedModellEvent) modellEvent).getFeatures();
+      changedFeatures = ((FeaturesChangedModellEvent) modellEvent).getFeatures();
     }
     else if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      changedFeatures =
-          ((FeatureStructureChangeModellEvent)modellEvent).getChangedFeatures();
+      changedFeatures = ((FeatureStructureChangeModellEvent) modellEvent).getChangedFeatures();
     }
     else
     {
-      changedFeatures = new Feature[]{};
+      changedFeatures = new Feature[] {};
     }
-    
-    for( Feature feature : changedFeatures )
+
+    for( final Feature feature : changedFeatures )
     {
       if( TypeInfo.isPolyElementFeature( feature ) )
       {
-//        ElementRoughnessStyleFunc.removeRoughnessClass( feature );
+// ElementRoughnessStyleFunc.removeRoughnessClass( feature );
         mergeService.removeRoughnessClass( feature );
       }
-      else if ( feature == null )
+      else if( feature == null )
       {
-        ///go ahead
+        // /go ahead
       }
       else
       {
-        
-        QName name = feature.getFeatureType().getQName();
+
+        final QName name = feature.getFeatureType().getQName();
         if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION.equals( name ) )
         {
           mergeService.doReInit();
         }
         else
         {
-          System.out.println("Changed:"+name);
+          // TODO: please do not pollute the console, introduce tracing option instead
+// System.out.println("Changed:"+name);
         }
       }
-      
+
     }
-  } 
+  }
 }

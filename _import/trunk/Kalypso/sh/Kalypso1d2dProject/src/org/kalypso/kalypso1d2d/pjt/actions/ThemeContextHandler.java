@@ -20,10 +20,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeListener;
-import org.kalypso.ogc.gml.KalypsoThemeEvent;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ui.views.map.MapView;
 
 /**
@@ -31,25 +31,59 @@ import org.kalypso.ui.views.map.MapView;
  * 
  * @author Stefan Kurzbach
  */
-public class ThemeContextHandler extends AbstractHandler implements IExecutableExtension, IKalypsoThemeListener
+public class ThemeContextHandler extends AbstractHandler implements IExecutableExtension
 {
   public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme"; //$NON-NLS-1$
 
   public static final String NO_THEME = "NO_THEME";
 
+  protected final IMapModellListener m_modellListener = new MapModellAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    {
+      maybeActivateTheme( theme );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#contextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
+    @Override
+    public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      maybeActivateTheme( theme );
+    }
+  };
+
   private String m_featureType;
 
   protected IMapModell m_mapModell;
 
-  public ThemeContextHandler( String featureType )
+  public ThemeContextHandler( final String featureType )
   {
     m_featureType = featureType;
   }
 
   /**
+   * @see org.eclipse.core.commands.AbstractHandler#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_mapModell != null )
+      m_mapModell.removeMapModelListener( m_modellListener );
+
+    super.dispose();
+  }
+
+  /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -70,9 +104,11 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
         protected IStatus run( final IProgressMonitor monitor )
         {
           m_mapModell = mapPanel.getMapModell();
+          if( m_mapModell != null )
+            m_mapModell.addMapModelListener( m_modellListener );
           if( layerContext != null )
           {
-            final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+            final IKalypsoTheme activeTheme = m_mapModell == null ? null : m_mapModell.getActiveTheme();
             if( activeTheme != null && layerContext.equals( NO_THEME ) )
             {
               m_mapModell.activateTheme( null );
@@ -82,14 +118,8 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
               final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
               for( final IKalypsoTheme theme : allThemes )
               {
-                if( !theme.isLoaded() )
-                {
-                  theme.addKalypsoThemeListener( ThemeContextHandler.this );
-                }
-                else
-                {
+                if( theme.isLoaded() )
                   maybeActivateTheme( theme );
-                }
               }
             }
           }
@@ -115,19 +145,6 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
     {
       final Map parameterMap = (Map) data;
       m_featureType = (String) parameterMap.get( CONTEXT_THEME_FEATURE_TYPE );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
-   */
-  public void kalypsoThemeChanged( final KalypsoThemeEvent event )
-  {
-    if( event.isType( KalypsoThemeEvent.CONTEXT_CHANGED ) )
-    {
-      final IKalypsoTheme themeToActivate = event.getSource();
-      maybeActivateTheme( themeToActivate );
-      themeToActivate.removeKalypsoThemeListener( this );
     }
   }
 

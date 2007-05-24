@@ -44,7 +44,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLActionAnalizeTheme;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -64,11 +63,10 @@ public class URLActionAnalizeConflicts extends AbstractURLActionAnalizeTheme
   {
     final GisMapEditor gisMapEditor = (GisMapEditor) getActiveEditor();
     final MapPanel mapPanel = gisMapEditor.getMapPanel();
-    final IMapModell modell = mapPanel.getMapModell();
 
     for( final IKalypsoTheme theme : themes )
     {
-      modell.enableTheme( theme, false );
+      theme.setVisible( false );
       final boolean hasLinkType = ArrayUtils.contains( linkTypes, theme.getType() );
       if( theme instanceof IKalypsoFeatureTheme )
       {
@@ -77,7 +75,7 @@ public class URLActionAnalizeConflicts extends AbstractURLActionAnalizeTheme
           final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) theme;
           final FeatureList visible = kft.getFeatureListVisible( mapPanel.getBoundingBox() );
           if( visible != null )
-            modell.enableTheme( theme, !visible.isEmpty() );
+            theme.setVisible( !visible.isEmpty() );
         }
       }
     }

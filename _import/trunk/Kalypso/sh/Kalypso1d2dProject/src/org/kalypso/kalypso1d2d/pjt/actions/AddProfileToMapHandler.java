@@ -62,6 +62,8 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.SoureAndPathThemePredicate;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
@@ -132,7 +134,13 @@ public class AddProfileToMapHandler extends AbstractHandler
       if( foundThemes.length == 0 )
         command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath, source );
       else
-        command = new ActivateThemeCommand( mapModell, foundThemes[0] );
+      {
+        final IKalypsoTheme themeToActivate = foundThemes[0];
+        final CompositeCommand compositeCommand = new CompositeCommand( "Activate Profile Theme" );
+        compositeCommand.addCommand( new EnableThemeCommand( themeToActivate, true ) );
+        compositeCommand.addCommand( new ActivateThemeCommand( mapModell, themeToActivate ) );
+        command = compositeCommand;
+      }
       mapView.postCommand( command, null );
     }
 

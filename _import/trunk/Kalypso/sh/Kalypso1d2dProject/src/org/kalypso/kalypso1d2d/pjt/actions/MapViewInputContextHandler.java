@@ -25,7 +25,6 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
 
-
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
  * {@link ViewContextHandler} for this purpose.
@@ -49,9 +48,9 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
-  public Object execute( final ExecutionEvent event ) 
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -80,8 +79,9 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
-          IMapModell mapModell = mapPanel.getMapModell();
-          mapModell.activateTheme( null );
+          final IMapModell mapModell = mapPanel.getMapModell();
+          if( mapModell != null )
+            mapModell.activateTheme( null );
           return Status.OK_STATUS;
         }
       };

@@ -86,128 +86,104 @@ public class FENetConceptSelectionWidget implements IWidget
   private class QNameBasedSelectionContext
   {
     final private QName m_themeElementsQName;
+
     private IKalypsoFeatureTheme m_featureTheme;
+
     private IFEDiscretisationModel1d2d m_model1d2d;
+
     private CommandableWorkspace m_cmdWorkspace;
-    
-    
+
     public QNameBasedSelectionContext( final QName themeElementsQName )
     {
       m_themeElementsQName = themeElementsQName;
     }
-    
+
     public void init( final IMapModell mapModell ) throws IllegalArgumentException
     {
-      m_model1d2d = 
-        UtilMap.findFEModelTheme( 
-          mapModell );
+      m_model1d2d = UtilMap.findFEModelTheme( mapModell );
       Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
-      m_featureTheme = 
-        UtilMap.findEditableTheme( 
-            mapModell, 
-            m_themeElementsQName );
+      m_featureTheme = UtilMap.findEditableTheme( mapModell, m_themeElementsQName );
       m_cmdWorkspace = this.m_featureTheme.getWorkspace();
     }
-    
-    public List getSelectedByPolygon(GM_Object polygon,ISelectionFilter selectionFilter)
+
+    public List getSelectedByPolygon( final GM_Object polygon, final ISelectionFilter selectionFilter )
     {
-//      GM_Object object = 
-//        polygonGeometryBuilder.finish();
-      GM_Envelope env = polygon.getEnvelope();
-      List selected = 
-              m_selector.select( 
-                      env, 
-                      m_featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
-                      true );
-      for(int i=selected.size()-1;i>=0;i--)
+// GM_Object object =
+// polygonGeometryBuilder.finish();
+      final GM_Envelope env = polygon.getEnvelope();
+      final List selected = m_selector.select( env, m_featureTheme.getFeatureList(),// model1d2d.getElements().getWrappedList(),
+      true );
+      for( int i = selected.size() - 1; i >= 0; i-- )
       {
-        //TODO WHAT is this doing???
-        ((Feature)selected.get( i )).getDefaultGeometryProperty();
+        // TODO WHAT is this doing???
+        ((Feature) selected.get( i )).getDefaultGeometryProperty();
       }
-      return filterSelected( selected,selectionFilter);
-    }
-    
-    public List<EasyFeatureWrapper> getSelectedByEnvelope(
-                                          GM_Envelope env, 
-                                          ISelectionFilter selectionFilter, 
-                                          boolean selectWithinBox)
-    {
-      
-      List selected = 
-        m_selector.select( 
-            env,
-            m_featureTheme.getFeatureList(),
-            selectWithinBox);
       return filterSelected( selected, selectionFilter );
-      
     }
-    
-    private List<EasyFeatureWrapper> filterSelected(List selected, ISelectionFilter selectionFilter)
+
+    public List<EasyFeatureWrapper> getSelectedByEnvelope( final GM_Envelope env, final ISelectionFilter selectionFilter, final boolean selectWithinBox )
     {
-        
-        final int SIZE = selected.size();
-        List<EasyFeatureWrapper> featuresToAdd = new ArrayList<EasyFeatureWrapper>(SIZE);
-        Feature parentFeature=m_model1d2d.getWrappedFeature();
-        IFeatureType featureType = parentFeature.getFeatureType();
-        IRelationType parentFeatureProperty=
-          (IRelationType)featureType.getProperty( 
-                                    m_themeElementsQName);
-        
-        if(selectionFilter==null)
-        {
-          for(int i=0;i<SIZE;i++)
-          {
-            Feature curFeature=(Feature)selected.get( i );
-            featuresToAdd.add( 
-              new EasyFeatureWrapper(
-                m_cmdWorkspace,
-                curFeature,
-                parentFeature,
-                parentFeatureProperty));
-          }
-        }
-        else
-        {
-          for(int i=0;i<SIZE;i++)
-          {
-            Feature curFeature=(Feature)selected.get( i );
-            if(selectionFilter.accept( curFeature ))
-            {
-              
-                EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper(
-                  m_cmdWorkspace,
-                  curFeature,
-                  parentFeature,
-                  parentFeatureProperty);
-              featuresToAdd.add( easyFeatureWrapper );
-              
-            }
-          }
-        }
-        return featuresToAdd;
-        
+
+      final List selected = m_selector.select( env, m_featureTheme.getFeatureList(), selectWithinBox );
+      return filterSelected( selected, selectionFilter );
+
     }
-    
+
+    private List<EasyFeatureWrapper> filterSelected( final List selected, final ISelectionFilter selectionFilter )
+    {
+
+      final int SIZE = selected.size();
+      final List<EasyFeatureWrapper> featuresToAdd = new ArrayList<EasyFeatureWrapper>( SIZE );
+      final Feature parentFeature = m_model1d2d.getWrappedFeature();
+      final IFeatureType featureType = parentFeature.getFeatureType();
+      final IRelationType parentFeatureProperty = (IRelationType) featureType.getProperty( m_themeElementsQName );
+
+      if( selectionFilter == null )
+      {
+        for( int i = 0; i < SIZE; i++ )
+        {
+          final Feature curFeature = (Feature) selected.get( i );
+          featuresToAdd.add( new EasyFeatureWrapper( m_cmdWorkspace, curFeature, parentFeature, parentFeatureProperty ) );
+        }
+      }
+      else
+      {
+        for( int i = 0; i < SIZE; i++ )
+        {
+          final Feature curFeature = (Feature) selected.get( i );
+          if( selectionFilter.accept( curFeature ) )
+          {
+
+            final EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper( m_cmdWorkspace, curFeature, parentFeature, parentFeatureProperty );
+            featuresToAdd.add( easyFeatureWrapper );
+
+          }
+        }
+      }
+      return featuresToAdd;
+
+    }
+
   }
-  
+
   private ICommandTarget commandPoster;
-  
+
   private MapPanel mapPanel;
- 
+
   private boolean addToSelection;
- 
-  private PolygonGeometryBuilder m_polygonGeometryBuilder; 
-  
-  private JMSelector m_selector= new JMSelector();
+
+  private PolygonGeometryBuilder m_polygonGeometryBuilder;
+
+  private final JMSelector m_selector = new JMSelector();
 
   private IMapModell m_mapModell;
-  
-  private QNameBasedSelectionContext m_selectionContexts[];
-  
+
+  private final QNameBasedSelectionContext m_selectionContexts[];
+
   private ISelectionFilter m_selectionFilter;
-  
+
   private Point draggedPoint0;
-  
+
   private Point draggedPoint1;
 
   private boolean polygonSelectModus;
@@ -216,66 +192,62 @@ public class FENetConceptSelectionWidget implements IWidget
 
   private Point currentPoint;
 
-  private String toolTip;
+  private final String toolTip;
 
   private String name;
-  
+
   /**
-   * Creates a new fe net concept selection to select in a theme 
-   * showing feature of the given q-name.
-   * The provided q-name is used to look for a suitable themes.
+   * Creates a new fe net concept selection to select in a theme showing feature of the given q-name. The provided
+   * q-name is used to look for a suitable themes.
    * 
-   * Note that {@link QNameBasedSelectionFilter}s, which support substitution,
-   * are created for those q-names.
+   * Note that {@link QNameBasedSelectionFilter}s, which support substitution, are created for those q-names.
    * 
    * use {@link #setSelectionFilter(ISelectionFilter)} to override this beahaviour
-   * @param themeElementsQNames an array of q-name to select
-   * @param name the name of the widget
-   * @param toolTip the tooltip of the widget
+   * 
+   * @param themeElementsQNames
+   *            an array of q-name to select
+   * @param name
+   *            the name of the widget
+   * @param toolTip
+   *            the tooltip of the widget
    * @see #FENetConceptSelectionWidget(QName[], String, String)
    */
-  public FENetConceptSelectionWidget(
-                      QName themeElementsQName,
-                      String name, 
-                      String toolTip )
+  public FENetConceptSelectionWidget( final QName themeElementsQName, final String name, final String toolTip )
   {
-    this(new QName[]{themeElementsQName},name,toolTip);    
+    this( new QName[] { themeElementsQName }, name, toolTip );
   }
-  
+
   /**
-   * Creates a new fe net concept selection to select in themes 
-   * showing feature of the given q-names.
-   * The provided qnames are used to look for suitable themes.
+   * Creates a new fe net concept selection to select in themes showing feature of the given q-names. The provided
+   * qnames are used to look for suitable themes.
    * 
-   * Note that {@link QNameBasedSelectionFilter}s, which support substitution,
-   * are created for those q-names.
+   * Note that {@link QNameBasedSelectionFilter}s, which support substitution, are created for those q-names.
    * 
    * use {@link #setSelectionFilter(ISelectionFilter)} to override this beahaviour
-   * @param themeElementsQNames an array of q-name to select
-   * @param name the name of the widget
-   * @param toolTip the tooltip of the widget
+   * 
+   * @param themeElementsQNames
+   *            an array of q-name to select
+   * @param name
+   *            the name of the widget
+   * @param toolTip
+   *            the tooltip of the widget
    * 
    */
-  public FENetConceptSelectionWidget(
-                  QName themeElementsQNames[],
-                  String name, 
-                  String toolTip )
+  public FENetConceptSelectionWidget( final QName themeElementsQNames[], final String name, final String toolTip )
   {
-    this.name=name;
-    this.toolTip=toolTip;
-    this.m_selectionContexts= new QNameBasedSelectionContext[themeElementsQNames.length];
-    
+    this.name = name;
+    this.toolTip = toolTip;
+    this.m_selectionContexts = new QNameBasedSelectionContext[themeElementsQNames.length];
+
     QNameBasedSelectionFilter qnameBasedFilter = null;
-    for(int i=0;i<themeElementsQNames.length;i++)
+    for( int i = 0; i < themeElementsQNames.length; i++ )
     {
-      m_selectionContexts[i] = 
-        new QNameBasedSelectionContext(themeElementsQNames[i]);
-      //TODO patrice check if this is working properly
-      //make qname base filter
-      if(qnameBasedFilter == null)
+      m_selectionContexts[i] = new QNameBasedSelectionContext( themeElementsQNames[i] );
+      // TODO patrice check if this is working properly
+      // make qname base filter
+      if( qnameBasedFilter == null )
       {
-        qnameBasedFilter =
-          QNameBasedSelectionFilter.getFilterForQName( themeElementsQNames[i] );
+        qnameBasedFilter = QNameBasedSelectionFilter.getFilterForQName( themeElementsQNames[i] );
         qnameBasedFilter.setAcceptSubstituables( true );
       }
       else
@@ -283,32 +255,33 @@ public class FENetConceptSelectionWidget implements IWidget
         qnameBasedFilter.add( themeElementsQNames[i] );
       }
     }
-    
+
     m_selectionFilter = qnameBasedFilter;
-  }
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
-   */
-  public void activate( 
-                ICommandTarget commandPoster, 
-                MapPanel mapPanel )
-  {
-   this.commandPoster=commandPoster;
-   this.mapPanel=mapPanel;
-   m_mapModell = mapPanel.getMapModell();
-   //QName name = Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT;
-   for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
-   {
-    selectionContext.init( m_mapModell );
-   }
-   crs = m_mapModell.getCoordinatesSystem();
-   
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  {
+    this.commandPoster = commandPoster;
+    this.mapPanel = mapPanel;
+    m_mapModell = mapPanel.getMapModell();
+    // QName name = Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT;
+    for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
+    {
+      selectionContext.init( m_mapModell );
+    }
+    crs = m_mapModell.getCoordinatesSystem();
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
   {
     return false;
   }
@@ -316,53 +289,51 @@ public class FENetConceptSelectionWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
-    
+
   }
 
-  
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
-  public void doubleClickedLeft( Point p )
+  public void doubleClickedLeft( final Point p )
   {
-    if(polygonSelectModus)
+    if( polygonSelectModus )
     {
-      if(m_polygonGeometryBuilder!=null)
+      if( m_polygonGeometryBuilder != null )
       {
         try
         {
-          GM_Object object = 
-              m_polygonGeometryBuilder.finish();
-//          GM_Envelope env = object.getEnvelope();
-//          List selected = 
-//                  selector.select( 
-//                          env, 
-//                          featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(), 
-//                          false );
-//          for(int i=selected.size()-1;i>=0;i--)
-//          {
-//            ((Feature)selected.get( i )).getDefaultGeometryProperty();
-//          }
-//          addSelection( selected );
-          for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
+          final GM_Object object = m_polygonGeometryBuilder.finish();
+// GM_Envelope env = object.getEnvelope();
+// List selected =
+// selector.select(
+// env,
+// featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(),
+// false );
+// for(int i=selected.size()-1;i>=0;i--)
+// {
+// ((Feature)selected.get( i )).getDefaultGeometryProperty();
+// }
+// addSelection( selected );
+          for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
           {
-            List selectedByPolygon = selectionContext.getSelectedByPolygon( object,m_selectionFilter );
-            addSelection(selectedByPolygon); 
+            final List selectedByPolygon = selectionContext.getSelectedByPolygon( object, m_selectionFilter );
+            addSelection( selectedByPolygon );
           }
-          
-//          selector.selectNearestHandel( geom, pos, snapRadius )
-          
+
+// selector.selectNearestHandel( geom, pos, snapRadius )
+
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
-          throw new RuntimeException(e);
+          throw new RuntimeException( e );
         }
         finally
         {
-          m_polygonGeometryBuilder= new PolygonGeometryBuilder(0,crs);
+          m_polygonGeometryBuilder = new PolygonGeometryBuilder( 0, crs );
         }
       }
     }
@@ -371,32 +342,29 @@ public class FENetConceptSelectionWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
-  public void doubleClickedRight( Point p )
+  public void doubleClickedRight( final Point p )
   {
-    
+
   }
-  
-  
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
-    if(draggedPoint0==null)
+    if( draggedPoint0 == null )
     {
-      draggedPoint0=p;
+      draggedPoint0 = p;
     }
     else
     {
-      draggedPoint1=p;
-      mapPanel.getMapModell().fireModellEvent( null );
+      draggedPoint1 = p;
+      mapPanel.repaint();
     }
-    //TODO: check if this repaint is really necessary
-    if (mapPanel != null)
+    // TODO: check if this repaint is really necessary
+    if( mapPanel != null )
       mapPanel.repaint();
 
-    
   }
 
   /**
@@ -404,7 +372,7 @@ public class FENetConceptSelectionWidget implements IWidget
    */
   public void finish( )
   {
-    
+
   }
 
   /**
@@ -415,11 +383,11 @@ public class FENetConceptSelectionWidget implements IWidget
     return name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     this.name = name;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getToolTip()
    */
@@ -427,32 +395,29 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     return toolTip;
   }
- 
-  public void setToolTip(String newToolTip)
+
+  public void setToolTip( final String newToolTip )
   {
     Assert.throwIAEOnNullParam( newToolTip, "newToolTip" );
   }
-  
-  
-  
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
-    int modifiers = e.getModifiers();
-    if(KeyEvent.CTRL_MASK == modifiers)
+    final int modifiers = e.getModifiers();
+    if( KeyEvent.CTRL_MASK == modifiers )
     {
-      this.addToSelection=true;
+      this.addToSelection = true;
     }
-    else if(e.isShiftDown())
+    else if( e.isShiftDown() )
     {
-      this.polygonSelectModus=true;
-      if(m_polygonGeometryBuilder==null)
+      this.polygonSelectModus = true;
+      if( m_polygonGeometryBuilder == null )
       {
-        m_polygonGeometryBuilder= 
-          new PolygonGeometryBuilder(0,crs);
-//        System.out.println("DDCDCD="+crs);
+        m_polygonGeometryBuilder = new PolygonGeometryBuilder( 0, crs );
+// System.out.println("DDCDCD="+crs);
       }
     }
   }
@@ -460,214 +425,197 @@ public class FENetConceptSelectionWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
    */
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
-    int keyCode = e.getKeyCode();
-    if(e.VK_CONTROL  == keyCode)
+    final int keyCode = e.getKeyCode();
+    if( e.VK_CONTROL == keyCode )
     {
-      this.addToSelection=false;
+      this.addToSelection = false;
     }
-    else if(e.VK_SHIFT == keyCode )
+    else if( e.VK_SHIFT == keyCode )
     {
-      this.polygonSelectModus=false;
-      m_polygonGeometryBuilder=null;
+      this.polygonSelectModus = false;
+      m_polygonGeometryBuilder = null;
     }
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
-    
-    GM_Point point = MapUtilities.transform( mapPanel, p );
-    if(polygonSelectModus)
+
+    final GM_Point point = MapUtilities.transform( mapPanel, p );
+    if( polygonSelectModus )
     {
       try
       {
         m_polygonGeometryBuilder.addPoint( point );
-        mapPanel.getMapModell().fireModellEvent( null );
+        mapPanel.repaint();
       }
-      catch (Exception e) 
+      catch( final Exception e )
       {
-        //TODO better exception handling
+        // TODO better exception handling
         e.printStackTrace();
-        throw new RuntimeException(e);
+        throw new RuntimeException( e );
       }
     }
     else
     {
-      //klick point select modus
-      //model1d2d.getElements().getWrappedList().query( env, result )
-       
-      //TODO get the delta from preferences
-      double delta=MapUtilities.calculateWorldDistance( mapPanel, point, 6 );
-      GM_Position min = 
-          GeometryFactory.createGM_Position( 
-                point.getX()-delta, point.getY()-delta );
-      
-      GM_Position max = 
-        GeometryFactory.createGM_Position( 
-              point.getX()+delta, point.getY()+delta );
-      GM_Envelope env= GeometryFactory.createGM_Envelope( min, max );
+      // klick point select modus
+      // model1d2d.getElements().getWrappedList().query( env, result )
 
-     for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
-     {
-       List selectedByEnvelope = 
-         selectionContext.getSelectedByEnvelope( env,m_selectionFilter, false );
-       addSelection( selectedByEnvelope );
-     }
+      // TODO get the delta from preferences
+      final double delta = MapUtilities.calculateWorldDistance( mapPanel, point, 6 );
+      final GM_Position min = GeometryFactory.createGM_Position( point.getX() - delta, point.getY() - delta );
+
+      final GM_Position max = GeometryFactory.createGM_Position( point.getX() + delta, point.getY() + delta );
+      final GM_Envelope env = GeometryFactory.createGM_Envelope( min, max );
+
+      for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
+      {
+        final List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env, m_selectionFilter, false );
+        addSelection( selectedByEnvelope );
+      }
     }
   }
 
-  
-  private final void addSelection(List<EasyFeatureWrapper> selected)
+  private final void addSelection( final List<EasyFeatureWrapper> selected )
   {
-    IFeatureSelectionManager selectionManager = 
-                      mapPanel.getSelectionManager();
+    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final Feature[] featuresToRemove;
-    
-    if(addToSelection)
+
+    if( addToSelection )
     {
-      //features 
-      List<EasyFeatureWrapper> toRemoveSelection = 
-                  new ArrayList<EasyFeatureWrapper>(
-                      Arrays.asList( 
-                            selectionManager.getAllFeatures()));
-      toRemoveSelection.retainAll( selected ); 
+      // features
+      final List<EasyFeatureWrapper> toRemoveSelection = new ArrayList<EasyFeatureWrapper>( Arrays.asList( selectionManager.getAllFeatures() ) );
+      toRemoveSelection.retainAll( selected );
       selected.removeAll( toRemoveSelection );
-//      System.out.println("Selected size="+selected.size());
+// System.out.println("Selected size="+selected.size());
       final int size = toRemoveSelection.size();
-      featuresToRemove= new Feature[size];
-      for(int i= size-1; i>=0;i--)
+      featuresToRemove = new Feature[size];
+      for( int i = size - 1; i >= 0; i-- )
       {
-        featuresToRemove[i] = 
-            toRemoveSelection.get( i ).getFeature(); 
+        featuresToRemove[i] = toRemoveSelection.get( i ).getFeature();
       }
     }
     else
     {
       selectionManager.clear();
-      featuresToRemove= new Feature[]{};
+      featuresToRemove = new Feature[] {};
     }
-    
+
     final int SIZE = selected.size();
-    EasyFeatureWrapper[] featuresToAdd = 
-                     selected.toArray( new EasyFeatureWrapper[SIZE]);
-    
-    
-    selectionManager.changeSelection( 
-                        featuresToRemove, 
-                        featuresToAdd );
+    final EasyFeatureWrapper[] featuresToAdd = selected.toArray( new EasyFeatureWrapper[SIZE] );
+
+    selectionManager.changeSelection( featuresToRemove, featuresToAdd );
     selectionMade();
   }
-  
+
   /**
    * Called after a selection habe been made
    */
-  protected void selectionMade()
+  protected void selectionMade( )
   {
-    
+
   }
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
-//    System.out.println("Left pressed");
+// System.out.println("Left pressed");
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
-    if(draggedPoint0!=null && draggedPoint1!=null)
+    if( draggedPoint0 != null && draggedPoint1 != null )
     {
-      
-     GM_Point point0=MapUtilities.transform( mapPanel, draggedPoint0 );
-      GM_Point point1=MapUtilities.transform( mapPanel, draggedPoint1 );
-      GM_Envelope env= 
-        GeometryFactory.createGM_Envelope( 
-                                    point0.getPosition(), 
-                                    point1.getPosition() );
-      for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
+
+      final GM_Point point0 = MapUtilities.transform( mapPanel, draggedPoint0 );
+      final GM_Point point1 = MapUtilities.transform( mapPanel, draggedPoint1 );
+      final GM_Envelope env = GeometryFactory.createGM_Envelope( point0.getPosition(), point1.getPosition() );
+      for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
       {
-        List selectedByEnvelope = 
-            selectionContext.getSelectedByEnvelope( env,m_selectionFilter, true );
+        final List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env, m_selectionFilter, true );
         addSelection( selectedByEnvelope );
       }
     }
-    draggedPoint0=null;
-    draggedPoint1=null;
-    
+    draggedPoint0 = null;
+    draggedPoint1 = null;
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
-  public void middleClicked( Point p )
+  public void middleClicked( final Point p )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
-  public void middlePressed( Point p )
+  public void middlePressed( final Point p )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
-  public void middleReleased( Point p )
+  public void middleReleased( final Point p )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
-  public void moved( Point p )
+  public void moved( final Point p )
   {
-//    currentPoint = MapUtilities.transform( mapPanel, p );
-    currentPoint=p;
-    
-//  TODO: check if this repaint is necessary for the widget
-    if ( mapPanel != null)
+// currentPoint = MapUtilities.transform( mapPanel, p );
+    currentPoint = p;
+
+// TODO: check if this repaint is necessary for the widget
+    if( mapPanel != null )
       mapPanel.repaint();
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
-    //TODO calculate real rect
-    if(draggedPoint0!=null && draggedPoint1!=null)
+    // TODO calculate real rect
+    if( draggedPoint0 != null && draggedPoint1 != null )
     {
-      double x = Math.min( draggedPoint0.getX(),draggedPoint1.getX());
-      double y = Math.min( draggedPoint0.getY(),draggedPoint1.getY());;
-      double width = Math.abs( draggedPoint0.getX()-draggedPoint1.getX());
-      double height = Math.abs( draggedPoint0.getY()-draggedPoint1.getY());
-      
-      g.drawRect( (int)x, (int)y, (int)width, (int)height );
+      final double x = Math.min( draggedPoint0.getX(), draggedPoint1.getX() );
+      final double y = Math.min( draggedPoint0.getY(), draggedPoint1.getY() );
+      ;
+      final double width = Math.abs( draggedPoint0.getX() - draggedPoint1.getX() );
+      final double height = Math.abs( draggedPoint0.getY() - draggedPoint1.getY() );
+
+      g.drawRect( (int) x, (int) y, (int) width, (int) height );
     }
-    
-    if(m_polygonGeometryBuilder!=null)
+
+    if( m_polygonGeometryBuilder != null )
     {
-      GeoTransform projection = mapPanel.getProjection();
+      final GeoTransform projection = mapPanel.getProjection();
       m_polygonGeometryBuilder.paint( g, projection, currentPoint );
     }
   }
@@ -675,93 +623,92 @@ public class FENetConceptSelectionWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
-  public void rightPressed( Point p )
+  public void rightPressed( final Point p )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
-  public void rightReleased( Point p )
+  public void rightReleased( final Point p )
   {
-    
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
-    
+
   }
 
-  public void setSelectionFilter( ISelectionFilter selectionFilter )
+  public void setSelectionFilter( final ISelectionFilter selectionFilter )
   {
     this.m_selectionFilter = selectionFilter;
   }
-  
+
   public ISelectionFilter getSelectionFilter( )
   {
     return m_selectionFilter;
   }
-  
-  public Feature[] getSelectedFeature()
+
+  public Feature[] getSelectedFeature( )
   {
-    EasyFeatureWrapper[] easyFeatureWrappers = 
-            mapPanel.getSelectionManager().getAllFeatures();
-    Feature features[]=new Feature[easyFeatureWrappers.length];
-    for(int i=features.length-1;i>=0;i--)
+    final EasyFeatureWrapper[] easyFeatureWrappers = mapPanel.getSelectionManager().getAllFeatures();
+    final Feature features[] = new Feature[easyFeatureWrappers.length];
+    for( int i = features.length - 1; i >= 0; i-- )
     {
-      features[i]=easyFeatureWrappers[i].getFeature();
+      features[i] = easyFeatureWrappers[i].getFeature();
     }
     return features;
   }
-  
-  public IFEDiscretisationModel1d2d getModel1d2d(QName themeQName )
+
+  public IFEDiscretisationModel1d2d getModel1d2d( final QName themeQName )
   {
-    if(themeQName==null)
+    if( themeQName == null )
     {
       return null;
     }
-    
-    for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
+
+    for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
     {
-      if(themeQName.equals( selectionContext.m_themeElementsQName))
+      if( themeQName.equals( selectionContext.m_themeElementsQName ) )
       {
         return selectionContext.m_model1d2d;
       }
     }
     return null;
   }
-  
-  public void postCommand(ICommand command)
+
+  public void postCommand( final ICommand command )
   {
     commandPoster.postCommand( command, null );
   }
-  
-  public IKalypsoFeatureTheme getTheme(QName themeQName)
+
+  public IKalypsoFeatureTheme getTheme( final QName themeQName )
   {
-    if(themeQName==null)
+    if( themeQName == null )
     {
       return null;
     }
-    for(QNameBasedSelectionContext selectionContext:m_selectionContexts)
+    for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
     {
-      if(themeQName.equals( selectionContext.m_themeElementsQName))
+      if( themeQName.equals( selectionContext.m_themeElementsQName ) )
       {
         return selectionContext.m_featureTheme;
       }
     }
-    
+
     return null;
   }
 
@@ -769,7 +716,7 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     return polygonSelectModus;
   }
-  
+
   public MapPanel getMapPanel( )
   {
     return mapPanel;

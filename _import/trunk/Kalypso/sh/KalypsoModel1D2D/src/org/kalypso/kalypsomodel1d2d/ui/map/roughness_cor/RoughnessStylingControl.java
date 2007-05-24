@@ -61,141 +61,129 @@ import org.kalypso.kalypsomodel1d2d.update.ModelMergeService;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * Provide the ui for controling the roughness styling
- * of finite elements
+ * Provide the ui for controling the roughness styling of finite elements
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class RoughnessStylingControl
 {
-  
+
   /**
-   * Check button to de- or activate element roughness
-   * styling area
+   * Check button to de- or activate element roughness styling area
    */
   private Button activateButton;
-  
+
   private final RoughnessCorrectionDataModel dataModel;
-  
+
   private final FormToolkit toolkit;
-  
+
   private final Section parentSection;
 
-  public RoughnessStylingControl(
-              RoughnessCorrectionDataModel dataModel,
-              FormToolkit toolkit, 
-              Section parentSection)
+  public RoughnessStylingControl( final RoughnessCorrectionDataModel dataModel, final FormToolkit toolkit, final Section parentSection )
   {
     this.dataModel = dataModel;
     this.toolkit = toolkit;
-    this.parentSection = parentSection;    
+    this.parentSection = parentSection;
   }
-  
-  public void createControl()
+
+  public void createControl( )
   {
     createFEStylingControlModel( parentSection );
   }
-  
-  public void dispose()
+
+  public void dispose( )
   {
-    
+
   }
-  
+
   /**
-   * Creates a control which provide the interface to
-   * control to roughness styling of elements
-   * @param the parent section which provides client area
-   *            to hold the styling control ui 
-   *    
+   * Creates a control which provide the interface to control to roughness styling of elements
+   * 
+   * @param the
+   *            parent section which provides client area to hold the styling control ui
+   * 
    */
-  private final void createFEStylingControlModel( 
-                                  Section workStatusSection )
+  private final void createFEStylingControlModel( final Section workStatusSection )
   {
-    
+
     workStatusSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
+    final Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
     workStatusSection.setClient( clientComposite );
     // clientComposite.setSize( 400, 300 );
-    FormLayout formLayout = new FormLayout();
+    final FormLayout formLayout = new FormLayout();
     clientComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 5 );
     clientComposite.setLayoutData( formData );
-       
-    activateButton = 
-          new Button(clientComposite,SWT.CHECK/*PUSH*/);
+
+    activateButton = new Button( clientComposite, SWT.CHECK/* PUSH */);
     formData = new FormData();
-    formData.top = new FormAttachment(0,5);
-    formData.left = new FormAttachment(0,5);
+    formData.top = new FormAttachment( 0, 5 );
+    formData.left = new FormAttachment( 0, 5 );
     activateButton.setText( "Rauheitsanzeige für 2D-Elemente aktivieren" );
     activateButton.setLayoutData( formData );
-    ModelMergeService mergeService = 
-                  ModelMergeService.getInstance();
-    //TODO Patrice put this into preferences or ..
-    final boolean isRoughnessToBeDisplay = 
-                    mergeService.getIsRoughnessToBeDisplay();
+    final ModelMergeService mergeService = ModelMergeService.getInstance();
+    // TODO Patrice put this into preferences or ..
+    final boolean isRoughnessToBeDisplay = mergeService.getIsRoughnessToBeDisplay();
     activateButton.setSelection( isRoughnessToBeDisplay );
     toggleMap( isRoughnessToBeDisplay );
-    
-    activateButton.addSelectionListener( 
-                  makeActivateButtonSelectionListener() );
-    
-    Composite newComposite = new Composite(clientComposite,SWT.None);
+
+    activateButton.addSelectionListener( makeActivateButtonSelectionListener() );
+
+    final Composite newComposite = new Composite( clientComposite, SWT.None );
     formData = new FormData();
-    formData.left = new FormAttachment(0,5);
-    formData.top = new FormAttachment(activateButton,5);
-    formData.bottom = new FormAttachment(100, -5);
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( activateButton, 5 );
+    formData.bottom = new FormAttachment( 100, -5 );
     newComposite.setLayoutData( formData );
-    newComposite.setLayout( new GridLayout(1,false) );
-    
+    newComposite.setLayout( new GridLayout( 1, false ) );
+
   }
-  
-  public final void toggleMap(boolean selected )
+
+  public final void toggleMap( final boolean selected )
   {
-    
+
     final ModelMergeService mergeService = ModelMergeService.getInstance();
-    
-    mergeService.doReInit();     
+
+    mergeService.doReInit();
     mergeService.setIsRoughnessToBeDisplay( selected );
-    
-    IMapModell mapModell = dataModel.getMapModell();        
-    Model1D2DElementRoughnessTheme theme = 
-      UtilMap.findTheme( 
-        mapModell, Model1D2DElementRoughnessTheme.class );
+
+    final IMapModell mapModell = dataModel.getMapModell();
+    Model1D2DElementRoughnessTheme theme = UtilMap.findTheme( mapModell, Model1D2DElementRoughnessTheme.class );
     if( theme == null )
     {
-      theme = new Model1D2DElementRoughnessTheme(
-                          "Element+Rauhheiten",mapModell);
+      theme = new Model1D2DElementRoughnessTheme( "Element+Rauhheiten", mapModell );
       mapModell.addTheme( theme );
     }
     if( selected )
     {
-      IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
+      final IStaticModel1D2D staticModel = Util.getModel( IStaticModel1D2D.class );
       theme.setStaticModel( staticModel );
     }
     else
     {
-      mapModell.removeTheme( theme );//theme.setStaticModel( null );
+      mapModell.removeTheme( theme );// theme.setStaticModel( null );
     }
-    mapModell.fireModellEvent( null );
+    mapModell.invalidate( null );
   }
-  
-  private final SelectionListener makeActivateButtonSelectionListener()
+
+  private final SelectionListener makeActivateButtonSelectionListener( )
   {
-    return new SelectionAdapter(){
+    return new SelectionAdapter()
+    {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         toggleMap( isStylingOptionChecked() );
       }
     };
   }
-  
-  public final boolean isStylingOptionChecked()
+
+  public final boolean isStylingOptionChecked( )
   {
     return activateButton.getSelection();
   }
