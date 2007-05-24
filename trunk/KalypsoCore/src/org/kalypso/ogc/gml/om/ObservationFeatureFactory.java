@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -171,18 +170,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final Feature recordDefinition = FeatureHelper.resolveLink( f, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
-    final String resultRaw = (String) f.getProperty( ObservationFeatureFactory.OM_RESULT );
-    final String result = resultRaw == null ? "" : resultRaw.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
+    final String result = (String) f.getProperty( ObservationFeatureFactory.OM_RESULT );
 
     final IComponent[] components = ObservationFeatureFactory.buildComponents( recordDefinition );
     final IComponent[] sortComponents = ObservationFeatureFactory.buildSortComponents( recordDefinition );
-    final XsdBaseTypeHandler[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
+    final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
     final TupleResult tupleResult = new TupleResult( components );
     tupleResult.setSortComponents( sortComponents );
 
     // TODO: move into own method
-    final StringTokenizer tk = new StringTokenizer( result );
+    // TODO: be more robust against inconsistency between resultDefinition and result
+    final StringTokenizer tk = new StringTokenizer( result.trim() );
     int nb = 0;
     IRecord record = null;
     while( tk.hasMoreElements() )
@@ -195,7 +194,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       final String token = tk.nextToken();
       final IComponent component = components[nb];
-      final XsdBaseTypeHandler handler = typeHandlers[nb];
+      final XsdBaseTypeHandler< ? > handler = typeHandlers[nb];
       try
       {
         Object value = null;
@@ -265,9 +264,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return components.toArray( new IComponent[components.size()] );
   }
 
-  private static XsdBaseTypeHandler[] typeHandlersForComponents( final IComponent[] components )
+  private static XsdBaseTypeHandler< ? >[] typeHandlersForComponents( final IComponent[] components )
   {
-    final XsdBaseTypeHandler[] typeHandlers = new XsdBaseTypeHandler[components.length];
+    final XsdBaseTypeHandler< ? >[] typeHandlers = new XsdBaseTypeHandler[components.length];
 
     for( int i = 0; i < components.length; i++ )
     {
@@ -277,7 +276,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return typeHandlers;
   }
 
-  public static final XsdBaseTypeHandler typeHanderForComponent( final IComponent component )
+  public static final XsdBaseTypeHandler< ? > typeHanderForComponent( final IComponent component )
   {
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
@@ -295,7 +294,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
     if( handler instanceof XsdBaseTypeHandler )
     {
-      return (XsdBaseTypeHandler) handler;
+      return (XsdBaseTypeHandler< ? >) handler;
     }
 
     return null;
@@ -428,8 +427,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
     {
       final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, itemDefRelation, schema, comp );
 
-      FeatureHelper.addProperty( featureItemDef, ObservationFeatureFactory.GML_NAME, comp.getName() );
-      FeatureHelper.addProperty( featureItemDef, ObservationFeatureFactory.GML_DESCRIPTION, comp.getDescription() );
+      NamedFeatureHelper.setName( featureItemDef, comp.getName() );
+      NamedFeatureHelper.setDescription( featureItemDef, comp.getDescription() );
 
       FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.SWE_COMPONENT, featureItemDef );
     }
@@ -522,13 +521,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IComponent[] components = result.getComponents();
 
-    final XsdBaseTypeHandler[] handlers = ObservationFeatureFactory.typeHandlersForComponents( components );
+    final XsdBaseTypeHandler< ? >[] handlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
     for( final IRecord record : result )
     {
       for( int i = 0; i < components.length; i++ )
       {
-        final XsdBaseTypeHandler handler = handlers[i];
+        final XsdBaseTypeHandler< ? > handler = handlers[i];
         final IComponent comp = components[i];
 
         if( comp != components[0] )
@@ -544,7 +543,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
       buffer.append( "\n" );
     }
 
-    return XMLUtilities.encapsulateInCDATA( buffer.toString() );
+    return buffer.toString();
   }
 
   private static String recordValueToString( final Object value, final XsdBaseTypeHandler handler )
