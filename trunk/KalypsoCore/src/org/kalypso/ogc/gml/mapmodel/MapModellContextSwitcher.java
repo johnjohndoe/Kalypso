@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class MapModellContextSwitcher
 {
+
   private final class ContextSwitcherThread extends Thread
   {
     private IContextService m_contextService;
@@ -84,7 +85,7 @@ public class MapModellContextSwitcher
       if( m_oldContext != null )
       {
         logger.info( "Deactivating context: " + m_oldContext.getContextId() );
-        m_contextService.deactivateContext( m_oldContext );
+        m_contextService.deactivateContext( m_oldContext );        
       }
       if( m_theme == null )
       {
@@ -96,7 +97,7 @@ public class MapModellContextSwitcher
         final Context context = m_contextService.getContext( contextId );
         if( !context.isDefined() )
         {
-          context.define( contextId, contextId, "org.eclipse.ui.contexts.window" );
+          context.define( contextId, contextId, "org.kalypso.ogc.gml.map.context" );
         }
         logger.info( "Activating context: " + contextId );
         m_oldContext = m_contextService.activateContext( contextId );
@@ -141,10 +142,10 @@ public class MapModellContextSwitcher
      */
     @Override
     public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
-    {
+  {
       if( source.getActiveTheme() == theme )
         activateContextFor( theme );
-    }
+  }
   };
 
   public void addContextService( final IContextService contextService )
@@ -165,7 +166,7 @@ public class MapModellContextSwitcher
   }
 
   protected synchronized void activateContextFor( final IKalypsoTheme theme )
-  {
+    {
     final Display display = PlatformUI.getWorkbench().getDisplay();
     if( display.isDisposed() )
       return;
@@ -187,7 +188,7 @@ public class MapModellContextSwitcher
   }
 
   public void setMapModell( final IMapModell mapModell )
-  {
+    {
     if( m_mapModell != null )
       m_mapModell.removeMapModelListener( m_modelListener );
 
