@@ -84,22 +84,37 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public final void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
+      // TODO: this is NOT the right place to write the element! This should be done in the next higher level, because
+      // it is always the same for every marshalling type handler.
       final String namespaceURI = propQName.getNamespaceURI();
       final String localPart = propQName.getLocalPart();
       final String qNameString = propQName.getPrefix() + ":" + localPart;
       contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+
+      // FIXME: this is the right place to write CDATA stuff, but of course now it is a wild hack
+      // to look for a specific value. This must of course be decided in a more generel way.
+      // Maybe we register extensions for specific qnames?
+      // TODO: also, it should be only done for String, i.e. in the XxsdBaseTypeHandlerString
+      if( propQName.equals( new QName( NS.OM, "result" ) ) )
+        lexicalHandler.startCDATA();
+
       final String valueAsXMLString = convertToXMLString( (T) value );
       final char[] cs = valueAsXMLString.toCharArray();
       contentHandler.characters( cs, 0, cs.length );
+
+      if( propQName.equals( new QName( NS.OM, "result" ) ) )
+        lexicalHandler.endCDATA();
+
       contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
     catch( final Exception e )
     {
       // TODO Auto-generated catch block
+      // TODO: there is probably an errorHandler in the XmlReader, give it to him
       e.printStackTrace();
       throw new TypeRegistryException( e );
     }
@@ -151,7 +166,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
       return null;
     }
     try
-    {
+    {// TODO: only do this in the case of the list-handler?
       if( objectToClone instanceof List )
       {
         final List list = (List) objectToClone;

@@ -53,6 +53,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * @author doemming
@@ -79,13 +80,15 @@ public class GMLWorkspaceReader implements XMLReader
 
   private ErrorHandler m_errorHandler;
 
-  private final Map<String,String> m_idMap;
+  private final Map<String, String> m_idMap;
+
+  private LexicalHandler m_lexicalHandler;
 
   /**
    * @param idMap
-   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLWorkspaceReader( final Map<String,String> idMap )
+  public GMLWorkspaceReader( final Map<String, String> idMap )
   {
     m_idMap = idMap;
   }
@@ -102,13 +105,13 @@ public class GMLWorkspaceReader implements XMLReader
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
 
-    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler ,m_idMap);
+    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler, m_idMap, m_lexicalHandler );
     handler.startDocument();
     factory.process( workspace );
     handler.endDocument();
   }
 
-  public boolean getFeature( String name )
+  public boolean getFeature( final String name )
   {
     return m_enabledFeatures.contains( name );
   }
@@ -116,7 +119,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setFeature(java.lang.String, boolean)
    */
-  public void setFeature( String name, boolean value )
+  public void setFeature( final String name, final boolean value )
   {
     if( value )
       m_enabledFeatures.add( name );
@@ -127,7 +130,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getProperty(java.lang.String)
    */
-  public Object getProperty( String name )
+  public Object getProperty( final String name )
   {
     return m_propMap.get( name );
   }
@@ -135,17 +138,18 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setProperty(java.lang.String, java.lang.Object)
    */
-  public void setProperty( String name, Object value )
+  public void setProperty( final String name, final Object value )
   {
-    // if("http://xml.org/sax/properties/lexical-handler".equals(name))
-    // throw new SAXNotRecognizedException("not supported");
+    if( "http://xml.org/sax/properties/lexical-handler".equals( name ) )
+      m_lexicalHandler = (LexicalHandler) value;
+
     m_propMap.put( name, value );
   }
 
   /**
    * @see org.xml.sax.XMLReader#setEntityResolver(org.xml.sax.EntityResolver)
    */
-  public void setEntityResolver( EntityResolver resolver )
+  public void setEntityResolver( final EntityResolver resolver )
   {
     m_entityResolver = resolver;
   }
@@ -161,7 +165,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setDTDHandler(org.xml.sax.DTDHandler)
    */
-  public void setDTDHandler( DTDHandler handler )
+  public void setDTDHandler( final DTDHandler handler )
   {
     m_dtdHandler = handler;
   }
@@ -177,7 +181,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setContentHandler(org.xml.sax.ContentHandler)
    */
-  public void setContentHandler( ContentHandler handler )
+  public void setContentHandler( final ContentHandler handler )
   {
     m_ContentHandler = handler;
   }
@@ -193,7 +197,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setErrorHandler(org.xml.sax.ErrorHandler)
    */
-  public void setErrorHandler( ErrorHandler handler )
+  public void setErrorHandler( final ErrorHandler handler )
   {
     m_errorHandler = handler;
   }
@@ -209,7 +213,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#parse(java.lang.String)
    */
-  public void parse( String systemId ) throws SAXException
+  public void parse( final String systemId ) throws SAXException
   {
     parse( new InputSource( systemId ) );
   }
