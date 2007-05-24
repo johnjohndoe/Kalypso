@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.swt;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -54,12 +51,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -82,22 +77,16 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.TableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointAdd;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
@@ -123,27 +112,12 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
  */
 public class ProfilSWTTableView extends AbstractProfilView
 {
-  private static final String INSERT_POINT_NAME = "Punkt einfügen";
-
- // private static final String DELETE_POINTS_NAME = "Punkte löschen";
 
   public static final String SORT_KEY = "sortViewer";
-
-  //public static final String ACTION_DELETEPOINTS = "profiltable.action.deletepoints";
-
-  public static final String ACTION_INSERTPOINT = "profiltable.action.insertpoint";
-
-//  public static final String ACTION_COPY = "profiltable.action.copy";
-//
-//  public static final String ACTION_PASTE = "profiltable.action.paste";
 
   public static final String ACTION_SELECTALL = "protfiltable.action.selectall";
 
   public static final String ACTION_FILLVALUES = "protfiltable.action.fillvalues";
-
-//  public static final String ACTION_ORDERPOINT_UP = "protfiltable.action.orderpoint_up";
-//
-//  public static final String ACTION_ORDERPOINT_DOWN = "protfiltable.action.orderpoint_down";
 
   protected final static class ColumnStruct
   {
@@ -192,8 +166,8 @@ public class ProfilSWTTableView extends AbstractProfilView
     super( pem, viewdata );
     m_file = file;
 
-    createActions();
-   m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+    //createActions();
+    m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
   /**
@@ -237,10 +211,12 @@ public class ProfilSWTTableView extends AbstractProfilView
   {
     return m_viewer;
   }
-public final boolean isSorted()
-{
-  return getViewer().getSorter()!=null;
-}
+
+  public final boolean isSorted( )
+  {
+    return getViewer().getSorter() != null;
+  }
+
   protected TableCursor getCursor( )
   {
     return m_cursor;
@@ -291,7 +267,7 @@ public final boolean isSorted()
     final ExcelTableCursor cursor = new ExcelTableCursor( m_viewer, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.RIGHT, true );
     m_cursor = cursor;
 
-final Menu menu = m_menuManager.createContextMenu( table );
+    final Menu menu = m_menuManager.createContextMenu( table );
     table.setMenu( menu );
     m_cursor.setMenu( m_menuManager.createContextMenu( table ) );
 
@@ -326,7 +302,7 @@ final Menu menu = m_menuManager.createContextMenu( table );
 
   public MenuManager getContextMenuManager( )
   {
-   return m_menuManager;
+    return m_menuManager;
   }
 
   public IAction getAction( final String id )
@@ -459,10 +435,12 @@ final Menu menu = m_menuManager.createContextMenu( table );
 
     m_viewer.setSorter( sorter );
   }
-public void closeCellEditor()
-{
-   getViewer().cancelEditing() ;
-}
+
+  public void closeCellEditor( )
+  {
+    getViewer().cancelEditing();
+  }
+
   public void setAdvanceMode( final String string )
   {
     m_cursor.setAdvanceMode( ExcelTableCursor.ADVANCE_MODE.valueOf( string ) );
@@ -478,179 +456,187 @@ public void closeCellEditor()
     return descriptions;
   }
 
-  private void createActions( )
-  {
-  
-//    m_actions.put( ACTION_DELETEPOINTS, new ProfilTableAction( this, DELETE_POINTS_NAME )
-//    {
-//      @Override
-//      public void run( )
-//      {
-//        final TableViewer viewer = getViewer();
-//        if( viewer == null )
-//          return;
-//
-//        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-//
-//        @SuppressWarnings("unchecked")
-//        final IProfilPoint[] pointsToDelete = (IProfilPoint[]) selection.toList().toArray( new IProfilPoint[selection.size()] );
-//        final IProfilChange[] changes = new IProfilChange[pointsToDelete.length + 1];
-//        final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( getProfil(), pointsToDelete[0] );
-//        for( int i = 0; i < pointsToDelete.length; i++ )
-//        {
-//          final IProfilPoint point = pointsToDelete[i];
-//          changes[i] = new PointRemove( getProfil(), point );
-//        }
-//        changes[pointsToDelete.length] = new ActiveObjectEdit( getProfil(), thePointBefore, IWspmConstants.POINT_PROPERTY_BREITE );
-//        final ProfilOperation operation = new ProfilOperation( "Punkte löschen", getProfilEventManager(), changes, false );
-//        new ProfilOperationJob( operation ).schedule();
-//      }
-//    } );
+//  private void createActions( )
+//  {
 
-//    m_actions.put( ACTION_INSERTPOINT, new ProfilTableAction( this, INSERT_POINT_NAME )
-//    {
-//      @Override
-//      public void run( )
-//      {
-//        if( getViewer().getSorter() != null )
-//        {
-//          MessageDialog.openWarning( getViewer().getControl().getShell(), INSERT_POINT_NAME, "Punkte können nur in unsortierte Tabelle eingefügt werden.\nKlicken Sie auf die markierte Spalte, um die Sortierung aufzuheben." );
-//          return;
-//        }
+// m_actions.put( ACTION_DELETEPOINTS, new ProfilTableAction( this, DELETE_POINTS_NAME )
+// {
+// @Override
+// public void run( )
+// {
+// final TableViewer viewer = getViewer();
+// if( viewer == null )
+// return;
 //
-//        final TableItem row = getCursor().getRow();
+// final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 //
-//        final IProfil profile = getProfil();
-//        final IProfilPoint thePointBefore = (row == null) ? null : (IProfilPoint) row.getData();
-//        final IProfilPoint thePointAfter = thePointBefore == null ? null : ProfilUtil.getPointAfter( profile, thePointBefore );
-//        IProfilPoint thePoint = thePointAfter == null ? thePointBefore.clonePoint() : ProfilUtil.splitSegment( profile, thePointBefore, thePointAfter );
-//        final IProfilChange[] changes = new IProfilChange[2];
-//        changes[0] = new PointAdd( profile, thePointBefore, thePoint );
-//        changes[1] = new ActiveObjectEdit( profile, thePoint, IWspmConstants.POINT_PROPERTY_BREITE );
-//        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, true );
-//        new ProfilOperationJob( operation ).schedule();
-//      }
-//    } );
+// @SuppressWarnings("unchecked")
+// final IProfilPoint[] pointsToDelete = (IProfilPoint[]) selection.toList().toArray( new IProfilPoint[selection.size()]
+// );
+// final IProfilChange[] changes = new IProfilChange[pointsToDelete.length + 1];
+// final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( getProfil(), pointsToDelete[0] );
+// for( int i = 0; i < pointsToDelete.length; i++ )
+// {
+// final IProfilPoint point = pointsToDelete[i];
+// changes[i] = new PointRemove( getProfil(), point );
+// }
+// changes[pointsToDelete.length] = new ActiveObjectEdit( getProfil(), thePointBefore,
+// IWspmConstants.POINT_PROPERTY_BREITE );
+// final ProfilOperation operation = new ProfilOperation( "Punkte löschen", getProfilEventManager(), changes, false );
+// new ProfilOperationJob( operation ).schedule();
+// }
+// } );
 
-    m_actions.put( ACTION_SELECTALL, new ProfilTableAction( this )
-    {
-      @Override
-      public void run( )
-      {
-        getViewer().getTable().selectAll();
-      }
-    } );
+// m_actions.put( ACTION_INSERTPOINT, new ProfilTableAction( this, INSERT_POINT_NAME )
+// {
+// @Override
+// public void run( )
+// {
+// if( getViewer().getSorter() != null )
+// {
+// MessageDialog.openWarning( getViewer().getControl().getShell(), INSERT_POINT_NAME, "Punkte können nur in unsortierte
+// Tabelle eingefügt werden.\nKlicken Sie auf die markierte Spalte, um die Sortierung aufzuheben." );
+// return;
+// }
+//
+// final TableItem row = getCursor().getRow();
+//
+// final IProfil profile = getProfil();
+// final IProfilPoint thePointBefore = (row == null) ? null : (IProfilPoint) row.getData();
+// final IProfilPoint thePointAfter = thePointBefore == null ? null : ProfilUtil.getPointAfter( profile, thePointBefore
+// );
+// IProfilPoint thePoint = thePointAfter == null ? thePointBefore.clonePoint() : ProfilUtil.splitSegment( profile,
+// thePointBefore, thePointAfter );
+// final IProfilChange[] changes = new IProfilChange[2];
+// changes[0] = new PointAdd( profile, thePointBefore, thePoint );
+// changes[1] = new ActiveObjectEdit( profile, thePoint, IWspmConstants.POINT_PROPERTY_BREITE );
+// final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, true );
+// new ProfilOperationJob( operation ).schedule();
+// }
+// } );
 
-//    m_actions.put( ACTION_COPY, new ProfilTableAction( this )
-//    {
-//      @Override
-//      public void run( )
-//      {
-//       // IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-//            //   IHandlerService handlerService = (IHandlerService)  getSite().getService(IHandlerService.class);
+// m_actions.put( ACTION_SELECTALL, new ProfilTableAction( this )
+// {
+// @Override
+// public void run( )
+// {
+// getViewer().getTable().selectAll();
+// }
+// } );
+
+// m_actions.put( ACTION_COPY, new ProfilTableAction( this )
+// {
+// @Override
+// public void run( )
+// {
+// // IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+// // IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 //    
 //   
-//   // handlerService.executeCommand("z.ex.view.keybindings.eatTaco", null);
+// // handlerService.executeCommand("z.ex.view.keybindings.eatTaco", null);
 //
 //        
 //        
 //        
-//        new ExcelClipboardAdapter( getViewer() ).doCopy();
-//      }
-//    } );
+// new ExcelClipboardAdapter( getViewer() ).doCopy();
+// }
+// } );
 //
-//    m_actions.put( ACTION_PASTE, new ProfilTableAction( this )
-//    {
-//      @Override
-//      public void run( )
-//      {
-//        // TODO KIM: das Verhalten ist im Moment zu strange....
-//        // besser wäre ein separater Dialog fürs einfügen von Punkten aus der Zwischenablage
-//        // ausserdem sollte es eine atomare operation sein, d.h. undo macht alles wieder rückgangig
-//        final ExcelClipboardAdapter adapter = new ExcelClipboardAdapter( getViewer() );
+// m_actions.put( ACTION_PASTE, new ProfilTableAction( this )
+// {
+// @Override
+// public void run( )
+// {
+// // TODO KIM: das Verhalten ist im Moment zu strange....
+// // besser wäre ein separater Dialog fürs einfügen von Punkten aus der Zwischenablage
+// // ausserdem sollte es eine atomare operation sein, d.h. undo macht alles wieder rückgangig
+// final ExcelClipboardAdapter adapter = new ExcelClipboardAdapter( getViewer() );
 //
-//        final Table table = getViewer().getTable();
+// final Table table = getViewer().getTable();
 //
-//        final int row = table.indexOf( getCursor().getRow() );
-//        final int column = getCursor().getColumn();
+// final int row = table.indexOf( getCursor().getRow() );
+// final int column = getCursor().getColumn();
 //
-//        // wird wissen, dass das einfügen einen refresh auslöst, deswegen: false
-//        adapter.doPaste( row, column, false );
-//      }
-//    } );
-//    m_actions.put( ACTION_ORDERPOINT_UP, new ProfilTableAction( this )
-//    {
-//      @SuppressWarnings("unchecked")
-//      @Override
-//      public void run( )
-//      {
-//        // final Object selected = getCursor().getRow().getData();
-//        final TableViewer viewer = getViewer();
-//        if( viewer == null )
-//          return;
-//        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+// // wird wissen, dass das einfügen einen refresh auslöst, deswegen: false
+// adapter.doPaste( row, column, false );
+// }
+// } );
+// m_actions.put( ACTION_ORDERPOINT_UP, new ProfilTableAction( this )
+// {
+// @SuppressWarnings("unchecked")
+// @Override
+// public void run( )
+// {
+// // final Object selected = getCursor().getRow().getData();
+// final TableViewer viewer = getViewer();
+// if( viewer == null )
+// return;
+// final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 //
-//        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(), selection.toList(), -1 ), true );
-//        new ProfilOperationJob( operation ).schedule();
+// final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(),
+// selection.toList(), -1 ), true );
+// new ProfilOperationJob( operation ).schedule();
 //
-//      }
-//    } );
-//    m_actions.put( ACTION_ORDERPOINT_DOWN, new ProfilTableAction( this )
-//    {
-//      @Override
-//      public void run( )
-//      {
-//        final Object selected = getCursor().getRow().getData();
-//        if( selected instanceof IProfilPoint )
-//        {
-//          final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(), (IProfilPoint) selected, 1 ), true );
-//          new ProfilOperationJob( operation ).schedule();
-//        }
-//      }
-//    } );
-    m_actions.put( ACTION_FILLVALUES, new ProfilTableAction( this )
-    {
-      @Override
-      public void run( )
-      {
-        final TableCursor cursor = getCursor();
-        final TableItem row = cursor.getRow();
-        final int column = cursor.getColumn();
-
-        final TableViewer viewer = getViewer();
-        final String property = "" + viewer.getColumnProperties()[column];
-
-        final ProfilCellModifier cellModifier = (ProfilCellModifier) viewer.getCellModifier();
-        final Object aktiveElement = row.getData();
-
-        try
-        {
-          final double value = cellModifier.getValueAsDouble( aktiveElement, property );
-
-          final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-
-          final List<PointPropertyEdit> changes = new ArrayList<PointPropertyEdit>( selection.size() );
-
-          for( final Iterator iter = selection.iterator(); iter.hasNext(); )
-          {
-            @SuppressWarnings("unchecked")
-            final Object element = iter.next();
-            if( element != aktiveElement )
-              changes.add( new PointPropertyEdit( (IProfilPoint) element, property, value ) );
-          }
-
-          final PointPropertyEdit[] profilChanges = changes.toArray( new PointPropertyEdit[changes.size()] );
-          final ProfilOperation operation = new ProfilOperation( "Werte setzen", getProfilEventManager(), profilChanges, true );
-          new ProfilOperationJob( operation ).schedule();
-        }
-        catch( IllegalArgumentException e )
-        {
-          // do nothing
-          e.printStackTrace();
-        }
-      }
-    } );
-  }
+// }
+// } );
+// m_actions.put( ACTION_ORDERPOINT_DOWN, new ProfilTableAction( this )
+// {
+// @Override
+// public void run( )
+// {
+// final Object selected = getCursor().getRow().getData();
+// if( selected instanceof IProfilPoint )
+// {
+// final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new PointMove( getProfil(),
+// (IProfilPoint) selected, 1 ), true );
+// new ProfilOperationJob( operation ).schedule();
+// }
+// }
+// } );
+// m_actions.put( ACTION_FILLVALUES, new ProfilTableAction( this )
+// {
+// @Override
+// public void run( )
+// {
+// final TableCursor cursor = getCursor();
+// final TableItem row = cursor.getRow();
+// final int column = cursor.getColumn();
+//
+// final TableViewer viewer = getViewer();
+// final String property = "" + viewer.getColumnProperties()[column];
+//
+// final ProfilCellModifier cellModifier = (ProfilCellModifier) viewer.getCellModifier();
+// final Object aktiveElement = row.getData();
+//
+// try
+// {
+// final double value = cellModifier.getValueAsDouble( aktiveElement, property );
+//
+// final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+//
+// final List<PointPropertyEdit> changes = new ArrayList<PointPropertyEdit>( selection.size() );
+//
+// for( final Iterator iter = selection.iterator(); iter.hasNext(); )
+// {
+// @SuppressWarnings("unchecked")
+// final Object element = iter.next();
+// if( element != aktiveElement )
+// changes.add( new PointPropertyEdit( (IProfilPoint) element, property, value ) );
+// }
+//
+// final PointPropertyEdit[] profilChanges = changes.toArray( new PointPropertyEdit[changes.size()] );
+// final ProfilOperation operation = new ProfilOperation( "Werte setzen", getProfilEventManager(), profilChanges, true
+// );
+// new ProfilOperationJob( operation ).schedule();
+// }
+// catch( IllegalArgumentException e )
+// {
+// // do nothing
+// e.printStackTrace();
+// }
+// }
+// } );
+//  }
 
   public ISelectionProvider getSelectionProvider( )
   {
@@ -677,10 +663,10 @@ public void closeCellEditor()
       } );
     }
   }
-/**
- * @return a keyValuePair Object[2](String,Double)
- */
-  
+
+  /**
+   * @return a keyValuePair Object[2](String,Double)
+   */
   public final Object[] getActiveCell( )
   {
     if( m_viewer.isCellEditorActive() )
@@ -695,14 +681,14 @@ public void closeCellEditor()
         final ProfilCellModifier cellModifier = (ProfilCellModifier) viewer.getCellModifier();
         final Object aktiveElement = row.getData();
         final Double value = cellModifier.getValueAsDouble( aktiveElement, property );
-        return new Object[]{  property ,value};
+        return new Object[] { property, value };
       }
       catch( final Exception e )
       {
-        return new Object[]{"",Double.NaN};
+        return new Object[] { "", Double.NaN };
       }
     }
-    return new Object[]{"",Double.NaN};
+    return new Object[] { "", Double.NaN };
   }
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )

@@ -142,7 +142,9 @@ public abstract class AbstractSWTTableHandler extends AbstractHandler implements
   {
     Object adapterObject = null;
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    
     if( part == null )
       throw new ExecutionException( "No active part." );
     adapterObject = part.getAdapter( TableView.class );

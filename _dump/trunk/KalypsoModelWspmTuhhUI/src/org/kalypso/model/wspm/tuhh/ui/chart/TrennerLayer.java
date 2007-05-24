@@ -83,7 +83,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
   public TrennerLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_DEVIDER, pcv, pcv.getDomainRange(),pcv.getValueRangeLeft(),"Fließzonen" );
+    super( IWspmTuhhConstants.LAYER_DEVIDER, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Fließzonen" );
     m_colorRegistry = pcv.getColorRegistry();
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
       m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
@@ -94,85 +94,11 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
   }
 
-  // TODO: Kim enum durch extension ersetzen
-  // private enum DEVIDER
-  // {
-  //
-  // Durchstroemte(IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE, true, 0,
-  // "Durchströmter Bereich"),
-  // Fliesszone(IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, IProfilColorSet.COLOUR_TRENNFLAECHEN, false, 20,
-  // "Trennflächen"),
-  // Bordvoll(IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IProfilColorSet.COLOUR_BORDVOLLPUNKTE, false, 40,
-  // "Bordvollpunkt"),
-  // Wehr(IWspmTuhhConstants.MARKER_TYP_WEHR, IProfilColorSet.COLOUR_WEHR, false, 60, "Wehrfeldtrenner");
-  //
-  // private DEVIDER( final String deviderTyp, final String colorKey, final boolean isclosed, final int topOffset, final
-  // String label )
-  // {
-  // m_colorKey = colorKey;
-  //
-  // m_isclosed = isclosed;
-  // m_label = label;
-  // m_topOffset = topOffset;
-  // m_deviderTyp = deviderTyp;
-  //
-  // }
-  //
-  // public final static DEVIDER getDevider( String typ )
-  // {
-  // if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( typ ) )
-  // return Fliesszone;
-  // else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( typ ) )
-  // return Wehr;
-  // else if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( typ ) )
-  // return Bordvoll;
-  // else if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( typ ) )
-  // return Durchstroemte;
-  // else
-  // return null;
-  // }
-  //
-  // public final boolean isClosed( )
-  // {
-  // return m_isclosed;
-  // }
-  //
-  // public final int getTopOffset( )
-  // {
-  // return m_topOffset;
-  // }
-  //
-  // public final String getColorKey( )
-  // {
-  // return m_colorKey;
-  // }
-
-  // private final String m_colorKey;
-  //
-  // private final String m_deviderTyp;
-  //
-  // private final boolean m_isclosed;
-  //
-  // private final int m_topOffset;
-  //
-  // private final String m_label;
-  //
-  // public String getDeviderTyp( )
-  // {
-  // return m_deviderTyp;
-  // }
-
   @Override
   public final IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
   {
     return new TrennerPanel( pem, viewData );
   }
-
-  // public final String getLabel( )
-  // {
-  // return m_label;
-  // }
-  // }
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#edit(org.eclipse.swt.graphics.Point, java.lang.Object)
@@ -229,23 +155,13 @@ public class TrennerLayer extends AbstractProfilChartLayer
     try
     {
 
-      // if( m_deviderTyp.compareTo( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) == 0 )
-      // return String.format( "%s%n%10.4f [m]", new Object[] { m_label, devider.getPoint().getValueFor(
-      // IWspmTuhhConstants.POINT_PROPERTY_BREITE ) } );
-      // else if( m_deviderTyp.compareTo( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) == 0 )
-      // return String.format( "%s%n%10.4f [m]", new Object[] { m_label, devider.getPoint().getValueFor(
-      // IWspmTuhhConstants.POINT_PROPERTY_BREITE ) } );
-      // else if( m_deviderTyp.compareTo( IWspmTuhhConstants.MARKER_TYP_WEHR ) == 0 )
-      // return String.format( "%s%n%s%n%s: %10.4f", new Object[] { m_label, "Wehrparameter", "Feld " +
-      // Integer.toString( fieldNr + 1 ),
-      // (Double) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT ) } );
       if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( devider.getMarkerId() ) )
       {
         final Boolean position = (Boolean) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
         final boolean pos = position == null ? false : position;
 
         return String.format( "%s %s%n%10.4f [m]", new Object[] { devider.getMarkerLabel(), pos ? "Böschungsfuss" : "Vorland",
-            devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE )} );
+            devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) } );
       }
       else
         return String.format( "%s%n%10.4f [m]", new Object[] { devider.getMarkerLabel(), devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) } );
@@ -254,7 +170,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       return "";
     }
-    // return "";
+
   }
 
   private EditInfo getDeviderInfo( final Point mousePoint, final IProfilPointMarker[] deviders, final int topOffset )
@@ -288,50 +204,29 @@ public class TrennerLayer extends AbstractProfilChartLayer
   {
     EditInfo info = null;
     final IProfil profil = getProfil();
-    // final DEVIDER[] devs = DEVIDER.values();
-    // for( int i = devs.length; i > 0; i-- )
-    // {
-    // final DEVIDER dev = devs[i - 1];
-    // final String devTyp = dev.getDeviderTyp();
 
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) != null && getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ),20 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 20 );
       if( info != null )
         return info;
     }
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) != null && getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ),40 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 40 );
       if( info != null )
         return info;
     }
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) != null && getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ),0 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 );
       if( info != null )
         return info;
     }
 
-    //    
-    // final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    // for( IProfilPointMarker devider : deviders )
-    // {
-    // info = getDeviderInfo( point, devider );
-    // if( info != null )
-    // return info;
-    // }
-    // final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    // for( IProfilPointMarker devider : deviders )
-    // {
-    // info = getDeviderInfo( point, devider );
-    // if( info != null )
-    // return info;
-    // }
-    // }
     return null;
   }
 
@@ -353,12 +248,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setLineWidth( 3 );
     gc.setLineStyle( SWT.LINE_SOLID );
     final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
       paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, top, true );
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
       paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, top + 20, false );
-    
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
+
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
       paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, top + 40, false );
   }
 

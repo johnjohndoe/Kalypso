@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view.table.swt;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -58,6 +57,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -74,14 +74,6 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   private static final String IMAGE_WARNING = "profilLabelProvider.img.warning";
 
-//  private static final String IMAGE_DEVIDER_T = "profilLabelProvider.img.devider_t";
-//
-//  private static final String IMAGE_DEVIDER_D = "profilLabelProvider.img.devider_d";
-//
-//  private static final String IMAGE_DEVIDER_B = "profilLabelProvider.img.devider_b";
-//
-//  private static final String IMAGE_DEVIDER_W = "profilLabelProvider.img.devider_w";
-
   private final ImageRegistry m_imgRegistry = new ImageRegistry();
 
   public static final String COLUMN_KEY = "columnKey";
@@ -94,42 +86,27 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   private Color m_colorWarning;
 
- // private ColorRegistry m_profilColorRegistry;
-
-  private Map<String, Color> m_deviderColors = new HashMap<String, Color>();
-
   public ProfilLabelProvider( final TableViewer viewer )
   {
     m_viewer = viewer;
 
     m_imgRegistry.put( IMAGE_ERROR, KalypsoModelWspmUIImages.ID_MARKER_ERROR );
     m_imgRegistry.put( IMAGE_WARNING, KalypsoModelWspmUIImages.ID_MARKER_WARNING );
-    final IContentProvider contentProvider = m_viewer.getContentProvider();
-    final IProfil profil = (contentProvider instanceof ProfilContentProvider) ? ((ProfilContentProvider) contentProvider).getProfil() : null;
 
-    final String[] markerIds = profil == null ? new String[0] : profil.getPointMarkerTypes();
-    for( final String markerId : markerIds )
+    final IProfilPointMarkerProvider[] mps = KalypsoModelWspmCoreExtensions.getAllMarkerProviders();
+    for( final IProfilPointMarkerProvider mp : mps )
     {
-      final IProfilPointMarkerProvider markerProvider = profil.getMarkerProviderFor( markerId );
-      final ImageDescriptor image = markerProvider == null ? null : markerProvider.getImageFor( markerId );
-      if( image != null )
-        m_imgRegistry.put( markerId, image );
+      for( final String markerId : mp.getMarkerTypes() )
+      {
+        final ImageDescriptor img = mp.getImageFor( markerId );
+        if( img != null )
+          m_imgRegistry.put( markerId, img );
+      }
     }
-
     final Display display = m_viewer.getControl().getDisplay();
     m_colorError = display.getSystemColor( SWT.COLOR_RED );
     m_colorWarning = display.getSystemColor( SWT.COLOR_YELLOW );
 
- //   m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( display );
-    
-    // m_deviderColors.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_profilColorRegistry.get(
-    // IProfilColorSet.COLOUR_BORDVOLLPUNKTE ) );
-    // m_deviderColors.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_profilColorRegistry.get(
-    // IProfilColorSet.COLOUR_TRENNFLAECHEN ) );
-    // m_deviderColors.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_profilColorRegistry.get(
-    // IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE ) );
-    // m_deviderColors.put( IWspmTuhhConstants.MARKER_TYP_WEHR, m_profilColorRegistry.get( IProfilColorSet.COLOUR_WEHR )
-    // );
   }
 
   /**
@@ -155,18 +132,7 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
           if( IMarker.SEVERITY_WARNING == severity )
             return m_imgRegistry.get( IMAGE_WARNING );
         }
-        return m_imgRegistry.get(deviderTyp);
-        
-        // if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( deviderTyp ) )
-        // return m_imgRegistry.get( IMAGE_DEVIDER_D );
-        // else if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( deviderTyp ) )
-        // return m_imgRegistry.get( IMAGE_DEVIDER_T );
-        // else if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( deviderTyp ) )
-        // return m_imgRegistry.get( IMAGE_DEVIDER_B );
-        // else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( deviderTyp ) )
-        // return m_imgRegistry.get( IMAGE_DEVIDER_W );
-        // else
-        // return null;
+        return m_imgRegistry.get( deviderTyp );
       }
     }
     return null;
@@ -265,10 +231,6 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   public Color getForeground( final Object element, int columnIndex )
   {
-    if( element instanceof IProfilPoint )
-    {
-      return m_deviderColors.get( getDeviderTyp( (IProfilPoint) element ) );
-    }
     return null;
   }
 

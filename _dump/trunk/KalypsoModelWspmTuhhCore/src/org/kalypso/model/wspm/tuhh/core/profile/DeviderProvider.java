@@ -63,13 +63,13 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   {
     final String plgn = KalypsoModelWspmTuhhCorePlugin.getDefault().toString();
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col1.gif" );
-    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col2.gif" );
-    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col3.gif" );
-    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )
       return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col4.gif" );
+    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
+      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col3.gif" );
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
+      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col1.gif" );
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )
+      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col2.gif" );
     return null;
   }
 

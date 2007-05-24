@@ -407,7 +407,7 @@ public class WehrPanel extends AbstractProfilView
     final String wehrart = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
     final String comboString = m_Wehrart.getData( wehrart ).toString();
     m_Wehrart.select( m_Wehrart.indexOf( comboString ) );
-    m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    m_WehrfeldVisible.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     m_kronenParameter.setText( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ).toString() );
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
     {

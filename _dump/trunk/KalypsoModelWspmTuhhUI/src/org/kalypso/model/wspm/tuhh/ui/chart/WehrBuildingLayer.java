@@ -123,7 +123,8 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   private EditInfo getDeviderInfo( final Point mousePoint )
   {
-    if( !getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+    final Boolean visibility =getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    if( visibility==null || !visibility  )
       return null;
     final AxisRange valueRange = getValueRange();
     final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
@@ -205,7 +206,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   public void paint( GCWrapper gc )
   {
     super.paint( gc );
-    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
       paintDevider( gc );
   }
 

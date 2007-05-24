@@ -286,14 +286,14 @@
               id="com.bce.profil.eclipse.view.table.popup"
               targetID="org.kalypso.model.wspm.ui.view.table.TableView">
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.DeletePointHandler"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.DeletePointCommand"
                  enablesFor="+"
                  id="com.bce.profil.eclipse.view.table.deletepoint"
                  label="%com.bce.profil.eclipse.view.table.deletepoint"
                  menubarPath="additions"
                  tooltip="%com.bce.profil.eclipse.view.table.deletepoint.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.InsertPointsHandler"
+                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.AddPointHandler"
                  enablesFor="?"
                  id="com.bce.profil.eclipse.view.table.insertpoint"
                  label="%com.bce.profil.eclipse.view.table.insertpoint"
@@ -328,7 +328,7 @@
                  menubarPath="additions"
                  tooltip="%org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboard.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.InsertPointsHandler"
+                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.AddPointHandler"
                  enablesFor="?"
                  id="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboard"
                  label="%org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboard"
@@ -412,9 +412,9 @@
       <extension
             point="org.eclipse.ui.commands">
          <category
-               description="Commands for the SWTTable View"
+               description="Commands for the Profile Table"
                id="org.kalypso.model.wspm.ui.view.table.swt.category"
-               name="SWTTable Commands"/>
+               name="Kommandos der Profiltabelle"/>
          <command
                categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
                id="org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
@@ -460,7 +460,7 @@
                class="org.kalypso.model.wspm.ui.view.table.swt.handlers.DeletePointHandler"
                commandId="org.kalypso.model.wspm.ui.view.table.swt.DeletePointCommand"/>
          <handler
-               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.InsertPointsHandler"
+               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.AddPointHandler"
                commandId="org.kalypso.model.wspm.ui.view.table.swt.InsertPointsCommand">
          </handler>
       </extension>

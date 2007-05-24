@@ -42,13 +42,15 @@ package org.kalypso.model.wspm.ui.view.table.swt.handlers;
 
 import java.util.LinkedList;
 
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointRemove;
+import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -57,26 +59,33 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public class DeletePointHandler extends AbstractSWTTableHandler
+public class AddPointHandler extends AbstractSWTTableHandler implements IHandler
 {
 
   /**
    * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList,
    *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
+
   @Override
-  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public final IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
-    final IProfilChange[] changes = new IProfilChange[selection.size() + 1];
-    final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( tableView.getProfil(), selection.getFirst() );
-    int i = 0;
-    for( final IProfilPoint point : selection )
+    if( tableView.isSorted() )
     {
-      changes[i++] = new PointRemove( tableView.getProfil(), point );
+            
+      MessageDialog.openWarning( tableView.getControl().getShell(), "", "Punkte können nur in unsortierte Tabelle eingefügt werden.\nKlicken Sie auf die markierte Spalte, um die Sortierung aufzuheben." );
+      return null;
     }
-    changes[i] = new ActiveObjectEdit( tableView.getProfil(), thePointBefore, IWspmConstants.POINT_PROPERTY_BREITE );
-    final ProfilOperation operation = new ProfilOperation( "Punkte löschen", tableView.getProfilEventManager(), changes, false );
+
+    final IProfilPoint thePointBefore = selection.isEmpty() ? null : selection.getLast();
+    final IProfilPoint thePointAfter = thePointBefore == null ? null : ProfilUtil.getPointAfter( tableView.getProfil(), thePointBefore );
+    IProfilPoint thePoint = thePointAfter == null ? thePointBefore.clonePoint() : ProfilUtil.splitSegment( tableView.getProfil(), thePointBefore, thePointAfter );
+    final IProfilChange[] changes = new IProfilChange[2];
+    changes[0] = new PointAdd(  tableView.getProfil(), thePointBefore, thePoint );
+    changes[1] = new ActiveObjectEdit(  tableView.getProfil(), thePoint, IWspmConstants.POINT_PROPERTY_BREITE );
+    final ProfilOperation operation = new ProfilOperation( "",  tableView.getProfilEventManager(), changes, true );
     new ProfilOperationJob( operation ).schedule();
+
     return Status.OK_STATUS;
   }
 }

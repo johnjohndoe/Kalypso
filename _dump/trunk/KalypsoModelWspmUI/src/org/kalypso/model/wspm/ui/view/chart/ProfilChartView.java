@@ -150,15 +150,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     // get visibility
     final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
     for( final IChartLayer layer : m_chart.getLayers() )
-      visibility.put( ((IAction) layer).getId(), m_chart.isVisible( layer ) );
+      visibility.put( layer.getId(), m_chart.isVisible( layer ) );
 
     m_chart.clearLayers();
 
     final IProfil profil = getProfil();
     if( profil != null )
     {
-      // final String profiletype = profil.getType();
-      // final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
       if( m_layerProvider == null )
       {
         m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
@@ -310,7 +308,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           createLayer();
           return;
         }
-        if(  hint.isPointPropertiesChanged() ||hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
+        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
+            || hint.isActivePointChanged() )
         {
           for( final IChartLayer layer : chart.getLayers() )
           {
@@ -387,23 +386,23 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         case MAXIMIZE:
           m_chart.maximize();
           break;
-//        TODO: KIM Ansicht Seitenverhältnis überarbeiten          
-//        case FIX_RATIO_0:
-//          m_chart.setFixAspectRatio( null );
-//          m_chart.repaint();
-//          break;
-//        case FIX_RATIO_1:
-//          m_chart.setFixAspectRatio( 1.0 );
-//          m_chart.repaint();
-//          break;
-//        case FIX_RATIO_2:
-//          m_chart.setFixAspectRatio( 2.0 );
-//          m_chart.repaint();
-//          break;
-//        case FIX_RATIO_3:
-//          m_chart.setFixAspectRatio( 10.0 );
-//          m_chart.repaint();
-//          break;
+// TODO: KIM Ansicht Seitenverhältnis überarbeiten
+// case FIX_RATIO_0:
+// m_chart.setFixAspectRatio( null );
+// m_chart.repaint();
+// break;
+// case FIX_RATIO_1:
+// m_chart.setFixAspectRatio( 1.0 );
+// m_chart.repaint();
+// break;
+// case FIX_RATIO_2:
+// m_chart.setFixAspectRatio( 2.0 );
+// m_chart.repaint();
+// break;
+// case FIX_RATIO_3:
+// m_chart.setFixAspectRatio( 10.0 );
+// m_chart.repaint();
+// break;
 
         case ZOOM_IN:
           m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );

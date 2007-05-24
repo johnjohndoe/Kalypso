@@ -216,31 +216,34 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
   private void registerGlobalActions( final ProfilSWTTableView tableView )
   {
-    final IActionBars actionBars = getViewSite().getActionBars();
+    // final IActionBars actionBars = getViewSite().getActionBars();
 
     // TODO: we can't do that, because then caopy/paste within a cell does not work any more
     // actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), tableView.getAction(
     // ProfilSWTTableView.ACTION_COPY ) );
     // actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), tableView.getAction(
     // ProfilSWTTableView.ACTION_PASTE ) );
-   // actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), tableView.getAction( ProfilSWTTableView.ACTION_DELETEPOINTS ) );
-    actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), tableView.getAction( ProfilSWTTableView.ACTION_SELECTALL ) );
-    actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, tableView.getAction( ProfilSWTTableView.ACTION_INSERTPOINT ) );
+    // actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), tableView.getAction(
+    // ProfilSWTTableView.ACTION_DELETEPOINTS ) );
+    // actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), tableView.getAction(
+    // ProfilSWTTableView.ACTION_SELECTALL ) );
+    // actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, tableView.getAction(
+    // ProfilSWTTableView.ACTION_INSERTPOINT ) );
 
-    actionBars.updateActionBars();
+    // actionBars.updateActionBars();
   }
 
   private void unregisterGlobalActions( )
   {
-    final IActionBars actionBars = getViewSite().getActionBars();
+// final IActionBars actionBars = getViewSite().getActionBars();
 
     // actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), null );
     // actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), null );
-   // actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), null );
-    actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), null );
-    actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, null );
-
-    actionBars.updateActionBars();
+    // actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), null );
+// actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), null );
+// actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, null );
+//
+// actionBars.updateActionBars();
   }
 
   /**

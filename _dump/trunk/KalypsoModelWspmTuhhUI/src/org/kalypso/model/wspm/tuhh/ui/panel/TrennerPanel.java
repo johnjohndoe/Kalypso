@@ -201,13 +201,11 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
         IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setMarkerMoved();
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
-        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -324,9 +322,9 @@ public class TrennerPanel extends AbstractProfilView
 
   /**
    * @exception SWTException
-   *              <ul>
-   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *              </ul>
+   *                <ul>
+   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *                </ul>
    */
   protected void updateControls( )
   {
@@ -338,7 +336,7 @@ public class TrennerPanel extends AbstractProfilView
     {
       if( !m_fz_show.isDisposed() )
       {
-        m_fz_show.setSelection( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+        m_fz_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
       }
       if( (!m_fzl_text.isDisposed()) && (fz_devs.length > 0) )
         m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
@@ -374,7 +372,7 @@ public class TrennerPanel extends AbstractProfilView
       }
       if( !m_db_show.isDisposed() )
       {
-        m_db_show.setSelection( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+        m_db_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
       }
       if( !m_dbl_text.isDisposed() && (db_devs.length > 0) )
         m_dbl_text.setText( String.format( "%.4f", db_devs[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
@@ -408,7 +406,7 @@ public class TrennerPanel extends AbstractProfilView
         if( !m_bv_show.isDisposed() )
         {
           m_bv_show.setVisible( true );
-          m_bv_show.setSelection( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
+          m_bv_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
         }
         if( !m_bv_add.isDisposed() )
         {

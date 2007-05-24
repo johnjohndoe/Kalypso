@@ -83,7 +83,7 @@ public class KalypsoModelWspmCoreExtensions
 
   /**
    * @param fileExtension
-   *          File extension without '.'
+   *            File extension without '.'
    */
   public static IProfilSource createProfilSource( final String fileExtension ) throws CoreException
   {
@@ -178,6 +178,20 @@ public class KalypsoModelWspmCoreExtensions
     return list.toArray( new IProfilPointMarkerProvider[list.size()] );
   }
 
+  public static IProfilPointMarkerProvider[] getAllMarkerProviders( )
+  {
+    final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
+    final ArrayList<IProfilPointMarkerProvider> list = new ArrayList<IProfilPointMarkerProvider>();
+    for( final List<IProfilPointMarkerProvider> ppmp : map.values() )
+    {
+      list.addAll( ppmp );
+    }
+    if( list == null )
+      return new IProfilPointMarkerProvider[0];
+
+    return list.toArray( new IProfilPointMarkerProvider[list.size()] );
+  }
+
   private static synchronized Map<String, List<IProfilPointMarkerProvider>> getMarkerProviders( )
   {
     if( THE_MARKER_PROVIDER_MAP != null )
@@ -208,6 +222,7 @@ public class KalypsoModelWspmCoreExtensions
 
     return THE_MARKER_PROVIDER_MAP;
   }
+
   public static IProfileObjectProvider[] getObjectProviders( final String profilType )
   {
     final Map<String, List<IProfileObjectProvider>> map = getObjectProviders();
@@ -217,6 +232,7 @@ public class KalypsoModelWspmCoreExtensions
 
     return list.toArray( new IProfileObjectProvider[list.size()] );
   }
+
   private static synchronized Map<String, List<IProfileObjectProvider>> getObjectProviders( )
   {
     if( THE_OBJECT_PROVIDER_MAP != null )
