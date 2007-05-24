@@ -106,7 +106,7 @@
 			<xs:documentation xml:lang="en">
 				The type for finite elements node in 1d 2d finit element 
 				network. Such a node as a pointProperty and a links to node 
-				conatiner which are edges.  
+				container which are edges.  
 			</xs:documentation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty

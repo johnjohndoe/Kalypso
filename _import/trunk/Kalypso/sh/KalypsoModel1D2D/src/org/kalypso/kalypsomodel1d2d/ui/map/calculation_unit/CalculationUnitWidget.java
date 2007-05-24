@@ -40,46 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.MenuItem;
 import java.awt.Point;
+import java.awt.PopupMenu;
 import java.awt.event.KeyEvent;
-import java.awt.font.LineMetrics;
-import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 
-import org.apache.commons.collections.MapUtils;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.ui.views.map.MapView;
 
 /**
  * 
@@ -88,15 +80,33 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  *
  */
 public class CalculationUnitWidget 
-                    extends FENetConceptSelectionWidget//AbstractWidget 
-                    implements IWidgetWithOptions/*, IEvaluationContextConsumer*/
+//                    extends FENetConceptSelectionWidget//AbstractWidget 
+                    implements IWidgetWithOptions, IWidget/*, IEvaluationContextConsumer*/
 {
   
-  
+  private IWidget strategy = null; 
     
   private CalculationUnitDataModel dataModel= new CalculationUnitDataModel();
+  
   private CalculationUnitWidgetFace widgetFace = new CalculationUnitWidgetFace(dataModel);
+  
+  private String name;
+  
+  private String tooltip;
+  
+  /**
+   * Prevents pop up menu to show
+   */
+  final Listener popupBlocker = new Listener()
+  {
 
+    public void handleEvent( Event event )
+    {
+      event.doit = false;
+    }
+    
+  };
+  
   public CalculationUnitWidget()
   {
     this("Berechnungseinheiten Modellieren","Berechnungseinheiten Modellieren");
@@ -104,30 +114,75 @@ public class CalculationUnitWidget
   
   public CalculationUnitWidget( String name, String toolTip )
   {
-//    super( name, toolTip );
-    super( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, name, toolTip );    
+    this.name = name;
+    this.tooltip = toolTip;
+//    super( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, name, toolTip );    
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
-  @Override
+//  @Override
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
-    super.activate(commandPoster, mapPanel);
-    // @TODO do all initilization here
+//    super.activate(commandPoster, mapPanel);
+    
     dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET, commandPoster );
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     IFEDiscretisationModel1d2d model1d2d =
         UtilMap.findFEModelTheme( mapPanel.getMapModell() );
     //TODO check model1d2d for null and do something
-    
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
     dataModel.setData(
         ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
         CalUnitOps.getModelCalculationUnits( model1d2d ) );
+////    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+//    PopupMenu popup = new PopupMenu();
+//    popup.add( new MenuItem("TestMenu") );
+//    mapPanel.add( popup  );
+//    hookContextMenu();
+    registerPopupBlocker( popupBlocker );
   }
+  
+  /**
+   * Register a popup blocker to the mapview id
+   */
+  private static final void registerPopupBlocker(Listener popupBlocker) 
+  {
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    IViewPart findView = activePage.findView( MapView.ID );
+    
+    if( findView instanceof MapView )
+    {
+      
+      final IWorkbenchPartSite site = findView.getViewSite();
+            Control control = (Control) findView.getAdapter( Control.class );
+      control.addListener( SWT.MenuDetect, popupBlocker  );
+    }
+  }
+  
+  /**
+   * Register a popup blocker to the mapview id
+   */
+  private static final void unRegisterPopupBlocker(Listener popupBlocker) 
+  {
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    IViewPart findView = activePage.findView( MapView.ID );
+    
+    if( findView instanceof MapView )
+    {
+      
+      final IWorkbenchPartSite site = findView.getViewSite();
+            Control control = (Control) findView.getAdapter( Control.class );
+      control.removeListener( SWT.MenuDetect, popupBlocker  );
+    }
+  }
+  
   
   
   /**
@@ -157,66 +212,268 @@ public class CalculationUnitWidget
     }
     //dataModel.removeAllListeners();
   }
-  
 
-  
-  private void drawToolTip( String tooltip, Point p, Graphics g )
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
+   */
+  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
   {
-    Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
+    return true;
+  }
 
-    g.setColor( new Color( 255, 255, 225 ) );
-    g.fillRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
+   */
+  public void clickPopup( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.clickPopup( p );
+    }
+    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    PopupMenu popup = new PopupMenu();
+    popup.add( new MenuItem("TestMenu") );
+    mapPanel.add( popup  );
+    popup.show( mapPanel, p.x, p.y );
+    System.out.println("popup");
+    
+//    mapPanel.
+  }
 
-    g.setColor( Color.BLUE);
-    g.drawRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
-
-    /* Tooltip zeichnen. */
-    g.drawString( tooltip, (int) p.getX() + 5, (int) p.getY() + 35 );
+  
+  
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
+   */
+  public void doubleClickedLeft( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.doubleClickedLeft( p );
+    }
     
   }
 
- 
- 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedLeft(java.awt.Point)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
-  @Override
-  public void doubleClickedLeft( Point p )
-  {
-    //@TODO
-  }
-  
-  private void reselectSelected( )
-  {
-    //@TODO
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedRight(java.awt.Point)
-   */
-  @Override
   public void doubleClickedRight( Point p )
   {
-//@TODO;
-  }
-  
-  @Override
-  public void keyPressed( KeyEvent e )
-  {
-    super.keyPressed( e );
-// @TODO
+    if( strategy != null )
+    {
+      strategy.doubleClickedRight( p );
+    }    
   }
 
-  
-  
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#leftClicked(java.awt.Point)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
-  @Override
+  public void dragged( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.dragged( p );
+    }    
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
+   */
+  public void finish( )
+  {
+    if( strategy != null )
+    {
+      strategy.finish();
+    }
+    unRegisterPopupBlocker( popupBlocker );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#getName()
+   */
+  public String getName( )
+  {
+    return name;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#getToolTip()
+   */
+  public String getToolTip( )
+  {
+    return tooltip;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  public void keyPressed( KeyEvent e )
+  {
+    if( strategy != null )
+    {
+      strategy.keyPressed( e );
+    }
+    
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  public void keyReleased( KeyEvent e )
+  {
+    if( strategy != null )
+    {
+      strategy.keyReleased( e );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
+   */
+  public void keyTyped( KeyEvent e )
+  {
+    if( strategy != null )
+    {
+      strategy.keyTyped( e );
+    }
+    
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
+   */
   public void leftClicked( Point p )
   {
-   super.leftClicked(p);
-// @TODO
+    if( strategy != null )
+    {
+      strategy.leftClicked( p );
+    }
+    
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
+   */
+  public void leftPressed( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.leftPressed( p );
+    }
+    
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
+   */
+  public void leftReleased( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.leftReleased( p );
+    }
+    
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
+   */
+  public void middleClicked( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.middleClicked( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
+   */
+  public void middlePressed( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.middlePressed( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
+   */
+  public void middleReleased( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.middleReleased( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
+   */
+  public void moved( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.moved( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
+   */
+  public void paint( Graphics g )
+  {
+    if( strategy != null )
+    {
+      strategy.paint( g );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
+   */
+  public void rightClicked( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.rightClicked( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
+   */
+  public void rightPressed( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.rightPressed( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
+   */
+  public void rightReleased( Point p )
+  {
+    if( strategy != null )
+    {
+      strategy.rightReleased( p );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( ISelection selection )
+  {
+    if( strategy != null )
+    {
+      strategy.setSelection( selection );
+    }
+  }
+  
+ 
   }
   
