@@ -103,8 +103,10 @@ public class ImportObservationWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection currentSelection )
+  public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
+    // TODO: this is not good, because now this wizard really does not work from the 'new' menu. So be consequent and
+    // dont let it be a INewWizard!
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     m_project = ((IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME )).getProject();
@@ -112,6 +114,9 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
+      // TODO: at least dont set a selection here! What the wizard really wants is the base-folder
+      // where to import its stuff. So translate the selection to a resource here
+      // and dont talk about selections any more!
       m_selection = new StructuredSelection( selectedResources );
     }
 
@@ -119,7 +124,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     setNeedsProgressMonitor( true );
   }
 
-  public final void setProject( IProject project )
+  public final void setProject( final IProject project )
   {
     m_project = project;
   }
@@ -165,7 +170,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, false );
       if( srcObservation == null )
       {
-        MessageBox messageBox = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+        final MessageBox messageBox = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
         messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ) );
         messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ) );
         if( messageBox.open() == SWT.NO )
@@ -244,8 +249,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       if( tuppelModelTarget != null )
       {
         for( int i = 0; i < countTarget; i++ )
-          for( int a = 0; a < axesNew.length; a++ )
-            newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, axesNew[a] ), axesNew[a] );
+          for( final IAxis element : axesNew )
+            newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, element ), element );
       }
       final String href = ""; //$NON-NLS-1$
       final String id = ""; //$NON-NLS-1$
@@ -254,24 +259,24 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      IObservation newObservation = new SimpleObservation( href, id, name, false, null, metadata, axesNew, newTuppelModel );
+      final IObservation newObservation = new SimpleObservation( href, id, name, false, null, metadata, axesNew, newTuppelModel );
       final Observation type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...
 
       final Marshaller marshaller = JaxbUtilities.createMarshaller( zmlJC );
       // use IResource
       final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
-      OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
+      final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );
       writer.close();
 
       m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // e.printStackTrace();
-      MessageBox messageBox = new MessageBox( getShell(), SWT.OK );
+      final MessageBox messageBox = new MessageBox( getShell(), SWT.OK );
       messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ) );
       messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ) );
       messageBox.open();

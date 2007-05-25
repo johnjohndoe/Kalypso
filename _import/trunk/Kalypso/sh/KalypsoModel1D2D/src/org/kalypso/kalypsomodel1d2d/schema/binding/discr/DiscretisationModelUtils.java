@@ -109,7 +109,9 @@ public class DiscretisationModelUtils
     if( contiLine != null )
       return contiLine;
 
-    // TODO: also find 1D-Elements
+    final IElement1D element1d = discModel.find1DElement( currentPos, grabDistance );
+    if( element1d != null )
+      return element1d;
 
     final IPolyElement element2d = discModel.find2DElement( currentPos, grabDistance );
     return element2d;

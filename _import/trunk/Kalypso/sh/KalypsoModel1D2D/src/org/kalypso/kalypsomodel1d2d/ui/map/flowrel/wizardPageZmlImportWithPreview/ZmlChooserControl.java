@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
@@ -33,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -60,18 +60,12 @@ import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class WizardPageZmlChooser extends WizardPage
+public abstract class ZmlChooserControl
 {
   public class ZmlFilter extends ViewerFilter
   {
-
-    public ZmlFilter( )
-    {
-      super();
-    }
-
     @Override
-    public boolean select( Viewer viewer, Object parentElement, Object element )
+    public boolean select( final Viewer viewer, final Object parentElement, final Object element )
     {
       if( element instanceof File )
         return ((File) element).getName().endsWith( ".zml" );
@@ -87,81 +81,71 @@ public class WizardPageZmlChooser extends WizardPage
 
   protected TextTitle m_subTitle;
 
-  private String m_parentFolder = "";
-  
-  private IFolder m_currentSzenario;
+  private IFolder m_importFolder = null;
 
   private Text m_dateFromTxt;
 
   private Text m_dateToTxt;
 
   private IObservation m_observation;
-  
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
-  public WizardPageZmlChooser( String title )
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+
+  public ZmlChooserControl( final IFolder importFolder )
   {
-    super( title );
+    m_importFolder = importFolder;
   }
 
-  public WizardPageZmlChooser( )
-  {
-    super( "Super title" );
-    setTitle( "Some title that should be changed." );
-    setDescription( "Some subtitle that should be changed." );
-  }
-
-  public void init( IFolder currentSzenario, String parentFolder )
-  {
-    m_currentSzenario = currentSzenario;
-    m_parentFolder = parentFolder;
-    setPageComplete( false );
-  }
-
-  public void createControl( Composite parent )
+  public Control createControl( final Composite parent )
   {
     final Composite topComposite = new Composite( parent, SWT.NONE );
-    GridLayout gridLayout = new GridLayout ();
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 4;
     gridLayout.makeColumnsEqualWidth = true;
-    topComposite.setLayout (gridLayout);
-    
-    Composite innerComposite = new SashForm( topComposite, SWT.HORIZONTAL | SWT.NULL );
-    GridData data = new GridData ();
+    topComposite.setLayout( gridLayout );
+
+    final Composite innerComposite = new SashForm( topComposite, SWT.HORIZONTAL | SWT.NULL );
+    GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.verticalAlignment = GridData.FILL;
     data.horizontalSpan = 4;
     data.grabExcessHorizontalSpace = true;
     data.grabExcessVerticalSpace = true;
-    innerComposite.setLayoutData (data);
+    innerComposite.setLayoutData( data );
 
-    final TreeViewer treeViewer = new TreeViewer( innerComposite );
+    final TreeViewer treeViewer = new TreeViewer( innerComposite, SWT.BORDER );
+
+    // TODO: do NOT use this file stuff! do NOT work against eclipse!
+    // TODO: either use WorkbenchLabelProvider and so on on IFiles/IFolders
+    // TODO: or even use ProjectExlorer techniques
     treeViewer.setContentProvider( new FileTreeContentProvider() );
     treeViewer.setLabelProvider( new FileTreeLabelProvider() );
-    treeViewer.setInput( new File( m_parentFolder ) );
+    treeViewer.setInput( new File( m_importFolder.getLocation().toOSString() ) );
     treeViewer.addFilter( new ZmlFilter() );
-    
-    Button loadZmlBtn = new Button(topComposite, SWT.PUSH);
-    data = new GridData ();
+
+    final Button loadZmlBtn = new Button( topComposite, SWT.PUSH );
+    data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = false;
     loadZmlBtn.setText( "Importieren" );
     loadZmlBtn.setLayoutData( data );
+    final IFolder importFolder = m_importFolder;
     loadZmlBtn.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard("org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" );        
-        IWorkbenchWizard wizard;
+        // TODO: ths is very strange. Where does the wizard put the files??
+        final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" );
         final Shell shell = topComposite.getShell();
         try
         {
-          wizard = wizardDesc.createWizard();
+          final IWorkbenchWizard wizard = wizardDesc.createWizard();
+          wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( importFolder ) );
           final WizardDialog dialog = new WizardDialog( shell, wizard );
           dialog.open();
         }
@@ -175,36 +159,35 @@ public class WizardPageZmlChooser extends WizardPage
       }
     } );
 
-    Label vonLbl = new Label(topComposite, SWT.NONE);
-    data = new GridData ();
+    final Label vonLbl = new Label( topComposite, SWT.NONE );
+    data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = true;
     vonLbl.setText( "Von:" );
     vonLbl.setAlignment( SWT.RIGHT );
     vonLbl.setLayoutData( data );
-    
+
     m_dateFromTxt = new Text( topComposite, SWT.BORDER );
-    data = new GridData ();
+    data = new GridData();
     data.horizontalAlignment = GridData.FILL;
-    m_dateFromTxt.setLayoutData (data);
+    m_dateFromTxt.setLayoutData( data );
     m_dateFromTxt.setEnabled( false );
     m_dateFromTxt.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         try
         {
-          m_dateFrom = DATE_FORMAT.parse( m_dateFromTxt.getText());
+          m_dateFrom = DATE_FORMAT.parse( m_dateFromTxt.getText() );
           dateIntervalChanged();
-          setPageComplete( true );
+          setComplete( true );
         }
-        catch( ParseException e1 )
+        catch( final ParseException e1 )
         {
           m_diagView.removeAllItems();
-          setPageComplete( false );
+          setComplete( false );
         }
-        getWizard().getContainer().updateButtons();
       }
     } );
 
@@ -217,52 +200,50 @@ public class WizardPageZmlChooser extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateFrom );
+        final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( topComposite.getShell(), m_dateFrom );
         if( calendarDialog.open() == Window.OK )
         {
           m_dateFrom = calendarDialog.getDate();
-          m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom) );
+          m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom ) );
           dateIntervalChanged();
         }
       }
     } );
 
-    Label bisLbl = new Label(topComposite, SWT.NONE);
-    data = new GridData ();
+    final Label bisLbl = new Label( topComposite, SWT.NONE );
+    data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 2;
     data.grabExcessHorizontalSpace = true;
     bisLbl.setText( "Bis:" );
     bisLbl.setAlignment( SWT.RIGHT );
     bisLbl.setLayoutData( data );
-    
+
     m_dateToTxt = new Text( topComposite, SWT.BORDER );
-    data = new GridData ();
+    data = new GridData();
     data.horizontalAlignment = GridData.FILL;
-    m_dateToTxt.setLayoutData (data);
+    m_dateToTxt.setLayoutData( data );
     m_dateToTxt.setEnabled( false );
     m_dateToTxt.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         try
         {
-          m_dateTo = DATE_FORMAT.parse( m_dateToTxt.getText());
+          m_dateTo = DATE_FORMAT.parse( m_dateToTxt.getText() );
           dateIntervalChanged();
-          setPageComplete( true );
+          setComplete( true );
         }
-        catch( ParseException e1 )
+        catch( final ParseException e1 )
         {
-//          e1.printStackTrace();
+// e1.printStackTrace();
           m_diagView.removeAllItems();
-          setPageComplete( false );
+          setComplete( false );
         }
-        getWizard().getContainer().updateButtons();
       }
     } );
-
 
     final Button dateToBtn = new Button( topComposite, SWT.PUSH );
     dateToBtn.setText( "..." );
@@ -273,13 +254,13 @@ public class WizardPageZmlChooser extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateTo );
+        final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( dateToBtn.getShell(), m_dateTo );
         if( calendarDialog.open() == Window.OK )
         {
           m_dateTo = calendarDialog.getDate();
-          m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo) );
+          m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo ) );
           dateIntervalChanged();
         }
       }
@@ -291,25 +272,23 @@ public class WizardPageZmlChooser extends WizardPage
     {
       m_chart = new ObservationChart( m_diagView );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
     m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) );
     m_chart.addSubtitle( m_subTitle );
-    
-    
-    
+
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( innerComposite, SWT.RIGHT | SWT.BORDER | SWT.EMBEDDED | SWT.Paint ) );
-    
+
     vFrame.add( ChartFactory.createChartPanel( m_chart ) );
-    
+
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
@@ -317,23 +296,23 @@ public class WizardPageZmlChooser extends WizardPage
         // always remove items first (we don't know which selection we get)
         m_diagView.removeAllItems();
 
-        setPageComplete( false );
+        setComplete( false );
 
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
 
-        File selectedFile = (File) selection.getFirstElement();
+        final File selectedFile = (File) selection.getFirstElement();
 
         try
         {
           m_observation = ZmlFactory.parseXML( selectedFile.toURL(), selectedFile.getAbsolutePath() );
         }
-        catch( MalformedURLException e )
+        catch( final MalformedURLException e )
         {
         }
-        catch( SensorException e )
+        catch( final SensorException e )
         {
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -351,20 +330,20 @@ public class WizardPageZmlChooser extends WizardPage
             m_dateTo = (Date) values.getElement( values.getCount() - 1, axis );
             dateRange = new DateRange( m_dateFrom, m_dateTo );
           }
-          catch( SensorException e )
+          catch( final SensorException e )
           {
             e.printStackTrace();
             dateRange = new DateRange( new Date( 1, 1, 1 ), null );
           }
           m_subTitle.setText( dateRange.toString() );
           m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( dateRange ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
-          m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom) );
-          m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo) );
+          m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom ) );
+          m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo ) );
           m_dateFromTxt.setEnabled( true );
           m_dateToTxt.setEnabled( true );
           dateFromBtn.setEnabled( true );
           dateToBtn.setEnabled( true );
-          setPageComplete( true );
+          setComplete( true );
         }
         else
         {
@@ -374,55 +353,62 @@ public class WizardPageZmlChooser extends WizardPage
           m_dateToTxt.setEnabled( false );
           dateFromBtn.setEnabled( false );
           dateToBtn.setEnabled( false );
-          setPageComplete( false );
+          setComplete( false );
         }
-        getWizard().getContainer().updateButtons();
-//        getWizard().canFinish();
       }
     } );
     topComposite.getShell().setMinimumSize( 400, 300 );
-    setControl( topComposite );
 
-    parent.pack();
-    parent.layout();
+    return topComposite;
   }
-  
-  private void dateIntervalChanged() {
+
+  private void dateIntervalChanged( )
+  {
     m_diagView.removeAllItems();
-    DateRange range = new DateRange( m_dateFrom, m_dateTo );
+    final DateRange range = new DateRange( m_dateFrom, m_dateTo );
     m_subTitle.setText( range.toString() );
     m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
   }
-  
-  public Date getFromDate() {
+
+  public Date getFromDate( )
+  {
     return m_dateFrom;
   }
-  
-  public Date getToDate() {
+
+  public Date getToDate( )
+  {
     return m_dateTo;
   }
-  
-  public ITuppleModel getTuppleModel() {
+
+  public ITuppleModel getTuppleModel( )
+  {
     try
     {
       return m_observation.getValues( null );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       return null;
     }
   }
-  
-  public String[] getComponentUrns() {
-    String[] res = new String[2];
+
+  public String[] getComponentUrns( )
+  {
+    final String[] res = new String[2];
     res[0] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
-    res[1] = "";
-    String type = m_observation.getAxisList()[1].getType();
-    if(type.equals( "W" ))
+
+    // TODO: this is not nice...
+    final String type = ObservationUtilities.findAxesByClass( m_observation.getAxisList(), Double.class )[0].getType();
+
+    if( type.equals( "W" ) )
       res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
-    if(type.equals( "Q" ))
+    else if( type.equals( "Q" ) )
       res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
+    else
+      throw new IllegalStateException( "Wrong ZML-Type" );
     return res;
   }
+
+  protected abstract void setComplete( final boolean complete );
 }

@@ -69,14 +69,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 @SuppressWarnings("unchecked")
 public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements IFEDiscretisationModel1d2d
 {
+  private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
-  private IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+  private final IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
 
-  private IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
+  private final IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
 
-  private IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
-
-  private IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = new FeatureWrapperCollection<IFE1D2DComplexElement>( getFeature(), IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_COMPLEX_ELEMENTS );
+  private final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = new FeatureWrapperCollection<IFE1D2DComplexElement>( getFeature(), IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_COMPLEX_ELEMENTS );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
@@ -90,7 +89,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
     IFE1D2DEdge toInv = null;
-    for( IFE1D2DEdge edge : (IFeatureWrapperCollection<IFE1D2DEdge>)node0.getContainers() )
+    for( final IFE1D2DEdge edge : (IFeatureWrapperCollection<IFE1D2DEdge>) node0.getContainers() )
     {
       if( NodeOps.endOf( node1, edge ) )
       {
@@ -148,7 +147,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(GM_Point, double, boolean[])
    */
-  public IFE1D2DNode createNode( GM_Point nodeLocation, double searchRectWidth, boolean[] alreadyExists )
+  public IFE1D2DNode createNode( final GM_Point nodeLocation, final double searchRectWidth, final boolean[] alreadyExists )
   {
     Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" );
 
@@ -204,7 +203,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     {
       double min = Double.MAX_VALUE, curDist;
       IFE1D2DNode nearest = null, curNode;
-      for( Feature feature : foundNodes )
+      for( final Feature feature : foundNodes )
       {
         curNode = new FE1D2DNode( feature );
         curDist = nodeLocation.distance( curNode.getPoint() );
@@ -234,33 +233,26 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     final FeatureList modelList = m_elements.getWrappedList();
     final GM_Envelope reqEnvelope = grabEnvelopeFromDistance( position, grabDistance );
     final List<Feature> foundNodes = modelList.query( reqEnvelope, null );
-    if( foundNodes.isEmpty() )
+    double min = Double.MAX_VALUE;
+    IFeatureWrapper2 nearest = null;
+    for( final Feature feature : foundNodes )
     {
-      return null;
-    }
-    else
-    {
-      double min = Double.MAX_VALUE;
-      IFeatureWrapper2 nearest = null;
-      for( final Feature feature : foundNodes )
+      final IFeatureWrapper2 current = (IFeatureWrapper2) feature.getAdapter( elementClass );
+      if( current != null )
       {
-        final IFeatureWrapper2 current = (IFeatureWrapper2) feature.getAdapter( elementClass );
-        if( current != null )
+        final GM_Object geometryFromNetItem = geometryFromNetItem( current );
+        if( geometryFromNetItem != null )
         {
-          final GM_Object geometryFromNetItem = geometryFromNetItem( current );
-          if( geometryFromNetItem != null )
+          final double curDist = position.distance( geometryFromNetItem );
+          if( min > curDist && curDist < grabDistance )
           {
-            final double curDist = position.distance( geometryFromNetItem );
-            if( min > curDist && curDist < grabDistance )
-            {
-              nearest = current;
-              min = curDist;
-            }
+            nearest = current;
+            min = curDist;
           }
         }
       }
-      return nearest;
     }
+    return nearest;
   }
 
   /**
@@ -271,7 +263,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     try
     {
       // TODO: add other known classes to switch
-      
+
       // ATTENTION: order of these ifs is importent, because
       // IFE1D2DContinuityLine inherits from FE1D2D_2DElement but
       // has no surface...
@@ -279,19 +271,19 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
       // have a surface
       if( netItem instanceof IFE1D2DContinuityLine )
         return ((IFE1D2DContinuityLine) netItem).recalculateElementGeometry();
-      
+
       if( netItem instanceof IPolyElement )
       {
-        return ((IPolyElement) netItem).recalculateElementGeometry();//getGeometry();
+        return ((IPolyElement) netItem).recalculateElementGeometry();// getGeometry();
       }
       return null;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return null;
     }
-    
+
   }
 
   private GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
@@ -316,5 +308,14 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
   public IFE1D2DContinuityLine findContinuityLine( final GM_Point position, final double grabDistance )
   {
     return (IFE1D2DContinuityLine) findElement( position, grabDistance, IFE1D2DContinuityLine.class );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#find1DElement(org.kalypsodeegree.model.geometry.GM_Point,
+   *      double)
+   */
+  public IElement1D find1DElement( final GM_Point position, final double grabDistance )
+  {
+    return (IElement1D) findElement( position, grabDistance, IElement1D.class );
   }
 }

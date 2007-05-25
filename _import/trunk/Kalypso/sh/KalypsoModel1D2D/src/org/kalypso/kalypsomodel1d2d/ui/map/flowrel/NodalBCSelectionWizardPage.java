@@ -48,32 +48,36 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class NodalBCSelectionWizardPage1 extends WizardPage
+public class NodalBCSelectionWizardPage extends WizardPage
 {
-  private final Button[] m_radioBtnGroup; 
+  private final Button[] m_radioBtnGroup;
 
-  private final TimeserieTypeDescription[] m_descriptions;
+  private final IBoundaryConditionDescriptor[] m_descriptors;
 
-  protected NodalBCSelectionWizardPage1( final TimeserieTypeDescription[] descriptions )
+  private final NodalBCDescriptorPage m_descriptorPage;
+
+  protected NodalBCSelectionWizardPage( final String pageName, final IBoundaryConditionDescriptor[] descriptors, final NodalBCDescriptorPage descriptorPage )
   {
-    super( "Super title" );
+    super( pageName );
+
+    m_descriptorPage = descriptorPage;
+
     setTitle( "Art der Randbedingung" );
     setDescription( "Geben sie auf dieser Seite die Art der Randbedingung ein." );
-    m_descriptions = descriptions;
-    m_radioBtnGroup = new Button[m_descriptions.length];
+    m_descriptors = descriptors;
+    m_radioBtnGroup = new Button[m_descriptors.length];
   }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
+    final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
@@ -83,34 +87,33 @@ public class NodalBCSelectionWizardPage1 extends WizardPage
     {
       final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
       gridData.horizontalSpan = 3;
-      m_radioBtnGroup[i] = new Button( container, SWT.RADIO );
-      m_radioBtnGroup[i].setText( m_descriptions[i].getName() );
-      m_radioBtnGroup[i].setLayoutData( gridData );
-    }
-    m_radioBtnGroup[m_radioBtnGroup.length - 1].addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( SelectionEvent e )
+      final Button radio = new Button( container, SWT.RADIO );
+      m_radioBtnGroup[i] = radio;
+      radio.setText( m_descriptors[i].getName() );
+      radio.setLayoutData( gridData );
+
+      final IBoundaryConditionDescriptor selectedDescriptor = m_descriptors[i];
+
+      radio.addSelectionListener( new SelectionAdapter()
       {
-        getWizard().getContainer().updateButtons();
-      }
-    } );
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        @Override
+        public void widgetSelected( final SelectionEvent e )
+        {
+          setDescriptor( selectedDescriptor );
+        }
+      } );
+    }
+
     m_radioBtnGroup[0].setFocus();
   }
 
-  public int getSelectedChoice( )
+  protected void setDescriptor( final IBoundaryConditionDescriptor selectedDescriptor )
   {
-    for( int i = 0; i < m_radioBtnGroup.length; i++ )
-    {
-      if( m_radioBtnGroup[i].getSelection() )
-        return i;
-    }
-    // TODO what if nothing is selected (if possible)
-    return -1;
-  }
+    m_descriptorPage.setDescriptor( selectedDescriptor );
 
-  public boolean isChoiceTimeseries( )
-  {
-    return getSelectedChoice() == m_radioBtnGroup.length - 1;
+    getContainer().updateButtons();
   }
 }

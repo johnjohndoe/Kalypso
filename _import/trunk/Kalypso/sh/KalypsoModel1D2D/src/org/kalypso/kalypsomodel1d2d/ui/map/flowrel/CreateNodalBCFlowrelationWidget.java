@@ -49,6 +49,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -69,30 +70,6 @@ import de.renew.workflow.base.ISzenarioSourceProvider;
  */
 public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
-  // TODO: move this to the Nodal...Wizard
-  public final static class TimeserieTypeDescription
-  {
-    private final String m_name;
-
-    private final String[] m_componentUrns;
-
-    public TimeserieTypeDescription( final String name, final String... componentUrns )
-    {
-      m_name = name;
-      m_componentUrns = componentUrns;
-    }
-
-    public String getName( )
-    {
-      return m_name;
-    }
-
-    public String[] getComponentUrns( )
-    {
-      return m_componentUrns;
-    }
-  }
-
   public CreateNodalBCFlowrelationWidget( )
   {
     super( "Randbedingung erzeugen", "Randbedinung für einen FE-Knoten erzeugen", IBoundaryCondition.QNAME );
@@ -104,50 +81,51 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IBoundaryCondition createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
+  protected IBoundaryCondition createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
-    final IBoundaryCondition[] bcresult = new IBoundaryCondition[1];
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IFolder scenarioFolder = (IFolder) handlerService.getCurrentState().getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
-    display.syncExec( new Runnable()
-    {
-      public void run( )
-      {
-        /* Ask user for type of new feature */
+    final IBoundaryConditionDescriptor[] descriptors = createTimeserieDescriptors( modelElement, scenarioFolder );
 
-        // TODO: make it dependend on the element type
-        final TimeserieTypeDescription[] descriptions = getTimeserieDescriptions();
+    /* Ask user for type of new feature */
+    final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, parentFeature, parentRelation );
 
-        final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptions, workspace, parentFeature, parentRelation, scenarioFolder );
+    final Shell shell = display.getActiveShell();
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    if( dialog.open() == Window.CANCEL )
+      return null;
 
-        final Shell shell = display.getActiveShell();
-        final WizardDialog dialog = new WizardDialog( shell, wizard );
-        if( dialog.open() == Window.CANCEL )
-          return;
-
-        bcresult[0] = wizard.getBoundaryCondition();
-      }
-    } );
-
-    return bcresult[0];
+    return wizard.getBoundaryCondition();
   }
 
-  // TODO: depends on type of element the bc is applied to
-  protected TimeserieTypeDescription[] getTimeserieDescriptions( )
+  private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
   {
-    return new TimeserieTypeDescription[] {
-        new TimeserieTypeDescription( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ),
-        new TimeserieTypeDescription( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ),
-        new TimeserieTypeDescription( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D ),
-        // new TimeserieTypeDescription( "W/Q - Beziehung",
-        // "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel",
-        // "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" ),
+    final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+    final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
 
-        // This one should be the last one:
-        new TimeserieTypeDescription( "Zeitreihe aus Repository", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time", "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" ) };
+    final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
+    final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
+
+    // TODO: ask ingenieurs what is right here:
+    if( modelElement instanceof IElement1D )
+      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
+
+    if( modelElement instanceof IPolyElement )
+      return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
+
+    if( modelElement instanceof IFE1D2DNode )
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+
+    if( modelElement instanceof IFE1D2DContinuityLine )
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+
+    return new IBoundaryConditionDescriptor[] {};
   }
 
   /**
@@ -156,7 +134,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   @Override
   protected boolean isConsidered( final IFeatureWrapper2 modelElement )
   {
-    return modelElement instanceof IFE1D2DNode || modelElement instanceof IFE1D2DContinuityLine || modelElement instanceof IPolyElement;
+    return modelElement instanceof IFE1D2DNode || modelElement instanceof IFE1D2DContinuityLine || modelElement instanceof IPolyElement || modelElement instanceof IElement1D;
   }
 
   /**

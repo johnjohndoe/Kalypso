@@ -65,7 +65,7 @@ public class CreateTeschkeFlowrelationWidget extends AbstractCreateFlowrelationW
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected ITeschkeFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
+  protected ITeschkeFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
@@ -73,10 +73,11 @@ public class CreateTeschkeFlowrelationWidget extends AbstractCreateFlowrelationW
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d, org.kalypsodeegree.model.geometry.GM_Point, double)
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
+   *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
-  protected IFeatureWrapper2 findModelElementFromCurrentPosition( IFEDiscretisationModel1d2d discModel, GM_Point currentPos, double grabDistance )
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return CreateKingFlowrelationWidget.findModelElementFromPosition( discModel, currentPos, grabDistance );
   }

@@ -68,7 +68,7 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IKingFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
+  protected IKingFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IKingFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );

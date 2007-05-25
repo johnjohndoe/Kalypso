@@ -40,35 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import java.math.BigDecimal;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget.TimeserieTypeDescription;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.WizardPageZmlChooser;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypsodeegree.model.feature.Feature;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -77,13 +72,9 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 {
   protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy H:mm" );
 
-  private NodalBCSelectionWizardPage1 m_page1;
+  private NodalBCSelectionWizardPage m_selectionPage;
 
-  private NodalBCSelectionWizardPage2 m_page2;
-
-  private WizardPageZmlChooser m_page3;
-
-  private final TimeserieTypeDescription[] m_descriptions;
+  private final IBoundaryConditionDescriptor[] m_descriptors;
 
   private final CommandableWorkspace m_workspace;
 
@@ -91,86 +82,32 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private final Feature m_parentFeature;
 
+  private NodalBCDescriptorPage m_descriptorPage;
+
   private IBoundaryCondition m_boundaryCondition;
-
-  private IPath m_repositoryPath;
-
-  private IFolder m_currentSzenario;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final TimeserieTypeDescription[] descriptions, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, IFolder currentScenarioFolder )
+  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
-    m_descriptions = descriptions;
+    m_descriptors = descriptors;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     setWindowTitle( "Randbedingung definieren" );
-    m_currentSzenario = currentScenarioFolder;
-    m_repositoryPath = m_currentSzenario.getProject().getLocation().append( "/imports/timeseries" );
+
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) );
   }
 
   @Override
   public void addPages( )
   {
-    m_page1 = new NodalBCSelectionWizardPage1( m_descriptions );
-    addPage( m_page1 );
-    m_page2 = new NodalBCSelectionWizardPage2();
-    addPage( m_page2 );
-    m_page3 = new WizardPageZmlChooser();
-    m_page3.init( m_currentSzenario, m_repositoryPath.toOSString() );
-    m_page3.setPreviousPage( m_page1 );
-    addPage( m_page3 );
-  }
+    m_descriptorPage = new NodalBCDescriptorPage( "descriptorPage", m_descriptors );
+    m_selectionPage = new NodalBCSelectionWizardPage( "selectionPage", m_descriptors, m_descriptorPage );
 
-  private int getSelectedPage( )
-  {
-    IWizardPage currentPage = getContainer().getCurrentPage();
-    if( currentPage == m_page1 )
-      return 1;
-    if( currentPage == m_page2 )
-      return 2;
-    if( currentPage == m_page3 )
-      return 3;
-    return 0;
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
-   */
-  @Override
-  public IWizardPage getNextPage( IWizardPage page )
-  {
-    switch( getSelectedPage() )
-    {
-      case 2:
-      case 3:
-        return null;
-      default:
-        return m_page1.isChoiceTimeseries() ? m_page3 : m_page2;
-    }
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
-  @Override
-  public boolean canFinish( )
-  {
-    switch( getSelectedPage() )
-    {
-      case 1:
-        return false;
-      case 2:
-        return m_page2.isPageComplete();
-      case 3:
-        return m_page3.isPageComplete();
-
-        // default is not used, but...
-      default:
-        return m_page1.isChoiceTimeseries() ? m_page3.isPageComplete() : m_page2.isPageComplete();
-    }
+    addPage( m_selectionPage );
+    addPage( m_descriptorPage );
   }
 
   /**
@@ -179,122 +116,53 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
-    final TimeserieTypeDescription choosenDesc = getDescription();
+    final IBoundaryConditionDescriptor descriptor = m_descriptorPage.getDescriptor();
 
-    /* Create new feature */
     final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
     final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
     final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
-    bc.setName( "1D-Randbedingung" ); // TODO: unterscheide zwischen verschiedenen Typen
-    bc.setDescription( DF.format( new Date() ) );
 
-    /* Initialize observation with components */
-    final Feature obsFeature = bc.getTimeserieFeature();
-
-    final String[] componentUrns = m_page1.isChoiceTimeseries() ? m_page3.getComponentUrns() : choosenDesc.getComponentUrns();
-    final IComponent[] components = new IComponent[componentUrns.length];
-
-    for( int i = 0; i < components.length; i++ )
-      components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
-
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-    obs.setName( choosenDesc.getName() );
-    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
-
-    final TupleResult result = obs.getResult();
-    for( final IComponent component : components )
-      result.addComponent( component );
-
-    // TODO: Refaktor in order to let different types of observations to be created
-    final IComponent domainComponent = components[0];
-    final IComponent valueComponent = components[1];
-    result.setSortComponents( new IComponent[] { domainComponent } );
-
-    GregorianCalendar calendarFrom = new GregorianCalendar();
-    GregorianCalendar calendarTo = new GregorianCalendar();
-    BigDecimal value = null;
-    if( !m_page1.isChoiceTimeseries() )
+    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
-      value = new BigDecimal( m_page2.getDefaultValue() );
-      calendarFrom.setTime( m_page2.getFromDate() );
-      calendarTo.setTime( m_page2.getToDate() );
-      do
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        final IRecord record = result.createRecord();
-        record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-        record.setValue( valueComponent, value );
-        result.add( record );
-        calendarFrom.add( Calendar.MINUTE, m_page2.getStep() );
+        /* Create new feature */
+        // TODO: maybe get from page?
+        bc.setName( "" ); // TODO: unterscheide zwischen verschiedenen Typen
+        bc.setDescription( DF.format( new Date() ) );
+
+        /* Initialize observation with components */
+        final Feature obsFeature = bc.getTimeserieFeature();
+
+        final String[] componentUrns = descriptor.getComponentUrns();
+        final IComponent[] components = new IComponent[componentUrns.length];
+
+        for( int i = 0; i < components.length; i++ )
+          components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
+
+        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+
+        final TupleResult result = obs.getResult();
+        for( final IComponent component : components )
+          result.addComponent( component );
+
+        descriptor.fillObservation( obs );
+
+        ObservationFeatureFactory.toFeature( obs, obsFeature );
+
+        return Status.OK_STATUS;
       }
-      while( !calendarFrom.after( calendarTo ) );
-    }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Erzeugen der Zeitreihe", status );
+
+    if( status.isOK() )
+      m_boundaryCondition = bc;
     else
-    {
-      ITuppleModel model = m_page3.getTuppleModel();
-      IAxis dateAxis;
-      IAxis valueAxis;
-      // System.out.println(model.getAxisList()[0].getDataClass());
-      // System.out.println(model.getAxisList()[1].getDataClass());
-      if( model.getAxisList()[0].getDataClass().equals( Date.class ) )
-      {
-        dateAxis = model.getAxisList()[0];
-        valueAxis = model.getAxisList()[1];
-      }
-      else
-      {
-        dateAxis = model.getAxisList()[1];
-        valueAxis = model.getAxisList()[0];
-      }
-      int cntFrom;
-      int cntTo;
-      try
-      {
-        for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
-        {
-          Date date = (Date) model.getElement( cntFrom, dateAxis );
-          if( m_page3.getFromDate().before( date ) )
-            break;
-        }
-        for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
-        {
-          Date date = (Date) model.getElement( cntTo, dateAxis );
-          if( m_page3.getToDate().before( date ) )
-          {
-            cntTo--;
-            break;
-          }
-        }
-        for( int i = cntFrom; i < cntTo; i++ )
-        {
-          Double doubleValue = (Double) model.getElement( i, valueAxis );
-          value = BigDecimal.valueOf( doubleValue );
-          final IRecord record = result.createRecord();
-          GregorianCalendar calendar = new GregorianCalendar();
-          calendar.setTime( (Date) model.getElement( i, dateAxis ) );
-          record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendar ) );
-          record.setValue( valueComponent, value );
-          result.add( record );
-        }
-      }
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      // TODO
-      // - get time intervall
-      // - get source-uri
-    }
-    ObservationFeatureFactory.toFeature( obs, obsFeature );
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
 
-    m_boundaryCondition = bc;
-
-    return true;
-  }
-
-  private TimeserieTypeDescription getDescription( )
-  {
-    return m_descriptions[m_page1.getSelectedChoice()];
+    return status.isOK();
   }
 
   public IBoundaryCondition getBoundaryCondition( )

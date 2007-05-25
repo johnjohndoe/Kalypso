@@ -241,7 +241,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     {
       e.printStackTrace();
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
     }
@@ -305,7 +305,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       // should never happen
       e.printStackTrace();
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
@@ -320,7 +320,8 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
     final String problemMessage;
-    if( m_modelElement == null )
+    final IFeatureWrapper2 modelElement = m_modelElement;
+    if( modelElement == null )
       // problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
       // TODO: provider nice common error message
       return;
@@ -344,7 +345,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     }
 
     /* Check preconditions */
-    if( m_modelElement == null )
+    if( modelElement == null )
       return;
     if( m_flowRelCollection == null )
       return;
@@ -354,7 +355,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_existingFlowRelation == null )
     {
       final MapPanel mapPanel = getMapPanel();
-      final GM_Position flowPositionFromElement = getFlowPositionFromElement( m_modelElement );
+      final GM_Position flowPositionFromElement = getFlowPositionFromElement( modelElement );
       final IFlowRelationshipModel flowRelationshipModel = m_flowRelCollection;
 
       /* Create flow relation at position */
@@ -364,7 +365,8 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         {
           final Feature parentFeature = flowRelationshipModel.getWrappedFeature();
           final IRelationType parentRelation = flowRelationshipModel.getWrappedList().getParentFeatureTypeProperty();
-          final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation );
+          final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, modelElement );
+
           if( flowRel == null )
           {
             mapPanel.repaint();
@@ -442,7 +444,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   {
     return modelElement instanceof IFE1D2DNode;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
@@ -452,7 +454,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     /* Deselect all */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();
-    
+
     super.finish();
   }
 
@@ -461,11 +463,11 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
    * 
    * @return The new object, if null, nothing happens..
    */
-  protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation );
+  protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement );
 
   /**
    * @param grabDistance
-   *          The grab distance in world (=geo) coordinates.
+   *            The grab distance in world (=geo) coordinates.
    */
   protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
 }

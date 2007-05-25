@@ -17,8 +17,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Time">
-			<gml:description>Time</gml:description>
-			<gml:name>Time</gml:name>
+			<gml:description>Zeit</gml:description>
+			<gml:name>Zeit</gml:name>
 			<swe:property xlink:href="#phenomenonTime" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -50,8 +50,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
-			<gml:description>WSP [NN+m]</gml:description>
-			<gml:name>WSP</gml:name>
+			<gml:description>h [NN+m]</gml:description>
+			<gml:name>h [NN+m]</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -67,7 +67,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
 			<gml:description>Q [m³/s]</gml:description>
-			<gml:name>Q</gml:name>
+			<gml:name>Q [m³/s]</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -82,8 +82,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
-			<gml:description>Q [m³/s/m²]</gml:description>
-			<gml:name>Q</gml:name>
+			<gml:description>q [m³/s/m²]</gml:description>
+			<gml:name>q [m³/s/m²]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -98,8 +98,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
-			<gml:description>Q [m³/s/m]</gml:description>
-			<gml:name>Q</gml:name>
+			<gml:description>q [m³/s/m]</gml:description>
+			<gml:name>q [m³/s/m]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
