@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -74,6 +75,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
+import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -255,14 +257,18 @@ public class FeatureTemplateView extends ViewPart
    */
   private void saveFeature( )
   {
-    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
+    final Job job = new Job( "Daten speichern" )
     {
-      public IStatus execute( final IProgressMonitor monitor )
+      @Override
+      public IStatus run( final IProgressMonitor monitor )
       {
-        return m_templateviewer.saveGML( monitor );
+        
+          return m_templateviewer.saveGML( monitor );
       }
     };
-    ProgressUtilitites.busyCursorWhile( runnable, "Fehler beim Speichern der Daten" );
+    job.setRule( m_file.getProject() );
+    job.setUser( true );
+    job.schedule();    
   }
 
   /**
