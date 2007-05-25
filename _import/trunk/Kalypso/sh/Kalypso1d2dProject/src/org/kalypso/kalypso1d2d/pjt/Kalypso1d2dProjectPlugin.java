@@ -2,6 +2,9 @@ package org.kalypso.kalypso1d2d.pjt;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -10,6 +13,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -67,6 +71,26 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     super.start( context );
 
     startSzenarioSourceProvider();
+
+    PlatformUI.getWorkbench().addWorkbenchListener( new IWorkbenchListener()
+    {
+
+      /**
+       * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
+       */
+      public void postShutdown( final IWorkbench workbench )
+      {
+      }
+
+      /**
+       * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
+       */
+      public boolean preShutdown( final IWorkbench workbench, final boolean forced )
+      {
+        stopSzenarioSourceProvider();
+        return true;
+      }
+    } );
   }
 
   /**
@@ -75,10 +99,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   @Override
   public void stop( BundleContext context ) throws Exception
   {
-    stopSzenarioSourceProvider();
-
     plugin = null;
-
     super.stop( context );
   }
 
@@ -148,23 +169,43 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private void stopSzenarioSourceProvider( )
   {
-    if( PlatformUI.isWorkbenchRunning() )
+    final Properties properties = m_activeWorkContext.createProperties();
+    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+    final File file = new File( fileName );
+    if( file.exists() )
     {
+      file.delete();
+    }
+    try
+    {
+      properties.storeToXML( new FileOutputStream( file ), "" );
+    }
+    catch( FileNotFoundException e1 )
+    {
+      e1.printStackTrace();
+    }
+    catch( IOException e1 )
+    {
+      e1.printStackTrace();
+    }
+    
+    if( PlatformUI.isWorkbenchRunning() )
+    {               
       final IWorkbench workbench = PlatformUI.getWorkbench();
+      try
+      {
+        m_activeWorkContext.setActiveProject( null );        
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }      
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       if( handlerService != null )
       {
         handlerService.removeSourceProvider( m_szenarioSourceProvider );
-        m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
-        try
-        {
-          m_activeWorkContext.setActiveProject( null );
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-        }
       }
+      m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );      
     }
   }
 

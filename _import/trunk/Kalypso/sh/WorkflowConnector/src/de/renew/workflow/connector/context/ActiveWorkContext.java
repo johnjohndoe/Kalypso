@@ -208,7 +208,11 @@ public class ActiveWorkContext<T extends Case>
 
   public void setCurrentCase( final T caze ) throws CoreException
   {
-    final T currentCase = m_caseManager.getCurrentCase();
+    final T currentCase;
+    if( m_caseManager == null )
+      currentCase = null;
+    else
+      currentCase = m_caseManager.getCurrentCase();
     if( currentCase == null && caze == null )
       return;
     else if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) )
