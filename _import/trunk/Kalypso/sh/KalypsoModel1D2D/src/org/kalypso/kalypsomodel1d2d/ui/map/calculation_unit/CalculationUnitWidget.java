@@ -41,17 +41,22 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.awt.Graphics;
-import java.awt.MenuItem;
 import java.awt.Point;
-import java.awt.PopupMenu;
 import java.awt.event.KeyEvent;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -60,6 +65,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -80,6 +87,14 @@ public class CalculationUnitWidget
                     implements IWidgetWithOptions, IWidget/*, IEvaluationContextConsumer*/
 {
   
+  private static IWorkbench workbench;
+
+  private static IWorkbenchWindow activeWorkbenchWindow;
+
+  private static IWorkbenchPage activePage;
+
+  private static IViewPart findView;
+
   private IWidget strategy = null; 
     
   private CalculationUnitDataModel dataModel= new CalculationUnitDataModel();
@@ -102,7 +117,7 @@ public class CalculationUnitWidget
     }
     
   };
-  
+ 
   public CalculationUnitWidget()
   {
     this("Berechnungseinheiten Modellieren","Berechnungseinheiten Modellieren");
@@ -146,18 +161,34 @@ public class CalculationUnitWidget
    */
   private static final void registerPopupBlocker(Listener popupBlocker) 
   {
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-    IViewPart findView = activePage.findView( MapView.ID );
+    IViewPart findView = getMapView();
     
     if( findView instanceof MapView )
     {
-      
       final IWorkbenchPartSite site = findView.getViewSite();
             Control control = (Control) findView.getAdapter( Control.class );
       control.addListener( SWT.MenuDetect, popupBlocker  );
     }
+  }
+
+  private static IViewPart getMapView( )
+  {
+    if (workbench == null){
+    workbench = PlatformUI.getWorkbench();
+    }
+    if (activeWorkbenchWindow == null){
+    activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    }
+    
+    if (activePage == null){
+      activePage = activeWorkbenchWindow.getActivePage();
+    }
+    
+    if(findView == null){
+      findView = activePage.findView( MapView.ID );
+    }
+    
+    return findView;
   }
   
   /**
@@ -165,14 +196,10 @@ public class CalculationUnitWidget
    */
   private static final void unRegisterPopupBlocker(Listener popupBlocker) 
   {
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-    IViewPart findView = activePage.findView( MapView.ID );
+    IViewPart findView = getMapView();
     
     if( findView instanceof MapView )
-    {
-      
+    {      
       final IWorkbenchPartSite site = findView.getViewSite();
             Control control = (Control) findView.getAdapter( Control.class );
       control.removeListener( SWT.MenuDetect, popupBlocker  );
@@ -220,20 +247,65 @@ public class CalculationUnitWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
+  
   public void clickPopup( Point p )
   {
     if( strategy != null )
     {
       strategy.clickPopup( p );
     }
+        
     MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-    PopupMenu popup = new PopupMenu();
-    popup.add( new MenuItem("TestMenu") );
-    mapPanel.add( popup  );
-    popup.show( mapPanel, p.x, p.y );
-    System.out.println("popup");
+    JPopupMenu popupMenu = new JPopupMenu();
     
-//    mapPanel.
+    JMenuItem addElement = new JMenuItem();
+    addElement.setText( "Add Element" );
+    addElement.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                  "icons/elcl16/add.gif" )));
+   
+    JMenuItem removeElement = new JMenuItem();
+    removeElement.setText("Remove Element");
+    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                  "icons/elcl16/remove.gif" )));
+    
+    JMenuItem addBoundaryUP = new JMenuItem();
+    addBoundaryUP.setText("Add Boundary UP");
+    addBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                  "icons/elcl16/addBoundary.gif" )));
+    
+    JMenuItem removeBoundaryUP = new JMenuItem();
+    removeBoundaryUP.setText("Remove Boundary UP");
+    removeBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                  "icons/elcl16/remove.gif" )));
+        
+    
+    JMenuItem addBoundaryDOWN = new JMenuItem();
+    addBoundaryDOWN.setText("Add Boundary DOWN");
+    addBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                 KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                 "icons/elcl16/addBoundary.gif" )));
+
+    
+    JMenuItem removeBoundaryDOWN = new JMenuItem();
+    removeBoundaryDOWN.setText("remove Boundary DOWN");
+    removeBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                "icons/elcl16/remove.gif" )));
+
+    popupMenu.add( addElement);
+    popupMenu.add( removeElement);
+    popupMenu.addSeparator();
+    popupMenu.add( addBoundaryUP);
+    popupMenu.add( removeBoundaryUP);
+    popupMenu.addSeparator();
+    popupMenu.add( addBoundaryDOWN);
+    popupMenu.add( removeBoundaryDOWN);
+    
+    popupMenu.show( mapPanel, p.x, p.y );    
   }
 
   
