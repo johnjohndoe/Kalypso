@@ -1,4 +1,4 @@
-!Last change:  EF   16 May 2007    4:24 pm
+!Last change:  K    25 May 2007    4:25 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -14,7 +14,6 @@
 !
 !Hamburg April, 18th 2007
 !****************************************************************
-
 
 SUBROUTINE COEF1dFE(NN,NTX)
 USE BLK10
@@ -37,10 +36,35 @@ REAL (KIND=8) :: dqsintdh1(1:4), dqsintdh2(1:4)
 real (KIND=8) :: d2qsidh1(1:4),  d2qsidh2(1:4)
 REAL (KIND=8) :: IntahRand
 REAL (KIND=8) :: sbot
-REAL (KIND=8) :: zs, dzsdh, fzs, dfzsdh
 
+INTEGER :: i, j, k
+!new variables
+!BC-values
+REAL (KIND=8) :: zsBC, dzsdhBC, fzsBC, dfzsdhBC
 
-REAL(KIND=8) :: froudeint(1:4)               
+REAL (KIND=8) :: Fint1(1:4), Fint2(1:4)
+REAL (KIND=8) :: dFintdh1(1:4), dFintdh2(1:4)
+REAL (KIND=8) :: d2Fintdh1(1:4), d2Fintdh2(1:4)
+REAL (KIND=8) :: dFintdx1(1:4), dFintdx2(1:4)
+REAL (KIND=8) :: d2Fintdxdh1(1:4), d2Fintdxdh2(1:4)
+
+REAL (KIND=8) :: daintdx1(1:4), daintdx2(1:4)
+REAL (KIND=8) :: d2aintdxdh1(1:4), d2aintdxdh2(1:4)
+
+REAL (KIND=8) :: yps(1:4)
+REAL (KIND=8) :: dypsdh(1:4)
+REAL (KIND=8) :: d2ypsdh(1:4)
+REAL (KIND=8) :: dypsdx(1:4)
+REAL (KIND=8) :: d2ypsdhdx(1:4)
+
+REAL (KIND=8) :: zsint(1:4)
+REAL (KIND=8) :: dzsintdh(1:4)
+REAL (KIND=8) :: d2zsintdh(1:4)
+REAL (KIND=8) :: d2sintdx(1:4)
+REAL (KIND=8) :: d2zsintdhdx(1:4)
+!end of new variables
+
+REAL(KIND=8) :: froudeint(1:4)
 REAL(KIND=8) :: vflowint(1:4)                
 REAL(KIND=8) :: dvintdx(1:4)                 
 REAL(KIND=8) :: dvintdt(1:4)                 
@@ -59,10 +83,10 @@ REAL(KIND=8) :: daintdt(1:4)
 REAL(KIND=8) :: qschint(1:4)                 
 REAL(KIND=8) :: dqsintdh(1:4)                
 REAL(KIND=8) :: d2qsidh(1:4)                 
-REAL(KIND=8) :: dqsintdx(1:4)                
+REAL(KIND=8) :: dqsintdx(1:4)
 REAL(KIND=8) :: d2qsidhdx(1:4)               
-REAL(KIND=8) :: s0schint(1:4)                
-REAL(KIND=8) :: sfwicint(1:4)                
+REAL(KIND=8) :: s0schint(1:4)
+REAL(KIND=8) :: sfwicint(1:4)
 REAL(KIND=8) :: sfint(1:4)                   
 REAL(KIND=8) :: dsfintdh1(1:4)               
 REAL(KIND=8) :: beiint(1:4)                  
@@ -160,7 +184,37 @@ init1: DO j = 1, 4
   vflowint(j)    = 0.0
   dvintdx(j)     = 0.0
   dvintdt(j)     = 0.0
+  !new variables
+  Fint1(j)       = 0.0
+  Fint2(j)       = 0.0
+  dFintdh1(j)    = 0.0
+  dFintdh2(j)    = 0.0
+  d2Fintdh1(j)   = 0.0
+  d2Fintdh2(j)   = 0.0
+  dFintdx1(i)    = 0.0
+  dFintdx2(i)    = 0.0
+  d2Fintdxdh1(i) = 0.0
+  d2Fintdxdh2(i) = 0.0
+
+  daintdx1(i)    = 0.0
+  daintdx2(i)    = 0.0
+  d2aintdxdh1(i) = 0.0
+  d2aintdxdh2(i) = 0.0
+
+  yps(j)        = 0.0
+  dypsdh(j)     = 0.0
+  d2ypsdh(j)    = 0.0
+  dypsdx(j)     = 0.0
+  d2ypsdhdx(j)  = 0.0
+
+  zsint(j)      = 0.0
+  dzsintdh(j)   = 0.0
+  d2zsintdh(j)  = 0.0
+  d2sintdx(j)   = 0.0
+  d2zsintdhdx(j)= 0.0
+
 ENDDO init1
+
 init2: do j = 1, 2
   dhdtaltzs(j) = 0.0
   hhalt(j)     = 0.0
@@ -186,6 +240,7 @@ init3: DO i = 1, 2
 ENDDO init3
 
 
+
 !initialice gravitation factor for unit system
 IF (GRAV .LT. 32.)  THEN
   grav = GRAV
@@ -201,6 +256,7 @@ ENDIF
 byparts = 1
 !byparts = 1: No differentiation by parts
 !byparts = 2: Apply Differentiation by parts
+!byparts = 3: new trial for natural boundary condition; it doesn't work yet
 
 testoutput = 0
 !testoutput = 1: output of partly values of equations and output of matrces
@@ -688,10 +744,10 @@ Gaussloop: DO I = 1, NGP
   !dA/dx at GP
   daintdx(i)  = dmx(1) * (aint1(i) + h1 * dareaintdh(i)) + dmx(2) * (aint2(i) + h3 * dareaintdh(i))
   !d2A/dx2 at GP
-  d2aintdx(i) = dhhintdx(i) * (2.0 * dmx(1) * daintdh1(i) +  xm(1) * d2aintdh1(i) * dhhintdx(i)  &
+  d2aintdx(i) = dhhintdx(i) * (2.0 * dmx(1) * daintdh1(i) +  xm(1) * d2aintdh1(i) * dhhintdx(i) &
   &                           +2.0 * dmx(2) * daintdh2(i) +  xm(2) * d2aintdh2(i) * dhhintdx(i))
   !d2A/dhdx at GP
-  d2aidhdx(i) = dmx(1) *  daintdh1(i) +  xm(1) * d2aintdh1(i) * dhhintdx(i)  &
+  d2aidhdx(i) = dmx(1) *  daintdh1(i) +  xm(1) * d2aintdh1(i) * dhhintdx(i) &
   &            +dmx(2) *  daintdh2(i) +  xm(2) * d2aintdh2(i) * dhhintdx(i)
   !dA/dt at GP
   daintdt(i)  = (xm(1) * daintdh1(i) + xm(2) * daintdh2(i)) * dhintdt(i)
@@ -766,6 +822,134 @@ Gaussloop: DO I = 1, NGP
   d2beiintdhdx(i) = dmx(1) * dbeiodh(1) + xm(1) * d2beiodh(1) * dhhintdx(i) &
   &                +dmx(2) * dbeiodh(2) + xm(2) * d2beiodh(2) * dhhintdx(i)
 
+  !mass center calculations
+  if (byparts == 3) then
+    !dAintdx
+    daintdx1(i) = daintdh1(i) * dhhintdx(i)
+    daintdx2(i) = daintdh2(i) * dhhintdx(i)
+    !d2aintdxdh
+    d2aintdxdh1(i) = d2aintdh1(i) * dhhintdx(i)
+    d2aintdxdh2(i) = d2aintdh2(i) * dhhintdx(i)
+    !Fint
+    Fint1(i) = 0.0
+    Fint2(i) = 0.0
+    do j = 0, 12
+      Fint1(i) = Fint1(i) + (j / (j+1.)) * apoly(n1,j) * hhint(i)**(j+1)
+      Fint2(i) = Fint2(i) + (j / (j+1.)) * apoly(n3,j) * hhint(i)**(j+1)
+    enddo
+    !dFintdh
+    dFintdh1(i) = 0.0
+    dFintdh2(i) = 0.0
+    do j = 0, 12
+      dFintdh1(i) = dFintdh1(i) + (j) * apoly(n1,j) * hhint(i)**j
+      dFintdh2(i) = dFintdh2(i) + (j) * apoly(n3,j) * hhint(i)**j
+    end do
+    !d2Fintdh
+    d2Fintdh1(i) = 0.0
+    d2Fintdh2(i) = 0.0
+    do j = 0, 12
+      d2Fintdh1(i) = d2Fintdh1(i) + (j**2) * apoly(n1,j) * hhint(i)**(j-1)
+      d2Fintdh2(i) = d2Fintdh2(i) + (j**2) * apoly(n3,j) * hhint(i)**(j-1)
+    end do
+    !dFintdx
+    dFintdx1(i) = 0.0
+    dFintdx2(i) = 0.0
+    dFintdx1(i) = dFintdh1(i) * dhhintdx(i)
+    dFintdx2(i) = dFintdh2(i) * dhhintdx(i)
+    !d2Fintdxdh1
+    d2Fintdxdh1(i) = d2Fintdh1(i) * dhhintdx(i)
+    d2Fintdxdh2(i) = d2Fintdh2(i) * dhhintdx(i)
+    if (testoutput == 3) then
+      WRITE(*,*)
+      WRITE(*,*) 'F1: ', fint1(i)
+      WRITE(*,*) 'F2: ', fint2(i)
+      WRITE(*,*) 'dF1/dh: ', dFintdh1(i)
+      WRITE(*,*) 'dF2/dh: ', dFintdh2(i)
+      WRITE(*,*) 'd2F1/dh2: ', d2Fintdh1(i)
+      WRITE(*,*) 'd2F2/dh2: ', d2fintdh2(i)
+      WRITE(*,*) 'd2F1/dhdx: ', d2Fintdxdh1(i)
+      WRITE(*,*) 'd2F2/dhdx: ', d2Fintdxdh2(i)
+      WRITE(*,*)
+    end if
+
+    !zS-Calculations
+    !zS
+    zsint(i) = xm(1) * Fint1(i) / aint1(i) &
+    &        + xm(2) * Fint2(i) / aint2(i)
+
+    !dzS/dh
+    dzsintdh(i) = xm(1) * (aint1(i) * dFintdh1(i) - fint1(i) * daintdh1(i)) / aint1(i)**2 &
+    &           + xm(2) * (aint2(i) * dFintdh2(i) - fint2(i) * daintdh2(i)) / aint2(i)**2
+
+    !d2zS/dh2
+    d2zsintdh(i) = xm(1) * (aint1(i) * d2Fintdh1(i) - fint1(i) * d2aintdh1(i)                                            &
+    &                       - 2. * dFintdh1(i) * daintdh1(i) + 2. * fint1(i) / aint1(i) * daintdh1(i)**2) / aint1(i)**2  &
+    &            + xm(2) * (aint2(i) * d2Fintdh2(i) - fint2(i) * d2aintdh2(i)                                            &
+    &                       - 2. * dFintdh2(i) * daintdh2(i) + 2. * fint2(i) / aint2(i) * daintdh2(i)**2) / aint2(i)**2
+
+    !d2zS/(dhdx)
+    d2zsintdhdx(i) = xm(1) * (- daintdx1(i) * dFintdh1(i) + aint1(1) * d2Fintdxdh1(i) - dFintdx1(i) * daintdh1(i)                &
+    &                         - fint1(i) * d2aintdxdh1(i) + 2. * daintdx1(i) * fint1(i) / aint1(i) * daintdh1(i)) / aint1(i)**2  &
+    &              + xm(2) * (- daintdx2(i) * dFintdh2(i) + aint2(1) * d2Fintdxdh2(i) - dFintdx2(i) * daintdh2(i)                &
+    &                         - fint2(i) * d2aintdxdh2(i) + 2. * daintdx2(i) * fint2(i) / aint2(i) * daintdh2(i)) / aint2(i)**2
+
+    !ypsilon
+    yps(i)  = xm(1) * (1. - 1. / hhint(i) * fint1(i) / aint1(i)) &
+    &       + xm(2) * (1. - 1. / hhint(i) * fint2(i) / aint2(i))
+
+    !dypsilon/dh
+    dypsdh(i)  = - xm(1) * (  hhint(i) * aint1(i) * dFintdh1(i) - fint1(i) * (aint1(i) &
+    &                       + hhint(i) * daintdh1(i))) / (hhint(i) * aint1(i))**2      &
+    &            - xm(2) * (  hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * (aint2(i) &
+    &                       + hhint(i) * daintdh2(i))) / (hhint(i) * aint2(i))**2
+
+    !d2ypsilon/dh2
+    d2ypsdh(i) = - xm(1) * (- 2. * hhint(i) * daintdh1(i) * dFintdh1(i) + 2. * fint1(i) * daintdh1(i) - aint1(i) * dFintdh1(i) &
+    &                       + 2. * fint1(i) * aint1(i) / hhint(i) + hhint(i) * aint1(i) * d2Fintdh1(i)                         &
+    &                       - hhint(i) * fint1(i) * d2aintdh1(i) + 2. * fint1(i) * hhint(i) / aint1(i) * (daintdh1(i))**2)     &
+    &                    / (hhint(i) * aint1(i) )**2                                                                           &
+    &            - xm(2) * (- 2. * hhint(i) * daintdh2(i) * dFintdh2(i) + 2. * fint2(i) * daintdh2(i) - aint2(i) * dFintdh2(i) &
+    &                       + 2. * fint2(i) * aint2(i) / hhint(i) + hhint(i) * aint2(i) * d2Fintdh2(i)                         &
+    &                       - hhint(i) * fint2(i) * d2aintdh2(i) + 2. * fint2(i) * hhint(i) / aint2(i) * (daintdh2(i))**2)     &
+    &                    / (hhint(i) * aint2(i) )**2
+    !dypsilon/dx
+    dypsdx(i) = dmx(1) * (1. - fint1(i) / hhint(i) / aint1(i))                                                &
+    &         + xm(1) * (dFintdh1(i) - fint1(i) / hhint(i) - fint1(i) / aint1(i) * daintdh1(i)) * dhhintdx(i) &
+    &         + dmx(2) * (1. - fint2(i) / hhint(i) / aint2(i))                                                &
+    &         + xm(1) * (dFintdh2(i) - fint2(i) / hhint(i) - fint2(i) / aint2(i) * daintdh2(i)) * dhhintdx(i)
+
+    !d2ypsilon/(dhdx)
+    d2ypsdhdx(i) = - xm(1) * (dhhintdx(i) * (2. * aint1(i) / hhint(i) * fint1(i) - aint1(i) * dFintdh1(i) - daintdh1(i) * fint1(i))&
+    &                       + daintdx1(i) * (fint1(i) - hhint(i) * dFintdh1(i) - 2. * hhint(i) / aint1(i) * daintdh1(i) * fint1(i))&
+    &                       + dFintdx1(i) * (hhint(i) * daintdh1(i) - aint1(i))                                                    &
+    &                       + hhint(i) * aint1(i) * d2Fintdxdh1(i) + hhint(i) * fint1(i) * d2aintdxdh1(i))                         &
+    &                    / (hhint(i) * aint1(i) )**2                                                                               &
+    &              - dmx(1) * (hhint(i) * aint1(i) * dFintdh1(i) - fint1(i) * aint1(i) + fint1(i) * hhint(i) * daintdh1(i))        &
+    &                     / (hhint(i) * aint1(i))**2                                                                               &
+    &              - xm(2) * (dhhintdx(i) * (2. * aint2(i) / hhint(i) * fint2(i) - aint2(i) * dFintdh2(i) - daintdh2(i) * fint2(i))&
+    &                       + daintdx2(i) * (fint2(i) - hhint(i) * dFintdh2(i) - 2. * hhint(i) / aint2(i) * daintdh2(i) * fint2(i))&
+    &                       + dFintdx2(i) * (hhint(i) * daintdh2(i) - aint2(i))                                                    &
+    &                       + hhint(i) * aint2(i) * d2Fintdxdh2(i) + hhint(i) * fint2(i) * d2aintdxdh2(i))                         &
+    &                    / (hhint(i) * aint2(i) )**2                                                                               &
+    &              - dmx(2) * (hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * aint2(i) + fint2(i) * hhint(i) * daintdh2(i))        &
+    &                     / (hhint(i) * aint2(i))**2
+
+    if (testoutput == 3 .or. testoutput == 1) then
+      WRITE(*,*) 'Element: ', nn, 'GP: ', i
+      WRITE(*,*) 'h: ', hhint(i)
+      WRITE(*,*) 'zS: ', zsint(i)
+      WRITE(*,*) 'dzsintdh: ', dzsintdh(i)
+      WRITE(*,*) 'd2zsintdh: ', d2zsintdh(i)
+      WRITE(*,*) 'd2zsintdhdx: ', d2zsintdhdx(i)
+      WRITE(*,*) 'ypsilon: ', yps(i)
+      WRITE(*,*) 'dypsdh: ', dypsdh(i)
+      WRITE(*,*) 'd2ypsdh: ', d2ypsdh(i)
+      WRITE(*,*) 'dypsdx: ', dypsdx(i)
+      WRITE(*,*) 'd2ypsdhdx: ', d2ypsdhdx(i)
+      if (i == 4) pause
+    end if
+  end if
+
  !*****************************************************************************************************************************************
  !RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS
  !  EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS   RESIDUAL EQUATIONS
@@ -802,7 +986,12 @@ Gaussloop: DO I = 1, NGP
   ELSEIF (Byparts == 2) then
     !Differentiation by parts with half a depth as natural boundary term
     FRN = FRN                                                      &
-      &    - grav * dhhintdx(i) * (dareaintdh(i) * hhint(i) - areaint(i))/ 2.0
+      &    - grav * dhhintdx(i) * (dareaintdh(i) * hhint(i) - areaint(i)) / 2.0
+  ELSEIF (Byparts == 3) then
+    !Differentiation using mass center of area
+    FRN = FRN                                                      &
+      &    - grav * (daintdx(i) * zsint(i))                        &
+      &    + grav * areaint(i) * (hhint(i) * dypsdx(i) + yps(i) * dhhintdx(i) )
   end if
 
     FRN = FRN                                                      &
@@ -818,6 +1007,11 @@ Gaussloop: DO I = 1, NGP
     !Differentiation by parts
     FRNX =                                                         &
       &  - grav * areaint(i) * hhint(i) / 2.0
+
+  ELSEIF (byparts == 3) then
+    !Differentiation using mass center of area
+    FRNX = FRNX                                                    &
+      &  - grav * areaint(i) * zsint(i)
   ENDIF
 
   !Term A: Unsteady terms
@@ -871,6 +1065,9 @@ Gaussloop: DO I = 1, NGP
       WRITE(*,*) ' Term E: ',  + grav * areaint(i) * dhhintdx(i)
     ELSEIF (byparts == 2) then
       WRITE(*,*) 'Term E1: ', - grav * dhhintdx(i) * (dareaintdh(i) * hhint(i)   - areaint(i))/ 2.0
+    ELSEIF (byparts == 3) then
+      WRITE(*,*) 'Term E1: ', - grav * (daintdx(i) * zsint(i)) &
+                            & + grav * areaint(i) * (hhint(i) * dypsdx(i) + yps(i) * dhhintdx(i) )
     end if
 
     WRITE(*,*) ' Term F: ', + grav * areaint(i) * sfint(i)
@@ -880,7 +1077,14 @@ Gaussloop: DO I = 1, NGP
     if (byparts == 2) then
       WRITE(*,*) 'FRNX'
       WRITE(*,*) 'Term E2: ', - grav * areaint(i) * hhint(i) / 2.0
+    ELSEIF (byparts == 3) then
+      WRITE(*,*) 'FRNX'
+      WRITE(*,*) 'Term E2: ', - grav * areaint(i) * zsint(i)
     end if
+
+    WRITE(*,*) 'Einzelterme: ', xn(l), FRN, dnx(l), FRNX
+    WRITE(*,*) 'assembled value without weighting: ', (xn(l) * FRN + dnx(l) * FRNX)
+    WRITE(*,*) 'assembled value    with weighting: ', ams * (xn(l) * FRN + dnx(l) * FRNX)
 
     pause
   endif
@@ -956,6 +1160,12 @@ Gaussloop: DO I = 1, NGP
     !Differentiation by parts with half a depth as natural boundary term
     FEEAN = FEEAN                                                                                    &
       &   - 0.5  * grav * hhint(i) * d2areaintdh(i) * dhhintdx(i)
+  ELSEIF (byparts == 3) then
+    FEEAN = FEEAN                                                                                    &
+      &   + grav *                                                                                   &
+      &     (hhint(i) * dypsdx(i) * dareaintdh(i) + areaint(i) * dypsdx(i) + areaint(i) * hhint(i) * d2ypsdhdx(i) &
+      &      + yps(i) * dhhintdx(i) * dareaintdh(i) + areaint(i) * dhhintdx(i) * dypsdh(i)                        &
+      &      - dzsintdh(i) * daintdx(i) - zsint(i) * d2areaintdh(i))
   ENDIF
 
     FEEAN = FEEAN                                                                                    &
@@ -1001,14 +1211,20 @@ Gaussloop: DO I = 1, NGP
     !Differentiation by parts with half a depth as natural boundary term
     FEEBN = FEEBN                                          &
       & - grav * 0.5 * (hhint(i) * dareaintdh(i) - areaint(i))
+  ELSEIF (byparts == 3) then
+    FEEBN = FEEBN                                          &
+      & + grav * (areaint(i) * yps(i) + areaint(i) * hhint(i) * dypsdh(i) - zsint(i) * dareaintdh(i) )
   ENDIF
 
   !FEECN FEECN FEECN
   !*****************
   !Term E: Hydrostatic term
   if (byparts == 2) then
-    FEECN =                                                &
+    FEECN = FEECN                                          &
       & - 0.5 * grav * (hhint(i) * dareaintdh(i) + areaint(i))
+  ELSEIF (byparts == 3) then
+    FEECN = FEECN                                          &
+      & - grav * (zsint(i) * dareaintdh(i) + areaint(i) * dzsintdh(i) )
   end if
 
   !Assemble equation values
@@ -1051,6 +1267,11 @@ Gaussloop: DO I = 1, NGP
       WRITE(*,*) 'Term E1: ', + grav * dareaintdh(i) * dhhintdx(i)
     ELSEIF (byparts == 2) then
       WRITE(*,*) 'Term E1: ', - 0.5  * grav * hhint(i) * d2areaintdh(i) * dhhintdx(i)
+    ELSEIF (byparts == 3) then
+      WRITE(*,*) 'Term E1: ', + grav *                                                                            &
+      &     (hhint(i) * dypsdx(i) * dareaintdh(i) + areaint(i) * dypsdx(i) + areaint(i) * hhint(i) * d2ypsdhdx(i) &
+      &      + yps(i) * dhhintdx(i) * dareaintdh(i) + areaint(i) * dhhintdx(i) * dypsdh(i)                        &
+      &      - dzsintdh(i) * daintdx(i) - zsint(i) * d2areaintdh(i))
     end if
 
     WRITE(*,*) ' Term F: ', + grav * (areaint(i) * dsfintdh1(i) + sfint(i) * dareaintdh(i))
@@ -1060,10 +1281,15 @@ Gaussloop: DO I = 1, NGP
       WRITE(*,*) 'Term E2: ', + grav * areaint(i)
     ELSEIF (byparts == 2) then
       WRITE(*,*) 'Term E2: ', - grav * 0.5 * (hhint(i) * dareaintdh(i) - areaint(i))
+    ELSEIF (byparts == 3) then
+      WRITE(*,*) 'Term E2: ', + grav * (areaint(i) * yps(i) + areaint(i) * hhint(i) * dypsdh(i) - zsint(i) * dareaintdh(i) )
     end if
     if (byparts == 2) then
       WRITE(*,*) 'Ableitungsterme FEECN'
       WRITE(*,*) 'Term E3: ', - 0.5 * grav * (hhint(i) * dareaintdh(i) + areaint(i))
+    ELSEIF (byparts == 3) then
+      WRITE(*,*) 'Ableitungsterme FEECN'
+      WRITE(*,*) 'Term E3: ', - grav * (zsint(i) * dareaintdh(i) + areaint(i) * dzsintdh(i))
     end if
     pause
   endif
@@ -1220,7 +1446,6 @@ Gaussloop: DO I = 1, NGP
 !END OF EQUATION FORMATION   END OF EQUATION FORMATION   END OF EQUATION FORMATION   END OF EQUATION FORMATION   END OF EQUATION FORMATION
 !*****************************************************************************************************************************************
 
-
  276  CONTINUE
 
   !TVOL(NN)=TVOL(NN)+AMW
@@ -1251,14 +1476,60 @@ HBCAssign: DO L=1, NCN, 2
     ELSEIF (byparts == 2) then
       NA = (L-1) * ndf + 1
 
-      ah(n1) = 0.0
+      ASoll = 0.0
       do k = 0, 12
-        ah(n1) = ah(n1) + apoly(n1,k) * spec(n1,3)**(k)
+        ASoll = ASoll + apoly(n1,k) * spec(n1,3)**(k)
       end do
-      ppl   = grav * ah(n1) * rho* qfact(l)
+      ppl   = grav * ASoll * rho* qfact(l)
       if (l == 1) ppl = -ppl
+
+      if (testoutput == 4) then
+        WRITE(*,*) 'Rand am Knoten: ', n1
+        WRITE(*,*) 'ppl: ', ppl
+        WRITE(*,*) 'Sollflaeche: ', ASoll, 'Istflaeche: ???'
+        WRITE(*,*) 'Sollwert: ', spec(n1,3)/ 2., 'Istwert: ', vel(3,n1)/2.
+        WRITE(*,*) 'Ableitung dzsist/dh: ', 0.5
+      end if
+
       f(na) = f(na) - ppl * (spec (n1,3) - vel (3,n1) / 2.)
       estifm (na, na+2) = estifm (na, na+2) - ppl / 2.
+    ELSEIF (byparts == 3) then
+      NA = (L-1) * ndf + 1
+
+      ASoll = 0.0
+      do k = 0, 12
+        ASoll = ASoll + apoly(n1,k) * spec(n1,3)**k
+      end do
+      ppl = grav * ASoll * rho * qfact(l)
+
+      if (l == 1) ppl = -ppl
+
+      !Calc zs of both depth
+      FBCSoll   = 0.0
+      FBCIst    = 0.0
+      dFBCistdh = 0.0
+      do j = 0, 12
+        FBCSoll = FBCSoll + (j / (j+1.)) * apoly(n1,j) * spec(n1,3)**(j+1)
+        FBCIst  = FBCIst  + (j / (j+1.)) * apoly(n1,j) *  vel(3,n1)**(j+1)
+        dFBCIstdh  = dFBCIstdh  + (j) * apoly(n1,j) *  vel(3,n1)**(j)
+      enddo
+      zssoll = FBCSoll / ASoll
+      zsist  = FBCIst  / ah(n1)
+      dzsistdh  = (ah(n1) * dFBCIstdh - FBCIst * dahdh(n1)) / ah(n1)**2
+
+      if (testoutput == 4) then
+        WRITE(*,*) 'Rand am Knoten: ', n1
+        WRITE(*,*) 'Einzelterme: ', ah(n1), dfbcistdh, FBCIst, dahdh(n1), vel(3,n1)
+        WRITE(*,*) 'ppl: ', ppl
+        WRITE(*,*) 'Sollflaeche: ', ASoll, 'Istflaeche', ah(n1)
+        WRITE(*,*) 'Sollzs: ', zssoll, 'Istzs: ', zsist
+        WRITE(*,*) 'Ableitung dzsist/dh: ', dzsistdh
+        !pause
+      end if
+
+      if (l == 1) ppl = - ppl
+      f(na) = f(na) - ppl * (2. * zssoll - zsist)
+      estifm (na, na + 2) = estifm (na, na + 2) - ppl * dzsistdh
     ENDIF
 
   ELSEIF (IBN(N1) .GE. 3) THEN
@@ -1303,59 +1574,70 @@ QBCAssign: DO N=1, NCN, 2
 ENDDO QBCAssign
 
 !Correction for Coupling
-!CouplingCorrection: do l = 1, ncn, 2
-!  m = ncon(l)
-!
-!  if (l==1) p = 1
-!  if (l==3) p = 2
-!
-!  do i = 1, MaxLT
-!    !WRITE(*,*) 'Kopplungstest: ', (translines(i,j), j=1, 3), maxlt
-!    !pause
-!    if (m == TransLines(i,3)) then
-!      fzs = 0.0
-!      dfzsdh = 0.0
-!      zs = 0.0
-!      dzsdh = 0.0
-!      do j = 0, 12
-!        fzs    = fzs    + apoly(m, j) * j / (j+1) * vel(3,m)**(j+1)
-!        dfzsdh = dfzsdh + apoly(m, j) * j * vel(3,m)**(j)
-!      ENDDO
-!      zs = fzs / ah(m)
-!      dzsdh = (ah(m) * dfzsdh - dahdh(m) * fzs) / ah(m)**2
-!
-!      WRITE(*,*) '     fzs: ', fzs
-!      WRITE(*,*) '  dfzsdh: ', dfzsdh
-!      WRITE(*,*) '      zs: ', zs
-!      WRITE(*,*) '   dzsdh: ', dzsdh
-!      WRITE(*,*)    'ah(m): ', ah(m)
-!      WRITE(*,*) 'dahdh(m): ', dahdh(m)
-!      pause
-!
-!      XHT = ELEV - AO(N1)
-!      NA  = (L - 1) * NDF + 1
-!      RHO = DEN(N1)
-!      PPL = 1.0
-!
-!      WRITE(*,*) 'Kontrolle'
-!      WRITE(*,*) 'm: ',m, 'ah(m): ', ah(m), 'vel(3,m): ',  vel(3,m), 'zs: ',zs, 'dzsdh: ',  dzsdh,'xht: ', xht
-!      WRITE(*,*) 'rho: ', rho, 'grav: ',  grav, 'Term: ', rho*grav*zs*ah(m), 'inotr: ', inotr
-!      WRITE(*,*) f(na)
-!
-!      IF(L .EQ. 1) PPL = -PPL
-!       if (inotr == 1) then
-!          F(NA)           = F(NA) - PPL * RHO * grav * zs * ah(m)
-!          ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) + PPL * RHO * grav * (dzsdh * ah(m) + dahdh(m))
-!        else
-!          f(na)           = f(na) - PPL * RHO * grav* zs * ah(m) * XHT
-!          ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) + PPL * RHO * grav * (dzsdh * ah(m) + dahdh(m)) * xht
-!        endif
-!      WRITE(*,*) ppl, grav, rho, zs, ah(m)
-!      WRITE(*,*) f(na)
-!      pause
-!    end if
-!  end do
-!end do CouplingCorrection
+CouplingCorrection: do l = 1, ncn, 2
+  if (byparts == 2 .or. byparts == 3) EXIT couplingcorrection
+
+  m = ncon(l)
+
+  if (l==1) p = 1
+  if (l==3) p = 2
+
+  do i = 1, MaxLT
+    !WRITE(*,*) 'Kopplungstest: ', (translines(i,j), j=1, 3), maxlt
+    !pause
+    if (m == TransLines(i,3)) then
+      fzsBC    = 0.0
+      dfzsdhBC = 0.0
+      zsBC     = 0.0
+      dzsdhBC  = 0.0
+      do j = 0, 12
+        fzsBC    = fzsBC    + apoly(m, j) * j / (j+1) * vel(3,m)**(j+1)
+        dfzsdhBC = dfzsdhBC + apoly(m, j) * j * vel(3,m)**(j)
+      ENDDO
+      zsBC    = fzsBC / ah(m)
+      dzsdhBC = (ah(m) * dfzsdhBC - dahdh(m) * fzsBC) / ah(m)**2
+
+      WRITE(*,*) '   depth: ', vel(3,m)
+      WRITE(*,*) '     fzs: ', fzsBC
+      WRITE(*,*) '  dfzsdh: ', dfzsdhBC
+      WRITE(*,*) '      zs: ', zsBC
+      WRITE(*,*) '   dzsdh: ', dzsdhBC
+      WRITE(*,*) '   ah(m): ', ah(m)
+      WRITE(*,*) 'dahdh(m): ', dahdh(m)
+      !pause
+
+      XHT = ELEV - AO(N1)
+      NA  = (L - 1) * NDF + 1
+      RHO = DEN(N1)
+      PPL = RHO * grav
+
+      WRITE(*,*) 'Kontrolle'
+      WRITE(*,*) 'Knoten m: ', m
+      WRITE(*,*) ' Tiefe t: ', vel(3,m)
+      WRITE(*,*) 'Fläche A: ', ah(m)
+      WRITE(*,*) 'Schwerp.: ', zsBC
+      WRITE(*,*) '   dzsdh: ', dzsdhBC
+      WRITE(*,*) '     xht: ', xht, inotr
+      WRITE(*,*) '  Dichte: ', rho
+      WRITE(*,*) '    grav: ', grav
+      WRITE(*,*) '    Term: ', rho*grav*zsBC*ah(m)
+      WRITE(*,*) 'on Korr.: ', f(na)
+
+      IF(L .EQ. 1) PPL = -PPL
+       if (inotr == 1) then
+          F(NA)           = F(NA) - PPL * zsBC * ah(m)
+          ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) + PPL * (dzsdhBC * ah(m) + zsBC * dahdh(m))
+        else
+          f(na)           = f(na) + PPL * zsBC * ah(m) * XHT
+          ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) - PPL * (dzsdhBC * ah(m) + zsBC * dahdh(m)) * xht
+        endif
+      !WRITE(*,*) ppl, grav, rho, zsBC, ah(m)
+      WRITE(*,*) ' + Korr.: ', f(na)
+      WRITE(*,*) 'Korrektur ', - PPL * zsBC * ah(m)
+      pause
+    end if
+  end do
+end do CouplingCorrection
 !-
 
  1305 CONTINUE
@@ -1444,17 +1726,35 @@ RETURN
 !*-
 !*...... Special case for junction element
 !*-
-
-!2000 CONTINUE
+ 2000 CONTINUE
 !cipk dec00
 !C-
 !C...... Special cases for control structures or junction sources
 !C-
+IF(IMAT(NN) .GT. 903) THEN
+  !init A(h)
+  ah(n1) = 0.0
+  ah(n3) = 0.0
+  !init Q(h)
+  qh(n1) = 0.0
+  qh(n3) = 0.0
+  do k=0, 12
+    !A(h)
+    ah(n1) = ah(n1) + apoly(n1,k) * vel(3,n1)**(k)
+    ah(n3) = ah(n3) + apoly(n3,k) * vel(3,n3)**(k)
+  end do
+  !init dA(h)/dh
+  dahdh(n1) = 0.0
+  dahdh(n3) = 0.0
+  do k=1,12
+    !dA(h)/dh
+    dahdh(n1) = dahdh(n1) + (k) * apoly(n1,k) * h1**(k-1)
+    dahdh(n3) = dahdh(n3) + (k) * apoly(n3,k) * h3**(k-1)
+  end do
 
-!IF(IMAT(NN) .GT. 903) THEN
-!  CALL CSTRC(NN)
-!  GO TO 1320
-!ENDIF
+  CALL CSTRC(NN)
+  GO TO 1320
+ENDIF
 
 !*-
 !*...... Special case for junction element
@@ -1497,4 +1797,5 @@ DO 2010 KK=1,NCN,2
     F(NA)=XHT*(WSEL1-WSELX)
  2020 CONTINUE
 GO TO 1320
-END
+
+END subroutine
