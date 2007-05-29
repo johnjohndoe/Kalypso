@@ -153,7 +153,9 @@ public class DeleteContinuityLineCmd implements IDiscrModel1d2dChangeCommand
       boolean isRemoved = containers.remove( elementID );
       if(!isRemoved)
       {
-        throw new RuntimeException("Could not remove element as edge container");
+        String message = "Could not remove element as edge container";
+        System.out.println(message);
+//        throw new RuntimeException(message);
       }
     }
     

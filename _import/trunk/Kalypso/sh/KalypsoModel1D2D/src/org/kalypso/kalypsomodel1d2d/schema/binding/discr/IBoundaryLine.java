@@ -52,11 +52,11 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 public interface IBoundaryLine<    
                             CT extends IFE1D2DComplexElement, 
                             ET extends IFE1D2DEdge>  
-                            extends IFE1D2DElement<CT, ET>
+                            extends ILineElement<CT, ET>//IFE1D2DElement<CT, ET>
 {
-  public IFeatureWrapperCollection<ET> getEdges( );
-
-  public void addEdge( final String edgeID );
-  
-  public void setEdges( final ET[] edges );
+//  public IFeatureWrapperCollection<ET> getEdges( );
+//
+//  public void addEdge( final String edgeID );
+//  
+//  public void setEdges( final ET[] edges );
 }

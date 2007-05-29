@@ -50,7 +50,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 public interface IFE1D2DContinuityLine<    
                             CT extends IFE1D2DComplexElement, 
                             ET extends IFE1D2DEdge>  
-                            extends IFE1D2DElement<CT, ET>
+                            extends ILineElement<CT,ET>//IFE1D2DElement<CT, ET>
 {
   public IFeatureWrapperCollection<ET> getEdges( );
 

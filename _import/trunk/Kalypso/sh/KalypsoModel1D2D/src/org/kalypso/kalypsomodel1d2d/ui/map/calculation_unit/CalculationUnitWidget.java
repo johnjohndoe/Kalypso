@@ -68,7 +68,11 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -154,6 +158,12 @@ public class CalculationUnitWidget
 //    mapPanel.add( popup  );
 //    hookContextMenu();
     registerPopupBlocker( popupBlocker );
+    setStrategy( 
+        new RouteLineElementWidget<IBoundaryLine>(
+                                "Create Boundary Line",
+                                "Create Boundary Line",
+                                IBoundaryLine.class,
+                                Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) );
   }
   
   /**
@@ -541,7 +551,30 @@ public class CalculationUnitWidget
       strategy.setSelection( selection );
     }
   }
-  
+ 
+  /**
+   * Sets a new strategy for this widget
+   * 
+   * @param strategy the new strategy to set or null
+   *        if the actual strategy is to be removed
+   */
+  public void setStrategy( IWidget strategy )
+  {
+    if( this.strategy != null )
+    {
+      this.strategy.finish();
+    }
+    
+    this.strategy = strategy;
+    if( this.strategy != null )
+    {
+     ICommandTarget commandPoster = 
+       (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+     MapPanel mapPanel = 
+         (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+     this.strategy.activate( commandPoster, mapPanel ); 
+    }
+  }
  
   }
   
