@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
@@ -73,7 +74,7 @@ public class NodeOps
    */
   public static IFE1D2DNode findNode( 
                       final GM_Point point, 
-                      final FE1D2DDiscretisationModel model )
+                      final IFEDiscretisationModel1d2d model )
   {
     Assert.throwIAEOnNullParam( point, "point" );
     Assert.throwIAEOnNullParam( model, "model" );

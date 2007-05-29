@@ -107,7 +107,7 @@ public class AddElementToCalculationUnit implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return null;
+    return model1d2d;
   }
 
   /**
