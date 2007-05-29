@@ -3,7 +3,7 @@ cipk  last update August 1 2001 correct bug that occurs when IMAT=0 in elements
 CIPK  LAST UPDATE APR 21 2001  ADD NRELSF FOR SIDE ELEMENTS
 cipk  last update Nov 8 1999 reset values for eddy coefficients for potential collapse
 cipk  last update Jan 3 1999
-C     Last change:  K    22 Feb 2007    6:55 pm
+C     Last change:  K    23 May 2007    4:59 pm
 CIPK  LATEST UPDATE NOV 17 1997
       SUBROUTINE THREED
       USE BLK10MOD
@@ -56,7 +56,13 @@ C-
 
 !nis,jan07,testing
 !      WRITE(*,*) 'In threed.for'
+!      do i = 1, ne
+!        WRITE(*,*) netyp(i)
+!      end do
 !      pause
+!   HINT: IF THERE IS AN ERROR IN 2D-APPLICATIONS WITH THE THREED-SUBROUTINE, THEN THE NETWORK IS NOT PROPERLY DEFINED; YOU MIGHT HAVE INITIALIZED
+!         ELEMENTS, THAT ARE NOT REALLY PART OF THE NETWORK, SO NOT OCCURING IN THE AR-LINES, BUT IN THE FE-LINES
+!   HINT-ENDE
 !-
 
 C-

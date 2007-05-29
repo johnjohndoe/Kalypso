@@ -1,4 +1,4 @@
-C     Last change:  K    14 May 2007   11:27 am
+C     Last change:  K    23 May 2007    5:28 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1089,12 +1089,12 @@ C-
       !NiS,may06: testing
       !OPEN(UNIT=357, FILE='roughnesstest.txt')
       Materialassigning: DO J=1,MaxE
-      !  WRITE(357,*) ' element    : ', J
-      !  WRITE(357,*) ' Material   : ', IMAT(J)
-      !  WRITE(357,*) ' Sandrauheit: ', ORT(IMAT(J),15)
-      !  WRITE(357,*) ' Baumabstand: ', ORT(IMAT(J),16)
-      !  WRITE(357,*) ' Baumdurchm.: ', ORT(IMAT(J),17)
-      !  WRITE(357,*) ' Ende Element ', J
+        !WRITE(357,*) ' element    : ', J
+        !WRITE(357,*) ' Material   : ', IMAT(J)
+        !WRITE(357,*) ' Sandrauheit: ', ORT(IMAT(J),15)
+        !WRITE(357,*) ' Baumabstand: ', ORT(IMAT(J),16)
+        !WRITE(357,*) ' Baumdurchm.: ', ORT(IMAT(J),17)
+        !WRITE(357,*) ' Ende Element ', J
         if (IMAT(J).eq.0) CYCLE Materialassigning
         CNIKU(J)     = ORT(IMAT(J),15)
         ABST(J)      = ORT(IMAT(J),16)
@@ -1449,6 +1449,7 @@ cipk jan99 set directions
 C
 C...... Set up IBN for three dimensional element generation
 C-
+
       IF(IFIT .GT. 0) GO TO 99
       DO 86 I=1,NP
    86 IBN(I)=0
