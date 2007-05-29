@@ -1,4 +1,4 @@
-!     Last change:  K    14 May 2007   11:27 am
+!     Last change:  K    24 May 2007   12:11 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -290,6 +290,10 @@ END SUBROUTINE check_Kalypso
         !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
         ALLOCATE (kntimel (MaxE, 8))
       endif
+!-
+
+!nis,may07: Information output
+WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
 !-
 
 !NiS,mar06: Allocating the arrays of module blkasteph
@@ -2298,9 +2302,9 @@ WRITE ( * , 105)
 105 format (1X, 'Reordering has to be done.')
 
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
-!CALL start_node (qlist, k, np)
+CALL start_node (qlist, k, np)
 !CALL reord (np, ne, qlist)
-!CALL reord_Kalyps (np, ne, qlist)
+CALL reord_Kalyps (np, ne, qlist)
 !-
 
 
