@@ -1,4 +1,4 @@
-C     Last change:  K    14 May 2007   11:28 am
+C     Last change:  K    25 May 2007    2:11 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -172,7 +172,14 @@ c
           URFCC=VSCALE(J)
         ENDIF
       ENDIF
-      EX=R1(I)*URFC*urfcc
+
+      !EX=R1(I)*URFC*urfcc
+      if (k == 1 .or. k == 2) then
+        EX=R1(I)*URFC*urfcc * eqscale(j,k)
+      else
+        EX=R1(I)*URFC*urfcc
+      end if
+
 cik dec97 end changes
       AEX = ABS( EX )
       EAVG(K) = EAVG(K) + AEX

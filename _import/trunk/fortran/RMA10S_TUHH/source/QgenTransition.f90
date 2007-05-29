@@ -1,4 +1,4 @@
-!     Last change:  JAJ  15 May 2007   10:37 pm
+!     Last change:  K    25 May 2007    3:12 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -36,7 +36,7 @@
       !integer variables
       INTEGER       :: maxno, mel
 !      INTEGER       :: iostaterror
-      INTEGER       :: k, l, i
+      INTEGER       :: k, l, i, Comp
       INTEGER       :: TLine, TNode
       INTEGER       :: na, nc, nbb, na1, na2, ncc
 
@@ -77,6 +77,11 @@ END DO
 
 !get number of nodes at line; zero-values can not occur, this was tested in the calling subroutine
 maxno = LMT(TLine)
+!WRITE(*,*) maxno
+!do i = 1, maxno
+!  WRITE(*,*) line(tline,i)
+!enddo
+!pause
 
 !transition line must contain more than one line segment
 if (maxno.lt.2) STOP 'ERROR - transition contains of less then 2 segments'
@@ -109,6 +114,12 @@ WRITE(999,*) 'inflow angle:                    ', thet
 !Assign water depth to nodes
 do k = 1, maxno
   TransitionVels(3,k) = waspi - ao(line(TLine,k))
+
+  !nis,may07: The transition depth should have a constant level, because, if it is updated with the same values later it will always have
+  !           the same topology. To prevent this, the elevation is flattened
+  Vel(3,line(Tline,k)) = waspi - ao(line(TLine,k))
+  !-
+
   WRITE(999,*) 'directly after assigning - Waterdepth:', TransitionVels(3,k)
 end do
 
@@ -498,8 +509,13 @@ AssignVelocities: DO k = 1, maxno
   ENDIF
 
   !Get the velocities
-  TransitionVels (1,k) = specdischarge (k,1) / d1
-  TransitionVels (2,k) = specdischarge (k,2) / d1
+  if (d1 > 0.0) then
+    TransitionVels (1,k) = specdischarge (k,1) / d1
+    TransitionVels (2,k) = specdischarge (k,2) / d1
+  else
+    TransitionVels (1,k) = 0.0
+    TransitionVels (2,k) = 0.0
+  end if
 
 END DO AssignVelocities
 
@@ -507,8 +523,11 @@ END DO AssignVelocities
 WRITE(999,*) 'Output of velocity and specific discharge distribution'
 WRITE(999,*) 'node,     qx     ,     qy     ,     vx     ,     vy     ,   b   '
 do i = 1, maxno
-  WRITE(999,'(i4,4(1x,f12.7),1x,f8.4)') line(TLine,i), &
-&      (specdischarge(i,TLine),TLine=1,2), (TransitionVels(TLine,i),TLine=1,2), dxl(i)
+  !WRITE(*,*) tline, line(tline,i)
+  !pause
+
+  WRITE(999,'(i6,4(1x,f12.7),1x,f8.4)') line(TLine,i), &
+&      (specdischarge(i, Comp), Comp = 1, 2), (TransitionVels(Comp, i), Comp = 1,2), dxl(i)
 end do
 !-
                                                                         

@@ -1,4 +1,4 @@
-C     Last change:  EF   15 May 2007   10:53 am
+C     Last change:  K    25 May 2007    4:16 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -595,7 +595,11 @@ CIPK FEB04
             !get the factor; the factor is .ne. 1.0, if the node is     in a line-Connection
             !                the factor is .eq. 1.0, if the node is not in a line-Connection
             !WRITE(*,*) nop(n,node), node, n, degree, temp_nbn
-             fac(temp_nbn) = EqScale(nop(n,node), degree)
+            if (degree == 1 .or. degree == 2) then
+              fac(temp_nbn) = EqScale(nop(n,node), degree)
+            ELSEIF (degree == 3) then
+              fac(temp_nbn) = 1.0
+            end if
             !testing
             !if (fac(temp_nbn).ne.1.0) then
             !  WRITE(*,*) 'Factor wird angewendet:'
@@ -639,16 +643,8 @@ CIPK FEB04
             !endif
             !-
             !IF(n == 1910) then
-            EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)*Fac(L)
-            !!nis,feb07,testing:
-            !WRITE(*,*) 'Spalte', LL, 'Zeile', KK, 'Wert: ', EQ(ll,KK)
-!            IF(fac(l) /= 1.0) then
-              !WRITE(*,*) fac(l), l, n
-              !pause
-!            endif
-            !
-            !endif
-            !-
+
+            EQ(LL,KK) = EQ(LL,KK) + ESTIFM(K,L) * Fac(L)
 !-
 	  ENDIF
    56     CONTINUE

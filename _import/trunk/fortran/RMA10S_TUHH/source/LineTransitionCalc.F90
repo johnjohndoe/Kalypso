@@ -1,4 +1,4 @@
-!     Last change:  K     2 May 2007    1:45 pm
+!     Last change:  K    25 May 2007    3:28 pm
 
 subroutine TransVelDistribution
 
@@ -49,7 +49,7 @@ INTEGER            :: teststat
   OPEN(999,filename_out, IOSTAT=teststat)
   if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
 
-if (maxn /= 1 .or. RESTARTSwitch /= 0) then
+!if (maxn /= 1 .or. RESTARTSwitch /= 0) then
   !for every line transition
   transitionloop: do i = 1, MaxLT
 
@@ -72,7 +72,7 @@ if (maxn /= 1 .or. RESTARTSwitch /= 0) then
 
     !if width is not zero a trapezoidal profile of the original RMA10S code is used
     if (ABS(width(TransNo)) .gt. 1e-7) then
-      CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))) *TransDep
+      CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) *TransDep
 
     !if width is zero, but the element is 1D it can only be a Teschke element
     else
@@ -126,27 +126,42 @@ if (maxn /= 1 .or. RESTARTSwitch /= 0) then
     !step4 and step5: Calculation of the velocity factors and the depth factors
     !****************
 
-    do l= 1, lmt(TransLi)
+    do l = 1, lmt(TransLi)
 
       !euclidic length of velocity vector
       localVel = SQRT(TransitionVels(1,l)**2 + TransitionVels(2,l)**2)
+
+      !nis,may07: Update the velocity-values at the transition coming from the distribution calculation
+      Vel(1, line(TransLi,l)) = TransitionVels(1,l)
+      Vel(2, line(TransLi,l)) = TransitionVels(2,l)
+
       !x-component (parallel component)
-      EqScale(line(TransLi,l),1) = TransVel/ localVel
+      !EqScale(line(TransLi,l),1) = TransVel/ localVel
+      EqScale(line(TransLi,l),1) = localVel / TransVel
       WRITE(999,*) 'lokale Absolutgeschwindigkeit:',localvel
       WRITE(*,*) 'Node: ', line(TransLi,l)
       !y-component (perpendicular component) (no value perpendicular to settled flow direction!)
       EqScale(line(TransLi,l),2) = EqScale(line(TransLi,l),1)
       !depth-component
-      EqScale(line(TransLi,l),3) = (TransDep + ao(TransNo) - ao(line(TransLi,l)) ) / TransitionVels(3,l)
+      !EqScale(line(TransLi,l),3) = (TransDep + ao(TransNo) - ao(line(TransLi,l)) ) / TransitionVels(3,l)
+      EqScale(line(TransLi,l),3) = TransitionVels(3,l)/ TransDep
+
+      if (EqScale(line(Transli,l),3) < 0.0) then
+        EqScale(line(Transli,l),3) =0.0
+      end if
 
       !nis,jan07: Write testing lines
-      WRITE(999,*) Transli, l, line(Transli,l), (EqScale(line(Transli,l),n), n=1,3), (TransitionVels(m,l), m=1, 3)
+      WRITE(999,'(a7,i2,1x,a8,i2,1x,a7,i5,1x,a10,1x,3(f5.3,1x),a7,3(f7.3,1x),a9,1x,f7.3,a19,2(1x,f7.3))')                    &
+      &                         'Linie: ', Transli, 'Knoten: ', l, 'global ',  line(Transli,l),                              &
+      &                         'Faktoren: ', (EqScale(line(Transli,l),n), n=1,3),'Werte: ',  (TransitionVels(m,l), m=1, 3), &
+      &                         'Spiegel: ', Vel(3,line(Transli,l)) + ao(line(Transli,l)),                                   &
+      &                         'Geschwindigkeiten: ', (vel(o,line(Transli,l)),o=1,2)
       !-
     end do
     DEALLOCATE (TransitionVels)
   end do transitionloop
   !-
-endif
+!endif
 !-
 !nis,jan07: Close testing file
 close (999,STATUS='keep')
