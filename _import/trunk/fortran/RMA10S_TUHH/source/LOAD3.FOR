@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  K    14 May 2007   11:27 am
+C     Last change:  K    25 May 2007    1:29 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -929,7 +929,7 @@ cipk oct98 update to f90
         EquationAdjustment: do i=1,MaxLT
 
           !look, whether element is part of a transition, if not test next transition
-          if (NN.ne.TransLines(i,1)) CYCLE EquationAdjustment
+          if (NN .ne. TransLines(i,1)) CYCLE EquationAdjustment
 
           !Get the Line Number and it's length as well as the connecting node number
           LiNo   = TransLines(i,2)
@@ -1434,6 +1434,15 @@ C
       N = 0
       DO 300 NN = 1, NP
         N = N + 1
+
+!**********************************************************************************************************************************
+!EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS
+!**********************************************************************************************************************************
+!nis,may07,comment: This unconsiderable loop assigns the global equation numbers to the nodal degrees of freedom. There's only a number applied,
+!                   if the nbc-values of the nodal degree of freedom is equal 1
+!**********************************************************************************************************************************
+!EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS   EQUATION NUMBERS
+!**********************************************************************************************************************************
 CIPK MAY02 SWITCH NDF TO 7
         DO 299 M = 1, 7
 cycw aug96
