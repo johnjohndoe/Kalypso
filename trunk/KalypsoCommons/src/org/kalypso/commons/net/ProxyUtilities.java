@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.net;
 
+import java.net.URL;
+import java.util.List;
+
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -122,5 +125,64 @@ public class ProxyUtilities
     }
 
     return client;
+  }
+
+  /**
+   * Creates a configured http client. The configuration includes setting of proxy settings.
+   * <p>
+   * IMPORTANT: To use proxy-authentication, you must use the setDoAuthetication Mehtod of the HttpMehthod you are going
+   * to use.
+   * </p>
+   * <strong>Example:</strong>
+   * 
+   * <pre>
+   * HttpMethod method = new GetMethod( m_url.toString() );
+   * method.setDoAuthentication( true );
+   * </pre>
+   * 
+   * @param timeout
+   *            The socket timeout in milliseconds.
+   * @param url
+   *            The url, for which the client is needed.
+   * @return The configured http client. If no proxy is set or the host, included in the url is a non proxy host, it
+   *         will be a normal http client with the given timeout.
+   */
+  public static HttpClient getConfiguredHttpClient( int timeout, URL url )
+  {
+    if( !isNonProxyHost( url ) )
+      return getConfiguredHttpClient( timeout );
+
+    /* Create the new http client. */
+    HttpClient client = new HttpClient();
+
+    /* Client should always authenticate before making a connection. */
+    client.getParams().setAuthenticationPreemptive( true );
+    client.getParams().setSoTimeout( timeout );
+
+    return client;
+  }
+
+  /**
+   * This function schecks if the host of an url is one of the non proxy hosts.
+   * 
+   * @param url
+   *            The url to check.
+   * @return True, if the host, contained in the url should not use a proxy.
+   */
+  public static boolean isNonProxyHost( URL url )
+  {
+    /* Get the proxy object. */
+    Proxy proxy = getProxy();
+
+    /* All hosts, that should use no proxy. */
+    List<String> nonProxyHosts = proxy.getNonProxyHosts();
+
+    for( int i = 0; i < nonProxyHosts.size(); i++ )
+    {
+      if( url.getHost().equals( nonProxyHosts.get( i ) ) )
+        return true;
+    }
+
+    return false;
   }
 }
