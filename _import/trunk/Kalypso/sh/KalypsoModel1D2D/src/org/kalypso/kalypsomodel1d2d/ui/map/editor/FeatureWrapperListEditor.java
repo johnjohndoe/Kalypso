@@ -499,27 +499,16 @@ public class FeatureWrapperListEditor implements IButtonConstants
   
   final void updateOnNewSelection( Object currentSelection  )
   {
-    Object cachedCurrentSelect = currentSelection; 
-    final IStructuredSelection selection;
+    final Object cachedCurrentSelect = currentSelection; 
     final String desc;
     if( cachedCurrentSelect instanceof IFeatureWrapper2 )
     {
-        selection = new StructuredSelection( new Object[]{ cachedCurrentSelect } );
         desc = ((IFeatureWrapper2)cachedCurrentSelect).getDescription();
     }  
     else if ( cachedCurrentSelect == null )
     {
-      selection = 
-        new StructuredSelection( new Object[]{ } );
       desc = "";
     }
-////      tableViewer.setSelection( selection );
-//      descriptionText.setText( desc );
-//      descriptionText.redraw();
-//      //refreshOtherSections();
-////      CalculationElementComponent calc = new CalculationElementComponent(); 
-////      calc.createControl( dataModel, toolkit, parent );      
-//    }
     else
     {
       throw new IllegalArgumentException(
