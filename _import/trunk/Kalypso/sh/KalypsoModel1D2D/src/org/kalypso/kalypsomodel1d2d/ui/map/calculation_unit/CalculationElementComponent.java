@@ -53,6 +53,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -98,17 +99,25 @@ public class CalculationElementComponent
   private GridData data;
   private Image imageBoundaryDown;
   private FormToolkit toolkit;
-  private Composite parent;
+  Composite parent;
   private KeyBasedDataModel dataModel;
   private int num1DElement;
   private int num2DElement;
 
   KeyBasedDataModelChangeListener newKeyListener = new KeyBasedDataModelChangeListener(){
-    public void dataChanged( String key, Object newValue )
+    public void dataChanged( final String key, final Object newValue )
     {
-      if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
-        updateThisSection( newValue );
-      }      
+      Display display = parent.getDisplay();
+      final Runnable runnable = new Runnable()
+      {
+        public void run( )
+        {
+          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
+            updateThisSection( newValue );
+          }
+        }
+      };
+      display.syncExec( runnable );      
     }    
   };
 

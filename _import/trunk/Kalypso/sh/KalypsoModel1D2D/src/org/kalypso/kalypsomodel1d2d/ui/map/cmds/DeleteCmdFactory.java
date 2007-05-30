@@ -81,6 +81,10 @@ public class DeleteCmdFactory
     {
       return new DeleteEdgeToCLineJunctionElementCmd(model1d2d,feature);
     }
+    else if( TypeInfo.isBoundaryLine( feature ) )
+    {
+      return new DeleteBoundaryLineCmd(model1d2d,feature);
+    }
     else
     {
        return null;

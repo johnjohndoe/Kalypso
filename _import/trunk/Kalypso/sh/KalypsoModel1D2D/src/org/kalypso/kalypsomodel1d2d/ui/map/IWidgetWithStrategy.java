@@ -38,43 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
-/**
- * Hold often used keys
- * 
- * @author Patrice Congo
- */
-public interface ICommonKeys
-{
-  /**
-   * Key for data entry holding the map panel
-   */
-  public static final String KEY_MAP_PANEL ="_map_panel_";
-  
-  /**
-   * Key used in the context of feature wrapper list editor
-   * denoting the data the list of feature wrapper which is
-   * to be shown in the list
-   */
-  public static final String KEY_FEATURE_WRAPPER_LIST = "_feature_wrapper_list_";
-  
-  /**
-   * Key used in the context of feature wrapper list editor
-   * denoting the currently selected feature wrapper
-   */
-  public static final String KEY_SELECTED_FEATURE_WRAPPER = "_sel_feature_wrapper_";
-  
-  /**
-   * Key for data entry holding the discretisation model
-   */
-  public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_"; 
-  
-  /**
-   * Data entry holding the {@link org.kalypso.commons.command.ICommandTarget}
-   * used to post command
-   */
-  public static final String KEY_COMMAND_TARGET ="_command target_";
+package org.kalypso.kalypsomodel1d2d.ui.map;
 
-  public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_";
-  
+import org.kalypso.ogc.gml.widgets.IWidget;
+
+/**
+ * @author Patrice Congo
+ * @author Madanagopal
+ *
+ */
+public interface IWidgetWithStrategy
+{
+  public void setStrategy( IWidget strategy );
 }

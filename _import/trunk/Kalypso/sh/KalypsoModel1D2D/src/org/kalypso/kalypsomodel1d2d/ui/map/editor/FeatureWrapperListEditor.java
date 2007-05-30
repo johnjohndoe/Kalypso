@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -497,26 +498,38 @@ public class FeatureWrapperListEditor implements IButtonConstants
     updateOnNewSelection( currentSelection );
   }
   
-  final void updateOnNewSelection( Object currentSelection  )
+  final void updateOnNewSelection( final Object currentSelection  )
   {
-    final Object cachedCurrentSelect = currentSelection; 
-    final String desc;
-    if( cachedCurrentSelect instanceof IFeatureWrapper2 )
+    final Runnable runnable = new Runnable()
     {
-        desc = ((IFeatureWrapper2)cachedCurrentSelect).getDescription();
-    }  
-    else if ( cachedCurrentSelect == null )
-    {
-      desc = "";
-    }
-    else
-    {
-      throw new IllegalArgumentException(
-          "IfeatureWrapper2 expected but got:"+currentSelection);
-    }
-    descriptionText.setText( desc );
-    descriptionText.redraw();
+
+      public void run( )
+      {
+        final Object cachedCurrentSelect = currentSelection; 
+        final String desc;
+        if( cachedCurrentSelect instanceof IFeatureWrapper2 )
+        {
+            desc = ((IFeatureWrapper2)cachedCurrentSelect).getDescription();
+        }  
+        else if ( cachedCurrentSelect == null )
+        {
+          desc = "";
+        }
+        else
+        {
+          throw new IllegalArgumentException(
+              "IfeatureWrapper2 expected but got:"+currentSelection);
+        }
+        descriptionText.setText( desc );
+        descriptionText.redraw();
+      }
+      
+    };
     
+    
+    Display display = parent.getDisplay();
+    
+    display.syncExec( runnable );
   }
   
   public void refreshOtherSections(){

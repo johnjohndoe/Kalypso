@@ -372,7 +372,9 @@ public class FENetConceptSelectionWidget implements IWidget
    */
   public void finish( )
   {
-
+    
+    IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+    selectionManager.clear();//changeSelection( featuresToRemove, featuresToAdd );
   }
 
   /**
@@ -606,7 +608,7 @@ public class FENetConceptSelectionWidget implements IWidget
     {
       final double x = Math.min( draggedPoint0.getX(), draggedPoint1.getX() );
       final double y = Math.min( draggedPoint0.getY(), draggedPoint1.getY() );
-      ;
+      
       final double width = Math.abs( draggedPoint0.getX() - draggedPoint1.getX() );
       final double height = Math.abs( draggedPoint0.getY() - draggedPoint1.getY() );
 

@@ -72,7 +72,8 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
               ICommonKeys.KEY_DISCRETISATION_MODEL,
               ICommonKeys.KEY_MAP_PANEL,
-              ICommonKeys.KEY_COMMAND_TARGET
+              ICommonKeys.KEY_COMMAND_TARGET,
+              ICommonKeys.WIDGET_WITH_STRATEGY
               }, 
         null 
         );

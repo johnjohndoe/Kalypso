@@ -83,6 +83,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>

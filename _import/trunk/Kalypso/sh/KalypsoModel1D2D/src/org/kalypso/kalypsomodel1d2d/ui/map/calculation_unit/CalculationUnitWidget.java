@@ -72,6 +72,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -88,7 +89,7 @@ import org.kalypso.ui.views.map.MapView;
  */
 public class CalculationUnitWidget 
 //                    extends FENetConceptSelectionWidget//AbstractWidget 
-                    implements IWidgetWithOptions, IWidget/*, IEvaluationContextConsumer*/
+                    implements IWidgetWithOptions, IWidget, IWidgetWithStrategy/*, IEvaluationContextConsumer*/
 {
   
   private static IWorkbench workbench;
@@ -152,6 +153,7 @@ public class CalculationUnitWidget
     dataModel.setData(
         ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
         CalUnitOps.getModelCalculationUnits( model1d2d ) );
+    dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 ////    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
 //    PopupMenu popup = new PopupMenu();
 //    popup.add( new MenuItem("TestMenu") );
@@ -265,57 +267,57 @@ public class CalculationUnitWidget
       strategy.clickPopup( p );
     }
         
-    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-    JPopupMenu popupMenu = new JPopupMenu();
-    
-    JMenuItem addElement = new JMenuItem();
-    addElement.setText( "Add Element" );
-    addElement.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                  "icons/elcl16/add.gif" )));
-   
-    JMenuItem removeElement = new JMenuItem();
-    removeElement.setText("Remove Element");
-    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                  "icons/elcl16/remove.gif" )));
-    
-    JMenuItem addBoundaryUP = new JMenuItem();
-    addBoundaryUP.setText("Add Boundary UP");
-    addBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                  "icons/elcl16/addBoundary.gif" )));
-    
-    JMenuItem removeBoundaryUP = new JMenuItem();
-    removeBoundaryUP.setText("Remove Boundary UP");
-    removeBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                  "icons/elcl16/remove.gif" )));
-        
-    
-    JMenuItem addBoundaryDOWN = new JMenuItem();
-    addBoundaryDOWN.setText("Add Boundary DOWN");
-    addBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                 KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                 "icons/elcl16/addBoundary.gif" )));
-
-    
-    JMenuItem removeBoundaryDOWN = new JMenuItem();
-    removeBoundaryDOWN.setText("remove Boundary DOWN");
-    removeBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                "icons/elcl16/remove.gif" )));
-
-    popupMenu.add( addElement);
-    popupMenu.add( removeElement);
-    popupMenu.addSeparator();
-    popupMenu.add( addBoundaryUP);
-    popupMenu.add( removeBoundaryUP);
-    popupMenu.addSeparator();
-    popupMenu.add( addBoundaryDOWN);
-    popupMenu.add( removeBoundaryDOWN);
-    
-    popupMenu.show( mapPanel, p.x, p.y );    
+//    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+//    JPopupMenu popupMenu = new JPopupMenu();
+//    
+//    JMenuItem addElement = new JMenuItem();
+//    addElement.setText( "Add Element" );
+//    addElement.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                  "icons/elcl16/add.gif" )));
+//   
+//    JMenuItem removeElement = new JMenuItem();
+//    removeElement.setText("Remove Element");
+//    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                  "icons/elcl16/remove.gif" )));
+//    
+//    JMenuItem addBoundaryUP = new JMenuItem();
+//    addBoundaryUP.setText("Add Boundary UP");
+//    addBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                  "icons/elcl16/addBoundary.gif" )));
+//    
+//    JMenuItem removeBoundaryUP = new JMenuItem();
+//    removeBoundaryUP.setText("Remove Boundary UP");
+//    removeBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                  "icons/elcl16/remove.gif" )));
+//        
+//    
+//    JMenuItem addBoundaryDOWN = new JMenuItem();
+//    addBoundaryDOWN.setText("Add Boundary DOWN");
+//    addBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                 KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                 "icons/elcl16/addBoundary.gif" )));
+//
+//    
+//    JMenuItem removeBoundaryDOWN = new JMenuItem();
+//    removeBoundaryDOWN.setText("remove Boundary DOWN");
+//    removeBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                "icons/elcl16/remove.gif" )));
+//
+//    popupMenu.add( addElement);
+//    popupMenu.add( removeElement);
+//    popupMenu.addSeparator();
+//    popupMenu.add( addBoundaryUP);
+//    popupMenu.add( removeBoundaryUP);
+//    popupMenu.addSeparator();
+//    popupMenu.add( addBoundaryDOWN);
+//    popupMenu.add( removeBoundaryDOWN);
+//    
+//    popupMenu.show( mapPanel, p.x, p.y );    
   }
 
   

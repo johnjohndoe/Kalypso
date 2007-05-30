@@ -201,6 +201,20 @@ public class TypeInfo
     }
   }
 
+  public static final boolean isBoundaryLine( Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      QName featureQName = feature.getFeatureType().getQName();
+      return featureQName.equals( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE );
+    }
+  }
+  
   public static final boolean isEdgeToEdgeJunction( Feature feature )
   {
     if(feature==null)

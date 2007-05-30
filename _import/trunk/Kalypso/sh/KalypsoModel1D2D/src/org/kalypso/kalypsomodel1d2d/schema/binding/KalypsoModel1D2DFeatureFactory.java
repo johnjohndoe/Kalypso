@@ -34,6 +34,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -250,26 +251,27 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // does not fit (this is according to the adapter-contract)
     cMap.put( IFE1D2DElement.class, cTor );
     cMap.put( IBoundaryLine.class, cTor );
-
-    // PolyElement
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
-        {
-          return new PolyElement( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IPolyElement.class );
-          return null;
-        }
-      }
-    };
+    cMap.put( IElement2D.class, cTor );
     cMap.put( IPolyElement.class, cTor );
+    // PolyElement
+//    cTor = new AdapterConstructor()
+//    {
+//      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+//      {
+//        final QName featureQName = feature.getFeatureType().getQName();
+//
+//        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
+//        {
+//          return new PolyElement( feature );
+//        }
+//        else
+//        {
+//          warnUnableToAdapt( feature, featureQName, IPolyElement.class );
+//          return null;
+//        }
+//      }
+//    };
+//    cMap.put( IPolyElement.class, cTor );
 
     // 1d2d 1d-element
     cTor = new AdapterConstructor()

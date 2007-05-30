@@ -47,7 +47,10 @@ import java.util.ArrayList;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -76,9 +79,38 @@ public class AddElementToCalculationUnit implements IDiscrModel1d2dChangeCommand
   
   @SuppressWarnings("hiding")
   public AddElementToCalculationUnit(
-                      ICalculationUnit1D<IElement1D> calculationUnit,
+                      ICalculationUnit1D calculationUnit,
                       IElement1D[] elementsToAdd,
                       IFEDiscretisationModel1d2d model1d2d )
+  {
+    this.calculationUnit = calculationUnit;
+    this.elementsToAdd = elementsToAdd;
+    this.model1d2d = model1d2d;
+  }
+  
+  public AddElementToCalculationUnit(
+      ICalculationUnit calculationUnit,
+      IFE1D2DElement[] elementsToAdd,
+      IFEDiscretisationModel1d2d model1d2d )
+  {
+    this.calculationUnit = calculationUnit;
+    this.elementsToAdd = elementsToAdd;
+    this.model1d2d = model1d2d;
+  }
+  public AddElementToCalculationUnit(
+      ICalculationUnit2D<IElement2D> calculationUnit,
+      IElement2D[] elementsToAdd,
+      IFEDiscretisationModel1d2d model1d2d )
+  {
+    this.calculationUnit = calculationUnit;
+    this.elementsToAdd = elementsToAdd;
+    this.model1d2d = model1d2d;
+  }
+  
+  public AddElementToCalculationUnit(
+      ICalculationUnit1D2D calculationUnit,
+      IFE1D2DElement[] elementsToAdd,
+      IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
     this.elementsToAdd = elementsToAdd;

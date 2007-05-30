@@ -2,6 +2,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cline;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 import javax.xml.namespace.QName;
 
@@ -11,10 +12,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
@@ -29,8 +28,6 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -107,6 +104,19 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
     m_builder = new LineGeometryBuilder( 0, targetCrs );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyTyped( KeyEvent e )
+  {
+    if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
+    {
+      this.reinit();
+      getMapPanel().repaint();
+    }
+  }
+  
   @Override
   public void moved( final Point p )
   {
