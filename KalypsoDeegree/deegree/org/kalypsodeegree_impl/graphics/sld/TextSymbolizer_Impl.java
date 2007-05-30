@@ -84,21 +84,20 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymbolizer, Marshallable
 {
-  private Fill fill = null;
+  private Fill m_fill = null;
 
-  private Font font = null;
+  private Font m_font = null;
 
-  private Halo halo = null;
+  private Halo m_halo = null;
 
-  private LabelPlacement labelPlacement = null;
+  private LabelPlacement m_labelPlacement = null;
 
-  private ParameterValueType label = null;
+  private ParameterValueType m_label = null;
 
   /**
    * constructor initializing the class with the <TextSymbolizer>
    */
-  TextSymbolizer_Impl( Geometry geometry, ParameterValueType label, Font font, LabelPlacement labelPlacement,
-      Halo halo, Fill fill, double min, double max, UOM uom )
+  TextSymbolizer_Impl( final Geometry geometry, final ParameterValueType label, final Font font, final LabelPlacement labelPlacement, final Halo halo, final Fill fill, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
     setLabel( label );
@@ -115,20 +114,20 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the label
    */
-  public ParameterValueType getLabel()
+  public ParameterValueType getLabel( )
   {
-    return label;
+    return m_label;
   }
 
   /**
    * sets the <Label>
    * 
    * @param label
-   *          the label
+   *            the label
    */
-  public void setLabel( ParameterValueType label )
+  public void setLabel( final ParameterValueType label )
   {
-    this.label = label;
+    this.m_label = label;
   }
 
   /**
@@ -136,20 +135,20 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the font
    */
-  public Font getFont()
+  public Font getFont( )
   {
-    return font;
+    return m_font;
   }
 
   /**
    * Sets a Font of a certain family, style, and size.
    * 
    * @param font
-   *          the font
+   *            the font
    */
-  public void setFont( Font font )
+  public void setFont( final Font font )
   {
-    this.font = font;
+    this.m_font = font;
   }
 
   /**
@@ -162,20 +161,20 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the labelPlacement
    */
-  public LabelPlacement getLabelPlacement()
+  public LabelPlacement getLabelPlacement( )
   {
-    return labelPlacement;
+    return m_labelPlacement;
   }
 
   /**
    * sets the <LabelPlacement>
    * 
    * @param labelPlacement
-   *          the labelPlacement
+   *            the labelPlacement
    */
-  public void setLabelPlacement( LabelPlacement labelPlacement )
+  public void setLabelPlacement( final LabelPlacement labelPlacement )
   {
-    this.labelPlacement = labelPlacement;
+    this.m_labelPlacement = labelPlacement;
   }
 
   /**
@@ -186,20 +185,20 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the halo
    */
-  public Halo getHalo()
+  public Halo getHalo( )
   {
-    return halo;
+    return m_halo;
   }
 
   /**
    * sets <Halo>
    * 
    * @param halo
-   *          the halo
+   *            the halo
    */
-  public void setHalo( Halo halo )
+  public void setHalo( final Halo halo )
   {
-    this.halo = halo;
+    this.m_halo = halo;
   }
 
   /**
@@ -209,20 +208,20 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the fill
    */
-  public Fill getFill()
+  public Fill getFill( )
   {
-    return fill;
+    return m_fill;
   }
 
   /**
    * sets the <Fill>
    * 
    * @param fill
-   *          the fill
+   *            the fill
    */
-  public void setFill( Fill fill )
+  public void setFill( final Fill fill )
   {
-    this.fill = fill;
+    this.m_fill = fill;
   }
 
   /**
@@ -230,37 +229,38 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return xml representation of the TextSymbolizer
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<TextSymbolizer>" );
+    final Geometry geometry = getGeometry();
     if( geometry != null )
     {
-      sb.append( ( (Marshallable)geometry ).exportAsXML() );
+      sb.append( ((Marshallable) geometry).exportAsXML() );
     }
-    if( label != null )
+    if( m_label != null )
     {
       sb.append( "<Label>" );
-      sb.append( ( (Marshallable)label ).exportAsXML() );
+      sb.append( ((Marshallable) m_label).exportAsXML() );
       sb.append( "</Label>" );
     }
-    if( font != null )
+    if( m_font != null )
     {
-      sb.append( ( (Marshallable)font ).exportAsXML() );
+      sb.append( ((Marshallable) m_font).exportAsXML() );
     }
-    if( labelPlacement != null )
+    if( m_labelPlacement != null )
     {
-      sb.append( ( (Marshallable)labelPlacement ).exportAsXML() );
+      sb.append( ((Marshallable) m_labelPlacement).exportAsXML() );
     }
-    if( halo != null )
+    if( m_halo != null )
     {
-      sb.append( ( (Marshallable)halo ).exportAsXML() );
+      sb.append( ((Marshallable) m_halo).exportAsXML() );
     }
-    if( fill != null )
+    if( m_fill != null )
     {
-      sb.append( ( (Marshallable)fill ).exportAsXML() );
+      sb.append( ((Marshallable) m_fill).exportAsXML() );
     }
     sb.append( "</TextSymbolizer>" );
 

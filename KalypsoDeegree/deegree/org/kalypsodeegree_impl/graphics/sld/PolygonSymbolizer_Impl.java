@@ -89,19 +89,19 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   /**
    * Creates a new PolygonSymbolizer_Impl object.
    */
-  public PolygonSymbolizer_Impl()
+  public PolygonSymbolizer_Impl( )
   {
     super( null, UOM.pixel );
     setFill( new Fill_Impl() );
 
-    Stroke stroke = new Stroke_Impl();
+    final Stroke stroke = new Stroke_Impl();
     setStroke( stroke );
   }
 
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  public PolygonSymbolizer_Impl( Fill fill, Stroke stroke, Geometry geometry, double min, double max, UOM uom )
+  public PolygonSymbolizer_Impl( final Fill fill, final Stroke stroke, final Geometry geometry, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
     setFill( fill );
@@ -117,7 +117,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * 
    * @return the fill of the polygon
    */
-  public Fill getFill()
+  public Fill getFill( )
   {
     return m_fill;
   }
@@ -126,9 +126,9 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * sets the <Fill>
    * 
    * @param fill
-   *          the fill of the polygon
+   *            the fill of the polygon
    */
-  public void setFill( Fill fill )
+  public void setFill( final Fill fill )
   {
     this.m_fill = fill;
   }
@@ -141,7 +141,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * 
    * @return the stroke of the polygon
    */
-  public Stroke getStroke()
+  public Stroke getStroke( )
   {
     return m_stroke;
   }
@@ -150,9 +150,9 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * sets the <Stroke>
    * 
    * @param stroke
-   *          the stroke of the polygon
+   *            the stroke of the polygon
    */
-  public void setStroke( Stroke stroke )
+  public void setStroke( final Stroke stroke )
   {
     this.m_stroke = stroke;
   }
@@ -162,10 +162,11 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * 
    * @return the textual representation
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
-    StringBuffer sb = new StringBuffer();
-    sb.append( "scale constraint:  >=" + minDenominator + " AND <" + maxDenominator + "\n" );
+    final StringBuffer sb = new StringBuffer();
+    sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
     sb.append( "<PolygonSymbolizer>\n" );
 
     if( getGeometry() != null )
@@ -193,23 +194,24 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * 
    * @return xml representation of the PolygonSymbolizer
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<PolygonSymbolizer>" );
+    final Geometry geometry = getGeometry();
     if( geometry != null )
     {
-      sb.append( ( (Marshallable)geometry ).exportAsXML() );
+      sb.append( ((Marshallable) geometry).exportAsXML() );
     }
     if( m_fill != null )
     {
-      sb.append( ( (Marshallable)m_fill ).exportAsXML() );
+      sb.append( ((Marshallable) m_fill).exportAsXML() );
     }
     if( m_stroke != null )
     {
-      sb.append( ( (Marshallable)m_stroke ).exportAsXML() );
+      sb.append( ((Marshallable) m_stroke).exportAsXML() );
     }
     sb.append( "</PolygonSymbolizer>" );
 

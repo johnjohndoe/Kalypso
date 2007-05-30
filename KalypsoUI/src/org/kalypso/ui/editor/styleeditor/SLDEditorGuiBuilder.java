@@ -290,7 +290,7 @@ public class SLDEditorGuiBuilder
 
               if( geometryObjects.size() > 0 )
               {
-                final Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String) geometryObjects.get( 0 ), "Point", getFeatureType() );
+                final Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( new PropertyName( (String) geometryObjects.get( 0 ) ), "Point", getFeatureType() );
                 final String patternName = "-name-" + new Date().getTime();
                 lowerBoundary = new BoundaryExpression( "0" );
                 upperBoundary = new BoundaryExpression( "1" );

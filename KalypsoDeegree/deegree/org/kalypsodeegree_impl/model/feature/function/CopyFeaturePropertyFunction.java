@@ -89,7 +89,7 @@ public class CopyFeaturePropertyFunction extends FeaturePropertyFunction
     {
       // TODO: is it possible?
     }
-    
+
     return valueToSet;
   }
 

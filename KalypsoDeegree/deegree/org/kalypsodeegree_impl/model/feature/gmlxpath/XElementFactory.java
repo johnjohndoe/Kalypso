@@ -43,6 +43,8 @@ package org.kalypsodeegree_impl.model.feature.gmlxpath;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.namespace.NamespaceContext;
+
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
@@ -59,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.XElementFromOpera
  */
 public class XElementFactory
 {
-  private IGMLXPathOperation[] m_operations;
+  private final IGMLXPathOperation[] m_operations;
 
   final IGMLXPathFunction[] m_functions;
 
@@ -210,7 +212,7 @@ public class XElementFactory
         return n1 == n2;
       }
     };
-    IGMLXPathOperation op11 = new GMLXPathMathOperation( "(.+)( \\\\* )(.+)" )
+    final IGMLXPathOperation op11 = new GMLXPathMathOperation( "(.+)( \\\\* )(.+)" )
     {
 
       @Override
@@ -220,7 +222,7 @@ public class XElementFactory
       }
 
     };
-    IGMLXPathOperation op12 = new GMLXPathMathOperation( "(.+)( - )(.+)" )
+    final IGMLXPathOperation op12 = new GMLXPathMathOperation( "(.+)( - )(.+)" )
     {
       @Override
       public Object mathOperate( double n1, double n2 )
@@ -228,7 +230,7 @@ public class XElementFactory
         return n1 - n2;
       }
     };
-    IGMLXPathOperation op13 = new GMLXPathMathOperation( "(.+)( \\\\+ )(.+)" )
+    final IGMLXPathOperation op13 = new GMLXPathMathOperation( "(.+)( \\\\+ )(.+)" )
     {
       @Override
       public Object mathOperate( double n1, double n2 )
@@ -285,21 +287,19 @@ public class XElementFactory
     m_functions = new IGMLXPathFunction[] { f1, f2, f3, f4 };
   }
 
-  public IXElement create( final String string )
+  public IXElement create( final String string, final NamespaceContext namespaceContext )
   {
     final GMLXPathString cond = new GMLXPathString( string );
-    return create( cond );
+    return create( cond, namespaceContext );
   }
 
-  public IXElement create( final GMLXPathString cond )
+  public IXElement create( final GMLXPathString cond, final NamespaceContext namespaceContext )
   {
-
     final String condition = cond.getCond();
     final String marked = cond.getMarked();
     // operations...
-    for( int i = 0; i < m_operations.length; i++ )
+    for( final IGMLXPathOperation operation : m_operations )
     {
-      final IGMLXPathOperation operation = m_operations[i];
       final Pattern pattern = operation.getPattern();
       final Matcher matcher = pattern.matcher( marked );
       if( matcher.matches() )
@@ -310,15 +310,14 @@ public class XElementFactory
         final String postMarked = matcher.group( 3 );
         final String post = condition.substring( condition.length() - postMarked.length() );
 
-        final IXElement preXElement = create( pre );
-        final IXElement postXElement = create( post );
+        final IXElement preXElement = create( pre, namespaceContext );
+        final IXElement postXElement = create( post, namespaceContext );
         return new XElementFromOperation( preXElement, operation, postXElement );
       }
     }
     // functions
-    for( int i = 0; i < m_functions.length; i++ )
+    for( final IGMLXPathFunction function : m_functions )
     {
-      final IGMLXPathFunction function = m_functions[i];
       final Pattern p = function.getPattern();
       final Matcher matcher = p.matcher( marked );
       if( matcher.matches() )
@@ -326,21 +325,21 @@ public class XElementFactory
         final String argument = function.getArgument( matcher, cond );
         if( argument != null && argument.length() > 0 )
         {
-          final IXElement element = create( argument );
+          final IXElement element = create( argument, namespaceContext );
           return new XElementFromFunction( function, element );
         }
         return new XElementFromFunction( function );
       }
     }
     // attributes
-    String markedTrim = marked.trim();
+    final String markedTrim = marked.trim();
     if( markedTrim.startsWith( "@" ) )
       return new XElementFormAttribute( condition );
     // other xpathes
     // strings
     if( markedTrim.startsWith( "'" ) )
       return new XElementFormString( condition );
-    return new XElementFormPath( condition );
+    return new XElementFormPath( condition, namespaceContext );
   }
 
 }

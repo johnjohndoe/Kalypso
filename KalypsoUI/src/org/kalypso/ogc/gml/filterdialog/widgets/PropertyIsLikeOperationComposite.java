@@ -138,18 +138,13 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
           final QName qnamePt = ((IValuePropertyType) firstElement).getQName();
-          PropertyName propertyName = m_operation.getPropertyName();
-          if( propertyName == null )
-            propertyName = new PropertyName( qnamePt );
-          else
-            propertyName.setValue( qnamePt );
-          m_operation.setPropertyName( propertyName );
+          m_operation.setPropertyName( new PropertyName( qnamePt ) );
         }
 
       }
@@ -164,21 +159,21 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     m_secondRowText.addFocusListener( new FocusListener()
     {
 
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         // do nothing
       }
 
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
         if( !selection.isEmpty() )
         {
-          Object firstElement = selection.getFirstElement();
+          final Object firstElement = selection.getFirstElement();
           if( firstElement instanceof IValuePropertyType )
           {
             final IValuePropertyType vpt = (IValuePropertyType) firstElement;
-            final  String str = m_secondRowText.getText().trim();
+            final String str = m_secondRowText.getText().trim();
             validate( vpt, str );
             Literal literal = m_operation.getLiteral();
             if( literal == null )
@@ -211,5 +206,4 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     m_escpapeChar.setText( String.valueOf( m_operation.getEscapeChar() ) );
   }
 
-  
 }

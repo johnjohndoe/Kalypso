@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
-import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
-
 /**
  * representation of Strings in GMLXPath expressions, used temporary by GMLXPath-compiler
  * 
@@ -52,12 +50,6 @@ public class GMLXPathString
   private final String m_condition;
 
   private final String m_marked;
-
-  private IXElement m_xElement = null;
-
-  private static XElementFactory m_fac = new XElementFactory();
-
-  private static int m_bID = 0;
 
   protected GMLXPathString( String condition )
   {
@@ -83,93 +75,6 @@ public class GMLXPathString
     }
     m_condition = condition;
     m_marked = buffer.toString();
-  }
-
-  private GMLXPathString( String condition, String marked )
-  {
-    m_condition = condition;
-    m_marked = marked;
-  }
-
-  private void init( )
-  {
-    // care for brakets
-    int level = 0;
-    int start = -1;
-    int end = -1;
-    for( int i = 0; i < m_marked.length(); i++ )
-    {
-      if( m_marked.charAt( i ) == '(' )
-      {
-        level++;
-        if( level == 1 )
-          start = i;
-      }
-      if( m_marked.charAt( i ) == ')' )
-      {
-        if( level == 1 )
-        {
-          end = i;
-          break;
-        }
-        level--;
-      }
-    }
-    if( start > 0 && end > 0 )
-    {
-      final GMLXPathString preCond;
-      if( start > 0 )
-        preCond = new GMLXPathString( m_condition.substring( 0, start ) );
-      else
-        preCond = null;
-
-      final String braketString = m_condition.substring( start + 1, end );
-      final IXElement element = m_fac.create( braketString );
-
-      final GMLXPathString postCond;
-      if( end + 1 < m_condition.length() )
-        postCond = new GMLXPathString( m_condition.substring( end + 1 ) );
-      else
-        postCond = null;
-
-      final StringBuffer newCondintion = new StringBuffer();
-      final StringBuffer newMarked = new StringBuffer();
-      if( preCond == null )
-      {
-        newCondintion.append( preCond.getCond() );
-        newMarked.append( preCond.getMarked() );
-      }
-      final String braketID = createID( element );
-      newCondintion.append( braketID );
-      newMarked.append( braketID.replaceAll( ".", "#" ) );
-      // TODO wrap original string as escaped sring to function
-      // better: TODO put also in marked and resolve late
-      if( postCond == null )
-      {
-        newCondintion.append( postCond.getCond() );
-        newMarked.append( postCond.getMarked() );
-      }
-      final GMLXPathString cond = new GMLXPathString( newCondintion.toString(), newMarked.toString() );
-
-      m_xElement = m_fac.create( cond );
-    }
-    else
-      m_xElement = m_fac.create( this );
-  }
-
-  private static String createID( final IXElement element )
-  {
-    m_bID++;
-    return "getBraket(" + m_bID + ")";
-  }
-
-  public IXElement toXElement( )
-  {
-    if( m_xElement == null )
-    {
-      init();
-    }
-    return m_xElement;
   }
 
   public String getMarked( )

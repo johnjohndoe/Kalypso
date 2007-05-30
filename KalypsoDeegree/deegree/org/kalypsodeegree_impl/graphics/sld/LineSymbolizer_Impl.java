@@ -60,10 +60,26 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import java.awt.Color;
+
+import javax.xml.namespace.QName;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.gmlschema.EmptyGMLSchema;
+import org.kalypso.gmlschema.feature.CustomFeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -85,18 +101,18 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
   /**
    * Creates a new LineSymbolizer_Impl object.
    */
-  public LineSymbolizer_Impl()
+  public LineSymbolizer_Impl( )
   {
     super();
 
-    Stroke stroke = new Stroke_Impl();
+    final Stroke stroke = new Stroke_Impl();
     setStroke( stroke );
   }
 
   /**
    * constructor initializing the class with the <LineSymbolizer>
    */
-  LineSymbolizer_Impl( Stroke stroke, Geometry geometry, double min, double max, UOM uom )
+  LineSymbolizer_Impl( final Stroke stroke, final Geometry geometry, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
     setStroke( stroke );
@@ -112,7 +128,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * 
    * @return the Stroke
    */
-  public Stroke getStroke()
+  public Stroke getStroke( )
   {
     return m_stroke;
   }
@@ -121,9 +137,9 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * sets the <Stroke>
    * 
    * @param stroke
-   *          the Stroke
+   *            the Stroke
    */
-  public void setStroke( Stroke stroke )
+  public void setStroke( final Stroke stroke )
   {
     this.m_stroke = stroke;
   }
@@ -133,23 +149,75 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * 
    * @return xml representation of the LineSymbolizer
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final Geometry geometry = getGeometry();
+
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LineSymbolizer>" );
     if( geometry != null )
     {
-      sb.append( ( (Marshallable)geometry ).exportAsXML() );
+      sb.append( ((Marshallable) geometry).exportAsXML() );
     }
     if( m_stroke != null )
     {
-      sb.append( ( (Marshallable)m_stroke ).exportAsXML() );
+      sb.append( ((Marshallable) m_stroke).exportAsXML() );
     }
     sb.append( "</LineSymbolizer>" );
 
     Debug.debugMethodEnd();
     return sb.toString();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paintLegendGraphic(org.eclipse.swt.graphics.GC)
+   */
+  @Override
+  public void paintLegendGraphic( final GC gc ) throws FilterEvaluationException
+  {
+    final Rectangle clipping = gc.getClipping();
+
+    org.eclipse.swt.graphics.Color color = null;
+    try
+    {
+      if( m_stroke.getGraphicStroke() == null )
+      {
+        final IFeatureType ft = new CustomFeatureType( new EmptyGMLSchema(), new QName( "", "" ), new IPropertyType[] {} );
+        final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
+
+        // Color & Opacity
+        final Color stroke = m_stroke.getStroke( feature );
+        final RGB rgb = new RGB( stroke.getRed(), stroke.getGreen(), stroke.getBlue() );
+        color = new org.eclipse.swt.graphics.Color( gc.getDevice(), rgb );
+        gc.setForeground( color );
+// gc.setAlpha( stroke.getAlpha() );
+
+        final float[] dash = m_stroke.getDashArray( feature );
+        final float width = (float) m_stroke.getWidth( feature );
+        final int cap = m_stroke.getLineCap( feature );
+        final int join = m_stroke.getLineJoin( feature );
+
+        if( dash == null || dash.length < 2 )
+          gc.setLineAttributes( new LineAttributes( width, cap, join ) );
+        else
+          gc.setLineAttributes( new LineAttributes( width, cap, join, SWT.LINE_DASH, dash, 0, 10 ) );
+
+        gc.drawLine( clipping.x, clipping.y, clipping.x + clipping.width, clipping.y + clipping.height );
+      }
+      else
+      {
+        // not implemented yet
+        super.paintLegendGraphic( gc );
+      }
+
+    }
+    finally
+    {
+      if( color != null )
+        color.dispose();
+    }
+
   }
 }

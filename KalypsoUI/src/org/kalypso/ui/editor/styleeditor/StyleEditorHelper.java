@@ -42,15 +42,18 @@ package org.kalypso.ui.editor.styleeditor;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 
 public class StyleEditorHelper
 {
-  public static IPropertyType getFeatureTypeProperty( IFeatureType ft, String propName )
+  public static IPropertyType getFeatureTypeProperty( final IFeatureType ft, final PropertyName propName )
   {
-    final IPropertyType ftp = ft.getProperty( propName );
+    // HACK: we assume that we have a simple PropertyName here, but this is not allways the case
+    final String path = propName.getValue();
+    final IPropertyType ftp = ft.getProperty( path );
     if( ftp == null )
-      return VirtualPropertyUtilities.getPropertyType( ft, propName );
+      return VirtualPropertyUtilities.getPropertyType( ft, path );
     return ftp;
   }
 }

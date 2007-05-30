@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
+import java.util.Iterator;
+
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.commons.xml.NSUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
 
@@ -52,7 +59,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
  */
 public final class GMLXPathSegment
 {
-  public static GMLXPathSegment[] addSegments( GMLXPathSegment[] segments, GMLXPathSegment segment )
+  public static GMLXPathSegment[] addSegments( final GMLXPathSegment[] segments, final GMLXPathSegment segment )
   {
     final int parentLength = segments.length;
     final GMLXPathSegment[] newSegments = new GMLXPathSegment[parentLength + 1];
@@ -61,7 +68,7 @@ public final class GMLXPathSegment
     return newSegments;
   }
 
-  public static GMLXPathSegment[] segmentsFromFeature( Feature feature ) throws GMLXPathException
+  public static GMLXPathSegment[] segmentsFromFeature( final Feature feature ) throws GMLXPathException
   {
     final String id = feature.getId();
     if( id == null || id.length() < 1 )
@@ -70,15 +77,17 @@ public final class GMLXPathSegment
       return new GMLXPathSegment[] { new GMLXPathSegment( feature ) };
   }
 
-  public static GMLXPathSegment[] segmentsFromPath( final String path )
+  public static GMLXPathSegment[] segmentsFromPath( final String path, final NamespaceContext namespaceContext )
   {
-    if( path.trim().length() == 0 )
+    final String trimmedPath = path.trim();
+
+    if( trimmedPath.length() == 0 )
       return new GMLXPathSegment[] {};
 
-    final String[] segments = path.split( "/" );
+    final String[] segments = trimmedPath.split( "/" );
     final GMLXPathSegment[] xSegments = new GMLXPathSegment[segments.length];
     for( int i = 0; i < segments.length; i++ )
-      xSegments[i] = new GMLXPathSegment( segments[i] );
+      xSegments[i] = new GMLXPathSegment( segments[i], namespaceContext );
 
     return xSegments;
   }
@@ -93,13 +102,14 @@ public final class GMLXPathSegment
 
   public GMLXPathSegment( final Feature feature )
   {
-    this( "id( '" + feature.getId() + "' )" );
+    this( "id( '" + feature.getId() + "' )", null );
   }
 
-  public GMLXPathSegment( final String segmentString )
+  public GMLXPathSegment( final String segmentString, final NamespaceContext namespaceContext )
   {
     m_segment = segmentString;
-    int index = segmentString.indexOf( "[" );
+
+    final int index = segmentString.indexOf( "[" );
     final String address;
     final String condition;
     if( index < 0 )
@@ -113,10 +123,10 @@ public final class GMLXPathSegment
       condition = segmentString.substring( index );
     }
 
-    m_addressXElement = m_fac.create( address );
+    m_addressXElement = m_fac.create( address, namespaceContext );
 
     if( condition != null )
-      m_conditionXElement = m_fac.create( condition );
+      m_conditionXElement = m_fac.create( condition, namespaceContext );
     else
       m_conditionXElement = null;
   }
@@ -158,4 +168,38 @@ public final class GMLXPathSegment
     return HashCodeBuilder.reflectionHashCode( this );
   }
 
+  public static GMLXPathSegment forQName( final QName qname )
+  {
+    final String namespaceURI = qname.getNamespaceURI();
+    final String localPart = qname.getLocalPart();
+
+    if( XMLConstants.NULL_NS_URI.equals( namespaceURI ) )
+      return new GMLXPathSegment( localPart, null );
+
+    final String defaultPrefix = "ns" + System.currentTimeMillis();
+    // Hopefully this works allways...
+    final String prefix = NSUtilities.getNSProvider().getPreferredPrefix( namespaceURI, defaultPrefix );
+
+    // Create a constant context
+    final NamespaceContext namespaceContext = new NamespaceContext()
+    {
+      public String getNamespaceURI( final String pref )
+      {
+        return namespaceURI;
+      }
+
+      public String getPrefix( final String namespace )
+      {
+        return prefix;
+      }
+
+      public Iterator<String> getPrefixes( final String namespace )
+      {
+        throw new UnsupportedOperationException();
+      }
+    };
+
+    final String segment = String.format( "%s:%s", prefix, localPart );
+    return new GMLXPathSegment( segment, namespaceContext );
+  }
 }

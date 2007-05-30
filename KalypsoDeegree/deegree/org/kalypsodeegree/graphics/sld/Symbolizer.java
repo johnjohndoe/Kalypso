@@ -60,6 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
+import org.eclipse.swt.graphics.GC;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
@@ -81,13 +83,13 @@ public interface Symbolizer
    * 
    * @return the MinScaleDenominator
    */
-  double getMinScaleDenominator();
+  double getMinScaleDenominator( );
 
   /**
    * Sets the MinScaleDenominator
    * 
    * @param minScaleDenominator
-   *          the MinScaleDenominator
+   *            the MinScaleDenominator
    */
   void setMinScaleDenominator( double minScaleDenominator );
 
@@ -97,13 +99,13 @@ public interface Symbolizer
    * 
    * @return the MaxScaleDenominator
    */
-  double getMaxScaleDenominator();
+  double getMaxScaleDenominator( );
 
   /**
    * Sets the MaxScaleDenominator
    * 
    * @param maxScaleDenominator
-   *          the MaxScaleDenominator
+   *            the MaxScaleDenominator
    */
   void setMaxScaleDenominator( double maxScaleDenominator );
 
@@ -114,17 +116,20 @@ public interface Symbolizer
    * 
    * @return the geometry of the symbolizer
    */
-  Geometry getGeometry();
+  Geometry getGeometry( );
 
   /**
    * Sets the Geometry.
    * 
    * @param geometry
-   *          the geometry of the symbolizer
+   *            the geometry of the symbolizer
    */
   void setGeometry( Geometry geometry );
-  
+
   public void setUom( final UOM uom );
-  
+
   public UOM getUom( );
+
+  /** Paints this symbolizer suitable for a legend. */
+  public void paintLegendGraphic( final GC gc ) throws FilterEvaluationException;
 }

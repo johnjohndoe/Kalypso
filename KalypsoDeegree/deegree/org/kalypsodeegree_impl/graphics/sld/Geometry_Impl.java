@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -77,12 +78,12 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Geometry_Impl implements Geometry, Marshallable
 {
-  private String m_propertyName = null;
+  private PropertyName m_propertyName = null;
 
   /**
    * constructor initializing the class with the <Geometry>
    */
-  public Geometry_Impl( String propertyName )
+  public Geometry_Impl( final PropertyName propertyName )
   {
     setPropertyName( propertyName );
   }
@@ -92,7 +93,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    * 
    * @return the name of the geometry property
    */
-  public String getPropertyName( )
+  public PropertyName getPropertyName( )
   {
     return m_propertyName;
   }
@@ -101,9 +102,9 @@ public class Geometry_Impl implements Geometry, Marshallable
    * sets the name of the geometry property
    * 
    * @param propertyName
-   *          the name of the geometry property
+   *            the name of the geometry property
    */
-  public void setPropertyName( String propertyName )
+  public void setPropertyName( final PropertyName propertyName )
   {
     this.m_propertyName = propertyName;
   }
@@ -124,7 +125,7 @@ public class Geometry_Impl implements Geometry, Marshallable
    * // * sets the <GMLGeometry> // * // *
    * 
    * @param geometryAsGML // *
-   *          the GMLGeometry //
+   *            the GMLGeometry //
    */
   // public void setGeometryAsGML( GMLGeometry geometryAsGML )
   // {
@@ -139,7 +140,7 @@ public class Geometry_Impl implements Geometry, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     if( m_propertyName != null && !m_propertyName.equals( "" ) )
     {
       sb.append( "<Geometry>" );

@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -79,7 +78,6 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
-import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
@@ -89,7 +87,6 @@ import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
@@ -107,10 +104,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class.getName() );
 
-  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources"; //$NON-NLS-N$
+  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources";
 
   /** location of the pool properties file */
-  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
+  private static final String POOL_PROPERTIES = "resources/pools.properties";
 
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
@@ -161,12 +158,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
-  private void registerVirtualFeatureTypeHandler( )
-  {
-    VirtualFeatureTypeRegistry instance = VirtualFeatureTypeRegistry.getInstance();
-    instance.register( new VirtualRasterFeatureTypePropertyHandler() );
-  }
-
   /**
    * Loads the client configuration from the various server that were configured in the kalypso plugin preferences page.
    */
@@ -206,9 +197,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         conf.load( stream );
 
         // merge the conf
-        for( final Iterator it = conf.keySet().iterator(); it.hasNext(); )
+        for( final Object element : conf.keySet() )
         {
-          final String key = (String) it.next();
+          final String key = (String) element;
 
           // TRICKY: the convention of the conf-file says that if the
           // property ends with '_URL' then its value is either a relative
@@ -276,13 +267,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private void configureLogger( )
   {
     // TODO:REMOVE THIS: we should always use the eclipse logging mechanisms
-    final Logger logger = Logger.getLogger( "org.kalypso" ); //$NON-NLS-N$
+    final Logger logger = Logger.getLogger( "org.kalypso" );
     logger.setLevel( Level.INFO );
 
     final Handler[] handlers = logger.getHandlers();
-    for( int i = 0; i < handlers.length; i++ )
+    for( final Handler handler : handlers )
     {
-      final Handler handler = handlers[i];
       handler.setLevel( Level.FINER );
     }
   }
@@ -303,8 +293,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       final String pDirs = props.getProperty( "DELETE_STARTUP", "" );
       final String[] dirNames = pDirs.split( "," );
-      for( int i = 0; i < dirNames.length; i++ )
-        TempFileUtilities.deleteTempDir( this, dirNames[i] );
+      for( final String element : dirNames )
+        TempFileUtilities.deleteTempDir( this, element );
     }
     catch( final IOException e )
     {
@@ -364,7 +354,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
 
     registerGuiTypeHandler();
-    registerVirtualFeatureTypeHandler();
 
     try
     {
@@ -405,7 +394,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       LOGGER.warning( "Default style location was not created, DefaultStyleFactory is not available." );
@@ -508,7 +497,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       return (bundle != null) ? bundle.getString( key ) : key;
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       e.printStackTrace();
 
@@ -612,7 +601,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       {
         reconfigure();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }

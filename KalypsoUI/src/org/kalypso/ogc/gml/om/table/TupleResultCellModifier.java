@@ -99,7 +99,8 @@ public class TupleResultCellModifier implements ICellModifier
       return;
     }
 
-    final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, value ) };
+    final Object changedValue = record.getValue( component );
+    final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, changedValue ) };
     m_provider.getResult().fireValuesChanged( changes );
   }
 
@@ -139,6 +140,7 @@ public class TupleResultCellModifier implements ICellModifier
     catch( final ParseException e1 )
     {
       // ignore
+      e1.printStackTrace();
     }
 
     return component;

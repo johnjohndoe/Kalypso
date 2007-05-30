@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -69,7 +68,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final IFeatureModifier m_modifier;
 
-  private Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
+  private final Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
 
   public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp )
   {
@@ -100,13 +99,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     m_checkbox.addSelectionListener( new SelectionListener()
     {
 
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         fireFeatureChange( getChange() );
         fireModified();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         fireFeatureChange( getChange() );
         fireModified();
@@ -196,9 +195,8 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   protected void fireModified( )
   {
-    for( final Iterator modIt = m_modlistener.iterator(); modIt.hasNext(); )
+    for( final ModifyListener l : m_modlistener )
     {
-      final ModifyListener l = (ModifyListener) modIt.next();
       l.modifyText( null );
     }
   }

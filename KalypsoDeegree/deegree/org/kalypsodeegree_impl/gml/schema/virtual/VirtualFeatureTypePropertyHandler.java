@@ -1,8 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,6 +38,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+package org.kalypsodeegree_impl.gml.schema.virtual;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 
 public interface VirtualFeatureTypePropertyHandler
 {

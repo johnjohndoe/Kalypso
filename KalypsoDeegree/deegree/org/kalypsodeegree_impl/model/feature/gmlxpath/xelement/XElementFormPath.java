@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
@@ -48,6 +50,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 
 /**
  * xelement that represents a path-xpath element s *
@@ -56,11 +60,32 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class XElementFormPath extends AbstractXElement
 {
-  private final String m_propName;
+  /* QName constant indicating that '*' was given as path. */
+  private final static QName QNAME_ALL = new QName( "*", "*", "*" );
 
-  public XElementFormPath( String condition )
+  private final QName m_propName;
+
+  public XElementFormPath( final String condition, final NamespaceContext namespaceContext )
   {
-    m_propName = condition.trim();
+    final QName regularQname = QNameUtilities.createQName( condition, namespaceContext );
+    if( "*".equals( condition ) )
+      m_propName = QNAME_ALL;
+    else if( regularQname != null )
+    {
+      /* Try parse with namespaceContext */
+      m_propName = regularQname;
+    }
+    else
+    {
+      /*
+       * Fallback: maybe it is formatted like {namespaceUri}localPart (which is not regular, but still recognized for
+       * backwards compability).
+       */
+      m_propName = QName.valueOf( condition );
+    }
+
+    if( m_propName == null )
+      throw new IllegalArgumentException( "Could not parse qname: " + condition );
   }
 
   /**
@@ -71,43 +96,55 @@ public class XElementFormPath extends AbstractXElement
   public Object evaluateFeature( final Feature contextFeature, final boolean featureTypeLevel )
   {
     final IFeatureType featureType = contextFeature.getFeatureType();
-    
-    final QName qname = QName.valueOf( m_propName );
 
     if( featureTypeLevel )
     {
       // check featureType
-      if( "*".equals( m_propName ) || m_propName.equals( featureType.getQName().getLocalPart() ) || qname.equals( featureType.getQName() ) )
+      // TODO: still tests for local part first, remove, if qname is allways correctly used.
+      if( m_propName == QNAME_ALL || m_propName.getLocalPart().equals( featureType.getQName().getLocalPart() ) || m_propName.equals( featureType.getQName() ) )
         return contextFeature;
       else
         return null;
     }
 
-    final IPropertyType pt;
-    if( qname.getNamespaceURI().length() == 0 )
-      pt = featureType.getProperty( m_propName );
-    else
-      pt = featureType.getProperty( qname );
-    
+    final IPropertyType pt = getPropertyType( featureType, m_propName );
     if( pt == null )
       return null;
-    
+
     final Object value = contextFeature.getProperty( pt );
     if( pt instanceof IRelationType )
     {
+      /* Resolve xlinks */
       if( value instanceof String )
-        return contextFeature.getWorkspace().getFeature( (String) value ); 
+        return contextFeature.getWorkspace().getFeature( (String) value );
 
       return value;
     }
     return value;
   }
 
+  private IPropertyType getPropertyType( final IFeatureType featureType, final QName qname )
+  {
+    final String nsuri = qname.getNamespaceURI();
+    final String localPart = qname.getLocalPart();
+
+    final IPropertyType pt = nsuri == XMLConstants.NULL_NS_URI ? featureType.getProperty( localPart ) : featureType.getProperty( qname );
+
+    if( pt != null )
+      return pt;
+
+    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( featureType, localPart );
+    if( vpt != null )
+      return vpt;
+
+    return null;
+  }
+
   /**
    * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
    */
   @Override
-  public Object evaluateOther( Object context, boolean featureTypeLevel )
+  public Object evaluateOther( final Object context, final boolean featureTypeLevel )
   {
     if( context instanceof GMLWorkspace )
     {

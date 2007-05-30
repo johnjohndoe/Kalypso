@@ -68,7 +68,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    * <p>
    * If null, the root-feature is the root element of the tree.
    */
-  private GMLXPath m_rootPath = new GMLXPath( "" );
+  private GMLXPath m_rootPath = new GMLXPath( "", null );
 
   /**
    * Gets the children and updates the parent-hash.
@@ -79,8 +79,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   {
     if( m_workspace == null )
       return new Object[] {};
-      
-    
+
     // Test first if we should show children
     final QName qname;
     if( parentElement instanceof Feature )
@@ -113,9 +112,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       final Feature parentFE = (Feature) parentElement;
       final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
 
-      for( int i = 0; i < properties.length; i++ )
+      for( final IPropertyType property : properties )
       {
-        final IPropertyType property = properties[i];
         if( property instanceof IRelationType )
           result.add( new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property ) );
 
@@ -173,7 +171,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       if( object == element )
         return null;
     }
-    
+
     // TODO: there are also GeometryProperty-Elements
 
     if( element instanceof Feature )
@@ -257,9 +255,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       final GMLXPathSegment segment = m_rootPath.getSegment( m_rootPath.getSegmentSize() - 1 );
       final QName childName = QName.valueOf( segment.toString() );
       final Object[] children = getChildren( parent );
-      for( int i = 0; i < children.length; i++ )
+      for( final Object object : children )
       {
-        final Object object = children[i];
         if( object instanceof FeatureAssociationTypeElement )
         {
           final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
@@ -300,7 +297,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       else
         m_workspace = null;
 
-      m_rootPath = new GMLXPath( "" );
+      m_rootPath = new GMLXPath( "", null );
     }
   }
 
@@ -332,7 +329,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     final Object[] expandedElements = m_viewer.getExpandedElements();
 
     // prepare for exception
-    m_rootPath = new GMLXPath( "" );
+    m_rootPath = new GMLXPath( "", null );
 
     try
     {
@@ -346,7 +343,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
         final Feature parentFeature = fate.getParentFeature();
         final GMLXPath path = new GMLXPath( parentFeature );
-        m_rootPath = new GMLXPath( path, fate.getAssociationTypeProperty().getQName().toString() );
+        m_rootPath = new GMLXPath( path, fate.getAssociationTypeProperty().getQName() );
       }
     }
     catch( final GMLXPathException e )
@@ -382,7 +379,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       KalypsoGisPlugin.getDefault().getLog().log( status );
     }
 
-    m_rootPath = new GMLXPath( "" );
+    m_rootPath = new GMLXPath( "", null );
 
     m_viewer.setExpandedElements( expandedElements );
     m_viewer.refresh();

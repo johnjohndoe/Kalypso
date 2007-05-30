@@ -561,7 +561,7 @@ public class RulePatternTabItem
     final Symbolizer[] returnArray = new Symbolizer[symbolizers.length];
     for( int i = 0; i < symbolizers.length; i++ )
     {
-      final String geomPropertyName = symbolizers[i].getGeometry().getPropertyName();
+      final PropertyName geomPropertyName = symbolizers[i].getGeometry().getPropertyName();
       if( symbolizers[i] instanceof PointSymbolizer )
       {
         returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Point", getFeatureType() );
