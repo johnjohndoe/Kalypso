@@ -29,6 +29,8 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:Timesteps:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.Timesteps.gft" />
 
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel:Timeserie:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel.Timeserie.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel:DirectedTimeserie:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel.DirectedTimeserie.gft" />
+
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TeschkeFlowRelation.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.gft" /> 
     

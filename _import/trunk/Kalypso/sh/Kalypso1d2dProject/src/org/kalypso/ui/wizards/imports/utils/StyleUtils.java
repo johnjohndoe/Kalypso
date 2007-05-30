@@ -66,9 +66,9 @@ public class StyleUtils
 
   private boolean m_CreateFilter = false;
 
-  private String m_InputGML;
+  private final String m_InputGML;
 
-  private String m_OutputSLD;
+  private final String m_OutputSLD;
 
   private String m_GeometryProperty;
 
@@ -76,9 +76,9 @@ public class StyleUtils
 
   private HashMap<String, Color> m_CustomPropertyColorMap;
 
-  private String m_StyleLayerName;
+  private final String m_StyleLayerName;
 
-  public StyleUtils( String inputGML, String outputSLD, String geometryProperty, String filterProperty, HashMap<String, Color> customPropertyColorMap, String styleLayerName )
+  public StyleUtils( final String inputGML, final String outputSLD, final String geometryProperty, final String filterProperty, final HashMap<String, Color> customPropertyColorMap, final String styleLayerName )
   {
     super();
     m_InputGML = inputGML;
@@ -89,13 +89,13 @@ public class StyleUtils
     m_StyleLayerName = styleLayerName;
   }
 
-  public void setFilterProperty( String filterProperty )
+  public void setFilterProperty( final String filterProperty )
   {
     m_FilterProperty = filterProperty;
     m_CreateFilter = (m_FilterProperty != null && m_FilterProperty.trim().length() > 0);
   }
 
-  public void importCustomFilterpropertyColorMap( HashMap<String, Color> customPropertyColorMap, boolean deleteExistingData )
+  public void importCustomFilterpropertyColorMap( final HashMap<String, Color> customPropertyColorMap, final boolean deleteExistingData )
   {
     if( m_CustomPropertyColorMap == null )
       m_CustomPropertyColorMap = new HashMap<String, Color>();
@@ -116,22 +116,22 @@ public class StyleUtils
       return;
     if( m_CustomPropertyColorMap == null )
       m_CustomPropertyColorMap = new HashMap<String, Color>();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + m_InputGML ), null );
-    String ns = workspace.getGMLSchema().getTargetNamespace();
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + m_InputGML ), null );
+    final String ns = workspace.getGMLSchema().getTargetNamespace();
     boolean b_geometryPropertyExists = (m_GeometryProperty != null && m_GeometryProperty.trim().length() > 0);
-    IFeatureType rootFeatureType = workspace.getRootFeature().getFeatureType();
-    IPropertyType[] propertyTypes = rootFeatureType.getProperties();
+    final IFeatureType rootFeatureType = workspace.getRootFeature().getFeatureType();
+    final IPropertyType[] propertyTypes = rootFeatureType.getProperties();
     try
     {
-      for( int i = 0; i < propertyTypes.length; i++ )
+      for( final IPropertyType element : propertyTypes )
       {
-        Object object = workspace.getRootFeature().getProperty( propertyTypes[i] );
+        final Object object = workspace.getRootFeature().getProperty( element );
         if( object instanceof FeatureList )
         {
-          ListIterator<Feature> iterator = ((FeatureList) object).listIterator();
+          final ListIterator<Feature> iterator = ((FeatureList) object).listIterator();
           while( iterator.hasNext() )
           {
-            Feature feature = iterator.next();
+            final Feature feature = iterator.next();
             try
             {
               if( !b_geometryPropertyExists )
@@ -150,7 +150,7 @@ public class StyleUtils
                 m_CustomPropertyColorMap.put( styledOne, color );
               }
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               System.out.println( e.getLocalizedMessage() );
               continue;
@@ -161,7 +161,7 @@ public class StyleUtils
       }
       m_DataPrepared = true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -173,46 +173,46 @@ public class StyleUtils
   }
 
   @SuppressWarnings("unchecked")
-  public void createStyle( String resultSLDFileName ) throws Exception
+  public void createStyle( final String resultSLDFileName ) throws Exception
   {
     if( resultSLDFileName == null || resultSLDFileName.trim().length() == 0 )
       throw new Exception( "Result file name cannot be null or empty string." );
     prepareData();
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
-    Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
-    FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
+    final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     Fill fill = null;
-    Iterator iterator = m_CustomPropertyColorMap.entrySet().iterator();
+    final Iterator iterator = m_CustomPropertyColorMap.entrySet().iterator();
     while( iterator.hasNext() )
     {
-      Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
-      Geometry geometry = new Geometry_Impl( m_GeometryProperty );
+      final Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
+      final Geometry geometry = new Geometry_Impl( new PropertyName( m_GeometryProperty, null ) );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
-      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
-      Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
-      Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
+      final Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
+      final Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( m_CreateFilter )
       {
-        Operation operation = new PropertyIsLikeOperation( new PropertyName( m_FilterProperty ), new Literal( mapEntry.getKey() ), '*', '$', '/' );
-        Filter filter = new ComplexFilter( operation );
+        final Operation operation = new PropertyIsLikeOperation( new PropertyName( m_FilterProperty, null ), new Literal( mapEntry.getKey() ), '*', '$', '/' );
+        final Filter filter = new ComplexFilter( operation );
         rule.setFilter( filter );
       }
       featureTypeStyle.addRule( rule );
     }
 
-    FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-    org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( m_StyleLayerName, m_StyleLayerName, null, false, featureTypeStyles ) };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
-    Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+    final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
+    final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( m_StyleLayerName, m_StyleLayerName, null, false, featureTypeStyles ) };
+    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     OutputStreamWriter os = null;
     try
     {
       os = new FileWriter( resultSLDFileName );
-      StreamResult result = new StreamResult( os );
-      TransformerFactory factory = TransformerFactory.newInstance();
+      final StreamResult result = new StreamResult( os );
+      final TransformerFactory factory = TransformerFactory.newInstance();
 
       // Dejan: this works only with Java 1.5, in 1.4 it throws IllegalArgumentException
       // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
@@ -220,11 +220,11 @@ public class StyleUtils
       {
         factory.setAttribute( "indent-number", new Integer( 4 ) );
       }
-      catch( IllegalArgumentException e )
+      catch( final IllegalArgumentException e )
       {
       }
 
-      Transformer transformer = factory.newTransformer();
+      final Transformer transformer = factory.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
       // transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,"users.dtd"); //$NON-NLS-1$
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
@@ -243,47 +243,47 @@ public class StyleUtils
    * Creates custom SLD file based on input GML file
    * 
    * @param inputGMLFile -
-   *          input GML file, full path
+   *            input GML file, full path
    * @param resultSLDFile -
-   *          output SLD file, full path
+   *            output SLD file, full path
    * @param styleLayerName -
-   *          name for styled layer, eg. "Roughness style"
+   *            name for styled layer, eg. "Roughness style"
    * @param geometryProperty -
-   *          optional; name of geometry property to use; if null or empty/whitespace string, default geometry property
-   *          will be used instead
+   *            optional; name of geometry property to use; if null or empty/whitespace string, default geometry
+   *            property will be used instead
    * @param filterProperty -
-   *          optional; name of the property on which values different styles will be defined; if null or
-   *          empty/whitespace string, one default style will be created (no filtering)
+   *            optional; name of the property on which values different styles will be defined; if null or
+   *            empty/whitespace string, one default style will be created (no filtering)
    * @param knownPropertyColorSet -
-   *          optional; set of known filterProperty values with preffered colors; doesn't have to be full set of all
-   *          possible values; can also be null or empty; for values not contained in knownPropertyColorSet, (different)
-   *          random colors will be used
+   *            optional; set of known filterProperty values with preffered colors; doesn't have to be full set of all
+   *            possible values; can also be null or empty; for values not contained in knownPropertyColorSet,
+   *            (different) random colors will be used
    * @throws Exception -
-   *           if GmlSerializer cannot create workspace based on input GML file
+   *             if GmlSerializer cannot create workspace based on input GML file
    * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
    */
-  public static void createCustomStyle( String inputGMLFile, String resultSLDFile, String styleLayerName, String geometryProperty, String filterProperty, HashMap<String, Color> knownPropertyColorSet ) throws Exception
+  public static void createCustomStyle( final String inputGMLFile, final String resultSLDFile, final String styleLayerName, final String geometryProperty, final String filterProperty, final HashMap<String, Color> knownPropertyColorSet ) throws Exception
   {
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + inputGMLFile ), null );
-    String ns = workspace.getGMLSchema().getTargetNamespace();
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + inputGMLFile ), null );
+    final String ns = workspace.getGMLSchema().getTargetNamespace();
     String geometryPropertyName = geometryProperty;
     boolean b_geometryPropertyExists = (geometryPropertyName != null && geometryPropertyName.trim().length() > 0);
-    boolean b_filterPropertyExists = (filterProperty != null && filterProperty.trim().length() > 0);
-    boolean b_knownPropertyColorSetExists = (knownPropertyColorSet != null && knownPropertyColorSet.size() > 0);
-    IFeatureType rootFeatureType = workspace.getRootFeature().getFeatureType();
-    IPropertyType[] propertyTypes = rootFeatureType.getProperties();
-    HashMap<String, Color> filterPropertyColorMap = new HashMap<String, Color>();
+    final boolean b_filterPropertyExists = (filterProperty != null && filterProperty.trim().length() > 0);
+    final boolean b_knownPropertyColorSetExists = (knownPropertyColorSet != null && knownPropertyColorSet.size() > 0);
+    final IFeatureType rootFeatureType = workspace.getRootFeature().getFeatureType();
+    final IPropertyType[] propertyTypes = rootFeatureType.getProperties();
+    final HashMap<String, Color> filterPropertyColorMap = new HashMap<String, Color>();
     try
     {
-      for( int i = 0; i < propertyTypes.length; i++ )
+      for( final IPropertyType element : propertyTypes )
       {
-        Object object = workspace.getRootFeature().getProperty( propertyTypes[i] );
+        final Object object = workspace.getRootFeature().getProperty( element );
         if( object instanceof FeatureList )
         {
-          ListIterator<Feature> iterator = ((FeatureList) object).listIterator();
+          final ListIterator<Feature> iterator = ((FeatureList) object).listIterator();
           while( iterator.hasNext() )
           {
-            Feature feature = iterator.next();
+            final Feature feature = iterator.next();
             try
             {
               if( !b_geometryPropertyExists )
@@ -311,7 +311,7 @@ public class StyleUtils
                 filterPropertyColorMap.put( styledOne, color );
               }
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               System.out.println( e.getLocalizedMessage() );
               continue;
@@ -322,7 +322,7 @@ public class StyleUtils
       }
       internal_createStyle( styleLayerName, geometryPropertyName, filterProperty, filterPropertyColorMap, resultSLDFile );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -337,53 +337,53 @@ public class StyleUtils
    * @param filterPropertyColorMap
    * @param resultSLDFile
    * @throws IOException -
-   *           by FileWriter
+   *             by FileWriter
    * @throws SAXException -
-   *           by XML parser
+   *             by XML parser
    * @throws TransformerFactoryConfigurationError -
-   *           by Transformer
+   *             by Transformer
    * @throws TransformerException -
-   *           by Transformer
+   *             by Transformer
    */
   @SuppressWarnings("unchecked")
-  private static final void internal_createStyle( String styleLayerName, String geometryProperty, String filterProperty, HashMap<String, Color> filterPropertyColorMap, String resultSLDFile ) throws IOException, SAXException, TransformerFactoryConfigurationError, TransformerException
+  private static final void internal_createStyle( final String styleLayerName, final String geometryProperty, final String filterProperty, final HashMap<String, Color> filterPropertyColorMap, final String resultSLDFile ) throws IOException, SAXException, TransformerFactoryConfigurationError, TransformerException
   {
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
-    Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
-    FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
+    final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     Fill fill = null;
-    Iterator iterator = filterPropertyColorMap.entrySet().iterator();
-    boolean b_filterPropertySet = (filterProperty != null && filterProperty.trim().length() > 0);
+    final Iterator iterator = filterPropertyColorMap.entrySet().iterator();
+    final boolean b_filterPropertySet = (filterProperty != null && filterProperty.trim().length() > 0);
     while( iterator.hasNext() )
     {
-      Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
-      Geometry geometry = new Geometry_Impl( geometryProperty );
+      final Map.Entry<String, Color> mapEntry = (Map.Entry<String, Color>) iterator.next();
+      final Geometry geometry = new Geometry_Impl( new PropertyName( geometryProperty, null ) );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
-      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
-      Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
-      Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
+      final Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
+      final Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( b_filterPropertySet )
       {
-        Operation operation = new PropertyIsLikeOperation( new PropertyName( filterProperty ), new Literal( mapEntry.getKey() ), '*', '$', '/' );
-        Filter filter = new ComplexFilter( operation );
+        final Operation operation = new PropertyIsLikeOperation( new PropertyName( filterProperty, null ), new Literal( mapEntry.getKey() ), '*', '$', '/' );
+        final Filter filter = new ComplexFilter( operation );
         rule.setFilter( filter );
       }
       featureTypeStyle.addRule( rule );
     }
 
-    FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-    org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( styleLayerName, styleLayerName, null, false, featureTypeStyles ) };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
-    Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+    final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
+    final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( styleLayerName, styleLayerName, null, false, featureTypeStyles ) };
+    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     OutputStreamWriter os = null;
     try
     {
       os = new FileWriter( resultSLDFile );
-      StreamResult result = new StreamResult( os );
-      TransformerFactory factory = TransformerFactory.newInstance();
+      final StreamResult result = new StreamResult( os );
+      final TransformerFactory factory = TransformerFactory.newInstance();
 
       // Dejan: this works only with Java 1.5, in 1.4 it throws IllegalArgumentException
       // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
@@ -391,11 +391,11 @@ public class StyleUtils
       {
         factory.setAttribute( "indent-number", new Integer( 4 ) );
       }
-      catch( IllegalArgumentException e )
+      catch( final IllegalArgumentException e )
       {
       }
 
-      Transformer transformer = factory.newTransformer();
+      final Transformer transformer = factory.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
       // transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,"users.dtd"); //$NON-NLS-1$
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
@@ -412,9 +412,9 @@ public class StyleUtils
 
   private static final Color getRandomColor( )
   {
-    int r = (int) (255.0 * Math.random());
-    int g = (int) (255.0 * Math.random());
-    int b = (int) (255.0 * Math.random());
+    final int r = (int) (255.0 * Math.random());
+    final int g = (int) (255.0 * Math.random());
+    final int b = (int) (255.0 * Math.random());
     return new Color( r, g, b );
   }
 

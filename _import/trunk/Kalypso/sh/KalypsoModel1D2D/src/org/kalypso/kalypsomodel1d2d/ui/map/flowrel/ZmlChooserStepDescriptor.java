@@ -108,7 +108,8 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#fillObservation(org.kalypso.observation.IObservation)
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#fillObservation(org.kalypso.observation.IObservation,
+   *      java.lang.String, java.lang.String)
    */
   public void fillObservation( final IObservation<TupleResult> obs )
   {
@@ -184,19 +185,27 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#getComponentUrns()
-   */
-  public String[] getComponentUrns( )
-  {
-    return m_wizardPageZmlChooser.getComponentUrns();
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#getName()
    */
   public String getName( )
   {
     return m_name;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getDomainComponentUrn()
+   */
+  public String getDomainComponentUrn( )
+  {
+    return m_wizardPageZmlChooser.getDomainComponentUrn();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getValueComponentUrn()
+   */
+  public String getValueComponentUrn( )
+  {
+    return m_wizardPageZmlChooser.getValueComponentUrn();
   }
 
 }

@@ -95,13 +95,13 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
 
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( rootFeatureQname ) )
     {
-      System.out.println( "Update roughness merge because of ne dicr-model" );
+// System.out.println( "Update roughness merge because of ne dicr-model" );
 // ElementRoughnessStyleFunc.clear( );
       mergeService.doReInit();
     }
     else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL.equals( rootFeature ) )
     {
-      System.out.println( "Update roughness merge because of new terrain-model" );
+// System.out.println( "Update roughness merge because of new terrain-model" );
 // ElementRoughnessStyleFunc.clear();
       mergeService.doReInit();
     }

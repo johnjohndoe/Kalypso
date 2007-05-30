@@ -77,7 +77,6 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializerXlinkFeatureProvider;
@@ -102,7 +101,7 @@ public class RMA10Calculation
 
   private GMLWorkspace m_flowRelWorkspace = null;
 
-  private GMLWorkspace m_flowResistanceWorkspace = null;
+  private final GMLWorkspace m_flowResistanceWorkspace = null;
 
   private Feature m_controlRootWorkspace = null;
 
@@ -170,7 +169,7 @@ public class RMA10Calculation
     m_timeStepInfos = calculationBoundaryConditionInfos();
   }
 
-  public RMA10Calculation( GMLWorkspace disModelWorkspace, Feature controlRoot, Feature roughnessRoot )
+  public RMA10Calculation( final GMLWorkspace disModelWorkspace, final Feature controlRoot, final Feature roughnessRoot )
   {
     m_disModelWorkspace = disModelWorkspace;
     m_controlRootWorkspace = controlRoot;
@@ -204,7 +203,7 @@ public class RMA10Calculation
 
   public void setKalypso1D2DKernelPath( )
   {
-    String kalypso1D2DVersion = (String) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
+    final String kalypso1D2DVersion = (String) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
     if( kalypso1D2DVersion.equals( "test" ) )
       m_kalypso1D2DKernelPath = RMA10SimModelConstants.SIM_EXE_FILE_TEST;
     else if( kalypso1D2DVersion.equals( "NEW" ) )
@@ -222,7 +221,7 @@ public class RMA10Calculation
 
   public Integer getIaccyc( )
   {
-    Integer iaccyc = (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
+    final Integer iaccyc = (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
     if( iaccyc > 1 )
     {
       m_restart = true;
@@ -248,7 +247,7 @@ public class RMA10Calculation
 
   public Integer getStartJulianDay( )
   {
-    GregorianCalendar calendar = getStartCalendar().toGregorianCalendar();
+    final GregorianCalendar calendar = getStartCalendar().toGregorianCalendar();
     return calendar.get( Calendar.DAY_OF_YEAR );
   }
 
@@ -262,9 +261,9 @@ public class RMA10Calculation
     return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
   }
 
-  public Double getViskosity( Feature roughnessFE )
+  public Double getViskosity( final Feature roughnessFE )
   {
-    int iedsw = ((Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW )).intValue();
+    final int iedsw = ((Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW )).intValue();
     if( iedsw == 0 )
     {
       return getEddy( roughnessFE );
@@ -272,12 +271,12 @@ public class RMA10Calculation
     return getcharactV( roughnessFE );
   }
 
-  public Double getEddy( Feature roughnessFE )
+  public Double getEddy( final Feature roughnessFE )
   {
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY );
   }
 
-  public Double getcharactV( Feature roughnessFE )
+  public Double getcharactV( final Feature roughnessFE )
   {
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV );
   }
@@ -392,7 +391,7 @@ public class RMA10Calculation
     return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
   }
 
-  public String getName( Feature feature )
+  public String getName( final Feature feature )
   {
     return (String) feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
   }
@@ -403,17 +402,17 @@ public class RMA10Calculation
     return (List) m_roughnessRootWorkspace.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
   }
 
-  public Double getKs( Feature roughnessFE )
+  public Double getKs( final Feature roughnessFE )
   {
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS );
   }
 
-  public Double getAxAy( Feature roughnessFE )
+  public Double getAxAy( final Feature roughnessFE )
   {
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY );
   }
 
-  public Double getDp( Feature roughnessFE )
+  public Double getDp( final Feature roughnessFE )
   {
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
   }
@@ -422,13 +421,13 @@ public class RMA10Calculation
   {
     // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
     // (discretisation model)
-    IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-    IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
-    List<IFE1D2DContinuityLine> list = new ArrayList<IFE1D2DContinuityLine>();
-    Iterator<IFE1D2DElement> iterator = elements.iterator();
+    final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
+    final List<IFE1D2DContinuityLine> list = new ArrayList<IFE1D2DContinuityLine>();
+    final Iterator<IFE1D2DElement> iterator = elements.iterator();
     while( iterator.hasNext() )
     {
-      IFE1D2DElement element = iterator.next();
+      final IFE1D2DElement element = iterator.next();
       if( element instanceof IFE1D2DContinuityLine )
         list.add( (IFE1D2DContinuityLine) element );
     }
@@ -483,7 +482,7 @@ public class RMA10Calculation
       if( relationship instanceof IBoundaryCondition )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) relationship;
-        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( bc.getTimeserieFeature() );
+        final IObservation<TupleResult> obs = bc.getObservation();
         final TupleResult obsResult = obs.getResult();
 
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?

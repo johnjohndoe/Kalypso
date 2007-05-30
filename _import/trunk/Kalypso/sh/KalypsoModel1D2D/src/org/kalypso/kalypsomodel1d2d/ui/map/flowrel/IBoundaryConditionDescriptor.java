@@ -55,11 +55,15 @@ public interface IBoundaryConditionDescriptor
 {
   public String getName( );
 
-  public String[] getComponentUrns( );
-
   public void fillObservation( final IObservation<TupleResult> obs ) throws InvocationTargetException;
 
   public Control createControl( final Composite parent, final WizardPage page );
 
+  /** Called when this descriptor gets choosen. Set name/message of wizard page here. */
   public void activate( );
+
+  public String getDomainComponentUrn( );
+
+  public String getValueComponentUrn( );
+
 }

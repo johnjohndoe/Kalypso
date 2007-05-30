@@ -59,10 +59,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -118,6 +116,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   {
     final IBoundaryConditionDescriptor descriptor = m_descriptorPage.getDescriptor();
 
+    /* Create new feature */
     final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
     final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
     final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
@@ -126,29 +125,15 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        /* Create new feature */
-        // TODO: maybe get from page?
-        bc.setName( "" ); // TODO: unterscheide zwischen verschiedenen Typen
+        bc.setName( descriptor.getName() );
         bc.setDescription( DF.format( new Date() ) );
 
         /* Initialize observation with components */
-        final Feature obsFeature = bc.getTimeserieFeature();
-
-        final String[] componentUrns = descriptor.getComponentUrns();
-        final IComponent[] components = new IComponent[componentUrns.length];
-
-        for( int i = 0; i < components.length; i++ )
-          components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
-
-        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-
-        final TupleResult result = obs.getResult();
-        for( final IComponent component : components )
-          result.addComponent( component );
-
+        final String domainComponentUrn = descriptor.getDomainComponentUrn();
+        final String valueComponentUrn = descriptor.getValueComponentUrn();
+        final IObservation<TupleResult> obs = bc.initializeObservation( domainComponentUrn, valueComponentUrn );
         descriptor.fillObservation( obs );
-
-        ObservationFeatureFactory.toFeature( obs, obsFeature );
+        bc.setObservation( obs );
 
         return Status.OK_STATUS;
       }

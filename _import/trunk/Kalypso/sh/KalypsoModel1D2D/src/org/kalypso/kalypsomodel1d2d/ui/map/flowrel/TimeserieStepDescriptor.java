@@ -315,14 +315,6 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#getComponentUrns()
-   */
-  public String[] getComponentUrns( )
-  {
-    return new String[] { m_domainComponentUrn, m_valueComponentUrn };
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#getName()
    */
   public String getName( )
@@ -384,6 +376,22 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     m_field = field;
 
     updatePageState( Status.OK_STATUS );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getDomainComponentUrn()
+   */
+  public String getDomainComponentUrn( )
+  {
+    return m_domainComponentUrn;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getValueComponentUrn()
+   */
+  public String getValueComponentUrn( )
+  {
+    return m_valueComponentUrn;
   }
 
 }

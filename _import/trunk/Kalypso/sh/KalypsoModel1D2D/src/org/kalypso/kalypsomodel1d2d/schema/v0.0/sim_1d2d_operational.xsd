@@ -22,7 +22,7 @@
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<xs:import namespace="http://www.opengis.net/om"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
-	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"  />
 
 
 	<!-- ======================================================== 
@@ -142,6 +142,7 @@
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
+	<!--  Is it still used? There is no content,no docuemntation, ... -->
 	<xs:element 
 			name="InitialCondition"
 			type="op1d2d:InitialConditionType"
@@ -246,5 +247,29 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element name="DirectedTimeserie" type="op1d2d:DirectedTimeserieType" substitutionGroup="op1d2d:Timeserie"/>
+	
+	<xs:complexType name="DirectedTimeserieType">
+		<xs:complexContent>
+			<xs:extension base="op1d2d:TimeserieType">
+				<xs:sequence>
+					<xs:element name="direction" type="gml:DegreeValueType" nillable="false">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Richtung</xs:label>
+								<xs:tooltip>Richtung der Zeitreihe</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>Direction</xs:label>
+								<xs:tooltip>Direction of the Timeserie</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 
 </xs:schema>

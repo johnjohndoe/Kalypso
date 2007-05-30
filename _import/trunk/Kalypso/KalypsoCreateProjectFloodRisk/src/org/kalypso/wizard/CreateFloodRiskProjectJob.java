@@ -167,21 +167,21 @@ public class CreateFloodRiskProjectJob extends Job
 
   private GMLWorkspace m_landuseShapeWS;
 
-  private IPath m_workspacePath;
+  private final IPath m_workspacePath;
 
-  private IProject m_projectHandle;
+  private final IProject m_projectHandle;
 
-  private File m_landuseDataFile;
+  private final File m_landuseDataFile;
 
-  private String m_landusePropertyName;
+  private final String m_landusePropertyName;
 
-  private CS_CoordinateSystem m_landuseCooSystem;
+  private final CS_CoordinateSystem m_landuseCooSystem;
 
-  private boolean m_autogenerateLanduseCollection;
+  private final boolean m_autogenerateLanduseCollection;
 
-  private Vector m_waterlevelGrids;
+  private final Vector m_waterlevelGrids;
 
-  private CS_CoordinateSystem m_waterlevelCooSystem;
+  private final CS_CoordinateSystem m_waterlevelCooSystem;
 
   private final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
 
@@ -196,16 +196,16 @@ public class CreateFloodRiskProjectJob extends Job
    * @param workspacePath
    * @param projectHandel
    * @param landuseDataFile
-   *          Shape file
+   *            Shape file
    * @param landusePropertyName
    * @param landuseCooSystem
    * @param autogenerateLanduseCollection
-   *          flag; true: generate LanduseCollection in ContextModel and RiskContextModel, false: not
+   *            flag; true: generate LanduseCollection in ContextModel and RiskContextModel, false: not
    * @param waterlevelGrids
-   *          Ascii files
+   *            Ascii files
    * @param waterlevelCooSystem
    */
-  public CreateFloodRiskProjectJob( String name, IPath workspacePath, IProject projectHandle, File landuseDataFile, String landusePropertyName, CS_CoordinateSystem landuseCooSystem, boolean autogenerateLanduseCollection, Vector waterlevelGrids, CS_CoordinateSystem waterlevelCooSystem )
+  public CreateFloodRiskProjectJob( final String name, final IPath workspacePath, final IProject projectHandle, final File landuseDataFile, final String landusePropertyName, final CS_CoordinateSystem landuseCooSystem, final boolean autogenerateLanduseCollection, final Vector waterlevelGrids, final CS_CoordinateSystem waterlevelCooSystem )
   {
     super( name );
     m_workspacePath = workspacePath;
@@ -223,7 +223,7 @@ public class CreateFloodRiskProjectJob extends Job
    * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus run( IProgressMonitor monitor )
+  protected IStatus run( final IProgressMonitor monitor )
   {
     return createProject( monitor );
   }
@@ -234,9 +234,9 @@ public class CreateFloodRiskProjectJob extends Job
    * @param monitor
    * @return status of process
    */
-  protected IStatus createProject( IProgressMonitor monitor )
+  protected IStatus createProject( final IProgressMonitor monitor )
   {
-    int totalWork = 100;
+    final int totalWork = 100;
     monitor.beginTask( WizardMessages.getString( "CreateFloodRiskProjectJob.CreateProject.Title" ), totalWork ); //$NON-NLS-1$
 
     try
@@ -245,7 +245,7 @@ public class CreateFloodRiskProjectJob extends Job
       m_projectHandle.open( null );
       m_projectHandle.setDefaultCharset( "UTF-8", null ); //$NON-NLS-1$
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       performCancel();
@@ -267,7 +267,7 @@ public class CreateFloodRiskProjectJob extends Job
 
       final Gismapview gismapview = mapTemplateOF.createGismapview();
       final Layers layers = mapTemplateOF.createGismapviewLayers();
-      ExtentType extent = typeOF.createExtentType();
+      final ExtentType extent = typeOF.createExtentType();
       m_layerList = layers.getLayer();
 
       // copy landuseData as shape
@@ -299,12 +299,12 @@ public class CreateFloodRiskProjectJob extends Job
       {
         monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.4" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
         autogenerateLanduseCollection();
-        createLanduseStyle(m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/landuse.sld"); //$NON-NLS-1$ //$NON-NLS-2$
+        createLanduseStyle( m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/landuse.sld" ); //$NON-NLS-1$ 
       }
       // create waterlevelGrids and defaultStyles
       monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.6" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      Vector targetFiles = createWaterlevelGrids( monitor );
+      final Vector targetFiles = createWaterlevelGrids( monitor );
       if( targetFiles == null )
       {
         performCancel();
@@ -330,12 +330,12 @@ public class CreateFloodRiskProjectJob extends Job
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       // create Map(Waterlevel.gmt) with waterlevelGrids and shape of landuse
-      String path = m_workspacePath.append( m_projectHandle.getFullPath() + "/Waterlevel/Waterlevel.gmt" ).toFile().toString(); //$NON-NLS-1$
-      FileWriter fw = new FileWriter( path );
+      final String path = m_workspacePath.append( m_projectHandle.getFullPath() + "/Waterlevel/Waterlevel.gmt" ).toFile().toString(); //$NON-NLS-1$
+      final FileWriter fw = new FileWriter( path );
       marshaller.marshal( gismapview, fw );
       fw.close();
     }
-    catch( Exception e2 )
+    catch( final Exception e2 )
     {
       e2.printStackTrace();
       performCancel();
@@ -347,7 +347,7 @@ public class CreateFloodRiskProjectJob extends Job
     {
       m_projectHandle.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( CoreException e1 )
+    catch( final CoreException e1 )
     {
       e1.printStackTrace();
       // performCancle();
@@ -362,14 +362,14 @@ public class CreateFloodRiskProjectJob extends Job
    * copies resources to project
    * 
    * @param path
-   *          project path
+   *            project path
    * @throws IOException
    */
-  private void copyResourcesToProject( IPath path ) throws IOException
+  private void copyResourcesToProject( final IPath path ) throws IOException
   {
     final String resource = m_resourceBase;
     System.out.print( "resource: " + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    InputStream resourceAsStream = getClass().getResourceAsStream( resource );
+    final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     try
     {
       ZipUtilities.unzip( resourceAsStream, path.toFile() );
@@ -386,13 +386,13 @@ public class CreateFloodRiskProjectJob extends Job
   private void createFolders( )
   {
     // Damage
-    File damageDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Damage" ) )).toFile(); //$NON-NLS-1$
+    final File damageDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Damage" ) )).toFile(); //$NON-NLS-1$
     damageDir.mkdir();
     // Risk
-    File riskDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Risk" ) )).toFile(); //$NON-NLS-1$
+    final File riskDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Risk" ) )).toFile(); //$NON-NLS-1$
     riskDir.mkdir();
     // Statistic
-    File statisticDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Statistic" ) )).toFile(); //$NON-NLS-1$
+    final File statisticDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Statistic" ) )).toFile(); //$NON-NLS-1$
     statisticDir.mkdir();
   }
 
@@ -403,16 +403,16 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private void copyLanduseShape( ) throws IOException
   {
-    String landuseSourceBase = FileUtilities.nameWithoutExtension( m_landuseDataFile.toString() );
-    File targetDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Landuse/" ) )).toFile(); //$NON-NLS-1$
+    final String landuseSourceBase = FileUtilities.nameWithoutExtension( m_landuseDataFile.toString() );
+    final File targetDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Landuse/" ) )).toFile(); //$NON-NLS-1$
 
-    File shp = new File( landuseSourceBase + ".shp" ); //$NON-NLS-1$
+    final File shp = new File( landuseSourceBase + ".shp" ); //$NON-NLS-1$
     FileUtils.copyFileToDirectory( shp, targetDir );
 
-    File dbf = new File( landuseSourceBase + ".dbf" ); //$NON-NLS-1$
+    final File dbf = new File( landuseSourceBase + ".dbf" ); //$NON-NLS-1$
     FileUtils.copyFileToDirectory( dbf, targetDir );
 
-    File shx = new File( landuseSourceBase + ".shx" ); //$NON-NLS-1$
+    final File shx = new File( landuseSourceBase + ".shx" ); //$NON-NLS-1$
     FileUtils.copyFileToDirectory( shx, targetDir );
 
   }
@@ -425,18 +425,18 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private IKalypsoTheme createDummyLanduseTheme( ) throws GmlSerializeException, IOException
   {
-    String shapeBase = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Landuse/" + FileUtilities.nameWithoutExtension( m_landuseDataFile.getName().toString() ) ) )).toString(); //$NON-NLS-1$
+    final String shapeBase = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Landuse/" + FileUtilities.nameWithoutExtension( m_landuseDataFile.getName().toString() ) ) )).toString(); //$NON-NLS-1$
     m_landuseShapeWS = ShapeSerializer.deserialize( shapeBase, m_landuseCooSystem );
-    KalypsoFeatureTheme kft = new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", WizardMessages.getString( "CreateFloodRiskProjectJob.Landuse" ), null, null ); //$NON-NLS-1$ //$NON-NLS-2$
-    ShapeFile sf = new ShapeFile( shapeBase );
+    final KalypsoFeatureTheme kft = new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", WizardMessages.getString( "CreateFloodRiskProjectJob.Landuse" ), null, null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final ShapeFile sf = new ShapeFile( shapeBase );
     m_boundingBox = sf.getFileMBR();
     sf.close();
     return kft;
   }
 
   /**
-   * creates the gml version of the landuseData (LanduseVectorData.gml, Schema: VectorDataModel.xsd)
-   * and populates m_landuseTypeSet
+   * creates the gml version of the landuseData (LanduseVectorData.gml, Schema: VectorDataModel.xsd) and populates
+   * m_landuseTypeSet
    * 
    * @return Set of landuse types (HashSet)
    * @throws IOException
@@ -444,21 +444,21 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private void createLanduseDataGML( ) throws IOException, GmlSerializeException, InvocationTargetException
   {
-    File landuseDataGML = m_workspacePath.append( m_projectHandle.getFullPath() + "/Landuse/LanduseVectorData.gml" ).toFile(); //$NON-NLS-1$
+    final File landuseDataGML = m_workspacePath.append( m_projectHandle.getFullPath() + "/Landuse/LanduseVectorData.gml" ).toFile(); //$NON-NLS-1$
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, (String) null );
 
-    QName rootFeatureTypeName = new QName( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "VectorDataCollection" ); //$NON-NLS-1$
-    QName featureTypePropertyName = new QName( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "FeatureMember" ); //$NON-NLS-1$
-    QName shapeFeatureTypePropertyName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
-    QName shapeGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
-    QName propertyName = new QName( "namespace", m_landusePropertyName ); //$NON-NLS-1$
+    final QName rootFeatureTypeName = new QName( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "VectorDataCollection" ); //$NON-NLS-1$
+    final QName featureTypePropertyName = new QName( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "FeatureMember" ); //$NON-NLS-1$
+    final QName shapeFeatureTypePropertyName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName shapeGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName propertyName = new QName( "namespace", m_landusePropertyName ); //$NON-NLS-1$
 
     final IFeatureType[] types = schema.getAllFeatureTypes();
-    IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( null, null, rootFeatureTypeName + "0", rootFeatureType, true ); //$NON-NLS-1$
+    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, rootFeatureTypeName + "0", rootFeatureType, true ); //$NON-NLS-1$
     final IRelationType ftp_feature = (IRelationType) rootFeatureType.getProperty( featureTypePropertyName );
-    Feature shapeRootFeature = m_landuseShapeWS.getRootFeature();
-    List featureList = (List) shapeRootFeature.getProperty( shapeFeatureTypePropertyName );
+    final Feature shapeRootFeature = m_landuseShapeWS.getRootFeature();
+    final List featureList = (List) shapeRootFeature.getProperty( shapeFeatureTypePropertyName );
     for( int i = 0; i < featureList.size(); i++ )
     {
       final Feature feat = (Feature) featureList.get( i );
@@ -467,12 +467,12 @@ public class CreateFloodRiskProjectJob extends Job
       {
         m_landuseTypeSet.add( propertyValue );
       }
-      Object[] properties = new Object[] { null, null, null, null, null, (GM_Object) feat.getProperty( shapeGeomPropertyName ), propertyValue };
+      final Object[] properties = new Object[] { null, null, null, null, null, (GM_Object) feat.getProperty( shapeGeomPropertyName ), propertyValue };
       final Feature feature = FeatureFactory.createFeature( rootFeature, ftp_feature, "Feature" + i, ftp_feature.getTargetFeatureType(), properties ); //$NON-NLS-1$
       FeatureHelper.addProperty( rootFeature, ftp_feature, feature );
     }
     final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, landuseDataGML.toURL(), "", null ); //$NON-NLS-1$
-    FileWriter fw = new FileWriter( landuseDataGML );
+    final FileWriter fw = new FileWriter( landuseDataGML );
     GmlSerializer.serializeWorkspace( fw, workspace );
     fw.close();
   }
@@ -481,47 +481,47 @@ public class CreateFloodRiskProjectJob extends Job
    * Creates a LanduseCollection with the given set of landuse types in ContextModel and RiskContextModel
    * 
    * @param landuseTypeSet
-   *          Set of existing landuse types
+   *            Set of existing landuse types
    * @throws Exception
    */
-  private void autogenerateLanduseCollection() throws Exception
+  private void autogenerateLanduseCollection( ) throws Exception
   {
-    URL contextModelURL = m_workspacePath.append( m_projectHandle.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL(); //$NON-NLS-1$
-    URL riskContextModelURL = m_workspacePath.append( m_projectHandle.getFullPath() + "/Control/riskContextModell.gml" ).toFile().toURL(); //$NON-NLS-1$
+    final URL contextModelURL = m_workspacePath.append( m_projectHandle.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL(); //$NON-NLS-1$
+    final URL riskContextModelURL = m_workspacePath.append( m_projectHandle.getFullPath() + "/Control/riskContextModell.gml" ).toFile().toURL(); //$NON-NLS-1$
 
-    QName landuseFeatureType = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Landuse" ); //$NON-NLS-1$
-    QName landuseCollectionType = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollection" ); //$NON-NLS-1$
-    QName parentFeatureName = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollectionMember" ); //$NON-NLS-1$
-    QName propertyName = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Name" ); //$NON-NLS-1$
-    QName propertyLanduseMember = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseMember" ); //$NON-NLS-1$
-    QName landuseFeatureTypeRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "Landuse" ); //$NON-NLS-1$
-    QName landuseCollectionTypeRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseCollection" ); //$NON-NLS-1$
-    QName parentFeatureNameRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseCollectionMember" ); //$NON-NLS-1$
-    QName propertyNameRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "Name" ); //$NON-NLS-1$
-    QName propertyLanduseMemberRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseMember" ); //$NON-NLS-1$
+    final QName landuseFeatureType = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Landuse" ); //$NON-NLS-1$
+    final QName landuseCollectionType = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollection" ); //$NON-NLS-1$
+    final QName parentFeatureName = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollectionMember" ); //$NON-NLS-1$
+    final QName propertyName = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Name" ); //$NON-NLS-1$
+    final QName propertyLanduseMember = new QName( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseMember" ); //$NON-NLS-1$
+    final QName landuseFeatureTypeRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "Landuse" ); //$NON-NLS-1$
+    final QName landuseCollectionTypeRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseCollection" ); //$NON-NLS-1$
+    final QName parentFeatureNameRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseCollectionMember" ); //$NON-NLS-1$
+    final QName propertyNameRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "Name" ); //$NON-NLS-1$
+    final QName propertyLanduseMemberRisk = new QName( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseMember" ); //$NON-NLS-1$
 
     // contextModel
-    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL, null );
+    final GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL, null );
 
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_CONTEXTMODEL, (String) null );
-    IFeatureType ftLanduse = schema.getFeatureType( landuseFeatureType );
-    IFeatureType ftLanduseCollection = schema.getFeatureType( landuseCollectionType );
+    final IFeatureType ftLanduse = schema.getFeatureType( landuseFeatureType );
+    final IFeatureType ftLanduseCollection = schema.getFeatureType( landuseCollectionType );
     final IRelationType featureProperty = (IRelationType) ftLanduse.getProperty( propertyName );
-    Feature rootFeature = contextModel.getRootFeature();
-    Feature parentFeature = (Feature) rootFeature.getProperty( parentFeatureName );
-    IRelationType featurePropertyName = (IRelationType) ftLanduseCollection.getProperty( propertyLanduseMember );
+    final Feature rootFeature = contextModel.getRootFeature();
+    final Feature parentFeature = (Feature) rootFeature.getProperty( parentFeatureName );
+    final IRelationType featurePropertyName = (IRelationType) ftLanduseCollection.getProperty( propertyLanduseMember );
 
     // riskContextModel
     final GMLSchema schemaRisk = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, (String) null );
-    IFeatureType ftLanduseRisk = schemaRisk.getFeatureType( landuseFeatureTypeRisk );
-    IFeatureType ftLanduseCollectionRisk = schemaRisk.getFeatureType( landuseCollectionTypeRisk );
+    final IFeatureType ftLanduseRisk = schemaRisk.getFeatureType( landuseFeatureTypeRisk );
+    final IFeatureType ftLanduseCollectionRisk = schemaRisk.getFeatureType( landuseCollectionTypeRisk );
     final IPropertyType featurePropertyRisk = ftLanduseRisk.getProperty( propertyNameRisk );
-    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL, null );
-    Feature rootFeature_risk = riskContextModel.getRootFeature();
-    Feature parentFeature_risk = (Feature) rootFeature_risk.getProperty( parentFeatureNameRisk );
-    IRelationType featurePropertyNameRisk = (IRelationType) ftLanduseCollectionRisk.getProperty( propertyLanduseMemberRisk );
+    final GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL, null );
+    final Feature rootFeature_risk = riskContextModel.getRootFeature();
+    final Feature parentFeature_risk = (Feature) rootFeature_risk.getProperty( parentFeatureNameRisk );
+    final IRelationType featurePropertyNameRisk = (IRelationType) ftLanduseCollectionRisk.getProperty( propertyLanduseMemberRisk );
 
-    Iterator it = m_landuseTypeSet.iterator();
+    final Iterator it = m_landuseTypeSet.iterator();
     String landusePropertyName = null;
     Feature landuseFeature = null;
     while( it.hasNext() )
@@ -532,16 +532,16 @@ public class CreateFloodRiskProjectJob extends Job
       landuseFeature.setProperty( featureProperty, landusePropertyName );
       contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
       // riskContextModel
-      Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, featurePropertyNameRisk, ftLanduseRisk );
+      final Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, featurePropertyNameRisk, ftLanduseRisk );
       landuseFeature_risk.setProperty( featurePropertyRisk, landusePropertyName );
       riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyNameRisk, 0, landuseFeature_risk );
     }
     // contextModel
-    FileWriter fw = new FileWriter( contextModelURL.getFile() );
+    final FileWriter fw = new FileWriter( contextModelURL.getFile() );
     GmlSerializer.serializeWorkspace( fw, contextModel );
     fw.close();
     // riskContextModel
-    FileWriter fw_risk = new FileWriter( riskContextModelURL.getFile() );
+    final FileWriter fw_risk = new FileWriter( riskContextModelURL.getFile() );
     GmlSerializer.serializeWorkspace( fw_risk, riskContextModel );
     fw_risk.close();
   }
@@ -553,24 +553,24 @@ public class CreateFloodRiskProjectJob extends Job
    * @return targetFiles gml files with waterlevel rasterData
    * @throws Exception
    */
-  private Vector createWaterlevelGrids( IProgressMonitor monitor ) throws Exception
+  private Vector createWaterlevelGrids( final IProgressMonitor monitor ) throws Exception
   {
     final Vector<File> targetFiles = new Vector<File>();
-    int workedPart = 50 / m_waterlevelGrids.size();
+    final int workedPart = 50 / m_waterlevelGrids.size();
     for( int i = 0; i < m_waterlevelGrids.size(); i++ )
     {
-      File sourceFile = (File) m_waterlevelGrids.get( i );
+      final File sourceFile = (File) m_waterlevelGrids.get( i );
       RectifiedGridCoverage2 grid = GridUtils.importGridArc( sourceFile, m_waterlevelCooSystem );
-      String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile.getName() );
-      File waterlevelDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel" ) )).toFile(); //$NON-NLS-1$
+      final String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile.getName() );
+      final File waterlevelDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel" ) )).toFile(); //$NON-NLS-1$
       waterlevelDir.mkdir();
       final File targetFile = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) )).toFile(); //$NON-NLS-1$ //$NON-NLS-2$
 
       GridUtils.writeRasterData( targetFile, grid );
       targetFiles.add( targetFile );
-      String sldFileName = m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/" + sourceFileNameWithoutExtension + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
-      Color lightBlue = new Color( 150, 150, 255 );
-      int numOfCategories = 5;
+      final String sldFileName = m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/" + sourceFileNameWithoutExtension + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
+      final Color lightBlue = new Color( 150, 150, 255 );
+      final int numOfCategories = 5;
 
       createRasterStyle( sldFileName, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
       m_layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
@@ -586,63 +586,63 @@ public class CreateFloodRiskProjectJob extends Job
    * Creates a rasterStyle (interval-value) with the given number of intervals and a given color as lightest color
    * 
    * @param resultFile
-   *          style
+   *            style
    * @param styleName
-   *          name of style
+   *            name of style
    * @param grid
    * @param color
-   *          lightest color
+   *            lightest color
    * @param numOfCategories
-   *          number of intervals
+   *            number of intervals
    * @throws Exception
    */
-  private void createRasterStyle( String resultFileName, String styleName, RectifiedGridCoverage2 grid, Color color, int numOfCategories ) throws Exception
+  private void createRasterStyle( final String resultFileName, final String styleName, final RectifiedGridCoverage2 grid, Color color, final int numOfCategories ) throws Exception
   {
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
-    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, WizardMessages.getString( "CreateFloodRiskProjectJob.NoData" ) ); //$NON-NLS-1$
+    final ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, WizardMessages.getString( "CreateFloodRiskProjectJob.NoData" ) ); //$NON-NLS-1$
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
 
     final DoubleRaster dr = new RectifiedGridCoverageDoubleRaster( grid.getFeature() );
     final MinMaxRasterWalker walker = new MinMaxRasterWalker();
     dr.walk( walker, null );
-    double min = 0.0; // We don't use walker.getMin() because min is -9999.0, and we need 0.0 water level as min
-    double max = walker.getMax();
+    final double min = 0.0; // We don't use walker.getMin() because min is -9999.0, and we need 0.0 water level as min
+    final double max = walker.getMax();
 
-    double intervalStep = (max - min) / numOfCategories;
+    final double intervalStep = (max - min) / numOfCategories;
     for( int i = 0; i < numOfCategories; i++ )
     {
-      double quantity = Number.round( (min + (i * intervalStep)), 4, BigDecimal.ROUND_HALF_EVEN );
-      ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 0.5, quantity, "" ); //$NON-NLS-1$
+      final double quantity = Number.round( (min + (i * intervalStep)), 4, BigDecimal.ROUND_HALF_EVEN );
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 0.5, quantity, "" ); //$NON-NLS-1$
       color = color.darker();
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
     color = color.darker();
-    ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( color, 0.5, max, "" ); //$NON-NLS-1$
+    final ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( color, 0.5, max, "" ); //$NON-NLS-1$
     colorMap.put( new Double( max ), colorMapEntry_max );
-    RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
-    Symbolizer[] symbolizers = new Symbolizer[] { rasterSymbolizer };
-    FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
-    double minScaleDenominator = 0;
-    double maxScaleDenominator = 1.8;
-    Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
+    final Symbolizer[] symbolizers = new Symbolizer[] { rasterSymbolizer };
+    final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    final double minScaleDenominator = 0;
+    final double maxScaleDenominator = 1.8;
+    final Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     featureTypeStyle.addRule( rule );
-    FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-    org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
+    final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
+    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
 
     // FIXME exportAsXML for RasterSymbolizer doesn't work
     // Dejan: I've changed it, it supports ColorMap for now (as we are using only ColorMap)
 
     // System.out.println(((StyledLayerDescriptor_Impl) sld).exportAsXML());
-    Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+    final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     OutputStream os = null;
     try
     {
       os = new FileOutputStream( resultFileName );
-      StreamResult result = new StreamResult( os );
-      Transformer t = TransformerFactory.newInstance().newTransformer();
+      final StreamResult result = new StreamResult( os );
+      final Transformer t = TransformerFactory.newInstance().newTransformer();
       t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
       t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       t.transform( source, result );
@@ -653,9 +653,9 @@ public class CreateFloodRiskProjectJob extends Job
     }
   }
 
-  private void createLanduseStyle( String resultFileName ) throws Exception
+  private void createLanduseStyle( final String resultFileName ) throws Exception
   {
-    HashMap<String, Color> predefinedColors = new HashMap<String, Color>();
+    final HashMap<String, Color> predefinedColors = new HashMap<String, Color>();
     predefinedColors.put( "Wasser", Color.blue.brighter() );
     predefinedColors.put( "Water", Color.blue.brighter() );
     predefinedColors.put( "Wohnen", Color.orange );
@@ -665,43 +665,43 @@ public class CreateFloodRiskProjectJob extends Job
     predefinedColors.put( "Verkehr", Color.gray );
     predefinedColors.put( "Ackerland", Color.yellow );
     predefinedColors.put( "Wald", Color.pink );
-    Iterator iterator = m_landuseTypeSet.iterator();
+    final Iterator iterator = m_landuseTypeSet.iterator();
     String landusePropertyName = null;
     final double minScaleDenominator = 0;
-    final double maxScaleDenominator = 1000000000000000.0; 
-    Stroke stroke = StyleFactory.createStroke(new Color(0,0,0), 1.0, 0.5, null, "mitre", "butt");
+    final double maxScaleDenominator = 1000000000000000.0;
+    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
     Color color = Color.red;
-    FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     Fill fill = null;
-    while(iterator.hasNext())
+    while( iterator.hasNext() )
     {
       color = color.brighter();
       landusePropertyName = (String) iterator.next();
-      Geometry geometry = new Geometry_Impl( "GEOM" );
-      if(predefinedColors.containsKey( landusePropertyName ))
+      final Geometry geometry = new Geometry_Impl( new PropertyName( "GEOM", null ) );
+      if( predefinedColors.containsKey( landusePropertyName ) )
         fill = StyleFactory.createFill( predefinedColors.get( landusePropertyName ), 0.3 );
       else
         fill = StyleFactory.createFill( color, 0.8 );
-      PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl(fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
-      Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
-      Operation operation = new PropertyIsLikeOperation(new PropertyName(m_landusePropertyName), new Literal(landusePropertyName), '*', '$', '/');
-      Filter filter = new ComplexFilter(operation);
-      Rule rule = StyleFactory.createRule( symbolizers, "default", landusePropertyName, "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
+      final Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
+      final Operation operation = new PropertyIsLikeOperation( new PropertyName( m_landusePropertyName ), new Literal( landusePropertyName ), '*', '$', '/' );
+      final Filter filter = new ComplexFilter( operation );
+      final Rule rule = StyleFactory.createRule( symbolizers, "default", landusePropertyName, "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ 
       rule.setFilter( filter );
       featureTypeStyle.addRule( rule );
     }
-    FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-    org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( "Landnutzung", "Landnutzung", null, false, featureTypeStyles ) };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
-    Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+    final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
+    final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( "Landnutzung", "Landnutzung", null, false, featureTypeStyles ) };
+    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     OutputStream os = null;
     try
     {
       os = new FileOutputStream( resultFileName );
-      StreamResult result = new StreamResult( os );
-      Transformer t = TransformerFactory.newInstance().newTransformer();
+      final StreamResult result = new StreamResult( os );
+      final Transformer t = TransformerFactory.newInstance().newTransformer();
       t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
       t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       t.transform( source, result );
@@ -719,9 +719,9 @@ public class CreateFloodRiskProjectJob extends Job
    * @throws IOException
    * @throws GmlSerializeException
    */
-  private void createWaterlevelData( Vector targetFiles ) throws IOException, GmlSerializeException, InvocationTargetException
+  private void createWaterlevelData( final Vector targetFiles ) throws IOException, GmlSerializeException, InvocationTargetException
   {
-    File waterlevelDataFile = m_workspacePath.append( m_projectHandle.getFullPath() + "/Control/waterlevelData.gml" ).toFile(); //$NON-NLS-1$
+    final File waterlevelDataFile = m_workspacePath.append( m_projectHandle.getFullPath() + "/Control/waterlevelData.gml" ).toFile(); //$NON-NLS-1$
     /*
      * // register typeHandler final ITypeRegistry<IMarshallingTypeHandler> registry =
      * MarshallingTypeRegistrySingleton.getTypeRegistry(); try { registry.registerTypeHandler( new RangeSetTypeHandler() );
@@ -732,29 +732,29 @@ public class CreateFloodRiskProjectJob extends Job
     // load schema
     final GMLSchemaCatalog schemaCatalog2 = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema schema = schemaCatalog2.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, (String) null );
-    QName rootFeatureName = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelData" ); //$NON-NLS-1$
-    QName rootFeatureProp = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelMember" ); //$NON-NLS-1$
-    IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, null, "WaterlevelData0", rootFeatureType, true ); //$NON-NLS-1$
+    final QName rootFeatureName = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelData" ); //$NON-NLS-1$
+    final QName rootFeatureProp = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelMember" ); //$NON-NLS-1$
+    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, "WaterlevelData0", rootFeatureType, true ); //$NON-NLS-1$
     final IRelationType waterlevelMember = (IRelationType) rootFeatureType.getProperty( rootFeatureProp );
     // create waterlevelFeature(s)
-    QName waterlevelFeatureName = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "Waterlevel" ); //$NON-NLS-1$
-    QName waterlevelFeatureProp = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelRasterData" ); //$NON-NLS-1$
-    IFeatureType waterlevelFeatureType = schema.getFeatureType( waterlevelFeatureName );
+    final QName waterlevelFeatureName = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "Waterlevel" ); //$NON-NLS-1$
+    final QName waterlevelFeatureProp = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelRasterData" ); //$NON-NLS-1$
+    final IFeatureType waterlevelFeatureType = schema.getFeatureType( waterlevelFeatureName );
     final IPropertyType featureProperty = waterlevelFeatureType.getProperty( waterlevelFeatureProp );
     int identifier = 0;
     for( int i = 0; i < targetFiles.size(); i++ )
     {
       final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelMember, waterlevelFeatureName.getLocalPart() + identifier, waterlevelFeatureType, true );
-      IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
+      final IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
       waterlevelFeature.setProperty( featureProperty, waterlevelFile.getLocationURI().toASCIIString() );
       FeatureHelper.addProperty( rootFeature, waterlevelMember, waterlevelFeature );
       identifier = identifier + 1;
     }
     // create workspace
-    IFeatureType[] types = schema.getAllFeatureTypes();
+    final IFeatureType[] types = schema.getAllFeatureTypes();
     final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "", null ); //$NON-NLS-1$
-    FileWriter fw = new FileWriter( waterlevelDataFile );
+    final FileWriter fw = new FileWriter( waterlevelDataFile );
     GmlSerializer.serializeWorkspace( fw, workspace );
     fw.close();
   }
@@ -805,7 +805,7 @@ public class CreateFloodRiskProjectJob extends Job
    * @return waterlevel layer
    * @throws Exception
    */
-  private StyledLayerType createWaterlevelLayer( File sourceFile, String styleName ) throws Exception
+  private StyledLayerType createWaterlevelLayer( final File sourceFile, final String styleName ) throws Exception
   {
     final StyledLayerType newLayer = typeOF.createStyledLayerType();
 
@@ -849,7 +849,7 @@ public class CreateFloodRiskProjectJob extends Job
       m_projectHandle.delete( true, false, null );
       // m_projectHandel.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       return false;

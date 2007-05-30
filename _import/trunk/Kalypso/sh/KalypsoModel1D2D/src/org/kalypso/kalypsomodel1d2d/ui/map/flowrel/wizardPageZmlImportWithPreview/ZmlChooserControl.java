@@ -41,6 +41,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -393,22 +394,23 @@ public abstract class ZmlChooserControl
     }
   }
 
-  public String[] getComponentUrns( )
-  {
-    final String[] res = new String[2];
-    res[0] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
+  protected abstract void setComplete( final boolean complete );
 
+  public String getDomainComponentUrn( )
+  {
+    return Kalypso1D2DDictConstants.DICT_COMPONENT_TIME;
+  }
+
+  public String getValueComponentUrn( )
+  {
     // TODO: this is not nice...
     final String type = ObservationUtilities.findAxesByClass( m_observation.getAxisList(), Double.class )[0].getType();
 
     if( type.equals( "W" ) )
-      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
+      return Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL;
     else if( type.equals( "Q" ) )
-      res[1] = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
-    else
-      throw new IllegalStateException( "Wrong ZML-Type" );
-    return res;
-  }
+      return Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE;
 
-  protected abstract void setComplete( final boolean complete );
+    throw new IllegalStateException( "Wrong ZML-Type" );
+  }
 }

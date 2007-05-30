@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogPageUtilitites;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
@@ -219,6 +220,14 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
   }
 
   /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#initializeBC(org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition)
+   */
+  public void initializeBC( final IBoundaryCondition bc )
+  {
+    bc.setName( getName() );
+  }
+
+  /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#fillObservation(org.kalypso.observation.IObservation)
    */
   public void fillObservation( final IObservation<TupleResult> obs ) throws InvocationTargetException
@@ -254,14 +263,6 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
     {
       throw new InvocationTargetException( t );
     }
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#getComponentUrns()
-   */
-  public String[] getComponentUrns( )
-  {
-    return new String[] { m_domainComponentUrn, m_valueComponentUrn };
   }
 
   /**
@@ -320,5 +321,21 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
     }
 
     updatePageState( status );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getDomainComponentUrn()
+   */
+  public String getDomainComponentUrn( )
+  {
+    return m_domainComponentUrn;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getValueComponentUrn()
+   */
+  public String getValueComponentUrn( )
+  {
+    return m_valueComponentUrn;
   }
 }

@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
@@ -56,8 +63,62 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getTimeserie1DFeature()
    */
-  public Feature getTimeserieFeature( )
+  private Feature getTimeserieFeature( )
   {
     return (Feature) getWrappedFeature().getProperty( QNAME_P_TIMESERIE );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#initializeObservation(java.lang.String,
+   *      java.lang.String)
+   */
+  public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn )
+  {
+    final Feature currentObsFeature = getTimeserieFeature();
+
+    /* If we have a discharge-timeserie, we have a directed timeserie. */
+    final Feature obsFeature;
+    if( domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+    {
+      final Feature parentFeature = currentObsFeature.getParent();
+      final GMLWorkspace workspace = parentFeature.getWorkspace();
+      final IFeatureType directedFT = workspace.getGMLSchema().getFeatureType( QNAME_DIRECTED_TIMESERIE );
+      final Feature newObsFeature = workspace.createFeature( parentFeature, currentObsFeature.getParentRelation(), directedFT );
+      parentFeature.setProperty( QNAME_P_TIMESERIE, newObsFeature );
+      obsFeature = newObsFeature;
+    }
+    else
+      obsFeature = currentObsFeature;
+
+    final String[] componentUrns = new String[] { domainComponentUrn, valueComponentUrn };
+    final IComponent[] components = new IComponent[componentUrns.length];
+
+    for( int i = 0; i < components.length; i++ )
+      components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+
+    final TupleResult result = obs.getResult();
+    for( final IComponent component : components )
+      result.addComponent( component );
+
+    return obs;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setObservation(org.kalypso.observation.IObservation)
+   */
+  public void setObservation( final IObservation<TupleResult> obs )
+  {
+    ObservationFeatureFactory.toFeature( obs, getTimeserieFeature() );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getObservation()
+   */
+  public IObservation<TupleResult> getObservation( )
+  {
+    return ObservationFeatureFactory.toObservation( getTimeserieFeature() );
+  }
+
 }
