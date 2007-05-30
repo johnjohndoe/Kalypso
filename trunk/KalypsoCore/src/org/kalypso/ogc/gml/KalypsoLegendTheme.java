@@ -272,7 +272,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     g.clipRect( 0, 0, width, height );
     final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
-    final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style }, null );
+    final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style } );
     for( final DisplayElement de : des )
     {
       de.paint( g, transform );

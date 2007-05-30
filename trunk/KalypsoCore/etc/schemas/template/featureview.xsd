@@ -208,6 +208,17 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="spinner" substitutionGroup="fv:control">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="fv:PropertyControlType">
+					<xs:attribute name="increment" type="xs:unsignedInt" use="optional" default="1" />
+					<xs:attribute name="pageIncrement" type="xs:unsignedInt" use="optional" default="10" />
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
 	<xs:element name="image" substitutionGroup="fv:control">
 		<xs:complexType>
 			<xs:complexContent>
@@ -351,8 +362,6 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-
 
 	<xs:complexType name="AbstractColumnDescription">
 		<xs:attribute name="component" type="xs:string"

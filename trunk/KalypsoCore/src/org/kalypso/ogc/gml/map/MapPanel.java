@@ -808,6 +808,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       {
         public void run( )
         {
+          // TODO: fire in display thread!
           l.selectionChanged( e );
         }
 
