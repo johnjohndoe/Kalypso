@@ -41,6 +41,8 @@ import org.eclipse.ui.progress.UIJob;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
+ * TODO: this class exists twice.
+ * 
  * @author Stefan Kurzbach
  */
 public class GenericCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
