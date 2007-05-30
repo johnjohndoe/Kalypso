@@ -120,7 +120,7 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
-  public void init( GMLWorkspace workspace )
+  public void init( final GMLWorkspace workspace )
   {
     this.m_workspace = workspace;
   }
@@ -128,7 +128,7 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
     try
     {
@@ -140,14 +140,14 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
       {
         if( modellEvent instanceof FeaturesChangedModellEvent )
         {
-          Feature changedFeatures[] = ((FeaturesChangedModellEvent) modellEvent).getFeatures();
+          final Feature changedFeatures[] = ((FeaturesChangedModellEvent) modellEvent).getFeatures();
           if( changedFeatures == null )
           {
             return;
           }
           else
           {
-            for( Feature feature : changedFeatures )
+            for( final Feature feature : changedFeatures )
             {
               if( feature.getFeatureType().getQName().equals( m_roughnessCls ) )
               {
@@ -161,25 +161,25 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
                   }
 
                 };
-                File file = new File( url.getPath() );
-                StyledLayerDescriptor descriptor = SLDFactory.createSLD( resolver, new FileReader( file ) );
-                for( NamedLayer layer : descriptor.getNamedLayers() )
+                final File file = new File( url.getPath() );
+                final StyledLayerDescriptor descriptor = SLDFactory.createSLD( resolver, new FileReader( file ) );
+                for( final NamedLayer layer : descriptor.getNamedLayers() )
                 {
-                  for( Style style : layer.getStyles() )
+                  for( final Style style : layer.getStyles() )
                   {
-                    for( FeatureTypeStyle featureTypeStyle : ((UserStyle) style).getFeatureTypeStyles() )
+                    for( final FeatureTypeStyle featureTypeStyle : ((UserStyle) style).getFeatureTypeStyles() )
                     {
                       boolean ruleFound = false;
-                      for( Rule rule : featureTypeStyle.getRules() )
+                      for( final Rule rule : featureTypeStyle.getRules() )
                       {
                         if( rule.getFilter() != null && rule.getFilter().evaluate( feature ) )
                         {
                           ruleFound = true;
-                          for( Symbolizer symbolizer : rule.getSymbolizers() )
+                          for( final Symbolizer symbolizer : rule.getSymbolizers() )
                           {
                             if( symbolizer instanceof PolygonSymbolizer )
                             {
-                              RGB rgb = (RGB) feature.getProperty( m_colorStyle );
+                              final RGB rgb = (RGB) feature.getProperty( m_colorStyle );
                               ((PolygonSymbolizer) symbolizer).getFill().setFill( new Color( rgb.red, rgb.green, rgb.blue ) );
                             }
                             break;
@@ -197,7 +197,7 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
                           color = new Color( rgb.red, rgb.green, rgb.blue );
                         final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
                         final Fill fill = StyleFactory.createFill( color, 0.5 );
-                        final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, "polygonProperty" );
+                        final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( "polygonProperty", null ) );
                         final Rule newRule = StyleFactory.createRule( newSymbolizer, 0.0, 1.0E15 );
                         final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle" ), new Literal( ((ArrayList<String>) feature.getProperty( m_name )).get( 0 ) ), '*', '$', '/' );
                         final Filter filter = new ComplexFilter( operation );
@@ -213,8 +213,8 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
                 try
                 {
                   os = new FileWriter( file );
-                  StreamResult result = new StreamResult( os );
-                  TransformerFactory factory = TransformerFactory.newInstance();
+                  final StreamResult result = new StreamResult( os );
+                  final TransformerFactory factory = TransformerFactory.newInstance();
 
                   // Dejan: this works only with Java 1.5, in 1.4 it throws IllegalArgumentException
                   // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
@@ -222,11 +222,11 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
                   {
                     factory.setAttribute( "indent-number", new Integer( 4 ) );
                   }
-                  catch( IllegalArgumentException e )
+                  catch( final IllegalArgumentException e )
                   {
                   }
 
-                  Transformer transformer = factory.newTransformer();
+                  final Transformer transformer = factory.newTransformer();
                   transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
                   transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
@@ -248,7 +248,7 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
