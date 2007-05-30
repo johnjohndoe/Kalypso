@@ -481,7 +481,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     private void addDisplayElements( final Feature feature )
     {
-      final DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style, m_workspace );
+      final DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style );
       if( elements.length > 0 )
         m_displayElements.put( feature, elements );
       if( elements.length > m_maxDisplayArray )

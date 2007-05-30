@@ -41,6 +41,10 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -104,22 +108,52 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
    */
-  public ImageDescriptor getImageDescriptor( Object object )
+  public ImageDescriptor getImageDescriptor( final Object object )
   {
-    return null;
+    if( object != this )
+      throw new IllegalStateException();
+
+    if( m_rule == null )
+      return null;
+
+    /*
+     * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have to
+     * many RuleTreeObjects.
+     */
+    final Image image = new Image( Display.getCurrent(), 16, 16 );
+
+    final GC gc = new GC( image );
+
+    try
+    {
+      RulePainter.paint( m_rule, gc );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    gc.dispose();
+
+    final ImageData imageData = image.getImageData();
+
+    return ImageDescriptor.createFromImageData( imageData );
   }
 
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
    */
-  public String getLabel( Object o )
+  public String getLabel( final Object o )
   {
+    if( o != this )
+      throw new IllegalStateException();
+
     if( m_rule == null )
       return "<no styles set>";
 
     if( m_rule.getTitle() != null )
       return m_rule.getTitle();
-    
+
     if( m_rule.getName() != null )
       return m_rule.getName();
 
@@ -129,7 +163,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
    */
-  public Object getParent( Object o )
+  public Object getParent( final Object o )
   {
     if( o != this )
       throw new IllegalStateException();
