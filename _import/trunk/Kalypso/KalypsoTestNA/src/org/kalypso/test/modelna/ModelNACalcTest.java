@@ -42,7 +42,6 @@ import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
@@ -77,7 +76,6 @@ public class ModelNACalcTest extends TestCase
   @Override
   protected void setUp( ) throws Exception
   {
-    KalypsoTest.init();
     if( !m_compareDir.exists() )
       m_compareDir.mkdirs();
   }
@@ -118,7 +116,7 @@ public class ModelNACalcTest extends TestCase
       calc( "we", "test1", "16", true );
       calc( "we", "test1", "17", true );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;
@@ -128,13 +126,13 @@ public class ModelNACalcTest extends TestCase
 
   /**
    * @param folder
-   *          name of test folder
+   *            name of test folder
    * @param spec
-   *          numer of modelspec.xml (e.g. "3")
+   *            numer of modelspec.xml (e.g. "3")
    * @throws JAXBException
    * @throws IOException
    */
-  public void calc( final String modellID, final String folder, String spec, boolean doCompare ) throws JAXBException, IOException, SimulationException
+  public void calc( final String modellID, final String folder, String spec, final boolean doCompare ) throws JAXBException, IOException, SimulationException
   {
     final File tmpDir = CalcJobTestUtilis.getTmpDir();
     final URL resource = getClass().getResource( "testData/" + modellID + "/" + folder + "/input.jar" );
@@ -180,7 +178,7 @@ public class ModelNACalcTest extends TestCase
       public void dispose( )
       {
         // TODO Auto-generated method stub
-        
+
       }
     };
 
@@ -191,7 +189,7 @@ public class ModelNACalcTest extends TestCase
     // final NaModelInnerCalcJob job = new NaModelInnerCalcJob()
     job.run( tmpDir, dataProvider, resultEater, monitor );
 
-    boolean succeeded = job.isSucceeded();
+    final boolean succeeded = job.isSucceeded();
     if( succeeded )
       System.out.println( "Berechnung erzeugte Ergebnisse!" );
     else
@@ -224,7 +222,7 @@ public class ModelNACalcTest extends TestCase
             // "out_we.nat/950825.qgs",
             // "inp.dat/we_nat.ger",
             "inp.dat/we_nat.geb", "zufluss/*", "klima.dat/*", "infolog.txt" };
-        ILogger logger = new ILogger()
+        final ILogger logger = new ILogger()
         {
           /**
            * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
@@ -240,7 +238,7 @@ public class ModelNACalcTest extends TestCase
     }
   }
 
-  private SimulationDataPath[] createBeans( URL modelSpec ) throws JAXBException
+  private SimulationDataPath[] createBeans( final URL modelSpec ) throws JAXBException
   {
     final List<SimulationDataPath> result = new ArrayList<SimulationDataPath>();
     final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );

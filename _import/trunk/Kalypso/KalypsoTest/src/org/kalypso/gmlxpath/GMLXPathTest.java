@@ -45,7 +45,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -62,24 +61,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class GMLXPathTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown( ) throws Exception
-  {
-    KalypsoTest.release();
-  }
-
   private String[] getXPathes( )
   {
     return new String[] {// 
@@ -112,9 +93,8 @@ public class GMLXPathTest extends TestCase
       final URL gmlURL = getClass().getResource( "resources/Bplan.xml" );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final String[] pathes = getXPathes();
-      for( int i = 0; i < pathes.length; i++ )
+      for( final String xPath : pathes )
       {
-        final String xPath = pathes[i];
         System.out.println( "\ntesting: " + xPath );
         final GMLXPath featureXPath = new GMLXPath( xPath );
         final Object featureFromPath = GMLXPathUtilities.query( featureXPath, workspace );
@@ -145,7 +125,7 @@ public class GMLXPathTest extends TestCase
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       // If you do such a thing (i don't like it because the junit view already shows the

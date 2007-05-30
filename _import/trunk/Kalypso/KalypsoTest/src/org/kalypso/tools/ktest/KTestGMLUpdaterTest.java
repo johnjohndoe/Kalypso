@@ -43,7 +43,6 @@ import javax.xml.bind.JAXBException;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -74,24 +73,6 @@ public class KTestGMLUpdaterTest extends TestCase
   private static final int TRACK_MIN = 2;
 
   private static final int TRACK_MAX = 3;
-
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown( ) throws Exception
-  {
-    KalypsoTest.release();
-  }
 
   public void testUpdateGML( ) throws Exception
   {
@@ -140,7 +121,7 @@ public class KTestGMLUpdaterTest extends TestCase
    * @param outFile
    * @throws Exception
    */
-  private void updatePegelMapping( File outFile ) throws Exception
+  private void updatePegelMapping( final File outFile ) throws Exception
   {
     // <!--
     // name PegelName
@@ -183,9 +164,8 @@ public class KTestGMLUpdaterTest extends TestCase
       final String pegelName = pegelData[i][0];
       final String psiIDEcht = pegelData[i][1];
       System.out.print( i + " generate mapping for " + pegelName + " ..." );
-      for( int j = 0; j < nodeFeatures.length; j++ )
+      for( final Feature nodeFE : nodeFeatures )
       {
-        final Feature nodeFE = nodeFeatures[j];
         if( pegelName.equals( FeatureHelper.getAsString( nodeFE, "name" ) ) )
         {
           final GM_Point point = (GM_Point) nodeFE.getProperty( "Ort" );
@@ -257,9 +237,9 @@ public class KTestGMLUpdaterTest extends TestCase
         throw new UnsupportedOperationException( "unsupported track" );
     }
     final String href = linkLocal.getHref();
-    int split = href.lastIndexOf( "/" );
-    String part1 = href.substring( 0, split );
-    String part3 = href.substring( split + 1 );
+    final int split = href.lastIndexOf( "/" );
+    final String part1 = href.substring( 0, split );
+    final String part3 = href.substring( split + 1 );
     final String newHref = part1 + "/Ablage/" + prefix + part3;
     // href.replaceAll( "/.+?", href ) + "/Ablage/" + prefix + href.replaceAll( ".+/", "" );
     final TimeseriesLinkType newLink = (TimeseriesLinkType) CloneUtilities.clone( linkLocal, JC );
@@ -287,7 +267,7 @@ public class KTestGMLUpdaterTest extends TestCase
       updateFeature( (Feature) featureFromPath, realProp, kTestProp );
     else if( featureFromPath instanceof FeatureList )
     {
-      Iterator iterator = ((FeatureList) featureFromPath).iterator();
+      final Iterator iterator = ((FeatureList) featureFromPath).iterator();
       while( iterator.hasNext() )
         updateFeature( (Feature) iterator.next(), realProp, kTestProp );
     }
@@ -299,7 +279,7 @@ public class KTestGMLUpdaterTest extends TestCase
       GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
       System.out.println( "wrote file " + output.getAbsolutePath() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw e;
     }
@@ -334,7 +314,7 @@ public class KTestGMLUpdaterTest extends TestCase
     return linkKTEST;
   }
 
-  private TimeseriesLinkType createTSLinkForTrackRemote( final TimeseriesLinkType link, int track ) throws JAXBException
+  private TimeseriesLinkType createTSLinkForTrackRemote( final TimeseriesLinkType link, final int track ) throws JAXBException
   {
     final String href = link.getHref();
     final String newHref = ceateIDForTrackRemote( href, track );
@@ -353,7 +333,7 @@ public class KTestGMLUpdaterTest extends TestCase
    * @param href
    * @return new id
    */
-  private String ceateIDForTrackRemote( String href, int track )
+  private String ceateIDForTrackRemote( final String href, final int track )
   {
     switch( track )
     {
@@ -380,14 +360,14 @@ public class KTestGMLUpdaterTest extends TestCase
   {
     if( hrefECHT == null )
       return null;
-    Matcher matcher = p.matcher( hrefECHT );
+    final Matcher matcher = p.matcher( hrefECHT );
     if( matcher.matches() )
     {
-      String part1 = matcher.group( 1 );
+      final String part1 = matcher.group( 1 );
       // String part2_HN = matcher.group( 2 );
-      String part3 = matcher.group( 3 );
-      String part4_ID = matcher.group( 4 );
-      String part5 = matcher.group( 5 );
+      final String part3 = matcher.group( 3 );
+      final String part4_ID = matcher.group( 4 );
+      final String part5 = matcher.group( 5 );
       return part1 + "TN" + part3 + "9" + part4_ID + part5;
     }
     System.err.println( "can not generate K-TestID from >" + hrefECHT + "<\n return >" + hrefECHT + "<" );

@@ -47,7 +47,6 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -63,19 +62,9 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class FlowsDssTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-    super.setUp();
-  }
-
   public void AtestGeometries( ) throws MalformedURLException, Exception
   {
-    double percentage = 0.7;
+    final double percentage = 0.7;
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:///c:/temp/plangebiet.gml" ), null );
     final FeatureList designAreaList = (FeatureList) workspace.getFeatureFromPath( "featureMember" );
     final Feature designAreaFe = (Feature) designAreaList.iterator().next();
@@ -83,16 +72,16 @@ public class FlowsDssTest extends TestCase
     final Geometry designAreaJTS = JTSAdapter.export( designAreaGEOM );
     final Envelope envelopeInternal = designAreaJTS.getEnvelopeInternal();
     double buffer = envelopeInternal.getWidth() * (1 - percentage) / 2 * -1;
-    double area1 = designAreaJTS.getArea();
+    final double area1 = designAreaJTS.getArea();
     final double affectedArea = area1 * percentage;
     double area2 = 0;
     double abs = 1d;
-//    double grenze = 0.1d;
+// double grenze = 0.1d;
     while( true )
     {
       final Geometry smallerGeom = designAreaJTS.buffer( buffer );
       area2 = smallerGeom.getArea();
-      double test = area1 - area2 - affectedArea;
+      final double test = area1 - area2 - affectedArea;
       if( test < 0 )
         buffer = Math.abs( buffer - 2 );
       else

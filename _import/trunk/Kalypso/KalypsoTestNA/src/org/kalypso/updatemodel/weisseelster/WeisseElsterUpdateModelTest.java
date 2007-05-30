@@ -48,7 +48,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -72,7 +71,6 @@ public class WeisseElsterUpdateModelTest extends TestCase
   @Override
   protected void setUp( ) throws Exception
   {
-    KalypsoTest.init();
     m_zmlLinkFac = new ObjectFactory();
   }
 
@@ -83,9 +81,8 @@ public class WeisseElsterUpdateModelTest extends TestCase
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel, null );
     final IFeatureType catchmentFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( catchmentFT );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
       final TimeseriesLinkType link = m_zmlLinkFac.createTimeseriesLinkType();
       link.setHref( "Temperatur/Temperatur_" + feature.getId() + ".zml" );
       feature.setProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR, link );
@@ -97,7 +94,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
     System.out.println( "wrote new model to " + outputFile.toString() );
   }
 
-  public void updateGMLTemperaturMapping( GMLWorkspace modelWorkspace ) throws Exception
+  public void updateGMLTemperaturMapping( final GMLWorkspace modelWorkspace ) throws Exception
   {
     final URL inputMappingURL = getClass().getResource( "resources/ObsTGebMapping.gml" );
     final File outputFile = new File( "C:\\TMP\\ObsTGebMapping.gml" );
@@ -106,9 +103,8 @@ public class WeisseElsterUpdateModelTest extends TestCase
     final Feature mapRootFeature = mapWorkspace.getRootFeature();
     final IFeatureType catchmentFT = modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] features = modelWorkspace.getFeatures( catchmentFT );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature modelFeature : features )
     {
-      final Feature modelFeature = features[i];
       // srcProp
       final TimeseriesLinkType srcLink = m_zmlLinkFac.createTimeseriesLinkType();
       srcLink.setHref( "Ombrometer/T_virtuell.zml" );

@@ -50,7 +50,6 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -62,20 +61,9 @@ import org.kalypsodeegree_impl.model.feature.visitors.FidCollectorVisitor;
 
 public class CombineModells extends TestCase
 {
-  // private final URL m_modellURL;
-
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
   public void testCombineModells( ) throws Exception
   {
-    CombineModells modell2 = new CombineModells();
+    final CombineModells modell2 = new CombineModells();
     modell2.combineIt();
   }
 
@@ -90,7 +78,7 @@ public class CombineModells extends TestCase
     final GMLWorkspace baseWorkspace = GmlSerializer.createGMLWorkspace( baseModel, null );
 
     final URL additiveModel = getClass().getResource( "resources/additive.gml" );
-    GMLWorkspace additiveWorkspace = GmlSerializer.createGMLWorkspace( additiveModel, null );
+    final GMLWorkspace additiveWorkspace = GmlSerializer.createGMLWorkspace( additiveModel, null );
 
     final HashMap<String, String> IDBase = collectIDs( baseWorkspace );
     final HashMap<String, String> IDAdditive = collectIDs( additiveWorkspace );
@@ -111,12 +99,12 @@ public class CombineModells extends TestCase
 
   private HashMap<String, String> changeIDs( final HashMap<String, String> mapChange, final GMLWorkspace additiveWorkspace, final HashMap<String, String> mapAdditive, final HashMap mapBase )
   {
-    HashMap<String, String> IDMap = new HashMap<String, String>();
+    final HashMap<String, String> IDMap = new HashMap<String, String>();
     final Collection<String> ChangeIDCollection = mapChange.values();
-    for( Iterator iter = ChangeIDCollection.iterator(); iter.hasNext(); )
+    for( final Object element : ChangeIDCollection )
     {
-      String oldID = (String) iter.next();
-      String FTName = additiveWorkspace.getFeature( oldID ).getFeatureType().getQName().getLocalPart();
+      final String oldID = (String) element;
+      final String FTName = additiveWorkspace.getFeature( oldID ).getFeatureType().getQName().getLocalPart();
       int i = 1;
       String newID = FTName + Integer.toString( i );
       while( mapAdditive.containsValue( newID ) || mapBase.containsValue( newID ) || IDMap.containsValue( newID ) )
@@ -129,12 +117,12 @@ public class CombineModells extends TestCase
     return IDMap;
   }
 
-  private HashMap<String, String> getIDsToChange( HashMap<String, String> base, HashMap<String, String> additive )
+  private HashMap<String, String> getIDsToChange( final HashMap<String, String> base, final HashMap<String, String> additive )
   {
-    HashMap<String, String> equalIDs = new HashMap<String, String>();
+    final HashMap<String, String> equalIDs = new HashMap<String, String>();
     final Collection collection = additive.values();
 
-    for( Iterator iter = collection.iterator(); iter.hasNext(); )
+    for( final Iterator iter = collection.iterator(); iter.hasNext(); )
     {
       final String checkID = (String) iter.next();
       if( base.containsValue( checkID ) )
@@ -145,9 +133,9 @@ public class CombineModells extends TestCase
     return equalIDs;
   }
 
-  private void getNewID( GMLWorkspace baseWorkspace, HashMap<String, String> mapBase, GMLWorkspace additiveWorkspace, HashMap<String, String> mapAdditive, String checkID )
+  private void getNewID( final GMLWorkspace baseWorkspace, final HashMap<String, String> mapBase, final GMLWorkspace additiveWorkspace, final HashMap<String, String> mapAdditive, String checkID )
   {
-    String FTName = (additiveWorkspace.getFeature( checkID )).getFeatureType().getQName().getLocalPart();
+    final String FTName = (additiveWorkspace.getFeature( checkID )).getFeatureType().getQName().getLocalPart();
     int i = 1;
     while( mapBase.containsKey( checkID ) || mapAdditive.containsKey( checkID ) )
     {
@@ -158,14 +146,14 @@ public class CombineModells extends TestCase
 
   private HashMap<String, String> collectIDs( final GMLWorkspace workspace )
   {
-    HashMap<String, String> IDMap = new HashMap<String, String>();
+    final HashMap<String, String> IDMap = new HashMap<String, String>();
     final Feature RootFE = workspace.getRootFeature();
     final FidCollectorVisitor IDVisitor = new FidCollectorVisitor();
     workspace.accept( IDVisitor, RootFE, 1 );
-    String[] results = IDVisitor.getResults( true );
-    for( int i = 0; i < results.length; i++ )
+    final String[] results = IDVisitor.getResults( true );
+    for( final String element : results )
     {
-      IDMap.put( results[i], results[i] );
+      IDMap.put( element, element );
     }
     return IDMap;
   }

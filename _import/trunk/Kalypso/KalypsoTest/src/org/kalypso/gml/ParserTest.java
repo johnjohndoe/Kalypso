@@ -48,12 +48,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -61,24 +56,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ParserTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown( ) throws Exception
-  {
-    KalypsoTest.release();
-  }
-
   public void ftestload( ) throws Exception
   {
     try
@@ -100,7 +77,7 @@ public class ParserTest extends TestCase
       GmlSerializer.serializeWorkspace( writer2, workspace2 );
       IOUtils.closeQuietly( writer2 );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;

@@ -37,38 +37,18 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 
 /**
- * 
  * Test of the DiffUtilities
  * 
  * @author doemming
  */
 public class DiffUtilitiesTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp() throws Exception
-  {
-    KalypsoTest.init();
-  }
-  
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown( ) throws Exception
-  {
-    KalypsoTest.release();
-  }
-
-  public void testZipDiff() throws Exception
+  public void testZipDiff( ) throws Exception
   {
     try
     {
@@ -93,12 +73,12 @@ public class DiffUtilitiesTest extends TestCase
       final InputStream resourceAsStream = getClass().getResourceAsStream( "resources/difflog.txt" );
       final StringWriter writer = new StringWriter();
       IOUtils.copy( resourceAsStream, writer );
-      final String test = buffer.toString().replaceAll("\\s","");
-      
-      final String goal = writer.toString().replaceAll("\\s","");
-      assertEquals( test, goal);
+      final String test = buffer.toString().replaceAll( "\\s", "" );
+
+      final String goal = writer.toString().replaceAll( "\\s", "" );
+      assertEquals( test, goal );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;

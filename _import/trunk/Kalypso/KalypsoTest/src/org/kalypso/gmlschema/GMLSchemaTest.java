@@ -54,10 +54,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class GMLSchemaTest extends TestCase
 {
-  // public static final String NS_GML2 = "http://www.opengis.net/gml";
-
-  // private File m_tmpFileCache;
-
   /**
    * @see TestCase#setUp()
    */
@@ -133,12 +129,12 @@ public class GMLSchemaTest extends TestCase
     try
     {
       loadAndTestSchema( // 
-          // getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
-          , false );
+      // getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
+      getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
+      getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
+      , false );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;
@@ -150,11 +146,11 @@ public class GMLSchemaTest extends TestCase
     try
     {
       loadAndTestSchema( // 
-          getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
-          , false );
+      getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
+      getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
+      , false );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;
@@ -179,7 +175,7 @@ public class GMLSchemaTest extends TestCase
   // }
   // }
 
-  public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
+  public static void loadAndTestSchema( final URL schemaLocationURL, final URL testResource, final boolean writeCompareFile ) throws Exception
   {
     System.out.println( " test " + schemaLocationURL.toString() );
     final IGMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( null, schemaLocationURL );

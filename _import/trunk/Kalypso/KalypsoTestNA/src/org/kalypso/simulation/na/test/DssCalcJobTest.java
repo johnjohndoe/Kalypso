@@ -44,7 +44,6 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.dss.calcjob.KalypsoDssCalcJob;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -54,15 +53,6 @@ import org.kalypso.simulation.core.SimulationException;
 
 public class DssCalcJobTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
   public void testKollau( ) throws SimulationException
   {
 
@@ -71,7 +61,7 @@ public class DssCalcJobTest extends TestCase
       kollau();
       // kollauOptimize();
     }
-    catch( SimulationException e )
+    catch( final SimulationException e )
     {
       e.printStackTrace();
       throw e;
@@ -80,7 +70,7 @@ public class DssCalcJobTest extends TestCase
 
   private File getTmpDir( )
   {
-    File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\temp" ) );
+    final File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\temp" ) );
     file.mkdirs();
     return file;
   }
@@ -89,7 +79,7 @@ public class DssCalcJobTest extends TestCase
   {
     final File tmp = getTmpDir();
     System.out.println( "Berechnungsverzeichnis: " + tmp.getPath() );
-    
+
     final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
       /**
@@ -98,7 +88,7 @@ public class DssCalcJobTest extends TestCase
       public Object getInputForID( String id )
       {
         Class clazz = getClass();
-        
+
         if( "metadata".equals( id ) )
           return clazz.getResource( "dss/.calculation" );
         if( "measureSealing".equals( id ) )
@@ -193,7 +183,7 @@ public class DssCalcJobTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
        */
-      public void addResult( String id, File file )
+      public void addResult( final String id, final File file )
       {
         System.out.println( "ID" + id + " File:" + file.getAbsolutePath() );
       }
@@ -223,7 +213,7 @@ public class DssCalcJobTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#setProgress(int)
        */
-      public void setProgress( int progress )
+      public void setProgress( final int progress )
       {
         //
       }
@@ -247,12 +237,12 @@ public class DssCalcJobTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#setMessage(java.lang.String)
        */
-      public void setMessage( String message )
+      public void setMessage( final String message )
       {
         System.out.println( message + "\n" );
       }
 
-      public void setFinishInfo( int status, String text )
+      public void setFinishInfo( final int status, final String text )
       {
         // TODO Auto-generated method stub
 

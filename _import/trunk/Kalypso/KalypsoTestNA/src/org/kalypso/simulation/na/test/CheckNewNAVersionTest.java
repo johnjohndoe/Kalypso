@@ -52,7 +52,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.commons.diff.DiffLogger;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.diff.IDiffComparator;
@@ -77,11 +76,11 @@ public class CheckNewNAVersionTest extends TestCase
 
   private final static String FILENAME_CONTROL = BASE_DIR.concat( "//start//we_nat_start.txt" );
 
-  private ArrayList<String> m_nodes = new ArrayList<String>();
+  private final ArrayList<String> m_nodes = new ArrayList<String>();
 
-  private ArrayList<String> m_catchments = new ArrayList<String>();
+  private final ArrayList<String> m_catchments = new ArrayList<String>();
 
-  private ArrayList<String> m_channels = new ArrayList<String>();
+  private final ArrayList<String> m_channels = new ArrayList<String>();
 
   final String DELIMITTER = "9999";
 
@@ -100,40 +99,31 @@ public class CheckNewNAVersionTest extends TestCase
     }
   };
 
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
   public void testResults( ) throws Exception
   {
     readControl();
-//    boolean fileChecked = false;
+// boolean fileChecked = false;
     final StringBuffer sb = new StringBuffer();
-    DiffLogger diffLogger = new DiffLogger( logger );
-    File dirOld = new File( BASE_DIR_OLD );
-    File dirNew = new File( BASE_DIR_NEW );
+    final DiffLogger diffLogger = new DiffLogger( logger );
+    final File dirOld = new File( BASE_DIR_OLD );
+    final File dirNew = new File( BASE_DIR_NEW );
     sb.append( "\n\n######### File Check Summery #########\n" );
     sb.append( "-- BaseDir1: " + BASE_DIR_OLD + " <---> BaseDir2: " + BASE_DIR_NEW.concat( " --\n" ) );
-    String[] oldFiles = dirOld.list();
-    String[] newFiles = dirNew.list();
+    final String[] oldFiles = dirOld.list();
+    final String[] newFiles = dirNew.list();
     if( oldFiles.length == newFiles.length && oldFiles.length > 0 )
     {
       sb.append( "-- " + oldFiles.length + " Files to compare --\n" );
 
       for( int i = 0; i < oldFiles.length; i++ )
       {
-        String oldFileName = oldFiles[i];
-        String newFileName = newFiles[i];
+        final String oldFileName = oldFiles[i];
+        final String newFileName = newFiles[i];
         sb.append( "old: " + oldFileName + " new: " + newFileName );
         if( oldFileName.equals( newFileName ) )
         {
-          File oldFile = new File( dirOld.getAbsolutePath().concat( "//".concat( oldFileName ) ) );
-          File newFile = new File( dirNew.getAbsolutePath().concat( "//".concat( newFileName ) ) );
+          final File oldFile = new File( dirOld.getAbsolutePath().concat( "//".concat( oldFileName ) ) );
+          final File newFile = new File( dirNew.getAbsolutePath().concat( "//".concat( newFileName ) ) );
           diffLogger.log( IDiffComparator.DIFF_INFO, "Datei (1) '" + oldFileName + "' erstellt am: " + new Date( oldFile.lastModified() ) );
           diffLogger.log( IDiffComparator.DIFF_INFO, "Datei (2) '" + newFileName + "' erstellt am: " + new Date( newFile.lastModified() ) );
           // fill objects
@@ -155,9 +145,9 @@ public class CheckNewNAVersionTest extends TestCase
       System.out.println( "Die Anzahl der Dateien ist nicht identisch!\nAnzahl(1): " + oldFiles.length + "\tAnzahl(2): " + newFiles.length );
       System.exit( 0 );
     }
-    String fileStats = sb.toString();
+    final String fileStats = sb.toString();
     System.out.print( fileStats );
-    FileWriter diffWriter = new FileWriter( BASE_DIR.concat( "\\diff.res" ) );
+    final FileWriter diffWriter = new FileWriter( BASE_DIR.concat( "\\diff.res" ) );
     diffWriter.write( fileStats.concat( buffer.toString() ) );
     diffWriter.close();
   }
@@ -168,7 +158,7 @@ public class CheckNewNAVersionTest extends TestCase
     try
     {
       url = new File( FILENAME_CONTROL ).toURL();
-      LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
+      final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
       // skip first line (Timestep dt) in control file
       String line = reader.readLine();
       int i = 0;
@@ -196,11 +186,11 @@ public class CheckNewNAVersionTest extends TestCase
       }
 
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }

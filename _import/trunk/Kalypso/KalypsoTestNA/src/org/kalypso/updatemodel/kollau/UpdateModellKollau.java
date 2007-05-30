@@ -50,7 +50,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.convert.update.WeisseElsterConstants;
@@ -92,22 +91,13 @@ public class UpdateModellKollau extends TestCase
 
   public final static String KollauPREFIX_LINK_GEBN_REPOSITORY = "project:/.model/Zeitreihen/Niederschlag/";
 
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
   public void testUpdateKollau( ) throws Exception
   {
-    UpdateModellKollau modell2 = new UpdateModellKollau();
+    final UpdateModellKollau modell2 = new UpdateModellKollau();
     modell2.updateIt();
   }
 
-  public UpdateModellKollau( URL modellURL ) throws Exception
+  public UpdateModellKollau( final URL modellURL ) throws Exception
   {
     // m_modellURL = modellURL;
   }
@@ -140,36 +130,35 @@ public class UpdateModellKollau extends TestCase
     final Feature[] rhbChannelFEs = workspace.getFeatures( RHBchannelFT );
     updateRHBCHannels( rhbChannelFEs );
 
-    File tmpDir = new File( "C:\\tmp\\ModellUpdate" );
-    File file = File.createTempFile( "modellUpdate", ".gml", tmpDir );
+    final File tmpDir = new File( "C:\\tmp\\ModellUpdate" );
+    final File file = File.createTempFile( "modellUpdate", ".gml", tmpDir );
     final OutputStreamWriter writer = new FileWriter( file );
     GmlSerializer.serializeWorkspace( writer, workspace );
     writer.close();
     System.out.println( " updated model is written to " + file.getCanonicalPath() );
   }
 
-  private void updateRHBCHannels( Feature[] features ) throws SensorException
+  private void updateRHBCHannels( final Feature[] features ) throws SensorException
   {
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
-      Double sv = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP )) * 1000000;
-      Double vmax = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP )) * 1000000;
-      Double vmin = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP )) * 1000000;
-      IObservation observation = (IObservation) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP );
+      final Double sv = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP )) * 1000000;
+      final Double vmax = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP )) * 1000000;
+      final Double vmin = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP )) * 1000000;
+      final IObservation observation = (IObservation) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP );
 
-      IAxis[] axisList = observation.getAxisList();
-      IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_NORMNULL );
-      IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_VOLUME );
-      IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF );
-      ITuppleModel values = observation.getValues( null );
-      int count = values.getCount();
+      final IAxis[] axisList = observation.getAxisList();
+      final IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_NORMNULL );
+      final IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_VOLUME );
+      final IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF );
+      final ITuppleModel values = observation.getValues( null );
+      final int count = values.getCount();
       final Object[][] newValues = new Object[count][axisList.length];
       for( int row = 0; row < count; row++ )
       {
-        Double w = (Double) values.getElement( row, waterTableAxis );
-        Double v = ((Double) values.getElement( row, volumeAxis )) * 1000000;
-        Double q = (Double) values.getElement( row, dischargeAxis );
+        final Double w = (Double) values.getElement( row, waterTableAxis );
+        final Double v = ((Double) values.getElement( row, volumeAxis )) * 1000000;
+        final Double q = (Double) values.getElement( row, dischargeAxis );
         newValues[row][0] = w;
         newValues[row][1] = v;
         newValues[row][2] = q;
@@ -184,74 +173,71 @@ public class UpdateModellKollau extends TestCase
     }
   }
 
-  private static void updateCatchments( Feature[] features ) throws Exception
+  private static void updateCatchments( final Feature[] features ) throws Exception
   {
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
 
     }
   }
 
   // int asciiID = Integer.parseInt( (String)idProp.getValue() );
-  private static void updateNiederschlagZR( Feature[] features ) throws Exception
+  private static void updateNiederschlagZR( final Feature[] features ) throws Exception
   {
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
-
       // Niederschlag Lokale Zeitreihen setzen
-      Object idObj = feature.getProperty( "inum" ); // inum is not used any more in the schema
-      int id = Integer.parseInt( idObj.toString() );
+      final Object idObj = feature.getProperty( "inum" ); // inum is not used any more in the schema
+      final int id = Integer.parseInt( idObj.toString() );
       // Station wasserwerk.kz
       if( (id >= 100 && id <= 106) || (id >= 200 && id <= 202) || id == 408 || id == 410 || id == 504 )
       {
-        TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "wasserwerk.zml" );
+        final TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "wasserwerk.zml" );
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-        TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
         setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
-        TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "wasserwerk.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
       else if( id == 601 || (id >= 603 && id <= 608) || (id >= 619 && id <= 620) )
       {
-        TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Desy.zml" );
+        final TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Desy.zml" );
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-        TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
         setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
-        TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Desy.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
 
       else if( (id >= 400 && id <= 407) || id == 503 || id == 501 || (id >= 609 && id <= 618) )
       {
-        TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "DB.zml" );
+        final TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "DB.zml" );
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-        TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
         setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
-        TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "DB.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
 
       else if( id == 107 || id == 301 || id == 409 || id == 500 || id == 505 || (id >= 621 && id <= 623) || (id >= 700 && id <= 704) || (id >= 708 && id <= 730) || id == 900 )
       {
-        TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Bauhof.zml" );
+        final TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Bauhof.zml" );
         setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-        TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
         setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
-        TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
+        final TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
     }
   }
 
-  private static void updateGeometries( Feature modelFeature, String shapeDir ) throws GmlSerializeException
+  private static void updateGeometries( final Feature modelFeature, final String shapeDir ) throws GmlSerializeException
   {
     // load ShapeFile
-    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
+    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Subcatchments", cSystem );
     final List catchmentFeatures = (List) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
@@ -265,49 +251,48 @@ public class UpdateModellKollau extends TestCase
     // insertGeometries
 
     System.out.println( "inserting geometries: catchments" );
-    Feature catchmentCollection = (Feature) modelFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    List catchmentList = (List) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final Feature catchmentCollection = (Feature) modelFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
+    final List catchmentList = (List) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
     copyProperties( catchmentFeatures, "GEOM", "SUBC_NR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: channels" );
-    Feature channelCollection = (Feature) modelFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
-    List channelList = (List) channelCollection.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
+    final Feature channelCollection = (Feature) modelFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
+    final List channelList = (List) channelCollection.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
     copyProperties( channelFeatures, "GEOM", "STRAND_NR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: nodes" );
-    Feature nodeCollection = (Feature) modelFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
-    List nodeList = (List) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+    final Feature nodeCollection = (Feature) modelFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+    final List nodeList = (List) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
     copyProperties( nodeFeatures, "GEOM", "NODE_NR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "num" );
 
   }
 
-  private static void copyProperties( final List catchmentFeatures, String orgGeomPropName, String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
+  private static void copyProperties( final List catchmentFeatures, final String orgGeomPropName, final String orgIdPropName, final Feature[] destFE, final String destGeomPropName, final String destIdPropName )
   {
-    HashMap<String, Feature> orgHash = new HashMap<String, Feature>();
-    for( Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
+    final HashMap<String, Feature> orgHash = new HashMap<String, Feature>();
+    for( final Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
     {
       final Feature f = (Feature) iter.next();
-      String id = f.getProperty( orgIdPropName ).toString();
+      final String id = f.getProperty( orgIdPropName ).toString();
       orgHash.put( id, f );
     }
-    for( int i = 0; i < destFE.length; i++ )
+    for( final Feature destFeature : destFE )
     {
-      Feature destFeature = destFE[i];
-      String id = destFeature.getProperty( destIdPropName ).toString();
+      final String id = destFeature.getProperty( destIdPropName ).toString();
       // System.out.println("processing id=" + id);
-      Feature orgFeature = orgHash.get( id );
+      final Feature orgFeature = orgHash.get( id );
       if( orgFeature != null )
       {
-        Object value = orgFeature.getProperty( orgGeomPropName );
+        final Object value = orgFeature.getProperty( orgGeomPropName );
         if( value == null )
           System.out.println( "copyvalue is null: id=" + id );
         // FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
         destFeature.setProperty( destGeomPropName, value );
-        Object GEOMProperty = destFeature.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
+        final Object GEOMProperty = destFeature.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         if( GEOMProperty instanceof GM_Surface )
         {
 
-          Long area = new Long( (long) ((GM_Surface) value).getArea() );
+          final Long area = new Long( (long) ((GM_Surface) value).getArea() );
           // FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", area );
           destFeature.setProperty( NaModelConstants.NA_MODEL_FLAECH_PROP, area );
         }
@@ -318,52 +303,47 @@ public class UpdateModellKollau extends TestCase
     }
   }
 
-  private static void updateGebNiederschlagZR( Feature[] features ) throws Exception
+  private static void updateGebNiederschlagZR( final Feature[] features ) throws Exception
   {
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
-
       // Niederschlag Lokale Gebietsniederschlagszeitreihen setzen
-      Object idObj = feature.getProperty( "inum" );
-      int id = Integer.parseInt( idObj.toString() );
-      TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_GEBN_LOKAL + "Niederschlag_Catchment" + id + ".zml" );
+      final Object idObj = feature.getProperty( "inum" );
+      final int id = Integer.parseInt( idObj.toString() );
+      final TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_GEBN_LOKAL + "Niederschlag_Catchment" + id + ".zml" );
       setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-      TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_GEBN_REPOSITORY + "Niederschlag_Catchment" + id + ".zml" );
+      final TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_GEBN_REPOSITORY + "Niederschlag_Catchment" + id + ".zml" );
       setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepository );
     }
   }
 
-  private static void updateLZNiederschlagZR( Feature[] features ) throws Exception
+  private static void updateLZNiederschlagZR( final Feature[] features ) throws Exception
   {
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
-
       // Niederschlag Lokale Langzeitniederschlagszeitreihen setzen
-      TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Fuhlsbuettel.zml" );
+      final TimeseriesLinkType linkNiederschlagZR = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_LOKAL + "Fuhlsbuettel.zml" );
       setTSLink( feature, "niederschlagZR", linkNiederschlagZR );
-      TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Fuhlsbuettel.zml" );
+      final TimeseriesLinkType linkNiederschlagZRRepositoryVorhersage = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Fuhlsbuettel.zml" );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkNiederschlagZRRepositoryVorhersage );
-      TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Fuhlsbuettel.zml" );
+      final TimeseriesLinkType linkNiederschlagZRRepository = NAZMLGenerator.generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Fuhlsbuettel.zml" );
       setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
     }
   }
 
-  private static void updateNodes( Feature[] features ) throws Exception
+  private static void updateNodes( final Feature[] features ) throws Exception
   {
     // lokale ZR werden fuer alle gesetzt.
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature fe : features )
     {
-      final Feature fe = features[i];
       // pegel lokal
-      TimeseriesLinkType linkPegel = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml" );
+      final TimeseriesLinkType linkPegel = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml" );
       setTSLink( fe, "pegelZR", linkPegel );
       // berechnet
-      TimeseriesLinkType linkBerechnet = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml" );
+      final TimeseriesLinkType linkBerechnet = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml" );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
       setTSLink( fe, "pegelBerechnetZRRepository", null );
       setTSLink( fe, "zuflussZR", null );
@@ -375,7 +355,7 @@ public class UpdateModellKollau extends TestCase
     }
   }
 
-  private static void setTSLink( Feature fe, String propName, TimeseriesLinkType tsLink )
+  private static void setTSLink( final Feature fe, final String propName, final TimeseriesLinkType tsLink )
   {
     // fe.setProperty( FeatureFactory.createFeatureProperty( propName, tsLink ) );
     fe.setProperty( propName, tsLink );

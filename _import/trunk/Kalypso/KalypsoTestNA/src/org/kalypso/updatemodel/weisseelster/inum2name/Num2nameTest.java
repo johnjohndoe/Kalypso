@@ -37,7 +37,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -49,16 +48,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class Num2nameTest extends TestCase
 {
-
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
   public void testUpdate( ) throws Exception
   {
     final URL modellURL = getClass().getResource( "resource/modell.gml" );
@@ -78,12 +67,11 @@ public class Num2nameTest extends TestCase
    * @param propName
    * @param featureType
    */
-  private void updateName( GMLWorkspace workspace, String propName, IFeatureType featureType )
+  private void updateName( final GMLWorkspace workspace, final String propName, final IFeatureType featureType )
   {
     final Feature[] features = workspace.getFeatures( featureType );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
       final Object value = feature.getProperty( propName );
       if( value != null )
       {

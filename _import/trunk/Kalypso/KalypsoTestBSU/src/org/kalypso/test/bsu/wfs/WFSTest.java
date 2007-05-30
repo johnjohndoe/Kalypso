@@ -38,7 +38,6 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.gmlschema.GMLSchemaTest;
 import org.kalypso.ogc.wfs.IWFSCapabilities;
 import org.kalypso.ogc.wfs.IWFSLayer;
@@ -55,18 +54,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class WFSTest extends TestCase
 {
   final File testBase = new File( "F:/eclipse3.1/testBase" );
-
-  /**
-   * @throws TypeRegistryException
-   * @throws JAXBException
-   * @throws IOException
-   */
-  @Override
-  public void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-
-  }
 
   /**
    *  
@@ -91,15 +78,14 @@ public class WFSTest extends TestCase
     // ignoreFT.add( "DIP_lang_SpezialNutzung_lang" );
     // ignoreFT.add( "stadtteile" );
     // ignoreFT.add( "umriss" );
-     ignoreFT.add( new QName("wasserschutzgebiete" ));
+    ignoreFT.add( new QName( "wasserschutzgebiete" ) );
     // ignoreFT.add( "EZG_Tarpenbek" );
     // ignoreFT.add( "sip_nord" );
     // ignoreFT.add( "CDD2947D-EE17-4098-A4D0-107E9433173F" );
     // ignoreFT.add( "fisbo_bodkopf" );
 
-     
-      ignoreFT.add(new QName( "bezirke" )); // getFeature schliesst nicht ab
-       ignoreFT.add(new QName( "MST_ezg_kollau_tarpenbek" ));// geht nicht
+    ignoreFT.add( new QName( "bezirke" ) ); // getFeature schliesst nicht ab
+    ignoreFT.add( new QName( "MST_ezg_kollau_tarpenbek" ) );// geht nicht
     // ignoreFT.add( "gewaesserguete99_flaechen" );
     // ignoreFT.add( "ortsteile" );
     // ignoreFT.add( "DIP_lang_scheinblock_lang" );
@@ -113,7 +99,7 @@ public class WFSTest extends TestCase
     // vermutlich < oder > in einem String-element
     ignoreFT.add( new QName( "855E4B54-7392-480D-8079-2DF593498C61" ) );
     ignoreFT.add( new QName( "50977EBA-D83C-4561-A9DF-38EE609F7BA6" ) ); // schutzgebiete
-    
+
     // 
     ignoreFT.add( new QName( "gruenplan_2006" ) );
     ignoreFT.add( new QName( "WSG_in_ezg_kollau_tarpenbek" ) );
@@ -121,7 +107,6 @@ public class WFSTest extends TestCase
     final String baseURLAsString = "http://bsu-uio:8081/deegreewfs/wfs";
 
     tryToCreateWorkspaces( baseURLAsString, ignoreFT );
-  
 
   }
 
@@ -137,7 +122,7 @@ public class WFSTest extends TestCase
     tryToCreateWorkspaces( baseURLAsString, ignoreFT );
   }
 
-  private void tryToCreateWorkspaces( String baseURLAsString, List<QName> ignoreFT )
+  private void tryToCreateWorkspaces( final String baseURLAsString, final List<QName> ignoreFT )
   {
     System.out.println( "test: " + baseURLAsString );
     final StringBuffer errors = new StringBuffer();
@@ -148,9 +133,8 @@ public class WFSTest extends TestCase
       final String maxFeaturesAsString = "3";
       final IWFSCapabilities capabilites = WFSUtilities.getCapabilites( baseURL );
       final IWFSLayer[] featureTypes = capabilites.getFeatureTypes();
-      for( int i = 0; i < featureTypes.length; i++ )
+      for( final IWFSLayer ft : featureTypes )
       {
-        final IWFSLayer ft = featureTypes[i];
         final QName featureTypeQName = ft.getQName();
         System.out.println( "Teste TypeName: " + featureTypeQName );
         if( ignoreFT.contains( featureTypeQName ) )
@@ -181,13 +165,13 @@ public class WFSTest extends TestCase
           // System.out.println( ".. workspace erfolgreich geladen" );
           final Feature rootFeature = workspace.getRootFeature();
           final FeatureList property = (FeatureList) rootFeature.getProperty( "featureMember" );
-          int size = property.size();
+          final int size = property.size();
           if( size != 3 )
             errors.append( featureTypeQName ).append( ": Warnung nur " ).append( size ).append( " Feature im" + "Workspace " ).append( "\n" );
           else
             ok.append( featureTypeQName ).append( "\n" );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           System.out.println( "Fehler bei Typename: " + featureTypeQName );
           e.printStackTrace();
@@ -198,7 +182,7 @@ public class WFSTest extends TestCase
       }
       System.out.println( "fertig" );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

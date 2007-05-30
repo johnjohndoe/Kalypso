@@ -36,7 +36,6 @@ package org.kalypso.test.kriging;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.ant.KrigingTask;
 
 /**
@@ -48,24 +47,6 @@ import org.kalypso.ant.KrigingTask;
  */
 public class KrigingTaskTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-
   public void testExecute( )
   {
     final KrigingTask mappingKriging = new KrigingTask();
@@ -86,7 +67,7 @@ public class KrigingTaskTest extends TestCase
     mappingKriging.setSourceGMLIDLinkProperty( "DWDID" );
     mappingKriging.setSourceGMLObservationLinkProperty( "N" );
     // setting outputs
-    String hrefResult = "C:\\TMP\\mappingOut.gml";
+    final String hrefResult = "C:\\TMP\\mappingOut.gml";
     mappingKriging.setHrefGeneratesGml( hrefResult );
 
     mappingKriging.setTimeStepMinutes( 15 );
