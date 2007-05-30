@@ -84,24 +84,24 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbolizer, Marshallable
 {
-  private Graphic graphic = null;
+  private Graphic m_graphic = null;
 
   /**
    * Creates a new PointSymbolizer_Impl object.
    */
-  public PointSymbolizer_Impl()
+  public PointSymbolizer_Impl( )
   {
     super();
-    Stroke stroke = new Stroke_Impl();
-    Fill fill = new Fill_Impl();
-    Mark mark = new Mark_Impl( "square", stroke, fill );
-    graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
+    final Stroke stroke = new Stroke_Impl();
+    final Fill fill = new Fill_Impl();
+    final Mark mark = new Mark_Impl( "square", stroke, fill );
+    m_graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
   }
 
   /**
    * constructor initializing the class with the <PointSymbolizer>
    */
-  PointSymbolizer_Impl( Graphic graphic, Geometry geometry, double min, double max, UOM uom )
+  PointSymbolizer_Impl( Graphic graphic, final Geometry geometry, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
 
@@ -131,20 +131,20 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * 
    * @return the graphic of the point
    */
-  public Graphic getGraphic()
+  public Graphic getGraphic( )
   {
-    return graphic;
+    return m_graphic;
   }
 
   /**
    * sets the <Graphic>
    * 
    * @param graphic
-   *          the graphic of the point
+   *            the graphic of the point
    */
-  public void setGraphic( Graphic graphic )
+  public void setGraphic( final Graphic graphic )
   {
-    this.graphic = graphic;
+    this.m_graphic = graphic;
   }
 
   /**
@@ -152,19 +152,20 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * 
    * @return xml representation of the PointSymbolizer
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<PointSymbolizer>" );
+    final Geometry geometry = getGeometry();
     if( geometry != null )
     {
-      sb.append( ( (Marshallable)geometry ).exportAsXML() );
+      sb.append( ((Marshallable) geometry).exportAsXML() );
     }
-    if( graphic != null )
+    if( m_graphic != null )
     {
-      sb.append( ( (Marshallable)graphic ).exportAsXML() );
+      sb.append( ((Marshallable) m_graphic).exportAsXML() );
     }
     sb.append( "</PointSymbolizer>" );
 

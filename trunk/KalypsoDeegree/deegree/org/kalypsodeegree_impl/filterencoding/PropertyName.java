@@ -60,15 +60,19 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.w3c.dom.Element;
 
 /**
@@ -80,43 +84,53 @@ import org.w3c.dom.Element;
 public class PropertyName extends Expression_Impl
 {
   /** The PropertyName's value (as an XPATH expression). */
-  private QName m_value;
+  private final GMLXPath m_path;
+
+  public PropertyName( final String xpath, final NamespaceContext namespaceContext )
+  {
+    this( new GMLXPath( xpath, namespaceContext ) );
+  }
 
   /**
    * Constructs a new PropertyName.
+   * 
+   * @deprecated Use either {@link #PropertyName(QName)} ord {@link #PropertyName(String, NamespaceContext)} instead.
    */
-  public PropertyName( String value )
+  @Deprecated
+  public PropertyName( final String xpath )
   {
-    m_id = ExpressionDefines.PROPERTYNAME;
-    if( value.startsWith( "/" ) )
-      value = value.substring( 1 );
-    final int i = value.indexOf( ":" );
-    if( i > 0 )
-      value = value.substring( i + 1 );
-    setValue( new QName( value ) );
+    this( xpath, null );
   }
 
-  public PropertyName( QName value )
+  public PropertyName( final QName qname )
+  {
+    this( new GMLXPath( qname ) );
+  }
+
+  public PropertyName( final GMLXPath path )
   {
     m_id = ExpressionDefines.PROPERTYNAME;
-    setValue( value );
+
+    m_path = path;
   }
 
   /**
    * Given a DOM-fragment, a corresponding Expression-object is built.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Expression buildFromDOM( Element element ) throws FilterConstructionException
+  public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
     // check if root element's name equals 'PropertyName'
     if( !element.getLocalName().toLowerCase().equals( "propertyname" ) )
     {
       throw new FilterConstructionException( "Name of element does not equal 'PropertyName'!" );
     }
-    // XMLTools.getQNameValue("name", "namespace",element);
-    return new PropertyName( XMLTools.getValue( element ) );
+
+    final String elementValue = XMLTools.getValue( element );
+    final NamespaceContext namespaceContext = XMLUtilities.createNamespaceContext( element );
+    return new PropertyName( elementValue, namespaceContext );
   }
 
   /**
@@ -133,32 +147,17 @@ public class PropertyName extends Expression_Impl
    */
   public String getValue( )
   {
-    return m_value.getLocalPart();
-  }
-
-  /**
-   * Returns the PropertyName's value.
-   */
-  public QName getQValue( )
-  {
-    return m_value;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.filterencoding.PropertyName#getValue()
-   */
-  public void setValue( QName value )
-  {
-    m_value = value;
-
+    return m_path.toString();
   }
 
   /** Produces an indented XML representation of this object. */
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 200 );
-    sb.append( "<ogc:PropertyName>" ).append( m_value.getLocalPart() ).append( "</ogc:PropertyName>" );
+    final StringBuffer sb = new StringBuffer( 200 );
+    sb.append( "<ogc:PropertyName>" );
+    sb.append( m_path.toString() );
+    sb.append( "</ogc:PropertyName>" );
     return sb;
   }
 
@@ -171,51 +170,37 @@ public class PropertyName extends Expression_Impl
    * <p>
    * 
    * @param feature
-   *          that determines the value of this <tt>PropertyName</tt>
+   *            that determines the value of this <tt>PropertyName</tt>
    * @return the resulting value
    */
-  public Object evaluate( Feature feature )
+  public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
-    // TODO: get property via qname, we already have the qname
-    final Object object = getProperty( feature, m_value.getLocalPart() );
-
-    if( object == null )
+    try
     {
-      return null;
+      final Object object = GMLXPathUtilities.query( m_path, feature );
+      if( object == null )
+        return null;
+      else if( object instanceof Number )
+        return object;
+      else if( object instanceof GM_Object )
+        return object;
+      else if( object instanceof Boolean )
+        return object.toString();
+      return FilterElementLabelProvider.toString( object );
     }
-    else if( object instanceof Number )
+    catch( final GMLXPathException e )
     {
-      return object;
+      final String msg = String.format( "Bad path: %s (%s)", m_path, e.getLocalizedMessage() );
+      throw new FilterEvaluationException( msg );
     }
-    else if( object instanceof Boolean)
-    {
-      return object.toString();
-    }
-    return FilterElementLabelProvider.toString( object );
   }
 
   /**
-   * Method getProperty
-   * 
-   * @param feature
-   *          a Feature
-   * @param value
-   *          a String
-   * @return an Object
+   * @see java.lang.Object#toString()
    */
-  private Object getProperty( Feature feature, String value )
+  @Override
+  public String toString( )
   {
-    if( feature.getFeatureType().getProperty( value ) != null )
-    {
-      return feature.getProperty( value );
-    }
-    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( feature.getFeatureType(), value );
-    if( vpt != null )
-    {
-      return vpt.getVirtuelValue( feature, null );
-    }
-    return null;
-    // throw new FilterEvaluationException( "IFeatureType '" + feature.getFeatureType().getName()
-    // + "' has no property with name '" + value + "'!" );
+    return getValue();
   }
 }

@@ -103,7 +103,7 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @see OperationDefines
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GM_Object gmlGeometry )
+  public SpatialOperation( final int operatorId, final PropertyName propertyName, final GM_Object gmlGeometry )
   {
     super( operatorId );
     m_propertyName = propertyName;
@@ -115,7 +115,7 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @see OperationDefines Calvin added on 10/21/2003
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GM_Object gmlGeometry, double d )
+  public SpatialOperation( final int operatorId, final PropertyName propertyName, final GM_Object gmlGeometry, final double d )
   {
     super( operatorId );
     this.m_propertyName = propertyName;
@@ -138,17 +138,17 @@ public class SpatialOperation extends AbstractOperation
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name is a spatial operator
-    String name = element.getLocalName();
-    int operatorId = OperationDefines.getIdByName( name );
+    final String name = element.getLocalName();
+    final int operatorId = OperationDefines.getIdByName( name );
 
     // every spatial operation has exactly 2 elements
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
 
     if( (children.getLength() != 2) && (operatorId != OperationDefines.DWITHIN) )
     {
@@ -156,15 +156,15 @@ public class SpatialOperation extends AbstractOperation
     }
 
     // first element must be a PropertyName-Element
-    Element child1 = children.item( 0 );
-    Element child2 = children.item( 1 );
+    final Element child1 = children.item( 0 );
+    final Element child2 = children.item( 1 );
 
     if( !child1.getLocalName().toLowerCase().equals( "propertyname" ) )
     {
       throw new FilterConstructionException( "First element of every '" + name + "'-operation must be a " + "'PropertyName'-element!" );
     }
 
-    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( child1 );
+    final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( child1 );
     final String gmlVersion = "2.1.2";
     final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
 
@@ -173,7 +173,7 @@ public class SpatialOperation extends AbstractOperation
     {
       geometry = bindingToGM_ObjectAdapter.wrapFromNode( child2 );
     }
-    catch( Exception e1 )
+    catch( final Exception e1 )
     {
       e1.printStackTrace();
       throw new FilterConstructionException( "Unable to parse GMLGeometry definition in '" + name + "'-operation: " + e1.getMessage() );
@@ -195,7 +195,7 @@ public class SpatialOperation extends AbstractOperation
         throw new FilterConstructionException( "'" + name + "' requires exactly 3 elements!" );
       }
 
-      Element child3 = children.item( 2 );
+      final Element child3 = children.item( 2 );
 
       if( !child3.getLocalName().toLowerCase().equals( "distance" ) )
       {
@@ -211,7 +211,7 @@ public class SpatialOperation extends AbstractOperation
           throw new FilterConstructionException( "value of  Distance can't be negative:" + XMLTools.getValue( element ) );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         throw new FilterConstructionException( "value of  Distance is error:" + XMLTools.getValue( element ) );
       }
@@ -229,7 +229,7 @@ public class SpatialOperation extends AbstractOperation
       case OperationDefines.INTERSECTS:
       case OperationDefines.WITHIN:
       case OperationDefines.CONTAINS:
-      // calvin added on 10/21/2003
+        // calvin added on 10/21/2003
       case OperationDefines.DWITHIN:
         // every GMLGeometry is allowed as Literal-argument here
         break;
@@ -256,11 +256,11 @@ public class SpatialOperation extends AbstractOperation
    * @param feature
    * @return the property as a <tt>GM_Object</tt> -object.
    * @throws FilterEvaluationException
-   *           if the PropertyName does not denote a GM_Object
+   *             if the PropertyName does not denote a GM_Object
    */
-  public GM_Object getGeometryProperty( Feature feature ) throws FilterEvaluationException
+  public GM_Object getGeometryProperty( final Feature feature ) throws FilterEvaluationException
   {
-    Object o = feature.getProperty( m_propertyName.getQValue() );
+    final Object o = m_propertyName.evaluate( feature );
 
     if( o != null && !(o instanceof GM_Object) )
     {
@@ -276,7 +276,7 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @return the literal as a <tt>GM_Object</tt> -object.
    * @throws FilterEvaluationException
-   *           if the Literal can not be converted to a GM_Object
+   *             if the Literal can not be converted to a GM_Object
    */
   public GM_Object getGeometryLiteral( )
   {
@@ -321,7 +321,7 @@ public class SpatialOperation extends AbstractOperation
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 2000 );
+    final StringBuffer sb = new StringBuffer( 2000 );
     sb.append( "<ogc:" ).append( getOperatorName() );
     sb.append( " xmlns:gml='http://www.opengis.net/gml' " ).append( ">" );
     sb.append( m_propertyName.toXML() );
@@ -334,7 +334,7 @@ public class SpatialOperation extends AbstractOperation
     {
       element = objectToGMLBindingAdapter.wrapToElement( m_geometry );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -355,16 +355,16 @@ public class SpatialOperation extends AbstractOperation
    * <p>
    * 
    * @param feature
-   *          that determines the property values
+   *            that determines the property values
    * @return true, if the <tt>SpatialOperation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     boolean value = false;
 
-    GM_Object geom = getGeometryProperty( feature );
+    final GM_Object geom = getGeometryProperty( feature );
     if( geom == null )
       return false;
 
@@ -376,11 +376,11 @@ public class SpatialOperation extends AbstractOperation
       {
         try
         {
-          Geometry geomNotToIntersectWith = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomTestNotToIntersect = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomNotToIntersectWith = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomTestNotToIntersect = JTSAdapter.export( getGeometryProperty( feature ) );
           value = !geomNotToIntersectWith.intersects( geomTestNotToIntersect );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -395,11 +395,11 @@ public class SpatialOperation extends AbstractOperation
       {
         try
         {
-          Geometry geomWhoContains = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsContained = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomWhoContains = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomIsContained = JTSAdapter.export( getGeometryProperty( feature ) );
           value = geomWhoContains.contains( geomIsContained );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -409,11 +409,11 @@ public class SpatialOperation extends AbstractOperation
       {
         try
         {
-          Geometry geomWhoIntersects = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsIntersecting = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomWhoIntersects = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomIsIntersecting = JTSAdapter.export( getGeometryProperty( feature ) );
           value = geomWhoIntersects.intersects( geomIsIntersecting );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -424,16 +424,16 @@ public class SpatialOperation extends AbstractOperation
         value = getGeometryProperty( feature ).intersects( getGeometryLiteral() );
         break;
       }
-      // calvin added on 10/21/2003
+        // calvin added on 10/21/2003
       case OperationDefines.DWITHIN:
       {
         try
         {
-          Geometry geomWhomToBeWithIn = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsWithIn = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomWhomToBeWithIn = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomIsWithIn = JTSAdapter.export( getGeometryProperty( feature ) );
           value = geomWhomToBeWithIn.isWithinDistance( geomIsWithIn, getDistance() );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -442,11 +442,11 @@ public class SpatialOperation extends AbstractOperation
       case OperationDefines.CROSSES:
         try
         {
-          Geometry geomToCross = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomThatCrosses = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomToCross = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomThatCrosses = JTSAdapter.export( getGeometryProperty( feature ) );
           value = geomToCross.crosses( geomThatCrosses );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -454,22 +454,22 @@ public class SpatialOperation extends AbstractOperation
       case OperationDefines.OVERLAPS:
         try
         {
-          Geometry geomToOverlap = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomOverlapping = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomToOverlap = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomOverlapping = JTSAdapter.export( getGeometryProperty( feature ) );
           value = geomToOverlap.overlaps( geomOverlapping );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
       case OperationDefines.TOUCHES:
         try
         {
-          Geometry geomWhoTouches = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsTouched = JTSAdapter.export( getGeometryProperty( feature ) );
+          final Geometry geomWhoTouches = JTSAdapter.export( getGeometryLiteral() );
+          final Geometry geomIsTouched = JTSAdapter.export( getGeometryProperty( feature ) );
           value = geomWhoTouches.touches( geomIsTouched );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -486,24 +486,24 @@ public class SpatialOperation extends AbstractOperation
   // Document.
   // (August 2005)
 
-  public void setProperty( PropertyName name )
+  public void setProperty( final PropertyName name )
   {
     m_propertyName = name;
   }
 
-  public void setGeometry( GM_Object geom )
+  public void setGeometry( final GM_Object geom )
   {
     geometryLiteral = geom;
     m_geometry = geom;
   }
 
-  public void setOperatorId( int opearationId )
+  public void setOperatorId( final int opearationId )
   {
     m_operatorId = opearationId;
 
   }
 
-  public void setDistacnce( double distance )
+  public void setDistacnce( final double distance )
   {
     m_distance = distance;
   }
@@ -512,7 +512,7 @@ public class SpatialOperation extends AbstractOperation
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
+  public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
     fv.visit( this );
   }

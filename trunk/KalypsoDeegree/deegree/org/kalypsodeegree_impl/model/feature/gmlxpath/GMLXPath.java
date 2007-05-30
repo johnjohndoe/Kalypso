@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,10 +57,6 @@ public class GMLXPath
   /** Separates two segments in the feature-path */
   public final static char SEGMENT_SEPARATOR = '/';
 
-  public final static char TYPENAME_TAG_OPEN = '[';
-
-  public final static char TYPENAME_TAG_CLOSE = ']';
-
   /** Something between two '/' */
   private final GMLXPathSegment[] m_segments;
 
@@ -68,10 +67,28 @@ public class GMLXPath
 
   /**
    * creates a GMLXPath from a string
+   * 
+   * @param namespaceContext
+   *            The context against which qname's within the path are resolved. Not to implementors: the xpath does not
+   *            store a reference to this context and uses it only within the constructor.
+   * @deprecated Use {@link #GMLXPath(String, NamespaceContext)} instead.
    */
+  @Deprecated
   public GMLXPath( final String path )
   {
-    this( GMLXPathSegment.segmentsFromPath( path ) );
+    this( path, null );
+  }
+
+  /**
+   * creates a GMLXPath from a string
+   * 
+   * @param namespaceContext
+   *            The context against which qname's within the path are resolved. Not to implementors: the xpath does not
+   *            store a reference to this context and uses it only within the constructor.
+   */
+  public GMLXPath( final String path, final NamespaceContext namespaceContext )
+  {
+    this( GMLXPathSegment.segmentsFromPath( path, namespaceContext ) );
   }
 
   /**
@@ -82,9 +99,19 @@ public class GMLXPath
     this( GMLXPathSegment.segmentsFromFeature( feature ) );
   }
 
-  public GMLXPath( final GMLXPath parent, final String segment )
+  public GMLXPath( final GMLXPath parent, final QName segment )
   {
-    this( GMLXPathSegment.addSegments( parent.m_segments, new GMLXPathSegment( segment ) ) );
+    this( GMLXPathSegment.addSegments( parent.m_segments, GMLXPathSegment.forQName( segment ) ) );
+  }
+
+  public GMLXPath( final QName qname )
+  {
+    this( GMLXPathSegment.forQName( qname ) );
+  }
+
+  public GMLXPath( final GMLXPathSegment segment )
+  {
+    this( new GMLXPathSegment[] { segment } );
   }
 
   /**
@@ -109,7 +136,7 @@ public class GMLXPath
     return m_segments.length;
   }
 
-  public GMLXPathSegment getSegment( int index )
+  public GMLXPathSegment getSegment( final int index )
   {
     return m_segments[index];
   }

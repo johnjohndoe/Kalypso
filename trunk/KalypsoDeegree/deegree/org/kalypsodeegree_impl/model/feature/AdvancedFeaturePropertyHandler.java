@@ -109,9 +109,9 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
 
           final QName propertyQName = new QName( propertyNamespace, propertyLocalPart );
 
-          /*final */IPropertyType pt = featureType.getProperty( propertyQName );
-          //introducing virtual property
-          if(pt==null)
+          /* final */IPropertyType pt = featureType.getProperty( propertyQName );
+          // introducing virtual property
+          if( pt == null )
           {
             pt = featureType.getVirtualProperty( propertyQName );
           }
@@ -189,7 +189,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );
     if( handler != null )
       return handler.invalidateEnvelope( pt );
-    
+
     return DEFAULT_HANDLER.invalidateEnvelope( pt );
   }
 

@@ -70,7 +70,7 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
 
   private ComboViewer m_propViewer;
 
-  public PropertyIsNullOperationComposite( final Composite parent, final int style, PropertyIsNullOperation operation, final IFeatureType ft, final IErrorMessageReciever errorMessageReciever )
+  public PropertyIsNullOperationComposite( final Composite parent, final int style, final PropertyIsNullOperation operation, final IFeatureType ft, final IErrorMessageReciever errorMessageReciever )
   {
     super( parent, style, errorMessageReciever, ft );
     m_operation = operation;
@@ -96,7 +96,7 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
 
     m_firstRowLabel = new Label( this, SWT.NULL );
     m_firstRowLabel.setText( expression.getExpressionName().trim() );
-    Combo firstRowCombo = new Combo( this, SWT.NULL );
+    final Combo firstRowCombo = new Combo( this, SWT.NULL );
     m_propViewer = new ComboViewer( firstRowCombo );
     m_propViewer.setContentProvider( new FeatureTypeContentProvider() );
     m_propViewer.setLabelProvider( new FeatureTypeLabelProvider() );
@@ -105,19 +105,13 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
           final QName item = ((IValuePropertyType) firstElement).getQName();
-
-          Expression expr = m_operation.getExpression();
-          if( expr == null )
-            expr = new PropertyName( item );
-          else if( expr instanceof PropertyName )
-            ((PropertyName) expr).setValue( item );
-          m_operation.setExpression( expr );
+          m_operation.setExpression( new PropertyName( item ) );
         }
 
       }

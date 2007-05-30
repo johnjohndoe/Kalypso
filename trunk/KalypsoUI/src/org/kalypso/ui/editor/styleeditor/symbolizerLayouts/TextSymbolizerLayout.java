@@ -255,7 +255,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     final Geometry geometry = textSymbolizer.getGeometry();
     if( geometry != null )
     {
-      final String geoPropName = geometry.getPropertyName();
+      final PropertyName geoPropName = geometry.getPropertyName();
       ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureTyped, geoPropName );
 
     }

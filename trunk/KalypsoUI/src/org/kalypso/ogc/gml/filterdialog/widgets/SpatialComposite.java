@@ -313,11 +313,9 @@ class SpatialComposite extends AbstractFilterComposite
       if( newGeometry == null )
         return false;
       m_operation.setGeometry( newGeometry );
-      final PropertyName propertyName = m_operation.getPropertyName();
       final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
-      propertyName.setValue( ((IPropertyType) selection.getFirstElement()).getQName() );
-      // PropertyName newPropertyName = new PropertyName( m_propViewer.getSelection() );
-      // m_operation.setProperty( newPropertyName );
+
+      m_operation.setProperty( new PropertyName( ((IPropertyType) selection.getFirstElement()).getQName() ) );
     }
     catch( final Exception e )
     {

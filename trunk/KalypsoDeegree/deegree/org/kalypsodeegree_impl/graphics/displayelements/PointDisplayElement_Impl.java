@@ -75,9 +75,11 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -99,7 +101,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
 
   static
   {
-    Graphics g = defaultImg.getGraphics();
+    final Graphics g = defaultImg.getGraphics();
     g.setColor( Color.LIGHT_GRAY );
     g.fillRect( 0, 0, 9, 9 );
     g.dispose();
@@ -111,11 +113,11 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * @param feature
    * @param geometry
    */
-  PointDisplayElement_Impl( Feature feature, GM_Point geometry )
+  PointDisplayElement_Impl( final Feature feature, final GM_Point geometry )
   {
     super( feature, geometry, null );
 
-    Symbolizer defaultSymbolizer = new PointSymbolizer_Impl();
+    final Symbolizer defaultSymbolizer = new PointSymbolizer_Impl();
     this.setSymbolizer( defaultSymbolizer );
   }
 
@@ -126,7 +128,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * @param geometry
    * @param symbolizer
    */
-  PointDisplayElement_Impl( Feature feature, GM_Point geometry, PointSymbolizer symbolizer )
+  PointDisplayElement_Impl( final Feature feature, final GM_Point geometry, final PointSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -137,11 +139,11 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * @param feature
    * @param geometry
    */
-  PointDisplayElement_Impl( Feature feature, GM_MultiPoint geometry )
+  PointDisplayElement_Impl( final Feature feature, final GM_MultiPoint geometry )
   {
     super( feature, geometry, null );
 
-    Symbolizer defaultSymbolizer = new PointSymbolizer_Impl();
+    final Symbolizer defaultSymbolizer = new PointSymbolizer_Impl();
     this.setSymbolizer( defaultSymbolizer );
   }
 
@@ -152,7 +154,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * @param geometry
    * @param symbolizer
    */
-  PointDisplayElement_Impl( Feature feature, GM_MultiPoint geometry, PointSymbolizer symbolizer )
+  PointDisplayElement_Impl( final Feature feature, final GM_MultiPoint geometry, final PointSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -161,7 +163,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * renders the DisplayElement to the submitted graphic context
    */
   @Override
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
     try
     {
@@ -171,37 +173,31 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
       final Feature feature = getFeature();
 
       final Image image;
-      final int size;
       final double rotation;
       if( graphic == null )
       {
         image = defaultImg;
-        size = 6;
         rotation = Graphic.ROTATION_DEFAULT;
       }
       else
       {
         image = graphic.getAsImage( feature, uom, projection );
-        size = graphic.getNormalizedSize( feature, uom, projection );
         rotation = graphic.getRotation( feature );
       }
 
-      Graphics2D g2D = (Graphics2D) g;
+      final Graphics2D g2D = (Graphics2D) g;
 
       final GM_Object geometry = getGeometry();
-      if( geometry instanceof GM_Point )
-        drawPoint( g2D, (GM_Point) geometry, projection, image, size, rotation );
-      else
+      if( geometry instanceof GM_MultiPrimitive )
       {
-        GM_MultiPoint mp = (GM_MultiPoint) geometry;
-
-        for( int i = 0; i < mp.getSize(); i++ )
-        {
-          drawPoint( g2D, mp.getPointAt( i ), projection, image, size, rotation );
-        }
+        final GM_Primitive[] primitives = ((GM_MultiPrimitive) geometry).getAllPrimitives();
+        for( final GM_Primitive primitive : primitives )
+          drawPoint( g2D, primitive.getCentroid(), projection, image, rotation );
       }
+      else
+        drawPoint( g2D, geometry.getCentroid(), projection, image, rotation );
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       Debug.debugException( e, "Exception caught evaluating an Expression!" );
     }
@@ -210,14 +206,14 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   /**
    * renders one point to the submitted graphic context considering the also submitted projection
    */
-  private void drawPoint( Graphics2D g, GM_Point point, GeoTransform projection, Image image, final int size, final double rotation )
+  private void drawPoint( final Graphics2D g, final GM_Point point, final GeoTransform projection, final Image image, final double rotation )
   {
-    GM_Position source = point.getPosition();
-    int x = (int) (projection.getDestX( source.getX() ) + 0.5);
-    int y = (int) (projection.getDestY( source.getY() ) + 0.5);
+    final GM_Position source = point.getPosition();
+    final int x = (int) (projection.getDestX( source.getX() ) + 0.5);
+    final int y = (int) (projection.getDestY( source.getY() ) + 0.5);
 
-    int x_ = x - (image.getWidth( null ) >> 1);
-    int y_ = y - (image.getHeight( null ) >> 1);
+    final int x_ = x - (image.getWidth( null ) >> 1);
+    final int y_ = y - (image.getHeight( null ) >> 1);
 
     g.rotate( Math.toRadians( rotation ), x, y );
 

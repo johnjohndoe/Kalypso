@@ -60,6 +60,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.Rectangle;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
@@ -74,22 +79,27 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class Symbolizer_Impl implements Symbolizer
 {
-  public enum UOM { pixel, meter, foot };
-  
-  protected double maxDenominator = 9E99;
+  public enum UOM
+  {
+    pixel,
+    meter,
+    foot
+  }
 
-  protected double minDenominator = 0;
+  private double m_maxDenominator = 9E99;
 
-  protected Geometry geometry = null;
+  private double m_minDenominator = 0;
+
+  private Geometry m_geometry = null;
 
   private UOM m_uom = UOM.pixel;
 
   /**
    * default constructor
    */
-  Symbolizer_Impl()
+  Symbolizer_Impl( )
   {
-  // geometry is null
+    // geometry is null
   }
 
   /**
@@ -108,63 +118,80 @@ public class Symbolizer_Impl implements Symbolizer
    * 
    * @return the geometry of the symbolizer
    */
-  public Geometry getGeometry()
+  public Geometry getGeometry( )
   {
-    return geometry;
+    return m_geometry;
   }
 
   /**
    * sets the <Geometry>
    * 
    * @param geometry
-   *          the geometry of the symbolizer
+   *            the geometry of the symbolizer
    */
-  public void setGeometry( Geometry geometry )
+  public void setGeometry( final Geometry geometry )
   {
-    this.geometry = geometry;
+    this.m_geometry = geometry;
   }
 
   public void setUom( final UOM uom )
   {
     m_uom = uom;
   }
-  
+
   public UOM getUom( )
   {
     return m_uom;
   }
-  
+
   /**
    * @return the MinScaleDenominator
    */
-  public double getMinScaleDenominator()
+  public double getMinScaleDenominator( )
   {
-    return minDenominator;
+    return m_minDenominator;
   }
 
   /**
    * @param minDenominator
-   *          the MinScaleDenominator
+   *            the MinScaleDenominator
    */
-  public void setMinScaleDenominator( double minDenominator )
+  public void setMinScaleDenominator( final double minDenominator )
   {
-    this.minDenominator = minDenominator;
+    this.m_minDenominator = minDenominator;
   }
 
   /**
    * @return the MaxScaleDenominator
    */
-  public double getMaxScaleDenominator()
+  public double getMaxScaleDenominator( )
   {
-    return maxDenominator;
+    return m_maxDenominator;
   }
 
   /**
    * @param maxDenominator
-   *          the MaxScaleDenominator
+   *            the MaxScaleDenominator
    */
-  public void setMaxScaleDenominator( double maxDenominator )
+  public void setMaxScaleDenominator( final double maxDenominator )
   {
-    this.maxDenominator = maxDenominator;
+    this.m_maxDenominator = maxDenominator;
+  }
+
+  /**
+   * Default implementation, draw a black cross to indicate that here is something to do.
+   * 
+   * @see org.kalypsodeegree.graphics.sld.Symbolizer#paintLegendGraphic(org.eclipse.swt.graphics.GC)
+   */
+  public void paintLegendGraphic( final GC gc ) throws FilterEvaluationException
+  {
+    final Rectangle clipping = gc.getClipping();
+
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
+    gc.setLineAttributes( new LineAttributes( 1 ) );
+
+    gc.drawLine( clipping.x, clipping.y, clipping.x + clipping.width, clipping.y + clipping.height );
+    gc.drawLine( clipping.x, clipping.y + clipping.height, clipping.x + clipping.width, clipping.y );
   }
 }

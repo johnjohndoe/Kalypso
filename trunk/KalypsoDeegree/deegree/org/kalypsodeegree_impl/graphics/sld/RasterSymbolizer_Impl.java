@@ -65,7 +65,6 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
-import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Interval;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.xml.Marshallable;
@@ -82,13 +81,11 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 {
   private TreeMap m_colorMap = null;
 
-  private Geometry m_geometry = null;
-
   private final int mode_intervalColorMapping = 0;
 
-  private int mode = mode_intervalColorMapping;
+  private int m_mode = mode_intervalColorMapping;
 
-  public RasterSymbolizer_Impl( TreeMap colorMap )
+  public RasterSymbolizer_Impl( final TreeMap colorMap )
   {
     setColorMap( colorMap );
   }
@@ -98,49 +95,39 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     return m_colorMap;
   }
 
-  public void setColorMap( TreeMap colorMap )
+  public void setColorMap( final TreeMap colorMap )
   {
     m_colorMap = colorMap;
   }
 
-  public Geometry getGeometry( )
-  {
-    return m_geometry;
-  }
-
-  public void setGeometry( Geometry geometry )
-  {
-    m_geometry = geometry;
-  }
-
   public int getMode( )
   {
-    return mode;
+    return m_mode;
   }
 
-  public void setMode( int mode )
+  public void setMode( final int mode )
   {
-    this.mode = mode;
+    this.m_mode = mode;
   }
 
   public TreeMap getIntervalMap( )
   {
-    TreeMap intervalMap = new TreeMap();
-    Object[] colorMapKeys = m_colorMap.keySet().toArray();
+    final TreeMap intervalMap = new TreeMap();
+    final Object[] colorMapKeys = m_colorMap.keySet().toArray();
     int startIndex = 0;
-    double nullValue = -9999;
+    final double nullValue = -9999;
     if( ((Double) colorMapKeys[0]).doubleValue() == nullValue )
     {
       startIndex = 1;
     }
     for( int i = startIndex; i < colorMapKeys.length - 1; i++ )
     {
-      ColorMapEntry colorMapEntry_i = (ColorMapEntry) m_colorMap.get( colorMapKeys[i] );
-      ColorMapEntry colorMapEntry_i1 = (ColorMapEntry) m_colorMap.get( colorMapKeys[i + 1] );
-      Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1.getQuantity() );
-      Color color = colorMapEntry_i.getColor();
+      final ColorMapEntry colorMapEntry_i = (ColorMapEntry) m_colorMap.get( colorMapKeys[i] );
+      final ColorMapEntry colorMapEntry_i1 = (ColorMapEntry) m_colorMap.get( colorMapKeys[i + 1] );
+      final Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1.getQuantity() );
+      final Color color = colorMapEntry_i.getColor();
       // TODO Opacity allways 0, check this
-      Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int) Math.round( colorMapEntry_i.getOpacity() * 255 ) );
+      final Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int) Math.round( colorMapEntry_i.getOpacity() * 255 ) );
       intervalMap.put( interval, colorWithOpacity );
     }
     return intervalMap;
@@ -148,23 +135,23 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
   public String exportAsXML( )
   {
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<RasterSymbolizer>" );
     sb.append( "<ColorMap>" );
-    
+
     if( m_colorMap != null )
     {
-      Iterator it = m_colorMap.keySet().iterator();
+      final Iterator it = m_colorMap.keySet().iterator();
       while( it.hasNext() )
       {
-        ColorMapEntry colorMapEntry = (ColorMapEntry) m_colorMap.get( it.next() );
+        final ColorMapEntry colorMapEntry = (ColorMapEntry) m_colorMap.get( it.next() );
         sb.append( colorMapEntry.exportAsXML() );
       }
     }
-    
+
     sb.append( "</ColorMap>" );
     sb.append( "</RasterSymbolizer>" );
-    
+
     return sb.toString();
   }
 

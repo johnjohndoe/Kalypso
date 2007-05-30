@@ -107,11 +107,11 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param feature
    * @param geometry
    */
-  protected LineStringDisplayElement_Impl( Feature feature, GM_Curve geometry )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Curve geometry )
   {
     super( feature, geometry, null );
 
-    Symbolizer defaultSymbolizer = new LineSymbolizer_Impl();
+    final Symbolizer defaultSymbolizer = new LineSymbolizer_Impl();
     this.setSymbolizer( defaultSymbolizer );
   }
 
@@ -122,7 +122,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param geometry
    * @param symbolizer
    */
-  protected LineStringDisplayElement_Impl( Feature feature, GM_Curve geometry, LineSymbolizer symbolizer )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Curve geometry, final LineSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -133,11 +133,11 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param feature
    * @param geometry
    */
-  protected LineStringDisplayElement_Impl( Feature feature, GM_MultiCurve geometry )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_MultiCurve geometry )
   {
     super( feature, geometry, null );
 
-    Symbolizer defaultSymbolizer = new LineSymbolizer_Impl();
+    final Symbolizer defaultSymbolizer = new LineSymbolizer_Impl();
     this.setSymbolizer( defaultSymbolizer );
   }
 
@@ -148,19 +148,19 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param geometry
    * @param symbolizer
    */
-  protected LineStringDisplayElement_Impl( Feature feature, GM_MultiCurve geometry, LineSymbolizer symbolizer )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_MultiCurve geometry, final LineSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
 
-  public void paintImage( Image image, Graphics2D g, int x, int y, double rotation )
+  public void paintImage( final Image image, final Graphics2D g, final int x, final int y, final double rotation )
   {
 
     // get the current transform
-    AffineTransform saveAT = g.getTransform();
+    final AffineTransform saveAT = g.getTransform();
 
     // translation parameters (rotation)
-    AffineTransform transform = new AffineTransform();
+    final AffineTransform transform = new AffineTransform();
     transform.rotate( rotation, x, y );
     transform.translate( -image.getWidth( null ), -image.getHeight( null ) / 2.0 );
     g.setTransform( transform );
@@ -176,12 +176,12 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * renders the DisplayElement to the submitted graphic context
    */
   @Override
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
     Debug.debugMethodBegin( this, "paint" );
 
-    LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
-    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
+    final LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
+    final org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
     final UOM uom = sym.getUom();
 
     // no stroke defined -> don't draw anything
@@ -198,23 +198,23 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
       {
         final Image image = stroke.getGraphicStroke().getGraphic().getAsImage( getFeature(), uom, projection );
 
-        CurveWalker walker = new CurveWalker( g.getClipBounds() );
+        final CurveWalker walker = new CurveWalker( g.getClipBounds() );
 
         if( geometry instanceof GM_Curve )
         {
-          int[][] pos = LabelFactory.calcScreenCoordinates( projection, (GM_Curve) geometry );
-          ArrayList positions = walker.createPositions( pos, image.getWidth( null ) );
-          Iterator it = positions.iterator();
+          final int[][] pos = LabelFactory.calcScreenCoordinates( projection, (GM_Curve) geometry );
+          final ArrayList positions = walker.createPositions( pos, image.getWidth( null ) );
+          final Iterator it = positions.iterator();
           while( it.hasNext() )
           {
-            double[] label = (double[]) it.next();
-            int x = (int) (label[0] + 0.5);
-            int y = (int) (label[1] + 0.5);
+            final double[] label = (double[]) it.next();
+            final int x = (int) (label[0] + 0.5);
+            final int y = (int) (label[1] + 0.5);
             paintImage( image, (Graphics2D) g, x, y, label[2] );
           }
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -226,7 +226,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
       try
       {
         int[][] pos = null;
-        Graphics2D g2 = (Graphics2D) g;
+        final Graphics2D g2 = (Graphics2D) g;
 
         if( geometry instanceof GM_Curve )
         {
@@ -235,7 +235,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
         }
         else
         {
-          GM_MultiCurve mc = (GM_MultiCurve) geometry;
+          final GM_MultiCurve mc = (GM_MultiCurve) geometry;
           for( int i = 0; i < mc.getSize(); i++ )
           {
             pos = calcTargetCoordinates( projection, mc.getCurveAt( i ) );
@@ -243,7 +243,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
           }
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         System.out.println( e );
       }
@@ -251,21 +251,21 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     Debug.debugMethodEnd();
   }
 
-  public double getDistance( double x1, double y1, double x2, double y2 )
+  public double getDistance( final double x1, final double y1, final double x2, final double y2 )
   {
-    double dx = x2 - x1;
-    double dy = y2 - y1;
+    final double dx = x2 - x1;
+    final double dy = y2 - y1;
     return Math.sqrt( dx * dx + dy * dy );
   }
 
   /**
    * Calculates the screen coordinates of the curve.
    */
-  private int[][] calcTargetCoordinates( GeoTransform projection, GM_Curve curve ) throws Exception
+  private int[][] calcTargetCoordinates( final GeoTransform projection, final GM_Curve curve ) throws Exception
   {
-    GM_LineString lineString = curve.getAsLineString();
-    int count = lineString.getNumberOfPoints();
-    int[][] pos = new int[3][];
+    final GM_LineString lineString = curve.getAsLineString();
+    final int count = lineString.getNumberOfPoints();
+    final int[][] pos = new int[3][];
     pos[0] = new int[count];
     pos[1] = new int[count];
     pos[2] = new int[1];
@@ -273,9 +273,9 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     int k = 0;
     for( int i = 0; i < count; i++ )
     {
-      GM_Position position = lineString.getPositionAt( i );
-      double tx = projection.getDestX( position.getX() );
-      double ty = projection.getDestY( position.getY() );
+      final GM_Position position = lineString.getPositionAt( i );
+      final double tx = projection.getDestX( position.getX() );
+      final double ty = projection.getDestY( position.getY() );
       if( i > 0 )
       {
         if( distance( tx, ty, pos[0][k - 1], pos[1][k - 1] ) > 1 )
@@ -300,21 +300,20 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   /**
    * Renders a curve to the submitted graphic context. TODO: Calculate miterlimit.
    */
-  private void drawLine( Graphics g, int[][] pos, org.kalypsodeegree.graphics.sld.Stroke stroke ) throws FilterEvaluationException
+  private void drawLine( final Graphics g, final int[][] pos, final org.kalypsodeegree.graphics.sld.Stroke stroke ) throws FilterEvaluationException
   {
-
     // Color & Opacity
-    Graphics2D g2 = (Graphics2D) g;
+    final Graphics2D g2 = (Graphics2D) g;
     final Feature feature = getFeature();
     setColor( g2, stroke.getStroke( feature ), stroke.getOpacity( feature ) );
 
-    float[] dash = stroke.getDashArray( feature );
+    final float[] dash = stroke.getDashArray( feature );
 
     // use a simple Stroke if dash == null or its length < 2
     // that's faster
-    float width = (float) stroke.getWidth( feature );
-    int cap = stroke.getLineCap( feature );
-    int join = stroke.getLineJoin( feature );
+    final float width = (float) stroke.getWidth( feature );
+    final int cap = stroke.getLineCap( feature );
+    final int join = stroke.getLineJoin( feature );
     BasicStroke bs2 = null;
 
     if( (dash == null) || (dash.length < 2) )
@@ -332,12 +331,12 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
   }
 
-  private double distance( double x1, double y1, double x2, double y2 )
+  private double distance( final double x1, final double y1, final double x2, final double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 
-  private Graphics2D setColor( Graphics2D g2, Color color, double opacity )
+  private Graphics2D setColor( final Graphics2D g2, Color color, final double opacity )
   {
     if( opacity < 0.999 )
     {

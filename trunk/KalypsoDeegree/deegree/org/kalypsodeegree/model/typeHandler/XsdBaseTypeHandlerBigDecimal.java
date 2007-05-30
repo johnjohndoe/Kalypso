@@ -60,7 +60,7 @@ public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
   @Override
   public BigDecimal convertToJavaValue( final String xmlString )
   {
-    return new BigDecimal( xmlString );
+    return new BigDecimal( xmlString.replace( ',', '.' ) );
   }
 
   /**

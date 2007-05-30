@@ -45,7 +45,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -99,6 +98,7 @@ import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.PropertyControlType;
 import org.kalypso.template.featureview.Radiobutton;
+import org.kalypso.template.featureview.Spinner;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
@@ -165,11 +165,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    */
   public void updateControl( )
   {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-    {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+    for( final IFeatureControl fc : m_featureControls )
       fc.updateControl();
-    }
   }
 
   /**
@@ -188,9 +185,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    */
   public boolean isValid( )
   {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
+    for( final Object element : m_featureControls )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl) element;
 
       if( !fc.isValid() )
       {
@@ -489,6 +486,21 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
+    else if( controlType instanceof Spinner )
+    {
+      final Spinner spinnerType = (Spinner) controlType;
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final SpinnerFeatureControl sfc = new SpinnerFeatureControl( feature, vpt );
+      final int spinnerStyle = SWTUtilities.createStyleFromString( spinnerType.getStyle() );
+      final org.eclipse.swt.widgets.Spinner control = sfc.createControl( parent, spinnerStyle );
+
+      control.setIncrement( (int) spinnerType.getIncrement() );
+      control.setPageIncrement( (int) spinnerType.getPageIncrement() );
+
+      addFeatureControl( sfc );
+
+      return control;
+    }
     else if( controlType instanceof Image )
     {
       final Image imageType = (Image) controlType;
@@ -659,25 +671,25 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public void setFeature( final Feature feature )
   {
     super.setFeature( feature );
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
+    for( final Object element : m_featureControls )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl) element;
       fc.setFeature( feature );
     }
   }
 
   public void disposeControl( )
   {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
+    for( final Object element : m_featureControls )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl) element;
       fc.dispose();
     }
     m_featureControls.clear();
 
-    for( final Iterator iter = m_swtControls.iterator(); iter.hasNext(); )
+    for( final Object element : m_swtControls )
     {
-      final Control c = (Control) iter.next();
+      final Control c = (Control) element;
       c.dispose();
     }
     m_swtControls.clear();
@@ -782,9 +794,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public void modifyText( final ModifyEvent e )
   {
     final ModifyListener[] listeners = m_modifyListeners.toArray( new ModifyListener[m_modifyListeners.size()] );
-    for( int i = 0; i < listeners.length; i++ )
+    for( final ModifyListener listener : listeners )
     {
-      final ModifyListener listener = listeners[i];
       SafeRunnable.run( new SafeRunnable()
       {
         public void run( ) throws Exception

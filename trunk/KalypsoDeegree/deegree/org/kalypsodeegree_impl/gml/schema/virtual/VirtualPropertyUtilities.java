@@ -42,13 +42,9 @@ package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming
@@ -57,11 +53,10 @@ public class VirtualPropertyUtilities
 {
   final static private HashMap<IFeatureType, HashMap> m_cache = new HashMap<IFeatureType, HashMap>();
 
-  final static private VirtualFeatureTypeProperty[] m_noVTP = new VirtualFeatureTypeProperty[0];
-
   /**
    * @deprecated use getPropertyType( IFeatureType ,QName )
    */
+  @Deprecated
   public static VirtualFeatureTypeProperty getPropertyType( final IFeatureType featureType, final String propNameLocalPart )
   {
     final HashMap map = getMap( featureType );
@@ -71,13 +66,13 @@ public class VirtualPropertyUtilities
   public static VirtualFeatureTypeProperty[] getVirtualProperties( final IFeatureType featureType )
   {
     final HashMap map = getMap( featureType );
-      Collection collection = map.values();
+    final Collection collection = map.values();
     return (VirtualFeatureTypeProperty[]) collection.toArray( new VirtualFeatureTypeProperty[collection.size()] );
     // final Collection<VirtualFeatureTypeProperty> collection = map.k();
     // return (VirtualFeatureTypeProperty[]) collection.toArray( new VirtualFeatureTypeProperty[collection.size()] );
   }
 
-  private static HashMap getMap( IFeatureType ft )
+  private static HashMap getMap( final IFeatureType ft )
   {
     if( !m_cache.containsKey( ft ) )
     {
@@ -85,20 +80,17 @@ public class VirtualPropertyUtilities
       // collect them
       final VirtualFeatureTypeRegistry registry = VirtualFeatureTypeRegistry.getInstance();
       final VirtualFeatureTypeProperty[] vpt4FT = registry.getVirtualFeatureTypePropertiesFor( ft );
-      for( int i = 0; i < vpt4FT.length; i++ )
+      for( final VirtualFeatureTypeProperty vpt : vpt4FT )
       {
-        final VirtualFeatureTypeProperty vpt = vpt4FT[i];
         map.put( vpt.getName(), vpt );
         map.put( vpt.getQName(), vpt );
       }
       final IPropertyType[] properties = ft.getProperties();
-      for( int i = 0; i < properties.length; i++ )
+      for( final IPropertyType pt : properties )
       {
-        final IPropertyType pt = properties[i];
         final VirtualFeatureTypeProperty[] vpt4PT = registry.getVirtualFeatureTypePropertiesFor( pt );
-        for( int j = 0; j < vpt4PT.length; j++ )
+        for( final VirtualFeatureTypeProperty vpt : vpt4PT )
         {
-          final VirtualFeatureTypeProperty vpt = vpt4PT[j];
           map.put( vpt.getName(), vpt );
           map.put( vpt.getQName(), vpt );
         }

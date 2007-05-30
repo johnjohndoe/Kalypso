@@ -96,7 +96,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Graphic_Impl implements Graphic, Marshallable
 {
-  private ArrayList marksAndExtGraphics = new ArrayList();
+  private final ArrayList marksAndExtGraphics = new ArrayList();
 
   private BufferedImage image = null;
 
@@ -111,15 +111,15 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param marksAndExtGraphics
-   *          the image will be based upon these
+   *            the image will be based upon these
    * @param opacity
-   *          opacity that the resulting image will have
+   *            opacity that the resulting image will have
    * @param size
-   *          image height will be scaled to this value, respecting the proportions
+   *            image height will be scaled to this value, respecting the proportions
    * @param rotation
-   *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
+   *            image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
-  protected Graphic_Impl( Object[] marksAndExtGraphics, ParameterValueType opacity, ParameterValueType size, ParameterValueType rotation )
+  protected Graphic_Impl( final Object[] marksAndExtGraphics, final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
     setMarksAndExtGraphics( marksAndExtGraphics );
     this.opacity = opacity;
@@ -132,15 +132,15 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param opacity
-   *          opacity that the resulting image will have
+   *            opacity that the resulting image will have
    * @param size
-   *          image height will be scaled to this value, respecting the proportions
+   *            image height will be scaled to this value, respecting the proportions
    * @param rotation
-   *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
+   *            image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
-  protected Graphic_Impl( ParameterValueType opacity, ParameterValueType size, ParameterValueType rotation )
+  protected Graphic_Impl( final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
-    Mark[] marks = new Mark[1];
+    final Mark[] marks = new Mark[1];
     marks[0] = new Mark_Impl( "square", null, null );
     setMarksAndExtGraphics( marks );
     this.opacity = opacity;
@@ -165,7 +165,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public Object[] getMarksAndExtGraphics( )
   {
-    Object[] objects = new Object[marksAndExtGraphics.size()];
+    final Object[] objects = new Object[marksAndExtGraphics.size()];
     return marksAndExtGraphics.toArray( objects );
   }
 
@@ -175,16 +175,16 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * @param object to be used as basis for the resulting image
    */
-  public void setMarksAndExtGraphics( Object[] object )
+  public void setMarksAndExtGraphics( final Object[] object )
   {
     image = null;
     this.marksAndExtGraphics.clear();
 
     if( object != null )
     {
-      for( int i = 0; i < object.length; i++ )
+      for( final Object element : object )
       {
-        marksAndExtGraphics.add( object[i] );
+        marksAndExtGraphics.add( element );
       }
     }
   }
@@ -195,9 +195,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param object
-   *          to be used as basis for the resulting image
+   *            to be used as basis for the resulting image
    */
-  public void addMarksAndExtGraphic( Object object )
+  public void addMarksAndExtGraphic( final Object object )
   {
     marksAndExtGraphics.add( object );
   }
@@ -208,9 +208,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param object
-   *          to be used as basis for the resulting image
+   *            to be used as basis for the resulting image
    */
-  public void removeMarksAndExtGraphic( Object object )
+  public void removeMarksAndExtGraphic( final Object object )
   {
     marksAndExtGraphics.remove( marksAndExtGraphics.indexOf( object ) );
   }
@@ -220,24 +220,24 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
-  public double getOpacity( Feature feature ) throws FilterEvaluationException
+  public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
     double opacityVal = OPACITY_DEFAULT;
 
     if( opacity != null )
     {
-      String value = opacity.evaluate( feature );
+      final String value = opacity.evaluate( feature );
 
       try
       {
         opacityVal = Double.parseDouble( value );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         throw new FilterEvaluationException( "Given value for parameter 'opacity' ('" + value + "') has invalid format!" );
       }
@@ -256,9 +256,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param opacity
-   *          Opacity to be set for the graphic
+   *            Opacity to be set for the graphic
    */
-  public void setOpacity( double opacity )
+  public void setOpacity( final double opacity )
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + opacity );
@@ -272,24 +272,24 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
-  public double getSize( Feature feature ) throws FilterEvaluationException
+  public double getSize( final Feature feature ) throws FilterEvaluationException
   {
     double sizeVal = SIZE_DEFAULT;
 
     if( size != null )
     {
-      String value = size.evaluate( feature );
+      final String value = size.evaluate( feature );
 
       try
       {
         sizeVal = Double.parseDouble( value );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         throw new FilterEvaluationException( "Given value for parameter 'size' ('" + value + "') has invalid format!" );
       }
@@ -315,7 +315,7 @@ public class Graphic_Impl implements Graphic, Marshallable
     {
       for( int i = 0; i < marksAndExtGraphics.size(); i++ )
       {
-        Object o = marksAndExtGraphics.get( i );
+        final Object o = marksAndExtGraphics.get( i );
         BufferedImage extImage = null;
 
         if( o instanceof ExternalGraphic )
@@ -341,13 +341,13 @@ public class Graphic_Impl implements Graphic, Marshallable
         final double sizeFromMeters = transform.getDestX( sourceRect.getMin().getX() + size );
         final double lengthInMeters = Math.abs( sizeFromMeters - sizeFromNull );
         return (int) lengthInMeters;
-        
+
       case foot:
         throw new UnsupportedOperationException( "Foot unit not implemented yet..." );
-      
+
       case pixel:
       default:
-        return (int)size;
+        return (int) size;
 
     }
   }
@@ -356,9 +356,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getSize(Feature)
    *      <p>
    * @param size
-   *          size to be set for the graphic
+   *            size to be set for the graphic
    */
-  public void setSize( double size )
+  public void setSize( final double size )
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + size );
@@ -372,26 +372,26 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
-  public double getRotation( Feature feature ) throws FilterEvaluationException
+  public double getRotation( final Feature feature ) throws FilterEvaluationException
   {
     double rotVal = ROTATION_DEFAULT;
 
     if( rotation != null )
     {
-      String value = rotation.evaluate( feature );
+      final String value = rotation.evaluate( feature );
 
       try
       {
         rotVal = Double.parseDouble( value );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'rotation' ('" + value + "') has invalid format!" );
+        throw new FilterEvaluationException( " Given value for parameter 'rotation' ('" + value + "') has invalid format!" );
       }
     }
 
@@ -402,9 +402,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getRotation(Feature)
    *      <p>
    * @param rotation
-   *          rotation to be set for the graphic
+   *            rotation to be set for the graphic
    */
-  public void setRotation( double rotation )
+  public void setRotation( final double rotation )
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + rotation );
@@ -419,21 +419,22 @@ public class Graphic_Impl implements Graphic, Marshallable
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   public BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
     final int intSize = getNormalizedSize( feature, uom, transform );
     if( intSize <= 0 )
-      return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );;
-      
+      return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
+    ;
+
     image = new BufferedImage( intSize, intSize, BufferedImage.TYPE_INT_ARGB );
 
     final Graphics2D g = (Graphics2D) image.getGraphics();
 
     for( int i = 0; i < marksAndExtGraphics.size(); i++ )
     {
-      Object o = marksAndExtGraphics.get( i );
+      final Object o = marksAndExtGraphics.get( i );
       BufferedImage extImage = null;
 
       if( o instanceof ExternalGraphic )
@@ -452,8 +453,8 @@ public class Graphic_Impl implements Graphic, Marshallable
     // specified at all
     if( marksAndExtGraphics.size() == 0 )
     {
-      Mark mark = new Mark_Impl();
-      BufferedImage extImage = mark.getAsImage( feature, intSize );
+      final Mark mark = new Mark_Impl();
+      final BufferedImage extImage = mark.getAsImage( feature, intSize );
       g.drawImage( extImage, 0, 0, intSize, intSize, null );
     }
 
@@ -466,9 +467,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param bufferedImage
-   *          BufferedImage to be set
+   *            BufferedImage to be set
    */
-  public void setAsImage( BufferedImage bufferedImage )
+  public void setAsImage( final BufferedImage bufferedImage )
   {
     image = bufferedImage;
   }
@@ -482,7 +483,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Graphic>" );
     for( int i = 0; i < marksAndExtGraphics.size(); i++ )
     {

@@ -72,6 +72,7 @@ import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -96,17 +97,14 @@ public class AddSymbolizerPanel
 
   private final boolean m_isSimpleRule;
 
-  /**
-   *  
-   */
-  public AddSymbolizerPanel( Composite parent, String label, IFeatureType featureType )
+  public AddSymbolizerPanel( final Composite parent, final String label, final IFeatureType featureType )
   {
     m_label = label;
     m_featureType = featureType;
     m_composite = new Composite( parent, SWT.NULL );
     m_isSimpleRule = true;
-    FormLayout compositeLayout = new FormLayout();
-    GridData compositeData = new GridData();
+    final FormLayout compositeLayout = new FormLayout();
+    final GridData compositeData = new GridData();
     compositeData.widthHint = 230;
     m_composite.setLayoutData( compositeData );
     m_composite.setLayout( compositeLayout );
@@ -117,14 +115,14 @@ public class AddSymbolizerPanel
     init();
   }
 
-  public AddSymbolizerPanel( Composite parent, String label, IFeatureType featureType, boolean isSimpleRule )
+  public AddSymbolizerPanel( final Composite parent, final String label, final IFeatureType featureType, final boolean isSimpleRule )
   {
     m_label = label;
     m_featureType = featureType;
     m_isSimpleRule = isSimpleRule;
     m_composite = new Composite( parent, SWT.NULL );
-    FormLayout compositeLayout = new FormLayout();
-    GridData compositeData = new GridData();
+    final FormLayout compositeLayout = new FormLayout();
+    final GridData compositeData = new GridData();
     compositeData.widthHint = 230;
     m_composite.setLayoutData( compositeData );
     m_composite.setLayout( compositeLayout );
@@ -135,7 +133,7 @@ public class AddSymbolizerPanel
     init();
   }
 
-  public void addPanelListener( PanelListener pl )
+  public void addPanelListener( final PanelListener pl )
   {
     m_listenerList.add( PanelListener.class, pl );
   }
@@ -161,12 +159,12 @@ public class AddSymbolizerPanel
     m_geometryCombo.setLayoutData( geometryComboData );
     m_geometryCombo.addSelectionListener( new SelectionListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         updateSymbolizerCombo();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         updateSymbolizerCombo();
       }
@@ -183,7 +181,7 @@ public class AddSymbolizerPanel
     // Symbolizer Add-Button
     final Label symbolizerAddButton = new Label( m_composite, SWT.PUSH | SWT.CENTER );
     symbolizerAddButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    FormData symbolizerAddButtonData = new FormData();
+    final FormData symbolizerAddButtonData = new FormData();
     symbolizerAddButtonData.height = 20;
     symbolizerAddButtonData.width = 30;
     symbolizerAddButtonData.left = new FormAttachment( 860, 1000, 0 );
@@ -192,17 +190,17 @@ public class AddSymbolizerPanel
     symbolizerAddButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     symbolizerAddButton.addMouseListener( new MouseListener()
     {
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         fire();
       }
 
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
         // nothing
       }
@@ -210,8 +208,8 @@ public class AddSymbolizerPanel
     } );
 
     // ***** Label
-    Label symbolizerLabel = new Label( m_composite, SWT.NULL );
-    FormData symbolizerLabelData = new FormData();
+    final Label symbolizerLabel = new Label( m_composite, SWT.NULL );
+    final FormData symbolizerLabelData = new FormData();
     symbolizerLabelData.height = 15;
     symbolizerLabelData.width = 242;
     symbolizerLabelData.left = new FormAttachment( 0, 1000, 0 );
@@ -228,7 +226,7 @@ public class AddSymbolizerPanel
     if( selectionIndex == -1 )
       return;
     final String propName = m_geometryCombo.getItem( selectionIndex );
-    final String items[] = getSymbolizerTypesByFeatureProperty( propName );
+    final String items[] = getSymbolizerTypesByFeatureProperty( new PropertyName( propName ) );
     if( items != null && items.length > 0 )
     {
       m_symbolizerCombo.setItems( items );
@@ -238,22 +236,22 @@ public class AddSymbolizerPanel
 
   public Symbolizer getSelection( )
   {
-    String geometryPropertyName = m_geometryCombo.getItem( m_geometryCombo.getSelectionIndex() );
-    int selectionIndex = m_symbolizerCombo.getSelectionIndex();
-    String symbolizerString = m_symbolizerCombo.getItem( selectionIndex );
+    final String geometryPropertyName = m_geometryCombo.getItem( m_geometryCombo.getSelectionIndex() );
+    final int selectionIndex = m_symbolizerCombo.getSelectionIndex();
+    final String symbolizerString = m_symbolizerCombo.getItem( selectionIndex );
     // String symbolizerString =
     // getSymbolizerTypesByFeatureProperty()[m_selectionIndex];
-    return getSymbolizer( geometryPropertyName, symbolizerString, m_featureType );
+    return getSymbolizer( new PropertyName( geometryPropertyName ), symbolizerString, m_featureType );
   }
 
-  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString, IFeatureType featureType )
+  public static Symbolizer getSymbolizer( final PropertyName geometryPropertyName, final String symbolizerString, final IFeatureType featureType )
   {
     final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( featureType, geometryPropertyName );
 
     if( symbolizerString.equals( "Point" ) )
     {
-      Mark mark = StyleFactory.createMark( "square" );
-      Graphic graphic = StyleFactory.createGraphic( null, mark, 1.0, 2.0, 0.0 );
+      final Mark mark = StyleFactory.createMark( "square" );
+      final Graphic graphic = StyleFactory.createGraphic( null, mark, 1.0, 2.0, 0.0 );
       return StyleFactory.createPointSymbolizer( graphic, geometryPropertyName );
     }
     else if( symbolizerString.equals( "Line" ) )
@@ -263,7 +261,7 @@ public class AddSymbolizerPanel
     else if( symbolizerString.equals( "Text" ) )
     {
 
-      TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
+      final TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
       textSymbolizer.setFill( null );
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
       textSymbolizer.setLabel( null );
@@ -289,26 +287,26 @@ public class AddSymbolizerPanel
     {
       if( listeners[i] == PanelListener.class )
       {
-        PanelEvent event = new PanelEvent( this );
+        final PanelEvent event = new PanelEvent( this );
         ((PanelListener) listeners[i + 1]).valueChanged( event );
       }
     }
   }
 
-  public static List<String> queryGeometriesPropertyNames( IPropertyType[] ftp, List<String> list )
+  public static List<String> queryGeometriesPropertyNames( final IPropertyType[] ftp, List<String> list )
   {
     if( list == null )
       list = new ArrayList<String>();
 
-    for( int i = 0; i < ftp.length; i++ )
+    for( final IPropertyType element : ftp )
     {
-      if( GeometryUtilities.isGeometry( ftp[i] ) )
-        list.add( ftp[i].getName() );
+      if( GeometryUtilities.isGeometry( element ) )
+        list.add( element.getName() );
     }
     return list;
   }
 
-  private String[] getSymbolizerTypesByFeatureProperty( String propName )
+  private String[] getSymbolizerTypesByFeatureProperty( final PropertyName propName )
   {
 
     final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType, propName );

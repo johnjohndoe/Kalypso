@@ -55,24 +55,26 @@ public class FilterElementLabelProvider
     // no instance all methods are static
   }
 
-  public static String toString( Object o )
+  public static String toString( final Object o )
   {
     if( o == null )
     {
       return "empty value";
     }
+    // TODO: aaarg, remove this special case from here!
     else if( o instanceof TimeseriesLinkType )
     {
       return ((TimeseriesLinkType) o).getHref();
     }
     else if( o instanceof String )
     {
-      return (String)o;
+      return (String) o;
     }
-    else if(o instanceof Boolean)
+    else if( o instanceof Boolean )
     {
       return o.toString();
     }
+    // TODO: why not .toString'it ?
     return "unknown type";
   }
 
