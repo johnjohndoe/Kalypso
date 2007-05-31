@@ -111,7 +111,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
-    // runnable is unsused!
+    // runnable is unused!
     new CommandJob( command, m_commandManager, m_mutexRule, m_dirtyRunnable, CommandJob.POST );
   }
 
