@@ -13,6 +13,14 @@
 			featurePath="#fid#root/element[ContinuityLine]" linktype="gml"
 			xlink:type="simple" xlink:href="../models/discretisation.gml"
 			xlink:actuate="onRequest" />
+		<mapv:layer 
+			visible="true" name="Randlinien" 
+			id="ID_rand4" 
+			featurePath="#fid#root/element[BoundaryLine]" 
+			linktype="gml" xlink:type="simple" 
+			xlink:href="../models/discretisation.gml" 
+			xlink:actuate="onRequest"/>
+        
 		<mapv:layer visible="true" name="Kanten" id="ID_3"
 			featurePath="#fid#root/edge[Edge]" linktype="gml" xlink:type="simple"
 			xlink:href="../models/discretisation.gml" xlink:actuate="onRequest" />

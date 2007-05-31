@@ -52,7 +52,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
+import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -158,12 +161,13 @@ public class CalculationUnitComplexSelectionsComponent
     final String selectedAction = actionsCombo.getText();
     IWidgetWithStrategy widgetWithStrategy = 
       (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-    AddElementToCalUnitWidget strategy = null;
+    IWidget strategy = null;
     if( ACTION_KEY_ADD.equals( selectedAction) )
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
       {
-        
+        strategy =
+          new AlterCalUnitBorderWidget(dataModel);
       }
       else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
       {
@@ -174,6 +178,22 @@ public class CalculationUnitComplexSelectionsComponent
       else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType )  )
       {
         
+      }
+    }
+    else if( ACTION_KEY_DRAW.equals( selectedAction) )
+    {
+      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
+      {
+        strategy = 
+          new RouteLineElementWidget<IBoundaryLine>(
+                  "Route boundary line",
+                  "Route boundary line",
+                  IBoundaryLine.class,
+                  Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE);
+      }
+      else
+      {
+        System.out.println("Drawing not supported for:"+selectedType);
       }
     }
     else

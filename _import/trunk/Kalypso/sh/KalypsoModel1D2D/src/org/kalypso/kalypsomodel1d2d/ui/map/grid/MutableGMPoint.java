@@ -271,5 +271,12 @@ class MutableGMPoint implements GM_Point
     this.point=point;
   }
   
-  
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public Object clone( ) throws CloneNotSupportedException
+  {
+    throw new CloneNotSupportedException();
+  }
 }
