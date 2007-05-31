@@ -90,7 +90,7 @@ public class DrawElements
       gmPoints.add( node.getPoint() );
     }
     
-    if( gmPoints.isEmpty() )
+    if( !gmPoints.isEmpty() )
     {
       final int[][] points = getPointArrays( gmPoints, projection);
 

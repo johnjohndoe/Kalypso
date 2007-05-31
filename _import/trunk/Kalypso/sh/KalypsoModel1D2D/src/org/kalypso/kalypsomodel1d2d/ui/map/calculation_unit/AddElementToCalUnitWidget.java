@@ -122,10 +122,14 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
 
   public AddElementToCalUnitWidget( KeyBasedDataModel dataModel )
   {
-      this(Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT , 
-            "Select PolyElements",
-            "Select PolyElements", 
-            dataModel );
+      this(
+          new QName[]{
+              Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ,
+              Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D,
+          },
+          "Select Elements and add to the current calculation unit",
+          "Select Elements and add to the current calculation unit", 
+          dataModel );
       
   }
   
