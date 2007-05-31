@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -498,6 +499,18 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return m_theme.getLabel( m_theme );
 
     return super.getLabel( o );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getImageDescriptor(java.lang.Object)
+   */
+  @Override
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    if( m_theme != null )
+      return m_theme.getImageDescriptor( object );
+
+    return super.getImageDescriptor( object );
   }
 
   /**

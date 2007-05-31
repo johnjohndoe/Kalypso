@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -56,6 +57,7 @@ import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -168,18 +170,18 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     final int value = m_spinner.getSelection();
 // final int digits = m_spinner.getDigits();
 
-// final QName qname = getFeatureTypeProperty().getQName();
-// final String localPart = qname.getLocalPart();
-// if( localPart == "decimal" )
-// return new BigDecimal( value / digits ).setScale( digits, BigDecimal.ROUND_HALF_UP );
-//
-// if( localPart == "int" )
-    return new Integer( value );
+    final IValuePropertyType vpt = (IValuePropertyType) getFeatureTypeProperty();
+    final IMarshallingTypeHandler handler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+    try
+    {
+      return (Number) handler.parseType( Integer.toString( value ) );
+    }
+    catch( final ParseException e )
+    {
+      e.printStackTrace();
 
-// if( localPart == "double" )
-// return new Double( value / digits );
-
-// throw new UnsupportedOperationException( "Unsupported type: " + qname );
+      return null;
+    }
   }
 
 // protected void onTextModified()
