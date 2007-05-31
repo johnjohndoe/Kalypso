@@ -258,7 +258,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         if( hover.contains( mousePos ) )
         {
           final double delta = 0.0001;
-          // TODO This is potentially wrong. We have to check for both x and y!
+          // TODO:KIM This is potentially wrong. We have to check for both x and y!
           final IProfilPoint point = ProfilUtil.findPoint( getProfil(), points[i].getX(), /*
                                                                                            * should also use y:
                                                                                            * points[i].getY(),

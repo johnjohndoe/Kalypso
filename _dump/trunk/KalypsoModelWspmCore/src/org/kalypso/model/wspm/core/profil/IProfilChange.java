@@ -47,13 +47,13 @@ public interface IProfilChange
   /**
    * @param
    *          the Themes , affected by this ProfilChange should be set true
-   * @return the undo operation for this ProfilChange
+   * @return the undo operation for this ProfilChange or {@code null} if not undoable
    */
   public IProfilChange doChange( final ProfilChangeHint hint )throws IllegalProfileOperationException;
 /**
  * @return something stored in this ProfilChange
  */
-  public Object getObject( );
+  public Object[] getObjects( );
   /**
    * @return a String stored in this ProfilChange
    */

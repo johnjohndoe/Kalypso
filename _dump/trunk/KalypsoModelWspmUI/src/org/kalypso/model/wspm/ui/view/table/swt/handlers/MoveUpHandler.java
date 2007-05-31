@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.table.swt.handlers;
 
 import java.util.LinkedList;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -54,15 +53,15 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public class MoveUpHandler extends AbstractSWTTableHandler implements IHandler
+public class MoveUpHandler extends AbstractSWTTableHandler
 {
 
- 
   /**
-   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList, org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
+   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList,
+   *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
   @Override
-  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
     final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection, -1 ), true );
     new ProfilOperationJob( operation ).schedule();

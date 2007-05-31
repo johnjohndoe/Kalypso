@@ -73,9 +73,9 @@ public class VisibleMarkerEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-    return m_typ;
+    return new Object[]{m_typ,m_visible};
   }
 
   /**

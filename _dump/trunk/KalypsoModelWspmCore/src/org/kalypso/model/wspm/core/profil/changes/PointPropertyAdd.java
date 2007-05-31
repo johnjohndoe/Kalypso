@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 
-
 public final class PointPropertyAdd implements IProfilChange
 {
   private final IProfil m_profil;
@@ -55,16 +54,14 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final Double[] m_values;
 
-  public PointPropertyAdd( final IProfil profil, final String property,
-      final Double[] values )
+  public PointPropertyAdd( final IProfil profil, final String property, final Double[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
   }
 
-  public PointPropertyAdd( final IProfil profil, final String property,
-      final double defaultValue )
+  public PointPropertyAdd( final IProfil profil, final String property, final double defaultValue )
   {
     m_profil = profil;
     m_property = property;
@@ -77,8 +74,11 @@ public final class PointPropertyAdd implements IProfilChange
 
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setPointPropertiesChanged();
-    
+    if( hint != null )
+    {
+      hint.setPointPropertiesChanged();
+    }
+
     m_profil.addPointProperty( m_property );
     final LinkedList<IProfilPoint> points = m_profil.getPoints();
     int i = 0;
@@ -93,9 +93,9 @@ public final class PointPropertyAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-        return m_values;
+    return m_values;
   }
 
   /**
@@ -111,8 +111,7 @@ public final class PointPropertyAdd implements IProfilChange
    */
   public Double getValue( )
   {
-       return null;
+    return null;
   }
 
-  
 }

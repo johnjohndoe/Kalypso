@@ -88,9 +88,9 @@ public class PointMarkerAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-    return m_pointMarker;
+    return new IProfilPointMarker[]{ m_pointMarker};
   }
 
   /**

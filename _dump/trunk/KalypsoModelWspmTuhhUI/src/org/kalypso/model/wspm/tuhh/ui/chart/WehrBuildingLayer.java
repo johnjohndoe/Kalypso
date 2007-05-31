@@ -123,8 +123,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   private EditInfo getDeviderInfo( final Point mousePoint )
   {
-    final Boolean visibility =getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    if( visibility==null || !visibility  )
+    if(!getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR   ))
       return null;
     final AxisRange valueRange = getValueRange();
     final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
@@ -176,7 +175,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   protected boolean isPointVisible( IProfilPoint point )
   {
     final IProfil profil = getProfil();
-    final LinkedList points = profil.getPoints();
+    final LinkedList<IProfilPoint> points = profil.getPoints();
     final int i = points.indexOf( point );
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( i < points.indexOf( deviders[0].getPoint() ) )

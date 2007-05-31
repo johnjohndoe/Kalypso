@@ -131,8 +131,8 @@ public final class ProfilOperation extends AbstractOperation
       {
 
         {
-          final IProfilChange undoChange = change.doChange( hint );
-          if( undoChange instanceof IllegalChange )
+          final IProfilChange undoChange = change == null ? null : change.doChange( hint );
+          if( undoChange != null && undoChange instanceof IllegalChange )
           {
             throw new IllegalProfileOperationException( undoChange.getInfo(), change );
           }
@@ -185,7 +185,8 @@ public final class ProfilOperation extends AbstractOperation
     {
       try
       {
-        undo.doChange( hint );
+        if( undo != null )
+          undo.doChange( hint );
       }
       catch( IllegalProfileOperationException e )
       {

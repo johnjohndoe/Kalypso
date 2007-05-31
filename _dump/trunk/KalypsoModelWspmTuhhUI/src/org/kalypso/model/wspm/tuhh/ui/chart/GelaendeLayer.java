@@ -116,7 +116,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
     {
       if( (change instanceof PointPropertyEdit) || (change instanceof PointAdd) )
       {
-        for( final IProfilPoint point : (IProfilPoint[]) change.getObject() )
+        for( final IProfilPoint point : (IProfilPoint[]) change.getObjects() )
         {
           try
           {

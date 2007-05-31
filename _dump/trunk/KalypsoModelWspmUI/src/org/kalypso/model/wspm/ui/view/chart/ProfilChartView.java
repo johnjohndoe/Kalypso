@@ -303,13 +303,12 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     {
       public void run( )
       {
-        if( hint.isObjectChanged() )
+        if( hint.isObjectChanged() || hint.isPointPropertiesChanged() )
         {
           createLayer();
           return;
         }
-        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
-            || hint.isActivePointChanged() )
+        else if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
         {
           for( final IChartLayer layer : chart.getLayers() )
           {

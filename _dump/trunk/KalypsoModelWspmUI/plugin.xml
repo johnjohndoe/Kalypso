@@ -293,42 +293,42 @@
                  menubarPath="additions"
                  tooltip="%com.bce.profil.eclipse.view.table.deletepoint.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.AddPointHandler"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.InsertPointsCommand"
                  enablesFor="?"
                  id="com.bce.profil.eclipse.view.table.insertpoint"
                  label="%com.bce.profil.eclipse.view.table.insertpoint"
                  menubarPath="additions"
                  tooltip="%com.bce.profil.eclipse.view.table.insertpoint.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.FillValuesDelegate"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.FillValuesCommand"
                  enablesFor="+"
                  id="com.bce.profil.eclipse.view.table.fillvalues"
                  label="%com.bce.profil.eclipse.view.table.fillvalues"
                  menubarPath="additions"
                  tooltip="%com.bce.profil.eclipse.view.table.fillvalues.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveUpHandler"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.MoveUpCommand"
                  enablesFor="+"
                  id="org.kalypso.model.wspm.ui.view.table.movepointup"
                  label="%org.kalypso.model.wspm.ui.view.table.movepointup"
                  menubarPath="additions"
                  tooltip="%org.kalypso.model.wspm.ui.view.table.movepointup.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.MoveDownHandler"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.MoveDownCommand"
                  enablesFor="+"
                  id="org.kalypso.model.wspm.ui.view.table.movepointdown"
                  label="%org.kalypso.model.wspm.ui.view.table.movepointdown"
                  menubarPath="additions"
                  tooltip="%org.kalypso.model.wspm.ui.view.table.movepointdown.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.CopyToClipboardHandler"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboardCommand"
                  enablesFor="+"
                  id="org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboard"
                  label="%org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboard"
                  menubarPath="additions"
                  tooltip="%org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboard.tooltip"/>
            <action
-                 class="org.kalypso.model.wspm.ui.view.table.swt.handlers.AddPointHandler"
+                 class="org.kalypso.ui.GenericCommandActionDelegate:org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboardCommand"
                  enablesFor="?"
                  id="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboard"
                  label="%org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboard"
@@ -440,6 +440,11 @@
                id="org.kalypso.model.wspm.ui.view.table.swt.InsertPointsCommand"
                name="Insert Points">
          </command>
+         <command
+               categoryId="org.kalypso.model.wspm.ui.view.table.swt.category"
+               id="org.kalypso.model.wspm.ui.view.table.swt.FillValuesCommand"
+               name="Fill Values">
+         </command>
       </extension>
       <extension
             point="org.eclipse.ui.handlers">
@@ -463,6 +468,10 @@
                class="org.kalypso.model.wspm.ui.view.table.swt.handlers.AddPointHandler"
                commandId="org.kalypso.model.wspm.ui.view.table.swt.InsertPointsCommand">
          </handler>
+         <handler
+               class="org.kalypso.model.wspm.ui.view.table.swt.handlers.FillValuesHandler"
+               commandId="org.kalypso.model.wspm.ui.view.table.swt.FillValuesCommand">
+         </handler>
       </extension>
       <extension
             point="org.eclipse.ui.bindings">
@@ -476,16 +485,6 @@
                contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
                schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
                sequence="M1+ARROW_DOWN"/>
-         <key
-               commandId="org.kalypso.model.wspm.ui.view.table.swt.CopyToClipboardCommand"
-               contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
-               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-               sequence="M1+C"/>
-         <key
-               commandId="org.kalypso.model.wspm.ui.view.table.swt.PasteFromClipboardCommand"
-               contextId="org.kalypso.model.wspm.ui.view.table.swt.context"
-               schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-               sequence="M1+V"/>
       </extension>
       <extension
             point="org.eclipse.ui.contexts">

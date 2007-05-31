@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.LinkedList;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -76,6 +78,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.operation.changes.VisibleMarkerEdit;
@@ -381,14 +384,13 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
-        IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
-        final ProfilChangeHint hint = new ProfilChangeHint();
-        hint.setMarkerMoved();
-        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
-        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
-      }
+        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfilEventManager(), true );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_WEHR, m_WehrfeldVisible.getSelection() ) );
+        final IStatus status = operation.execute( new NullProgressMonitor(), null );
+        operation.dispose();
+        if( !status.isOK() )
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+       }
     } );
 
     updateControls();

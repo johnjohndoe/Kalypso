@@ -42,9 +42,7 @@ package org.kalypso.model.wspm.ui.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -82,7 +80,7 @@ public class ProfilViewData
 
   protected boolean m_useDeviderValue = false;
 
-  private Map<String, Boolean> m_visibleMarker = new HashMap<String, Boolean>();
+  private List<String> m_invisibleMarker = new ArrayList<String>();
 
   private List<String> m_visiblePointProperties = new ArrayList<String>();
 
@@ -165,16 +163,18 @@ public class ProfilViewData
 
   public void setMarkerVisibility( final String markerTyp, final boolean visible )
   {
-    m_visibleMarker.put( markerTyp, visible );
+    if( visible )
+      m_invisibleMarker.remove( markerTyp );
+    else if( !m_invisibleMarker.contains( markerTyp ) )
+      m_invisibleMarker.add( markerTyp );
   }
 
   /**
-   * @return null if not yet initialized
+   * @return true if not yet initialized
    */
-  public Boolean getMarkerVisibility( final String markerTyp )
+  public boolean getMarkerVisibility( final String markerTyp )
   {
-    final Boolean visibility = m_visibleMarker.get( markerTyp );
-    return visibility == null ? true : visibility;
+    return !m_invisibleMarker.contains( markerTyp );
   }
 
   public boolean isEditvert( )

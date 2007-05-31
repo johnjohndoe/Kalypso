@@ -42,20 +42,22 @@ package org.kalypso.model.wspm.ui.view.table.swt.handlers;
 
 import java.util.LinkedList;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.contribs.eclipse.swt.custom.TableCursor;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.view.table.swt.ProfilCellModifier;
 import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 
 /**
  * @author kimwerner
  */
-public class FillValuesHandler extends AbstractSWTTableHandler implements IHandler
+public class FillValuesHandler extends AbstractSWTTableHandler
 {
 
   /**
@@ -63,10 +65,16 @@ public class FillValuesHandler extends AbstractSWTTableHandler implements IHandl
    *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
   @Override
-  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
-    final String activeProp = (String) tableView.getActiveCell()[0];
-    final Double value = (Double) tableView.getActiveCell()[1];
+    final TableCursor cursor = tableView.getCursor();
+    final TableItem row = cursor.getRow();
+    final int column = cursor.getColumn();
+
+    final ProfilCellModifier cellModifier = tableView.getCellModifier();
+    final String activeProp = cellModifier.getColumnProperty( column );
+    final Double value = cellModifier.getValueAsDouble( row, activeProp );
+
     final IProfilChange[] changes = new IProfilChange[selection.size()];
     int i = 0;
     for( final IProfilPoint point : selection )

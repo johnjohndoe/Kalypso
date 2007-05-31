@@ -205,21 +205,21 @@ public class TrennerLayer extends AbstractProfilChartLayer
     EditInfo info = null;
     final IProfil profil = getProfil();
 
-    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) != null && getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
     {
 
       info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 20 );
       if( info != null )
         return info;
     }
-    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) != null && getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
     {
 
       info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 40 );
       if( info != null )
         return info;
     }
-    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) != null && getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
+    if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
     {
 
       info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 );

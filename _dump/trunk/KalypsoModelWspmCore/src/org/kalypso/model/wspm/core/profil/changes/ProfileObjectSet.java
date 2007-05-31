@@ -98,9 +98,9 @@ public class ProfileObjectSet implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-    return m_object;
+    return new Object[]{m_object};
   }
 
   /**
@@ -109,7 +109,7 @@ public class ProfileObjectSet implements IProfilChange
   public String getInfo( )
   {
 
-    return null;
+    return m_objectId;
   }
 
   /**

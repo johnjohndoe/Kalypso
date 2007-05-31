@@ -72,9 +72,9 @@ public class IllegalChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-        return m_change;
+        return new IProfilChange[]{m_change};
   }
 
   /**

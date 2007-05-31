@@ -48,12 +48,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -63,7 +60,7 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public class PasteFromClipboardHandler extends AbstractSWTTableHandler implements IHandler
+public class PasteFromClipboardHandler extends AbstractSWTTableHandler
 {
 
   /**
@@ -71,7 +68,7 @@ public class PasteFromClipboardHandler extends AbstractSWTTableHandler implement
    *      java.util.LinkedList, org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
   @Override
-  public final IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public final IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
     final Clipboard clp = Toolkit.getDefaultToolkit().getSystemClipboard();
     try
@@ -79,64 +76,67 @@ public class PasteFromClipboardHandler extends AbstractSWTTableHandler implement
       final String content = (String) clp.getData( DataFlavor.stringFlavor );
       if( content != null )
       {
-        final Object[] activeCell = tableView.getActiveCell();
-        if( ((Double) activeCell[1]).isNaN() )
+        // TODO:KIM check this
+// final Object[] activeCell = tableView.getActiveCell();
+// if( ((Double) activeCell[1]).isNaN() )
+// {
+        final StringTokenizer lines = new StringTokenizer( content, "\n", false );
+        final ArrayList<String> propList = new ArrayList<String>();
+        final HashMap<String, ArrayList<Double>> propMap = new HashMap<String, ArrayList<Double>>();
+        // get PointProperties
+        if( lines.hasMoreElements() )
         {
-          final StringTokenizer lines = new StringTokenizer( content, "\n", false );
-          final ArrayList<String> propList = new ArrayList<String>();
-         final HashMap<String, ArrayList<Double>> propMap = new HashMap<String, ArrayList<Double>>();
-          // get PointProperties
-          if( lines.hasMoreElements() )
-          {
-            final StringTokenizer header = new StringTokenizer( lines.nextToken(), "\t", false );
+          final StringTokenizer header = new StringTokenizer( lines.nextToken(), "\t", false );
 
-            while( header.hasMoreElements() )
-            {
-              final String prop = header.nextToken();
-              propList.add(prop  );
-              propMap.put( prop, new ArrayList<Double>() );
-            }
-          }
-          final String[] pointProperties = propList.toArray( new String[0] );
-          // fill the Map
-          while( lines.hasMoreElements() )
+          while( header.hasMoreElements() )
           {
-            final StringTokenizer line = new StringTokenizer( lines.nextToken(), "\t", false );
-            final ArrayList<Double> values = new ArrayList<Double>();
-            while( line.hasMoreElements() )
-            {
-              values.add( new Double( line.nextToken() ) );
-            }
-            final Double[] propertyValues = values.toArray( new Double[0] );
-            for( int i = 0; i < propertyValues.length && i < pointProperties.length; i++ )
-            {
-              final ArrayList<Double> vl = propMap.get( pointProperties[i] );
-              vl.add( propertyValues[i] );
-            }
+            final String prop = header.nextToken();
+            propList.add( prop );
+            propMap.put( prop, new ArrayList<Double>() );
           }
-          final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
-          for( final String prop : selection.getFirst().getProperties() )
-          {
-            if( propMap.containsKey( prop ) )
-            {
-              final Double[] values = propMap.get( prop ).toArray( new Double[0] );
-              changes.add( new PointPropertyEdit( selection.toArray( new IProfilPoint[0] ), prop, values ) );
-            }
-          }
-          final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
-          new ProfilOperationJob( operation ).schedule();
         }
-        else
+        final String[] pointProperties = propList.toArray( new String[0] );
+        // fill the Map
+        while( lines.hasMoreElements() )
         {
-          final Double value = new Double( content );
-          if( value.isNaN() )
-            return null;
-          tableView.closeCellEditor();
-          final IProfilEventManager pem = tableView.getProfilEventManager();
-          final IProfil profile = pem.getProfil();
-          final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointPropertyEdit( profile.getActivePoint(), (String) activeCell[0], value ), true );
-          new ProfilOperationJob( operation ).schedule();
+          final StringTokenizer line = new StringTokenizer( lines.nextToken(), "\t", false );
+          final ArrayList<Double> values = new ArrayList<Double>();
+          while( line.hasMoreElements() )
+          {
+            values.add( new Double( line.nextToken() ) );
+          }
+          final Double[] propertyValues = values.toArray( new Double[0] );
+          for( int i = 0; i < propertyValues.length && i < pointProperties.length; i++ )
+          {
+            final ArrayList<Double> vl = propMap.get( pointProperties[i] );
+            vl.add( propertyValues[i] );
+          }
         }
+        final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
+        for( final String prop : selection.getFirst().getProperties() )
+        {
+          if( propMap.containsKey( prop ) )
+          {
+            final Double[] values = propMap.get( prop ).toArray( new Double[0] );
+            changes.add( new PointPropertyEdit( selection.toArray( new IProfilPoint[0] ), prop, values ) );
+          }
+        }
+        final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
+        new ProfilOperationJob( operation ).schedule();
+// }
+// else
+// {
+        // TODO:KIM check this
+// final Double value = new Double( content );
+// if( value.isNaN() )
+// return null;
+// tableView.closeCellEditor();
+// final IProfilEventManager pem = tableView.getProfilEventManager();
+// final IProfil profile = pem.getProfil();
+// final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointPropertyEdit(
+// profile.getActivePoint(), (String) activeCell[0], value ), true );
+// new ProfilOperationJob( operation ).schedule();
+// }
       }
       return Status.OK_STATUS;
     }

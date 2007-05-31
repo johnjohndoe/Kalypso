@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -71,6 +73,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.operation.changes.VisibleMarkerEdit;
@@ -201,11 +204,12 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() );
-        final ProfilChangeHint hint = new ProfilChangeHint();
-        hint.setMarkerMoved();
-        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() ) );
+        final IStatus status = operation.execute( new NullProgressMonitor(), null );
+        operation.dispose();
+        if( !status.isOK() )
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
     } );
 
@@ -233,13 +237,13 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() );
-        IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() );
-        final ProfilChangeHint hint = new ProfilChangeHint();
-        hint.setMarkerMoved();
-        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
-        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() ) );
+        final IStatus status = operation.execute( new NullProgressMonitor(), null );
+        operation.dispose();
+        if( !status.isOK() )
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+ 
       }
     } );
 
@@ -267,13 +271,12 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() );
-        IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() );
-        final ProfilChangeHint hint = new ProfilChangeHint();
-        hint.setMarkerMoved();
-        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
-        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
+        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfilEventManager(), true );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() ) );
+        final IStatus status = operation.execute( new NullProgressMonitor(), null );
+        operation.dispose();
+        if( !status.isOK() )
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
     } );
 
@@ -305,12 +308,14 @@ public class TrennerPanel extends AbstractProfilView
         }
         else
         {
-          final IProfilChange[] changes = new IProfilChange[2];
-          changes[0] = new PointMarkerRemove( profil, bv_devs[0] );
-          changes[1] = new PointMarkerRemove( profil, bv_devs[1] );
+          final IProfilChange[] changes = new IProfilChange[bv_devs.length + 1];
+          for( int i = 0; i < bv_devs.length; i++ )
+          {
+            changes[i] = new PointMarkerRemove( profil, bv_devs[i] );
+          }
+          changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, false );
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfilEventManager(), changes, true );
           new ProfilOperationJob( operation ).schedule();
-
         }
       }
     } );

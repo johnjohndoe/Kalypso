@@ -75,9 +75,9 @@ public class ProfileObjectEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-       return m_object;
+       return new Object[]{m_object, m_property};
   }
 
   /**

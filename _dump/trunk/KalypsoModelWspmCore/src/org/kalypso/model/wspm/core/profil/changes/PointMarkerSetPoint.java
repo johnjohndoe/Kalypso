@@ -72,9 +72,9 @@ public class PointMarkerSetPoint implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-        return m_pointMarker;
+        return new Object[]{m_pointMarker};
   }
 
   /**
@@ -82,7 +82,7 @@ public class PointMarkerSetPoint implements IProfilChange
    */
   public String getInfo( )
   {
-        return null;
+        return m_pointMarker.getMarkerId();
   }
 
   /**

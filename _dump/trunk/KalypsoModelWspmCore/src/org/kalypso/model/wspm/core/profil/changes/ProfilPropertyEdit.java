@@ -74,9 +74,9 @@ public final class ProfilPropertyEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
-    return m_property;
+    return new Object[]{m_property,m_newValue};
   }
 
   /**
@@ -84,7 +84,7 @@ public final class ProfilPropertyEdit implements IProfilChange
    */
   public String getInfo( )
   {
-       return null;
+       return m_property.toString();
   }
 
   /**

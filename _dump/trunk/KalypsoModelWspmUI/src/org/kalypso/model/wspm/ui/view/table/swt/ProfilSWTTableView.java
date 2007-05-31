@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.swt;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -123,7 +124,7 @@ public class ProfilSWTTableView extends AbstractProfilView
   {
     private final Collection<CellEditor> m_editors = new LinkedList<CellEditor>();
 
-    private final Collection<String> m_properties = new LinkedList<String>();
+    private final Collection<String> m_properties = new ArrayList<String>();
 
     public CellEditor[] getEditors( )
     {
@@ -133,6 +134,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     protected String[] getProperties( )
     {
       return m_properties.toArray( new String[m_properties.size()] );
+      
     }
 
     public void addColumn( final CellEditor editor, final String id )
@@ -166,7 +168,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     super( pem, viewdata );
     m_file = file;
 
-    //createActions();
+    // createActions();
     m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
@@ -217,7 +219,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     return getViewer().getSorter() != null;
   }
 
-  protected TableCursor getCursor( )
+  public TableCursor getCursor( )
   {
     return m_cursor;
   }
@@ -249,7 +251,8 @@ public class ProfilSWTTableView extends AbstractProfilView
 
   private Control doCreateTable( )
   {
-    m_viewer = new NoMouseDownTableViewer( m_tableContainer, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+//    m_viewer = new NoMouseDownTableViewer( m_tableContainer, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    m_viewer = new TableViewer( m_tableContainer, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
     final Table table = m_viewer.getTable();
     table.setFont( table.getParent().getFont() );
@@ -278,19 +281,17 @@ public class ProfilSWTTableView extends AbstractProfilView
       {
         final TableItem row = cursor.getRow();
         final int col = cursor.getColumn();
-
-        // change the active point and pointproperty, but dont put it into the undo queue
         final IProfilPoint point = (IProfilPoint) row.getData();
         final IProfilPointProperty ppp = (IProfilPointProperty) m_viewer.getTable().getColumn( col ).getData( "columnKey" );
+        final ITooltipProvider labelProvider = (ITooltipProvider) m_viewer.getLabelProvider();
+        cursor.setToolTipText( labelProvider.getTooltip( row.getData() ) );
 
+        // change the active point and pointproperty, but dont put it into the undo queue
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), point, ppp == null ? "null" : ppp.getId() ), true );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
           KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-
-        final ITooltipProvider labelProvider = (ITooltipProvider) m_viewer.getLabelProvider();
-        cursor.setToolTipText( labelProvider.getTooltip( row.getData() ) );
       }
     } );
 
@@ -361,7 +362,7 @@ public class ProfilSWTTableView extends AbstractProfilView
   public TableColumn addColumn( final ColumnStruct struct, final IProfilPointProperty columnKey )
   {
     final String text = (columnKey == null) ? "" : columnKey.getLabel();
-    final String id = columnKey == null ? "" : columnKey.toString();
+    final String id = columnKey == null ? "" : columnKey.getId();
 
     final Table table = m_viewer.getTable();
     final TableColumn column = new TableColumn( table, SWT.CENTER );
@@ -436,10 +437,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     m_viewer.setSorter( sorter );
   }
 
-  public void closeCellEditor( )
-  {
-    getViewer().cancelEditing();
-  }
+ 
 
   public void setAdvanceMode( final String string )
   {
@@ -456,8 +454,8 @@ public class ProfilSWTTableView extends AbstractProfilView
     return descriptions;
   }
 
-//  private void createActions( )
-//  {
+// private void createActions( )
+// {
 
 // m_actions.put( ACTION_DELETEPOINTS, new ProfilTableAction( this, DELETE_POINTS_NAME )
 // {
@@ -636,7 +634,7 @@ public class ProfilSWTTableView extends AbstractProfilView
 // }
 // }
 // } );
-//  }
+// }
 
   public ISelectionProvider getSelectionProvider( )
   {
@@ -664,46 +662,21 @@ public class ProfilSWTTableView extends AbstractProfilView
     }
   }
 
-  /**
-   * @return a keyValuePair Object[2](String,Double)
-   */
-  public final Object[] getActiveCell( )
-  {
-    if( m_viewer.isCellEditorActive() )
-    {
-      try
-      {
-        final TableCursor cursor = getCursor();
-        final TableItem row = cursor.getRow();
-        final int column = cursor.getColumn();
-        final TableViewer viewer = getViewer();
-        final String property = "" + viewer.getColumnProperties()[column];
-        final ProfilCellModifier cellModifier = (ProfilCellModifier) viewer.getCellModifier();
-        final Object aktiveElement = row.getData();
-        final Double value = cellModifier.getValueAsDouble( aktiveElement, property );
-        return new Object[] { property, value };
-      }
-      catch( final Exception e )
-      {
-        return new Object[] { "", Double.NaN };
-      }
-    }
-    return new Object[] { "", Double.NaN };
-  }
-
+ 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     m_tableContainer.getDisplay().syncExec( new Runnable()
     {
       public void run( )
       {
-        if( hint.isPointPropertiesChanged() )
+        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() )
         {
           refreshColumns( getProfil() );
+          refreshActivePoint();
           return;
         }
 
-        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isMarkerMoved() )
+        if( hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isMarkerMoved() )
           refresh();
 
         if( hint.isActivePointChanged() )
@@ -712,6 +685,10 @@ public class ProfilSWTTableView extends AbstractProfilView
     } );
 
   }
+public ProfilCellModifier getCellModifier()
+{
+  return (ProfilCellModifier)m_viewer.getCellModifier();
+}
 
   protected void refreshActivePoint( )
   {
@@ -751,6 +728,7 @@ public class ProfilSWTTableView extends AbstractProfilView
 
         m_cursor.setSelection( item, column );
         table.setSelection( new TableItem[] { item } );
+        break;
       }
     }
   }

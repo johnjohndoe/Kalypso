@@ -73,7 +73,7 @@ public final class PointPropertyVisibility implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
    */
-  public Object getObject( )
+  public Object[] getObjects( )
   {
     return null;
   }

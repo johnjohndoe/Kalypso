@@ -65,7 +65,7 @@ public class DeletePointHandler extends AbstractSWTTableHandler
    *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
    */
   @Override
-  public IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
     final IProfilChange[] changes = new IProfilChange[selection.size() + 1];
     final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( tableView.getProfil(), selection.getFirst() );

@@ -44,7 +44,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.LinkedList;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -53,7 +52,7 @@ import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 /**
  * @author kimwerner
  */
-public class CopyToClipboardHandler extends AbstractSWTTableHandler implements IHandler
+public class CopyToClipboardHandler extends AbstractSWTTableHandler
 {
 
   /**
@@ -62,12 +61,12 @@ public class CopyToClipboardHandler extends AbstractSWTTableHandler implements I
    */
 
   @Override
-  public final IStatus doAction( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public final IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
   {
-    final Object[] activeCell = tableView.getActiveCell();
+//    final Object[] activeCell = tableView.getActiveCell();
     final StringBuffer sbf = new StringBuffer();
-    if( ((Double)activeCell[1]).isNaN())
-    {
+//    if( ((Double)activeCell[1]).isNaN())
+//    {
       final String[] props = selection.getFirst().getProperties();
       sbf.append( props[0] );
       for( int i = 1; i < props.length; i++ )
@@ -88,12 +87,12 @@ public class CopyToClipboardHandler extends AbstractSWTTableHandler implements I
         }
         sbf.append( "\n" );
       }
-    }
-    else
-    {
-      // let the CellEditor handle this event
-      sbf.append( ((Double)activeCell[1]).toString());
-    }
+//    }
+//    else
+//    {
+//      // let the CellEditor handle this event
+//      sbf.append( ((Double)activeCell[1]).toString());
+//    }
     final StringSelection stsel = new StringSelection( sbf.toString() );
     Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
 
