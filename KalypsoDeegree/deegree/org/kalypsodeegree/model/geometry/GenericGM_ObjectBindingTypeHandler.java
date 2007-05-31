@@ -45,7 +45,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -65,7 +64,7 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
 {
-  public GenericGM_ObjectBindingTypeHandler( JAXBContextProvider jaxbContextProvider, QName xmlTypeQName, QName xmlTagQName, Class gm_objectClass, boolean isGeometry )
+  public GenericGM_ObjectBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class gm_objectClass, final boolean isGeometry )
   {
     super( jaxbContextProvider, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false, true );
   }
@@ -75,7 +74,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
   @Override
-  public void unmarshal( XMLReader xmlReader, URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     final UnMarshallResultEater eater = new UnMarshallResultEater()
     {
@@ -101,7 +100,9 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
               geometryValue = bindingToGM_ObjectAdapter.wrapFromBinding( bindingGeometry, geometryClass );
             }
             else
+            {
               throw e;
+            }
           }
 
           // geometryValue = BindingToValueAdapter_GML31.createGM_Object( bindingGeometry, geometryClass );
@@ -122,7 +123,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
   @Override
-  public void marshal( QName propQName, Object geometry, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object geometry, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -147,6 +148,9 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
   {
     try
     {
+      // TODO: the unmarshalling/marshalling (especially the adapting to the bindng stuff)
+      // takes veeeery long!
+      // better implement/fix the clone method if GM_Object's
       final GM_Object geometry = (GM_Object) objectToClone;
 
       // final String gmlVersion = "3.1";
@@ -162,7 +166,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
       final Object result = bindingToGM_ObjectAdapter.wrapFromBinding( clonedBindingGeometry, geometryClass );
       return result;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       throw new CloneNotSupportedException( e.getLocalizedMessage() );
     }

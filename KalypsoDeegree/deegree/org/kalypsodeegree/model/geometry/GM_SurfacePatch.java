@@ -64,12 +64,9 @@ package org.kalypsodeegree.model.geometry;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
  * Defining the iso geometry <code>GM_SurfacePatch</code> which is used for building surfaces. A surface patch is made
  * of one exterior ring and 0..n interior rings. By definition there can't be a surface patch with no exterior ring. A
- * polygon is a specialized surface patch.
- * 
- * -----------------------------------------------------
+ * polygon is a specialized surface patch. -----------------------------------------------------
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
@@ -83,22 +80,22 @@ public interface GM_SurfacePatch extends GM_GenericSurface
    * the control points and control parameters defined in the various subclasses to determine the position of this GM_
    * SurfacePatch.
    */
-  GM_SurfaceInterpolation getInterpolation();
+  GM_SurfaceInterpolation getInterpolation( );
 
   /**
    * returns the exterior ring of the surface
    */
-  GM_Position[] getExteriorRing();
+  GM_Position[] getExteriorRing( );
 
   /**
    * returns the interior rings of the surface
    */
-  GM_Position[][] getInteriorRings();
+  GM_Position[][] getInteriorRings( );
 
   /**
    * returns the coordinate system of the surface patch
    */
-  CS_CoordinateSystem getCoordinateSystem();
+  CS_CoordinateSystem getCoordinateSystem( );
 
   /**
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
@@ -116,18 +113,19 @@ public interface GM_SurfacePatch extends GM_GenericSurface
    * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
    * be on the object.
    */
-  public GM_Point getCentroid();
+  public GM_Point getCentroid( );
 
   /**
    * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
-  public double getArea();
+  public double getArea( );
 
   /**
    * @link aggregationByValue
    * @clientCardinality 1..*
    */
+
   /* #GM_GenericCurve lnkGM_GenericCurve; */
 }

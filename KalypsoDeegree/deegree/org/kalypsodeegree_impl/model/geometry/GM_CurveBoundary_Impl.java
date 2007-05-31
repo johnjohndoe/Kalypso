@@ -73,7 +73,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_CurveBoundary interface from package jago.model.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -93,7 +92,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * constructor of curve_boundary with CS_CoordinateSystem and startpoint and endpoint
    */
-  public GM_CurveBoundary_Impl( CS_CoordinateSystem crs, GM_Position sp, GM_Position ep )
+  public GM_CurveBoundary_Impl( final CS_CoordinateSystem crs, final GM_Position sp, final GM_Position ep )
   {
     super( crs );
 
@@ -109,7 +108,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return 1;
   }
@@ -118,7 +117,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     return getStartPoint().getAsArray().length;
   }
@@ -127,26 +126,21 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    GM_CurveBoundary cb = null;
+    // kuch
+    final CS_CoordinateSystem system = getCoordinateSystem();
 
-    try
-    {
-      cb = new GM_CurveBoundary_Impl( getCoordinateSystem(), m_sp, m_ep );
-    }
-    catch( Exception ex )
-    {
-      System.out.println( "GM_CurveBoundary_Impl.clone: " + ex );
-    }
+    final GM_Position[] sp = GeometryFactory.cloneGM_Position( new GM_Position[] { m_sp } );
+    final GM_Position[] ep = GeometryFactory.cloneGM_Position( new GM_Position[] { m_ep } );
 
-    return cb;
+    return new GM_CurveBoundary_Impl( system, sp[0], ep[0] );
   }
 
   /**
    * returns the StartPoint of the boundary
    */
-  public GM_Position getStartPoint()
+  public GM_Position getStartPoint( )
   {
     return m_sp;
   }
@@ -154,7 +148,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * returns the EndPoint of the boundary
    */
-  public GM_Position getEndPoint()
+  public GM_Position getEndPoint( )
   {
     return m_ep;
   }
@@ -163,18 +157,17 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * checks if this curve is completly equal to the submitted geometry
    * 
    * @param other
-   *          object to compare to
+   *            object to compare to
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    if( !super.equals( other ) || !( other instanceof GM_CurveBoundary_Impl ) )
+    if( !super.equals( other ) || !(other instanceof GM_CurveBoundary_Impl) )
     {
       return false;
     }
 
-    if( !m_ep.equals( ( (GM_CurveBoundary)other ).getEndPoint() )
-        || !m_sp.equals( ( (GM_CurveBoundary)other ).getStartPoint() ) )
+    if( !m_ep.equals( ((GM_CurveBoundary) other).getEndPoint() ) || !m_sp.equals( ((GM_CurveBoundary) other).getStartPoint() ) )
     {
       return false;
     }
@@ -188,48 +181,49 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * geometric objects to capture intersection information.
    */
   @Override
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
-    GM_Point p1 = new GM_Point_Impl( m_sp, getCoordinateSystem() );
-    GM_Point p2 = new GM_Point_Impl( m_ep, getCoordinateSystem() );
+    final GM_Point p1 = new GM_Point_Impl( m_sp, getCoordinateSystem() );
+    final GM_Point p2 = new GM_Point_Impl( m_ep, getCoordinateSystem() );
 
     try
     {
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( p1, (GM_Point)gmo );
+        inter = LinearIntersects.intersects( p1, (GM_Point) gmo );
 
         if( !inter )
         {
-          inter = LinearIntersects.intersects( p2, (GM_Point)gmo );
+          inter = LinearIntersects.intersects( p2, (GM_Point) gmo );
         }
       }
       else if( gmo instanceof GM_Curve )
       {
-        inter = LinearIntersects.intersects( p1, (GM_Curve)gmo );
+        inter = LinearIntersects.intersects( p1, (GM_Curve) gmo );
 
         if( !inter )
         {
-          inter = LinearIntersects.intersects( p2, (GM_Curve)gmo );
+          inter = LinearIntersects.intersects( p2, (GM_Curve) gmo );
         }
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( p1, (GM_Surface)gmo );
+        inter = LinearIntersects.intersects( p1, (GM_Surface) gmo );
 
         if( !inter )
         {
-          inter = LinearIntersects.intersects( p2, (GM_Surface)gmo );
+          inter = LinearIntersects.intersects( p2, (GM_Surface) gmo );
         }
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {
-        inter = intersectsMultiPrimitive( (GM_MultiPrimitive)gmo );
+        inter = intersectsMultiPrimitive( (GM_MultiPrimitive) gmo );
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return inter;
   }
@@ -237,11 +231,11 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
-  private boolean intersectsMultiPrimitive( GM_MultiPrimitive mprim ) throws Exception
+  private boolean intersectsMultiPrimitive( final GM_MultiPrimitive mprim ) throws Exception
   {
     boolean inter = false;
 
-    int cnt = mprim.getSize();
+    final int cnt = mprim.getSize();
 
     for( int i = 0; i < cnt; i++ )
     {
@@ -258,16 +252,16 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * calculates the envelope of the curve boundary
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
-    double[] min = m_sp.getAsArray().clone();
-    double[] max = m_ep.getAsArray().clone();
+    final double[] min = m_sp.getAsArray().clone();
+    final double[] max = m_ep.getAsArray().clone();
 
     for( int i = 0; i < min.length; i++ )
     {
       if( min[i] > max[i] )
       {
-        double d = min[i];
+        final double d = min[i];
         min[i] = max[i];
         max[i] = d;
       }
@@ -280,14 +274,14 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * calculates the envelope of the curve boundary
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateEnvelope();
     setValid( true );
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return "point1: [" + m_sp + "] - point2: [" + m_ep + "]";
   }

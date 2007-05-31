@@ -77,7 +77,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementierung of the GM_Polygon interface from package jago.model.
- * 
  * ------------------------------------------------------------
  * 
  * @version 11.6.2001
@@ -97,15 +96,13 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * @param exteriorRing
    * @param interiorRings
    * @param crs
-   * 
    * @throws GM_Exception
    */
-  public GM_Polygon_Impl( GM_SurfaceInterpolation interpolation, GM_Position[] exteriorRing,
-      GM_Position[][] interiorRings, CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_Polygon_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     super( interpolation, exteriorRing, interiorRings, crs );
 
-    GM_Ring outer = new GM_Ring_Impl( exteriorRing, crs );
+    final GM_Ring outer = new GM_Ring_Impl( exteriorRing, crs );
     GM_Ring[] inner = null;
 
     if( interiorRings != null )
@@ -126,7 +123,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * organized as a GM_SurfaceBoundary, consisting of GM_Curve instances along the boundary of the aggregate GM_Surface,
    * and interior to the GM_Surface where GM_SurfacePatches are adjacent.
    */
-  public GM_SurfaceBoundary getBoundary()
+  public GM_SurfaceBoundary getBoundary( )
   {
     return boundary;
   }
@@ -135,12 +132,12 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * checks if this curve is completly equal to the submitted geometry
    * 
    * @param other
-   *          object to compare to
+   *            object to compare to
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    if( !super.equals( other ) || !( other instanceof GM_Polygon_Impl ) )
+    if( !super.equals( other ) || !(other instanceof GM_Polygon_Impl) )
     {
       return false;
     }
@@ -149,7 +146,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = "GM_SurfacePatch: ";
     ret = "interpolation = " + m_interpolation + "\n";
@@ -157,11 +154,11 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
     for( int i = 0; i < m_exteriorRing.length; i++ )
     {
-      ret += ( m_exteriorRing[i] + "\n" );
+      ret += (m_exteriorRing[i] + "\n");
     }
 
-    ret += ( "interiorRings = " + m_interiorRings + "\n" );
-    ret += ( "envelope = " + m_envelope + "\n" );
+    ret += ("interiorRings = " + m_interiorRings + "\n");
+    ret += ("envelope = " + m_envelope + "\n");
     return ret;
   }
 
@@ -169,21 +166,29 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    GM_Polygon p = null;
+    // kuch
+    final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
+
+    final GM_Position[][] interiorRings = getInteriorRings();
+    final GM_Position[][] clonedInterior = new GM_Position[interiorRings.length][];
+
+    for( int i = 0; i < interiorRings.length; i++ )
+    {
+      clonedInterior[i] = GeometryFactory.cloneGM_Position( interiorRings[i] );
+    }
 
     try
     {
-      p = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( getInterpolation().getValue() ), getExteriorRing(),
-          getInteriorRings(), m_crs );
+      return new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( getInterpolation().getValue() ), clonedExteriorRing, clonedInterior, m_crs );
     }
-    catch( Exception ex )
+    catch( final GM_Exception e )
     {
-      System.out.println( "GM_Polygon_Impl.clone: " + ex );
+      e.printStackTrace();
     }
 
-    return p;
+    throw (new IllegalStateException());
   }
 
   /**
@@ -191,7 +196,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
 
@@ -199,23 +204,24 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     {
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( ( (GM_Point)gmo ).getPosition(), this );
+        inter = LinearIntersects.intersects( ((GM_Point) gmo).getPosition(), this );
       }
       else if( gmo instanceof GM_Curve )
       {
-        inter = LinearIntersects.intersects( (GM_Curve)gmo, new GM_Surface_Impl( this ) );
+        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Surface_Impl( this ) );
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( (GM_Surface)gmo, new GM_Surface_Impl( this ) );
+        inter = LinearIntersects.intersects( (GM_Surface) gmo, new GM_Surface_Impl( this ) );
       }
       else if( gmo instanceof GM_Aggregate )
       {
-        inter = intersectsMultiObject( (GM_Aggregate)gmo );
+        inter = intersectsMultiObject( (GM_Aggregate) gmo );
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return inter;
   }
@@ -223,11 +229,11 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   /**
    * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
-  private boolean intersectsMultiObject( GM_Aggregate mprim ) throws Exception
+  private boolean intersectsMultiObject( final GM_Aggregate mprim ) throws Exception
   {
     boolean inter = false;
 
-    int cnt = mprim.getSize();
+    final int cnt = mprim.getSize();
 
     for( int i = 0; i < cnt; i++ )
     {
@@ -246,7 +252,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * <p>
    * </p>
    */
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
     boolean contain = false;
 
@@ -254,30 +260,31 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     {
       if( gmo instanceof GM_Point )
       {
-        contain = LinearContains.contains( this, ( (GM_Point)gmo ).getPosition() );
+        contain = LinearContains.contains( this, ((GM_Point) gmo).getPosition() );
       }
       else if( gmo instanceof GM_Curve )
       {
-        //                    contain = contain_.contains ( new GM_Surface_Impl ( this ),
-        //                                                 (GM_Curve)gmo );
-        contain = LinearContains.contains( this, ( (GM_Curve)gmo ).getAsLineString() );
+        // contain = contain_.contains ( new GM_Surface_Impl ( this ),
+        // (GM_Curve)gmo );
+        contain = LinearContains.contains( this, ((GM_Curve) gmo).getAsLineString() );
       }
       else if( gmo instanceof GM_Surface )
       {
-        contain = LinearContains.contains( new GM_Surface_Impl( this ), (GM_Surface)gmo );
+        contain = LinearContains.contains( new GM_Surface_Impl( this ), (GM_Surface) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {
-        contain = containsMultiObject( (GM_Aggregate)gmo );
+        contain = containsMultiObject( (GM_Aggregate) gmo );
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return contain;
   }
 
-  private boolean containsMultiObject( GM_Aggregate gmo )
+  private boolean containsMultiObject( final GM_Aggregate gmo )
   {
     try
     {
@@ -289,11 +296,13 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
         }
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return true;
   }
+
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#invalidate()
    */
@@ -301,7 +310,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   public void invalidate( )
   {
     boundary.invalidate();
-    
+
     super.invalidate();
   }
 }

@@ -51,7 +51,7 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.EmptyGMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -136,7 +136,6 @@ public class ShapeSerializer
     }
 
     final IFeatureType featureType = features[0].getFeatureType();
-
     final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geoName );
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
@@ -182,7 +181,6 @@ public class ShapeSerializer
         }
 
         final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
-
         shapeFeatures.add( feature );
       }
 
@@ -198,6 +196,31 @@ public class ShapeSerializer
     }
   }
 
+  public final static Feature createWorkspaceRootFeature( final IFeatureType featureType, final Object shapeFileType )
+  {
+    final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
+    new GMLWorkspace_Impl( new EmptyGMLSchema(), new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null );
+
+    rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, shapeFileType );
+
+    return rootFeature;
+  }
+
+  public static Feature createShapeRootFeature( final IFeatureType ft )
+  {
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final ITypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
+
+    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
+    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, ft, 0, IPropertyType.UNBOUND_OCCURENCY, false );
+    final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
+    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
+
+    return FeatureFactory.createFeature( null, null, "root", collectionFT, true );
+  }
+
   public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs ) throws GmlSerializeException
   {
     ShapeFile sf = null;
@@ -206,11 +229,10 @@ public class ShapeSerializer
     {
       sf = new ShapeFile( fileBase );
       final IFeatureType featureType = sf.getFeatureType();
-
-      final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
-
       final int fileShapeType = sf.getFileShapeType();
-      rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, fileShapeType );
+
+      final Feature rootFeature = ShapeSerializer.createWorkspaceRootFeature( featureType, fileShapeType );
+      final GMLWorkspace workspace = rootFeature.getWorkspace();
 
       final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
       final List list = (List) rootFeature.getProperty( listRelation );
@@ -228,9 +250,6 @@ public class ShapeSerializer
         }
       }
 
-      final GMLSchema schema = null;
-      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null );
-
       return workspace;
     }
     catch( final Exception e )
@@ -244,21 +263,6 @@ public class ShapeSerializer
         sf.close();
       }
     }
-  }
-
-  public static Feature createShapeRootFeature( final IFeatureType ft )
-  {
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final ITypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
-
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
-    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, ft, 0, IPropertyType.UNBOUND_OCCURENCY, false );
-    final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
-
-    return FeatureFactory.createFeature( null, null, "root", collectionFT, true );
   }
 
   /** REMARK: we return a simple collection of features with no parent. Better we would return a GMLWorkspace. */

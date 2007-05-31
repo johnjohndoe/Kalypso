@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The interface defines the bais of curves and curve segments.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -79,20 +77,22 @@ public interface GM_GenericCurve
   /**
    * returns the length of the curve in units of the related spatial reference system
    */
-  double getLength();
+  double getLength( );
 
   /**
    * returns the first point of the curve
    */
-  GM_Point getStartPoint();
+  GM_Point getStartPoint( );
 
   /**
    * returns the last point of the curve
    */
-  GM_Point getEndPoint();
+  GM_Point getEndPoint( );
 
   /**
    * returns the curve as GM_LineString
    */
-  GM_LineString getAsLineString() throws GM_Exception;
+  GM_LineString getAsLineString( ) throws GM_Exception;
+
+  public Object clone( ) throws CloneNotSupportedException;
 }

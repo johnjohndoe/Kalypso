@@ -141,7 +141,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     public void widgetChanged( final IWidget newWidget )
     {
       if( PlatformUI.getWorkbench().isClosing() )
+      {
         return;
+      }
 
       // the widget changed and there is something to show, so bring this
       // view to top
@@ -300,14 +302,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     // TODO: this context is never deaktivated..., is this right? If yes, please comment why.
     final IContextService contextService = (IContextService) site.getService( IContextService.class );
     if( contextService != null )
+    {
       contextService.activateContext( "org.kalypso.ogc.gml.map.context" );
+    }
 
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
 
     final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
     final IContextService workbenchContextService = (IContextService) workbench.getService( IContextService.class );
     if( workbenchContextService != null )
+    {
       m_mapModellContextSwitcher.addContextService( workbenchContextService );
+    }
   }
 
   /**
@@ -316,8 +322,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public void setFocus( )
   {
-    if( m_control != null && !m_control.isDisposed() )
+    if( (m_control != null) && !m_control.isDisposed() )
+    {
       m_control.setFocus();
+    }
   }
 
   /**
@@ -354,7 +362,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     if( m_mapPanel != null )
+    {
       loadMap( monitor, input.getStorage() );
+    }
   }
 
   /**
@@ -399,7 +409,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     if( m_saving )
+    {
       return;
+    }
 
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
@@ -505,8 +517,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    if( m_mapModell == null || m_saving )
+    if( (m_mapModell == null) || m_saving )
+    {
       return;
+    }
 
     m_saving = true;
     try
@@ -541,13 +555,17 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     // dispose old one
     // TODO: shouldnt this be done by the one who creates it?
     if( m_mapModell != null )
+    {
       m_mapModell.dispose();
+    }
 
     m_mapModell = mapModell;
     m_mapModellContextSwitcher.setMapModell( mapModell );
 
     if( m_mapPanel != null )
+    {
       m_mapPanel.setMapModell( m_mapModell );
+    }
   }
 
   /**
@@ -587,23 +605,33 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public Object getAdapter( final Class adapter )
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
+    {
       return this;
+    }
 
     if( adapter == IFile.class )
     {
       final IEditorInput input = getEditorInput();
       if( input instanceof IFileEditorInput )
+      {
         return ((IFileEditorInput) getEditorInput()).getFile();
+      }
     }
 
     if( adapter == MapPanel.class )
+    {
       return m_mapPanel;
+    }
 
     if( adapter == ModellEventProvider.class )
+    {
       return new MapPanelModellEventProvider( m_mapPanel );
+    }
 
     if( adapter == Control.class )
+    {
       return m_control;
+    }
 
     return super.getAdapter( adapter );
   }

@@ -91,15 +91,23 @@ public class QNameFeaturesProvider implements IFeaturesProvider
           {
             final Feature f;
             if( object instanceof Feature )
+            {
               f = (Feature) object;
+            }
             else if( object instanceof String )
+            {
               f = workspace.getFeature( (String) object );
+            }
             else
+            {
               continue;
+            }
 
             final IFeatureType targetFeatureType = f.getFeatureType();
             if( GMLSchemaUtilities.substitutes( targetFeatureType, m_qname ) )
+            {
               foundfeatures.add( new EasyFeatureWrapper( workspace, f, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() ) );
+            }
           }
         }
       }

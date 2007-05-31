@@ -61,6 +61,8 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -68,12 +70,12 @@ import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_MultiCurve interface from package jago.model.
- * 
  * ------------------------------------------------------------
  * 
  * @version 12.6.2001
@@ -89,7 +91,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @param crs
    */
-  public GM_MultiCurve_Impl( CS_CoordinateSystem crs )
+  public GM_MultiCurve_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
   }
@@ -99,12 +101,14 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @param gmc
    */
-  public GM_MultiCurve_Impl( GM_Curve[] gmc )
+  public GM_MultiCurve_Impl( final GM_Curve[] gmc )
   {
     super( null );
 
     for( int i = 0; i < gmc.length; i++ )
+    {
       m_aggregate.add( gmc[i] );
+    }
   }
 
   /**
@@ -113,18 +117,20 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param gmc
    * @param crs
    */
-  public GM_MultiCurve_Impl( GM_Curve[] gmc, CS_CoordinateSystem crs )
+  public GM_MultiCurve_Impl( final GM_Curve[] gmc, final CS_CoordinateSystem crs )
   {
     super( crs );
 
     for( int i = 0; i < gmc.length; i++ )
+    {
       m_aggregate.add( gmc[i] );
+    }
   }
 
   /**
    * adds a GM_Curve to the aggregation
    */
-  public void addCurve( GM_Curve gmc )
+  public void addCurve( final GM_Curve gmc )
   {
     super.add( gmc );
   }
@@ -134,11 +140,11 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
    * 
    * @param gmc
-   *          GM_Curve to insert.
+   *            GM_Curve to insert.
    * @param index
-   *          position where to insert the new GM_Curve
+   *            position where to insert the new GM_Curve
    */
-  public void insertCurveAt( GM_Curve gmc, int index ) throws GM_Exception
+  public void insertCurveAt( final GM_Curve gmc, final int index ) throws GM_Exception
   {
     super.insertObjectAt( gmc, index );
   }
@@ -148,11 +154,11 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
    * 
    * @param gmc
-   *          GM_Curve to set.
+   *            GM_Curve to set.
    * @param index
-   *          position where to set the new GM_Curve
+   *            position where to set the new GM_Curve
    */
-  public void setCurveAt( GM_Curve gmc, int index ) throws GM_Exception
+  public void setCurveAt( final GM_Curve gmc, final int index ) throws GM_Exception
   {
     setObjectAt( gmc, index );
   }
@@ -162,9 +168,9 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Curve
    */
-  public GM_Curve removeCurve( GM_Curve gmc )
+  public GM_Curve removeCurve( final GM_Curve gmc )
   {
-    return (GM_Curve)super.removeObject( gmc );
+    return (GM_Curve) super.removeObject( gmc );
   }
 
   /**
@@ -173,16 +179,16 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Curve
    */
-  public GM_Curve removeCurveAt( int index ) throws GM_Exception
+  public GM_Curve removeCurveAt( final int index ) throws GM_Exception
   {
-    return (GM_Curve)super.removeObjectAt( index );
+    return (GM_Curve) super.removeObjectAt( index );
   }
 
   /**
    * removes all GM_Curve from the aggregation.
    */
   @Override
-  public void removeAll()
+  public void removeAll( )
   {
     super.removeAll();
   }
@@ -190,15 +196,15 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns the GM_Curve at the submitted index.
    */
-  public GM_Curve getCurveAt( int index )
+  public GM_Curve getCurveAt( final int index )
   {
-    return (GM_Curve)super.getPrimitiveAt( index );
+    return (GM_Curve) super.getPrimitiveAt( index );
   }
 
   /**
    * returns all GM_Curves as array
    */
-  public GM_Curve[] getAllCurves()
+  public GM_Curve[] getAllCurves( )
   {
     return m_aggregate.toArray( new GM_Curve[getSize()] );
   }
@@ -206,7 +212,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns true if the submitted GM_Curve is within the aggregation
    */
-  public boolean isMember( GM_Curve gmc )
+  public boolean isMember( final GM_Curve gmc )
   {
     return super.isMember( gmc );
   }
@@ -217,7 +223,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * not implemented yet
    */
   @Override
-  public GM_Boundary getBoundary()
+  public GM_Boundary getBoundary( )
   {
     return null;
   }
@@ -225,17 +231,17 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * calculates the bounding box / envelope of the aggregation
    */
-  protected void calculateEnvelope()
+  protected void calculateEnvelope( )
   {
-    GM_Envelope bb = getCurveAt( 0 ).getEnvelope();
+    final GM_Envelope bb = getCurveAt( 0 ).getEnvelope();
 
-    double[] min = bb.getMin().getAsArray().clone();
-    double[] max = bb.getMax().getAsArray().clone();
+    final double[] min = bb.getMin().getAsArray().clone();
+    final double[] max = bb.getMax().getAsArray().clone();
 
     for( int i = 1; i < getSize(); i++ )
     {
-      double[] pos1 = getCurveAt( i ).getEnvelope().getMin().getAsArray();
-      double[] pos2 = getCurveAt( i ).getEnvelope().getMax().getAsArray();
+      final double[] pos1 = getCurveAt( i ).getEnvelope().getMin().getAsArray();
+      final double[] pos2 = getCurveAt( i ).getEnvelope().getMax().getAsArray();
 
       for( int j = 0; j < pos1.length; j++ )
       {
@@ -265,20 +271,20 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * calculates the centroid of the aggregation
    */
-  protected void calculateCentroid()
+  protected void calculateCentroid( )
   {
     try
     {
       double cnt = 0;
-      GM_Point gmp = getCurveAt( 0 ).getCentroid();
+      final GM_Point gmp = getCurveAt( 0 ).getCentroid();
 
-      double[] cen = new double[gmp.getAsArray().length];
+      final double[] cen = new double[gmp.getAsArray().length];
 
       for( int i = 0; i < getSize(); i++ )
       {
         cnt += getCurveAt( i ).getNumberOfCurveSegments();
 
-        double[] pos = getCurveAt( i ).getCentroid().getAsArray();
+        final double[] pos = getCurveAt( i ).getCentroid().getAsArray();
 
         for( int j = 0; j < getCoordinateDimension(); j++ )
         {
@@ -293,15 +299,16 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
       centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
     }
-    catch( Exception ex )
-    {}
+    catch( final Exception ex )
+    {
+    }
   }
 
   /**
    * calculates the centroid and envelope of the aggregation
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateCentroid();
     calculateEnvelope();
@@ -315,7 +322,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 3-dimensional.
    */
   @Override
-  public int getDimension()
+  public int getDimension( )
   {
     return 1;
   }
@@ -325,7 +332,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   @Override
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     GM_CurveSegment sp = null;
 
@@ -333,35 +340,27 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     {
       sp = getCurveAt( 0 ).getCurveSegmentAt( 0 );
     }
-    catch( Exception ex )
-    {}
+    catch( final Exception ex )
+    {
+    }
 
     return sp.getPositionAt( 0 ).getAsArray().length;
   }
 
   /**
-   * returns a shallow copy of the geometry
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#clone()
    */
   @Override
-  public Object clone()
+  public GM_Object clone( ) throws CloneNotSupportedException
   {
-    GM_MultiCurve mc = null;
-
-    try
+    // kuch
+    final GM_Curve[] curves = getAllCurves();
+    final List<GM_Curve> myCurves = new LinkedList<GM_Curve>();
+    for( final GM_Curve curve : curves )
     {
-      mc = new GM_MultiCurve_Impl( getCoordinateSystem() );
-
-      for( int i = 0; i < this.getSize(); i++ )
-      {
-        GM_Curve_Impl ci = (GM_Curve_Impl)getCurveAt( i );
-        mc.addCurve( (GM_Curve)ci.clone() );
-      }
-    }
-    catch( Exception ex )
-    {
-      System.out.println( "GM_MultiCurve_Impl.clone: " + ex );
+      myCurves.add( (GM_Curve) curve.clone() );
     }
 
-    return mc;
+    return new GM_MultiCurve_Impl( myCurves.toArray( new GM_Curve[] {} ) );
   }
 }

@@ -72,7 +72,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Point interface.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -92,9 +91,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor. initializes a point to the coordinate 0/0
    * 
    * @param crs
-   *          spatial reference system of the point
+   *            spatial reference system of the point
    */
-  public GM_Point_Impl( CS_CoordinateSystem crs )
+  public GM_Point_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
     position = new GM_Position_Impl();
@@ -106,13 +105,13 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor for initializing a point within a two-dimensional coordinate system
    * 
    * @param x
-   *          x-value of the point
+   *            x-value of the point
    * @param y
-   *          y-value of the point
+   *            y-value of the point
    * @param crs
-   *          spatial reference system of the point
+   *            spatial reference system of the point
    */
-  public GM_Point_Impl( double x, double y, CS_CoordinateSystem crs )
+  public GM_Point_Impl( final double x, final double y, final CS_CoordinateSystem crs )
   {
     super( crs );
     position = new GM_Position_Impl( x, y );
@@ -124,15 +123,15 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor for initializing a point within a three-dimensional coordinate system
    * 
    * @param x
-   *          x-value of the point
+   *            x-value of the point
    * @param y
-   *          y-value of the point
+   *            y-value of the point
    * @param z
-   *          z-value of the point
+   *            z-value of the point
    * @param crs
-   *          spatial reference system of the point
+   *            spatial reference system of the point
    */
-  public GM_Point_Impl( double x, double y, double z, CS_CoordinateSystem crs )
+  public GM_Point_Impl( final double x, final double y, final double z, final CS_CoordinateSystem crs )
   {
     super( crs );
     position = new GM_Position_Impl( x, y, z );
@@ -144,9 +143,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor
    * 
    * @param gmo
-   *          existing GM_Point
+   *            existing GM_Point
    */
-  public GM_Point_Impl( GM_Point gmo )
+  public GM_Point_Impl( final GM_Point gmo )
   {
     super( gmo.getCoordinateSystem() );
     position = new GM_Position_Impl( gmo.getAsArray() );
@@ -158,11 +157,11 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor
    * 
    * @param gmo
-   *          existing GM_Point
+   *            existing GM_Point
    * @param crs
-   *          spatial reference system of the point
+   *            spatial reference system of the point
    */
-  public GM_Point_Impl( GM_Position gmo, CS_CoordinateSystem crs )
+  public GM_Point_Impl( final GM_Position gmo, final CS_CoordinateSystem crs )
   {
     super( crs );
     position = gmo;
@@ -174,15 +173,15 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * checks if this point is completly equal to the submitted geometry
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    if( super.equals( other ) && ( other instanceof GM_Point ) )
+    if( super.equals( other ) && (other instanceof GM_Point) )
     {
-      GM_Point p = (GM_Point)other;
-      boolean flagEq = Math.abs( getX() - p.getX() ) < mute && Math.abs( getY() - p.getY() ) < mute;
+      final GM_Point p = (GM_Point) other;
+      boolean flagEq = (Math.abs( getX() - p.getX() ) < GM_Object_Impl.mute) && (Math.abs( getY() - p.getY() ) < GM_Object_Impl.mute);
       if( getCoordinateDimension() == 3 )
       {
-        flagEq = flagEq && Math.abs( getZ() - p.getZ() ) < mute;
+        flagEq = flagEq && (Math.abs( getZ() - p.getZ() ) < GM_Object_Impl.mute);
       }
       return flagEq;
     }
@@ -196,7 +195,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return 0;
   }
@@ -205,7 +204,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     return position.getAsArray().length;
   }
@@ -214,15 +213,18 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * returns a shallow copy of the geometry.
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    return new GM_Point_Impl( this );
+    // kuch
+    final CS_CoordinateSystem system = getCoordinateSystem();
+
+    return new GM_Point_Impl( getX(), getY(), getZ(), system );
   }
 
   /**
    * returns the x-value of this point
    */
-  public double getX()
+  public double getX( )
   {
     return position.getX();
   }
@@ -230,7 +232,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * returns the y-value of this point
    */
-  public double getY()
+  public double getY( )
   {
     return position.getY();
   }
@@ -238,7 +240,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * returns the y-value of this point
    */
-  public double getZ()
+  public double getZ( )
   {
     return position.getZ();
   }
@@ -247,7 +249,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
-  public double[] getAsArray()
+  public double[] getAsArray( )
   {
     return position.getAsArray();
   }
@@ -256,13 +258,13 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
   @Override
-  public void translate( double[] d )
+  public void translate( final double[] d )
   {
     setValid( false );
     position.translate( d );
   }
 
-  public GM_Position getPosition()
+  public GM_Position getPosition( )
   {
     return position;
   }
@@ -276,7 +278,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * dummy implementation
    */
   @Override
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
 
@@ -284,23 +286,24 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     {
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( (GM_Point)gmo, this );
+        inter = LinearIntersects.intersects( (GM_Point) gmo, this );
       }
       else if( gmo instanceof GM_Curve )
       {
-        inter = LinearIntersects.intersects( this, (GM_Curve)gmo );
+        inter = LinearIntersects.intersects( this, (GM_Curve) gmo );
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( this, (GM_Surface)gmo );
+        inter = LinearIntersects.intersects( this, (GM_Surface) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {
-        inter = intersectsAggregate( (GM_Aggregate)gmo );
+        inter = intersectsAggregate( (GM_Aggregate) gmo );
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return inter;
   }
@@ -308,11 +311,11 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
-  private boolean intersectsAggregate( GM_Aggregate mprim ) throws Exception
+  private boolean intersectsAggregate( final GM_Aggregate mprim ) throws Exception
   {
     boolean inter = false;
 
-    int cnt = mprim.getSize();
+    final int cnt = mprim.getSize();
 
     for( int i = 0; i < cnt; i++ )
     {
@@ -332,7 +335,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * </p>
    */
   @Override
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
     throw new NoSuchMethodError( "the contains operation for points " + "isn't supported at the moment." );
   }
@@ -341,19 +344,19 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * recalculates internal parameters
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     setValid( true );
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = "GM_Point: ";
 
     for( int i = 0; i < getCoordinateDimension(); i++ )
     {
-      ret += ( getAsArray()[i] + " " );
+      ret += (getAsArray()[i] + " ");
     }
 
     return ret;

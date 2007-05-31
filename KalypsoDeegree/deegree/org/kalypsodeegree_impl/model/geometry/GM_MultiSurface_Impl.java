@@ -61,6 +61,8 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -71,7 +73,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_MultiSurface interface from package jago.model.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -92,7 +93,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 
    * @param crs
    */
-  public GM_MultiSurface_Impl( CS_CoordinateSystem crs )
+  public GM_MultiSurface_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
   }
@@ -102,12 +103,14 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 
    * @param surface
    */
-  public GM_MultiSurface_Impl( GM_Surface[] surface )
+  public GM_MultiSurface_Impl( final GM_Surface[] surface )
   {
     super( null );
 
     for( int i = 0; i < surface.length; i++ )
+    {
       m_aggregate.add( surface[i] );
+    }
 
     setValid( false );
   }
@@ -118,12 +121,14 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * @param surface
    * @param crs
    */
-  public GM_MultiSurface_Impl( GM_Surface[] surface, CS_CoordinateSystem crs )
+  public GM_MultiSurface_Impl( final GM_Surface[] surface, final CS_CoordinateSystem crs )
   {
     super( crs );
 
     for( int i = 0; i < surface.length; i++ )
+    {
       m_aggregate.add( surface[i] );
+    }
 
     setValid( false );
   }
@@ -131,7 +136,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * adds an GM_Surface to the aggregation
    */
-  public void addSurface( GM_Surface gms )
+  public void addSurface( final GM_Surface gms )
   {
     super.add( gms );
   }
@@ -141,11 +146,11 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
-   *          GM_Surface to insert.
+   *            GM_Surface to insert.
    * @param index
-   *          position where to insert the new GM_Surface
+   *            position where to insert the new GM_Surface
    */
-  public void insertSurfaceAt( GM_Surface gms, int index ) throws GM_Exception
+  public void insertSurfaceAt( final GM_Surface gms, final int index ) throws GM_Exception
   {
     super.insertObjectAt( gms, index );
   }
@@ -155,11 +160,11 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
-   *          GM_Surface to set.
+   *            GM_Surface to set.
    * @param index
-   *          position where to set the new GM_Surface
+   *            position where to set the new GM_Surface
    */
-  public void setSurfaceAt( GM_Surface gms, int index ) throws GM_Exception
+  public void setSurfaceAt( final GM_Surface gms, final int index ) throws GM_Exception
   {
     setObjectAt( gms, index );
   }
@@ -169,9 +174,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 
    * @return the removed GM_Surface
    */
-  public GM_Surface removeSurface( GM_Surface gms )
+  public GM_Surface removeSurface( final GM_Surface gms )
   {
-    return (GM_Surface)super.removeObject( gms );
+    return (GM_Surface) super.removeObject( gms );
   }
 
   /**
@@ -180,23 +185,23 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 
    * @return the removed GM_Surface
    */
-  public GM_Surface removeSurfaceAt( int index ) throws GM_Exception
+  public GM_Surface removeSurfaceAt( final int index ) throws GM_Exception
   {
-    return (GM_Surface)super.removeObjectAt( index );
+    return (GM_Surface) super.removeObjectAt( index );
   }
 
   /**
    * returns the GM_Surface at the submitted index.
    */
-  public GM_Surface getSurfaceAt( int index )
+  public GM_Surface getSurfaceAt( final int index )
   {
-    return (GM_Surface)super.getPrimitiveAt( index );
+    return (GM_Surface) super.getPrimitiveAt( index );
   }
 
   /**
    * returns all GM_Surfaces as array
    */
-  public GM_Surface[] getAllSurfaces()
+  public GM_Surface[] getAllSurfaces( )
   {
     return m_aggregate.toArray( new GM_Surface[getSize()] );
   }
@@ -204,18 +209,18 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * calculates the bounding box / envelope of the aggregation
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
-    GM_Envelope bb = getSurfaceAt( 0 ).getEnvelope();
+    final GM_Envelope bb = getSurfaceAt( 0 ).getEnvelope();
 
-    double[] min = bb.getMin().getAsArray().clone();
-    double[] max = bb.getMax().getAsArray().clone();
+    final double[] min = bb.getMin().getAsArray().clone();
+    final double[] max = bb.getMax().getAsArray().clone();
 
     final int size = getSize();
-	for( int i = 1; i < size; i++ )
+    for( int i = 1; i < size; i++ )
     {
-      double[] pos1 = getSurfaceAt( i ).getEnvelope().getMin().getAsArray();
-      double[] pos2 = getSurfaceAt( i ).getEnvelope().getMax().getAsArray();
+      final double[] pos1 = getSurfaceAt( i ).getEnvelope().getMin().getAsArray();
+      final double[] pos2 = getSurfaceAt( i ).getEnvelope().getMax().getAsArray();
 
       for( int j = 0; j < pos1.length; j++ )
       {
@@ -245,25 +250,25 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * calculates the centroid and area of the aggregation
    */
-  private void calculateCentroidArea()
+  private void calculateCentroidArea( )
   {
 
     area = 0;
-    int cnt = getCoordinateDimension();
+    final int cnt = getCoordinateDimension();
     try
     {
-      double[] cen = new double[cnt];
+      final double[] cen = new double[cnt];
 
       for( int i = 0; i < getSize(); i++ )
       {
-        double a = getSurfaceAt( i ).getArea();
+        final double a = getSurfaceAt( i ).getArea();
         area = area + a;
 
-        double[] pos = getSurfaceAt( i ).getCentroid().getAsArray();
+        final double[] pos = getSurfaceAt( i ).getCentroid().getAsArray();
 
         for( int j = 0; j < cnt; j++ )
         {
-          cen[j] = cen[j] + ( pos[j] * a );
+          cen[j] = cen[j] + (pos[j] * a);
         }
       }
 
@@ -274,7 +279,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
       centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       System.out.println( e );
     }
@@ -284,7 +289,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * calculates the centroid, area and envelope of the aggregation
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateEnvelope();
     calculateCentroidArea();
@@ -294,7 +299,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * returns the area of the multi surface. this is calculate as the sum of all containing surface areas.
    */
-  public double getArea()
+  public double getArea( )
   {
     if( !isValid() )
     {
@@ -307,26 +312,18 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( ) throws CloneNotSupportedException
   {
-    GM_MultiSurface ms = null;
+    // kuch
+    final GM_Surface[] surfaces = getAllSurfaces();
+    final List<GM_Surface> mySurfaces = new LinkedList<GM_Surface>();
 
-    try
+    for( final GM_Surface surface : surfaces )
     {
-      ms = new GM_MultiSurface_Impl( getCoordinateSystem() );
-
-      for( int i = 0; i < this.getSize(); i++ )
-      {
-        GM_Surface_Impl si = (GM_Surface_Impl)getSurfaceAt( i );
-        ms.add( (GM_Surface)si.clone() );
-      }
-    }
-    catch( Exception ex )
-    {
-      System.out.println( "GM_MultiSurface_Impl.clone: " + ex );
+      mySurfaces.add( (GM_Surface) surface.clone() );
     }
 
-    return ms;
+    return new GM_MultiSurface_Impl( mySurfaces.toArray( new GM_Surface[] {} ) );
   }
 
   /**
@@ -336,7 +333,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 3-dimensional.
    */
   @Override
-  public int getDimension()
+  public int getDimension( )
   {
     return 2;
   }
@@ -346,7 +343,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   @Override
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     GM_SurfacePatch sp = null;
 
@@ -354,8 +351,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     {
       sp = getSurfaceAt( 0 ).getSurfacePatchAt( 0 );
     }
-    catch( Exception ex )
-    {}
+    catch( final Exception ex )
+    {
+    }
 
     return sp.getExteriorRing()[0].getAsArray().length;
   }

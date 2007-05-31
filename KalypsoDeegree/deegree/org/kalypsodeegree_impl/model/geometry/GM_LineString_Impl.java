@@ -75,7 +75,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_LineString interface of package jago.model.
- * 
  * ------------------------------------------------------------
  * 
  * @version 10.6.2001
@@ -91,10 +90,9 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
    * 
    * @param gmps
    * @param cs
-   * 
    * @throws GM_Exception
    */
-  public GM_LineString_Impl( GM_Position[] gmps, CS_CoordinateSystem cs ) throws GM_Exception
+  public GM_LineString_Impl( final GM_Position[] gmps, final CS_CoordinateSystem cs ) throws GM_Exception
   {
     super( gmps, cs );
   }
@@ -103,26 +101,29 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    GM_CurveSegment cs = null;
+    // kuch
+    final CS_CoordinateSystem system = getCoordinateSystem();
+    final GM_Position[] positions = GeometryFactory.cloneGM_Position( getPositions() );
 
     try
     {
-      cs = new GM_LineString_Impl( getPositions(), getCoordinateSystem() );
+      return new GM_LineString_Impl( positions, system );
     }
-    catch( Exception ex )
+    catch( final GM_Exception e )
     {
-      System.out.println( "GM_LineString_Impl.clone: " + ex );
+      e.printStackTrace();
     }
 
-    return cs;
+    throw (new IllegalStateException());
   }
 
   /**
    * returns the length of the curve in units of the related spatial reference system
    */
-  public double getLength()
+  @Override
+  public double getLength( )
   {
     return -1;
   }
@@ -130,7 +131,8 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   /**
    * returns a reference to itself
    */
-  public GM_LineString getAsLineString()
+  @Override
+  public GM_LineString getAsLineString( )
   {
     return this;
   }
@@ -140,7 +142,8 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
-  public boolean intersects( GM_Object gmo )
+  @Override
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
 
@@ -148,27 +151,26 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
     {
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( ( (GM_Point)gmo ).getPosition(), this );
+        inter = LinearIntersects.intersects( ((GM_Point) gmo).getPosition(), this );
       }
       else if( gmo instanceof GM_Curve )
       {
-        GM_CurveSegment[] cs = new GM_CurveSegment[]
-        { this };
-        inter = LinearIntersects.intersects( (GM_Curve)gmo, new GM_Curve_Impl( cs ) );
+        final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
+        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Curve_Impl( cs ) );
       }
       else if( gmo instanceof GM_Surface )
       {
-        GM_CurveSegment[] cs = new GM_CurveSegment[]
-        { this };
-        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Surface)gmo );
+        final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
+        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Surface) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {
-        inter = intersectsMultiPrimitive( (GM_MultiPrimitive)gmo );
+        inter = intersectsMultiPrimitive( (GM_MultiPrimitive) gmo );
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return inter;
   }
@@ -176,11 +178,11 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   /**
    * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
-  private boolean intersectsMultiPrimitive( GM_MultiPrimitive mprim ) throws Exception
+  private boolean intersectsMultiPrimitive( final GM_MultiPrimitive mprim ) throws Exception
   {
     boolean inter = false;
 
-    int cnt = mprim.getSize();
+    final int cnt = mprim.getSize();
 
     for( int i = 0; i < cnt; i++ )
     {
@@ -198,8 +200,9 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    */
   @Override
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
     return false;
   }
+
 }

@@ -132,18 +132,18 @@ public class FeatureCompositeGFTWrapper
     m_compFeature.setShowOk( false );
     m_compFeature.createControl( composite, SWT.NONE );
 
-    removeListener(workspace);
+    removeListener( workspace );
     addListener( workspace );
   }
 
-  private void removeListener( CommandableWorkspace workspace )
+  private void removeListener( final CommandableWorkspace workspace )
   {
-    if (m_compFeature != null && m_ifFtrChLstner != null)
+    if( (m_compFeature != null) && (m_ifFtrChLstner != null) )
     {
       m_compFeature.removeChangeListener( m_ifFtrChLstner );
       m_ifFtrChLstner = null;
     }
-    
+
   }
 
   private void addListener( final CommandableWorkspace workspace )
@@ -232,13 +232,13 @@ public class FeatureCompositeGFTWrapper
    * id.
    * 
    * @param project
-   *          your active eclipse project
+   *            your active eclipse project
    * @param templateFilePath
-   *          project relative file name
+   *            project relative file name
    * @param gftFile
-   *          filePointer to new gft-File which will be created
+   *            filePointer to new gft-File which will be created
    * @param gmlId
-   *          the id which will be replaced
+   *            the id which will be replaced
    */
   public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final String gmlId ) throws IOException, CoreException
   {
@@ -252,13 +252,13 @@ public class FeatureCompositeGFTWrapper
    * dto. - in this function you can replace different kind of keys and values (hashmap)
    * 
    * @param project
-   *          your active eclipse project
+   *            your active eclipse project
    * @param templateFilePath
-   *          project relative file name
+   *            project relative file name
    * @param gftFile
-   *          filePointer to new gft-File which will be created
+   *            filePointer to new gft-File which will be created
    * @param hReplacements
-   *          index[key, value] - keys will be replaced with their assigned values
+   *            index[key, value] - keys will be replaced with their assigned values
    */
   public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final Map<String, String> hReplacements ) throws IOException, CoreException
   {

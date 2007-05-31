@@ -79,8 +79,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Ring interface of the
- * 
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -100,7 +98,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * Constructor, with Array and CS_CoordinateSystem
    */
-  public GM_Ring_Impl( GM_Position[] points, CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_Ring_Impl( final GM_Position[] points, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     super( crs );
 
@@ -110,7 +108,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * Constructor, with Array, CS_CoordinateSystem and Orientation
    */
-  public GM_Ring_Impl( GM_Position[] points, CS_CoordinateSystem crs, char orientation ) throws GM_Exception
+  public GM_Ring_Impl( final GM_Position[] points, final CS_CoordinateSystem crs, final char orientation ) throws GM_Exception
   {
     super( crs, orientation );
     setPositions( points );
@@ -119,14 +117,14 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * calculates the envelope
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
-    double[] min = m_points[0].getAsArray().clone();
-    double[] max = min.clone();
+    final double[] min = m_points[0].getAsArray().clone();
+    final double[] max = min.clone();
 
     for( int i = 1; i < m_points.length; i++ )
     {
-      double[] pos = m_points[i].getAsArray();
+      final double[] pos = m_points[i].getAsArray();
 
       for( int j = 0; j < pos.length; j++ )
       {
@@ -147,7 +145,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * GM_Ring must be closed, so isCycle returns TRUE.
    */
-  public boolean isCycle()
+  public boolean isCycle( )
   {
     return true;
   }
@@ -155,7 +153,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * GM_Ring is a PrimitiveBoundary, so isSimple returns TRUE.
    */
-  public boolean isSimple()
+  public boolean isSimple( )
   {
     return true;
   }
@@ -166,7 +164,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return 1;
   }
@@ -175,7 +173,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     return getPositions()[0].getAsArray().length;
   }
@@ -183,15 +181,15 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * gets the Ring as a Array of positions.
    */
-  public GM_Position[] getPositions()
+  public GM_Position[] getPositions( )
   {
     if( getOrientation() == '-' )
     {
-      GM_Position[] temp = new GM_Position[m_points.length];
+      final GM_Position[] temp = new GM_Position[m_points.length];
 
       for( int i = 0; i < m_points.length; i++ )
       {
-        temp[i] = m_points[( m_points.length - 1 ) - i];
+        temp[i] = m_points[(m_points.length - 1) - i];
       }
 
       return temp;
@@ -203,9 +201,9 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * sets the Ring as a ArrayList of points
    */
-  protected void setPositions( GM_Position[] positions ) throws GM_Exception
+  protected void setPositions( final GM_Position[] positions ) throws GM_Exception
   {
-    this.m_points = positions;
+    m_points = positions;
 
     // checks if the ring has more than 3 elements [!(points.length > 3)]
     if( positions.length < 3 )
@@ -225,7 +223,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * returns the Ring as a CurveSegment
    */
-  public GM_CurveSegment getAsCurveSegment() throws GM_Exception
+  public GM_CurveSegment getAsCurveSegment( ) throws GM_Exception
   {
     return new GM_LineString_Impl( m_points, getCoordinateSystem() );
   }
@@ -234,31 +232,31 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * returns the CurveBoundary of the Ring. For a CurveBoundary is defines as the first and the last point of a Curve
    * the CurveBoundary of a Ring contains two indentical point (because a Ring is closed)
    */
-  public GM_CurveBoundary getCurveBoundary()
+  public GM_CurveBoundary getCurveBoundary( )
   {
-    return (GM_CurveBoundary)m_boundary;
+    return (GM_CurveBoundary) m_boundary;
   }
 
   /**
    * checks if this curve segment is completly equal to the submitted geometry
    * 
    * @param other
-   *          object to compare to
+   *            object to compare to
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    if( !super.equals( other ) || !( other instanceof GM_Ring_Impl ) )
+    if( !super.equals( other ) || !(other instanceof GM_Ring_Impl) )
     {
       return false;
     }
 
-    if( !envelope.equals( ( (GM_Object)other ).getEnvelope() ) )
+    if( !envelope.equals( ((GM_Object) other).getEnvelope() ) )
     {
       return false;
     }
 
-    GM_Position[] p2 = ( (GM_Ring)other ).getPositions();
+    final GM_Position[] p2 = ((GM_Ring) other).getPositions();
 
     if( !Arrays.equals( m_points, p2 ) )
     {
@@ -272,22 +270,23 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    GM_Ring r = null;
+    // kuch
+    final CS_CoordinateSystem system = getCoordinateSystem();
+    final GM_Position[] myPositions = GeometryFactory.cloneGM_Position( getPositions() );
+    final char orientation = getOrientation();
 
     try
     {
-      GM_Position[] p = m_points.clone();
-
-      r = new GM_Ring_Impl( p, getCoordinateSystem(), getOrientation() );
+      return new GM_Ring_Impl( myPositions, system, orientation );
     }
-    catch( Exception ex )
+    catch( final GM_Exception e )
     {
-      System.out.println( "GM_Ring_Impl.clone: " + ex );
+      e.printStackTrace();
     }
 
-    return r;
+    throw (new IllegalStateException());
   }
 
   /**
@@ -296,37 +295,36 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * geometric objects to capture intersection information.
    */
   @Override
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
 
     try
     {
-      GM_CurveSegment sp = new GM_LineString_Impl( m_points, getCoordinateSystem() );
+      final GM_CurveSegment sp = new GM_LineString_Impl( m_points, getCoordinateSystem() );
 
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( ( (GM_Point)gmo ).getPosition(), sp );
+        inter = LinearIntersects.intersects( ((GM_Point) gmo).getPosition(), sp );
       }
       else if( gmo instanceof GM_Curve )
       {
-        GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[]
-        { sp } );
-        inter = LinearIntersects.intersects( (GM_Curve)gmo, curve );
+        final GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[] { sp } );
+        inter = LinearIntersects.intersects( (GM_Curve) gmo, curve );
       }
       else if( gmo instanceof GM_Surface )
       {
-        GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[]
-        { sp } );
-        inter = LinearIntersects.intersects( curve, (GM_Surface)gmo );
+        final GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[] { sp } );
+        inter = LinearIntersects.intersects( curve, (GM_Surface) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {
-        inter = intersectsAggregate( (GM_MultiPrimitive)gmo );
+        inter = intersectsAggregate( (GM_MultiPrimitive) gmo );
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return inter;
   }
@@ -334,11 +332,11 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
-  private boolean intersectsAggregate( GM_Aggregate mprim ) throws Exception
+  private boolean intersectsAggregate( final GM_Aggregate mprim ) throws Exception
   {
     boolean inter = false;
 
-    int cnt = mprim.getSize();
+    final int cnt = mprim.getSize();
 
     for( int i = 0; i < cnt; i++ )
     {
@@ -359,7 +357,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * At the moment the operation just works with point geometries
    */
   @Override
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
 
     try
@@ -370,8 +368,9 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
       }
       return m_sp.contains( gmo );
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return false;
   }
@@ -384,7 +383,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * dummy implementation
    */
   @Override
-  public boolean contains( GM_Position position )
+  public boolean contains( final GM_Position position )
   {
     return contains( new GM_Point_Impl( position, null ) );
   }
@@ -392,15 +391,15 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * calculates the centroid of the ring
    */
-  protected void calculateCentroid()
+  protected void calculateCentroid( )
   {
-    double[] cen = new double[getCoordinateDimension()];
+    final double[] cen = new double[getCoordinateDimension()];
 
     for( int i = 0; i < m_points.length; i++ )
     {
       for( int j = 0; j < getCoordinateDimension(); j++ )
       {
-        cen[j] += ( m_points[i].getAsArray()[j] / m_points.length );
+        cen[j] += (m_points[i].getAsArray()[j] / m_points.length);
       }
     }
 
@@ -411,7 +410,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * calculates the centroid and the envelope of the ring
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateCentroid();
     calculateEnvelope();
@@ -419,14 +418,14 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = null;
     ret = "points = " + m_points + "\n";
-    ret += ( "envelope = " + envelope + "\n" );
+    ret += ("envelope = " + envelope + "\n");
     return ret;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
    */
@@ -434,7 +433,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   public void invalidate( )
   {
     m_sp = null;
-    
+
     super.invalidate();
   }
 }

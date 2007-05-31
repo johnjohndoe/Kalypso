@@ -67,7 +67,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 
 /**
  * default implementation of the GM_SurfaceInterpolation interface from the package jago.model.
- * 
  * ------------------------------------------------------------
  * 
  * @version 11.6.2001
@@ -78,30 +77,30 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -3728721225837686088L;
 
-  private int m_surfaceInterpolation = NONE;
+  private final int m_surfaceInterpolation = GM_SurfaceInterpolation.NONE;
 
   /**
    * Creates a new GM_SurfaceInterpolation_Impl object.
    */
-  public GM_SurfaceInterpolation_Impl()
-  {}
+  public GM_SurfaceInterpolation_Impl( )
+  {
+  }
 
   /**
    * Creates a new GM_SurfaceInterpolation_Impl object.
    * 
    * @param surfaceInterpolation
-   * 
    * @throws GM_Exception
    */
-  public GM_SurfaceInterpolation_Impl( int surfaceInterpolation ) throws GM_Exception
+  public GM_SurfaceInterpolation_Impl( final int surfaceInterpolation ) throws GM_Exception
   {
-    if( ( surfaceInterpolation > TRIANGULATEDSOLINE ) || ( surfaceInterpolation < NONE ) )
+    if( (surfaceInterpolation > GM_SurfaceInterpolation.TRIANGULATEDSOLINE) || (surfaceInterpolation < GM_SurfaceInterpolation.NONE) )
     {
       throw new GM_Exception( "invalid surface interpolation" );
     }
   }
 
-  public int getValue()
+  public int getValue( )
   {
     return m_surfaceInterpolation;
   }
@@ -110,29 +109,26 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
    * returns a deep copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    GM_SurfaceInterpolation si = null;
-
     try
     {
-      si = new GM_SurfaceInterpolation_Impl( getValue() );
+      return new GM_SurfaceInterpolation_Impl( getValue() );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       System.out.println( "GM_SurfaceInterpolation_Impl.clone: " + ex );
     }
 
-    return si;
+    throw (new IllegalStateException());
   }
 
   /**
    * checks if this surface is completly equal to the submitted geometry.
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    return ( other instanceof GM_SurfaceInterpolation_Impl )
-        && ( ( (GM_SurfaceInterpolation)other ).getValue() == m_surfaceInterpolation );
+    return (other instanceof GM_SurfaceInterpolation_Impl) && (((GM_SurfaceInterpolation) other).getValue() == m_surfaceInterpolation);
   }
 }
