@@ -139,7 +139,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
     final Object currentFeatureValue = feature.getProperty( pt );
 
     if( !m_valueToSet.equals( currentFeatureValue ) )
-      fireFeatureChange( new FeatureChange( feature, pt, m_valueToSet ) );
+      fireFeatureChange( new FeatureChange[] { new FeatureChange( feature, pt, m_valueToSet ) } );
   }
 
   /**

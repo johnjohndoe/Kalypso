@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -92,9 +93,9 @@ public class FeatureviewDialog extends Dialog
     final Collection<FeatureChange> changes = m_changes;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange change )
+      public void featureChanged( final FeatureChange[] change )
       {
-        changes.add( change );
+        changes.addAll( Arrays.asList( change ) );
         updateButtons();
       }
 
@@ -113,7 +114,7 @@ public class FeatureviewDialog extends Dialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( Messages.getString("org.kalypso.ogc.gml.featureview.FeatureviewDialog.editfeature") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "org.kalypso.ogc.gml.featureview.FeatureviewDialog.editfeature" ) ); //$NON-NLS-1$
 
     final Feature feature = m_featureComposite.getFeature();
     final IFeatureType featureType = feature.getFeatureType();
@@ -146,8 +147,8 @@ public class FeatureviewDialog extends Dialog
   {
     super.createButtonsForButtonBar( parent );
 
-    createButton( parent, APPLY_ID, Messages.getString("org.kalypso.ogc.gml.featureview.FeatureviewDialog.apply"), false ); //$NON-NLS-1$
-    createButton( parent, RESET_ID, Messages.getString("org.kalypso.ogc.gml.featureview.FeatureviewDialog.revert"), false ); //$NON-NLS-1$
+    createButton( parent, APPLY_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.FeatureviewDialog.apply" ), false ); //$NON-NLS-1$
+    createButton( parent, RESET_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.FeatureviewDialog.revert" ), false ); //$NON-NLS-1$
 
     updateButtons();
   }

@@ -215,11 +215,11 @@ public class ComboFeatureControl extends AbstractFeatureControl
     /* Null check first */
     if( newValue == oldValue )
       return;
-    
-    if( ( newValue == null && oldValue != null ) || !newValue.equals( oldValue ) )
+
+    if( (newValue == null && oldValue != null) || !newValue.equals( oldValue ) )
     {
       m_ignoreNextUpdate = true;
-      fireFeatureChange( new FeatureChange( feature, pt, newValue ) );
+      fireFeatureChange( new FeatureChange[] { new FeatureChange( feature, pt, newValue ) } );
     }
   }
 
@@ -242,7 +242,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     for( final Object value : m_entries.keySet() )
     {
-      if( value.equals( currentFeatureValue ) || ( value == NULL_LINK && currentFeatureValue == null ) )
+      if( value.equals( currentFeatureValue ) || (value == NULL_LINK && currentFeatureValue == null) )
       {
         m_comboViewer.setSelection( new StructuredSelection( value ), true );
         break;
@@ -303,10 +303,10 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
       if( workspace == null )
         return new Feature[] {};
-      
+
       final CollectorVisitor collectorVisitor = new CollectorVisitor();
       final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
-      
+
       workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final Feature[] features = collectorVisitor.getResults( true );

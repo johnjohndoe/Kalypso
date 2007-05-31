@@ -49,9 +49,13 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
+import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
@@ -71,9 +75,21 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     }
   };
 
+  private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#statusChanged(org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void statusChanged( final IKalypsoTheme source )
+    {
+      handleStatusChanged();
+    }
+  };
+
   private final IFeatureSelectionManager m_selectionManager;
 
-  private Viewer m_viewer;
+  private LayerTableViewer m_viewer;
 
   public LayerTableContentProvider( final IFeatureSelectionManager selectionManager )
   {
@@ -122,7 +138,17 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   public void dispose( )
   {
     if( m_viewer != null )
+    {
       m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
+
+      final Object input = m_viewer.getInput();
+      if( input instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) input;
+        (theme).removeKalypsoThemeListener( m_themeListener );
+        m_viewer.disposeTheme( theme );
+      }
+    }
   }
 
   /**
@@ -131,13 +157,19 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public void inputChanged( final Viewer viewer, Object oldInput, Object newInput )
   {
+    if( oldInput instanceof IKalypsoFeatureTheme )
+      ((IKalypsoFeatureTheme) oldInput).removeKalypsoThemeListener( m_themeListener );
+
     if( m_viewer != null )
       m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
 
-    m_viewer = viewer;
+    m_viewer = (LayerTableViewer) viewer;
 
     if( m_viewer != null )
       m_viewer.addSelectionChangedListener( m_tableSelectionListener );
+
+    if( newInput instanceof IKalypsoFeatureTheme )
+      ((IKalypsoFeatureTheme) newInput).addKalypsoThemeListener( m_themeListener );
   }
 
   /**
@@ -186,6 +218,23 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     final EasyFeatureWrapper[] izis = wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
     final Feature[] featureArray = featureToRemove.toArray( new Feature[featureToRemove.size()] );
     m_selectionManager.changeSelection( featureArray, izis );
+  }
+
+  protected void handleStatusChanged( )
+  {
+    final LayerTableViewer viewer = m_viewer;
+    if( viewer != null && !viewer.isDisposed() )
+    {
+      final Control control = viewer.getControl();
+      control.getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          if( !control.isDisposed() )
+            viewer.refreshAll();
+        }
+      } );
+    }
   }
 
 }

@@ -101,13 +101,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
       public void widgetSelected( final SelectionEvent e )
       {
-        fireFeatureChange( getChange() );
+        fireFeatureChange( new FeatureChange[] { getChange() } );
         fireModified();
       }
 
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        fireFeatureChange( getChange() );
+        fireFeatureChange( new FeatureChange[] { getChange() } );
         fireModified();
       }
     } );

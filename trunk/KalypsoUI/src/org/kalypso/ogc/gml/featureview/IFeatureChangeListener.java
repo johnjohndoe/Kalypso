@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureChangeListener
 {
-  public void featureChanged( final FeatureChange change );
-  
+  public void featureChanged( final FeatureChange[] changes );
+
   public void openFeatureRequested( final Feature feature, final IPropertyType pt );
 }

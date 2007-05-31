@@ -335,10 +335,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       // alles abfangen, damit der Pool trotzdem weitermacht
       e.printStackTrace();
     }
-    // ModellEvent event = new ModellEvent( this,null ) ;
-    // ModellEvent event = new ModellEvent( this, ModellEvent.FULL_CHANGE ) ;
+
     invalidate( getBoundingBox() );
     fireContextChanged();
+    setStatus( status );
   }
 
   /**
@@ -589,10 +589,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setStatus(org.eclipse.core.runtime.IStatus)
    */
   @Override
-  protected void setStatus( final IStatus status )
+  public void setStatus( final IStatus status )
   {
     if( m_theme != null )
-      m_theme.setStatus( status );
+      ((AbstractKalypsoTheme) m_theme).setStatus( status );
 
     super.setStatus( status );
   }

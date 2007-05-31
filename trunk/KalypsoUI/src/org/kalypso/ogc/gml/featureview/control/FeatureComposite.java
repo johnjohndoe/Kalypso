@@ -774,9 +774,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.ogc.gml.featureview.FeatureChange)
    */
-  public void featureChanged( final FeatureChange change )
+  public void featureChanged( final FeatureChange[] changes )
   {
-    fireFeatureChange( change );
+    fireFeatureChange( changes );
   }
 
   /**

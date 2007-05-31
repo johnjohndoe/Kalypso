@@ -117,7 +117,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
   final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
-    public void featureChanged( final FeatureChange change )
+    public void featureChanged( final FeatureChange[] changes )
     {
     }
 
@@ -174,7 +174,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
       bos = new ByteArrayOutputStream();
       final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
-      final Marshaller marshaller =JaxbUtilities.createMarshaller( JC);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( tableTemplate, osw );
       bos.close();
@@ -302,7 +302,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     final IPropertyType[] ftps = theme.getFeatureType().getProperties();
 
     for( int i = 0; i < ftps.length; i++ )
-      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), AnnotationUtilities.getAnnotation(ftps[i]) ) );
+      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), AnnotationUtilities.getAnnotation( ftps[i] ) ) );
   }
 
   /**
@@ -313,7 +313,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
-    
+
     if( adapter == ModellEventProvider.class )
       return m_layerTable;
 

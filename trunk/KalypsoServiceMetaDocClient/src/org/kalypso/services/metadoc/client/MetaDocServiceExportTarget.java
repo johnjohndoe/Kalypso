@@ -214,14 +214,18 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc, false, feature, new FeatureSelectionManager2() )
     {
       @Override
-      protected void applyFeatureChange( FeatureChange fc )
+      protected void applyFeatureChange( FeatureChange[] fcs )
       {
-        super.applyFeatureChange( fc );
+        super.applyFeatureChange( fcs );
 
         final Map<Object, Object> metadata = (Map<Object, Object>) configuration.getProperty( CONF_METADATA );
 
-        final Object newValue = org.kalypso.gmlschema.Mapper.mapJavaValueToXml( fc.getNewValue() );
-        metadata.put( fc.getProperty(), newValue );
+        for( final FeatureChange fc : fcs )
+        {
+          final Object newValue = org.kalypso.gmlschema.Mapper.mapJavaValueToXml( fc.getNewValue() );
+          metadata.put( fc.getProperty(), newValue );
+        }
+
       }
     };
 
@@ -320,7 +324,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
   /**
    * @return instance of the client proxy of the metadoc service
    * @throws CoreException
-   *           if client-server connection could not be established
+   *             if client-server connection could not be established
    */
   public static KalypsoMetaDocService getMetadocService( ) throws CoreException
   {

@@ -61,9 +61,9 @@ public class SubFeatureControl extends AbstractFeatureControl
 
     m_fc.addChangeListener( new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange change )
+      public void featureChanged( final FeatureChange[] changes )
       {
-        fireFeatureChange( change );
+        fireFeatureChange( changes );
       }
 
       public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )

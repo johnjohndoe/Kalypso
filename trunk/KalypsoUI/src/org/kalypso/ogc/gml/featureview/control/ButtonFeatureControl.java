@@ -94,9 +94,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
     m_listener = new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange change )
+      public void featureChanged( final FeatureChange[] changes )
       {
-        fireFeatureChange( change );
+        fireFeatureChange( changes );
       }
 
       public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
@@ -126,27 +126,30 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
         // return new FeatureDialog( workspace, feature, ftp, selectionManager );
         return new JumpToFeatureDialog( listener, feature, pt );
       }
-      
+
       // it is not a list
       final Object property = feature.getProperty( pt );
       final Feature linkedFeature;
 
       if( property == null )
         return new CreateFeaturePropertyDialog( listener, feature, rt );
-      
+
       if( property instanceof String ) // link auf ein Feature mit FeatureID
       {
         if( ((String) property).length() < 1 )
           return new CreateFeaturePropertyDialog( listener, feature, rt );
-//          return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"), Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$ //$NON-NLS-2$
-        
+// return new NotImplementedFeatureDialog(
+// Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"),
+// Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$
+// //$NON-NLS-2$
+
         final GMLWorkspace workspace = feature.getWorkspace();
         linkedFeature = workspace.getFeature( (String) property );
       }
       else if( property instanceof Feature )
         linkedFeature = (Feature) property;
       else
-        return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"), Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$ //$NON-NLS-2$
+        return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement" ), Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return new JumpToFeatureDialog( listener, linkedFeature, null );
     }
@@ -193,8 +196,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     {
       final Collection<FeatureChange> c = new LinkedList<FeatureChange>();
       m_dialog.collectChanges( c );
-      for( final Iterator iter = c.iterator(); iter.hasNext(); )
-        fireFeatureChange( (FeatureChange) iter.next() );
+      final FeatureChange[] changes = c.toArray( new FeatureChange[c.size()] );
+      fireFeatureChange( changes );
 
       fireModfied();
 

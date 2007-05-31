@@ -24,6 +24,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
@@ -223,27 +224,31 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent != null )
+    if( modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == m_kft.getWorkspace() )
     {
-      if( modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == m_kft.getWorkspace() )
+      final Event event = new Event();
+      final Control control = m_viewer.getControl();
+      if( control != null && !control.isDisposed() )
       {
-        final Event event = new Event();
-        final Control control = m_viewer.getControl();
-        if( control != null && !control.isDisposed() )
+        control.getDisplay().asyncExec( new Runnable()
         {
-          control.getDisplay().asyncExec( new Runnable()
+          public void run( )
           {
-            public void run( )
-            {
-              event.widget = control;
-              final ModifyEvent me = new ModifyEvent( event );
-              for( final Object element : m_listeners )
-                ((ModifyListener) element).modifyText( me );
+            event.widget = control;
+            final ModifyEvent me = new ModifyEvent( event );
+            for( final Object element : m_listeners )
+              ((ModifyListener) element).modifyText( me );
 
-            }
-          } );
+          }
+        } );
+
+        if( modellEvent instanceof FeatureChangeModellEvent )
+        {
+          final FeatureChangeModellEvent featureEvent = (FeatureChangeModellEvent) modellEvent;
+          fireFeatureChange( featureEvent.getChanges() );
         }
       }
     }
   }
+
 }
