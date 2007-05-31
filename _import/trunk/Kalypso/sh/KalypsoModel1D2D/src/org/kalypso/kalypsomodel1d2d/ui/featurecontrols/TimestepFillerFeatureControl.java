@@ -64,10 +64,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class TimestepFillerFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   private final Properties m_arguments;
-  
-  private static final String WIZARD_ID = "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard";
 
   private Button m_button;
+
   private Feature m_feature;
 
   public TimestepFillerFeatureControl( Feature feature, IPropertyType ftp, Properties arguments )
@@ -103,14 +102,13 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
       public void widgetSelected( SelectionEvent e )
       {
         final Shell shell = display.getActiveShell();
-        TimeStepFillerWizard wizard = new TimeStepFillerWizard(m_feature);
+        TimeStepFillerWizard wizard = new TimeStepFillerWizard( m_feature );
         final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
         wizardDialog.open();
-        //MessageDialog.openInformation( parent.getShell(), "Fill Timesteps", "Do it, babe" );
-        
+        // MessageDialog.openInformation( parent.getShell(), "Fill Timesteps", "Do it, babe" );
+
         final FeatureChange[] changes = wizard.getFeatureChange();
-        for( FeatureChange change : changes )
-          fireFeatureChange( change );
+        fireFeatureChange( changes );
       }
     } );
     return m_button;
