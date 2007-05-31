@@ -75,13 +75,12 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
  * should be specialized by derived classes <code>GM_Polygon</code> for example
- * 
  * ------------------------------------------------------------
  * 
  * @version 11.6.2001
  * @author Andreas Poth
  */
-abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
+class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
@@ -109,15 +108,13 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * @param exteriorRing
    * @param interiorRings
    * @param crs
-   * 
    * @throws GM_Exception
    */
-  protected GM_SurfacePatch_Impl( GM_SurfaceInterpolation interpolation, GM_Position[] exteriorRing,
-      GM_Position[][] interiorRings, CS_CoordinateSystem crs ) throws GM_Exception
+  protected GM_SurfacePatch_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     m_crs = crs;
 
-    if( ( exteriorRing == null ) || ( exteriorRing.length < 3 ) )
+    if( (exteriorRing == null) || (exteriorRing.length < 3) )
     {
       throw new GM_Exception( "The exterior ring doesn't contains enough point!" );
     }
@@ -142,9 +139,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
       }
     }
 
-    this.m_interpolation = interpolation;
-    this.m_exteriorRing = exteriorRing;
-    this.m_interiorRings = interiorRings;
+    m_interpolation = interpolation;
+    m_exteriorRing = exteriorRing;
+    m_interiorRings = interiorRings;
 
     setValid( false );
   }
@@ -152,7 +149,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * invalidates the calculated parameters of the GM_Object
    */
-  protected void setValid( boolean valid )
+  protected void setValid( final boolean valid )
   {
     m_valid = valid;
   }
@@ -160,7 +157,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns true if the calculated parameters of the GM_Object are valid and false if they must be recalculated
    */
-  protected boolean isValid()
+  protected boolean isValid( )
   {
     return m_valid;
   }
@@ -168,18 +165,18 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    *  
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
-    double[] min = m_exteriorRing[0].getAsArray().clone();
-    double[] max = min.clone();
-    final int ENV_DIM=min.length;//dim taken from first position
-    
+    final double[] min = m_exteriorRing[0].getAsArray().clone();
+    final double[] max = min.clone();
+    final int ENV_DIM = min.length;// dim taken from first position
+
     for( int i = 1; i < m_exteriorRing.length; i++ )
     {
-      double[] pos = m_exteriorRing[i].getAsArray();
-      
-      //j<ENV_DIM allows cohabitation of point with differen dimention 
-      for( int j = 0; j < pos.length && j<ENV_DIM; j++ )
+      final double[] pos = m_exteriorRing[i].getAsArray();
+
+      // j<ENV_DIM allows cohabitation of point with differen dimention
+      for( int j = 0; (j < pos.length) && (j < ENV_DIM); j++ )
       {
         if( pos[j] < min[j] )
         {
@@ -200,7 +197,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * the control points and control parameters defined in the various subclasses to determine the position of this GM_
    * SurfacePatch.
    */
-  public GM_SurfaceInterpolation getInterpolation()
+  public GM_SurfaceInterpolation getInterpolation( )
   {
     return m_interpolation;
   }
@@ -208,7 +205,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns the bounding box of the surface patch
    */
-  public GM_Envelope getEnvelope()
+  public GM_Envelope getEnvelope( )
   {
     if( !isValid() )
     {
@@ -220,7 +217,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns a reference to the exterior ring of the surface
    */
-  public GM_Position[] getExteriorRing()
+  public GM_Position[] getExteriorRing( )
   {
     return m_exteriorRing;
   }
@@ -228,7 +225,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns a reference to the interior rings of the surface
    */
-  public GM_Position[][] getInteriorRings()
+  public GM_Position[][] getInteriorRings( )
   {
     return m_interiorRings;
   }
@@ -236,7 +233,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
-  public double getPerimeter()
+  public double getPerimeter( )
   {
     return -1;
   }
@@ -244,15 +241,15 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns the coordinate system of the surface patch
    */
-  public CS_CoordinateSystem getCoordinateSystem()
+  public CS_CoordinateSystem getCoordinateSystem( )
   {
     return m_crs;
   }
 
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    if( ( other == null ) || !( other instanceof GM_SurfacePatch_Impl ) )
+    if( (other == null) || !(other instanceof GM_SurfacePatch_Impl) )
     {
       return false;
     }
@@ -260,48 +257,48 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     // Assuming Interpolation can be null (not checked by Constructor)
     if( getInterpolation() != null )
     {
-      if( !getInterpolation().equals( ( (GM_SurfacePatch)other ).getInterpolation() ) )
+      if( !getInterpolation().equals( ((GM_SurfacePatch) other).getInterpolation() ) )
       {
         return false;
       }
     }
     else
     {
-      if( ( (GM_SurfacePatch)other ).getInterpolation() != null )
+      if( ((GM_SurfacePatch) other).getInterpolation() != null )
       {
         return false;
       }
     }
 
     // Assuming envelope cannot be null (always calculated)
-    if( !m_envelope.equals( ( (GM_SurfacePatch)other ).getEnvelope() ) )
+    if( !m_envelope.equals( ((GM_SurfacePatch) other).getEnvelope() ) )
     {
       return false;
     }
 
     // Assuming exteriorRing cannot be null (checked by Constructor)
-    if( !Arrays.equals( m_exteriorRing, ( (GM_SurfacePatch)other ).getExteriorRing() ) )
+    if( !Arrays.equals( m_exteriorRing, ((GM_SurfacePatch) other).getExteriorRing() ) )
     {
       return false;
     }
 
     // Assuming either can have interiorRings set to null (not checked
-    //by Constructor)
+    // by Constructor)
     if( m_interiorRings != null )
     {
-      if( ( (GM_SurfacePatch)other ).getInteriorRings() == null )
+      if( ((GM_SurfacePatch) other).getInteriorRings() == null )
       {
         return false;
       }
 
-      if( m_interiorRings.length != ( (GM_SurfacePatch)other ).getInteriorRings().length )
+      if( m_interiorRings.length != ((GM_SurfacePatch) other).getInteriorRings().length )
       {
         return false;
       }
 
       for( int i = 0; i < m_interiorRings.length; i++ )
       {
-        if( !Arrays.equals( m_interiorRings[i], ( (GM_SurfacePatch)other ).getInteriorRings()[i] ) )
+        if( !Arrays.equals( m_interiorRings[i], ((GM_SurfacePatch) other).getInteriorRings()[i] ) )
         {
           return false;
         }
@@ -309,7 +306,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     }
     else
     {
-      if( ( (GM_SurfacePatch)other ).getInteriorRings() != null )
+      if( ((GM_SurfacePatch) other).getInteriorRings() != null )
       {
         return false;
       }
@@ -322,7 +319,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
    * be on the object.
    */
-  public GM_Point getCentroid()
+  public GM_Point getCentroid( )
   {
     if( !isValid() )
     {
@@ -336,7 +333,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
-  public double getArea()
+  public double getArea( )
   {
     if( !isValid() )
     {
@@ -348,9 +345,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * calculates the centroid and area of the surface patch. this method is only valid for the two-dimensional case.
    */
-  private void calculateCentroidArea()
+  private void calculateCentroidArea( )
   {
-    GM_Position centroid_ = calculateCentroid( m_exteriorRing );
+    final GM_Position centroid_ = calculateCentroid( m_exteriorRing );
     double varea = calculateArea( m_exteriorRing );
 
     double x = centroid_.getX();
@@ -363,10 +360,10 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     {
       for( int i = 0; i < m_interiorRings.length; i++ )
       {
-        double dum = -1 * calculateArea( m_interiorRings[i] );
-        GM_Position temp = calculateCentroid( m_interiorRings[i] );
-        x += ( temp.getX() * dum );
-        y += ( temp.getY() * dum );
+        final double dum = -1 * calculateArea( m_interiorRings[i] );
+        final GM_Position temp = calculateCentroid( m_interiorRings[i] );
+        x += (temp.getX() * dum);
+        y += (temp.getY() * dum);
         varea += dum;
       }
     }
@@ -378,7 +375,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * calculates the centroid and the area of the surface patch
    */
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateEnvelope();
     calculateCentroidArea();
@@ -394,7 +391,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * </p>
    * this method is only valid for the two-dimensional case.
    */
-  private double calculateArea( GM_Position[] point )
+  private double calculateArea( final GM_Position[] point )
   {
     int i;
     int j;
@@ -403,11 +400,11 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 
     for( i = point.length - 1, j = 0; j < point.length; i = j, j++ )
     {
-      double xi = point[i].getX() - point[0].getX();
-      double yi = point[i].getY() - point[0].getY();
-      double xj = point[j].getX() - point[0].getX();
-      double yj = point[j].getY() - point[0].getY();
-      ai = ( xi * yj ) - ( xj * yi );
+      final double xi = point[i].getX() - point[0].getX();
+      final double yi = point[i].getY() - point[0].getY();
+      final double xj = point[j].getX() - point[0].getX();
+      final double yj = point[j].getY() - point[0].getY();
+      ai = (xi * yj) - (xj * yi);
       atmp += ai;
     }
 
@@ -422,7 +419,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * </p>
    * this method is only valid for the two-dimensional case.
    */
-  protected GM_Position calculateCentroid( GM_Position[] point )
+  protected GM_Position calculateCentroid( final GM_Position[] point )
   {
 
     int i;
@@ -436,25 +433,25 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 
     // move points to the origin of the coordinate space
     // (to solve precision issues)
-    double transX = point[0].getX();
-    double transY = point[0].getY();
+    final double transX = point[0].getX();
+    final double transY = point[0].getY();
 
     for( i = point.length - 1, j = 0; j < point.length; i = j, j++ )
     {
-      double x1 = point[i].getX() - transX;
-      double y1 = point[i].getY() - transY;
-      double x2 = point[j].getX() - transX;
-      double y2 = point[j].getY() - transY;
-      ai = ( x1 * y2 ) - ( x2 * y1 );
+      final double x1 = point[i].getX() - transX;
+      final double y1 = point[i].getY() - transY;
+      final double x2 = point[j].getX() - transX;
+      final double y2 = point[j].getY() - transY;
+      ai = (x1 * y2) - (x2 * y1);
       atmp += ai;
-      xtmp += ( ( x2 + x1 ) * ai );
-      ytmp += ( ( y2 + y1 ) * ai );
+      xtmp += ((x2 + x1) * ai);
+      ytmp += ((y2 + y1) * ai);
     }
 
     if( atmp != 0 )
     {
-      x = xtmp / ( 3 * atmp ) + transX;
-      y = ytmp / ( 3 * atmp ) + transY;
+      x = xtmp / (3 * atmp) + transX;
+      y = ytmp / (3 * atmp) + transY;
     }
     else
     {
@@ -466,7 +463,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = "GM_SurfacePatch: ";
     ret = "interpolation = " + m_interpolation + "\n";
@@ -474,16 +471,47 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 
     for( int i = 0; i < m_exteriorRing.length; i++ )
     {
-      ret += ( m_exteriorRing + "\n" );
+      ret += (m_exteriorRing + "\n");
     }
 
-    ret += ( "interiorRings = " + m_interiorRings + "\n" );
-    ret += ( "envelope = " + m_envelope + "\n" );
+    ret += ("interiorRings = " + m_interiorRings + "\n");
+    ret += ("envelope = " + m_envelope + "\n");
     return ret;
   }
-  
-  public void invalidate()
+
+  public void invalidate( )
   {
     m_valid = false;
+  }
+
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public Object clone( ) throws CloneNotSupportedException
+  {
+    final CS_CoordinateSystem system = getCoordinateSystem();
+
+    final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
+
+    final GM_Position[][] interiorRings = getInteriorRings();
+    final GM_Position[][] clonedInteriorRings = new GM_Position[interiorRings.length][];
+    for( int i = 0; i < interiorRings.length; i++ )
+    {
+      clonedInteriorRings[i] = GeometryFactory.cloneGM_Position( interiorRings[i] );
+    }
+
+    final GM_SurfaceInterpolation interpolation = (GM_SurfaceInterpolation) getInterpolation().clone();
+
+    try
+    {
+      return new GM_SurfacePatch_Impl( interpolation, clonedExteriorRing, clonedInteriorRings, system );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    throw (new IllegalStateException());
   }
 }

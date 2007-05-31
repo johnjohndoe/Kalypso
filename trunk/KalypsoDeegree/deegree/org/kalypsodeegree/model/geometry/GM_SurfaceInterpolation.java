@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * Defining the different kind of surface interpolation known by the iso geometry modell.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -101,6 +99,7 @@ public interface GM_SurfaceInterpolation
 
   public static final int TRIANGULATEDSOLINE = 11;
 
-  int getValue();
+  int getValue( );
 
+  public Object clone( );
 }

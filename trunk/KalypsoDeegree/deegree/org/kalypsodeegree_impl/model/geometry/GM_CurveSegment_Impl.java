@@ -63,8 +63,10 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -73,16 +75,14 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * default implementation of the GM_CurveSegment interface from package jago.model. the class is abstract because it
  * should be specialized by derived classes <code>GM_LineString</code> for example
- * 
  * <p>
  * ---------------------------------------------------------------------------
  * </p>
  * 
  * @version 10.6.2001
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
- *  
  */
-abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
+class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -8102075931849374162L;
@@ -96,10 +96,9 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * 
    * @param gmps
    * @param crs
-   * 
    * @throws GM_Exception
    */
-  protected GM_CurveSegment_Impl( GM_Position[] gmps, CS_CoordinateSystem crs ) throws GM_Exception
+  protected GM_CurveSegment_Impl( final GM_Position[] gmps, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     if( gmps == null )
     {
@@ -116,7 +115,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * returns the first point of the curve. if the curve segment doesn't contain a point <code>null</code> will be
    * returned
    */
-  public GM_Point getStartPoint()
+  public GM_Point getStartPoint( )
   {
     return new GM_Point_Impl( points[0], m_crs );
   }
@@ -125,7 +124,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * returns the last point of the curve. if the curve segment doesn't contain a point <code>null</code> will be
    * returned
    */
-  public GM_Point getEndPoint()
+  public GM_Point getEndPoint( )
   {
     return new GM_Point_Impl( points[getNumberOfPoints() - 1], m_crs );
   }
@@ -133,7 +132,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the number of points building the curve or curve segment
    */
-  public int getNumberOfPoints()
+  public int getNumberOfPoints( )
   {
     return points.length;
   }
@@ -141,7 +140,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns all positions of the segement as array of GM_Position. If the segment is empty null will be returned
    */
-  public GM_Position[] getPositions()
+  public GM_Position[] getPositions( )
   {
     return points;
   }
@@ -149,7 +148,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the curve segment position at the submitted index
    */
-  public GM_Position getPositionAt( int index )
+  public GM_Position getPositionAt( final int index )
   {
     return points[index];
   }
@@ -157,9 +156,9 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * reverses the direction of the curvesegment
    */
-  public void reverse()
+  public void reverse( )
   {
-    GM_Position[] reverse_ = new GM_Position[points.length];
+    final GM_Position[] reverse_ = new GM_Position[points.length];
 
     for( int i = 0; i < points.length; i++ )
     {
@@ -172,7 +171,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the coordinate system of the curve segment
    */
-  public CS_CoordinateSystem getCoordinateSystem()
+  public CS_CoordinateSystem getCoordinateSystem( )
   {
     return m_crs;
   }
@@ -181,38 +180,38 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * checks if this curve segment is completly equal to the submitted geometry
    * 
    * @param other
-   *          object to compare to
+   *            object to compare to
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
-    if( ( other == null ) || !( other instanceof GM_CurveSegment_Impl ) )
+    if( (other == null) || !(other instanceof GM_CurveSegment_Impl) )
     {
       return false;
     }
 
-    if( ( m_crs == null ) && ( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() != null ) )
+    if( (m_crs == null) && (((GM_CurveSegment_Impl) other).getCoordinateSystem() != null) )
     {
       return false;
     }
 
     if( m_crs != null )
     {
-      if( !m_crs.equals( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() ) )
+      if( !m_crs.equals( ((GM_CurveSegment_Impl) other).getCoordinateSystem() ) )
       {
         return false;
       }
     }
     else
     {
-      if( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() != null )
+      if( ((GM_CurveSegment_Impl) other).getCoordinateSystem() != null )
       {
         return false;
       }
     }
 
-    GM_Position[] p1 = getPositions();
-    GM_Position[] p2 = ( (GM_CurveSegment)other ).getPositions();
+    final GM_Position[] p1 = getPositions();
+    final GM_Position[] p2 = ((GM_CurveSegment) other).getPositions();
 
     if( !Arrays.equals( p1, p2 ) )
     {
@@ -227,17 +226,63 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * <p>
    * </p>
    */
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
     throw new NoSuchMethodError( "the contains operation for curve segments " + "isn't supported at the moment." );
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = null;
     ret = "points = ";
-    ret += ( "crs = " + m_crs + "\n" );
+    ret += ("crs = " + m_crs + "\n");
     return ret;
+  }
+
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public Object clone( ) throws CloneNotSupportedException
+  {
+    // kuch
+    final CS_CoordinateSystem system = getCoordinateSystem();
+    final GM_Position[] clonedPositions = GeometryFactory.cloneGM_Position( getPositions() );
+
+    try
+    {
+      return new GM_CurveSegment_Impl( clonedPositions, system );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    throw (new IllegalStateException());
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_CurveSegment#intersects(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public boolean intersects( final GM_Object gmo )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_GenericCurve#getAsLineString()
+   */
+  public GM_LineString getAsLineString( ) throws GM_Exception
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_GenericCurve#getLength()
+   */
+  public double getLength( )
+  {
+    return points.length;
   }
 }

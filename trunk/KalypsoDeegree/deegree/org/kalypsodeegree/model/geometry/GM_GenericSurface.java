@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The interface defines the basis of surfaces and surface patches
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -79,23 +77,25 @@ public interface GM_GenericSurface
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
-  double getPerimeter();
+  double getPerimeter( );
 
   /**
    * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
-  double getArea();
+  double getArea( );
 
   /**
    * returns the bounding box of the surface
    */
-  GM_Envelope getEnvelope();
+  GM_Envelope getEnvelope( );
 
   /**
    * @see GM_Object#invalidate()
    */
-  public void invalidate();
-  
+  public void invalidate( );
+
+  public Object clone( ) throws CloneNotSupportedException;
+
 }

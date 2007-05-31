@@ -74,7 +74,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * 
  * default implementation of the GM_Surface interface from package jago.model.
  * <p>
  * </p>
@@ -83,7 +82,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * <p>
  * </p>
  * It will be extended to fullfill the complete specs as soon as possible.
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -104,9 +102,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface with default orientation submitting one surface patch.
    * 
    * @param surfacePatch
-   *          patches of the surface.
+   *            patches of the surface.
    */
-  public GM_Surface_Impl( GM_SurfacePatch surfacePatch ) throws GM_Exception
+  public GM_Surface_Impl( final GM_SurfacePatch surfacePatch ) throws GM_Exception
   {
     this( '+', surfacePatch );
   }
@@ -115,9 +113,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface submitting the orientation and one surface patch.
    * 
    * @param surfacePatch
-   *          patches of the surface.
+   *            patches of the surface.
    */
-  public GM_Surface_Impl( char orientation, GM_SurfacePatch surfacePatch ) throws GM_Exception
+  public GM_Surface_Impl( final char orientation, final GM_SurfacePatch surfacePatch ) throws GM_Exception
   {
     super( surfacePatch.getCoordinateSystem(), orientation );
 
@@ -130,9 +128,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface with default orientation submitting the surfaces boundary
    * 
    * @param boundary
-   *          boundary of the surface
+   *            boundary of the surface
    */
-  public GM_Surface_Impl( GM_SurfaceBoundary boundary ) throws GM_Exception
+  public GM_Surface_Impl( final GM_SurfaceBoundary boundary ) throws GM_Exception
   {
     this( '+', boundary );
   }
@@ -141,9 +139,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface submitting the orientation and the surfaces boundary.
    * 
    * @param boundary
-   *          boundary of the surface
+   *            boundary of the surface
    */
-  public GM_Surface_Impl( char orientation, GM_SurfaceBoundary boundary ) throws GM_Exception
+  public GM_Surface_Impl( final char orientation, final GM_SurfaceBoundary boundary ) throws GM_Exception
   {
     // todo
     // extracting surface patches from the boundary
@@ -155,7 +153,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * calculates the centroid and area of the surface
    */
-  private void calculateCentroidArea()
+  private void calculateCentroidArea( )
   {
     centroid = m_patch.getCentroid();
     area = m_patch.getArea();
@@ -164,12 +162,12 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * calculates the boundary and area of the surface
    */
-  private void calculateBoundary()
+  private void calculateBoundary( )
   {
     try
     {
-      GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), getCoordinateSystem() );
-      GM_Position[][] inn_ = m_patch.getInteriorRings();
+      final GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), getCoordinateSystem() );
+      final GM_Position[][] inn_ = m_patch.getInteriorRings();
       GM_Ring[] inn = null;
 
       if( inn_ != null )
@@ -184,7 +182,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
 
       m_boundary = new GM_SurfaceBoundary_Impl( ext, inn );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       System.out.println( e );
     }
@@ -194,7 +192,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * calculates area, centroid and the envelope of the surface
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateCentroidArea();
     calculateEnvelope();
@@ -207,7 +205,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * calculates the envelope of the surface
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
     envelope = m_patch.getEnvelope();
   }
@@ -215,7 +213,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
-  public double getPerimeter()
+  public double getPerimeter( )
   {
     return -1;
   }
@@ -225,7 +223,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
-  public double getArea()
+  public double getArea( )
   {
     if( !isValid() )
     {
@@ -237,19 +235,19 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * returns the boundary of the surface as surface boundary
    */
-  public GM_SurfaceBoundary getSurfaceBoundary()
+  public GM_SurfaceBoundary getSurfaceBoundary( )
   {
     if( !isValid() )
     {
       calculateParam();
     }
-    return (GM_SurfaceBoundary)m_boundary;
+    return (GM_SurfaceBoundary) m_boundary;
   }
 
   /**
    * returns the number of patches building the surface
    */
-  public int getNumberOfSurfacePatches()
+  public int getNumberOfSurfacePatches( )
   {
     return 1;
   }
@@ -257,7 +255,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * returns the surface patch at the submitted index
    */
-  public GM_SurfacePatch getSurfacePatchAt( int index ) throws GM_Exception
+  public GM_SurfacePatch getSurfacePatchAt( final int index ) throws GM_Exception
   {
     if( index != 0 )
     {
@@ -270,14 +268,14 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * writes a surface patch to the surface at submitted position. the old patch will be deleted
    */
-  public void setSurfacePatchAt( GM_SurfacePatch patch, int index ) throws GM_Exception
+  public void setSurfacePatchAt( final GM_SurfacePatch patch, final int index ) throws GM_Exception
   {
     if( index != 0 )
     {
       throw new GM_Exception( "invalid index/position to set a patch!" );
     }
 
-    this.m_patch = patch;
+    m_patch = patch;
 
     setValid( false );
   }
@@ -286,14 +284,14 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * inserts a surface patch in the curve at the submitted position. all points with a position that equals index or is
    * higher will be shifted
    */
-  public void insertSurfacePatchAt( GM_SurfacePatch patch, int index ) throws GM_Exception
+  public void insertSurfacePatchAt( final GM_SurfacePatch patch, final int index ) throws GM_Exception
   {
     if( index != 0 )
     {
       throw new GM_Exception( "invalid index/position to insert a patch!" );
     }
 
-    this.m_patch = patch;
+    m_patch = patch;
 
     setValid( false );
   }
@@ -301,7 +299,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * adds a surface patch at the end of the curve
    */
-  public void addSurfacePatch( GM_SurfacePatch patch )
+  public void addSurfacePatch( final GM_SurfacePatch patch )
   {
     throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment." );
   }
@@ -309,10 +307,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * deletes the surface patch at the submitted index
    */
-  public void deleteSurfacePatchAt( int index )
+  public void deleteSurfacePatchAt( final int index )
   {
-    throw new NoSuchMethodError( "Surfaces made of more then one surface patch "
-        + "are not supported at the moment. Because " + "empty surface are not allowed you can't delete "
+    throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment. Because " + "empty surface are not allowed you can't delete "
         + "the only existing patch." );
   }
 
@@ -320,17 +317,17 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * checks if this surface is completly equal to the submitted geometry
    * 
    * @param other
-   *          object to compare to
+   *            object to compare to
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
     if( !super.equals( other ) )
     {
       return false;
     }
 
-    if( !( other instanceof GM_Surface_Impl ) )
+    if( !(other instanceof GM_Surface_Impl) )
     {
       return false;
     }
@@ -339,19 +336,19 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       calculateEnvelope();
     }
-    if( !envelope.equals( ( (GM_Object)other ).getEnvelope() ) )
+    if( !envelope.equals( ((GM_Object) other).getEnvelope() ) )
     {
       return false;
     }
 
     try
     {
-      if( !m_patch.equals( ( (GM_Surface)other ).getSurfacePatchAt( 0 ) ) )
+      if( !m_patch.equals( ((GM_Surface) other).getSurfacePatchAt( 0 ) ) )
       {
         return false;
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return false;
     }
@@ -365,7 +362,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return 2;
   }
@@ -374,7 +371,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     return m_patch.getExteriorRing()[0].getAsArray().length;
   }
@@ -383,30 +380,31 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( ) throws CloneNotSupportedException
   {
-    GM_Surface s = null;
-
+    // kuch
     try
     {
-      s = new GM_Surface_Impl( getOrientation(), m_patch );
+      final GM_SurfacePatch myPatch = (GM_SurfacePatch) m_patch.clone();
+
+      return new GM_Surface_Impl( getOrientation(), myPatch );
     }
-    catch( Exception ex )
+    catch( final GM_Exception e )
     {
-      //   
+      e.printStackTrace();
     }
 
-    return s;
+    throw (new IllegalStateException());
   }
 
   /**
    * translate each point of the surface with the values of the submitted double array.
    */
   @Override
-  public void translate( double[] d )
+  public void translate( final double[] d )
   {
-    GM_Position[] ext = m_patch.getExteriorRing();
-    GM_Position[][] inn = m_patch.getInteriorRings();
+    final GM_Position[] ext = m_patch.getExteriorRing();
+    final GM_Position[][] inn = m_patch.getInteriorRings();
 
     for( int j = 0; j < ext.length; j++ )
     {
@@ -436,7 +434,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * @return true if the <tt>GM_Object</tt> intersects with this
    */
   @Override
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     if( !isValid() )
     {
@@ -452,7 +450,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * </p>
    */
   @Override
-  public boolean contains( GM_Position position )
+  public boolean contains( final GM_Position position )
   {
     return contains( new GM_Point_Impl( position, null ) );
   }
@@ -463,7 +461,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * </p>
    */
   @Override
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
     if( !isValid() )
     {
@@ -477,22 +475,22 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    *  
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = getClass().getName() + ":\n";
-    ret += ( "envelope = " + envelope + "\n" );
+    ret += ("envelope = " + envelope + "\n");
     try
     {
       ret += " CRS: " + getCoordinateSystem().getName() + "\n";
     }
-    catch( RemoteException e )
+    catch( final RemoteException e )
     {
       e.printStackTrace();
     }
-    ret += ( "patch = " + m_patch + "\n" );
+    ret += ("patch = " + m_patch + "\n");
     return ret;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
    */
@@ -500,7 +498,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   public void invalidate( )
   {
     m_patch.invalidate();
-    
+
     super.invalidate();
   }
 }

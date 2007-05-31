@@ -105,7 +105,7 @@ public class DBaseFile
 
   private static String NS_SHAPEFILE = "namespace";
 
-  private ArrayList<String> colHeader = new ArrayList<String>();
+  private final ArrayList<String> colHeader = new ArrayList<String>();
 
   // representing the datasection of the dBase file
   // only needed for writing a dBase file
@@ -115,7 +115,7 @@ public class DBaseFile
   private IFeatureType m_featureType = null;
 
   // Hashtable to contain info abouts in the table
-  private Hashtable<String, dbfCol> column_info = new Hashtable<String, dbfCol>();
+  private final Hashtable<String, dbfCol> column_info = new Hashtable<String, dbfCol>();
 
   // references to the dbase file
   private RandomAccessFile rafDbf;
@@ -169,7 +169,7 @@ public class DBaseFile
    * constructor <BR>
    * only for reading a dBase file <BR>
    */
-  public DBaseFile( String url, int defaultFileShapeType ) throws IOException
+  public DBaseFile( final String url, final int defaultFileShapeType ) throws IOException
   {
     fname = url;
     m_prefix = fname.replaceAll( ".+[/|\\\\]", "" );
@@ -197,7 +197,7 @@ public class DBaseFile
    * constructor <BR>
    * only for writing a dBase file <BR>
    */
-  public DBaseFile( String url, FieldDescriptor[] fieldDesc )
+  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc )
   {
     m_defaultFileShapeType = -1;
     fname = url;
@@ -220,7 +220,7 @@ public class DBaseFile
     {
       rafDbf.close();
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       // shouldnt we do something here?
     }
@@ -235,12 +235,12 @@ public class DBaseFile
     rafDbf.seek( 0 );
 
     // read the file type
-    fixByte( rafDbf.readByte() );
+    DBaseFile.fixByte( rafDbf.readByte() );
 
     // get the last update date
-    fixByte( rafDbf.readByte() );
-    fixByte( rafDbf.readByte() );
-    fixByte( rafDbf.readByte() );
+    DBaseFile.fixByte( rafDbf.readByte() );
+    DBaseFile.fixByte( rafDbf.readByte() );
+    DBaseFile.fixByte( rafDbf.readByte() );
 
     // a byte array to hold little-endian long data
     byte[] b = new byte[4];
@@ -296,29 +296,29 @@ public class DBaseFile
       }
 
       // convert the byte array to a String
-      String col_name = new String( b, 0, length ).trim().toUpperCase();
+      final String col_name = new String( b, 0, length ).trim().toUpperCase();
 
       // read in the column type
-      char[] c = new char[1];
+      final char[] c = new char[1];
       c[0] = (char) rafDbf.readByte();
 
       // skip four bytes
       rafDbf.skipBytes( 4 );
 
       // get field length and precision
-      short flen = fixByte( rafDbf.readByte() );
-      short fdec = fixByte( rafDbf.readByte() );
+      final short flen = DBaseFile.fixByte( rafDbf.readByte() );
+      final short fdec = DBaseFile.fixByte( rafDbf.readByte() );
       // System.out.println(col_name + " len: " + flen + " dec: " + fdec);
       // set the field position to the current
       // value of locn
-      int fpos = locn;
+      final int fpos = locn;
 
       // increment locn by the length of this field.
       locn += flen;
 
       // create a new dbfCol object and assign it the
       // attributes of the current field
-      dbfCol column = new dbfCol( col_name );
+      final dbfCol column = new dbfCol( col_name );
       column.type = new String( c );
       column.size = flen;
       column.position = fpos + 1;
@@ -362,42 +362,62 @@ public class DBaseFile
       column = column_info.get( colHeader.get( i ) );
       final ITypeHandler th;
       if( column.type.equalsIgnoreCase( "C" ) )
+      {
         th = stringTH;
+      }
       else if( column.type.equalsIgnoreCase( "F" ) || column.type.equalsIgnoreCase( "N" ) )
       {
         if( column.prec == 0 )
         {
           if( column.size < 10 )
+          {
             th = integerTH;
+          }
           else
+          {
             th = longTH;
+          }
         }
         else
         {
           if( column.size < 8 )
+          {
             th = floatTH;
+          }
           else
+          {
             th = doubleTH;
+          }
         }
       }
       else if( column.type.equalsIgnoreCase( "M" ) )
+      {
         th = stringTH;
+      }
       else if( column.type.equalsIgnoreCase( "L" ) )
+      {
         th = stringTH;
+      }
       else if( column.type.equalsIgnoreCase( "D" ) )
+      {
         th = dateTH;
+      }
       else if( column.type.equalsIgnoreCase( "B" ) )
+      {
         th = byteArrayOutputStreamTH;
+      }
       else
+      {
         th = null;
-      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, column.name ), th.getTypeName(), th, 1, 1, false );
+      }
+      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( DBaseFile.NS_SHAPEFILE, column.name ), th.getTypeName(), th, 1, 1, false );
     }
 
     // remove everything before "\" or "/"
-    final QName qNameFT = new QName( NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
+    final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class geoClass = getGeometryType();
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
-    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName(), geoTH, 1, 1, false );
+    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( DBaseFile.NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName(), geoTH, 1, 1, false );
     return GMLSchemaFactory.createFeatureType( qNameFT, ftp );
   }
 
@@ -412,15 +432,15 @@ public class DBaseFile
       case ShapeConst.SHAPE_TYPE_MULTIPOINT:
         return GeometryUtilities.getMultiPointClass();
       case ShapeConst.SHAPE_TYPE_POLYLINE:
-        return GeometryUtilities.getLineStringClass();
+        return GeometryUtilities.getMultiLineStringClass();
       case ShapeConst.SHAPE_TYPE_POLYGON:
-        return GeometryUtilities.getPolygonClass();
+        return GeometryUtilities.getMultiPolygonClass();
       case ShapeConst.SHAPE_TYPE_POINTZ:
-        return GeometryUtilities.getPointClass();        
+        return GeometryUtilities.getPointClass();
       case ShapeConst.SHAPE_TYPE_POLYLINEZ:
-        return GeometryUtilities.getLineStringClass();
+        return GeometryUtilities.getMultiLineStringClass();
       case ShapeConst.SHAPE_TYPE_POLYGONZ:
-        return GeometryUtilities.getPolygonClass();
+        return GeometryUtilities.getMultiPolygonClass();
       default:
         return GM_Object.class;
     }
@@ -477,7 +497,7 @@ public class DBaseFile
    * method: getColumn(String col_name) <BR>
    * Retrieve a column's string value from the current row.
    */
-  public String getColumn( String col_name ) throws DBaseException
+  public String getColumn( final String col_name ) throws DBaseException
   {
     if( filemode == 1 )
     {
@@ -488,7 +508,7 @@ public class DBaseFile
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      dbfCol column = column_info.get( col_name );
+      final dbfCol column = column_info.get( col_name );
 
       // seek the starting offset of the current record,
       // as indicated by record_number
@@ -540,7 +560,9 @@ public class DBaseFile
   public String[] getProperties( ) throws DBaseException
   {
     if( filemode == 1 )
+    {
       throw new DBaseException( "class is initialized in write-only mode" );
+    }
 
     return colHeader.toArray( new String[colHeader.size()] );
   }
@@ -556,7 +578,7 @@ public class DBaseFile
       throw new DBaseException( "class is initialized in write-only mode" );
     }
 
-    String[] datatypes = new String[colHeader.size()];
+    final String[] datatypes = new String[colHeader.size()];
     dbfCol column;
 
     for( int i = 0; i < colHeader.size(); i++ )
@@ -575,14 +597,15 @@ public class DBaseFile
    * method: private boolean contains(String[] container, String element) <BR>
    * retruns true if the container sting array contains element <BR>
    */
-  private boolean contains( String[] container, String element )
+  private boolean contains( final String[] container, final String element )
   {
     for( int i = 0; i < container.length; i++ )
-
+    {
       if( container[i].equals( element ) )
       {
         return true;
       }
+    }
 
     return false;
   }
@@ -590,11 +613,13 @@ public class DBaseFile
   /**
    * returns the size of a column
    */
-  public int getDataLength( String field ) throws DBaseException
+  public int getDataLength( final String field ) throws DBaseException
   {
-    dbfCol col = column_info.get( field );
+    final dbfCol col = column_info.get( field );
     if( col == null )
+    {
       throw new DBaseException( "Field " + field + " not found" );
+    }
 
     return col.size;
   }
@@ -603,14 +628,14 @@ public class DBaseFile
    * method: public String[] getDataTypes(String[] fields) <BR>
    * returns the datatype of each column of the database specified by fields <BR>
    */
-  public String[] getDataTypes( String[] fields ) throws DBaseException
+  public String[] getDataTypes( final String[] fields ) throws DBaseException
   {
     if( filemode == 1 )
     {
       throw new DBaseException( "class is initialized in write-only mode" );
     }
 
-    ArrayList<String> vec = new ArrayList<String>();
+    final ArrayList<String> vec = new ArrayList<String>();
     dbfCol column;
 
     for( int i = 0; i < colHeader.size(); i++ )
@@ -634,7 +659,7 @@ public class DBaseFile
    * returns a row of the dBase-file as Feature containing a place holder (field name = "GEOM") for a geometry.
    * 
    * @param allowNull
-   *          if true, everything wich cannot read or parsed gets 'null' instead of ""
+   *            if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
   public Feature getFRow( final Feature parent, final IRelationType parentRelation, final int rowNo, final boolean allowNull ) throws DBaseException
   {
@@ -642,15 +667,15 @@ public class DBaseFile
 
     record_number += rowNo;
 
-    Object[] fp = new Object[colHeader.size() + 1];
+    final Object[] fp = new Object[colHeader.size() + 1];
 
     for( int i = 0; i < colHeader.size(); i++ )
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      dbfCol column = column_info.get( colHeader.get( i ) );
+      final dbfCol column = column_info.get( colHeader.get( i ) );
 
-      String value = getColumn( column.name.trim() );
+      final String value = getColumn( column.name.trim() );
       // System.out.print(value);
       if( value != null )
       {
@@ -686,7 +711,7 @@ public class DBaseFile
               }
             }
           }
-          catch( Exception ex )
+          catch( final Exception ex )
           {
             fp[i] = allowNull ? null : new Double( "0" );
           }
@@ -702,18 +727,22 @@ public class DBaseFile
         else if( column.type.equalsIgnoreCase( "D" ) )
         {
           if( value.equals( "" ) )
+          {
             fp[i] = null;
+          }
           else
+          {
             fp[i] = TimeTools.createCalendar( value.substring( 0, 4 ) + "-" + value.substring( 4, 6 ) + "-" + value.substring( 6, 8 ) ).getTime();
+          }
         }
         else if( column.type.equalsIgnoreCase( "B" ) )
         {
-          ByteArrayOutputStream os = new ByteArrayOutputStream( 10000 );
+          final ByteArrayOutputStream os = new ByteArrayOutputStream( 10000 );
           try
           {
             os.write( value.getBytes() );
           }
-          catch( IOException e )
+          catch( final IOException e )
           {
             e.printStackTrace();
           }
@@ -734,7 +763,7 @@ public class DBaseFile
    * method: public ArrayList getRow(int row) <BR>
    * returns a row of the dBase-file <BR>
    */
-  public Object[] getRow( int rowNo ) throws DBaseException
+  public Object[] getRow( final int rowNo ) throws DBaseException
   {
     if( filemode == 1 )
     {
@@ -742,7 +771,7 @@ public class DBaseFile
     }
 
     String value = "";
-    Object[] row = new Object[colHeader.size()];
+    final Object[] row = new Object[colHeader.size()];
     dbfCol column;
 
     goTop();
@@ -789,7 +818,7 @@ public class DBaseFile
             }
           }
         }
-        catch( Exception ex )
+        catch( final Exception ex )
         {
           row[i] = new Double( "0" );
         }
@@ -805,19 +834,23 @@ public class DBaseFile
       else if( column.type.equalsIgnoreCase( "D" ) )
       {
         if( value.equals( "" ) )
+        {
           row[i] = "";
+        }
         else
+        {
           row[i] = TimeTools.createCalendar( value.substring( 0, 4 ) + "-" + value.substring( 4, 6 ) + "-" + value.substring( 6, 8 ) ).getTime();
+        }
       }
       else if( column.type.equalsIgnoreCase( "B" ) )
       {
-        ByteArrayOutputStream os = new ByteArrayOutputStream( 10000 );
+        final ByteArrayOutputStream os = new ByteArrayOutputStream( 10000 );
 
         try
         {
           os.write( value.getBytes() );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // System.out.println( e.toString() );
         }
@@ -833,7 +866,7 @@ public class DBaseFile
    * method: private fixByte (byte b)<BR>
    * bytes are signed; let's fix them...
    */
-  private static short fixByte( byte b )
+  private static short fixByte( final byte b )
   {
     if( b < 0 )
     {
@@ -865,11 +898,11 @@ public class DBaseFile
     file = null;
 
     // create a new file
-    RandomAccessFile rdbf = new RandomAccessFile( fname + ".dbf", "rw" );
+    final RandomAccessFile rdbf = new RandomAccessFile( fname + ".dbf", "rw" );
 
     byte[] b = header.getHeader();
 
-    int nRecords = dataSection.getNoOfRecords();
+    final int nRecords = dataSection.getNoOfRecords();
 
     // write number of records
     ByteUtils.writeLEInt( b, 4, nRecords );
@@ -892,7 +925,7 @@ public class DBaseFile
    * dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set at the
    * constructor.
    */
-  public void setRecord( ArrayList recData ) throws DBaseException
+  public void setRecord( final ArrayList recData ) throws DBaseException
   {
     if( filemode == 0 )
     {
@@ -908,7 +941,7 @@ public class DBaseFile
    * at the constructor. index specifies the location of the retrieved record in the datasection. if an invalid index is
    * used an exception will be thrown
    */
-  public void setRecord( int index, ArrayList recData ) throws DBaseException
+  public void setRecord( final int index, final ArrayList recData ) throws DBaseException
   {
     if( filemode == 0 )
     {
@@ -940,9 +973,9 @@ class tsColumn
    * Constructs a tsColumn object.
    * 
    * @param s
-   *          the column name
+   *            the column name
    */
-  tsColumn( String s )
+  tsColumn( final String s )
   {
     name = s;
   }
@@ -962,7 +995,7 @@ class dbfCol extends tsColumn
    * 
    * @param c
    */
-  public dbfCol( String c )
+  public dbfCol( final String c )
   {
     super( c );
   }

@@ -45,14 +45,16 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
   private Object m_parent = null;
 
-  private IRelationType m_parentRelation;
+  private final IRelationType m_parentRelation;
 
-  private GM_Envelope m_envelope = INVALID_ENV;
+  private GM_Envelope m_envelope = Feature_Impl.INVALID_ENV;
 
   protected Feature_Impl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     if( ft == null )
+    {
       throw new UnsupportedOperationException( "must provide a featuretype" );
+    }
 
     m_parent = parent;
     m_parentRelation = parentRelation;
@@ -97,12 +99,14 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public Object getProperty( final IPropertyType pt )
   {
     if( pt == null )
+    {
       throw new IllegalArgumentException( "pt may not null" );
+    }
 
     final int pos = m_featureType.getPropertyPosition( pt );
     if( pos == -1 )
     {
-      if(m_featureType.isVirtualProperty( pt ))
+      if( m_featureType.isVirtualProperty( pt ) )
       {
         final IFeaturePropertyHandler fsh = getPropertyHandler();
         return fsh.getValue( this, pt, null );
@@ -131,18 +135,23 @@ public class Feature_Impl extends AbstractFeature implements Feature
       {
         final Object o = getProperty( element );
         if( o == null )
+        {
           continue;
+        }
         if( o instanceof List )
+        {
           result.addAll( (List) o );
+        }
         else
+        {
           result.add( (GM_Object) o );
+        }
       }
     }
-    
-    //add virtual function properties
-    IVirtualFunctionPropertyType[] virtualFuncGeo = 
-              m_featureType.getVirtualGeometryProperties();
-    for(IVirtualFunctionPropertyType pt:virtualFuncGeo)
+
+    // add virtual function properties
+    final IVirtualFunctionPropertyType[] virtualFuncGeo = m_featureType.getVirtualGeometryProperties();
+    for( final IVirtualFunctionPropertyType pt : virtualFuncGeo )
     {
       final Object virGeoProp = getProperty( pt );
       if( virGeoProp == null )
@@ -158,7 +167,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
         result.add( (GM_Object) virGeoProp );
       }
     }
-   
+
     // TODO allways use virtual ftp to calculate bbox ??
     final VirtualFeatureTypeProperty[] vftp = VirtualPropertyUtilities.getVirtualProperties( m_featureType );
     for( int p = 0; p < vftp.length; p++ )
@@ -167,11 +176,17 @@ public class Feature_Impl extends AbstractFeature implements Feature
       {
         final Object o = getVirtuelProperty( vftp[p], null );
         if( o == null )
+        {
           continue;
+        }
         if( o instanceof List )
+        {
           result.addAll( (List) o );
+        }
         else
+        {
           result.add( (GM_Object) o );
+        }
       }
     }
 
@@ -183,18 +198,17 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public GM_Object getDefaultGeometryProperty( )
   {
-    int pos = m_featureType.getDefaultGeometryPropertyPosition();
+    final int pos = m_featureType.getDefaultGeometryPropertyPosition();
     if( pos < 0 )
     {
-      IVirtualFunctionPropertyType[] virtualGeometryProperties = 
-                        m_featureType.getVirtualGeometryProperties();
-      if(virtualGeometryProperties == null )
+      final IVirtualFunctionPropertyType[] virtualGeometryProperties = m_featureType.getVirtualGeometryProperties();
+      if( virtualGeometryProperties == null )
       {
         return null;
       }
-      else if(virtualGeometryProperties.length>0)
+      else if( virtualGeometryProperties.length > 0 )
       {
-        return (GM_Object)getProperty( virtualGeometryProperties[0] );
+        return (GM_Object) getProperty( virtualGeometryProperties[0] );
       }
       else
       {
@@ -206,11 +220,13 @@ public class Feature_Impl extends AbstractFeature implements Feature
     final Object prop = getProperty( property );
     if( prop instanceof List )
     {
-      List props = (List) prop;
+      final List props = (List) prop;
       return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
     }
-    if( !(prop == null || prop instanceof GM_Object) )
+    if( !((prop == null) || (prop instanceof GM_Object)) )
+    {
       throw new UnsupportedOperationException( "wrong geometry type" );
+    }
     return (GM_Object) prop;
   }
 
@@ -219,34 +235,44 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public GM_Envelope getEnvelope( )
   {
-    if( m_envelope == INVALID_ENV )
+    if( m_envelope == Feature_Impl.INVALID_ENV )
+    {
       calculateEnv();
+    }
     return m_envelope;
   }
 
   private void calculateEnv( )
   {
     GM_Envelope env = null;
-    GM_Object[] geoms = getGeometryProperties();
+    final GM_Object[] geoms = getGeometryProperties();
     for( int i = 0; i < geoms.length; i++ )
     {
       if( !(geoms[i] instanceof GM_Point) )
       {
         if( env == null )
+        {
           env = geoms[i].getEnvelope();
+        }
         else
+        {
           env = env.getMerged( geoms[i].getEnvelope() );
+        }
       }
       else
       {
-        GM_Position pos = ((GM_Point) geoms[i]).getPosition();
-//        System.out.println(geoms[i].getClass().getName());
-//        System.out.println("POS:"+pos);
-        GM_Envelope env2 = GeometryFactory.createGM_Envelope( pos, pos );
+        final GM_Position pos = ((GM_Point) geoms[i]).getPosition();
+// System.out.println(geoms[i].getClass().getName());
+// System.out.println("POS:"+pos);
+        final GM_Envelope env2 = GeometryFactory.createGM_Envelope( pos, pos );
         if( env == null )
+        {
           env = env2;
+        }
         else
+        {
           env = env.getMerged( env2 );
+        }
       }
     }
     m_envelope = env;
@@ -255,8 +281,8 @@ public class Feature_Impl extends AbstractFeature implements Feature
   // TODO: make it private again?
   public void invalidEnvelope( )
   {
-    m_envelope = INVALID_ENV;
-    
+    m_envelope = Feature_Impl.INVALID_ENV;
+
     /* Invalidate geo-index of all feature-list which contains this feature. */
     // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not
     // invalidated.
@@ -264,12 +290,16 @@ public class Feature_Impl extends AbstractFeature implements Feature
     // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
     final Feature parent = getParent();
     if( parent == null )
+    {
       return;
+    }
 
     final IRelationType rt = getParentRelation();
-    if( rt != null && rt.isList() )
+    if( (rt != null) && rt.isList() )
     {
-      final FeatureList list = (FeatureList) parent.getProperty( rt );
+      // rt relation type and this relation type can differ (differnt feature workspaces!)
+      final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
+      final FeatureList list = (FeatureList) parent.getProperty( relation );
       list.invalidate( this );
     }
   }
@@ -278,7 +308,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
    * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String,
    *      org.kalypsodeegree.model.feature.GMLWorkspace)
    */
-  public Object getVirtuelProperty( VirtualFeatureTypeProperty vpt, GMLWorkspace workspace )
+  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt, final GMLWorkspace workspace )
   {
     return vpt.getVirtuelValue( this, workspace );
   }
@@ -289,11 +319,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public void setProperty( final IPropertyType pt, final Object value )
   {
     final int pos = m_featureType.getPropertyPosition( pt );
-    if(pos==-1)
+    if( pos == -1 )
     {
-      //if there is not regula property look for virtual
-      //function property
-      if(m_featureType.isVirtualProperty( pt ))
+      // if there is not regula property look for virtual
+      // function property
+      if( m_featureType.isVirtualProperty( pt ) )
       {
         final IFeaturePropertyHandler fsh = getPropertyHandler();
         fsh.setValue( this, pt, null );
@@ -301,24 +331,22 @@ public class Feature_Impl extends AbstractFeature implements Feature
         {
           invalidEnvelope();
         }
-      } 
+      }
       else
       {
-        String message = String.format( 
-              "Feature[%s] does not know this property %s", 
-              toString(),
-              pt.getQName().toString() );
-        throw new RuntimeException(
-            new GMLSchemaException(message));
+        final String message = String.format( "Feature[%s] does not know this property %s", toString(), pt.getQName().toString() );
+        throw new RuntimeException( new GMLSchemaException( message ) );
       }
     }
     else
     {
       final IFeaturePropertyHandler fsh = getPropertyHandler();
       m_properties[pos] = fsh.setValue( this, pt, value );
-  
+
       if( fsh.invalidateEnvelope( pt ) )
+      {
         invalidEnvelope();
+      }
     }
   }
 
@@ -330,11 +358,15 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public Object getProperty( final String propNameLocalPart )
   {
     if( propNameLocalPart.indexOf( ':' ) > 0 )
+    {
       throw new UnsupportedOperationException( propNameLocalPart + " is not a localPart" );
+    }
 
     final IPropertyType pt = m_featureType.getProperty( propNameLocalPart );
     if( pt == null )
+    {
       throw new IllegalArgumentException( "unknown local part: " + propNameLocalPart );
+    }
 
     return getProperty( pt );
   }
@@ -344,20 +376,15 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public Object getProperty( final QName propQName )
   {
-    /*final */IPropertyType pt = 
-                m_featureType.getProperty( propQName );
+    /* final */final IPropertyType pt = m_featureType.getProperty( propQName );
     if( pt == null )
     {
-//      pt = m_featureType.getVirtualProperty(propQName);
-//      if(pt==null)
-//      {
-        final String message = 
-          String.format( 
-              "Unknow property:\n\tfeatureType=%s\n\tprop QName=%s", 
-              getFeatureType().getQName(), 
-              propQName );
-        throw new IllegalArgumentException( message );
-//      }
+// pt = m_featureType.getVirtualProperty(propQName);
+// if(pt==null)
+// {
+      final String message = String.format( "Unknow property:\n\tfeatureType=%s\n\tprop QName=%s", getFeatureType().getQName(), propQName );
+      throw new IllegalArgumentException( message );
+// }
     }
     return getProperty( pt );
   }
@@ -379,9 +406,13 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public GMLWorkspace getWorkspace( )
   {
     if( m_parent instanceof GMLWorkspace )
+    {
       return (GMLWorkspace) m_parent;
+    }
     if( m_parent instanceof Feature )
+    {
       return ((Feature) m_parent).getWorkspace();
+    }
     return null;
   }
 
@@ -391,7 +422,9 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public Feature getParent( )
   {
     if( m_parent instanceof Feature )
+    {
       return (Feature) m_parent;
+    }
     return null;
   }
 
@@ -408,10 +441,14 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public void setWorkspace( final GMLWorkspace workspace )
   {
-    if( m_parent == null || m_parent == workspace )
+    if( (m_parent == null) || (m_parent == workspace) )
+    {
       m_parent = workspace;
+    }
     else
+    {
       throw new UnsupportedOperationException( "is not a root feature" );
+    }
   }
 
   /**
@@ -422,9 +459,13 @@ public class Feature_Impl extends AbstractFeature implements Feature
   {
     final StringBuffer buffer = new StringBuffer( "Feature " );
     if( m_featureType != null )
+    {
       buffer.append( m_featureType.getQName().getLocalPart() );
+    }
     if( m_id != null )
+    {
       buffer.append( "#" + m_id );
+    }
     return buffer.toString();
   }
 
@@ -437,7 +478,9 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
     final IPropertyType prop = featureType.getProperty( propQName );
     if( prop == null )
+    {
       throw new IllegalArgumentException( "Property not found: " + propQName );
+    }
 
     setProperty( prop, value );
   }

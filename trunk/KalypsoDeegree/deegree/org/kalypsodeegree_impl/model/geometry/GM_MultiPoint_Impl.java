@@ -61,6 +61,8 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
@@ -69,7 +71,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementierung of the GM_MultiPoint interface of package jago.model.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -88,7 +89,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @param crs
    */
-  public GM_MultiPoint_Impl( CS_CoordinateSystem crs )
+  public GM_MultiPoint_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
   }
@@ -98,11 +99,13 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @param gmp
    */
-  public GM_MultiPoint_Impl( GM_Point[] gmp )
+  public GM_MultiPoint_Impl( final GM_Point[] gmp )
   {
     super( null );
     for( int i = 0; i < gmp.length; i++ )
+    {
       m_aggregate.add( gmp[i] );
+    }
 
   }
 
@@ -112,18 +115,20 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param gmp
    * @param crs
    */
-  public GM_MultiPoint_Impl( GM_Point[] gmp, CS_CoordinateSystem crs )
+  public GM_MultiPoint_Impl( final GM_Point[] gmp, final CS_CoordinateSystem crs )
   {
     super( crs );
 
     for( int i = 0; i < gmp.length; i++ )
+    {
       m_aggregate.add( gmp[i] );
+    }
   }
 
   /**
    * adds a GM_Point to the aggregation
    */
-  public void addPoint( GM_Point gmp )
+  public void addPoint( final GM_Point gmp )
   {
     super.add( gmp );
   }
@@ -133,11 +138,11 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
    * 
    * @param gmp
-   *          GM_Point to insert.
+   *            GM_Point to insert.
    * @param index
-   *          position where to insert the new GM_Point
+   *            position where to insert the new GM_Point
    */
-  public void insertPointAt( GM_Point gmp, int index ) throws GM_Exception
+  public void insertPointAt( final GM_Point gmp, final int index ) throws GM_Exception
   {
     super.insertObjectAt( gmp, index );
   }
@@ -147,11 +152,11 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
    * 
    * @param gmp
-   *          GM_Point to set.
+   *            GM_Point to set.
    * @param index
-   *          position where to set the new GM_Point
+   *            position where to set the new GM_Point
    */
-  public void setPointAt( GM_Point gmp, int index ) throws GM_Exception
+  public void setPointAt( final GM_Point gmp, final int index ) throws GM_Exception
   {
     setObjectAt( gmp, index );
   }
@@ -161,9 +166,9 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Point
    */
-  public GM_Point removePoint( GM_Point gmp )
+  public GM_Point removePoint( final GM_Point gmp )
   {
-    return (GM_Point)super.removeObject( gmp );
+    return (GM_Point) super.removeObject( gmp );
   }
 
   /**
@@ -172,23 +177,23 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @return the removed GM_Point
    */
-  public GM_Point removePointAt( int index ) throws GM_Exception
+  public GM_Point removePointAt( final int index ) throws GM_Exception
   {
-    return (GM_Point)super.removeObjectAt( index );
+    return (GM_Point) super.removeObjectAt( index );
   }
 
   /**
    * returns the GM_Point at the submitted index.
    */
-  public GM_Point getPointAt( int index )
+  public GM_Point getPointAt( final int index )
   {
-    return (GM_Point)super.getPrimitiveAt( index );
+    return (GM_Point) super.getPrimitiveAt( index );
   }
 
   /**
    * returns all GM_Points as array
    */
-  public GM_Point[] getAllPoints()
+  public GM_Point[] getAllPoints( )
   {
     return m_aggregate.toArray( new GM_Point[getSize()] );
   }
@@ -196,16 +201,16 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * updates the bounding box of the aggregation
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
-    GM_Point gmp = getPointAt( 0 );
+    final GM_Point gmp = getPointAt( 0 );
 
-    double[] min = gmp.getAsArray().clone();
-    double[] max = min.clone();
+    final double[] min = gmp.getAsArray().clone();
+    final double[] max = min.clone();
 
     for( int i = 1; i < getSize(); i++ )
     {
-      double[] pos = getPointAt( i ).getAsArray();
+      final double[] pos = getPointAt( i ).getAsArray();
 
       for( int j = 0; j < pos.length; j++ )
       {
@@ -226,27 +231,27 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * calculates the centroid of the surface
    */
-  private void calculateCentroid()
+  private void calculateCentroid( )
   {
     try
     {
-      GM_Point gmp = getPointAt( 0 );
+      final GM_Point gmp = getPointAt( 0 );
 
-      double[] cen = new double[gmp.getAsArray().length];
+      final double[] cen = new double[gmp.getAsArray().length];
 
       for( int i = 0; i < getSize(); i++ )
       {
-        double[] pos = getPointAt( i ).getAsArray();
+        final double[] pos = getPointAt( i ).getAsArray();
 
         for( int j = 0; j < pos.length; j++ )
         {
-          cen[j] += ( pos[j] / getSize() );
+          cen[j] += (pos[j] / getSize());
         }
       }
 
       centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       // nothing
     }
@@ -256,7 +261,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * calculates the centroid and envelope of the aggregation
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateCentroid();
     calculateEnvelope();
@@ -270,7 +275,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 3-dimensional.
    */
   @Override
-  public int getDimension()
+  public int getDimension( )
   {
     return 0;
   }
@@ -280,7 +285,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   @Override
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     GM_Point sp = null;
 
@@ -288,7 +293,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     {
       sp = getPointAt( 0 );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       // nothing
     }
@@ -300,25 +305,16 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public Object clone( ) throws CloneNotSupportedException
   {
-    GM_MultiPoint mp = null;
-
-    try
+    // kuch
+    final GM_Point[] points = getAllPoints();
+    final List<GM_Point> myPoints = new LinkedList<GM_Point>();
+    for( final GM_Point point : points )
     {
-      mp = new GM_MultiPoint_Impl( getCoordinateSystem() );
-
-      for( int i = 0; i < this.getSize(); i++ )
-      {
-        GM_Point_Impl pi = (GM_Point_Impl)getPointAt( i );
-        mp.add( (GM_Point)pi.clone() );
-      }
-    }
-    catch( Exception ex )
-    {
-      System.out.println( "GM_MultiPoint_Impl.clone: " + ex );
+      myPoints.add( (GM_Point) point.clone() );
     }
 
-    return mp;
+    return new GM_MultiPoint_Impl( myPoints.toArray( new GM_Point[] {} ) );
   }
 }

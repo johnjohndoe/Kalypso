@@ -62,10 +62,8 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * A GM_Polygon is a specialized GM_SurfacePatch and it's implementation should be implementable. It special
  * characteristic is that's the interpolation between the points of the bounding rings is linear.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -76,4 +74,6 @@ package org.kalypsodeegree.model.geometry;
  */
 
 public interface GM_Polygon extends GM_SurfacePatch
-{}
+{
+
+}

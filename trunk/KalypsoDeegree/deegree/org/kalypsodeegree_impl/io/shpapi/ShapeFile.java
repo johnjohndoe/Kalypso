@@ -68,6 +68,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -108,12 +109,12 @@ public class ShapeFile
 {
   private DBaseFile m_dbf = null;
 
-  private SHP2WKS shpwks = new SHP2WKS();
+  private final SHP2WKS shpwks = new SHP2WKS();
 
   /**
    * contains the dBase indexes
    */
-  private Hashtable<String, DBaseIndex> dBaseIndexes = new Hashtable<String, DBaseIndex>();
+  private final Hashtable<String, DBaseIndex> dBaseIndexes = new Hashtable<String, DBaseIndex>();
 
   /**
    * aggregated Instance-variables
@@ -138,7 +139,7 @@ public class ShapeFile
    * constructor: <BR>
    * Construct a ShapeFile from a file name. <BR>
    */
-  public ShapeFile( String url ) throws IOException
+  public ShapeFile( final String url ) throws IOException
   {
     m_url = url;
 
@@ -168,7 +169,7 @@ public class ShapeFile
     {
       rti = new RTree( url + ".rti" );
     }
-    catch( RTreeException e )
+    catch( final RTreeException e )
     {
       hasRTreeIndex = false;
     }
@@ -181,7 +182,7 @@ public class ShapeFile
       {
         s = getProperties();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -192,7 +193,7 @@ public class ShapeFile
         {
           dBaseIndexes.put( s[i], new DBaseIndex( url + "$" + s[i] ) );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // shouldnt we do something here?
         }
@@ -204,7 +205,7 @@ public class ShapeFile
    * constructor: <BR>
    * Construct a ShapeFile from a file name. <BR>
    */
-  public ShapeFile( String url, String rwflag ) throws IOException
+  public ShapeFile( final String url, final String rwflag ) throws IOException
   {
     m_url = url;
 
@@ -234,21 +235,21 @@ public class ShapeFile
       {
         rti.close();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
     }
 
-    for( Enumeration e = dBaseIndexes.elements(); e.hasMoreElements(); )
+    for( final Enumeration e = dBaseIndexes.elements(); e.hasMoreElements(); )
     {
-      DBaseIndex index = (DBaseIndex) e.nextElement();
+      final DBaseIndex index = (DBaseIndex) e.nextElement();
 
       try
       {
         index.close();
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         // and here?
       }
@@ -259,7 +260,7 @@ public class ShapeFile
   /**
    * returns true if a column is indexed
    */
-  public boolean hasDBaseIndex( String column )
+  public boolean hasDBaseIndex( final String column )
   {
     final DBaseIndex index = dBaseIndexes.get( column );
     return index != null;
@@ -270,7 +271,7 @@ public class ShapeFile
    */
   public boolean hasDBaseFile( )
   {
-    return this.hasDBaseFile;
+    return hasDBaseFile;
   }
 
   /**
@@ -278,7 +279,7 @@ public class ShapeFile
    */
   public boolean hasRTreeIndex( )
   {
-    return this.hasRTreeIndex;
+    return hasRTreeIndex;
   }
 
   /**
@@ -295,10 +296,10 @@ public class ShapeFile
    */
   public GM_Envelope getFileMBR( )
   {
-    double xmin = shp.getFileMBR().west;
-    double xmax = shp.getFileMBR().east;
-    double ymin = shp.getFileMBR().south;
-    double ymax = shp.getFileMBR().north;
+    final double xmin = shp.getFileMBR().west;
+    final double xmax = shp.getFileMBR().east;
+    final double ymin = shp.getFileMBR().south;
+    final double ymax = shp.getFileMBR().north;
 
     return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
   }
@@ -306,13 +307,13 @@ public class ShapeFile
   /**
    * returns the minimum bound rectangle of RecNo'th Geometrie <BR>
    */
-  public GM_Envelope getMBRByRecNo( int recNo ) throws IOException
+  public GM_Envelope getMBRByRecNo( final int recNo ) throws IOException
   {
-    SHPEnvelope shpenv = shp.getRecordMBR( recNo );
-    double xmin = shpenv.west;
-    double xmax = shpenv.east;
-    double ymin = shpenv.south;
-    double ymax = shpenv.north;
+    final SHPEnvelope shpenv = shp.getRecordMBR( recNo );
+    final double xmin = shpenv.west;
+    final double xmax = shpenv.east;
+    final double ymin = shpenv.south;
+    final double ymax = shpenv.north;
 
     return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
   }
@@ -350,27 +351,27 @@ public class ShapeFile
   /**
    * returns RecNo'th Geometrie <BR>
    */
-  public GM_Object getGM_ObjectByRecNo( int RecNo ) throws IOException
+  public GM_Object getGM_ObjectByRecNo( final int RecNo ) throws IOException
   {
     GM_Object geom = null;
 
-    int shpType = getShapeTypeByRecNo( RecNo );
+    final int shpType = getShapeTypeByRecNo( RecNo );
 
     if( shpType == ShapeConst.SHAPE_TYPE_POINT )
     {
-      SHPPoint shppoint = (SHPPoint) shp.getByRecNo( RecNo );
+      final SHPPoint shppoint = (SHPPoint) shp.getByRecNo( RecNo );
 
       geom = shpwks.transformPoint( null, shppoint );
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT )
     {
-      SHPMultiPoint shpmultipoint = (SHPMultiPoint) shp.getByRecNo( RecNo );
+      final SHPMultiPoint shpmultipoint = (SHPMultiPoint) shp.getByRecNo( RecNo );
 
-      GM_Point[] points = shpwks.transformMultiPoint( null, shpmultipoint );
+      final GM_Point[] points = shpwks.transformMultiPoint( null, shpmultipoint );
 
       if( points != null )
       {
-        GM_MultiPoint mp = GeometryFactory.createGM_MultiPoint( points );
+        final GM_MultiPoint mp = GeometryFactory.createGM_MultiPoint( points );
         geom = mp;
       }
       else
@@ -380,20 +381,15 @@ public class ShapeFile
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINE )
     {
-      SHPPolyLine shppolyline = (SHPPolyLine) shp.getByRecNo( RecNo );
+      final SHPPolyLine shppolyline = (SHPPolyLine) shp.getByRecNo( RecNo );
 
-      GM_Curve[] curves = shpwks.transformPolyLine( null, shppolyline );
+      final GM_Curve[] curves = shpwks.transformPolyLine( null, shppolyline );
 
-      if( (curves != null) && (curves.length > 1) )
+      if( curves != null  )
       {
         // create multi curve
-        GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
+        final GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
         geom = mc;
-      }
-      else if( (curves != null) && (curves.length == 1) )
-      {
-        // single curve
-        geom = curves[0];
       }
       else
       {
@@ -402,19 +398,15 @@ public class ShapeFile
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
     {
-      SHPPolygon shppoly = (SHPPolygon) shp.getByRecNo( RecNo );
+      final SHPPolygon shppoly = (SHPPolygon) shp.getByRecNo( RecNo );
 
-      GM_Surface[] polygons = shpwks.transformPolygon( null, shppoly );
+      final GM_Surface[] polygons = shpwks.transformPolygon( null, shppoly );
 
-      if( (polygons != null) && (polygons.length > 1) )
+      if( polygons != null )
       {
         // create multi surface
-        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
+        final GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
         geom = ms;
-      }
-      else if( (polygons != null) && (polygons.length == 1) )
-      {
-        geom = polygons[0];
       }
       else
       {
@@ -423,21 +415,21 @@ public class ShapeFile
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POINTZ )
     {
-      SHPPointz shppointz = (SHPPointz) shp.getByRecNo( RecNo );
+      final SHPPointz shppointz = (SHPPointz) shp.getByRecNo( RecNo );
 
       geom = shpwks.transformPointz( null, shppointz );
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ )
     {
-      SHPPolyLinez shppolyline = (SHPPolyLinez) shp.getByRecNo( RecNo );
+      final SHPPolyLinez shppolyline = (SHPPolyLinez) shp.getByRecNo( RecNo );
 
       // TODO!
-      GM_Curve[] curves = shpwks.transformPolyLinez( null, shppolyline );
+      final GM_Curve[] curves = shpwks.transformPolyLinez( null, shppolyline );
 
       if( (curves != null) && (curves.length > 1) )
       {
         // create multi curve
-        GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
+        final GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
         geom = mc;
       }
       else if( (curves != null) && (curves.length == 1) )
@@ -452,14 +444,14 @@ public class ShapeFile
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POLYGONZ )
     {
-      SHPPolygonz shppoly = (SHPPolygonz) shp.getByRecNo( RecNo );
+      final SHPPolygonz shppoly = (SHPPolygonz) shp.getByRecNo( RecNo );
       // TODO!
-      GM_Surface[] polygonsz = shpwks.transformPolygonz( null, shppoly );
+      final GM_Surface[] polygonsz = shpwks.transformPolygonz( null, shppoly );
 
       if( (polygonsz != null) && (polygonsz.length > 1) )
       {
         // create multi surface
-        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygonsz, null );
+        final GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygonsz, null );
         geom = ms;
       }
       else if( (polygonsz != null) && (polygonsz.length == 1) )
@@ -471,7 +463,10 @@ public class ShapeFile
         geom = null;
       }
     }
-
+    else
+    {
+      throw(new NotImplementedException());
+    }
 
     return geom;
   }
@@ -481,7 +476,7 @@ public class ShapeFile
    * per definition a shape file contains onlay one shape type <BR>
    * but null shapes are possible too! <BR>
    */
-  private int getShapeTypeByRecNo( int RecNo ) throws IOException
+  private int getShapeTypeByRecNo( final int RecNo ) throws IOException
   {
     return shp.getShapeTypeByRecNo( RecNo );
   }
@@ -489,9 +484,9 @@ public class ShapeFile
   /**
    * returns a int array that containts all the record numbers that matches the search operation
    */
-  public int[] getGeoNumbersByAttribute( String column, Comparable value ) throws IOException, DBaseIndexException
+  public int[] getGeoNumbersByAttribute( final String column, final Comparable value ) throws IOException, DBaseIndexException
   {
-    DBaseIndex index = dBaseIndexes.get( column );
+    final DBaseIndex index = dBaseIndexes.get( column );
 
     if( index == null )
     {
@@ -506,11 +501,11 @@ public class ShapeFile
    * which mbr's are completly or partly within the rectangle r <BR>
    * only Points, MultiPoints, PolyLines and Polygons are handled <BR>
    */
-  public int[] getGeoNumbersByRect( GM_Envelope r ) throws IOException
+  public int[] getGeoNumbersByRect( final GM_Envelope r ) throws IOException
   {
     SHPPoint geom = null;
     int[] num = null;
-    int numRecs = getRecordNum();
+    final int numRecs = getRecordNum();
     final ArrayList<Integer> numbers = new ArrayList<Integer>();
 
     GM_Envelope mbr = getFileMBR();
@@ -525,16 +520,18 @@ public class ShapeFile
       try
       {
         // translate envelope (deegree) to bounding box (rtree)
-        HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ), new HyperPoint( r.getMax().getAsArray() ) );
-        Object[] iNumbers = rti.intersects( box );
+        final HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ), new HyperPoint( r.getMax().getAsArray() ) );
+        final Object[] iNumbers = rti.intersects( box );
         num = new int[iNumbers.length];
 
         for( int i = 0; i < iNumbers.length; i++ )
+        {
           num[i] = ((Integer) iNumbers[i]).intValue();
+        }
 
         return num;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -553,7 +550,7 @@ public class ShapeFile
         geom = (SHPPoint) shp.getByRecNo( i + 1 );
 
         // is the Point within the seach rectangle?
-        GM_Position pos = GeometryFactory.createGM_Position( geom.x, geom.y );
+        final GM_Position pos = GeometryFactory.createGM_Position( geom.x, geom.y );
 
         if( r.contains( pos ) == true )
         {
@@ -585,7 +582,9 @@ public class ShapeFile
 
       // put all numbers within numbers to an array
       for( int i = 0; i < numbers.size(); i++ )
+      {
         num[i] = numbers.get( i ).intValue();
+      }
     }
 
     return num;
@@ -594,12 +593,14 @@ public class ShapeFile
   /**
    * is a property unique?
    */
-  public boolean isUnique( String property )
+  public boolean isUnique( final String property )
   {
     final DBaseIndex index = dBaseIndexes.get( property );
 
     if( index == null )
+    {
       return false;
+    }
 
     return index.isUnique();
   }
@@ -638,8 +639,8 @@ public class ShapeFile
    */
   public int[] getDataLengths( ) throws HasNoDBaseFileException, DBaseException
   {
-    String[] properties = getProperties();
-    int[] retval = new int[properties.length];
+    final String[] properties = getProperties();
+    final int[] retval = new int[properties.length];
 
     for( int i = 0; i < properties.length; i++ )
     {
@@ -653,7 +654,7 @@ public class ShapeFile
    * returns the datatype of each column of the dBase associated <BR>
    * to the shape-file specified by fields <BR>
    */
-  public String[] getDataTypes( String[] fields ) throws HasNoDBaseFileException, DBaseException
+  public String[] getDataTypes( final String[] fields ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
@@ -667,7 +668,7 @@ public class ShapeFile
    * returns a row of the dBase-file <BR>
    * associated to the shape-file <BR>
    */
-  public Object[] getRow( int rowNo ) throws HasNoDBaseFileException, DBaseException
+  public Object[] getRow( final int rowNo ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
@@ -679,7 +680,7 @@ public class ShapeFile
 
   private int getGeometryType( final Feature feature )
   {
-    GM_Object[] g = feature.getGeometryProperties();
+    final GM_Object[] g = feature.getGeometryProperties();
 
     if( (g == null) || (g.length == 0) )
     {
@@ -729,7 +730,7 @@ public class ShapeFile
   private void initDBaseFile( final IFeatureType featT ) throws DBaseException
   {
     // count regular fields
-    IPropertyType[] ftp = featT.getProperties();
+    final IPropertyType[] ftp = featT.getProperties();
 
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
@@ -739,13 +740,15 @@ public class ShapeFile
       final String ftpName = ftp[i].getQName().getLocalPart();
       int pos = ftpName.lastIndexOf( '.' );
       if( pos < 0 )
+      {
         pos = -1;
+      }
       final String s = ftpName.substring( pos + 1 );
       if( !(ftp[i] instanceof IValuePropertyType) )
       {// TODO: this ssems to be a bug;
       }
-      IValuePropertyType vpt = (IValuePropertyType) ftp[i];
-      Class clazz = vpt.getValueClass();
+      final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
+      final Class clazz = vpt.getValueClass();
       if( clazz == Integer.class )
       {
         fieldList.add( new FieldDescriptor( s, "N", (byte) 20, (byte) 0 ) );
@@ -763,7 +766,7 @@ public class ShapeFile
         // TODO: Problem: reading/writing a shape will change the precision/size of the column!
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
       }
-      else if( clazz == Double.class || clazz == Number.class )
+      else if( (clazz == Double.class) || (clazz == Number.class) )
       {
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
       }
@@ -799,12 +802,14 @@ public class ShapeFile
     Debug.debugMethodBegin( this, "writeShape" );
 
     if( features.length == 0 )
+    {
       throw new Exception( "Can't write an empty shape." );
+    }
 
     int nbyte = 0;
     int geotype = -1;
     byte shptype = -1;
-    int typ_ = getGeometryType( features[0] );
+    final int typ_ = getGeometryType( features[0] );
     byte[] bytearray = null;
     IndexRecord record = null;
     SHPEnvelope mbr = null;
@@ -825,7 +830,7 @@ public class ShapeFile
     for( int i = 0; i < features.length; i++ )
     {
       // get i'th features properties
-      Feature feature = features[i];
+      final Feature feature = features[i];
       // pairs = getFeatureProperties( features[i] );
 
       // write i'th features properties to a ArrayList
@@ -834,14 +839,20 @@ public class ShapeFile
       {
         final Object value = feature.getProperty( ftp[j] );
         if( !(ftp[j] instanceof IValuePropertyType) )
+        {
           continue;
+        }
         final IValuePropertyType ivp = (IValuePropertyType) ftp[j];
         final Class clazz = ivp.getValueClass();
-        if( clazz == Integer.class || clazz == Byte.class || clazz == Character.class || clazz == Float.class || clazz == Double.class || clazz == Number.class || clazz == Date.class
-            || clazz == Long.class || clazz == String.class )
+        if( (clazz == Integer.class) || (clazz == Byte.class) || (clazz == Character.class) || (clazz == Float.class) || (clazz == Double.class) || (clazz == Number.class) || (clazz == Date.class)
+            || (clazz == Long.class) || (clazz == String.class) )
+        {
           vec.add( value );
+        }
         else if( clazz == BigDecimal.class )
+        {
           vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
+        }
       }
 
       // write the ArrayList (properties) to the dbase file
@@ -849,7 +860,7 @@ public class ShapeFile
       {
         m_dbf.setRecord( vec );
       }
-      catch( DBaseException db )
+      catch( final DBaseException db )
       {
         db.printStackTrace();
         throw new Exception( db.toString() );
@@ -895,8 +906,8 @@ public class ShapeFile
       if( geotype == 0 )
       {
         // Geometrie Type = Point
-        GM_Point wks = (GM_Point) getFeatureAsGeometry( features[i] );
-        SHPPoint shppoint = new SHPPoint( wks.getPosition() );
+        final GM_Point wks = (GM_Point) getFeatureAsGeometry( features[i] );
+        final SHPPoint shppoint = new SHPPoint( wks.getPosition() );
         nbyte = shppoint.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
         shppoint.writeSHPPoint( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
@@ -912,10 +923,10 @@ public class ShapeFile
       else if( geotype == 1 )
       {
         // Geometrie Type = LineString
-        GM_Curve[] wks = new GM_Curve[1];
+        final GM_Curve[] wks = new GM_Curve[1];
         wks[0] = (GM_Curve) getFeatureAsGeometry( features[i] );
 
-        SHPPolyLine shppolyline = new SHPPolyLine( wks );
+        final SHPPolyLine shppolyline = new SHPPolyLine( wks );
         nbyte = shppolyline.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
         shppolyline.writeSHPPolyLine( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
@@ -931,10 +942,10 @@ public class ShapeFile
       else if( geotype == 2 )
       {
         // Geometrie Type = Polygon
-        GM_Surface[] wks = new GM_Surface[1];
+        final GM_Surface[] wks = new GM_Surface[1];
         wks[0] = (GM_Surface) getFeatureAsGeometry( features[i] );
 
-        SHPPolygon shppolygon = new SHPPolygon( wks );
+        final SHPPolygon shppolygon = new SHPPolygon( wks );
         nbyte = shppolygon.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
         shppolygon.writeSHPPolygon( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
@@ -950,8 +961,8 @@ public class ShapeFile
       else if( geotype == 3 )
       {
         // Geometrie Type = MultiPoint
-        GM_MultiPoint wks = (GM_MultiPoint) getFeatureAsGeometry( features[i] );
-        SHPMultiPoint shpmultipoint = new SHPMultiPoint( wks );
+        final GM_MultiPoint wks = (GM_MultiPoint) getFeatureAsGeometry( features[i] );
+        final SHPMultiPoint shpmultipoint = new SHPMultiPoint( wks );
         nbyte = shpmultipoint.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
         shpmultipoint.writeSHPMultiPoint( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
@@ -961,8 +972,8 @@ public class ShapeFile
       else if( geotype == 4 )
       {
         // Geometrie Type = MultiLineString
-        GM_MultiCurve wks = (GM_MultiCurve) getFeatureAsGeometry( features[i] );
-        SHPPolyLine shppolyline = new SHPPolyLine( wks.getAllCurves() );
+        final GM_MultiCurve wks = (GM_MultiCurve) getFeatureAsGeometry( features[i] );
+        final SHPPolyLine shppolyline = new SHPPolyLine( wks.getAllCurves() );
         nbyte = shppolyline.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
         shppolyline.writeSHPPolyLine( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
@@ -978,8 +989,8 @@ public class ShapeFile
       else if( geotype == 5 )
       {
         // Geometrie Type = MultiPolygon
-        GM_MultiSurface wks = (GM_MultiSurface) getFeatureAsGeometry( features[i] );
-        SHPPolygon shppolygon = new SHPPolygon( wks.getAllSurfaces() );
+        final GM_MultiSurface wks = (GM_MultiSurface) getFeatureAsGeometry( features[i] );
+        final SHPPolygon shppolygon = new SHPPolygon( wks.getAllSurfaces() );
         nbyte = shppolygon.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
         shppolygon.writeSHPPolygon( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );

@@ -22,16 +22,18 @@ public interface Feature extends DeegreeFeature, IAdaptable
 
   /**
    * Return the parent of this feature, that is, the feature wich contains this feature as inline feature.
+   * 
    * @see #getParentRelation()
    */
   public Feature getParent( );
 
   /**
    * Returns the {@link IRelationType} where this feature resides inside its parent feature.
+   * 
    * @see #getParent()
    */
-  public IRelationType getParentRelation();
-  
+  public IRelationType getParentRelation( );
+
   public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType, final GMLWorkspace workspace );
 
   public void setProperty( final IPropertyType propertyType, final Object value );
@@ -56,6 +58,7 @@ public interface Feature extends DeegreeFeature, IAdaptable
    * intended to be called from GMLWorkspace when root feature is set.
    */
   public void setWorkspace( final GMLWorkspace workspace );
-  
+
   public void invalidEnvelope( );
+
 }

@@ -206,4 +206,6 @@ public interface GM_Object
    * </p>
    */
   public void invalidate( );
+
+  public Object clone( ) throws CloneNotSupportedException;
 }

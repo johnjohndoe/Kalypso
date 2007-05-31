@@ -62,6 +62,8 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
@@ -76,13 +78,10 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * default implementation of the GM_Curve interface from package jago.model.
- * 
  * ------------------------------------------------------------
  * 
  * @version 14.10.2001
  * @author Andreas Poth
- * 
- *  
  */
 class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_GenericCurve, Serializable
 {
@@ -96,9 +95,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * the curve is '+'
    * 
    * @param segments
-   *          array of GM_CurveSegment
+   *            array of GM_CurveSegment
    */
-  public GM_Curve_Impl( GM_CurveSegment[] segments ) throws GM_Exception
+  public GM_Curve_Impl( final GM_CurveSegment[] segments ) throws GM_Exception
   {
     this( '+', segments );
   }
@@ -108,11 +107,11 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * the curve
    * 
    * @param segments
-   *          array of GM_CurveSegment
+   *            array of GM_CurveSegment
    * @param orientation
-   *          of the curve
+   *            of the curve
    */
-  public GM_Curve_Impl( char orientation, GM_CurveSegment[] segments ) throws GM_Exception
+  public GM_Curve_Impl( final char orientation, final GM_CurveSegment[] segments ) throws GM_Exception
   {
     super( segments[0].getCoordinateSystem(), orientation );
 
@@ -140,25 +139,25 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * calculates the envelope of the Curve
    */
-  private void calculateEnvelope()
+  private void calculateEnvelope( )
   {
     try
     {
-      GM_Position[] positions = getAsLineString().getPositions();
+      final GM_Position[] positions = getAsLineString().getPositions();
 
-      double[] min = positions[0].getAsArray().clone();
-      double[] max = min.clone();
-      final int DIM=min.length;//envelop dim from first position
-      
+      final double[] min = positions[0].getAsArray().clone();
+      final double[] max = min.clone();
+      final int DIM = min.length;// envelop dim from first position
+
       for( int i = 1; i < positions.length; i++ )
       {
-        double[] pos = positions[i].getAsArray();
-        
-        //DIM used to cope case where point with different dimention are 
-        //in the curve, 
-        //eg mixing 2d and 3d points 2d point will not contribute
-        //to min max of third dim
-        for( int j = 0; j < pos.length && j<DIM; j++ )
+        final double[] pos = positions[i].getAsArray();
+
+        // DIM used to cope case where point with different dimention are
+        // in the curve,
+        // eg mixing 2d and 3d points 2d point will not contribute
+        // to min max of third dim
+        for( int j = 0; (j < pos.length) && (j < DIM); j++ )
         {
           if( pos[j] < min[j] )
           {
@@ -173,30 +172,32 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
       envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
     }
-    catch( GM_Exception e )
-    {}
+    catch( final GM_Exception e )
+    {
+    }
   }
 
   /**
    * calculates the boundary of the Curve
    */
-  private void calculateBoundary()
+  private void calculateBoundary( )
   {
-    m_boundary = new GM_CurveBoundary_Impl( getCoordinateSystem(), getStartPoint().getPosition(), getEndPoint()
-        .getPosition() );
+    m_boundary = new GM_CurveBoundary_Impl( getCoordinateSystem(), getStartPoint().getPosition(), getEndPoint().getPosition() );
   }
 
   /**
    * calculates the centroid of the Curve <br>
    * if you follow the curve and measure the length from start to end, the centeroid should be half the way.
    */
-  private void calculateCentroid()
+  private void calculateCentroid( )
   {
     try
     {
       final GM_Position[] positions = getAsLineString().getPositions();
       if( positions.length < 2 )
+      {
         return;
+      }
       final double length = getLength();
       if( length == 0 )
       {
@@ -208,61 +209,64 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
       int i = 1;
       for( ; i < positions.length; i++ )
       {
-        double d = positions[i].getDistance( positions[i - 1] );
+        final double d = positions[i].getDistance( positions[i - 1] );
         if( coveredDistance + d <= halfWay )
+        {
           coveredDistance += d;
+        }
         else
+        {
           break;
+        }
       }
-      final GM_Position newPos = GeometryUtilities.createGM_PositionAt( positions[i - 1], positions[i], halfWay
-          - coveredDistance );
+      final GM_Position newPos = GeometryUtilities.createGM_PositionAt( positions[i - 1], positions[i], halfWay - coveredDistance );
       centroid = new GM_Point_Impl( newPos, getCoordinateSystem() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
   }
 
-//  /**
-//   * calculates the centroid of the Curve
-//   * 
-//   *  
-//   */
-//  private void calculateCentroidAsWeight()
-//  {
-//    //   this is the origininal method calculateCenteroid from deegree
-//    //   I (doemming) implemented calculateCenteroid() new, so that the centeroid
-//    // is half on the full-point-by-point way from the start to the end of the
-//    // curve, in my eyes it is more logical that way when using pointsymbolizers
-//    // with curves (they should be on the line)
-//    try
-//    {
-//      GM_Position[] positions = getAsLineString().getPositions();
+// /**
+// * calculates the centroid of the Curve
+// *
+// *
+// */
+// private void calculateCentroidAsWeight()
+// {
+// // this is the origininal method calculateCenteroid from deegree
+// // I (doemming) implemented calculateCenteroid() new, so that the centeroid
+// // is half on the full-point-by-point way from the start to the end of the
+// // curve, in my eyes it is more logical that way when using pointsymbolizers
+// // with curves (they should be on the line)
+// try
+// {
+// GM_Position[] positions = getAsLineString().getPositions();
 //
-//      double[] cen = new double[positions[0].getAsArray().length];
-//      // 
-//      for( int i = 0; i < positions.length; i++ )
-//      {
-//        double[] pos = positions[i].getAsArray();
+// double[] cen = new double[positions[0].getAsArray().length];
+// //
+// for( int i = 0; i < positions.length; i++ )
+// {
+// double[] pos = positions[i].getAsArray();
 //
-//        for( int j = 0; j < pos.length; j++ )
-//        {
-//          cen[j] += ( pos[j] / positions.length );
-//        }
-//      }
+// for( int j = 0; j < pos.length; j++ )
+// {
+// cen[j] += ( pos[j] / positions.length );
+// }
+// }
 //
-//      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
-//    }
-//    catch( Exception e )
-//    {}
-//  }
+// centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
+// }
+// catch( Exception e )
+// {}
+// }
 
   /**
    *  
    */
   @Override
-  protected void calculateParam()
+  protected void calculateParam( )
   {
     calculateCentroid();
     calculateEnvelope();
@@ -273,9 +277,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the boundary of the curve
    */
-  public GM_CurveBoundary getCurveBoundary()
+  public GM_CurveBoundary getCurveBoundary( )
   {
-    return (GM_CurveBoundary)m_boundary;
+    return (GM_CurveBoundary) m_boundary;
   }
 
   /**
@@ -284,7 +288,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return 1;
   }
@@ -293,7 +297,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     return getStartPoint().getAsArray().length;
   }
@@ -307,7 +311,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * dummy implementation
    */
   @Override
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
 
@@ -315,7 +319,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     {
       for( int i = 0; i < m_segments.size(); i++ )
       {
-        GM_CurveSegment cs = getCurveSegmentAt( i );
+        final GM_CurveSegment cs = getCurveSegmentAt( i );
 
         if( cs.intersects( gmo ) )
         {
@@ -324,8 +328,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         }
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
 
     return inter;
   }
@@ -333,17 +338,19 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the length of the curve in units of the related spatial reference system
    */
-  public double getLength()
+  public double getLength( )
   {
     try
     {
       double result = 0;
       final GM_Position[] positions = getAsLineString().getPositions();
       for( int i = 1; i < positions.length; i++ )
+      {
         result += positions[i].getDistance( positions[i - 1] );
+      }
       return result;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return 0;
@@ -353,7 +360,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the number of segments building the curve
    */
-  public int getNumberOfCurveSegments()
+  public int getNumberOfCurveSegments( )
   {
     return m_segments.size();
   }
@@ -362,7 +369,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns the first point of the curve. if the curve doesn't contain a segment or the first segment doesn't contain a
    * point null will be returned
    */
-  public GM_Point getStartPoint()
+  public GM_Point getStartPoint( )
   {
     if( getNumberOfCurveSegments() == 0 )
     {
@@ -375,8 +382,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     {
       gmp = getCurveSegmentAt( 0 ).getStartPoint();
     }
-    catch( GM_Exception e )
-    {}
+    catch( final GM_Exception e )
+    {
+    }
 
     return gmp;
   }
@@ -385,7 +393,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns the last point of the curve.if the curve doesn't contain a segment or the last segment doesn't contain a
    * point null will be returned
    */
-  public GM_Point getEndPoint()
+  public GM_Point getEndPoint( )
   {
     if( getNumberOfCurveSegments() == 0 )
     {
@@ -398,8 +406,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     {
       gmp = getCurveSegmentAt( getNumberOfCurveSegments() - 1 ).getEndPoint();
     }
-    catch( GM_Exception e )
-    {}
+    catch( final GM_Exception e )
+    {
+    }
 
     return gmp;
   }
@@ -407,7 +416,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * returns the curve as GM_LineString. if there isn't a curve segment within the curve null will be returned
    */
-  public GM_LineString getAsLineString() throws GM_Exception
+  public GM_LineString getAsLineString( ) throws GM_Exception
   {
     if( getNumberOfCurveSegments() == 0 )
     {
@@ -432,7 +441,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
       for( int i = 0; i < getNumberOfCurveSegments(); i++ )
       {
-        GM_Position[] gmps = getCurveSegmentAt( i ).getPositions();
+        final GM_Position[] gmps = getCurveSegmentAt( i ).getPositions();
 
         for( int j = 0; j < gmps.length; j++ )
         {
@@ -456,7 +465,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
       for( int i = getNumberOfCurveSegments() - 1; i >= 0; i-- )
       {
-        GM_Position[] gmps = getCurveSegmentAt( i ).getPositions();
+        final GM_Position[] gmps = getCurveSegmentAt( i ).getPositions();
 
         for( int j = gmps.length - 1; j >= 0; j-- )
         {
@@ -472,14 +481,14 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns the curve segment at the submitted index
    * 
    * @param index
-   *          index of the curve segment that should be returned
+   *            index of the curve segment that should be returned
    * @exception GM_Exception
-   *              a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
-   *              <tt>getNumberOfCurveSegments()-1</tt>
+   *                a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
+   *                <tt>getNumberOfCurveSegments()-1</tt>
    */
-  public GM_CurveSegment getCurveSegmentAt( int index ) throws GM_Exception
+  public GM_CurveSegment getCurveSegmentAt( final int index ) throws GM_Exception
   {
-    if( ( index < 0 ) || ( index > getNumberOfCurveSegments() - 1 ) )
+    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
     {
       throw new GM_Exception( "invalid index/position to get a segment!" );
     }
@@ -491,18 +500,18 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * writes a segment to the curve at submitted position. the old point will be deleted
    * 
    * @param segment
-   *          curve segment that should be set
+   *            curve segment that should be set
    * @param index
-   *          index where to set the curve segment
+   *            index where to set the curve segment
    * @exception GM_Exception
-   *              a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
-   *              <tt>getNumberOfCurveSegments()-1</tt> or or the starting point of the submitted curve segment isn't
-   *              equal to the ending point of segment at <tt>index-1</tt> and/or the ending point of the submitted
-   *              segment isn't equals to the curve segment at <tt>index+1</tt>
+   *                a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
+   *                <tt>getNumberOfCurveSegments()-1</tt> or or the starting point of the submitted curve segment
+   *                isn't equal to the ending point of segment at <tt>index-1</tt> and/or the ending point of the
+   *                submitted segment isn't equals to the curve segment at <tt>index+1</tt>
    */
-  public void setCurveSegmentAt( GM_CurveSegment segment, int index ) throws GM_Exception
+  public void setCurveSegmentAt( final GM_CurveSegment segment, final int index ) throws GM_Exception
   {
-    if( ( index < 0 ) || ( index > getNumberOfCurveSegments() - 1 ) )
+    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
     {
       throw new GM_Exception( "invalid index/position to set a segment!" );
     }
@@ -511,12 +520,12 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
      * checks if the start/endpoint of the inserted segment is equal to the end/startpoint of the successor/previous
      * segment start segx == start segx-1
      */
-    GM_Point p1 = segment.getEndPoint();
-    GM_Point p2 = segment.getStartPoint();
+    final GM_Point p1 = segment.getEndPoint();
+    final GM_Point p2 = segment.getStartPoint();
 
     if( index == 0 )
     {
-      GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
+      final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
 
       /*
        * insert segment at beginning of curve
@@ -526,10 +535,10 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i-1] doesn't match start-point of segment[i]!" );
       }
     }
-    else if( ( index > 0 ) && ( index < ( getNumberOfCurveSegments() - 1 ) ) )
+    else if( (index > 0) && (index < (getNumberOfCurveSegments() - 1)) )
     {
-      GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
-      GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
+      final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
+      final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
 
       /*
        * insert segment anywhere in curve
@@ -539,9 +548,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i-1 || i]  doesn't match start-point of segment[i || i+1]!" );
       }
     }
-    else if( index == ( getNumberOfCurveSegments() - 1 ) )
+    else if( index == (getNumberOfCurveSegments() - 1) )
     {
-      GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
+      final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
 
       /*
        * insert segment at end of curve
@@ -562,18 +571,18 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * will be shifted
    * 
    * @param segment
-   *          curve segment that should be inserted
+   *            curve segment that should be inserted
    * @param index
-   *          index where to insert the curve segment
+   *            index where to insert the curve segment
    * @exception GM_Exception
-   *              a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
-   *              <tt>getNumberOfCurveSegments()-1</tt> or or the starting point of the submitted curve segment isn't
-   *              equal to the ending point of segment at <tt>index-1</tt> and/or the ending point of the submitted
-   *              segment isn't equals to the curve segment at <tt>index+1</tt>
+   *                a exception will be thrown if <tt>index</tt> is smaller than '0' or larger than
+   *                <tt>getNumberOfCurveSegments()-1</tt> or or the starting point of the submitted curve segment
+   *                isn't equal to the ending point of segment at <tt>index-1</tt> and/or the ending point of the
+   *                submitted segment isn't equals to the curve segment at <tt>index+1</tt>
    */
-  public void insertCurveSegmentAt( GM_CurveSegment segment, int index ) throws GM_Exception
+  public void insertCurveSegmentAt( final GM_CurveSegment segment, final int index ) throws GM_Exception
   {
-    if( ( index < 0 ) || ( index > getNumberOfCurveSegments() - 1 ) )
+    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
     {
       throw new GM_Exception( "invalid index/position to insert a segment!" );
     }
@@ -582,12 +591,12 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
      * checks if the start/endpoint of the inserted segment is equal to the end/startpoint of the successor/previous
      * segment
      */
-    GM_Point p1 = segment.getEndPoint();
-    GM_Point p2 = segment.getStartPoint();
+    final GM_Point p1 = segment.getEndPoint();
+    final GM_Point p2 = segment.getStartPoint();
 
     if( index == 0 )
     {
-      GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
+      final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
 
       /*
        * insert segment at beginning of curve
@@ -597,10 +606,10 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i] doesn't match start-point of segment[i+1]!" );
       }
     }
-    else if( ( index > 0 ) && ( index < ( getNumberOfCurveSegments() - 1 ) ) )
+    else if( (index > 0) && (index < (getNumberOfCurveSegments() - 1)) )
     {
-      GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
-      GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
+      final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
+      final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
 
       /*
        * insert segment anywhere in curve
@@ -610,9 +619,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i-1 || i]  doesn't match start-point of segment[i || i+1]!" );
       }
     }
-    else if( index == ( getNumberOfCurveSegments() - 1 ) )
+    else if( index == (getNumberOfCurveSegments() - 1) )
     {
-      GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
+      final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
 
       /*
        * insert segment at end of curve
@@ -632,19 +641,19 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * adds a segment at the end of the curve
    * 
    * @param segment
-   *          curve segment that should be set
+   *            curve segment that should be set
    * @exception GM_Exception
-   *              a exception will be thrown if the starting point of the submitted curve segment isn't equal to the
-   *              ending point of the last segment.
+   *                a exception will be thrown if the starting point of the submitted curve segment isn't equal to the
+   *                ending point of the last segment.
    */
-  public void addCurveSegment( GM_CurveSegment segment ) throws GM_Exception
+  public void addCurveSegment( final GM_CurveSegment segment ) throws GM_Exception
   {
     // TODO: Was wenn keine Curve da?
-    GM_Point p2 = getEndPoint();
+    final GM_Point p2 = getEndPoint();
 
     m_segments.add( segment );
 
-    GM_Point p1 = segment.getStartPoint();
+    final GM_Point p1 = segment.getStartPoint();
 
     if( !p1.equals( p2 ) )
     {
@@ -658,20 +667,20 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * deletes the segment at the submitted index
    * 
    * @param index
-   *          index of the curve segement that should be removed from the curve.
+   *            index of the curve segement that should be removed from the curve.
    * @exception GM_Exception
-   *              will be thrown if <tt>index</tt> is smaller '0' or larger <tt>getNumberOfCurveSegments()-1</tt>
+   *                will be thrown if <tt>index</tt> is smaller '0' or larger <tt>getNumberOfCurveSegments()-1</tt>
    */
-  public void deleteCurveSegmentAt( int index ) throws GM_Exception
+  public void deleteCurveSegmentAt( final int index ) throws GM_Exception
   {
-    if( ( index < 0 ) || ( index > getNumberOfCurveSegments() - 1 ) )
+    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
     {
       throw new GM_Exception( "invalid index/position to remove a segment!" );
     }
 
-    GM_Point p1 = getCurveSegmentAt( index - 1 ).getEndPoint();
+    final GM_Point p1 = getCurveSegmentAt( index - 1 ).getEndPoint();
     // p1 (index.sp) and p2 (index.ep) not used here!
-    GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
+    final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
 
     if( index > 0 )
     {
@@ -690,22 +699,22 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns true if no segment is within the curve
    */
   @Override
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
-    return ( getNumberOfCurveSegments() == 0 );
+    return (getNumberOfCurveSegments() == 0);
   }
 
   /**
    * translate each point of the curve with the values of the submitted double array.
    */
   @Override
-  public void translate( double[] d )
+  public void translate( final double[] d )
   {
     try
     {
       for( int i = 0; i < m_segments.size(); i++ )
       {
-        GM_Position[] pos = getCurveSegmentAt( i ).getPositions();
+        final GM_Position[] pos = getCurveSegmentAt( i ).getPositions();
 
         for( int j = 0; j < pos.length; j++ )
         {
@@ -713,8 +722,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         }
       }
     }
-    catch( Exception e )
-    {}
+    catch( final Exception e )
+    {
+    }
     setValid( false );
   }
 
@@ -722,28 +732,28 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * checks if this curve is completly equal to the submitted geometry
    * 
    * @param other
-   *          object to compare to
+   *            object to compare to
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
     if( !super.equals( other ) )
     {
       return false;
     }
 
-    if( !( other instanceof GM_Curve_Impl ) )
+    if( !(other instanceof GM_Curve_Impl) )
     {
       return false;
     }
 
     // Bugfix: envelope maybe not yet valid
-    if( !getEnvelope().equals( ( (GM_Object)other ).getEnvelope() ) )
+    if( !getEnvelope().equals( ((GM_Object) other).getEnvelope() ) )
     {
       return false;
     }
 
-    if( getNumberOfCurveSegments() != ( (GM_Curve)other ).getNumberOfCurveSegments() )
+    if( getNumberOfCurveSegments() != ((GM_Curve) other).getNumberOfCurveSegments() )
     {
       return false;
     }
@@ -752,13 +762,13 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     {
       for( int i = 0; i < m_segments.size(); i++ )
       {
-        if( !getCurveSegmentAt( i ).equals( ( (GM_Curve)other ).getCurveSegmentAt( i ) ) )
+        if( !getCurveSegmentAt( i ).equals( ((GM_Curve) other).getCurveSegmentAt( i ) ) )
         {
           return false;
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return false;
     }
@@ -770,30 +780,33 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * returns a shallow copy of the geometry
    */
   @Override
-  public Object clone()
+  public GM_Curve clone( ) throws CloneNotSupportedException
   {
-    GM_Curve c = null;
+    // kuch
+    final List<GM_CurveSegment> mySegments = new LinkedList<GM_CurveSegment>();
+    for( final GM_CurveSegment segment : m_segments )
+    {
+      mySegments.add( (GM_CurveSegment) segment.clone() );
+    }
 
     try
     {
-      GM_CurveSegment[] cs = null;
-      cs = m_segments.toArray( new GM_CurveSegment[getNumberOfCurveSegments()] );
-      c = new GM_Curve_Impl( getOrientation(), cs );
+      return new GM_Curve_Impl( mySegments.toArray( new GM_CurveSegment[] {} ) );
     }
-    catch( Exception ex )
+    catch( final GM_Exception e )
     {
-      System.out.println( "GM_Curve_Impl.clone: " + ex );
+      e.printStackTrace();
     }
 
-    return c;
+    throw (new IllegalStateException());
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = null;
     ret = "segments = " + m_segments + "\n";
-    ret += ( "envelope = " + envelope + "\n" );
+    ret += ("envelope = " + envelope + "\n");
     return ret;
   }
 
