@@ -201,11 +201,11 @@ public class FeatureCompositeGFTWrapper
 
     m_ifFtrChLstner = new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange change )
+      public void featureChanged( final FeatureChange[] changes )
       {
         try
         {
-          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
           workspace.postCommand( command );
         }
         catch( final Exception e )

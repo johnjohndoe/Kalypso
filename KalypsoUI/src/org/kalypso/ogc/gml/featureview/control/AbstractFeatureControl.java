@@ -75,7 +75,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     m_changelisteners.clear();
   }
@@ -83,7 +83,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
-  public final Feature getFeature()
+  public final Feature getFeature( )
   {
     return m_feature;
   }
@@ -93,7 +93,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_feature = feature;
   }
 
-  public IPropertyType getFeatureTypeProperty()
+  public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
   }
@@ -114,21 +114,17 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.remove( l );
   }
 
-  protected final void fireFeatureChange( final FeatureChange change )
+  protected final void fireFeatureChange( final FeatureChange[] changes )
   {
-    if( change == null )
-      return;
-
-    final IFeatureChangeListener[] listeners = m_changelisteners
-        .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
+    final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       final IFeatureChangeListener listener = listeners[i];
       SafeRunner.run( new SafeRunnable()
       {
-        public void run() throws Exception
+        public void run( ) throws Exception
         {
-          listener.featureChanged( change );
+          listener.featureChanged( changes );
         }
       } );
     }
@@ -142,7 +138,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
       final IFeatureChangeListener listener = listeners[i];
       SafeRunner.run( new SafeRunnable()
       {
-        public void run() throws Exception
+        public void run( ) throws Exception
         {
           listener.openFeatureRequested( feature, ftp );
         }

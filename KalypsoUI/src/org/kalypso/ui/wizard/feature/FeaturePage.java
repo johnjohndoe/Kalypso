@@ -41,6 +41,7 @@
 package org.kalypso.ui.wizard.feature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -77,9 +78,7 @@ public class FeaturePage extends WizardPage
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public FeaturePage( final String pagename, final String title, final ImageDescriptor image,
-      final boolean overrideCanFlipToNextPage, final Feature feature,
-      final IFeatureSelectionManager selectionManager )
+  public FeaturePage( final String pagename, final String title, final ImageDescriptor image, final boolean overrideCanFlipToNextPage, final Feature feature, final IFeatureSelectionManager selectionManager )
   {
     super( pagename, title, image );
 
@@ -99,19 +98,19 @@ public class FeaturePage extends WizardPage
     group.setText( getTitle() );
 
     final CachedFeatureviewFactory factory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-    
+
     m_featureComposite = new FeatureComposite( null, m_selectionManager, factory );
     m_featureComposite.setFeature( m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange change )
+      public void featureChanged( final FeatureChange[] changes )
       {
-        applyFeatureChange( change );
+        applyFeatureChange( changes );
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
-      // TODO: open modal dialog?
+        // TODO: open modal dialog?
       }
     } );
 
@@ -124,16 +123,16 @@ public class FeaturePage extends WizardPage
   /**
    * Add the change to our list of changes. Subclass may override (and call super.applyFeatureChange())
    */
-  protected void applyFeatureChange( final FeatureChange change )
+  protected void applyFeatureChange( final FeatureChange[] changes )
   {
-    m_changes.add( change );
+    m_changes.addAll( Arrays.asList( changes ) );
   }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
@@ -143,7 +142,7 @@ public class FeaturePage extends WizardPage
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
   @Override
-  public boolean isPageComplete()
+  public boolean isPageComplete( )
   {
     return m_featureComposite.isValid();
   }
@@ -152,7 +151,7 @@ public class FeaturePage extends WizardPage
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
   @Override
-  public boolean canFlipToNextPage()
+  public boolean canFlipToNextPage( )
   {
     if( m_overrideCanFlipToNextPage )
       return super.canFlipToNextPage() && isPageComplete();
@@ -160,7 +159,7 @@ public class FeaturePage extends WizardPage
     return super.canFlipToNextPage();
   }
 
-  public Collection<FeatureChange> getChanges()
+  public Collection<FeatureChange> getChanges( )
   {
     return new ArrayList<FeatureChange>( m_changes );
   }

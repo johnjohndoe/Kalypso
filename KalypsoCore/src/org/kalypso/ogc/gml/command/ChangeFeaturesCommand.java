@@ -46,7 +46,6 @@ import java.util.Set;
 import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * @author belger
@@ -76,7 +75,7 @@ public class ChangeFeaturesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -84,7 +83,7 @@ public class ChangeFeaturesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     applyChanges( m_newChanges );
   }
@@ -92,7 +91,7 @@ public class ChangeFeaturesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     applyChanges( m_newChanges );
   }
@@ -100,7 +99,7 @@ public class ChangeFeaturesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     applyChanges( m_oldChanges );
   }
@@ -108,7 +107,7 @@ public class ChangeFeaturesCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Feature verändern";
   }
@@ -124,9 +123,6 @@ public class ChangeFeaturesCommand implements ICommand
     }
 
     if( m_workspace != null )
-    {
-      final Feature[] cfs = changedFeaturesList.toArray( new Feature[changedFeaturesList.size()] );
-      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, cfs ) );
-    }
+      m_workspace.fireModellEvent( new FeatureChangeModellEvent( m_workspace, changes ) );
   }
 }

@@ -109,9 +109,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
   {
-    public void featureChanged( final FeatureChange change )
+    public void featureChanged( final FeatureChange[] changes )
     {
-      onFeatureChanged( change );
+      onFeatureChanged( changes );
     }
 
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
@@ -392,9 +392,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     }
   }
 
-  protected void onFeatureChanged( final FeatureChange change )
+  protected void onFeatureChanged( final FeatureChange[] changes )
   {
-    m_commandtarget.postCommand( new ChangeFeaturesCommand( m_workspace, new FeatureChange[] { change } ), null );
+    m_commandtarget.postCommand( new ChangeFeaturesCommand( m_workspace, changes ), null );
   }
 
   /**

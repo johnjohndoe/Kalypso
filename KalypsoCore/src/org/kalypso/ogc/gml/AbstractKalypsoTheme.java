@@ -328,7 +328,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_status;
   }
 
-  protected void setStatus( final IStatus status )
+  public void setStatus( final IStatus status )
   {
     m_status = status;
 

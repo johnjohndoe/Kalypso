@@ -41,6 +41,8 @@
 package org.kalypso.ogc.gml.gui;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -156,15 +158,28 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
    */
   public Object parseText( String text, String formatHint )
   {
-    // TODO parse, remove errors and create the RGB instance
+    Pattern p = Pattern.compile( "^\\((\\d{1,3}+),(\\d{1,3}+),(\\d{1,3}+)\\)$" );
+    Matcher m = p.matcher( text );
 
-    return m_handler.convertToJavaValue( text );
+    if( m.find() )
+    {
+      if( m.groupCount() != 3 )
+        return null;
+
+      String red = m.group( 1 );
+      String green = m.group( 2 );
+      String blue = m.group( 3 );
+
+      RGB rgb = new RGB( Integer.valueOf( red ), Integer.valueOf( green ), Integer.valueOf( blue ) );
+      return rgb;
+    }
+
+    return new RGB( 0, 0, 0 );
   }
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public String getText( Object element )
   {
@@ -173,8 +188,8 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
       final RGB rgb = (RGB) element;
       return "(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
     }
-    else
-      return m_handler.convertToXMLString( element );
+
+    return "(0,0,0)";
   }
 
   /**

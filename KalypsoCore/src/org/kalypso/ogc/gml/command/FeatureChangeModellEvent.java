@@ -38,56 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature.event;
+package org.kalypso.ogc.gml.command;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 
 /**
- * @author doemming
+ * @author Holger Albert
  */
-public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
+public class FeatureChangeModellEvent extends FeaturesChangedModellEvent implements IGMLWorkspaceModellEvent
 {
-  private final Feature[] m_features;
+  private final FeatureChange[] m_changes;
 
-  private final GMLWorkspace m_workspace;
-
-  public FeaturesChangedModellEvent( final GMLWorkspace workspace, final Feature[] features )
+  public FeatureChangeModellEvent( final GMLWorkspace eventSource, final FeatureChange[] changes )
   {
-    super( workspace, FEATURE_CHANGE );
-    m_workspace = workspace;
-    m_features = features;
+    super( eventSource, featureFromChanges( changes ) );
+
+    m_changes = changes;
   }
 
-  public Feature[] getFeatures( )
+  private static Feature[] featureFromChanges( final FeatureChange[] changes )
   {
-    return m_features;
+    final List<Feature> list = new ArrayList<Feature>( changes.length );
+    for( FeatureChange featureChange : changes )
+      list.add( featureChange.getFeature() );
+    return list.toArray( new Feature[list.size()] );
   }
 
-  public GMLWorkspace getGMLWorkspace( )
+  public FeatureChange[] getChanges( )
   {
-    return m_workspace;
+    return m_changes;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEvent#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    StringBuffer buf = new StringBuffer( 128 );
-    buf.append( "FeatureChangedModellEvent[" );
-    if( m_features != null )
-    {
-      buf.append( Arrays.asList( m_features ) );
-    }
-    else
-    {
-      buf.append( "null" );
-    }
-    buf.append( ']' );
-    return buf.toString();
-  }
 }

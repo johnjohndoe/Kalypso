@@ -47,6 +47,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -64,7 +65,6 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -262,7 +262,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       }
       else
       {
-        crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+        crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
         /* Der erste Eintrag war kein CS. */
         dbl_values = new double[str_values.length];
@@ -288,7 +288,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       }
       else
       {
-        crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+        crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         pos = GeometryFactory.createGM_Position( new double[] { new Double( str_values[0] ) } );
       }
 

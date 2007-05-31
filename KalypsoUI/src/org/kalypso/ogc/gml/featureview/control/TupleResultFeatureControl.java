@@ -298,12 +298,12 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     {
       final FeatureChange change = new FeatureChange( obsFeature, resultDefPT, rd );
       m_ignoreNextUpdateControl = true;
-      fireFeatureChange( change );
+      fireFeatureChange( new FeatureChange[] { change } );
     }
 
     final FeatureChange change2 = new FeatureChange( obsFeature, resultPT, strResult );
     m_ignoreNextUpdateControl = true;
-    fireFeatureChange( change2 );
+    fireFeatureChange( new FeatureChange[] { change2 } );
   }
 
   /** Sets the column descriptors used to render the columns. Must called before {@link #createControl(Composite, int)}. */

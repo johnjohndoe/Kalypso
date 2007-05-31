@@ -157,10 +157,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
-    public void featureChanged( final FeatureChange change )
+    public void featureChanged( final FeatureChange[] changes )
     {
       final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
-      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
 
       m_target.setCommandManager( m_commandManager );
       m_target.postCommand( command, null );
@@ -453,7 +453,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   /**
    * @param force
-   *          if true, alwys reset this view, else, only if feature has really changed.
+   *            if true, alwys reset this view, else, only if feature has really changed.
    */
   protected void activateFeature( final Feature feature, final boolean force, final ISelection selection )
   {
