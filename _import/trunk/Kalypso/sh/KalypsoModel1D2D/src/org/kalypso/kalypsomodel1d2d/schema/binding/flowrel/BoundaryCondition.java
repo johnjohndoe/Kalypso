@@ -85,6 +85,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       final IFeatureType directedFT = workspace.getGMLSchema().getFeatureType( QNAME_DIRECTED_TIMESERIE );
       final Feature newObsFeature = workspace.createFeature( parentFeature, currentObsFeature.getParentRelation(), directedFT );
       parentFeature.setProperty( QNAME_P_TIMESERIE, newObsFeature );
+      newObsFeature.setProperty( QNAME_P_DIRECTION, 180 );
       obsFeature = newObsFeature;
     }
     else
