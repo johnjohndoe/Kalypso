@@ -153,10 +153,6 @@ public class CalculationUnitComplexSelectionsComponent
    */
   public void changeStategy()
   {
-//    final int selectionIndex = elementsCombo.getSelectionIndex();
-//    final String selectedItem = 
-//          elementsCombo.getItem( selectionIndex );
-    
     final String selectedType = elementsCombo.getText();
     final String selectedAction = actionsCombo.getText();
     IWidgetWithStrategy widgetWithStrategy = 
@@ -166,19 +162,32 @@ public class CalculationUnitComplexSelectionsComponent
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
       {
-        strategy =
-          new AlterCalUnitBorderWidget(dataModel);
+        strategy = new AlterCalUnitBorderWidget(dataModel);
       }
       else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
       {
-        strategy= new AddElementToCalUnitWidget(dataModel);
-        
-        
+        strategy= new AddElementToCalUnitWidget(dataModel);        
       }
       else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType )  )
       {
         
       }
+      
+    }
+    else if (ACTION_KEY_REMOVE.equals( selectedAction ))
+    {
+      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )){
+        
+      }
+      else if (ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
+      {
+        strategy = new RemoveElementFromCalUnitWidget(dataModel);
+      }
+      else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType ))
+      {
+        
+      }
+
     }
     else if( ACTION_KEY_DRAW.equals( selectedAction) )
     {
@@ -195,10 +204,6 @@ public class CalculationUnitComplexSelectionsComponent
       {
         System.out.println("Drawing not supported for:"+selectedType);
       }
-    }
-    else
-    {
-      
     }
     widgetWithStrategy.setStrategy( strategy );
   }
