@@ -52,4 +52,5 @@ public class DeleteFEElements2DWidget extends DeleteFEElementsWidget
   {
     super( new FENetConceptSelectionWidget( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, "2D-Element löschen", "2D-Element löschen" ) );
   }
+  
 }

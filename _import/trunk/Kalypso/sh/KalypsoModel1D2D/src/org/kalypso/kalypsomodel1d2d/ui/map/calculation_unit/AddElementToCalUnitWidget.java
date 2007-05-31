@@ -114,9 +114,7 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
     public void process( ) throws Exception
     {
       super.process();
-      dataModel.setData( 
-          ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-          dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ));
+      dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ));
     }
   }
 
@@ -167,39 +165,39 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
                                   "icons/elcl16/add.gif" )));
     addElement.addActionListener( makeAddElementActionListener() );
    
-    JMenuItem removeElement = new JMenuItem();
-    removeElement.setText("Remove Element");
-    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
-                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-                                  "icons/elcl16/remove.gif" )));
-    removeElement.addActionListener( 
-          makeRemoveElementActionListener());
+//    JMenuItem removeElement = new JMenuItem();
+//    removeElement.setText("Remove Element");
+//    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
+//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//                                  "icons/elcl16/remove.gif" )));
+//    removeElement.addActionListener( 
+//          makeRemoveElementActionListener());
     
     popupMenu.add( addElement);
-    popupMenu.add( removeElement);
-    popupMenu.addSeparator();
+//    popupMenu.add( removeElement);
+//    popupMenu.addSeparator();
     
     popupMenu.show( mapPanel, p.x, p.y );    
   }
   
-  private ActionListener makeRemoveElementActionListener()
-  {
-    ActionListener al = new ActionListener()
-    {
-
-      public void actionPerformed( ActionEvent e )
-      {
-        final Feature[] selectedFeatures = getSelectedFeature();
-        Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        if( selectedWrapper instanceof ICalculationUnit )
-        {
-          ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;          
-        }
-      }
-      
-    };
-    return al;
-  }
+//  private ActionListener makeRemoveElementActionListener()
+//  {
+//    ActionListener al = new ActionListener()
+//    {
+//
+//      public void actionPerformed( ActionEvent e )
+//      {
+//        final Feature[] selectedFeatures = getSelectedFeature();
+//        Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+//        if( selectedWrapper instanceof ICalculationUnit )
+//        {
+//          ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;          
+//        }
+//      }
+//      
+//    };
+//    return al;
+//  }
   
   private ActionListener makeAddElementActionListener()
   {

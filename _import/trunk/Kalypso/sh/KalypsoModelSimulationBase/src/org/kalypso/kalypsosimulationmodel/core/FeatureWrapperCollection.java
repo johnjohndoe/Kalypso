@@ -583,12 +583,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       
       final String gmlID = toRemove.getGmlID();
       boolean removed = false;
+      boolean currentRemove = false;
       do
       {      
-        removed = removed || featureList.remove( gmlID );
+        currentRemove = featureList.remove( gmlID );
+        removed = removed || currentRemove;
       }
-      while(removed);
-      
+      while(currentRemove);
       return removed;
       
     }
