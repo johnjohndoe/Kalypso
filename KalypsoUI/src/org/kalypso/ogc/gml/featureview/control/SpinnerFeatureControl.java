@@ -133,13 +133,13 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        fireFeatureChange( getChange() );
+        fireFeatureChange( getChanges() );
         fireModified();
       }
 
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        fireFeatureChange( getChange() );
+        fireFeatureChange( getChanges() );
         fireModified();
       }
     } );
@@ -149,7 +149,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     return m_spinner;
   }
 
-  protected FeatureChange getChange( )
+  protected FeatureChange[] getChanges( )
   {
     final Feature feature = getFeature();
 
@@ -160,9 +160,9 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
-      return new FeatureChange( feature, pt, newData );
+      return new FeatureChange[] { new FeatureChange( feature, pt, newData ) };
 
-    return null;
+    return new FeatureChange[] {};
   }
 
   private Number getCurrentValue( )
