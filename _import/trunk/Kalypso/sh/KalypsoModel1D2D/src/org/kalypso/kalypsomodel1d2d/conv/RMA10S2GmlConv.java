@@ -160,7 +160,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 
   private static final void interpreteNodeLine( final String line, final IRMA10SModelElementHandler handler )
   {
-    final Pattern linePattern = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*).*" );
+    final Pattern linePattern = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
     final Matcher matcher = linePattern.matcher( line );
     if( matcher.matches() )
     {
@@ -168,8 +168,11 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       {
         int id = Integer.parseInt( matcher.group( 1 ) );
         double easting = Double.parseDouble( matcher.group( 2 ) );
-        double northing = Double.parseDouble( matcher.group( 3 ) );
+        double northing = Double.parseDouble( matcher.group( 3 ) );    
         double elevation = Double.parseDouble( matcher.group( 4 ) );
+        //TODO: the value '-9999' represents the NODATA-value, should be discussed
+        if (elevation == -9999) 
+          elevation = Double.NaN;
         handler.handleNode( line, id, easting, northing, elevation );
       }
       catch( NumberFormatException e )
@@ -181,8 +184,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       handler.handlerError( line, EReadError.ILLEGAL_SECTION );
   }
 
-  private static final void interpreteResultLine( final String line, final IRMA10SModelElementHandler handler )
-  {
+  private static final void interpreteResultLine( final String line, final IRMA10SModelElementHandler handler ) {
     final String[] strings = line.split( "\\s+" );
     if( strings.length == 6 )
     {
@@ -246,7 +248,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   private static final void interpreteElementLine( final String line, final IRMA10SModelElementHandler handler )
   {
     Matcher matcher = null;
-    final Pattern fourParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+    final Pattern fourParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" );
     matcher = fourParamLinePattern.matcher( line );
     try
     {
@@ -260,7 +262,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       else
       {
-        final Pattern threeParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+        final Pattern threeParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" );
         matcher = threeParamLinePattern.matcher( line );
         if( matcher.matches() )
         {
