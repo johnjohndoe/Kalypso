@@ -46,6 +46,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Formatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
@@ -103,7 +104,7 @@ public class Gml2RMA10SConv
 
   private File m_outputFile;
 
-  private IFEDiscretisationModel1d2d m_discretisationModel1d2d;
+  private final IFEDiscretisationModel1d2d m_discretisationModel1d2d;
 
   private final ITerrainModel m_terrainModel;
 
@@ -122,6 +123,21 @@ public class Gml2RMA10SConv
       final Feature roughnessCL = (Feature) o;
       getID( m_roughnessIDProvider, roughnessCL.getId() );
     }
+  }
+
+  public Gml2RMA10SConv( final File rma10sOutputFile, IFEDiscretisationModel1d2d discretisationModel1d2d, ITerrainModel terrainModel, IFlowRelationshipModel flowrelationModel, List roughnessClassList )
+  {
+    m_outputFile = rma10sOutputFile;
+    m_discretisationModel1d2d = discretisationModel1d2d;
+    m_terrainModel = terrainModel;
+    m_flowrelationModel = flowrelationModel;
+
+    // initialize Roughness IDs
+// for( final Object o : roughnessClassList )
+// {
+// final Feature roughnessCL = (Feature) o;
+// getID( m_roughnessIDProvider, roughnessCL.getId() );
+// }
   }
 
   private int getID( final IFeatureWrapper2 i1d2dObject )
@@ -179,15 +195,23 @@ public class Gml2RMA10SConv
     final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
     final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_discretisationModel1d2d.getEdges();
 
-    final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+    if( m_terrainModel != null )
+    {
+      final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
+      writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+    }
+    else
+    {
+      writeElements( formatter, elements );
+    }
     writeNodes( formatter, nodes );
     writeEdges( formatter, edges );
   }
+
+
 
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
@@ -327,11 +351,23 @@ public class Gml2RMA10SConv
 
   private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station )
   {
+    
     /* Now really write the nodes */
+    double x = point.getX();
+    double y = point.getY();
+    double z = Double.NaN;
+    
+    //TODO: Here we should decide what we do with non-elevation-assigned nodes. For now the elevation of these nodes will be set to '-9999'
+    if (point.getCoordinateDimension() == 3)
+      z = point.getZ();
+    else 
+      z = -9999;
+    
+    
     if( station == null )
-      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ() );
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );
     else
-      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, point.getX(), point.getY(), point.getZ(), station );
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
@@ -369,6 +405,19 @@ public class Gml2RMA10SConv
     }
   }
 
+  private void writeElements( Formatter formatter, IFeatureWrapperCollection<IFE1D2DElement> elements )
+  {
+    for( final IFE1D2DElement element : elements )
+    {
+      if( element instanceof IFE1D2DContinuityLine )
+      {
+        continue;
+      }
+      formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), 0, 1, 0 );
+    }
+    
+  }
+  
   private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
     /*
