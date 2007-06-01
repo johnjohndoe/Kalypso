@@ -396,29 +396,14 @@ public class DisplayElementFactory
    *            associated <tt>Feature<tt>
    * @param geom geometry information
    * @param sym style information
-   * @throws IncompatibleGeometryTypeException if the geometry property is not
-   *         a <tt>GM_Curve</tt> or a <tt>GM_MultiCurve</tt>
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym )
   {
-    LineStringDisplayElement displayElement = null;
     if( geom == null )
       return null;
-    if( geom instanceof GM_Curve )
-    {
-      displayElement = new LineStringDisplayElement_Impl( feature, (GM_Curve) geom, sym );
-    }
-    else if( geom instanceof GM_MultiCurve )
-    {
-      displayElement = new LineStringDisplayElement_Impl( feature, (GM_MultiCurve) geom, sym );
-    }
-    else
-    {
-      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + geom.getClass().getName() + "'!" );
-    }
 
-    return displayElement;
+    return new LineStringDisplayElement_Impl( feature, geom, sym );
   }
 
   /**
@@ -435,22 +420,18 @@ public class DisplayElementFactory
    */
   public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final GM_Object gmObject, final PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
-    PolygonDisplayElement displayElement = null;
-
     if( gmObject instanceof GM_Surface )
     {
-      displayElement = new PolygonDisplayElement_Impl( feature, (GM_Surface) gmObject, sym );
+      return new PolygonDisplayElement_Impl( feature, (GM_Surface) gmObject, sym );
     }
     else if( gmObject instanceof GM_MultiSurface )
     {
-      displayElement = new PolygonDisplayElement_Impl( feature, (GM_MultiSurface) gmObject, sym );
+      return new PolygonDisplayElement_Impl( feature, (GM_MultiSurface) gmObject, sym );
     }
     else
     {
       throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
     }
-
-    return displayElement;
   }
 
   /**

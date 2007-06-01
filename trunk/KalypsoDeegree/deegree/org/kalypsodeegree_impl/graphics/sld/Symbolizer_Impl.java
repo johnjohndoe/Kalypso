@@ -60,13 +60,30 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+
+import javax.xml.namespace.QName;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.Pattern;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Resource;
+import org.kalypso.gmlschema.EmptyGMLSchema;
+import org.kalypso.gmlschema.feature.CustomFeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.GraphicFill;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * This is the basis of all symbolizers. It defines the method <tt>getGeometry</tt> that's common to all symbolizers.
@@ -84,6 +101,115 @@ public class Symbolizer_Impl implements Symbolizer
     pixel,
     meter,
     foot
+  }
+
+  public static Resource[] prepareGc( final GC gc, final Stroke stroke, final Feature feature ) throws FilterEvaluationException
+  {
+    final Color awtColor = stroke == null ? null : stroke.getStroke( feature );
+    final RGB rgb = awtColor == null ? new RGB( 0, 0, 0 ) : new RGB( awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+    final org.eclipse.swt.graphics.Color color = new org.eclipse.swt.graphics.Color( gc.getDevice(), rgb );
+    final int opacity = stroke == null ? 255 : (int) (stroke.getOpacity( feature ) * 255);
+
+    gc.setForeground( color );
+    gc.setAlpha( opacity );
+
+    final float width = stroke == null ? 1 : (float) stroke.getWidth( feature );
+    final LineAttributes lineAttributes = getLineAttributes( stroke, feature, width );
+
+    gc.setLineAttributes( lineAttributes );
+
+    return new Resource[] { color };
+  }
+
+  private static LineAttributes getLineAttributes( final Stroke stroke, final Feature feature, final float width ) throws FilterEvaluationException
+  {
+    if( stroke == null )
+      return new LineAttributes( width );
+
+    final float[] dash = stroke.getDashArray( feature );
+    final int cap = capAwt2swt( stroke.getLineCap( feature ) );
+    final int join = joinAwt2swt( stroke.getLineJoin( feature ) );
+    final float dashOffset = stroke.getDashOffset( feature );
+
+    if( dash == null || dash.length < 2 )
+      return new LineAttributes( width, cap, join );
+
+    return new LineAttributes( width, cap, join, SWT.LINE_DASH, dash, dashOffset, 10 );
+  }
+
+  public static Feature createPseudoFeature( )
+  {
+    final IFeatureType ft = new CustomFeatureType( new EmptyGMLSchema(), new QName( "", "" ), new IPropertyType[] {} );
+    final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
+    return feature;
+  }
+
+  public static int joinAwt2swt( final int lineJoin )
+  {
+    switch( lineJoin )
+    {
+      case BasicStroke.JOIN_BEVEL:
+        return SWT.JOIN_BEVEL;
+      case BasicStroke.JOIN_MITER:
+        return SWT.JOIN_MITER;
+      case BasicStroke.JOIN_ROUND:
+        return SWT.JOIN_ROUND;
+
+      default:
+        break;
+    }
+    throw new UnsupportedOperationException();
+  }
+
+  public static int capAwt2swt( final int lineCap )
+  {
+    switch( lineCap )
+    {
+      case BasicStroke.CAP_BUTT:
+        return SWT.CAP_FLAT;
+      case BasicStroke.CAP_ROUND:
+        return SWT.CAP_ROUND;
+      case BasicStroke.CAP_SQUARE:
+        return SWT.CAP_SQUARE;
+    }
+
+    throw new UnsupportedOperationException();
+  }
+
+  public static Resource[] prepareGc( final GC gc, final org.kalypsodeegree.graphics.sld.Fill fill, final Feature feature ) throws FilterEvaluationException
+  {
+    final double opacity = fill == null ? 1.0 : fill.getOpacity( feature );
+    final int alpha = (int) Math.round( opacity * 255 );
+
+    final Color awtColor = fill == null ? null : fill.getFill( feature );
+    final RGB rgb = awtColor == null ? new RGB( 128, 128, 128 ) : new RGB( awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+    final org.eclipse.swt.graphics.Color color = new org.eclipse.swt.graphics.Color( gc.getDevice(), rgb );
+    gc.setAlpha( alpha );
+    gc.setBackground( color );
+
+    final GraphicFill gFill = fill == null ? null : fill.getGraphicFill();
+    if( gFill != null )
+    {
+      final Image image = new Image( gc.getDevice(), gc.getClipping().width, gc.getClipping().height );
+      final GC gc2 = new GC( image );
+      gFill.getGraphic().paint( gc2, feature );
+
+      final Pattern pattern = new Pattern( gc.getDevice(), image );
+      gc.setBackgroundPattern( pattern );
+
+      return new Resource[] { color, gc, image };
+    }
+    else
+      return new Resource[] { color };
+  }
+
+  public static void disposeResource( final Resource[] resources )
+  {
+    if( resources == null )
+      return;
+
+    for( final Resource resource : resources )
+      resource.dispose();
   }
 
   private double m_maxDenominator = 9E99;
@@ -183,7 +309,8 @@ public class Symbolizer_Impl implements Symbolizer
    * 
    * @see org.kalypsodeegree.graphics.sld.Symbolizer#paintLegendGraphic(org.eclipse.swt.graphics.GC)
    */
-  public void paintLegendGraphic( final GC gc ) throws FilterEvaluationException
+  @SuppressWarnings("unused")
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
     final Rectangle clipping = gc.getClipping();
 

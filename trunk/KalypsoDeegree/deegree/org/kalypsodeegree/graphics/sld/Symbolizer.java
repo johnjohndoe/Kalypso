@@ -62,6 +62,7 @@ package org.kalypsodeegree.graphics.sld;
 
 import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
@@ -131,5 +132,5 @@ public interface Symbolizer
   public UOM getUom( );
 
   /** Paints this symbolizer suitable for a legend. */
-  public void paintLegendGraphic( final GC gc ) throws FilterEvaluationException;
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
 }

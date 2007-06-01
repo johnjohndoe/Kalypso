@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -194,13 +195,16 @@ public class MapModellHelper
   public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
   {
     final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    final Graphics gr = image.getGraphics();
+    final Graphics2D gr = (Graphics2D) image.getGraphics();
     try
     {
       gr.setColor( Color.white );
       gr.fillRect( 0, 0, width, height );
       gr.setColor( Color.black );
       gr.setClip( 0, 0, width, height );
+
+      gr.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+
       final int x = bounds.x;
       final int y = bounds.y;
       final int w = bounds.width;
@@ -219,7 +223,7 @@ public class MapModellHelper
         System.out.println( e.getMessage() );
       }
 
-      final HighlightGraphics highlightGraphics = new HighlightGraphics( (Graphics2D) gr );
+      final HighlightGraphics highlightGraphics = new HighlightGraphics( gr );
       model.paint( highlightGraphics, p, bbox, scale, true );
     }
     finally

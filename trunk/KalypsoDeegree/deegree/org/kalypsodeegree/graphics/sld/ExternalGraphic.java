@@ -65,6 +65,8 @@ import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.swt.graphics.GC;
+
 /**
  * The ExternalGraphic element allows a reference to be made to an external graphic file with a Web URL. The
  * OnlineResource sub-element gives the URL and the Format sub-element identifies the expected document MIME type of a
@@ -85,14 +87,14 @@ public interface ExternalGraphic
    * 
    * @return Format of the external graphic
    */
-  String getFormat();
+  String getFormat( );
 
   /**
    * the Format sub-element identifies the expected document MIME type of a successful fetch. This method sets the
    * format of an ExternalGraphic.
    * 
    * @param format
-   *          Format of the external graphic
+   *            Format of the external graphic
    */
   void setFormat( String format );
 
@@ -101,7 +103,7 @@ public interface ExternalGraphic
    * 
    * @return URL of the external graphic
    */
-  String getOnlineResource();
+  String getOnlineResource( );
 
   URL getOnlineResourceURL( ) throws MalformedURLException;
 
@@ -110,7 +112,7 @@ public interface ExternalGraphic
    * ExternalGraphic.
    * 
    * @param onlineResource
-   *          URL of the external graphic
+   *            URL of the external graphic
    */
   void setOnlineResource( String onlineResource );
 
@@ -120,14 +122,8 @@ public interface ExternalGraphic
    * 
    * @return the external graphic as BufferedImage
    */
-  BufferedImage getAsImage();
+  BufferedImage getAsImage( );
 
-  /**
-   * sets the external graphic as an image.
-   * 
-   * @param image
-   *          the external graphic as BufferedImage
-   */
-  void setAsImage( BufferedImage image );
+  void paint( final GC gc );
 
 }

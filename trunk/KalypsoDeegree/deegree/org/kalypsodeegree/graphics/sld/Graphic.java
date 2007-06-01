@@ -62,6 +62,7 @@ package org.kalypsodeegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
 
+import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -87,7 +88,6 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public interface Graphic
 {
-
   // default values
   public static final double OPACITY_DEFAULT = 1.0;
 
@@ -102,19 +102,11 @@ public interface Graphic
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
 
-  /**
-   * Sets a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
-   * parameters.
-   * <p>
-   * 
-   * @param bufferedImage
-   *          BufferedImage to be set
-   */
-  void setAsImage( BufferedImage bufferedImage );
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
 
   /**
    * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
@@ -123,7 +115,7 @@ public interface Graphic
    * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
    */
-  public Object[] getMarksAndExtGraphics();
+  public Object[] getMarksAndExtGraphics( );
 
   /**
    * Sets the <tt>ExternalGraphic</tt>/<tt>Mark<tt>-instances that the image
@@ -156,10 +148,10 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
   double getOpacity( Feature feature ) throws FilterEvaluationException;
 
@@ -168,7 +160,7 @@ public interface Graphic
    * <p>
    * 
    * @param opacity
-   *          Opacity to be set for the graphic
+   *            Opacity to be set for the graphic
    */
   void setOpacity( double opacity );
 
@@ -179,10 +171,10 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
   double getSize( Feature feature ) throws FilterEvaluationException;
 
@@ -195,7 +187,7 @@ public interface Graphic
    * @see #getSize(Feature)
    *      <p>
    * @param size
-   *          size to be set for the graphic
+   *            size to be set for the graphic
    */
   void setSize( double size );
 
@@ -206,10 +198,10 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
   double getRotation( Feature feature ) throws FilterEvaluationException;
 
@@ -217,7 +209,7 @@ public interface Graphic
    * @see #getRotation(Feature)
    *      <p>
    * @param rotation
-   *          rotation to be set for the graphic
+   *            rotation to be set for the graphic
    */
   void setRotation( double rotation );
 }

@@ -85,19 +85,13 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
 
   private Symbolizer m_symbolizer = null;
 
-  private Symbolizer m_highlightSymbolizer = null;
-
-  private Symbolizer m_selectedSymbolizer = null;
-
-  // private Object placement = null;
-
   /**
    * Creates a new GeometryDisplayElement_Impl object.
    * 
    * @param feature
    * @param geometry
    */
-  GeometryDisplayElement_Impl( Feature feature, GM_Object geometry )
+  GeometryDisplayElement_Impl( final Feature feature, final GM_Object geometry )
   {
     super( feature );
     setGeometry( geometry );
@@ -110,31 +104,11 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * @param geometry
    * @param symbolizer
    */
-  GeometryDisplayElement_Impl( Feature feature, GM_Object geometry, Symbolizer symbolizer )
+  GeometryDisplayElement_Impl( final Feature feature, final GM_Object geometry, final Symbolizer symbolizer )
   {
     super( feature );
     setGeometry( geometry );
     setSymbolizer( symbolizer );
-    setHighlightSymbolizer( symbolizer );
-    setSelectedSymbolizer( symbolizer );
-  }
-
-  /**
-   * Creates a new GeometryDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   * @param symbolizer
-   * @param selectedSymbolizer
-   * @param highlightSymbolizer
-   */
-  GeometryDisplayElement_Impl( Feature feature, GM_Object geometry, Symbolizer symbolizer, Symbolizer highlightSymbolizer, Symbolizer selectedSymbolizer )
-  {
-    super( feature );
-    setGeometry( geometry );
-    setSymbolizer( symbolizer );
-    setSelectedSymbolizer( selectedSymbolizer );
-    setHighlightSymbolizer( highlightSymbolizer );
   }
 
   /**
@@ -143,16 +117,16 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * <p>
    * 
    * @param o
-   *          the placement to be used
+   *            the placement to be used
    */
-  public void setPlacement( Object o )
+  public void setPlacement( final Object o )
   {
   }
 
   /**
    * sets the geometry that determines the position the DisplayElement will be rendered to
    */
-  public void setGeometry( GM_Object geometry )
+  public void setGeometry( final GM_Object geometry )
   {
     this.m_geometry = geometry;
   }
@@ -168,7 +142,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /**
    * sets the rules that determines how the geometry will be rendered
    */
-  public void setSymbolizer( Symbolizer symbolizer )
+  public void setSymbolizer( final Symbolizer symbolizer )
   {
     this.m_symbolizer = symbolizer;
   }
@@ -182,48 +156,10 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * sets the rule that determines how the geometry will be rendered when it's highlighted
-   * 
-   * @param rule
-   *          symbolizer defining rendering style
-   */
-  public void setHighlightSymbolizer( Symbolizer rule )
-  {
-    this.m_highlightSymbolizer = rule;
-  }
-
-  /**
-   * returns the symbolizer that determines how the geometry will be rendered if it's highlighted
-   */
-  public Symbolizer getHighlightSymbolizer( )
-  {
-    return m_highlightSymbolizer;
-  }
-
-  /**
-   * sets the rule that determines how the geometry will be rendered when it's selected
-   * 
-   * @param rule
-   *          symbolizer defining rendering style
-   */
-  public void setSelectedSymbolizer( Symbolizer rule )
-  {
-    m_selectedSymbolizer = rule;
-  }
-
-  /**
-   * returns the symbolizer that determines how the geometry will be rendered if it's selected
-   */
-  public Symbolizer getSelectedSymbolizer( )
-  {
-    return m_selectedSymbolizer;
-  }
-
-  /**
    * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
   @Override
-  public boolean doesScaleConstraintApply( double scale )
+  public boolean doesScaleConstraintApply( final double scale )
   {
     return m_symbolizer.getMinScaleDenominator() <= scale && m_symbolizer.getMaxScaleDenominator() > scale;
   }

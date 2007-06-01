@@ -49,6 +49,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -517,6 +519,19 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return label + "*";
 
     return label;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getImageDescriptor(java.lang.Object)
+   */
+  @Override
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    final Object[] children = getChildren( this );
+    if( children.length > 0 && children[0] instanceof IWorkbenchAdapter )
+      return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
+
+    return super.getImageDescriptor( object );
   }
 
   /**

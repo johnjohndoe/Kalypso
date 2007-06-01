@@ -60,12 +60,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import org.eclipse.swt.graphics.GC;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -113,6 +116,19 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
     setGraphic( graphic );
     setMinScaleDenominator( min );
     setMaxScaleDenominator( max );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
+  {
+    if( m_graphic == null )
+      super.paint( gc, feature );
+
+    m_graphic.paint( gc, feature );
   }
 
   /**

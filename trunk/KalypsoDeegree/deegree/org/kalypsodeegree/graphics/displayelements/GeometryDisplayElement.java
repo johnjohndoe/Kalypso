@@ -110,30 +110,4 @@ public interface GeometryDisplayElement extends DisplayElement
    * Returns the symbolizer that determines how the geometry will be rendered.
    */
   Symbolizer getSymbolizer();
-
-  /**
-   * sets the rule that determines how the geometry will be rendered when it's highlighted
-   * 
-   * @param rule
-   *          symbolizer defining rendering style
-   */
-  void setHighlightSymbolizer( Symbolizer rule );
-
-  /**
-   * returns the symbolizer that determines how the geometry will be rendered if it's highlighted
-   */
-  Symbolizer getHighlightSymbolizer();
-
-  /**
-   * sets the rule that determines how the geometry will be rendered when it's selected
-   * 
-   * @param rule
-   *          symbolizer defining rendering style
-   */
-  void setSelectedSymbolizer( Symbolizer rule );
-
-  /**
-   * returns the symbolizer that determines how the geometry will be rendered if it's selected
-   */
-  Symbolizer getSelectedSymbolizer();
 }
