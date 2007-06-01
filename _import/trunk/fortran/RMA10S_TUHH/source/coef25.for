@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    10 May 2007    8:01 pm
+C     Last change:  K    24 May 2007    3:39 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -978,6 +978,9 @@ CIPK SEP04  ADD MAH AND MAT OPTION
       !-
         !nis,jan07,testing
         !WRITE(*,*) 'in coef25: ', ort(imat(nn),15)
+        !WRITE(*,*) 'in coef25: ', imat(nn), nr
+        !WRITE(*,*) 'in coef25: ', ort(imat(nn),15),ort(nr,15),cniku(nn)
+        !pause
         !-
         !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
         !nis,may07: Add switch for approximation decision
@@ -1937,7 +1940,7 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
  1450 CONTINUE
 
       !matrix in datei
-      if (nn==92 .or. nn==93 .or. nn==95) then
+      if (nn >= 313 .and. nn <= 320) then
         WRITE(9919,*) 'Element ', nn, 'coef2 t', xht
         WRITE(9919,'(6x,32(1x,i10))')
      +       ( ( nbc (nop(nn,i), j), j=1, 4), i = 1,8)
@@ -1945,16 +1948,18 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           if (MOD(i,4)/=0) then
 !            WRITE(*,*) i, MOD(i,4),
 !     +         1+(i-MOD(i,4))/ 4, nop(nn, 1+(i-MOD(i,4))/ 4)
-            WRITE(9919,'(i6,33(1x,f10.2))')
+            WRITE(9919,'(i6,33(1x,f10.2),1x,i6)')
      +       nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
      +       (estifm(i,j), j=1, 32),
-     +       f(i)
+     +       f(i),
+     +       nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
           ELSE
 !            WRITE(*,*) i, 4,
 !     +       i/4, nop(nn, i/4)
-            WRITE(9919,'(i6,33(1x,f10.2))')
+            WRITE(9919,'(i6,33(1x,f10.2),1x,i6)')
      +       nbc( nop(nn, i/4 ), 4),
-     +       (estifm(i,j), j=1, 32),f(i)
+     +       (estifm(i,j), j=1, 32),f(i),
+     +       nbc( nop(nn, i/4 ), 4)
           endif
         end do
         WRITE(9919,*)

@@ -1,4 +1,4 @@
-C     Last change:  K    25 May 2007    3:21 pm
+C     Last change:  K    31 May 2007    5:11 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -312,8 +312,6 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
         TransLineMember = 0
         do i=1,MaxLT
           if (n.eq. TransLines(i,1)) TransLineMember = 1
-          IF(n.EQ.61) WRITE(*,*)
-     +     '61', (TransLines(i,j),j=1,2), TransLineMember
         end do
         !-
 

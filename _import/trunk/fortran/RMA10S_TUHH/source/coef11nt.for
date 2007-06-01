@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  EF   15 May 2007    2:39 pm
+C     Last change:  K     1 Jun 2007    9:32 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -49,6 +49,7 @@ C
 !NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
       REAL :: lambda
 !-
+      INTEGER :: testoutput
 !NiS,jul06: declaring waterdepth for proper parameter-passing
       REAL (KIND=8) :: h
 !-
@@ -84,6 +85,13 @@ cipk jan99 initialize AKE
       ELSE
         FCOEF = GRAV/2.208
       ENDIF
+
+      !testoutput variable
+      !0 : switched of
+      !1 : switched on
+      !the outputs are very rudimentary
+      testoutput = 0
+
 
 C-
 C-.....ASSIGN PROPER COEFS.....
@@ -636,10 +644,13 @@ cipk mar05
 
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       IF(H .LT. ZSTDEP) THEN
-	  SIGMAX=0.
-	ENDIF
+        SIGMAX=0.
+      ENDIF
 
+      !nis,jun07: unused
       GHC = GRAV*H
+      !-
+
       VECQ = ABS(R)
       IF(H .LE. 0.) H=0.001
 
@@ -806,6 +817,34 @@ C
       IA = IA + NDF
       F(IA) = F(IA) - AMS*(XN(M)*FRN + DNX(M)*FRNX)*QFACT(M)
   285 CONTINUE
+
+      if (testoutput == 1) then
+        WRITE(*,*) 'Momentum equation, element: ', nn, 'GaussPt.: ', I
+        WRITE(*,*) 'FRN'
+
+        WRITE(*,*) ' Term D: ', + ACR*AKE*R*DRDX
+        WRITE(*,*) 'Term E1: ', - GRAV*DASHDX
+        WRITE(*,*) ' Term F: ', + FFACT*VECQ*R*PERIM*UBF**2
+        WRITE(*,*) ' Term G: ', + GRAV*DAODX*ACR
+        WRITE(*,*) ' Term H: ', + SIDFT*R - SIDFQ*eina
+        WRITE(*,*) 'DragTer: ', + DRAGX(MAT)*GRAV*ACR*VECQ*R*UBF**2
+        WRITE(*,*) 'WindTer: ', - SIGMAX*WSRF
+
+        WRITE(*,*)
+        WRITE(*,*) 'FRNX'
+        WRITE(*,*) 'Term E2: ', - GRAV * ACR * H / 2.
+
+        WRITE(*,*) 'Einzelterme: ', FRN, FRNX
+        do m = 1, 3
+          WRITE(*,*) 'weighting: ', m, xn(m), dnx(m)
+          WRITE(*,*) 'assembled value without weighting: ',
+     +    (xn(l) * FRN + dnx(l) * FRNX)
+          WRITE(*,*) 'assembled value    with weighting: ',
+     +    ams * (xn(l) * FRN + dnx(l) * FRNX)
+        end do
+        pause
+      endif
+
 C
 C.....CONTINUITY EQUATION.....
 C
@@ -1201,28 +1240,22 @@ C        ENDDO
 C      ENDDO
 
       !estifm-testoutput
-      if (nn > 0) then
-        WRITE(9919,*) 'Element ', nn, 'coef1nt'
-        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2),
-     +                    nbc (nop(nn,2), 1),
-     +                    ( nbc (nop(nn,3), j), j=1,  3, 2)
-        writematrix: do i = 1,11, 2
+      if (testoutput > -1) then
+        WRITE(9919,*) 'Element ', nn, 'coef1Pol'
+              WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2),
+     +        nbc (nop(nn,2), 1), ( nbc (nop(nn,3), j), j=1,  3, 2)
+        writematrix: do i = 1, 11, 2
           if (i == 7) CYCLE writematrix
+
           if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
-            WRITE(9919, 1234)
-     +        nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
-     +        (estifm(i,j), j=1,  5, 2),
-     +        (estifm(i,j), j=9, 11, 2), f(i)
+            WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
+     +      , (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
           elseif (MOD(i,4) == 3 ) then
-            WRITE(9919, 1234)
-     +        nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
-     +        (estifm(i,j), j=1,  5, 2),
-     +        (estifm(i,j), j=9, 11, 2), f(i)
+            WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
+     +      , (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
           ELSE
-            WRITE(9919, 1234)
-     +        nbc( nop(nn, i/4 ), 4),
-     +        (estifm(i,j), j=1,  5, 2),
-     +        (estifm(i,j), j=9, 11, 2), f(i)
+            WRITE(9919, 1234) nbc( nop(nn, i/4 ), 4),
+     +       (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
           endif
         end do writematrix
         WRITE(9919,*)
