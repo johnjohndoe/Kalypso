@@ -206,7 +206,19 @@ public class ShapeSerializer
     return rootFeature;
   }
 
-  public static Feature createShapeRootFeature( final IFeatureType ft )
+  /**
+   * Creates to feature type for the root feature of a shape-file-based workspace.
+   * 
+   * @param childFeatureType
+   *            The feature type for the children (i.e. the shape-objects) of the root.
+   * @return A newly created feature suitable for the root of a workspace. It has the following properties:
+   *         <ul>
+   *         <li>name : String [1] - some meaningful name</li>
+   *         <li>type : int [1] - the shape-geometry-type</li>
+   *         <li>featureMember : inline-feature with type childFeatureType [0,n]</li>
+   *         </ul>
+   */
+  public static Feature createShapeRootFeature( final IFeatureType childFeatureType )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
@@ -214,7 +226,7 @@ public class ShapeSerializer
 
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, ft, 0, IPropertyType.UNBOUND_OCCURENCY, false );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
 
