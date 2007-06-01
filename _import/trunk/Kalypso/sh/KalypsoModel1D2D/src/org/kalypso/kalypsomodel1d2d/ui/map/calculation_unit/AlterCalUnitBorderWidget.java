@@ -40,59 +40,52 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.command.ICommandTarget;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.DrawElements;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Patrice Congo
  *
  */
+
+// @TODO Start implementing the addition of this to the calculationUnit. 
 public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 {
   private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_";
   private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif";
   private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";
+  private static final String ICONS_ELCL16_SET_BOUNDARY_GIF = "icons/elcl16/addBoundary.gif";
   private static final String TXT_REMOVE_BOUNDARY_LINE_UP_STREAM = "Remove boundary line";
   private static final String TXT_ADD_BOUNDARY_LINE_UP_STREAM = "Add Boundary Line";
+  private static final String TXT_SET_BOUNDARY_CONDITION = "Set Boundary Condition";
 
   private static final String[][] MENU_ITEM_SPECS = {
       {TXT_ADD_BOUNDARY_LINE_UP_STREAM, ICONS_ELCL16_ADD_GIF},
-      {TXT_REMOVE_BOUNDARY_LINE_UP_STREAM, ICONS_ELCL16_REMOVE_GIF}};
+      {TXT_REMOVE_BOUNDARY_LINE_UP_STREAM, ICONS_ELCL16_REMOVE_GIF},
+      {TXT_SET_BOUNDARY_CONDITION, ICONS_ELCL16_SET_BOUNDARY_GIF}};
   
   
   private KeyBasedDataModel dataModel;
@@ -163,7 +156,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
         if(!( source instanceof JMenuItem ) )
         {
           return;
-        };
+        }
         doMenuAction( ((JMenuItem)source).getText() );
         
       }
@@ -185,6 +178,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       {
         updateRemoveUpStreamMenu( item );
       }
+      else if (TXT_SET_BOUNDARY_CONDITION.equals( text )){
+        updateSetBoundaryMenu( item );
+      }
       else
       {
         
@@ -194,15 +190,19 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   
   private void updateAddUpStreamMenu( JMenuItem item )
   {
-    updateGeneraBadSelection( item );
+    updateGeneralBadSelection( item );
   }
   
   private void updateRemoveUpStreamMenu( JMenuItem item )
   {
-    updateGeneraBadSelection( item );
+    updateGeneralBadSelection( item );
   }
   
-  private void updateGeneraBadSelection( JMenuItem item )
+  private void updateSetBoundaryMenu(JMenuItem item){
+    updateGeneralBadSelection( item );
+  }
+  
+  private void updateGeneralBadSelection( JMenuItem item )
   {
     Feature[] selectedFeature = getSelectedFeature();
     item.setEnabled( true );
@@ -217,7 +217,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  private void doMenuAction( String text )
+  synchronized void doMenuAction( String text )
   {
     if( text == null )
     {
@@ -226,6 +226,13 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     else if( TXT_ADD_BOUNDARY_LINE_UP_STREAM.equals( text ) )
     {
       
+    }
+    else if (TXT_SET_BOUNDARY_CONDITION.equals( text ))
+    {      
+      final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+      NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(null, null, null, null);
+      final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+      wizardDialog.open();
     }
     else
     {
@@ -243,8 +250,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   {
     
     JPopupMenu menu = new JPopupMenu();
-    final ActionListener actionListener = makeActionListener();
-    
+    final ActionListener actionListener = makeActionListener();   
     
     for( String[] spec : MENU_ITEM_SPECS )
     {
@@ -268,9 +274,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
         menu.add( addElement );
         items.add( addElement );
       }
-    }
-    
-    
+    }    
     return menu;
   }
  

@@ -137,8 +137,8 @@ class CalculationUnitWidgetFace
     tableWrapData.grabVertical = true;
     calculationSettingsSection.setLayoutData( tableWrapData );
     calculationSettingsSection.setExpanded( true );
-    // Creates Section for "Calculation Elements Unit"
-    
+ 
+ // Creates Section for "Calculation Elements Unit"
     calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     calculationElementUnitSection.setText( "Selectierte Bereichnungseinheit Verwalten" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
