@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -117,15 +118,16 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       return null;
 
     /*
-     * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have to
+     * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have too
      * many RuleTreeObjects.
      */
-    final Image image = new Image( Display.getCurrent(), 16, 16 );
+    final Image image = new Image( Display.getCurrent(), 15, 15 );
 
     final GC gc = new GC( image );
 
     try
     {
+      gc.setAntialias( SWT.ON );
       RulePainter.paint( m_rule, gc );
     }
     catch( final Throwable t )

@@ -61,9 +61,12 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -96,15 +99,13 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Graphic_Impl implements Graphic, Marshallable
 {
-  private final ArrayList marksAndExtGraphics = new ArrayList();
+  private final List<Object> m_marksAndExtGraphics = new ArrayList<Object>();
 
-  private BufferedImage image = null;
+  private ParameterValueType m_opacity = null;
 
-  private ParameterValueType opacity = null;
+  private ParameterValueType m_rotation = null;
 
-  private ParameterValueType rotation = null;
-
-  private ParameterValueType size = null;
+  private ParameterValueType m_size = null;
 
   /**
    * Creates a new <tt>Graphic_Impl</tt> instance.
@@ -122,9 +123,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   protected Graphic_Impl( final Object[] marksAndExtGraphics, final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
     setMarksAndExtGraphics( marksAndExtGraphics );
-    this.opacity = opacity;
-    this.size = size;
-    this.rotation = rotation;
+    this.m_opacity = opacity;
+    this.m_size = size;
+    this.m_rotation = rotation;
   }
 
   /**
@@ -143,9 +144,9 @@ public class Graphic_Impl implements Graphic, Marshallable
     final Mark[] marks = new Mark[1];
     marks[0] = new Mark_Impl( "square", null, null );
     setMarksAndExtGraphics( marks );
-    this.opacity = opacity;
-    this.size = size;
-    this.rotation = rotation;
+    this.m_opacity = opacity;
+    this.m_size = size;
+    this.m_rotation = rotation;
   }
 
   /**
@@ -165,8 +166,8 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public Object[] getMarksAndExtGraphics( )
   {
-    final Object[] objects = new Object[marksAndExtGraphics.size()];
-    return marksAndExtGraphics.toArray( objects );
+    final Object[] objects = new Object[m_marksAndExtGraphics.size()];
+    return m_marksAndExtGraphics.toArray( objects );
   }
 
   /**
@@ -177,14 +178,13 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public void setMarksAndExtGraphics( final Object[] object )
   {
-    image = null;
-    this.marksAndExtGraphics.clear();
+    this.m_marksAndExtGraphics.clear();
 
     if( object != null )
     {
       for( final Object element : object )
       {
-        marksAndExtGraphics.add( element );
+        m_marksAndExtGraphics.add( element );
       }
     }
   }
@@ -199,7 +199,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public void addMarksAndExtGraphic( final Object object )
   {
-    marksAndExtGraphics.add( object );
+    m_marksAndExtGraphics.add( object );
   }
 
   /**
@@ -212,7 +212,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public void removeMarksAndExtGraphic( final Object object )
   {
-    marksAndExtGraphics.remove( marksAndExtGraphics.indexOf( object ) );
+    m_marksAndExtGraphics.remove( m_marksAndExtGraphics.indexOf( object ) );
   }
 
   /**
@@ -229,9 +229,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     double opacityVal = OPACITY_DEFAULT;
 
-    if( opacity != null )
+    if( m_opacity != null )
     {
-      final String value = opacity.evaluate( feature );
+      final String value = m_opacity.evaluate( feature );
 
       try
       {
@@ -262,7 +262,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + opacity );
-    this.opacity = pvt;
+    this.m_opacity = pvt;
   }
 
   /**
@@ -281,9 +281,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     double sizeVal = SIZE_DEFAULT;
 
-    if( size != null )
+    if( m_size != null )
     {
-      final String value = size.evaluate( feature );
+      final String value = m_size.evaluate( feature );
 
       try
       {
@@ -313,9 +313,9 @@ public class Graphic_Impl implements Graphic, Marshallable
     // if size is unspecified, use the height of the first ExternalGraphic
     if( size < 0 )
     {
-      for( int i = 0; i < marksAndExtGraphics.size(); i++ )
+      for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
       {
-        final Object o = marksAndExtGraphics.get( i );
+        final Object o = m_marksAndExtGraphics.get( i );
         BufferedImage extImage = null;
 
         if( o instanceof ExternalGraphic )
@@ -362,7 +362,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + size );
-    this.size = pvt;
+    this.m_size = pvt;
   }
 
   /**
@@ -381,9 +381,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     double rotVal = ROTATION_DEFAULT;
 
-    if( rotation != null )
+    if( m_rotation != null )
     {
-      final String value = rotation.evaluate( feature );
+      final String value = m_rotation.evaluate( feature );
 
       try
       {
@@ -408,7 +408,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + rotation );
-    this.rotation = pvt;
+    this.m_rotation = pvt;
   }
 
   /**
@@ -423,18 +423,21 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
+    // TODO: replace with the new swt paint method
+    // problems: drawing the a rotated image later changes the palette somehow...
+
     final int intSize = getNormalizedSize( feature, uom, transform );
     if( intSize <= 0 )
       return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
-    ;
 
-    image = new BufferedImage( intSize, intSize, BufferedImage.TYPE_INT_ARGB );
+    final BufferedImage image = new BufferedImage( intSize + 1, intSize + 1, BufferedImage.TYPE_INT_ARGB );
 
     final Graphics2D g = (Graphics2D) image.getGraphics();
+    g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
-    for( int i = 0; i < marksAndExtGraphics.size(); i++ )
+    for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
     {
-      final Object o = marksAndExtGraphics.get( i );
+      final Object o = m_marksAndExtGraphics.get( i );
       BufferedImage extImage = null;
 
       if( o instanceof ExternalGraphic )
@@ -446,32 +449,52 @@ public class Graphic_Impl implements Graphic, Marshallable
         extImage = ((Mark) o).getAsImage( feature, intSize );
       }
 
-      g.drawImage( extImage, 0, 0, intSize, intSize, null );
+      g.drawImage( extImage, 0, 0, intSize + 1, intSize + 1, null );
     }
 
     // use the default Mark if there are no Marks / ExternalGraphics
     // specified at all
-    if( marksAndExtGraphics.size() == 0 )
+    if( m_marksAndExtGraphics.size() == 0 )
     {
       final Mark mark = new Mark_Impl();
       final BufferedImage extImage = mark.getAsImage( feature, intSize );
-      g.drawImage( extImage, 0, 0, intSize, intSize, null );
+      g.drawImage( extImage, 0, 0, intSize + 1, intSize + 1, null );
     }
 
     return image;
   }
 
   /**
-   * Sets a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
-   * parameters.
+   * Returns an {@link Image} representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
+   * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If
+   * there is none, the default value of 6 pixels is used.
    * <p>
    * 
-   * @param bufferedImage
-   *            BufferedImage to be set
+   * @return the <tt>BufferedImage</tt> ready to be painted
+   * @throws FilterEvaluationException
+   *             if the evaluation fails
    */
-  public void setAsImage( final BufferedImage bufferedImage )
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
-    image = bufferedImage;
+    for( final Object o : m_marksAndExtGraphics )
+    {
+      if( o instanceof ExternalGraphic )
+      {
+        ((ExternalGraphic) o).paint( gc );
+      }
+      else
+      {
+        ((Mark) o).paint( gc, feature );
+      }
+    }
+
+    // use the default Mark if there are no Marks / ExternalGraphics
+    // specified at all
+    if( m_marksAndExtGraphics.size() == 0 )
+    {
+      final Mark mark = new Mark_Impl();
+      mark.paint( gc, feature );
+    }
   }
 
   /**
@@ -485,26 +508,26 @@ public class Graphic_Impl implements Graphic, Marshallable
 
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Graphic>" );
-    for( int i = 0; i < marksAndExtGraphics.size(); i++ )
+    for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
     {
-      sb.append( ((Marshallable) marksAndExtGraphics.get( i )).exportAsXML() );
+      sb.append( ((Marshallable) m_marksAndExtGraphics.get( i )).exportAsXML() );
     }
-    if( opacity != null )
+    if( m_opacity != null )
     {
       sb.append( "<Opacity>" );
-      sb.append( ((Marshallable) opacity).exportAsXML() );
+      sb.append( ((Marshallable) m_opacity).exportAsXML() );
       sb.append( "</Opacity>" );
     }
-    if( size != null )
+    if( m_size != null )
     {
       sb.append( "<Size>" );
-      sb.append( ((Marshallable) size).exportAsXML() );
+      sb.append( ((Marshallable) m_size).exportAsXML() );
       sb.append( "</Size>" );
     }
-    if( rotation != null )
+    if( m_rotation != null )
     {
       sb.append( "<Rotation>" );
-      sb.append( ((Marshallable) rotation).exportAsXML() );
+      sb.append( ((Marshallable) m_rotation).exportAsXML() );
       sb.append( "</Rotation>" );
     }
     sb.append( "</Graphic>" );

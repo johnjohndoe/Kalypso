@@ -150,6 +150,10 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       throw new IllegalStateException();
     }
 
+    final Object[] children = getChildren( this );
+    if( children.length > 0 && children[0] instanceof IWorkbenchAdapter )
+      return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
+
     final KalypsoUserStyle userStyle = getStyle();
 
     return userStyle.getImageDescriptor( userStyle );

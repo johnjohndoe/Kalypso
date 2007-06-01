@@ -100,7 +100,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * Returns the associated <tt>Feature</tt>.
    */
-  public Feature getFeature()
+  public Feature getFeature( )
   {
     return m_feature;
   }
@@ -108,7 +108,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * returns the id of the feature that's associated with the DisplayElement
    */
-  public String getAssociateFeatureId()
+  public String getAssociateFeatureId( )
   {
     return m_feature.getId();
   }
@@ -121,7 +121,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * marks a <tt>DisplayElement</tt> as selected or not
    */
-  public void setSelected( boolean selected )
+  public void setSelected( final boolean selected )
   {
     m_selected = selected;
   }
@@ -129,15 +129,17 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * returns if the <tt>DisplayElement</tt> is selected or not
    */
-  public boolean isSelected()
+  public boolean isSelected( )
   {
     return m_selected;
   }
 
   /**
+   * TODO: Remove this, it is awful! Use two different display elements instead...
+   * <p>
    * marks the <tt>DisplayElement</tt> as highlighted or not
    */
-  public void setHighlighted( boolean highlighted )
+  public void setHighlighted( final boolean highlighted )
   {
     m_highlighted = highlighted;
   }
@@ -145,7 +147,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * returns if the <tt>DisplayElement</tt> is highlighted or not.
    */
-  public boolean isHighlighted()
+  public boolean isHighlighted( )
   {
     return m_highlighted;
   }
@@ -153,7 +155,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   /**
    * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
-  public boolean doesScaleConstraintApply( double scale )
+  public boolean doesScaleConstraintApply( final double scale )
   {
     return true;
   }

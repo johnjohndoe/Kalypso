@@ -94,11 +94,11 @@ public class SldLoader extends AbstractLoader
 
         public URL resolveURL( final String href ) throws MalformedURLException
         {
-          return UrlResolverSingleton.resolveUrl( context, href );
+          return UrlResolverSingleton.resolveUrl( url, href );
         }
 
       };
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD(resolver, br );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, br );
 
       reader.close();
 

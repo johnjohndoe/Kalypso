@@ -72,17 +72,23 @@ import java.util.Iterator;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
+import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -107,7 +113,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param feature
    * @param geometry
    */
-  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Curve geometry )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Object geometry )
   {
     super( feature, geometry, null );
 
@@ -122,40 +128,13 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param geometry
    * @param symbolizer
    */
-  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Curve geometry, final LineSymbolizer symbolizer )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Object geometry, final LineSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
 
-  /**
-   * Creates a new LineStringDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   */
-  protected LineStringDisplayElement_Impl( final Feature feature, final GM_MultiCurve geometry )
+  private void paintImage( final Image image, final Graphics2D g, final int x, final int y, final double rotation )
   {
-    super( feature, geometry, null );
-
-    final Symbolizer defaultSymbolizer = new LineSymbolizer_Impl();
-    this.setSymbolizer( defaultSymbolizer );
-  }
-
-  /**
-   * Creates a new LineStringDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   * @param symbolizer
-   */
-  protected LineStringDisplayElement_Impl( final Feature feature, final GM_MultiCurve geometry, final LineSymbolizer symbolizer )
-  {
-    super( feature, geometry, symbolizer );
-  }
-
-  public void paintImage( final Image image, final Graphics2D g, final int x, final int y, final double rotation )
-  {
-
     // get the current transform
     final AffineTransform saveAT = g.getTransform();
 
@@ -180,75 +159,86 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   {
     Debug.debugMethodBegin( this, "paint" );
 
+    final Graphics2D g2 = (Graphics2D) g;
+
     final LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
     final org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
     final UOM uom = sym.getUom();
 
     // no stroke defined -> don't draw anything
     if( stroke == null )
-    {
       return;
-    }
 
     // GraphicStroke label
     final GM_Object geometry = getGeometry();
-    if( stroke.getGraphicStroke() != null )
+
+    try
     {
-      try
+      final GraphicStroke graphicStroke = stroke == null ? null : stroke.getGraphicStroke();
+      final Image image = graphicStroke == null ? null : graphicStroke.getGraphic().getAsImage( getFeature(), uom, projection );
+      if( geometry instanceof GM_Primitive )
+        paintCurve( g2, projection, (GM_Curve) geometry, image, stroke );
+      else if( geometry instanceof GM_MultiPrimitive )
       {
-        final Image image = stroke.getGraphicStroke().getGraphic().getAsImage( getFeature(), uom, projection );
-
-        final CurveWalker walker = new CurveWalker( g.getClipBounds() );
-
-        if( geometry instanceof GM_Curve )
-        {
-          final int[][] pos = LabelFactory.calcScreenCoordinates( projection, (GM_Curve) geometry );
-          final ArrayList positions = walker.createPositions( pos, image.getWidth( null ) );
-          final Iterator it = positions.iterator();
-          while( it.hasNext() )
-          {
-            final double[] label = (double[]) it.next();
-            final int x = (int) (label[0] + 0.5);
-            final int y = (int) (label[1] + 0.5);
-            paintImage( image, (Graphics2D) g, x, y, label[2] );
-          }
-        }
+        final GM_MultiPrimitive multi = (GM_MultiPrimitive) geometry;
+        final GM_Primitive[] allPrimitives = multi.getAllPrimitives();
+        for( final GM_Primitive primitive : allPrimitives )
+          paintPrimitive( g2, projection, primitive, image, stroke );
       }
-      catch( final Exception e )
+    }
+    catch( final FilterEvaluationException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    Debug.debugMethodEnd();
+  }
+
+  private void paintPrimitive( final Graphics2D g2, final GeoTransform projection, final GM_Primitive primitive, final Image image, final Stroke stroke ) throws FilterEvaluationException, Exception
+  {
+    if( primitive instanceof GM_Curve )
+      paintCurve( g2, projection, (GM_Curve) primitive, image, stroke );
+    else if( primitive instanceof GM_Surface )
+    {
+      final GM_Surface surface = (GM_Surface) primitive;
+      final int numberOfSurfacePatches = surface.getNumberOfSurfacePatches();
+      for( int i = 0; i < numberOfSurfacePatches; i++ )
       {
-        e.printStackTrace();
+        final GM_SurfacePatch surfacePatchAt = surface.getSurfacePatchAt( i );
+        final GM_Position[] exteriorRing = surfacePatchAt.getExteriorRing();
+        final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, surface.getCoordinateSystem() );
+        paintCurve( g2, projection, curve, image, stroke );
       }
+    }
+  }
 
+  private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final Image image, final Stroke stroke ) throws FilterEvaluationException, Exception
+  {
+    if( image != null )
+    {
+      final CurveWalker walker = new CurveWalker( g2.getClipBounds() );
+
+      final int[][] pos = LabelFactory.calcScreenCoordinates( projection, curve );
+      final ArrayList positions = walker.createPositions( pos, image.getWidth( null ) );
+      final Iterator it = positions.iterator();
+      while( it.hasNext() )
+      {
+        final double[] label = (double[]) it.next();
+        final int x = (int) (label[0] + 0.5);
+        final int y = (int) (label[1] + 0.5);
+        paintImage( image, g2, x, y, label[2] );
+      }
       // solid color label
     }
     else
     {
-      try
-      {
-        int[][] pos = null;
-        final Graphics2D g2 = (Graphics2D) g;
-
-        if( geometry instanceof GM_Curve )
-        {
-          pos = calcTargetCoordinates( projection, (GM_Curve) geometry );
-          drawLine( g2, pos, stroke );
-        }
-        else
-        {
-          final GM_MultiCurve mc = (GM_MultiCurve) geometry;
-          for( int i = 0; i < mc.getSize(); i++ )
-          {
-            pos = calcTargetCoordinates( projection, mc.getCurveAt( i ) );
-            drawLine( g2, pos, stroke );
-          }
-        }
-      }
-      catch( final Exception e )
-      {
-        System.out.println( e );
-      }
+      final int[][] pos = calcTargetCoordinates( projection, curve );
+      drawLine( g2, pos, stroke );
     }
-    Debug.debugMethodEnd();
   }
 
   public double getDistance( final double x1, final double y1, final double x2, final double y2 )

@@ -170,11 +170,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
     // TODO allways use virtual ftp to calculate bbox ??
     final VirtualFeatureTypeProperty[] vftp = VirtualPropertyUtilities.getVirtualProperties( m_featureType );
-    for( int p = 0; p < vftp.length; p++ )
+    for( final VirtualFeatureTypeProperty element : vftp )
     {
-      if( GeometryUtilities.isGeometry( vftp[p] ) )
+      if( GeometryUtilities.isGeometry( element ) )
       {
-        final Object o = getVirtuelProperty( vftp[p], null );
+        final Object o = getVirtuelProperty( element, null );
         if( o == null )
         {
           continue;
@@ -281,7 +281,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
   // TODO: make it private again?
   public void invalidEnvelope( )
   {
-    m_envelope = Feature_Impl.INVALID_ENV;
+    m_envelope = INVALID_ENV;
 
     /* Invalidate geo-index of all feature-list which contains this feature. */
     // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not

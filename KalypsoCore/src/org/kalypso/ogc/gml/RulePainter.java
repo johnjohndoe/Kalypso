@@ -41,9 +41,12 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.swt.graphics.GC;
+import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LegendGraphic;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl;
 
 /**
  * @author Gernot Belger
@@ -52,24 +55,19 @@ public class RulePainter
 {
   public static void paint( final Rule rule, final GC gc ) throws Exception
   {
-    gc.drawRectangle( 3, 3, 10, 10 );
+    final Feature feature = Symbolizer_Impl.createPseudoFeature();
 
     final LegendGraphic legendGraphic = rule.getLegendGraphic();
     if( legendGraphic != null )
     {
-// final Graphic graphic = legendGraphic.getGraphic();
-      // TODO: paint the graphic onto the image
-      // do this when we have implemented it for the PointSymbolizer
+      final Graphic graphic = legendGraphic.getGraphic();
+      graphic.paint( gc, feature );
     }
     else
     {
       final Symbolizer[] symbolizers = rule.getSymbolizers();
       for( final Symbolizer symbolizer : symbolizers )
-      {
-        symbolizer.paintLegendGraphic( gc );
-      }
-
+        symbolizer.paint( gc, feature );
     }
   }
-
 }

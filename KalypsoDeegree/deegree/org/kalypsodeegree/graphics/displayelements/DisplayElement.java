@@ -76,16 +76,15 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface DisplayElement
 {
-
   /**
    * Returns the associated <tt>Feature</tt>.
    */
-  Feature getFeature();
+  Feature getFeature( );
 
   /**
    * returns the id of thr feature that's associated with the DisplayElement
    */
-  String getAssociateFeatureId();
+  String getAssociateFeatureId( );
 
   /**
    * renders the DisplayElement to the submitted graphic context
@@ -100,7 +99,7 @@ public interface DisplayElement
   /**
    * returns if the <tt>DisplayElement</tt> is selected or not
    */
-  boolean isSelected();
+  boolean isSelected( );
 
   /**
    * marks the <tt>DisplayElement</tt> as highlighted or not
@@ -110,7 +109,7 @@ public interface DisplayElement
   /**
    * returns if the <tt>DisplayElement</tt> is highlighted or not.
    */
-  boolean isHighlighted();
+  boolean isHighlighted( );
 
   /**
    * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.

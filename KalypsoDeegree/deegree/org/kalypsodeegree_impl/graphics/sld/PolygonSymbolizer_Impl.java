@@ -60,10 +60,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Resource;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -217,5 +222,42 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
     Debug.debugMethodEnd();
     return sb.toString();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
+  {
+    final org.kalypsodeegree.graphics.sld.Fill fill = getFill();
+    final org.kalypsodeegree.graphics.sld.Stroke stroke = getStroke();
+    final Rectangle clipping = gc.getClipping();
+
+    Resource[] strokeResources = null;
+    Resource[] fillResources = null;
+    try
+    {
+      // only draw filled polygon, if Fill-Element is given
+      if( fill != null )
+      {
+        fillResources = prepareGc( gc, fill, feature );
+
+        gc.fillRectangle( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+      }
+
+      // only stroke outline, if Stroke-Element is given
+      if( stroke != null )
+      {
+        strokeResources = LineSymbolizer_Impl.prepareGc( gc, stroke, feature );
+        gc.drawRectangle( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+      }
+    }
+    finally
+    {
+      disposeResource( strokeResources );
+      disposeResource( fillResources );
+    }
   }
 }

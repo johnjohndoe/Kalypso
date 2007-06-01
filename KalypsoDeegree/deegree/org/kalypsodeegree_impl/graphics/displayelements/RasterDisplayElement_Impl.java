@@ -130,7 +130,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   {
     if( (m_surrogateTiledImage == null) || !m_valid )
     {
-      final RasterSymbolizer rasterSym = (RasterSymbolizer) getSelectedSymbolizer();
+      final RasterSymbolizer rasterSym = (RasterSymbolizer) getSymbolizer();
 
       final Feature feature = getFeature();
       final RectifiedGridCoverage2 coverage = new RectifiedGridCoverage2( feature );

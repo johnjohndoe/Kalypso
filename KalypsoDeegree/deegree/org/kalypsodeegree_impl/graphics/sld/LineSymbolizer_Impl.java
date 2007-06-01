@@ -60,26 +60,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
-import java.awt.Color;
-
-import javax.xml.namespace.QName;
-
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.LineAttributes;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.gmlschema.EmptyGMLSchema;
-import org.kalypso.gmlschema.feature.CustomFeatureType;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.eclipse.swt.graphics.Resource;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -172,52 +162,33 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paintLegendGraphic(org.eclipse.swt.graphics.GC)
+   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
+   *      org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public void paintLegendGraphic( final GC gc ) throws FilterEvaluationException
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
     final Rectangle clipping = gc.getClipping();
 
-    org.eclipse.swt.graphics.Color color = null;
+    Resource[] resources = null;
     try
     {
-      if( m_stroke.getGraphicStroke() == null )
+      final Stroke stroke = m_stroke;
+      final GraphicStroke graphicStroke = stroke.getGraphicStroke();
+      if( graphicStroke == null )
       {
-        final IFeatureType ft = new CustomFeatureType( new EmptyGMLSchema(), new QName( "", "" ), new IPropertyType[] {} );
-        final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
+        resources = prepareGc( gc, stroke, feature );
 
-        // Color & Opacity
-        final Color stroke = m_stroke.getStroke( feature );
-        final RGB rgb = new RGB( stroke.getRed(), stroke.getGreen(), stroke.getBlue() );
-        color = new org.eclipse.swt.graphics.Color( gc.getDevice(), rgb );
-        gc.setForeground( color );
-// gc.setAlpha( stroke.getAlpha() );
-
-        final float[] dash = m_stroke.getDashArray( feature );
-        final float width = (float) m_stroke.getWidth( feature );
-        final int cap = m_stroke.getLineCap( feature );
-        final int join = m_stroke.getLineJoin( feature );
-
-        if( dash == null || dash.length < 2 )
-          gc.setLineAttributes( new LineAttributes( width, cap, join ) );
-        else
-          gc.setLineAttributes( new LineAttributes( width, cap, join, SWT.LINE_DASH, dash, 0, 10 ) );
-
-        gc.drawLine( clipping.x, clipping.y, clipping.x + clipping.width, clipping.y + clipping.height );
+        gc.drawLine( clipping.x + 1, clipping.y + clipping.height - 2, clipping.x + clipping.width - 1, clipping.y + 2 );
       }
       else
       {
-        // not implemented yet
-        super.paintLegendGraphic( gc );
+        graphicStroke.getGraphic().paint( gc, feature );
       }
-
     }
     finally
     {
-      if( color != null )
-        color.dispose();
+      disposeResource( resources );
     }
-
   }
 }

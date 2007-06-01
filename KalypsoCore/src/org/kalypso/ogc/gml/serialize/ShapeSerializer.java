@@ -87,8 +87,6 @@ public class ShapeSerializer
 
   private static final QName PROPERTY_TYPE = new QName( "namespace", "type" );
 
-// private static final QName PROPERTY_BBOX = new QName( "namespace", "boundingBox" );
-
   private static final QName ROOT_FEATURETYPE = new QName( "namespace", "featureCollection" );
 
   private ShapeSerializer( )

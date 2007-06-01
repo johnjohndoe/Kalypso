@@ -106,11 +106,11 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param feature
    * @param geometry
    */
-  protected PolygonDisplayElement_Impl( Feature feature, GM_Surface geometry )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface geometry )
   {
     super( feature, geometry, null );
 
-    Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
+    final Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
     this.setSymbolizer( defaultSymbolizer );
   }
 
@@ -121,7 +121,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( Feature feature, GM_Surface geometry, PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface geometry, final PolygonSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -132,11 +132,11 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param feature
    * @param geometry
    */
-  protected PolygonDisplayElement_Impl( Feature feature, GM_MultiSurface geometry )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_MultiSurface geometry )
   {
     super( feature, geometry, null );
 
-    Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
+    final Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
     this.setSymbolizer( defaultSymbolizer );
   }
 
@@ -147,7 +147,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( Feature feature, GM_MultiSurface geometry, PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_MultiSurface geometry, final PolygonSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -156,11 +156,11 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * renders the DisplayElement to the submitted graphic context
    */
   @Override
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
     try
     {
-      GM_Object geometry = getGeometry();
+      final GM_Object geometry = getGeometry();
       if( geometry == null )
         return;
       Area area = null;
@@ -171,7 +171,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       }
       else
       {
-        GM_MultiSurface msurface = (GM_MultiSurface) geometry;
+        final GM_MultiSurface msurface = (GM_MultiSurface) geometry;
         for( int i = 0; i < msurface.getSize(); i++ )
         {
           area = calcTargetCoordinates( projection, msurface.getSurfaceAt( i ) );
@@ -179,17 +179,17 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         }
       }
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       Debug.debugException( e, "FilterEvaluationException caught evaluating an Expression!" );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       Debug.debugException( ex, "Exception caught evaluating an Expression!" );
     }
   }
 
-  private double distance( double x1, double y1, double x2, double y2 )
+  private double distance( final double x1, final double y1, final double x2, final double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
@@ -197,7 +197,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  private Area calcTargetCoordinates( GeoTransform projection, GM_Surface surface ) throws Exception
+  private Area calcTargetCoordinates( final GeoTransform projection, final GM_Surface surface ) throws Exception
   {
     final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
     final Stroke stroke = sym.getStroke();
@@ -216,7 +216,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       final Area areaouter = areaFromRing( projection, width, ex );
       if( inner != null )
       {
-        for( GM_Position[] innerRing : inner )
+        for( final GM_Position[] innerRing : inner )
         {
           if( innerRing != null )
             areaouter.subtract( areaFromRing( projection, width, innerRing ) );
@@ -225,7 +225,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
       return areaouter;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       Debug.debugException( e, "" );
     }
@@ -233,17 +233,17 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     return null;
   }
 
-  private Area areaFromRing( GeoTransform projection, float width, final GM_Position[] ex )
+  private Area areaFromRing( final GeoTransform projection, final float width, final GM_Position[] ex )
   {
     final int[] x = new int[ex.length];
     final int[] y = new int[ex.length];
 
     int k = 0;
-    for( int i = 0; i < ex.length; i++ )
+    for( final GM_Position element : ex )
     {
-      GM_Position position = projection.getDestPoint( ex[i] );
-      int xx = (int) (position.getX() + 0.5);
-      int yy = (int) (position.getY() + 0.5);
+      final GM_Position position = projection.getDestPoint( element );
+      final int xx = (int) (position.getX() + 0.5);
+      final int yy = (int) (position.getY() + 0.5);
 
       if( k > 0 && k < ex.length - 1 )
       {
@@ -269,42 +269,43 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   /**
    * renders one surface to the submitted graphic context considering the also submitted projection
    */
-  private void drawPolygon( Graphics g, Area area, GeoTransform projection ) throws FilterEvaluationException
+  private void drawPolygon( final Graphics g, final Area area, final GeoTransform projection ) throws FilterEvaluationException
   {
-    Graphics2D g2 = (Graphics2D) g;
+    final Graphics2D g2 = (Graphics2D) g;
 
-    PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
-    org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
-    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
+    final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
+    final org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
+    final org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
     final UOM uom = sym.getUom();
 
     final Feature feature = getFeature();
     // only draw filled polygon, if Fill-Element is given
     if( fill != null )
     {
-      double opacity = fill.getOpacity( feature );
+      final double opacity = fill.getOpacity( feature );
 
       // is completly transparent
       // if not fill polygon
       if( opacity > 0.01 )
       {
         Color color = fill.getFill( feature );
-        int alpha = (int) Math.round( opacity * 255 );
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
+        final int alpha = (int) Math.round( opacity * 255 );
+        final int red = color.getRed();
+        final int green = color.getGreen();
+        final int blue = color.getBlue();
         color = new Color( red, green, blue, alpha );
 
         g2.setColor( color );
 
-        GraphicFill gFill = fill.getGraphicFill();
+        final GraphicFill gFill = fill.getGraphicFill();
 
         if( gFill != null )
         {
-          BufferedImage texture = gFill.getGraphic().getAsImage( feature, uom, projection );
+          // TODO: rotation is not considered here
+          final BufferedImage texture = gFill.getGraphic().getAsImage( feature, uom, projection );
           if( texture != null )
           {
-            Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
+            final Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
             g2.setPaint( new TexturePaint( texture, anchor ) );
           }
         }
@@ -313,7 +314,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         {
           g2.fill( area );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           //  
         }
@@ -323,23 +324,23 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     // only stroke outline, if Stroke-Element is given
     if( stroke != null )
     {
-      double opacity = stroke.getOpacity( feature );
+      final double opacity = stroke.getOpacity( feature );
       if( opacity > 0.01 )
       {
         Color color = stroke.getStroke( feature );
-        int alpha = (int) Math.round( opacity * 255 );
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
+        final int alpha = (int) Math.round( opacity * 255 );
+        final int red = color.getRed();
+        final int green = color.getGreen();
+        final int blue = color.getBlue();
         color = new Color( red, green, blue, alpha );
 
         g2.setColor( color );
 
-        float[] dash = stroke.getDashArray( feature );
+        final float[] dash = stroke.getDashArray( feature );
 
         // use a simple Stroke if dash == null or dash length < 2
         BasicStroke bs2 = null;
-        float w = (float) stroke.getWidth( feature );
+        final float w = (float) stroke.getWidth( feature );
 
         if( (dash == null) || (dash.length < 2) )
         {
@@ -355,7 +356,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         {
           g2.draw( area );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           //  
         }

@@ -62,6 +62,7 @@ package org.kalypsodeegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
 
+import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -88,7 +89,7 @@ public interface Mark
    * 
    * @return the WK-Name of the mark
    */
-  String getWellKnownName();
+  String getWellKnownName( );
 
   /**
    * Sets the well known name of a Mark's shape. Allowed values include at least "square", "circle", "triangle", "star",
@@ -97,7 +98,7 @@ public interface Mark
    * value is "square"..
    * 
    * @param wellKnownName
-   *          the WK-Name of the mark
+   *            the WK-Name of the mark
    */
   void setWellKnownName( String wellKnownName );
 
@@ -108,13 +109,13 @@ public interface Mark
    * 
    * @return the fill of the mark
    */
-  Fill getFill();
+  Fill getFill( );
 
   /**
    * Sets the Fill
    * 
    * @param fill
-   *          the fill of the mark
+   *            the fill of the mark
    */
   void setFill( Fill fill );
 
@@ -126,30 +127,17 @@ public interface Mark
    * 
    * @return the stroke of the mark
    */
-  Stroke getStroke();
+  Stroke getStroke( );
 
   /**
    * Sets the <Stroke>
    * 
    * @param stroke
-   *          the stroke of the mark
+   *            the stroke of the mark
    */
   void setStroke( Stroke stroke );
 
-  /**
-   * Returns the mark as an image. Rhis method is not part of the sld specifications but it is added to speed up
-   * applications.
-   * 
-   * @return the mark as image
-   */
-  BufferedImage getAsImage( Feature feature, int size ) throws FilterEvaluationException;
+  BufferedImage getAsImage( Feature feature, int intSize ) throws FilterEvaluationException;
 
-  /**
-   * Sets the mark as an image. Rhis method is not part of the sld specifications but it is added to speed up
-   * applications.
-   * 
-   * @param bufferedImage
-   *          the bufferedImage to be set for the mark
-   */
-  void setAsImage( BufferedImage bufferedImage );
+  void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
 }

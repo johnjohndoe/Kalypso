@@ -66,15 +66,18 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -82,6 +85,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -200,6 +204,41 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
   };
 
+  private final IPartListener2 m_partListener = new PartAdapter2()
+  {
+    private static final String MAP_CONTEXT = "org.kalypso.ogc.gml.map.context";
+
+    private IContextActivation m_activateContext;
+
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
+     */
+    @Override
+    public void partActivated( final IWorkbenchPartReference partRef )
+    {
+      if( partRef.getPart( false ) == AbstractMapPart.this )
+      {
+        final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
+        if( contextService != null )
+          m_activateContext = contextService.activateContext( MAP_CONTEXT );
+      }
+    }
+
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
+     */
+    @Override
+    public void partDeactivated( IWorkbenchPartReference partRef )
+    {
+      if( partRef.getPart( false ) == AbstractMapPart.this )
+      {
+        final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
+        if( contextService != null && m_activateContext != null )
+          contextService.deactivateContext( m_activateContext );
+      }
+    }
+  };
+
   protected AbstractMapPart( )
   {
     super();
@@ -298,13 +337,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, site );
     site.setSelectionProvider( m_mapPanel );
 
-    // activate MapView Context
-    // TODO: this context is never deaktivated..., is this right? If yes, please comment why.
-    final IContextService contextService = (IContextService) site.getService( IContextService.class );
-    if( contextService != null )
-    {
-      contextService.activateContext( "org.kalypso.ogc.gml.map.context" );
-    }
+    site.getPage().addPartListener( m_partListener );
 
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
 
@@ -685,6 +718,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public void dispose( )
   {
+    getSite().getPage().removePartListener( m_partListener );
+
     m_disposed = true;
 
     setMapModell( null );

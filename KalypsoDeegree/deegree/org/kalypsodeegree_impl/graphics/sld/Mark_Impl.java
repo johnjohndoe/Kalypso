@@ -62,8 +62,13 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Resource;
+import org.eclipse.swt.graphics.Transform;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Mark;
@@ -86,13 +91,11 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Mark_Impl implements Mark, Marshallable
 {
-  private BufferedImage m_image = null;
+  private Fill m_fill = null;
 
-  private Fill fill = null;
+  private String m_wellKnownName = null;
 
-  private String wellKnownName = null;
-
-  private Stroke stroke = null;
+  private Stroke m_stroke = null;
 
   /**
    * Constructor for the default <tt>Mark</tt>.
@@ -105,7 +108,7 @@ public class Mark_Impl implements Mark, Marshallable
   /**
    * constructor initializing the class with the <Mark>
    */
-  Mark_Impl( String wellKnownName, Stroke stroke, Fill fill )
+  Mark_Impl( final String wellKnownName, final Stroke stroke, final Fill fill )
   {
     setWellKnownName( wellKnownName );
     setStroke( stroke );
@@ -122,7 +125,7 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public String getWellKnownName( )
   {
-    return wellKnownName;
+    return m_wellKnownName;
   }
 
   /**
@@ -132,11 +135,11 @@ public class Mark_Impl implements Mark, Marshallable
    * value is "square".
    * 
    * @param wellKnownName
-   *          the WK-Name of the mark
+   *            the WK-Name of the mark
    */
-  public void setWellKnownName( String wellKnownName )
+  public void setWellKnownName( final String wellKnownName )
   {
-    this.wellKnownName = wellKnownName;
+    this.m_wellKnownName = wellKnownName;
   }
 
   /**
@@ -148,18 +151,18 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public Fill getFill( )
   {
-    return fill;
+    return m_fill;
   }
 
   /**
    * sets the <Fill>
    * 
    * @param fill
-   *          the fill of the mark
+   *            the fill of the mark
    */
-  public void setFill( Fill fill )
+  public void setFill( final Fill fill )
   {
-    this.fill = fill;
+    this.m_fill = fill;
   }
 
   /**
@@ -172,113 +175,159 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public Stroke getStroke( )
   {
-    return stroke;
+    return m_stroke;
   }
 
   /**
    * sets <Stroke>
    * 
    * @param stroke
-   *          the stroke of the mark
+   *            the stroke of the mark
    */
-  public void setStroke( Stroke stroke )
+  public void setStroke( final Stroke stroke )
   {
-    this.stroke = stroke;
+    this.m_stroke = stroke;
   }
 
   /**
    * DOCUMENT ME!
    * 
    * @param size
-   *          DOCUMENT ME!
+   *            DOCUMENT ME!
    * @return DOCUMENT ME!
    */
-  public BufferedImage getAsImage( Feature feature, int size ) throws FilterEvaluationException
+  public BufferedImage getAsImage( final Feature feature, final int size ) throws FilterEvaluationException
   {
     double fillOpacity = 1.0;
     double strokeOpacity = 1.0;
     Color fillColor = new Color( 128, 128, 128 );
     Color strokeColor = new Color( 0, 0, 0 );
 
-    if( fill != null )
+    if( m_fill != null )
     {
-      fillOpacity = fill.getOpacity( feature );
-      fillColor = fill.getFill( feature );
+      fillOpacity = m_fill.getOpacity( feature );
+      fillColor = m_fill.getFill( feature );
     }
 
-    if( stroke != null )
+    if( m_stroke != null )
     {
-      strokeOpacity = stroke.getOpacity( feature );
-      strokeColor = stroke.getStroke( feature );
+      strokeOpacity = m_stroke.getOpacity( feature );
+      strokeColor = m_stroke.getStroke( feature );
     }
 
-    if( wellKnownName == null )
+    if( m_wellKnownName == null )
     {
-      wellKnownName = "square";
+      m_wellKnownName = "square";
     }
 
-    if( wellKnownName.equalsIgnoreCase( "circle" ) )
+    final BufferedImage image = new BufferedImage( size + 1, size + 1, BufferedImage.TYPE_INT_ARGB );
+    final Graphics2D g2D = (Graphics2D) image.getGraphics();
+    g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+
+    if( m_wellKnownName.equalsIgnoreCase( "circle" ) )
     {
-      m_image = drawCircle( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      drawCircle( g2D, size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
-    else if( wellKnownName.equalsIgnoreCase( "triangle" ) )
+    else if( m_wellKnownName.equalsIgnoreCase( "triangle" ) )
     {
-      m_image = drawTriangle( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      drawTriangle( g2D, size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
-    else if( wellKnownName.equalsIgnoreCase( "cross" ) )
+    else if( m_wellKnownName.equalsIgnoreCase( "cross" ) )
     {
-      m_image = drawCross1( size, strokeOpacity, strokeColor );
+      drawCross1( g2D, size, strokeOpacity, strokeColor );
     }
-    else if( wellKnownName.equalsIgnoreCase( "x" ) )
+    else if( m_wellKnownName.equalsIgnoreCase( "x" ) )
     {
-      m_image = drawCross2( size, strokeOpacity, strokeColor );
+      drawCross2( g2D, size, strokeOpacity, strokeColor );
     }
     /* Kalypso known names */
-    else if( wellKnownName.equalsIgnoreCase( "kalypsoArrow" ) )
+    else if( m_wellKnownName.equalsIgnoreCase( "kalypsoArrow" ) )
     {
-      m_image = drawArrow( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      drawArrow( g2D, size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
     else
     {
-      m_image = drawSquare( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      return drawSquare( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
 
-    return m_image;
+    return image;
   }
 
   /**
-   * Sets the mark as an image. Rhis method is not part of the sld specifications but it is added to speed up
-   * applications.
-   * 
-   * @param bufferedImage
-   *          the bufferedImage to be set for the mark
+   * @see org.kalypsodeegree.graphics.sld.Mark#paint(org.kalypsodeegree.model.feature.Feature)
    */
-  public void setAsImage( BufferedImage bufferedImage )
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
-    m_image = bufferedImage;
+    final Resource[] strokeResources = LineSymbolizer_Impl.prepareGc( gc, m_stroke, feature );
+    final Resource[] fillResources = PolygonSymbolizer_Impl.prepareGc( gc, m_fill, feature );
+
+    // TODO: stroke line width is not yet supported with the awt stuff, so set always to 1 here
+    gc.setLineWidth( 1 );
+
+    final Transform oldTrans = new Transform( gc.getDevice() );
+    gc.getTransform( oldTrans );
+    try
+    {
+      if( m_wellKnownName == null )
+        m_wellKnownName = "square";
+
+      final Rectangle clipping = gc.getClipping();
+      final float clipSize = clipping.width;
+      final float size = clipSize / 2;
+
+      // HACK: in order to have a nice legend, we paint it only half sized
+      // this must be removed if this code is ever used to paint the real features
+
+      final Transform trans = new Transform( gc.getDevice() );
+
+      trans.scale( 0.8f, 0.8f );
+      trans.translate( size, size );
+// trans.translate( -size, -size );
+
+      gc.setTransform( trans );
+
+      if( m_wellKnownName.equalsIgnoreCase( "circle" ) )
+        drawCircle( gc, (int) size );
+      else if( m_wellKnownName.equalsIgnoreCase( "triangle" ) )
+        drawTriangle( gc, (int) size );
+      else if( m_wellKnownName.equalsIgnoreCase( "cross" ) )
+        drawCross1( gc, (int) size );
+      else if( m_wellKnownName.equalsIgnoreCase( "x" ) )
+        drawCross2( gc, (int) size );
+      /* Kalypso known names */
+      else if( m_wellKnownName.equalsIgnoreCase( "kalypsoArrow" ) )
+        drawArrow( gc, (int) size );
+      else
+        drawSquare( gc, (int) size );
+    }
+    finally
+    {
+      Symbolizer_Impl.disposeResource( fillResources );
+      Symbolizer_Impl.disposeResource( strokeResources );
+
+      gc.setTransform( oldTrans );
+    }
   }
 
   /**
    * Draws a scaled instance of a triangle mark according to the given parameters.
    * 
    * @param size
-   *          resulting image's height and widthh
+   *            resulting image's height and widthh
    * @param fillOpacity
-   *          opacity value for the filled parts of the image
+   *            opacity value for the filled parts of the image
    * @param fillColor
-   *          <tt>Color</tt> to be used for the fill
+   *            <tt>Color</tt> to be used for the fill
    * @param strokeOpacity
-   *          opacity value for the stroked parts of the image
+   *            opacity value for the stroked parts of the image
    * @param strokeColor
-   *          <tt>Color</tt> to be used for the strokes
+   *            <tt>Color</tt> to be used for the strokes
    * @return image displaying a triangle
    */
-  public BufferedImage drawTriangle( int size, double fillOpacity, Color fillColor, double strokeOpacity, Color strokeColor )
+  public void drawTriangle( final Graphics2D g2D, final int size, final double fillOpacity, final Color fillColor, final double strokeOpacity, final Color strokeColor )
   {
-    BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
-
-    int[] x_ = new int[3];
-    int[] y_ = new int[3];
+    final int[] x_ = new int[3];
+    final int[] y_ = new int[3];
     x_[0] = 0;
     y_[0] = 0;
     x_[1] = size / 2;
@@ -286,64 +335,91 @@ public class Mark_Impl implements Mark, Marshallable
     x_[2] = size - 1;
     y_[2] = 0;
 
-    Graphics2D g2D = (Graphics2D) image.getGraphics();
     setColor( g2D, fillColor, fillOpacity );
     g2D.fillPolygon( x_, y_, 3 );
     setColor( g2D, strokeColor, strokeOpacity );
     g2D.drawPolygon( x_, y_, 3 );
+  }
 
-    return image;
+  /**
+   * Draws a scaled instance of a triangle mark according to the given parameters.
+   * 
+   * @param size
+   *            resulting image's height and widthh
+   */
+  public void drawTriangle( final GC gc, final int size )
+  {
+    final int[] points = new int[8];
+
+    points[0] = 0;
+    points[1] = 0;
+    points[2] = size / 2;
+    points[3] = size - 1;
+    points[4] = size - 1;
+    points[5] = 0;
+    points[6] = 0;
+    points[7] = 0;
+
+    gc.fillPolygon( points );
+    gc.drawPolygon( points );
   }
 
   /**
    * Draws a scaled instance of a circle mark according to the given parameters.
    * 
    * @param size
-   *          resulting image's height and widthh
+   *            resulting image's height and widthh
    * @param fillOpacity
-   *          opacity value for the filled parts of the image
+   *            opacity value for the filled parts of the image
    * @param fillColor
-   *          <tt>Color</tt> to be used for the fill
+   *            <tt>Color</tt> to be used for the fill
    * @param strokeOpacity
-   *          opacity value for the stroked parts of the image
+   *            opacity value for the stroked parts of the image
    * @param strokeColor
-   *          <tt>Color</tt> to be used for the strokes
+   *            <tt>Color</tt> to be used for the strokes
    * @return image displaying a circle
    */
-  public BufferedImage drawCircle( int size, double fillOpacity, Color fillColor, double strokeOpacity, Color strokeColor )
+  public void drawCircle( final Graphics2D g2D, final int size, final double fillOpacity, final Color fillColor, final double strokeOpacity, final Color strokeColor )
   {
-    BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
-
-    Graphics2D g2D = (Graphics2D) image.getGraphics();
     setColor( g2D, fillColor, fillOpacity );
     g2D.fillOval( 0, 0, size, size );
 
     setColor( g2D, strokeColor, strokeOpacity );
     g2D.drawOval( 0, 0, size, size );
+  }
 
-    return image;
+  /**
+   * Draws a scaled instance of a circle mark according to the given parameters.
+   * 
+   * @param size
+   *            resulting image's height and widthh
+   */
+  public void drawCircle( final GC gc, final int size )
+  {
+    gc.fillOval( 0, 0, size, size );
+    gc.drawOval( 0, 0, size, size );
   }
 
   /**
    * Draws a scaled instance of a square mark according to the given parameters.
    * 
    * @param size
-   *          resulting image's height and widthh
+   *            resulting image's height and widthh
    * @param fillOpacity
-   *          opacity value for the filled parts of the image
+   *            opacity value for the filled parts of the image
    * @param fillColor
-   *          <tt>Color</tt> to be used for the fill
+   *            <tt>Color</tt> to be used for the fill
    * @param strokeOpacity
-   *          opacity value for the stroked parts of the image
+   *            opacity value for the stroked parts of the image
    * @param strokeColor
-   *          <tt>Color</tt> to be used for the strokes
+   *            <tt>Color</tt> to be used for the strokes
    * @return image displaying a square
    */
-  public BufferedImage drawSquare( int size, double fillOpacity, Color fillColor, double strokeOpacity, Color strokeColor )
+  public BufferedImage drawSquare( final int size, final double fillOpacity, final Color fillColor, final double strokeOpacity, final Color strokeColor )
   {
-    BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
+    final BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
 
-    Graphics2D g2D = (Graphics2D) image.getGraphics();
+    final Graphics2D g2D = (Graphics2D) image.getGraphics();
     setColor( g2D, fillColor, fillOpacity );
     g2D.fillRect( 0, 0, size, size );
 
@@ -357,72 +433,94 @@ public class Mark_Impl implements Mark, Marshallable
   }
 
   /**
+   * Draws a scaled instance of a square mark according to the given parameters.
+   * 
+   * @param size
+   *            resulting image's height and widthh
+   */
+  public void drawSquare( final GC gc, final int size )
+  {
+    gc.fillRectangle( 0, 0, size, size );
+    gc.drawRectangle( 0, 0, size, size );
+  }
+
+  /**
    * Draws a scaled instance of a cross mark (a "+") according to the given parameters.
    * 
    * @param size
-   *          resulting image's height and widthh
+   *            resulting image's height and widthh
    * @param strokeOpacity
-   *          opacity value for the stroked parts of the image
+   *            opacity value for the stroked parts of the image
    * @param strokeColor
-   *          <tt>Color</tt> to be used for the strokes
+   *            <tt>Color</tt> to be used for the strokes
    * @return image displaying a cross (a "+")
    */
-  public BufferedImage drawCross1( int size, double strokeOpacity, Color strokeColor )
+  public void drawCross1( final Graphics2D g2D, final int size, final double strokeOpacity, final Color strokeColor )
   {
-    BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
-
-    Graphics2D g2D = (Graphics2D) image.getGraphics();
-
     setColor( g2D, strokeColor, strokeOpacity );
     g2D.drawLine( 0, size / 2, size - 1, size / 2 );
     g2D.drawLine( size / 2, 0, size / 2, size - 1 );
+  }
 
-    return image;
+  /**
+   * Draws a scaled instance of a cross mark (a "+") according to the given parameters.
+   * 
+   * @param size
+   *            resulting image's height and widthh
+   */
+  public void drawCross1( final GC gc, final int size )
+  {
+    gc.drawLine( 0, size / 2, size - 1, size / 2 );
+    gc.drawLine( size / 2, 0, size / 2, size - 1 );
   }
 
   /**
    * Draws a scaled instance of a cross mark (an "X") according to the given parameters.
    * 
    * @param size
-   *          resulting image's height and widthh
+   *            resulting image's height and widthh
    * @param strokeOpacity
-   *          opacity value for the stroked parts of the image
+   *            opacity value for the stroked parts of the image
    * @param strokeColor
-   *          <tt>Color</tt> to be used for the strokes
+   *            <tt>Color</tt> to be used for the strokes
    * @return image displaying a cross (a "X")
    */
-  public BufferedImage drawCross2( int size, double strokeOpacity, Color strokeColor )
+  public void drawCross2( final Graphics2D g2D, final int size, final double strokeOpacity, final Color strokeColor )
   {
-    BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
-
-    Graphics2D g2D = (Graphics2D) image.getGraphics();
-
     setColor( g2D, strokeColor, strokeOpacity );
     g2D.drawLine( 0, 0, size - 1, size - 1 );
     g2D.drawLine( 0, size - 1, size - 1, 0 );
+  }
 
-    return image;
+  /**
+   * Draws a scaled instance of a cross mark (an "X") according to the given parameters.
+   * 
+   * @param size
+   *            resulting image's height and widthh
+   */
+  public void drawCross2( final GC gc, final int size )
+  {
+    gc.drawLine( 0, 0, size - 1, size - 1 );
+    gc.drawLine( 0, size - 1, size - 1, 0 );
   }
 
   /**
    * Draws a scaled instance of a triangle mark according to the given parameters.
    * 
    * @param size
-   *          resulting image's height and widthh
+   *            resulting image's height and widthh
    * @param fillOpacity
-   *          opacity value for the filled parts of the image
+   *            opacity value for the filled parts of the image
    * @param fillColor
-   *          <tt>Color</tt> to be used for the fill
+   *            <tt>Color</tt> to be used for the fill
    * @param strokeOpacity
-   *          opacity value for the stroked parts of the image
+   *            opacity value for the stroked parts of the image
    * @param strokeColor
-   *          <tt>Color</tt> to be used for the strokes
+   *            <tt>Color</tt> to be used for the strokes
    * @return image displaying a triangle
    */
-  public BufferedImage drawArrow( int size, double fillOpacity, Color fillColor, double strokeOpacity, Color strokeColor )
+  public void drawArrow( final Graphics2D g2D, final int size, final double fillOpacity, final Color fillColor, final double strokeOpacity, final Color strokeColor )
   {
-    final BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
-
     final int middle = size / 2;
     final int triangleBottom = size - size / 8;
     final int triangleLeft = middle - size / 16;
@@ -439,7 +537,6 @@ public class Mark_Impl implements Mark, Marshallable
     x_[2] = triangleRight;
     y_[2] = triangleBottom;
 
-    Graphics2D g2D = (Graphics2D) image.getGraphics();
     setColor( g2D, fillColor, fillOpacity );
     g2D.fillPolygon( x_, y_, 3 );
     setColor( g2D, strokeColor, strokeOpacity );
@@ -447,8 +544,38 @@ public class Mark_Impl implements Mark, Marshallable
 
     /* Draw the line */
     g2D.drawLine( middle, middle, middle, triangleBottom );
+  }
 
-    return image;
+  /**
+   * Draws a scaled instance of a triangle mark according to the given parameters.
+   * 
+   * @param size
+   *            resulting image's height and widthh
+   */
+  public void drawArrow( final GC gc, final int size )
+  {
+    final int middle = size / 2;
+    final int triangleBottom = size - size / 8;
+    final int triangleLeft = middle - size / 16;
+    final int triangleRight = middle + size / 16;
+    final int triangleTop = size;
+
+    /* Draw the triangle */
+    final int[] points = new int[8];
+    points[0] = triangleLeft;
+    points[1] = triangleBottom;
+    points[2] = middle;
+    points[3] = triangleTop;
+    points[4] = triangleRight;
+    points[5] = triangleBottom;
+    points[6] = triangleLeft;
+    points[7] = triangleBottom;
+
+    gc.fillPolygon( points );
+    gc.drawPolygon( points );
+
+    /* Draw the line */
+    gc.drawLine( middle, middle, middle, triangleBottom );
   }
 
   /**
@@ -456,7 +583,7 @@ public class Mark_Impl implements Mark, Marshallable
    * @param color
    * @param opacity
    */
-  private void setColor( Graphics2D g2D, Color color, double opacity )
+  private void setColor( final Graphics2D g2D, Color color, final double opacity )
   {
     if( opacity < 0.999 )
     {
@@ -479,20 +606,20 @@ public class Mark_Impl implements Mark, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Mark>" );
-    if( wellKnownName != null && !wellKnownName.equals( "" ) )
+    if( m_wellKnownName != null && !m_wellKnownName.equals( "" ) )
     {
-      sb.append( "<WellKnownName>" ).append( wellKnownName );
+      sb.append( "<WellKnownName>" ).append( m_wellKnownName );
       sb.append( "</WellKnownName>" );
     }
-    if( fill != null )
+    if( m_fill != null )
     {
-      sb.append( ((Marshallable) fill).exportAsXML() );
+      sb.append( ((Marshallable) m_fill).exportAsXML() );
     }
-    if( stroke != null )
+    if( m_stroke != null )
     {
-      sb.append( ((Marshallable) stroke).exportAsXML() );
+      sb.append( ((Marshallable) m_stroke).exportAsXML() );
     }
 
     sb.append( "</Mark>" );
@@ -500,69 +627,4 @@ public class Mark_Impl implements Mark, Marshallable
     Debug.debugMethodEnd();
     return sb.toString();
   }
-
-  // private void drawUnicode(Graphics2D g2, int x, int y, double rotation,
-  // double size, String m, Mark mark) {
-  // int sz = (int)size;
-  // double fo = mark.getFill().getOpacity();
-  // double so = mark.getStroke().getOpacity();
-  //        
-  // java.awt.Font font = new java.awt.Font("sans serif", java.awt.Font.PLAIN,
-  // sz);
-  // g2.setFont( font );
-  // FontMetrics fm = g2.getFontMetrics();
-  //        
-  // char c = (char)m.charAt(0);
-  // int w = fm.charWidth(c);
-  // int h = fm.getHeight();
-  //        
-  // g2 = setColor( g2, mark.getFill().getFill(), fo );
-  // g2.fillRect( x-w/2, y-h/2, w, h);
-  // g2 = setColor( g2, mark.getStroke().getStroke(), so );
-  //        
-  // String s = "" + c;
-  // g2.drawString( s, x-w/2, y+h/2-fm.getDescent());
-  // }
-  // else {
-  //            
-  // Mark[] marks = sym.getGraphic().getMarks();
-  // double rotation = sym.getGraphic().getRotation();
-  // double size = sym.getGraphic().getSize();
-  // if (marks != null) {
-  //                
-  // for (int k = 0; k > marks.length; k++) {
-  //                    
-  // float w = (float)marks[k].getStroke().getWidth();
-  // g2.setStroke( new BasicStroke( w ) );
-  //                    
-  // if (marks[k].getWellKnownName().equalsIgnoreCase("triangle") ) {
-  // drawTriangle( g2, x, y, rotation, size, marks[k] );
-  // }
-  // else
-  // if (marks[k].getWellKnownName().equalsIgnoreCase("circle") ) {
-  // drawCircle( g2, x, y, rotation, size, marks[k] );
-  // }
-  // else
-  // if (marks[k].getWellKnownName().equalsIgnoreCase("square") ) {
-  // drawSquare( g2, x, y, rotation, size, marks[k] );
-  // }
-  // else
-  // if (marks[k].getWellKnownName().equalsIgnoreCase("cross") ) {
-  // drawCross1( g2, x, y, rotation, size, marks[k] );
-  // }
-  // else
-  // if (marks[k].getWellKnownName().equalsIgnoreCase("x") ) {
-  // drawCross2( g2, x, y, rotation, size, marks[k] );
-  // }
-  // else
-  // if (marks[k].getWellKnownName().length() == 0 ) {
-  // drawSquare( g2, x, y, rotation, size, marks[k] );
-  // }
-  // else {
-  // drawUnicode( g2, x, y, rotation, size,
-  // marks[k].getWellKnownName(), marks[k] );
-  // }
-  // }
-  // }
-  // }
 }
