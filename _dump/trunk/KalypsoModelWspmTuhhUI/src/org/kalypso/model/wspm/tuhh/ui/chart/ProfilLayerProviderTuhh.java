@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
+import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -74,7 +75,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     m_layers.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     m_layers.add( IWspmTuhhConstants.LAYER_GELAENDE );
     m_layers.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
-    m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT );
+    m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
+    m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
+    m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
     m_layers.add( IWspmTuhhConstants.LAYER_BRUECKE );
     m_layers.add( IWspmTuhhConstants.LAYER_WEHR );
     m_layers.add( IWspmTuhhConstants.LAYER_KREIS );
@@ -111,8 +114,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       addableLayer.add( IWspmTuhhConstants.LAYER_GELAENDE );
     if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
-    if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT ) )
-      addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT );
+    if(existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW )||!existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
+      addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
+    if(existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW )|| !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
+      addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
     if( !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_DEVIDER );
     if( (view.getResults().length > 0) && !existingLayers.contains( IWspmTuhhConstants.LAYER_WASSERSPIEGEL ) )
@@ -156,15 +161,25 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new GelaendeLayer( view ) };
     }
-    
-    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
-    {
-      final IProfilChange[] changes = new IProfilChange[1];
-      changes[0] = new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT, 0 );
 
-      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), changes, true );
+    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
+    {
+      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), true );
+      if( !profil.hasPointProperty( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) )
+        operation.addChange( new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT, 0 ) );
+      operation.addChange( new ProfilPropertyEdit( profil, IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS ) );
       new ProfilOperationJob( operation ).schedule();
-      return new IProfilChartLayer[] { new RauheitLayer( view ) };
+      return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" ) };
+    }
+
+    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
+    {
+      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), true );
+      if( !profil.hasPointProperty( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) )
+        operation.addChange( new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT, 0 ) );
+      operation.addChange( new ProfilPropertyEdit( profil, IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KST ) );
+      new ProfilOperationJob( operation ).schedule();
+      return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-kst" ) };
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
@@ -226,7 +241,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new EiBuildingLayer( view ) };
     }
-    
+
     return getLayer( layerId, view );
   }
 
@@ -270,17 +285,24 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
     /* We always have a trenner layer, even if no trenner is defined. */
     layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
-    
+
     if( profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( view.getResults().length > 0 )
       layerToAdd.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
     if( profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
-      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT );
+    {
+      if( IWspmTuhhConstants.RAUHEIT_TYP_KS.equals( profile.getProperty( IWspmTuhhConstants.RAUHEIT_TYP ) ) )
+        layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
+      else if( IWspmTuhhConstants.RAUHEIT_TYP_KST.equals( profile.getProperty( IWspmTuhhConstants.RAUHEIT_TYP ) ) )
+        layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
+    }
+    if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
+    {
+      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
+    }
     return layerToAdd.toArray( new String[0] );
   }
-
- 
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getLayer(java.lang.String)
@@ -300,9 +322,17 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       return new IProfilChartLayer[] { new GelaendeLayer( view ) };
     }
 
-    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
     {
-      return new IProfilChartLayer[] { new RauheitLayer( view ) };
+      return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" ) };
+    }
+    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
+    {
+      return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-kst" ) };
+    }
+    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW ) )
+    {
+      return new IProfilChartLayer[] { new SimpleRauheitLayer( view, layerId, "Rauheit" ) };
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {

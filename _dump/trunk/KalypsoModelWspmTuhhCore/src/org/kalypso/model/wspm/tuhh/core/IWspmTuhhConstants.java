@@ -170,7 +170,11 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_WASSERSPIEGEL = PROFILE_LAYER + "WASSERSPIEGEL";
 
-  public static String LAYER_RAUHEIT = PROFILE_LAYER + "RAUHEIT";
+  public static String LAYER_RAUHEIT_KST = PROFILE_LAYER + "RAUHEIT_KST";
+
+  public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
+  
+  public static String LAYER_RAUHEIT_QUICKVIEW = PROFILE_LAYER + "RAUHEIT_QUICKVIEW";
 
   public static String LAYER_BRUECKE = PROFILE_LAYER + "BRUECKE";
 
@@ -192,7 +196,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
    * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
    */
 
-  public static String LAYER_RAUHEIT_COLOR_BACKGROUND = LAYER_RAUHEIT + "_COLOR_BACKGROUND";
+  public static String LAYER_RAUHEIT_COLOR_BACKGROUND = PROFILE_LAYER + "RAUHEIT_COLOR_BACKGROUND";
 
   public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
 

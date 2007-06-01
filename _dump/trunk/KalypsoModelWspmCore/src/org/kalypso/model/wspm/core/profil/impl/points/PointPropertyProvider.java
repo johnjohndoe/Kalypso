@@ -71,6 +71,9 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
    */
   public String[] getPointProperties( )
   {
+    /**
+     * the order in the array is the columnsort_order in the tableview
+     */
     return new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT,
         IWspmConstants.POINT_PROPERTY_RAUHEIT, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP };
   }
@@ -93,7 +96,6 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
       return new PointProperty( property, "Hochwert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_RECHTSWERT }, true, true );
     if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT ) )
       return new PointProperty( property, "Rauheit", 0.0001, new String[0], false, false );
-
     return null;
   }
 
