@@ -467,5 +467,23 @@
                  visible="true">
            </separator>
         </menuContribution>
-     </extension>     
+     </extension>
+  <extension
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           id="org.kalypso.kalypsomodel1d2d.objectContribution.discretisationmodel"
+           objectClass="org.kalypsodeegree.model.feature.Feature">
+        <filter
+              name="featureType"
+              value="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d#DiscretisationModel">
+        </filter>
+        <action
+              class="org.kalypso.kalypsomodel1d2d.actions.ExportDiscrModelaction"
+              icon="icons/obj16/DiscrModelExport.gif"
+              id="org.kalypso.kalypsomodel1d2d.discretisationmodel.action"
+              label="Modell exportieren"
+              tooltip="exportiert das DiscretisationModel">
+        </action>
+     </objectContribution>
+  </extension>     
 </plugin>
