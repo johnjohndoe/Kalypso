@@ -56,10 +56,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Thomas Jung
  */
-public class NodeResult extends AbstractFeatureBinder
+public class NodeResult extends AbstractFeatureBinder implements INodeResult
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
-
   private static final QName QNAME_PROP_CALCID = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "calcId" );
   private static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" );
   private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
@@ -101,5 +99,12 @@ public class NodeResult extends AbstractFeatureBinder
   {
     getFeature().setProperty( QNAME_PROP_MIDSIDE, isMidSide );
   }
+
+  public GM_Point getPoint( )
+  {
+    return (GM_Point) getFeature().getProperty( NodeResult.QNAME_PROP_LOCATION );
+  }
+
+
 
 }
