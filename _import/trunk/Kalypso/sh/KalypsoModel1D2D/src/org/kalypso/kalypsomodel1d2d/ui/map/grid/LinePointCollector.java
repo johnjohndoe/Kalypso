@@ -52,7 +52,6 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -79,31 +78,32 @@ public class LinePointCollector
    */
   private int m_cnt_points;
 
-  private List<MutableGMPoint> m_points = new ArrayList<MutableGMPoint>();
+  private final List<MutableGMPoint> m_points = new ArrayList<MutableGMPoint>();
 
   private CS_CoordinateSystem m_crs;
-  
-  private boolean isFinished=false;
-  private boolean isSelected=false;
-  
-  private int[][] drawPoints;
-  private int highlightDeltaX=1;
-//  private int pointRectSize = 6;
 
-  private int selection=-1;
-  
+  private boolean isFinished = false;
+
+  private boolean isSelected = false;
+
+  private int[][] drawPoints;
+
+  private final int highlightDeltaX = 1;
+
+// private int pointRectSize = 6;
+
+  private int selection = -1;
+
   /**
    * The constructor.
    * 
    * @param cnt_points
-   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *          count of the points will apply.
+   *            If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
+   *            count of the points will apply.
    * @param targetCrs
-   *          The target coordinate system.
+   *            The target coordinate system.
    */
-  public LinePointCollector( 
-              final int cnt_points, 
-              final CS_CoordinateSystem targetCrs )
+  public LinePointCollector( final int cnt_points, final CS_CoordinateSystem targetCrs )
   {
     m_cnt_points = 0;
 
@@ -115,12 +115,12 @@ public class LinePointCollector
 
   public GM_Object addPoint( GM_Point p ) throws Exception
   {
-    if(!(p instanceof MutableGMPoint))
+    if( !(p instanceof MutableGMPoint) )
     {
-      p=new MutableGMPoint(p);
+      p = new MutableGMPoint( p );
     }
-    
-    m_points.add( (MutableGMPoint)p );
+
+    m_points.add( (MutableGMPoint) p );
 
     if( m_points.size() == m_cnt_points )
     {
@@ -134,37 +134,34 @@ public class LinePointCollector
 
   public GM_Object finish( ) throws Exception
   {
-    int size=m_points.size();
-    
-    if(size==0)
+    final int size = m_points.size();
+
+    if( size == 0 )
     {
-      //to avoid empty lines
-      return null;
-    }
-    
-    if( ((m_points.size() == m_cnt_points) && m_cnt_points!=0) || (m_cnt_points == 0) )
-    {
-      m_cnt_points=m_points.size();
-      isFinished=true;
-      return getLastPoint();
-      //FIXME changed to prevent the curve geometry not to be drawn
-//      return createGeometry( poses );
-    }
-    else
-    {
-      System.out.println("Bad finishing");
+      // to avoid empty lines
       return null;
     }
 
-    
+    if( ((m_points.size() == m_cnt_points) && m_cnt_points != 0) || (m_cnt_points == 0) )
+    {
+      m_cnt_points = m_points.size();
+      isFinished = true;
+      return getLastPoint();
+      // FIXME changed to prevent the curve geometry not to be drawn
+// return createGeometry( poses );
+    }
+    else
+    {
+      System.out.println( "Bad finishing" );
+      return null;
+    }
+
   }
 
   /**
    * This function creates the geometry (GM_Curve).
    */
-  private GM_Object createGeometry( 
-                        final GM_Position[] poses ) 
-                        throws GM_Exception
+  private GM_Object createGeometry( final GM_Position[] poses ) throws GM_Exception
   {
     return GeometryFactory.createGM_Curve( poses, m_crs );
   }
@@ -173,89 +170,79 @@ public class LinePointCollector
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
-  public void paint( 
-                  final Graphics g, 
-                  final GeoTransform projection, 
-                  final Point currentPoint,
-                  final int pointRectSize)
+  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint, final int pointRectSize )
   {
-    
-//    Color curColor=g.getColor();
-//    g.setColor( Color.BLUE );
-    
+
+// Color curColor=g.getColor();
+// g.setColor( Color.BLUE );
+
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
     if( !m_points.isEmpty() )
     {
 
-      if(isSelected)
+      if( isSelected )
       {
         final int[][] points = getPointArrays( projection, null );
-        int[][] polygonPoints = toPolygonPoints(points,highlightDeltaX );
-        
+        final int[][] polygonPoints = toPolygonPoints( points, highlightDeltaX );
+
         g.drawPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
         g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
-       
-        drawHandles( g, points[0], points[1],pointRectSize,selection );
+
+        drawHandles( g, points[0], points[1], pointRectSize, selection );
       }
       else
       {
-        //draw a line
+        // draw a line
         final int[][] points = getPointArrays( projection, currentPoint );
         final int[] arrayX = points[0];
         final int[] arrayY = points[1];
-  
+
         /* Paint a linestring. */
         g.drawPolyline( arrayX, arrayY, arrayX.length );
-        
-       
 
-          //paintLine(g, projection, width , color );
-//        if(!isFinished)
-//        {
-          //do not draw handle if finish and not selected
-          drawHandles( g, arrayX, arrayY, pointRectSize,selection );
-//        }
-        
-        drawPoints=points;
+        // paintLine(g, projection, width , color );
+// if(!isFinished)
+// {
+        // do not draw handle if finish and not selected
+        drawHandles( g, arrayX, arrayY, pointRectSize, selection );
+// }
+
+        drawPoints = points;
       }
-    }    
+    }
   }
-  
-  private static final int[][] toPolygonPoints(
-                                      int[][] originalPoint,
-                                      int deltaY)
+
+  private static final int[][] toPolygonPoints( final int[][] originalPoint, final int deltaY )
   {
-    if(originalPoint==null)
+    if( originalPoint == null )
     {
       Assert.throwIAEOnNull( originalPoint, null );
     }
-    
-    int SIZE=originalPoint[0].length;
-    if(SIZE==0)
+
+    final int SIZE = originalPoint[0].length;
+    if( SIZE == 0 )
     {
-      return new int[][]{};
+      return new int[][] {};
     }
     else
     {
-      int[][] polyPoints= new int[2][SIZE+SIZE];
-      
-      for(int i=0, opposite=SIZE+SIZE-1;i<SIZE;i++, opposite--)
+      final int[][] polyPoints = new int[2][SIZE + SIZE];
+
+      for( int i = 0, opposite = SIZE + SIZE - 1; i < SIZE; i++, opposite-- )
       {
-        polyPoints[0][i]=originalPoint[0][i];
-        polyPoints[1][i]=originalPoint[1][i]+deltaY;
-        
-        polyPoints[0][opposite]=originalPoint[0][i];
-        polyPoints[1][opposite]=originalPoint[1][i]-deltaY;        
+        polyPoints[0][i] = originalPoint[0][i];
+        polyPoints[1][i] = originalPoint[1][i] + deltaY;
+
+        polyPoints[0][opposite] = originalPoint[0][i];
+        polyPoints[1][opposite] = originalPoint[1][i] - deltaY;
       }
       return polyPoints;
     }
   }
 
-  private int[][] getPointArrays( 
-                      final GeoTransform projection, 
-                      final Point currentPoint )
+  private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
   {
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
@@ -283,27 +270,18 @@ public class LinePointCollector
     return new int[][] { xs, ys };
   }
 
-  private static final void drawHandles( 
-                            final Graphics g, 
-                            final int[] x, 
-                            final int[] y ,
-                            final int pointRectWidth,
-                            final int selection)
+  private static final void drawHandles( final Graphics g, final int[] x, final int[] y, final int pointRectWidth, final int selection )
   {
-    final Color oldColor=g.getColor();
+    final Color oldColor = g.getColor();
     g.setColor( oldColor.darker() );
-    //int sizeOuter = 4;
-    int halfRectWidth=pointRectWidth/2;
-    
-    if(selection<0)
+    // int sizeOuter = 4;
+    final int halfRectWidth = pointRectWidth / 2;
+
+    if( selection < 0 )
     {
       for( int i = 0; i < y.length; i++ )
       {
-        g.drawRect( 
-              x[i] - halfRectWidth, 
-              y[i] - halfRectWidth, 
-              pointRectWidth, 
-              pointRectWidth );
+        g.drawRect( x[i] - halfRectWidth, y[i] - halfRectWidth, pointRectWidth, pointRectWidth );
       }
     }
     else
@@ -311,107 +289,100 @@ public class LinePointCollector
       int i;
       for( i = 0; i < selection; i++ )
       {
-        g.drawRect( 
-              x[i] - halfRectWidth, 
-              y[i] - halfRectWidth, 
-              pointRectWidth, 
-              pointRectWidth );
+        g.drawRect( x[i] - halfRectWidth, y[i] - halfRectWidth, pointRectWidth, pointRectWidth );
       }
-      //is is now selection 
-      g.drawOval( 
-          x[i]-pointRectWidth,//halfRectWidth, 
-          y[i]-pointRectWidth,//halfRectWidth, 
-          pointRectWidth+pointRectWidth, 
-          pointRectWidth+pointRectWidth );
+      // is is now selection
+      g.drawOval( x[i] - pointRectWidth,// halfRectWidth,
+      y[i] - pointRectWidth,// halfRectWidth,
+      pointRectWidth + pointRectWidth, pointRectWidth + pointRectWidth );
       i++;
       for( ; i < y.length; i++ )
       {
-        g.drawRect( 
-              x[i] - halfRectWidth, 
-              y[i] - halfRectWidth, 
-              pointRectWidth, 
-              pointRectWidth );
+        g.drawRect( x[i] - halfRectWidth, y[i] - halfRectWidth, pointRectWidth, pointRectWidth );
       }
     }
     g.setColor( oldColor );
   }
-  
+
   /**
-   * removes all points in this {@link LineGeometryBuilder} 
+   * removes all points in this {@link LineGeometryBuilder}
    * 
    */
-  void clear()
+  void clear( )
   {
     m_points.clear();
-    isFinished=false;
+    isFinished = false;
     m_cnt_points = 0;
   }
-  
-  void reset(CS_CoordinateSystem crs)
+
+  void reset( final CS_CoordinateSystem crs )
   {
     m_points.clear();
-    isFinished=false;
-    isSelected=false;
-    m_cnt_points=0;
-    m_crs=crs;
+    isFinished = false;
+    isSelected = false;
+    m_cnt_points = 0;
+    m_crs = crs;
   }
-  
-  void removeLastPoint(boolean doDelFirstPoint)
+
+  void removeLastPoint( final boolean doDelFirstPoint )
   {
-    int index=m_points.size()-1;
-    
-    if(index>0)
+    final int index = m_points.size() - 1;
+
+    if( index > 0 )
     {
-      
+
       m_points.remove( index );
     }
-    else if(index==0)
+    else if( index == 0 )
     {
-      if(doDelFirstPoint)
+      if( doDelFirstPoint )
       {
         m_points.remove( index );
       }
     }
-      
-    isFinished=false;
+
+    isFinished = false;
   }
-  
+
   /**
-   * Conevniance methode to get a new builder with the same required
-   * number of point and coordinate reference system
-   * @param return a new builder
+   * Conevniance methode to get a new builder with the same required number of point and coordinate reference system
+   * 
+   * @param return
+   *            a new builder
    */
-  public LinePointCollector getNewBuilder()
+  public LinePointCollector getNewBuilder( )
   {
-    return new LinePointCollector(m_cnt_points,m_crs);
+    return new LinePointCollector( m_cnt_points, m_crs );
   }
-  
+
   /**
    * Returns the last point in this {@link LineGeometryBuilder}
+   * 
    * @return the last point included in this {@link LineGeometryBuilder}
    */
-  public GM_Point getLastPoint()
+  public GM_Point getLastPoint( )
   {
-    int size=m_points.size();
-    if(size>0)
+    final int size = m_points.size();
+    if( size > 0 )
     {
-      return m_points.get( size-1 );
+      return m_points.get( size - 1 );
     }
     else
     {
       return null;
     }
   }
-  
+
   /**
    * To get the first point included in this geometry builder
+   * 
    * @return the first point in this geometry builder
    */
-  public GM_Point getFirstPoint()
+  public GM_Point getFirstPoint( )
   {
-    int size=m_points.size();
-    
-    if(size>0)
+    final int size = m_points.size();
+
+    if( size > 0 )
     {
       return m_points.get( 0 );
     }
@@ -420,270 +391,258 @@ public class LinePointCollector
       return null;
     }
   }
-  
+
   /**
-   * To set the number of points the this line geometry
-   * is required to have to be considered finished
-   * @param cntPoints the new required number of points
-   *  
+   * To set the number of points the this line geometry is required to have to be considered finished
+   * 
+   * @param cntPoints
+   *            the new required number of points
+   * 
    */
-  public void setCntPoints(int cntPoints)
+  public void setCntPoints( final int cntPoints )
   {
-    m_cnt_points=cntPoints;
-    final int SIZE=m_points.size();
-    
-    if(SIZE>cntPoints && cntPoints!=0)
+    m_cnt_points = cntPoints;
+    final int SIZE = m_points.size();
+
+    if( SIZE > cntPoints && cntPoints != 0 )
     {
-      //trim the size to cnt_points if the array 
-      //already contain more than cntPoints elements
-      
-      for(int i=SIZE-1;i>=cntPoints ;i--)
+      // trim the size to cnt_points if the array
+      // already contain more than cntPoints elements
+
+      for( int i = SIZE - 1; i >= cntPoints; i-- )
       {
-        System.out.println("Removing extra points:"+i);
+        System.out.println( "Removing extra points:" + i );
         m_points.remove( i );
       }
     }
   }
-  
-  public int getPointCnt()
+
+  public int getPointCnt( )
   {
     return m_cnt_points;
   }
-  
-  
-  
+
   /**
-   * Return the number of points already in this 
-   * {@link LineGeometryBuilder}
-   * @return the number of points allready included in the line
-   *    geometry
+   * Return the number of points already in this {@link LineGeometryBuilder}
+   * 
+   * @return the number of points allready included in the line geometry
    */
-  public int getCurrentPointCnt()
+  public int getCurrentPointCnt( )
   {
     return m_points.size();
   }
-  
-  
+
   /**
-   * Return the remaining number of point to add 
-   * to this {@link LineGeometryBuilder} to reach the expected
-   * number of points 
+   * Return the remaining number of point to add to this {@link LineGeometryBuilder} to reach the expected number of
+   * points
    * 
-   * @return the actual of number of point remaining for completion
-   *  or {@link Integer#MAX_VALUE} if the required number of point
-   *  was set to a zero or negativ integer     
+   * @return the actual of number of point remaining for completion or {@link Integer#MAX_VALUE} if the required number
+   *         of point was set to a zero or negativ integer
    */
-  public int getRemainingPointCnt()
+  public int getRemainingPointCnt( )
   {
-    if(m_cnt_points<=0)
+    if( m_cnt_points <= 0 )
     {
       return Integer.MAX_VALUE;
     }
     else
     {
-      return m_cnt_points-m_points.size();
+      return m_cnt_points - m_points.size();
     }
   }
-  
-  public void replaceLastPoint(GM_Point point)
+
+  public void replaceLastPoint( final GM_Point point )
   {
-    int index=m_points.size()-1;
-    if(index>0)
+    final int index = m_points.size() - 1;
+    if( index > 0 )
     {
-      //m_points.set( index, point );
+      // m_points.set( index, point );
       m_points.get( index ).setPoint( point );
     }
     else
     {
-      if(point instanceof MutableGMPoint)
+      if( point instanceof MutableGMPoint )
       {
-        m_points.add((MutableGMPoint)point);
+        m_points.add( (MutableGMPoint) point );
       }
       else
       {
-        m_points.add( new MutableGMPoint(point) );
+        m_points.add( new MutableGMPoint( point ) );
       }
     }
   }
-  
-  public void changeSelected(GM_Point point)
+
+  public void changeSelected( final GM_Point point )
   {
-    if(selection>=0)
+    if( selection >= 0 )
     {
-      //m_points.set( selection, point );
+      // m_points.set( selection, point );
       m_points.get( selection ).setPoint( point );
-      
+
     }
     else
     {
-      System.out.println("selection="+selection);
+      System.out.println( "selection=" + selection );
     }
-    
+
   }
-  
+
   public GM_Point getSelectedPoint( )
   {
-    if(selection>=0)
+    if( selection >= 0 )
     {
-      return m_points.get( selection);
+      return m_points.get( selection );
     }
     else
     {
       return null;
     }
-    
+
   }
-  
-  public GM_Point getPointAt(int index)
+
+  public GM_Point getPointAt( final int index )
   {
-    return m_points.get( index );    
+    return m_points.get( index );
   }
-  
-  public void clearSelection()
+
+  public void clearSelection( )
   {
-    selection=-1;
+    selection = -1;
   }
-  
-  private int selectPoint(
-                    GM_Point lowerCorner, 
-                    GM_Point upperCorner)
+
+  private int selectPoint( final GM_Point lowerCorner, final GM_Point upperCorner )
   {
-    if(!isSelected)
+    if( !isSelected )
     {
-      selection=-1;
+      selection = -1;
       return -1;
     }
-    
-    final double lowX=lowerCorner.getX();
-    final double lowY=lowerCorner.getY();
-    
-    final double upperX=upperCorner.getX();
-    final double upperY=upperCorner.getY();
-    
-    final int SIZE=m_points.size();
+
+    final double lowX = lowerCorner.getX();
+    final double lowY = lowerCorner.getY();
+
+    final double upperX = upperCorner.getX();
+    final double upperY = upperCorner.getY();
+
+    final int SIZE = m_points.size();
     GM_Point curPoint;
     double curCoordY, curCoordX;
-    for(int i=0;i<SIZE;i++)
+    for( int i = 0; i < SIZE; i++ )
     {
-      curPoint=m_points.get( i );
-      curCoordX=curPoint.getX();
-      if(lowX<=curCoordX && upperX>=curCoordX)
+      curPoint = m_points.get( i );
+      curCoordX = curPoint.getX();
+      if( lowX <= curCoordX && upperX >= curCoordX )
       {
-        curCoordY=curPoint.getY();
-        if(lowY<=curCoordY && upperY>=curCoordY)
+        curCoordY = curPoint.getY();
+        if( lowY <= curCoordY && upperY >= curCoordY )
         {
-          selection=i;
+          selection = i;
           return i;
         }
       }
     }
-    selection=-1;
+    selection = -1;
     return -1;
   }
-  
-  public int selectPoint(
-              GM_Point lowerCorner, 
-              double squareWidth)
+
+  public int selectPoint( final GM_Point lowerCorner, final double squareWidth )
   {
-    if(!isSelected)
+    if( !isSelected )
     {
-    selection=-1;
-    return -1;
+      selection = -1;
+      return -1;
     }
-    
-    double halfWidth=squareWidth/2;
-    final double lowX=lowerCorner.getX()-halfWidth;
-    final double lowY=lowerCorner.getY()-halfWidth;
-    
-    final double upperX=lowX+squareWidth;
-    final double upperY=lowY+squareWidth;
-    
-    final int SIZE=m_points.size();
+
+    final double halfWidth = squareWidth / 2;
+    final double lowX = lowerCorner.getX() - halfWidth;
+    final double lowY = lowerCorner.getY() - halfWidth;
+
+    final double upperX = lowX + squareWidth;
+    final double upperY = lowY + squareWidth;
+
+    final int SIZE = m_points.size();
     GM_Point curPoint;
     double curCoordY, curCoordX;
-    double distance=Double.MAX_VALUE;
-    int nextSel=-1;
-    
-    
-    for(int i=0;i<SIZE;i++)
+    final double distance = Double.MAX_VALUE;
+    int nextSel = -1;
+
+    for( int i = 0; i < SIZE; i++ )
     {
-      curPoint=m_points.get( i );
-      curCoordX=curPoint.getX();
-      if(lowX<=curCoordX && upperX>=curCoordX)
+      curPoint = m_points.get( i );
+      curCoordX = curPoint.getX();
+      if( lowX <= curCoordX && upperX >= curCoordX )
       {
-        curCoordY=curPoint.getY();
-        if(lowY<=curCoordY && upperY>=curCoordY)
+        curCoordY = curPoint.getY();
+        if( lowY <= curCoordY && upperY >= curCoordY )
         {
-          if(distance>curPoint.distance( lowerCorner ))
+          if( distance > curPoint.distance( lowerCorner ) )
           {
-            nextSel=i;
+            nextSel = i;
           }
-          
+
         }
       }
     }
-    
-    selection=nextSel;
+
+    selection = nextSel;
     return selection;
   }
-  
+
   /**
    * Mark the {@link LineGeometryBuilder} as selected
-   * @param isSelected -- a boolean expressing the selection state
-   *    of the {@link LineGeometryBuilder}
-   *    
+   * 
+   * @param isSelected --
+   *            a boolean expressing the selection state of the {@link LineGeometryBuilder}
+   * 
    */
   public void setSelected( boolean isSelected )
   {
     this.isSelected = isSelected;
-    if(!isSelected)
+    if( !isSelected )
     {
-      selection=-1;
+      selection = -1;
     }
   }
-  
-  //TODO move this method to the grid colector
-  public double getHandleWidthAsWorldDistance(
-                                      MapPanel mapPanel,
-                                      int pointRectSize)
+
+  // TODO move this method to the grid colector
+  public double getHandleWidthAsWorldDistance( final MapPanel mapPanel, final int pointRectSize )
   {
-    if ( m_points.size()>0)
-    return MapUtilities.calculateWorldDistance( 
-                mapPanel, m_points.get( 0 ), pointRectSize );
+    if( m_points.size() > 0 )
+      return MapUtilities.calculateWorldDistance( mapPanel, m_points.get( 0 ), pointRectSize );
     else
       return 0;
   }
 
-  public void removeMaxNum()
+  public void removeMaxNum( )
   {
     m_cnt_points = 0;
   }
-  
-  public boolean isSelected()
+
+  public boolean isSelected( )
   {
     return isSelected;
   }
-  
-  public void paintLine( final Graphics g, final GeoTransform projection, double width, Color color ) 
+
+  public void paintLine( final Graphics g, final GeoTransform projection, final double width, final Color color )
   {
     final GM_Position[] positions = new GM_Position[m_points.size()];
-    
+
     for( int i = 0; i < positions.length; i++ )
     {
       positions[i] = m_points.get( i ).getPosition();
     }
-    
+
     GM_Curve curve = null;
     try
     {
       curve = GeometryFactory.createGM_Curve( positions, m_crs );
     }
-    catch( GM_Exception e1 )
+    catch( final GM_Exception e1 )
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-    
+
     if( curve == null )
       return;
 
@@ -700,24 +659,13 @@ public class LinePointCollector
     // stroke.setDashArray( dArray );
     symb.setStroke( stroke );
 
-
     final DisplayElement de;
-    try
-    {
-      de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-      de.paint( g, projection );
-    }
-    catch( IncompatibleGeometryTypeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
- 
+    de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+    de.paint( g, projection );
 
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );
 
   }
-  
-  
+
 }

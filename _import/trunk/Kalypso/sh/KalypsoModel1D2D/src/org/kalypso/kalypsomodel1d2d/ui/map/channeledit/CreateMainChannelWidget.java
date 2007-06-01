@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,7 +66,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-
 
 /**
  * @author Thomas Jung
@@ -139,16 +137,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       final WspmProfile profile = new WspmProfile( feature );
       final GM_Curve line = profile.getLine();
 
-      try
-      {
-        final LineSymbolizer symb = getProfilLineSymbolizer( new Color ( 255, 255, 0));
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
-        de.paint( g, getMapPanel().getProjection() );
-      }
-      catch( final IncompatibleGeometryTypeException e )
-      {
-        e.printStackTrace();
-      }
+      final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );
+      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
+      de.paint( g, getMapPanel().getProjection() );
     }
 
     paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
@@ -181,7 +172,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   }
 
-  private void drawIntersProfiles( Graphics g, Color color )
+  private void drawIntersProfiles( final Graphics g, final Color color )
   {
     if( m_data.getSelectedSegment() != 0 )
     {
@@ -192,7 +183,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     }
   }
 
-  private void drawIntersPoints( Graphics g, Color color )
+  private void drawIntersPoints( final Graphics g, final Color color )
   {
     if( m_data.getSelectedSegment() != 0 )
     {
@@ -210,32 +201,25 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     {
       final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
 
-      try
-      {
-        final LineSymbolizer symb = new LineSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+      final LineSymbolizer symb = new LineSymbolizer_Impl();
+      final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
 
-        Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+      Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
 
-        defaultstroke = symb.getStroke();
+      defaultstroke = symb.getStroke();
 
-        stroke.setWidth( 1 );
-        stroke.setStroke( color );
-        symb.setStroke( stroke );
+      stroke.setWidth( 1 );
+      stroke.setStroke( color );
+      symb.setStroke( stroke );
 
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
-        de.paint( g, getMapPanel().getProjection() );
+      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
+      de.paint( g, getMapPanel().getProjection() );
 
-        symb.setStroke( defaultstroke );
-      }
-      catch( final IncompatibleGeometryTypeException e )
-      {
-        e.printStackTrace();
-      }
+      symb.setStroke( defaultstroke );
     }
   }
 
-  private LineSymbolizer getProfilLineSymbolizer( Color color )
+  private LineSymbolizer getProfilLineSymbolizer( final Color color )
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
@@ -250,7 +234,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
   }
@@ -267,7 +251,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
   {
     return true;
   }
@@ -277,7 +261,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
   @Override
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.clickPopup( p );
@@ -288,7 +272,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
-  public void doubleClickedLeft( Point p )
+  public void doubleClickedLeft( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.doubleClickedLeft( p );
@@ -299,7 +283,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
   @Override
-  public void doubleClickedRight( Point p )
+  public void doubleClickedRight( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.doubleClickedRight( p );
@@ -310,13 +294,13 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.dragged( p );
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
@@ -339,153 +323,153 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
-//    int code = e.getKeyCode();
-    MapPanel mapPanel = getMapPanel();
+// int code = e.getKeyCode();
+    final MapPanel mapPanel = getMapPanel();
 
     MapKeyNavigator.navigateOnKeyEvent( mapPanel, e, true );
     // TODO:
     // zoom in "-"
 
-//    if( e.isActionKey() )
-//    {
-//      System.out.println( "e:" + e );
-//    }
-//    /* zoom in */
-//    if( code == KeyEvent.VK_PLUS )
-//    {
-////      if( e.isShiftDown() )
-////      {
-//        final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+// if( e.isActionKey() )
+// {
+// System.out.println( "e:" + e );
+// }
+// /* zoom in */
+// if( code == KeyEvent.VK_PLUS )
+// {
+// // if( e.isShiftDown() )
+// // {
+// final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 //
-//        GM_Envelope wishBBox = null;
+// GM_Envelope wishBBox = null;
 //
-//        final GM_Position currentMax = currentBBox.getMax();
-//        final GM_Position currentMin = currentBBox.getMin();
+// final GM_Position currentMax = currentBBox.getMax();
+// final GM_Position currentMin = currentBBox.getMin();
 //
-//        final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-//        final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-//        final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-//        final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+// final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+// final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+// final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+// final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
 //
-//        final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-//        final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+// final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+// final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
 //
-//        wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+// wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
 //
-//        mapPanel.setBoundingBox( wishBBox );
-////      }
-////      else
-////      {
-////        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
-////      }
+// mapPanel.setBoundingBox( wishBBox );
+// // }
+// // else
+// // {
+// // mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+// // }
 //
-//    }
-//    /* zoom out */
-//    else if( code == KeyEvent.VK_MINUS )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+// }
+// /* zoom out */
+// else if( code == KeyEvent.VK_MINUS )
+// {
+// final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 //
-//      GM_Envelope wishBBox = null;
+// GM_Envelope wishBBox = null;
 //
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
+// final GM_Position currentMax = currentBBox.getMax();
+// final GM_Position currentMin = currentBBox.getMin();
 //
-//      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-//      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-//      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-//      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+// final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+// final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+// final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+// final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
 //
-//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+// final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+// final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
 //
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+// wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
 //
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
+// mapPanel.setBoundingBox( wishBBox );
+// }
 //
-//    // pan "arrows
-//    else if( code == KeyEvent.VK_RIGHT )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+// // pan "arrows
+// else if( code == KeyEvent.VK_RIGHT )
+// {
+// final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 //
-//      GM_Envelope wishBBox = null;
+// GM_Envelope wishBBox = null;
 //
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
+// final GM_Position currentMax = currentBBox.getMax();
+// final GM_Position currentMin = currentBBox.getMin();
 //
-//      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-//      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+// final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+// final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
 //      
 //
-//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+// final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+// final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
 //
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+// wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
 //
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//    else if( code == KeyEvent.VK_LEFT )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+// mapPanel.setBoundingBox( wishBBox );
+// }
+// else if( code == KeyEvent.VK_LEFT )
+// {
+// final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 //
-//      GM_Envelope wishBBox = null;
+// GM_Envelope wishBBox = null;
 //
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
+// final GM_Position currentMax = currentBBox.getMax();
+// final GM_Position currentMin = currentBBox.getMin();
 //
-//      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-//      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+// final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+// final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
 //      
 //
-//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+// final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+// final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
 //
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+// wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
 //
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//    else if( code == KeyEvent.VK_UP )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+// mapPanel.setBoundingBox( wishBBox );
+// }
+// else if( code == KeyEvent.VK_UP )
+// {
+// final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 //
-//      GM_Envelope wishBBox = null;
+// GM_Envelope wishBBox = null;
 //
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
+// final GM_Position currentMax = currentBBox.getMax();
+// final GM_Position currentMin = currentBBox.getMin();
 //
-//      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-//      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+// final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+// final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
 //      
 //
-//      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+// final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+// final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
 //
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+// wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
 //
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//    else if( code == KeyEvent.VK_DOWN )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+// mapPanel.setBoundingBox( wishBBox );
+// }
+// else if( code == KeyEvent.VK_DOWN )
+// {
+// final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 //
-//      GM_Envelope wishBBox = null;
+// GM_Envelope wishBBox = null;
 //
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
+// final GM_Position currentMax = currentBBox.getMax();
+// final GM_Position currentMin = currentBBox.getMin();
 //
-//      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-//      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+// final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+// final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
 //      
 //
-//      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+// final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+// final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
 //
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+// wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
 //
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
+// mapPanel.setBoundingBox( wishBBox );
+// }
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
   }
@@ -495,7 +479,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.keyReleased( e );
@@ -506,7 +490,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.keyTyped( e );
@@ -517,7 +501,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.leftClicked( p );
@@ -528,7 +512,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.leftPressed( p );
@@ -539,7 +523,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
   @Override
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.leftReleased( p );
@@ -550,7 +534,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
   @Override
-  public void middleClicked( Point p )
+  public void middleClicked( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.middleClicked( p );
@@ -561,7 +545,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
   @Override
-  public void middlePressed( Point p )
+  public void middlePressed( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.middlePressed( p );
@@ -572,7 +556,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
   @Override
-  public void middleReleased( Point p )
+  public void middleReleased( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.middleReleased( p );
@@ -583,7 +567,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.moved( p );
@@ -594,7 +578,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.rightClicked( p );
@@ -605,7 +589,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
   @Override
-  public void rightPressed( Point p )
+  public void rightPressed( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.rightPressed( p );
@@ -616,7 +600,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
   @Override
-  public void rightReleased( Point p )
+  public void rightReleased( final Point p )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.rightReleased( p );
@@ -627,7 +611,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.setSelection( selection );
