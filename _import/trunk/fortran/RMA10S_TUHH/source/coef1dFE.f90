@@ -1,4 +1,4 @@
-!Last change:  K    25 May 2007    4:25 pm
+!Last change:  K    31 May 2007    3:32 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1082,9 +1082,12 @@ Gaussloop: DO I = 1, NGP
       WRITE(*,*) 'Term E2: ', - grav * areaint(i) * zsint(i)
     end if
 
-    WRITE(*,*) 'Einzelterme: ', xn(l), FRN, dnx(l), FRNX
-    WRITE(*,*) 'assembled value without weighting: ', (xn(l) * FRN + dnx(l) * FRNX)
-    WRITE(*,*) 'assembled value    with weighting: ', ams * (xn(l) * FRN + dnx(l) * FRNX)
+    WRITE(*,*) 'Einzelterme: ', FRN, FRNX
+    do l = 1, 3
+      WRITE(*,*) 'weighting: ', l,  xn(l), dnx(l)
+      WRITE(*,*) 'assembled value without weighting: ', (xn(l) * FRN + dnx(l) * FRNX)
+      WRITE(*,*) 'assembled value    with weighting: ', ams * (xn(l) * FRN + dnx(l) * FRNX)
+    end do
 
     pause
   endif
@@ -1415,7 +1418,7 @@ Gaussloop: DO I = 1, NGP
     do c = 1, 2
       !column no.
       ib = 3 + (2 * ndf) * (c - 1)
-      estifm(ia,ib) = estifm(ia,ib) + xm(l) * amu * ( xm(c) * EA + dmx(c) * EB)
+      estifm(ia,ib) = estifm(ia,ib) + xm(l) * amw * ( xm(c) * EA + dmx(c) * EB)
     end do
   end do
 
@@ -1438,7 +1441,7 @@ Gaussloop: DO I = 1, NGP
     do c = 1, 3
       !column no.
       ib = 1 + ndf * (c - 1)
-      estifm(ia,ib) = estifm(ia,ib) + xm(l) * amu *  qfact(l) * (xn(c) * EA + dnx(c) * EB)
+      estifm(ia,ib) = estifm(ia,ib) + xm(l) * amw * (xn(c) * EA + dnx(c) * EB) * qfact(c)
     end do
   end do
 
@@ -1576,6 +1579,7 @@ ENDDO QBCAssign
 !Correction for Coupling
 CouplingCorrection: do l = 1, ncn, 2
   if (byparts == 2 .or. byparts == 3) EXIT couplingcorrection
+  if (byparts == 1) EXIT couplingcorrection
 
   m = ncon(l)
 

@@ -1,4 +1,4 @@
-!     Last change:  K    25 May 2007    3:28 pm
+!     Last change:  K    31 May 2007    4:38 pm
 
 subroutine TransVelDistribution
 
@@ -58,10 +58,16 @@ INTEGER            :: teststat
 
 
     !if transition is empty, cycle loop.
-    if (TransLines(i,1).eq.0) CYCLE transitionloop
+    if (TransLines(i,1) == 0) CYCLE transitionloop
     !get the line number and the 1D-transitioning node number
     TransLi = TransLines(i,2)
     TransNo = nop(TransLines(i,1),3)
+
+    !testing
+    WRITE(*,*) transno, 'Iteration: ', maxn
+    WRITE(*,*) vel(1,transno), vel(2,transno)
+    pause
+    !-
 
     !get the 1D-velocity; the transition node is always the 3rd one of the 1D-part definition nop(j,3)
     TransVel = SQRT((vel(1,TransNo))**2 + (vel(2,TransNo))**2)
@@ -71,7 +77,7 @@ INTEGER            :: teststat
     CSArea = 0.0
 
     !if width is not zero a trapezoidal profile of the original RMA10S code is used
-    if (ABS(width(TransNo)) .gt. 1e-7) then
+    if (ABS(width(TransNo)) > 1.e-7) then
       CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) *TransDep
 
     !if width is zero, but the element is 1D it can only be a Teschke element

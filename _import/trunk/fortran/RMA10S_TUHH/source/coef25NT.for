@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    23 May 2007    5:52 pm
+C     Last change:  JAJ  26 May 2007    0:10 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1907,6 +1907,16 @@ CIPK JUN05
           JA=NBC(J,K)
           IF(JA.GT.0) THEN
             R1(JA)=R1(JA)+F(IA)
+
+            !nis,may07,testing
+            !if (ja == 994 .or. ja == 995) then
+            !  WRITE(*,*) ' Element: ', nn
+            !  WRITE(*,*) 'Freiheit: ', ja
+            !  WRITE(*,*) 'neu Wert: ', r1(ja)
+            !  pause
+            !end if
+            !-
+
 C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           ENDIF
  1400   CONTINUE
@@ -1914,7 +1924,7 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 
 
       !matrix in datei
-      if (nn==92 .or. nn==93 .or. nn==95) then
+      if (nn >=312  .or. nn <= 320) then
         WRITE(9919,*) 'Element ', nn, 'coef2nt', xht
         WRITE(9919,'(6x,32(1x,i10))')
      +       ( ( nbc (nop(nn,i), j), j=1, 4), i = 1,8)

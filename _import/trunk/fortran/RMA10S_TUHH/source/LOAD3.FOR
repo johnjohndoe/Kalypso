@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  K    25 May 2007    1:29 pm
+C     Last change:  K    29 May 2007   12:49 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -941,23 +941,30 @@ cipk oct98 update to f90
 
           !Get the smallest node number to reference equations to; 1st was already processed in lines before
           DO K=2,LiLe
-            IF(NLN .GT. Line(LiNo,K)) NLN = Line(LiNo,K)
+            IF(NLN > Line(LiNo,K)) NLN = Line(LiNo,K)
           ENDDO
 
           !testing, whether connecting node is part of line; transmember(i).eq.2 means seperate node
           if (transmember(i) .eq. 2) then
             !check, whether the number is less than referenced node number for coupling of DOFs
-            if (NLN.gt.CoNode) NLN = CoNode
+            if (NLN > CoNode) NLN = CoNode
           end if
 
           !assign references to all nodes of the connection line
           equationassigning: DO K=1, LiLe
 
+            !get copy of node number
+            nd = line(LiNo,k)
+            !Initialize the momentum equations. The velocities are a result of the distribution calculation. This is done for every node
+            DO eqdof = 1, 2
+              NBC(ND,eqdof) = 0
+            ENDDO
+
             !the same node must not be processed on
-            IF(NLN .EQ. LINE(LiNo,k)) CYCLE equationassigning
+            IF(NLN == nd) CYCLE equationassigning
 
             !Stop, if there is gap in line
-            if (Line(LiNo,k) .eq. 0) then
+            if (nd == 0) then
               WRITE(*,*) 'ERROR - Definition gap in transition line.'
               WRITE(*,*) 'the ', k, 'th slot has a zero entry'
               WRITE(*,*) 'Have a look at your line definition'
@@ -966,21 +973,30 @@ cipk oct98 update to f90
               STOP
             endif
 
-            !get copy of node number
-            nd = line(LiNo,k)
             !assign equation references
-            DO eqdof=1,6
-              NBC(ND,eqdof)= -NLN
+            DO eqdof = 3, 6
+              NBC(ND,eqdof) = -NLN
             ENDDO
 
           ENDDO equationassigning
 
-          !Overgive to 1D-node, if this is a seperate transition node and if it is not the reference node
-          if (TransMember(i).eq.2 .and. NLN.ne.CoNode) then
-            DO eqdof=1,6
-              NBC(CoNode,eqdof)= -NLN
-            ENDDO
-          end if
+          !Process 1D-node, because this can't be member of the line
+          !nbc(CoNode,1) = -NLN
+          nbc(CoNode,1) = 1
+          nbc(CoNode,2) = 0
+          DO eqdof = 3,6
+            NBC(CoNode,eqdof) = -NLN
+          ENDDO
+
+          !testoutput
+          do iii = 1, LiLe
+            WRITE (*, '(1x,i5,6(1x,i5))') line(LiNo, iii),
+     +            (nbc(line(LiNo, iii), jjj), jjj=1, 6)
+          end do
+          WRITE (*,'(1x,i5,6(1x,i5))') CoNode,
+     +          (nbc(CoNode, jjj), jjj=1, 6)
+          !pause
+          !-
 
           !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
           EXIT EquationAdjustment
@@ -1447,12 +1463,12 @@ CIPK MAY02 SWITCH NDF TO 7
         DO 299 M = 1, 7
 cycw aug96
 cc          if(iactv(n,m) .eq. 0) nbc(n,m)=0  not active at present
-
           IF( NBC(N,M) .NE. 1 ) GO TO 299
           NSZF=NSZF+1
           NBC(N,M)=NSZF
   299   CONTINUE
   300 CONTINUE
+
 C-
 C...... Reduce from upto 6 column to the 4th column
 C
