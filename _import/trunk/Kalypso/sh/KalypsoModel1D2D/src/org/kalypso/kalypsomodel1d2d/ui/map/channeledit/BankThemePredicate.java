@@ -54,23 +54,23 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class BankThemePredicate implements IKalypsoThemePredicate
 {
-
-  private QName m_QName = GeometryUtilities.QN_LINE_STRING_PROPERTY;
+  private QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING_PROPERTY };
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public boolean decide( IKalypsoTheme theme )
   {
+
     if( theme instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
       final IFeatureType featureType = fTheme.getFeatureType();
-      if (featureType == null)
+      if( featureType == null )
         return false;
       final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
 
-      if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QName ) )
+      if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QNames[0] ) || allGeomteryProperties[0].getValueQName().equals( m_QNames[1] ) )
         return true;
     }
     return false;

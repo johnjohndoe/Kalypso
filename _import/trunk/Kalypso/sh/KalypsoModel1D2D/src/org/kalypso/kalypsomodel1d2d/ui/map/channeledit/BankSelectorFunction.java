@@ -58,6 +58,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -113,8 +114,12 @@ public class BankSelectorFunction implements IRectangleMapFunction
     {
       final Object o = iter.next();
       final Feature feature = FeatureHelper.getFeature( workspace, o );
-
-      final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
+      
+      final GM_MultiCurve multiline = (GM_MultiCurve) feature.getDefaultGeometryProperty();
+      if (multiline.getSize() > 1)
+        return;
+      final GM_Curve line = multiline.getCurveAt( 0 );
+      
       try
       {
         final LineString jtsLine = (LineString) JTSAdapter.export( line );
