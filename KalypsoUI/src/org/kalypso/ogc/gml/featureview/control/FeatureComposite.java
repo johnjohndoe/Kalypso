@@ -110,13 +110,26 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.filterencoding.AbstractOperation;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author Gernot Belger
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
+  private static final String DATA_LAYOUTDATA = "layoutData";
+
+  private static final String DATA_CONTROL_TYPE = "controlType";
+
+  private static final LayoutDataType NULL_LAYOUT_DATA_TYPE = new LayoutDataType();
+
   /**
    * The flag, indicating, if the green hook should be displayed.
    */
@@ -167,6 +180,32 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     for( final IFeatureControl fc : m_featureControls )
       fc.updateControl();
+
+    for( final Control control : m_swtControls )
+    {
+      updateLayoutData( control );
+
+      final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
+
+      final Object visibleOperation = controlType.getVisibleOperation();
+      final boolean visible;
+      if( visibleOperation != null )
+        visible = evaluateOperation( getFeature(), visibleOperation );
+      else
+        visible = controlType.isVisible();
+      control.setVisible( visible );
+
+      final Object enabledOperation = controlType.getEnabledOperation();
+      final boolean enabled;
+      if( enabledOperation != null )
+        enabled = evaluateOperation( getFeature(), enabledOperation );
+      else
+        enabled = controlType.isEnabled();
+      control.setEnabled( enabled );
+    }
+
+    if( m_control != null )
+      m_control.getParent().layout();
   }
 
   /**
@@ -230,33 +269,95 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
   }
 
-  public Control createControl( final Composite parent, final int style, final ControlType controlType )
+  private Control createControl( final Composite parent, final int style, final ControlType controlType )
   {
     final Control control = createControlFromControlType( parent, style, controlType );
 
-    m_swtControls.add( control );
+    control.setData( DATA_CONTROL_TYPE, controlType );
 
-    control.setVisible( controlType.isVisible() );
-    control.setEnabled( controlType.isEnabled() );
+    m_swtControls.add( control );
 
     // einen bereits gesetzten Tooltip nicht überschreiben
     if( control.getToolTipText() == null )
-    {
       control.setToolTipText( controlType.getTooltip() );
-    }
 
     final JAXBElement< ? extends LayoutDataType> jaxLayoutData = controlType.getLayoutData();
-    if( jaxLayoutData != null )
-    {
-      final LayoutDataType layoutData = jaxLayoutData.getValue();
-      control.setLayoutData( createLayoutData( layoutData ) );
-    }
+    final LayoutDataType layoutDataType;
+    if( jaxLayoutData == null )
+      layoutDataType = NULL_LAYOUT_DATA_TYPE;
     else
-    {
-      control.setLayoutData( new GridData() );
-    }
+      layoutDataType = jaxLayoutData.getValue();
+
+    control.setData( DATA_LAYOUTDATA, layoutDataType );
+    updateLayoutData( control );
 
     return control;
+  }
+
+  private void updateLayoutData( final Control control )
+  {
+    final LayoutDataType layoutDataType = (LayoutDataType) control.getData( DATA_LAYOUTDATA );
+
+    final Feature feature = getFeature();
+
+    if( layoutDataType instanceof GridDataType )
+    {
+      final GridDataType gridDataType = (GridDataType) layoutDataType;
+      final GridData gridData = new GridData();
+
+      gridData.grabExcessHorizontalSpace = gridDataType.isGrabExcessHorizontalSpace();
+      gridData.grabExcessVerticalSpace = gridDataType.isGrabExcessVerticalSpace();
+
+      gridData.heightHint = gridDataType.getHeightHint();
+      gridData.widthHint = gridDataType.getWidthHint();
+      gridData.horizontalAlignment = SWTUtilities.getGridData( gridDataType.getHorizontalAlignment() );
+      gridData.verticalAlignment = SWTUtilities.getGridData( gridDataType.getVerticalAlignment() );
+      gridData.horizontalIndent = gridDataType.getHorizontalIndent();
+
+      gridData.horizontalSpan = gridDataType.getHorizontalSpan();
+      gridData.verticalSpan = gridDataType.getVerticalSpan();
+
+      final Object excludeType = gridDataType.getExcludeOperation();
+      gridData.exclude = evaluateOperation( feature, excludeType );
+
+      control.setLayoutData( gridData );
+    }
+    else if( layoutDataType == NULL_LAYOUT_DATA_TYPE )
+      control.setLayoutData( new GridData() );
+  }
+
+  private boolean evaluateOperation( final Feature feature, final Object operationElement )
+  {
+    try
+    {
+      if( operationElement instanceof Element )
+      {
+        final Element element = (Element) operationElement;
+        final NodeList childNodes = element.getChildNodes();
+        for( int i = 0; i < childNodes.getLength(); i++ )
+        {
+          final Node item = childNodes.item( i );
+          if( item instanceof Element )
+          {
+            final Operation operation = AbstractOperation.buildFromDOM( (Element) item );
+            final Boolean exclude = operation.evaluate( feature );
+            return exclude == null ? false : exclude.booleanValue();
+          }
+        }
+      }
+    }
+    catch( final FilterConstructionException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( final FilterEvaluationException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return false;
   }
 
   private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType )
@@ -614,31 +715,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       layout.numColumns = gridLayoutType.getNumColumns();
 
       return layout;
-    }
-
-    return null;
-  }
-
-  private Object createLayoutData( final LayoutDataType layoutDataType )
-  {
-    if( layoutDataType instanceof GridDataType )
-    {
-      final GridDataType gridDataType = (GridDataType) layoutDataType;
-      final GridData gridData = new GridData();
-
-      gridData.grabExcessHorizontalSpace = gridDataType.isGrabExcessHorizontalSpace();
-      gridData.grabExcessVerticalSpace = gridDataType.isGrabExcessVerticalSpace();
-
-      gridData.heightHint = gridDataType.getHeightHint();
-      gridData.widthHint = gridDataType.getWidthHint();
-      gridData.horizontalAlignment = SWTUtilities.getGridData( gridDataType.getHorizontalAlignment() );
-      gridData.verticalAlignment = SWTUtilities.getGridData( gridDataType.getVerticalAlignment() );
-      gridData.horizontalIndent = gridDataType.getHorizontalIndent();
-
-      gridData.horizontalSpan = gridDataType.getHorizontalSpan();
-      gridData.verticalSpan = gridDataType.getVerticalSpan();
-
-      return gridData;
     }
 
     return null;

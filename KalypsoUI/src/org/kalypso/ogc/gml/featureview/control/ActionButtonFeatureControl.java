@@ -74,13 +74,13 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
 
   private final Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
 
-  private IAction m_action;
+  private final IAction m_action;
 
   /**
    * @param pluginId
-   *          The plugin from which the action will be loaded.
+   *            The plugin from which the action will be loaded.
    * @param actionClass
-   *          The classname of the action to load. The class must implement {@link org.eclipse.jface.action.IAction}
+   *            The classname of the action to load. The class must implement {@link org.eclipse.jface.action.IAction}
    */
   public ActionButtonFeatureControl( final Feature feature, final IPropertyType ftp, final String pluginId, final String actionClass )
   {
@@ -102,7 +102,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
 
     try
     {
-      final Class actionClass = bundle.loadClass( actionClassName );
+      final Class< ? > actionClass = bundle.loadClass( actionClassName );
       return (IAction) actionClass.newInstance();
     }
     catch( final ClassNotFoundException e )

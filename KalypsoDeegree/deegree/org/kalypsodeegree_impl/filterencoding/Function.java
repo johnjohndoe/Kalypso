@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -78,19 +79,18 @@ import org.w3c.dom.Element;
  */
 public class Function extends Expression_Impl
 {
-
   /** The Function's name (as specified in it's name attribute). */
-  String m_name;
+  private String m_name;
 
   /** The Function's arguments. */
-  ArrayList<Expression> m_args = new ArrayList<Expression>();
+  private final ArrayList<Expression> m_args = new ArrayList<Expression>();
 
   /** Constructs a new Function. */
-  public Function( String name, ArrayList<Expression> args )
+  public Function( final String name, final List<Expression> args )
   {
     m_id = ExpressionDefines.FUNCTION;
     m_name = name;
-    m_args = args;
+    m_args.addAll( args );
   }
 
   /**
@@ -98,26 +98,26 @@ public class Function extends Expression_Impl
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Expression buildFromDOM( Element element ) throws FilterConstructionException
+  public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
-
     // check if root element's name equals 'Function'
-    if( !element.getLocalName().toLowerCase().equals( "function" ) )
+    final String localName = element.getLocalName();
+    if( !localName.toLowerCase().equals( "function" ) )
       throw new FilterConstructionException( "Name of element does not equal 'Function'!" );
 
     // determine the name of the Function
-    String name = element.getAttribute( "name" );
+    final String name = element.getAttribute( "name" );
     if( name == null )
       throw new FilterConstructionException( "Function's name (-attribute) is unspecified!" );
 
     // determine the arguments of the Function
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() < 1 )
       throw new FilterConstructionException( "'" + name + "' requires at least 1 element!" );
 
-    ArrayList<Expression> args = new ArrayList<Expression>( children.getLength() );
+    final ArrayList<Expression> args = new ArrayList<Expression>( children.getLength() );
     for( int i = 0; i < children.getLength(); i++ )
     {
       args.add( Expression_Impl.buildFromDOM( children.item( i ) ) );
@@ -137,7 +137,7 @@ public class Function extends Expression_Impl
   /**
    * @see org.kalypsodeegree_impl.filterencoding.Function#getName()
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
     this.m_name = name;
   }
@@ -145,7 +145,7 @@ public class Function extends Expression_Impl
   /**
    * returns the arguments of the function
    */
-  public ArrayList getArguments( )
+  public List<Expression> getArguments( )
   {
     return m_args;
   }
@@ -154,11 +154,11 @@ public class Function extends Expression_Impl
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:Function name=\"" ).append( m_name ).append( "\">" );
     for( int i = 0; i < m_args.size(); i++ )
     {
-      Expression expr = m_args.get( i );
+      final Expression expr = m_args.get( i );
       sb.append( expr.toXML() );
     }
     sb.append( "</ogc:Function>" );
@@ -169,10 +169,10 @@ public class Function extends Expression_Impl
    * Returns the <tt>Function</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>).
    * 
    * @param feature
-   *          that determines the concrete values of <tt>PropertyNames</tt> found in the expression
+   *            that determines the concrete values of <tt>PropertyNames</tt> found in the expression
    * @return the resulting value
    */
-  public Object evaluate( Feature feature ) throws FilterEvaluationException
+  public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
     throw new FilterEvaluationException( "Function evaluation is not implemented yet!" );
   }

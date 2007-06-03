@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  */
 abstract public class Expression_Impl implements Expression
 {
-  protected static ExpressionDefines EXPRESSION_DEFINES = new ExpressionDefines();
+  public static ExpressionDefines EXPRESSION_DEFINES = new ExpressionDefines();
 
   /**
    * The underlying expression's id.
@@ -86,54 +86,55 @@ abstract public class Expression_Impl implements Expression
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Expression buildFromDOM( Element element ) throws FilterConstructionException
+  public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
     // check if root element's name is a known expression
-    String name = element.getLocalName();
+    final String name = element.getLocalName();
+
     final int id = EXPRESSION_DEFINES.getIdByName( name );
     Expression expression = null;
 
     switch( id )
     {
-    case ExpressionDefines.EXPRESSION:
-    {
-      break;
-    }
-    case ExpressionDefines.PROPERTYNAME:
-    {
-      expression = PropertyName.buildFromDOM( element );
-      break;
-    }
-    case ExpressionDefines.LITERAL:
-    {
-      expression = Literal.buildFromDOM( element );
-      break;
-    }
-    case ExpressionDefines.FUNCTION:
-    {
-      expression = Function.buildFromDOM( element );
-      break;
-    }
-    case ExpressionDefines.ADD:
-    case ExpressionDefines.SUB:
-    case ExpressionDefines.MUL:
-    case ExpressionDefines.DIV:
-    {
-      expression = ArithmeticExpression.buildFromDOM( element );
-      break;
-    }
-    default:
-    {
-      throw new FilterConstructionException( "Unknown expression '" + name + "'!" );
-    }
+      case ExpressionDefines.EXPRESSION:
+      {
+        break;
+      }
+      case ExpressionDefines.PROPERTYNAME:
+      {
+        expression = PropertyName.buildFromDOM( element );
+        break;
+      }
+      case ExpressionDefines.LITERAL:
+      {
+        expression = Literal.buildFromDOM( element );
+        break;
+      }
+      case ExpressionDefines.FUNCTION:
+      {
+        expression = Function.buildFromDOM( element );
+        break;
+      }
+      case ExpressionDefines.ADD:
+      case ExpressionDefines.SUB:
+      case ExpressionDefines.MUL:
+      case ExpressionDefines.DIV:
+      {
+        expression = ArithmeticExpression.buildFromDOM( element );
+        break;
+      }
+      default:
+      {
+        throw new FilterConstructionException( "Unknown expression '" + name + "'!" );
+      }
     }
     return expression;
   }
 
   /** Returns the name of the expression. */
-  public String getExpressionName()
+  public String getExpressionName( )
   {
     return EXPRESSION_DEFINES.getNameById( m_id );
   }
@@ -143,11 +144,11 @@ abstract public class Expression_Impl implements Expression
    * 
    * @see ExpressionDefines
    */
-  public int getExpressionId()
+  public int getExpressionId( )
   {
     return m_id;
   }
 
   /** Produces an indented XML representation of this object. */
-  public abstract StringBuffer toXML();
+  public abstract StringBuffer toXML( );
 }

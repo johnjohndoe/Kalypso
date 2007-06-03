@@ -77,8 +77,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
-import net.opengis.sld.ColorMap;
-import net.opengis.sld.ObjectFactory;
+import ogc2.www.opengis.net.sld.ColorMap;
+import ogc2.www.opengis.net.sld.ObjectFactory;
 
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -1613,16 +1613,14 @@ public class SLDFactory
     return (new CssParameter_Impl( name, pvt ));
   }
 
-  private static RasterSymbolizer createRasterSymbolizer( final Element element, final UOM uom ) // throws
-  // XMLParsingException
+  private static RasterSymbolizer createRasterSymbolizer( final Element element, final UOM uom )
   {
     try
     {
-      // final ObjectFactory fac = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Unmarshaller unmarshaller = jc.createUnmarshaller();
       final Object e = unmarshaller.unmarshal( element );
-      final net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = ((JAXBElement<net.opengis.sld.RasterSymbolizer>) e).getValue();
+      final ogc2.www.opengis.net.sld.RasterSymbolizer rasterSymbolizerElement = ((JAXBElement<ogc2.www.opengis.net.sld.RasterSymbolizer>) e).getValue();
       // Geometry geometry = createGeometry(rasterSymbolizerElement.getGeometry());
       final TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
       return new RasterSymbolizer_Impl( colorMap );
@@ -1654,7 +1652,7 @@ public class SLDFactory
     final List colorMapEntries = colorMapType.getColorMapEntry();
     for( int i = 0; i < colorMapEntries.size(); i++ )
     {
-      final net.opengis.sld.ColorMapEntry colorMapEntry = (net.opengis.sld.ColorMapEntry) colorMapEntries.get( i );
+      final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = (ogc2.www.opengis.net.sld.ColorMapEntry) colorMapEntries.get( i );
       Color color = null;
       if( colorMapEntry.getColor() != null )
       {
