@@ -70,27 +70,26 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface Expression
 {
-
   /** Returns the name of the expression. */
-  String getExpressionName();
+  String getExpressionName( );
 
   /**
    * Returns the expression's id.
    */
-  int getExpressionId();
+  int getExpressionId( );
 
   /**
    * Calculates the <tt>Expression</tt>'s value based on the certain property values of the given feature.
    * <p>
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the expression
+   *            that determines the values of <tt>PropertyNames</tt> in the expression
    * @return the resulting Object
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   public Object evaluate( Feature feature ) throws FilterEvaluationException;
 
   /** Produces an indented XML representation of this object. */
-  StringBuffer toXML();
+  StringBuffer toXML( );
 }

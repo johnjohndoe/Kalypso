@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvider implements IFeatureProvider
 {
@@ -94,7 +94,6 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
           return null;
 
         final URL context = contextWorkspace.getContext();
-
         final URL url = m_urlResolver.resolveURL( context, uri );
 
         m_workspace = GmlSerializer.createGMLWorkspace( url, m_factory );
@@ -116,5 +115,4 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
   {
     m_workspace = null;
   }
-
 }

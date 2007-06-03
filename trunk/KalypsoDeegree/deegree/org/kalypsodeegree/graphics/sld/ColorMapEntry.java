@@ -84,9 +84,9 @@ public interface ColorMapEntry
 
   public void setLabel( String label );
 
-  public net.opengis.sld.ColorMapEntry getColorMapEntry( );
+  public ogc2.www.opengis.net.sld.ColorMapEntry getColorMapEntry( );
 
   public String exportAsXML( );
-  
+
   public ColorMapEntry clone( );
 }

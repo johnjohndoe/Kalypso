@@ -79,7 +79,7 @@ public class Literal extends Expression_Impl
   String m_value;
 
   /** Constructs a new Literal. */
-  public Literal( String value )
+  public Literal( final String value )
   {
     m_id = ExpressionDefines.LITERAL;
     m_value = value;
@@ -90,13 +90,14 @@ public class Literal extends Expression_Impl
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Expression buildFromDOM( Element element ) throws FilterConstructionException
+  public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
+    final String localNameFrom = element.getLocalName();
 
     // check if root element's name equals 'Literal'
-    if( !element.getLocalName().equals( "Literal" ) )
+    if( !localNameFrom.equals( "Literal" ) )
       throw new FilterConstructionException( "Name of element does not equal 'Literal'!" );
 
     return new Literal( XMLTools.getValue( element ) );
@@ -113,7 +114,7 @@ public class Literal extends Expression_Impl
   /**
    * @see org.kalypsodeegree_impl.filterencoding.Literal#getValue()
    */
-  public void setValue( String value )
+  public void setValue( final String value )
   {
     this.m_value = value;
   }
@@ -122,7 +123,7 @@ public class Literal extends Expression_Impl
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 200 );
+    final StringBuffer sb = new StringBuffer( 200 );
     sb.append( "<ogc:Literal>" ).append( m_value ).append( "</ogc:Literal>" );
     return sb;
   }
@@ -133,16 +134,16 @@ public class Literal extends Expression_Impl
    * datatype handling.
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the expression (no use here)
+   *            that determines the values of <tt>PropertyNames</tt> in the expression (no use here)
    * @return the resulting value
    */
-  public Object evaluate( Feature feature )
+  public Object evaluate( final Feature feature )
   {
     try
     {
       return new Double( m_value );
     }
-    catch( NumberFormatException e )
+    catch( final NumberFormatException e )
     {
       //  
     }

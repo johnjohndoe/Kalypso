@@ -65,7 +65,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
 
   /**
    * @param context
-   *          The context is used to find the feature.
+   *            The context is used to find the feature.
    */
   public PooledXLinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
@@ -93,7 +93,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
       /* Immediately handle local features */
       final String uri = getUri();
 
-      if( uri == null  )
+      if( uri == null )
       {
         m_workspace = contextWorkspace;
         return m_workspace;
@@ -156,5 +156,4 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   {
     return false;
   }
-
 }

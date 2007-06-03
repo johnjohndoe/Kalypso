@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.eclipse.jface.window.Window;
@@ -179,7 +178,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         buttonPressed();
       }
@@ -207,9 +206,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private void fireModfied( )
   {
-    for( final Iterator iter = m_modifyListener.iterator(); iter.hasNext(); )
+    for( final Object element : m_modifyListener )
     {
-      final ModifyListener l = (ModifyListener) iter.next();
+      final ModifyListener l = (ModifyListener) element;
       final Event event = new Event();
       event.widget = m_button;
       l.modifyText( new ModifyEvent( event ) );

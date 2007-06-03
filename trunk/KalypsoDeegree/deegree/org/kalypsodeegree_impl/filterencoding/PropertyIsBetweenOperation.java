@@ -85,7 +85,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
 
   private Expression m_upperBoundary;
 
-  public PropertyIsBetweenOperation( PropertyName propertyName, Expression lowerBoundary, Expression upperBoundary )
+  public PropertyIsBetweenOperation( final PropertyName propertyName, final Expression lowerBoundary, final Expression upperBoundary )
   {
     super( OperationDefines.PROPERTYISBETWEEN );
     m_propertyName = propertyName;
@@ -98,22 +98,22 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'PropertyIsBetween'
     if( !element.getLocalName().equals( "PropertyIsBetween" ) )
       throw new FilterConstructionException( "Name of element does not equal 'PropertyIsBetween'!" );
 
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() != 3 )
       throw new FilterConstructionException( "'PropertyIsBetween' requires exactly 3 elements!" );
 
-    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
-    Expression lowerBoundary = buildLowerBoundaryFromDOM( children.item( 1 ) );
-    Expression upperBoundary = buildUpperBoundaryFromDOM( children.item( 2 ) );
+    final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
+    final Expression lowerBoundary = buildLowerBoundaryFromDOM( children.item( 1 ) );
+    final Expression upperBoundary = buildUpperBoundaryFromDOM( children.item( 2 ) );
 
     return new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
   }
@@ -123,16 +123,16 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * recursively calls other buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  private static Expression buildLowerBoundaryFromDOM( Element element ) throws FilterConstructionException
+  private static Expression buildLowerBoundaryFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'LowerBoundary'
     if( !element.getLocalName().equals( "LowerBoundary" ) )
       throw new FilterConstructionException( "Name of element does not equal 'LowerBoundary'!" );
 
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
 
     if( children.getLength() != 1 )
     {
@@ -148,16 +148,16 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * recursively calls other buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  private static Expression buildUpperBoundaryFromDOM( Element element ) throws FilterConstructionException
+  private static Expression buildUpperBoundaryFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'UpperBoundary'
     if( !element.getLocalName().equals( "UpperBoundary" ) )
       throw new FilterConstructionException( "Name of element does not equal 'UpperBoundary'!" );
 
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() != 1 )
     {
       if( element.getChildNodes().getLength() == 1 )
@@ -175,7 +175,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     return m_propertyName;
   }
 
-  public void setPropertyName( PropertyName propName )
+  public void setPropertyName( final PropertyName propName )
   {
     m_propertyName = propName;
   }
@@ -188,7 +188,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     return m_lowerBoundary;
   }
 
-  public void setLowerBoundary( Expression lowerBounds )
+  public void setLowerBoundary( final Expression lowerBounds )
   {
     m_lowerBoundary = lowerBounds;
   }
@@ -201,7 +201,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     return m_upperBoundary;
   }
 
-  public void setUpperBoundary( Expression upperBounds )
+  public void setUpperBoundary( final Expression upperBounds )
   {
     m_upperBoundary = upperBounds;
   }
@@ -209,7 +209,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 500 );
+    final StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
     sb.append( m_propertyName.toXML() );
     sb.append( "<ogc:LowerBoundary>" );
@@ -227,33 +227,32 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * given <tt>Feature</tt>. TODO: Improve datatype handling.
    * 
    * @param feature
-   *          that determines the property values
+   *            that determines the property values
    * @return true, if the <tt>Operation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
 
-    Object lowerValue = m_lowerBoundary.evaluate( feature );
-    Object upperValue = m_upperBoundary.evaluate( feature );
-    Object thisValue = m_propertyName.evaluate( feature );
+    final Object lowerValue = m_lowerBoundary.evaluate( feature );
+    final Object upperValue = m_upperBoundary.evaluate( feature );
+    final Object thisValue = m_propertyName.evaluate( feature );
 
     if( !(lowerValue instanceof Number && upperValue instanceof Number && thisValue instanceof Number) )
       throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical " + "expressions!" );
 
-    double d1 = ((Number) lowerValue).doubleValue();
-    double d2 = ((Number) upperValue).doubleValue();
-    double d3 = ((Number) thisValue).doubleValue();
+    final double d1 = ((Number) lowerValue).doubleValue();
+    final double d2 = ((Number) upperValue).doubleValue();
+    final double d3 = ((Number) thisValue).doubleValue();
     return d1 <= d3 && d3 <= d2;
-
   }
 
   /**
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
+  public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
     fv.visit( this );
   }

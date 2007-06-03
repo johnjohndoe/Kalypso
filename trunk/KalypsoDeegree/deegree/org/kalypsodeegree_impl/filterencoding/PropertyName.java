@@ -122,8 +122,9 @@ public class PropertyName extends Expression_Impl
    */
   public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
+    final String localName = element.getLocalName();
     // check if root element's name equals 'PropertyName'
-    if( !element.getLocalName().toLowerCase().equals( "propertyname" ) )
+    if( !localName.toLowerCase().equals( "propertyname" ) )
     {
       throw new FilterConstructionException( "Name of element does not equal 'PropertyName'!" );
     }

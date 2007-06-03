@@ -62,7 +62,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 
-import net.opengis.sld.ObjectFactory;
+import ogc2.www.opengis.net.sld.ObjectFactory;
 
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
@@ -88,7 +88,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
    * @param quantity
    * @param label
    */
-  public ColorMapEntry_Impl( Color color, double opacity, double quantity, String label )
+  public ColorMapEntry_Impl( final Color color, final double opacity, final double quantity, final String label )
   {
     super();
     m_color = color;
@@ -102,7 +102,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     return m_color;
   }
 
-  public void setColor( Color color )
+  public void setColor( final Color color )
   {
     m_color = color;
   }
@@ -112,7 +112,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     return m_label;
   }
 
-  public void setLabel( String label )
+  public void setLabel( final String label )
   {
     m_label = label;
   }
@@ -122,7 +122,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     return m_opacity;
   }
 
-  public void setOpacity( double opacity )
+  public void setOpacity( final double opacity )
   {
     m_opacity = opacity;
   }
@@ -132,25 +132,25 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     return m_quantity;
   }
 
-  public void setQuantity( double quantity )
+  public void setQuantity( final double quantity )
   {
     m_quantity = quantity;
   }
 
-  public net.opengis.sld.ColorMapEntry getColorMapEntry( )
+  public ogc2.www.opengis.net.sld.ColorMapEntry getColorMapEntry( )
   {
-    net.opengis.sld.ColorMapEntry colorMapEntry = OF.createColorMapEntry();
+    final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = OF.createColorMapEntry();
     colorMapEntry.setColor( StyleFactory.getColorAsHex( getColor() ) );
-    //colorMapEntry.setLabel( getLabel() );
-    //colorMapEntry.setOpacity( getOpacity() );
-    //colorMapEntry.setQuantity( getQuantity() );
+    // colorMapEntry.setLabel( getLabel() );
+    // colorMapEntry.setOpacity( getOpacity() );
+    // colorMapEntry.setQuantity( getQuantity() );
 
     return colorMapEntry;
   }
 
   public String exportAsXML( )
   {
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ColorMapEntry" );
     sb.append( " color=\"" ).append( StyleFactory.getColorAsHex( getColor() ) ).append( "\"" );
     sb.append( " opacity=\"0.8\"" );
