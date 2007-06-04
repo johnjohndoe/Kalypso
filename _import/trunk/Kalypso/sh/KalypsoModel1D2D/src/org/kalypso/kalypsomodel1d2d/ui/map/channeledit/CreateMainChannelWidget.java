@@ -63,6 +63,7 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -199,7 +200,10 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     final Feature[] selectedBanks = m_data.getSelectedBanks( side );
     for( final Feature feature : selectedBanks )
     {
-      final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
+      final GM_MultiCurve multiline = (GM_MultiCurve) feature.getDefaultGeometryProperty();
+      if (multiline.getSize() > 1)
+        return;
+      final GM_Curve line = multiline.getCurveAt( 0 );
 
       final LineSymbolizer symb = new LineSymbolizer_Impl();
       final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );

@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
@@ -793,7 +794,12 @@ public class SegmentData
       /* convert current bankLine in Curve */
       final Feature bankFeature = bankEntry.getKey();
       final CreateChannelData.SIDE side = bankEntry.getValue();
-      final GM_Curve bankCurve = (GM_Curve) bankFeature.getDefaultGeometryProperty();
+      
+      final GM_MultiCurve multiline = (GM_MultiCurve) bankFeature.getDefaultGeometryProperty();
+      if (multiline.getSize() > 1)
+        return;
+      final GM_Curve bankCurve = multiline.getCurveAt( 0 );
+      
 
       /* convert bank curve into LineString */
       try
