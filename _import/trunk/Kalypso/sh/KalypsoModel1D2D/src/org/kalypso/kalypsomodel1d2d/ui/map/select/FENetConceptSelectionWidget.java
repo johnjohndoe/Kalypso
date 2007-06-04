@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.select;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,6 +82,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Patrice Congo
  */
+@SuppressWarnings({"unchecked", "hiding"})
 public class FENetConceptSelectionWidget implements IWidget
 {
   private class QNameBasedSelectionContext
@@ -664,6 +666,31 @@ public class FENetConceptSelectionWidget implements IWidget
     return m_selectionFilter;
   }
 
+  /**
+   * To get the wrapped selected feature
+   * 
+   * @param targetWrapClass the class the selection feature
+   *            should be wrapped
+   * @return return an array containing the wrappers of the selected
+   *           features  
+   */
+  public <T>T[] getWrappedSelectedFeature( Class<T> targetWrapClass )
+  {
+    Feature[] selectedFeature = getSelectedFeature();
+    T[] wrappers = (T[])Array.newInstance( targetWrapClass, selectedFeature.length);
+    for(int i= selectedFeature.length-1;i>=0;i--)
+    {
+      wrappers[i] = 
+        (T) selectedFeature[i].getAdapter( targetWrapClass );
+    }
+    return wrappers;
+  }
+  
+  
+  /**
+   * To get all selected feature
+   * @return a {@link Feature} array containing the selected feature
+   */
   public Feature[] getSelectedFeature( )
   {
     final EasyFeatureWrapper[] easyFeatureWrappers = mapPanel.getSelectionManager().getAllFeatures();

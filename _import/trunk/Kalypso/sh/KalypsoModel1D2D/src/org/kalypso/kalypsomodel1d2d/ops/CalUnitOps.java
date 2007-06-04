@@ -44,6 +44,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -62,6 +66,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
  * @author Patrice Congo
  */
 
+@SuppressWarnings({"unchecked", "hiding"})
 public class CalUnitOps
 {
   private CalUnitOps( )
@@ -242,5 +247,124 @@ public class CalUnitOps
     return calUnit.getDownStreamBoundaryLine() !=null;
   }
   
+  public static final boolean isCalculationUnitBoundaryRelationType(
+                                          QName relationType )
+  {
+    Assert.throwIAEOnNullParam( relationType, "relationType" );
+    if( relationType.equals( 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM)||
+          relationType.equals( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM))
+    {
+      return true; 
+    }
+    else
+    {
+      return false;
+    }
+  }
   
+  /**
+   * To get the boundary line linked to the given calculation
+   * unit by the specified relation.
+   * @param calUnit the calculation unit which boundary is to be 
+   *            found
+   * @param relationType the type of the relation between boundary
+   *            line and calculation unit 
+   */
+  public static final IBoundaryLine getLinkedBoundaryLine(
+                                  ICalculationUnit calUnit, 
+                                  QName relationType )
+  {
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( relationType, "relaytionType" );
+    
+    if( relationType.equals( 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM))
+    {
+      return calUnit.getDownStreamBoundaryLine();
+    }
+    else if( relationType.equals( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM))
+    {
+      return calUnit.getUpStreamBoundaryLine();
+    }
+    else
+    {
+      throw new RuntimeException(
+          "Unable to get related boundary: relationType="+relationType);
+    }
+      
+      
+  }
+  
+  /**
+   * Tests whether a given boundary is the upstream boundary line of the specified
+   * calculation unit.
+   * @param calUnit the calculation unit which up stream boundary is to be tested
+   * @param boundaryLine the boundary line to assert
+   * @return true if the provided boundary line is the upstream boundary of the given 
+   *            calculation unit otherwise false.
+   */
+  public static final boolean isUpStreamBoundaryLine(
+                                    ICalculationUnit calUnit, 
+                                    IBoundaryLine boundaryLine)
+  {
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
+    IBoundaryLine upLine = calUnit.getUpStreamBoundaryLine();
+    if( upLine == null )
+    {
+      return false;
+    }
+    else
+    {
+      return boundaryLine.equals( upLine );
+    }
+  }
+  
+  /**
+   * Tests whether a given boundary is the downstream boundary line of the specified
+   * calculation unit.
+   * @param calUnit the calculation unit which down stream boundary is to be tested
+   * @param boundaryLine the boundary line to assert
+   * @return true if the provided boundary line is the down stream boundary of the given 
+   *            calculation unit otherwise false.
+   */
+  public static final boolean isDownStreamBoundaryLine(
+                                    ICalculationUnit calUnit, 
+                                    IBoundaryLine boundaryLine)
+  {
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
+    IBoundaryLine upLine = calUnit.getDownStreamBoundaryLine();
+    if( upLine == null )
+    {
+      return false;
+    }
+    else
+    {
+      return boundaryLine.equals( upLine );
+    }
+  }
+  
+  public static final QName getRelationType(
+                              ICalculationUnit calUnit, 
+                              IBoundaryLine bLine)
+  {
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( bLine, "bLine" );
+    if( isDownStreamBoundaryLine( calUnit, bLine ))
+    {
+      return Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM;
+    }
+    else if( isUpStreamBoundaryLine( calUnit, bLine ))
+    {
+      return Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM;
+    }
+    else
+    {
+      return null;
+    }
+  }
 }

@@ -106,6 +106,32 @@ public class KeyBasedDataModel
       return data[pos];
     }
   }
+  public <T> T  getData( Class<T> dataType, String key)
+  {
+    Object obj = getData( key );
+    if( obj == null )
+    {
+      return null;
+    }
+    else if( dataType.isInstance( obj ) )
+    {
+      return (T)obj;
+    }
+    else
+    {
+      String message = 
+        String.format( 
+            "Illegal type in model:"+
+              " \n\texpected=%s"+
+              "\n\tcurrent=%s"+
+              "\n\tkey=%s", 
+              dataType, 
+              obj.getClass(),
+              key);
+      throw new RuntimeException(message);
+    }
+    
+  }
   
   public IDataModelCheck getDataCheck(String key)
   {
