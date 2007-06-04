@@ -740,7 +740,7 @@ public class SegmentData
     // compute the width coordinates of the intersection points
     try
     {
-      final double width = WspmProfileHelper.getWidthPosition( (GM_Point) JTSAdapter.wrap( point ), profile.getProfil() );
+      final double width = WspmProfileHelper.getWidthPosition( (GM_Point) JTSAdapter.wrap( point ), profile.getProfil(), profile.getSrsName() );
       return width;
     }
     catch( final GM_Exception e )
@@ -819,7 +819,7 @@ public class SegmentData
           try
           {
             final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionUpProfile );
-            width = WspmProfileHelper.getWidthPosition( gmpoint, m_upProfile.getProfil() );
+            width = WspmProfileHelper.getWidthPosition( gmpoint, m_upProfile.getProfil(), m_upProfile.getSrsName() );
             z = WspmProfileHelper.getHeigthPositionByWidth( width, m_upProfile.getProfil() );
           }
           catch( final Exception e )
@@ -860,7 +860,7 @@ public class SegmentData
           try
           {
             final GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( intersectionDownProfile );
-            width = WspmProfileHelper.getWidthPosition( gmpoint, m_DownProfile.getProfil() );
+            width = WspmProfileHelper.getWidthPosition( gmpoint, m_DownProfile.getProfil(), m_DownProfile.getSrsName() );
             z = WspmProfileHelper.getHeigthPositionByWidth( width, m_DownProfile.getProfil() );
           }
           catch( final Exception e )
