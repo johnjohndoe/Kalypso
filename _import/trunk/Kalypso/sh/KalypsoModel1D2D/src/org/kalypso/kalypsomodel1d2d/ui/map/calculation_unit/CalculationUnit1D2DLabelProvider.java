@@ -38,42 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.editor;
+package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
+
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 
-public class ListLabelProvider extends LabelProvider
+
+/**
+ * @author Madanagopal
+ *
+ */
+public class CalculationUnit1D2DLabelProvider extends LabelProvider
 {
-  public ListLabelProvider( )
-  {
-    //i am empty
-  }
-
-  public Image getImage( Object element )
-  {
-    return null;
+  //private final static CalculationUnit1D2DLabelProvider labelProvider;
+  public CalculationUnit1D2DLabelProvider()
+  {   
   }
 
   public String getText( Object element )
   {
-    if( element instanceof IFeatureWrapper2 )
+    if( element instanceof ICalculationUnit1D || element instanceof ICalculationUnit2D)
     {
 
-      String name = ((IFeatureWrapper2) element).getName();
+      String name = ((ICalculationUnit) element).getName();
       if( name != null )
       {
         return name;
       }
       else
       {
-        return ((IFeatureWrapper2) element).getGmlID();
+        return ((ICalculationUnit) element).getGmlID();
       }
     }
     else
     {
-      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+      throw new RuntimeException( "Only ICalculation1D / ICalculation2D are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
     }
   }
 }

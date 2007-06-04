@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -49,6 +50,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -178,7 +181,14 @@ public class CalculationUnitComplexSelectionsComponent
       }
       else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType )  )
       {
-        
+        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        CreateSubCalculationUnitCopyDialog calculationDialog = 
+                      new CreateSubCalculationUnitCopyDialog( shell, dataModel );
+        int answer = calculationDialog.open();
+        if( answer == Window.OK )
+        {
+          
+        }
       }      
     }
     else if (ACTION_KEY_REMOVE.equals( selectedAction ))

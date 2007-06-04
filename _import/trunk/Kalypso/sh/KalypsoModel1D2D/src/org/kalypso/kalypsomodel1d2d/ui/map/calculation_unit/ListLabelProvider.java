@@ -46,11 +46,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 class ListLabelProvider extends LabelProvider
 {
-  private final CalculationElementComponent ListLabelProvider;
+  private final CalculationElementComponent listLabelProvider;
 
   ListLabelProvider( CalculationElementComponent calculationElementComponent )
   {
-    ListLabelProvider = calculationElementComponent;
+    listLabelProvider = calculationElementComponent;
   }
 
   public Image getImage( Object element )

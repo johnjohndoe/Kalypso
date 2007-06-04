@@ -114,6 +114,7 @@ public class CalculationElementComponent
         {
           if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
             updateThisSection( newValue );
+            
           }
         }
       };
@@ -236,6 +237,10 @@ public class CalculationElementComponent
           descriptionGroupText.setEnabled( true );
           descriptionText.setEnabled( true );
         }
+        if (newValue instanceof ICalculationUnit1D2D){
+         
+          tableViewer.setInput( ((ICalculationUnit1D2D)newValue).getSubUnits().toArray());
+        }
         
     }
     else
@@ -338,6 +343,7 @@ public class CalculationElementComponent
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new ListLabelProvider(this) );
     table.setLinesVisible( true );
+    
     
     formData = new FormData();
     formData.top = new FormAttachment(titleSubCalculation,5);
