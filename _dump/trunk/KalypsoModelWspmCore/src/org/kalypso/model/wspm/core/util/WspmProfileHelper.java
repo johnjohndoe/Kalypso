@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.util;
 
 import java.util.LinkedList;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -85,12 +86,15 @@ public class WspmProfileHelper
    * </p>
    * 
    * @param geoPoint
-   *          The geo point. It does not have to lie on the profile.
+   *            The geo point. It does not have to lie on the profile.
    * @param profile
-   *          The profile.
+   *            The profile.
+   * @param srsName
+   *            The coordinate system, in which the profile lies (or null, but this can behave strange, since it assumes
+   *            one).
    * @return The width (X-Direction) of the geo point projected on the profile.
    */
-  public static Double getWidthPosition( GM_Point geoPoint, IProfil profile ) throws Exception
+  public static Double getWidthPosition( GM_Point geoPoint, IProfil profile, String srsName ) throws Exception
   {
     /* List for storing points of the profile, which have a geo reference. */
     LinkedList<IProfilPoint> geoReferencedPoints = new LinkedList<IProfilPoint>();
@@ -117,12 +121,15 @@ public class WspmProfileHelper
     // END OF FINDING GEOREFERENCED POINTS
 
     /* It is assumed that all points and values share the same coordinate system. */
-    String crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( geoReferencedPoints.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
-    final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
+    if( srsName == null )
+      srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( geoReferencedPoints.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
+
+    CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+    final CS_CoordinateSystem kalypsoCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     /* Transform geo point into the coord-system of the line. */
-    GeoTransformer transformer = new GeoTransformer( crs );
-    Geometry comparePoint = JTSAdapter.export( transformer.transform( geoPoint ) );
+    GeoTransformer transformer = new GeoTransformer( kalypsoCrs );
+    Geometry comparePoint = JTSAdapter.export( geoPoint  );
 
     double distance = Double.MAX_VALUE;
     IProfilPoint pointOne = null;
@@ -140,9 +147,13 @@ public class WspmProfileHelper
       double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
       double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
+      /* Geo-Projectino */
+      final GM_Point geoPointOne = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
+      final GM_Point geoPointTwo = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, crs );
+
       /* Build the line segment. */
-      Coordinate geoCoordOne = new Coordinate( rechtsWertOne, hochWertOne );
-      Coordinate geoCoordTwo = new Coordinate( rechtsWertTwo, hochWertTwo );
+      Coordinate geoCoordOne = JTSAdapter.export( transformer.transform( geoPointOne ).getCentroid().getPosition() );
+      Coordinate geoCoordTwo = JTSAdapter.export( transformer.transform( geoPointTwo ).getCentroid().getPosition() );
       LineSegment geoSegment = new LineSegment( geoCoordOne, geoCoordTwo );
 
       /* Calculate the distance of the geo point to the line. */
@@ -171,10 +182,10 @@ public class WspmProfileHelper
     /* Using Breite und Hoehe to build. */
     Coordinate coordProfileOne = new Coordinate( pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
     Coordinate coordProfileTwo = new Coordinate( pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    
+
     /* Important: The interpolation is done here :). */
-    double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * ( coordProfileTwo.x - coordProfileOne.x );
-    
+    double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * (coordProfileTwo.x - coordProfileOne.x);
+
     return coordProfileOne.x + toProfilePointLength;
   }
 

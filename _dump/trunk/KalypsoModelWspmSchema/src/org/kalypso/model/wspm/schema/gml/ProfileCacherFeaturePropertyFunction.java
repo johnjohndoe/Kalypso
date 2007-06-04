@@ -47,7 +47,7 @@ import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -92,19 +92,16 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   {
     try
     {
-      final IProfil profil = ProfileFeatureFactory.toProfile( feature );
-
-      // final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT :
-      // null;
-      // final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT :
-      // null;
-      // final POINT_PROPERTY ppB = POINT_PROPERTY.BREITE;
-      // final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
+      final WspmProfile wspmProfile = new WspmProfile( feature );
+      
+      final IProfil profil = wspmProfile.getProfil();
+      if( profil == null )
+        return null;
 
       final LinkedList<IProfilPoint> points = profil.getPoints();
       final List<GM_Position> positions = new ArrayList<GM_Position>( points.size() );
 
-      String crsName = null;
+      String srsName = wspmProfile.getSrsName();
       for( final IProfilPoint point : points )
       {
         /* If there are no rw/hw create pseudo geometries from breite and station */
@@ -127,8 +124,8 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         final double h = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-        if( crsName == null )
-          crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+        if( srsName == null )
+          srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
         positions.add( GeometryFactory.createGM_Position( rw, hw, h ) );
       }
@@ -136,7 +133,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       if( positions.size() < 2 )
         return null;
 
-      final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
+      final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
 
       final GM_Position[] poses = positions.toArray( new GM_Position[positions.size()] );
       final GM_Curve curve = GeometryFactory.createGM_Curve( poses, crs );

@@ -69,6 +69,8 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
 
   public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" );
 
+  public static final QName QNAME_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" );
+
   /**
    * The scale (i.e. fraction digits) for station values.
    * 
@@ -123,6 +125,16 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
     return (GM_Curve) getFeature().getProperty( QNAME_LINE );
   }
 
+  public String getSrsName( )
+  {
+    return (String) getFeature().getProperty( QNAME_SRS );
+  }
+
+  public void setSrsName( final String srsName )
+  {
+    getFeature().setProperty( QNAME_SRS, srsName );
+  }
+
   /**
    * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
    * 
@@ -132,5 +144,4 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
   {
     return new BigDecimal( station ).setScale( STATION_SCALE, RoundingMode.HALF_UP );
   }
-
 }
