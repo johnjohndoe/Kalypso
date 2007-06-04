@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Font;
 import org.kalypsodeegree.graphics.sld.Geometry;
@@ -67,6 +68,7 @@ import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -127,7 +129,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    */
   public void setLabel( final ParameterValueType label )
   {
-    this.m_label = label;
+    m_label = label;
   }
 
   /**
@@ -148,7 +150,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    */
   public void setFont( final Font font )
   {
-    this.m_font = font;
+    m_font = font;
   }
 
   /**
@@ -174,7 +176,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    */
   public void setLabelPlacement( final LabelPlacement labelPlacement )
   {
-    this.m_labelPlacement = labelPlacement;
+    m_labelPlacement = labelPlacement;
   }
 
   /**
@@ -198,7 +200,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    */
   public void setHalo( final Halo halo )
   {
-    this.m_halo = halo;
+    m_halo = halo;
   }
 
   /**
@@ -221,7 +223,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    */
   public void setFill( final Fill fill )
   {
-    this.m_fill = fill;
+    m_fill = fill;
   }
 
   /**
@@ -266,5 +268,14 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
     Debug.debugMethodEnd();
     return sb.toString();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public void paint( final GC gc, final Feature feature )
+  {
   }
 }

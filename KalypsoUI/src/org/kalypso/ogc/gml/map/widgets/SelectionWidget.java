@@ -83,11 +83,11 @@ public class SelectionWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *          The name of the widget.
+   *            The name of the widget.
    * @param toolTip
-   *          The tooltip of the widget.
+   *            The tooltip of the widget.
    * @param clickFunction
-   *          The map function, which should select a feature. May not be null!
+   *            The map function, which should select a feature. May not be null!
    */
   public SelectionWidget( final String name, final String toolTip, final IRectangleMapFunction clickFunction )
   {
@@ -98,15 +98,15 @@ public class SelectionWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *          The name of the widget.
+   *            The name of the widget.
    * @param toolTip
-   *          The tooltip of the widget.
+   *            The tooltip of the widget.
    * @param clickFunction
-   *          The map function, which should select a feature. May not be null!
+   *            The map function, which should select a feature. May not be null!
    * @param tooltipProvider
-   *          The provider, which will be used on move. May be null.
+   *            The provider, which will be used on move. May be null.
    */
-  public SelectionWidget( final String name, final String toolTip, final IRectangleMapFunction clickFunction, ITooltipProvider tooltipProvider )
+  public SelectionWidget( final String name, final String toolTip, final IRectangleMapFunction clickFunction, final ITooltipProvider tooltipProvider )
   {
     super( name, toolTip );
 
@@ -126,9 +126,11 @@ public class SelectionWidget extends AbstractWidget
       getMapPanel().setMessage( "Auswahl durchführen ..." );
     }
     // TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
+    {
       panel.repaint();
+    }
 
   }
 
@@ -172,20 +174,24 @@ public class SelectionWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     super.moved( p );
 
-    if( m_tooltipProvider != null && getMapPanel() != null )
+    if( (m_tooltipProvider != null) && (getMapPanel() != null) )
+    {
       m_tooltip = m_tooltipProvider.getTooltip( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
+    }
 
     m_current_point = p;
 
     if( m_tooltipProvider != null )
     {
-      MapPanel panel = getMapPanel();
+      final MapPanel panel = getMapPanel();
       if( panel != null )
+      {
         panel.repaint();
+      }
     }
   }
 
@@ -196,10 +202,14 @@ public class SelectionWidget extends AbstractWidget
   public void paint( final Graphics g )
   {
     if( m_selector != null )
+    {
       m_selector.paint( g );
+    }
 
     if( (m_current_point != null) && (m_tooltipProvider != null) && (!m_tooltip.equals( "" )) )
+    {
       m_tooltipProvider.paintTooltip( g, m_current_point, m_tooltip );
+    }
   }
 
   /**
@@ -218,10 +228,15 @@ public class SelectionWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     super.setSelection( selection );
 
     getMapPanel().setMessage( "Klicken und ziehen Sie, um ein Feature auszuwählen." );
+  }
+
+  protected IRectangleMapFunction getClickFunction( )
+  {
+    return m_clickFunction;
   }
 }
