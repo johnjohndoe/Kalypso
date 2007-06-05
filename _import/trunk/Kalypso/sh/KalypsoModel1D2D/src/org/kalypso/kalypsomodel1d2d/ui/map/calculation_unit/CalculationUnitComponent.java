@@ -45,9 +45,11 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -101,10 +103,46 @@ public class CalculationUnitComponent
   } 
   
   @Override
-  public void refreshOtherSections(){
+  public void refreshOtherSections(){    
     
-    
-    
+  }
+  
+  @Override
+  protected void deleteSelected()
+  {
+    final KeyBasedDataModel dataModel = getDataModel();
+    ICalculationUnit calUnitToDel = dataModel.getData( 
+        ICalculationUnit.class,
+        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( calUnitToDel != null )
+    {
+      final IFEDiscretisationModel1d2d model1d2d =
+          dataModel.getData( 
+              IFEDiscretisationModel1d2d.class, 
+              ICommonKeys.KEY_DISCRETISATION_MODEL );
+      final ICommandTarget commandTarget =
+          dataModel.getData( 
+              ICommandTarget.class, 
+              ICommonKeys.KEY_COMMAND_TARGET );
+      DeleteCalculationUnit delCmd = 
+          new DeleteCalculationUnit( model1d2d, calUnitToDel)
+      {
+        /**
+         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit#process()
+         */
+        @Override
+        public void process( ) throws Exception
+        {
+          super.process();
+          dataModel.setData( 
+              ICommonKeys.KEY_FEATURE_WRAPPER_LIST,
+              CalUnitOps.getModelCalculationUnits( model1d2d ) );
+          dataModel.setData( 
+              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
+        }
+      };
+      commandTarget.postCommand( delCmd, null );
+    }
   }
   
 }
