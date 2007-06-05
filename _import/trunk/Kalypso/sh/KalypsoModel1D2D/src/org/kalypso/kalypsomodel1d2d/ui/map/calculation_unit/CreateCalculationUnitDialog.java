@@ -96,6 +96,7 @@ class CreateCalculationUnitDialog extends Dialog{
                             KeyBasedDataModel dataModel )
   {
     super( parentShell );
+    parentShell.setText( "Berechnungseinheit Hinzufügen" );
     this.dataModel =  dataModel;
   }
   
@@ -122,7 +123,7 @@ class CreateCalculationUnitDialog extends Dialog{
     typeCombo = new Combo(comp, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
     typeCombo.add( QNAME_KEY_1D );
     typeCombo.add( QNAME_KEY_2D );
-    typeCombo.add(QNAME_KEY_1D2D);
+    typeCombo.add( QNAME_KEY_1D2D );
     data = new GridData(GridData.FILL_HORIZONTAL);
     typeCombo.setLayoutData( data );      
     
@@ -134,7 +135,6 @@ class CreateCalculationUnitDialog extends Dialog{
     data = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ); 
     data.heightHint = 100;
     descriptionText.setLayoutData( data );
-    
     return comp;
   }
   @Override

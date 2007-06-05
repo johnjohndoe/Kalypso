@@ -572,7 +572,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     /**
      * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#removeAllRefs(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
      */
-    public boolean removeAllRefs( FWCls toRemove )
+	synchronized public boolean removeAllRefs( FWCls toRemove )
                                   throws IllegalArgumentException 
     {
       if(toRemove == null)
@@ -597,7 +597,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     /**
      * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#addRef(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
      */
-    public boolean addRef(  FWCls toAdd )
+	synchronized public boolean addRef(  FWCls toAdd )
                             throws IllegalArgumentException
     {
       final String gmlID = toAdd.getGmlID();

@@ -41,10 +41,15 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -58,6 +63,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -84,7 +90,7 @@ public class CalculationElementComponent
   private static final String SUB_CALCULATION_UNIT_Title = "Sub Calculation Unit";
 
   /* ======================================================================== */
-  private TableViewer tableViewer;
+  TableViewer tableViewer;
   private Image imageBoundaryUp;
   final String mainGroupTitle = "Bitte Höhenmodell auswählen";
   final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
@@ -93,7 +99,7 @@ public class CalculationElementComponent
   final String saveToolTip = "Deskription Sichern";
   final String titleDescriptionGroup = "Beschreibung";
   private Group descriptionGroupText;
-  private Text descriptionText;
+  Text descriptionText;
   private Text _2dElementField;
   private Text _1dElementField;
   private GridData data;
@@ -151,7 +157,7 @@ public class CalculationElementComponent
 
   private Label titleSubCalculation;
 
-  private Table table;
+  Table table;
 
   private Image image_;
   public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
@@ -341,9 +347,43 @@ public class CalculationElementComponent
     
     tableViewer = new TableViewer( subCalculationComposite, SWT.FILL | SWT.BORDER );
     table = tableViewer.getTable();
+    table.addSelectionListener( new SelectionAdapter(){
+      private IStructuredSelection sel;
+
+      public void widgetSelected( SelectionEvent e )
+      {
+        
+        if (tableViewer.getSelection() != null)
+        {
+          
+          try
+          {
+            if(tableViewer.getSelection() instanceof IStructuredSelection){
+              sel = (IStructuredSelection)(tableViewer.getSelection());
+              String description = ((ICalculationUnit)sel.getFirstElement()).getDescription();
+              descriptionText.setText( description );
+            }
+          }
+          catch( RuntimeException e1 )
+          {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+          
+        }
+        else
+        {
+          descriptionText.setText( defaultTestDecription );
+        }         
+        
+     }
+      
+    });
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new ListLabelProvider(this) );
+    //tableViewer.addSelectionChangedListener( listener )
     table.setLinesVisible( true );
+    
     
     
     formData = new FormData();
@@ -365,8 +405,10 @@ public class CalculationElementComponent
     descriptionGroupText.setLayout( formDescription );
     
     descriptionText = new Text( descriptionGroupText, SWT.MULTI|SWT.WRAP );
-    descriptionText.setText( defaultTestDecription );
+     
+    
     descriptionText.setEditable( false );
+    descriptionText.setText( defaultTestDecription );
     
     FormData formDescripData = new FormData();
     formDescripData.left = new FormAttachment( 0, 0 );
