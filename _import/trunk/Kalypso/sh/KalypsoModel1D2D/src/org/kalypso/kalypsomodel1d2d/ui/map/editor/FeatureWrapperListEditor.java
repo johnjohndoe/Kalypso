@@ -43,14 +43,14 @@ package org.kalypso.kalypsomodel1d2d.ui.map.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -59,30 +59,25 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationElementComponent;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
@@ -106,6 +101,96 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private FormToolkit toolkit;
 
   private Composite parent;
+  
+  private ICellModifier modifier = new ICellModifier()
+  {
+
+    public boolean canModify( Object element, String property )
+    {
+      System.out.println( "CanmOdiy=" + property );
+      // Find the index of the column
+      if( property.equals( tableViewer.getColumnProperties()[0] ) )
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    
+    public Object getValue( Object element, String property )
+    {
+      System.out.println("getting prop="+property);
+      if( property.equals( tableViewer.getColumnProperties()[0] ) )
+      {
+        if( element instanceof IFeatureWrapper2 )
+        {
+          
+          return ((IFeatureWrapper2)element).getName();
+        }
+        else
+        {
+          throw new RuntimeException(
+              "Only IFeatureWrapper2 are accepted:"+element);
+        }
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    public void modify( Object element, String property, Object value )
+    {
+
+      IFeatureWrapper2 featureWrapper = null;
+      if( element instanceof TableItem )
+      {
+        Object data = ((TableItem) element).getData();
+        if( data instanceof IFeatureWrapper2 )
+        {
+          featureWrapper = (IFeatureWrapper2) data;
+        }
+
+      }
+
+      if( property.equals( tableViewer.getColumnProperties()[0] ) )
+      {
+        final String oldName = featureWrapper.getName(); 
+        if( value == null )
+        {
+          System.out.println("new Name is null");
+        }
+        else if( value.equals( oldName ) )
+        {
+          System.out.println( "No name change!" );
+          return;
+        }
+        
+        featureWrapper.setName( (String) value );
+        ChangeIFeatureWrapper2NameCmd renameCommand =
+            new ChangeIFeatureWrapper2NameCmd( featureWrapper, (String)value)
+        {
+          /**
+           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd#process()
+           */
+          @Override
+          public void process( ) throws Exception
+          {
+            super.process();
+            refreshTableView();
+          }
+        };
+        KeyBasedDataModelUtil.postCommand( dataModel, renameCommand );
+      }
+      else
+      {
+        System.out.println( "BAD property:" + property );
+      }
+    }
+
+  };
 
   /**
    * The id for the selection in the data model
@@ -268,6 +353,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
     table.setLinesVisible( true );
     table.setLayoutData( formData );
 
+    final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
+    lineColumn.setWidth( 50 );
    
     Object inputData = 
       dataModel.getData( 
@@ -343,7 +430,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
           {
             try
             {
-              deleteElevationModel();
+              deleteSelected();
               tableViewer.refresh();
             }
             catch( Throwable th )
@@ -421,10 +508,18 @@ public class FeatureWrapperListEditor implements IButtonConstants
             getCurrentSelection().setDescription( descriptionText.getText() );          
           }        
       }
-    } );        
+    } );  
+    
+    //setup cell editing
+    TextCellEditor textCellEditor = new TextCellEditor( table );
+    CellEditor[] editors = 
+        new CellEditor[] { textCellEditor };
+    tableViewer.setCellEditors( editors );
+    tableViewer.setCellModifier( modifier );
+    tableViewer.setColumnProperties( new String[]{"Name"} );
   }
 
-  protected final void deleteElevationModel( ) throws Exception
+  protected void deleteSelected( ) throws Exception
   {
   }
 
@@ -537,6 +632,24 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
         descriptionText.setText( desc );
         descriptionText.redraw();
+      }
+      
+    };
+    
+    
+    Display display = parent.getDisplay();
+    
+    display.syncExec( runnable );
+  }
+  
+  final void refreshTableView( )
+  {
+    final Runnable runnable = new Runnable()
+    {
+
+      public void run( )
+      {
+        tableViewer.refresh();
       }
       
     };
