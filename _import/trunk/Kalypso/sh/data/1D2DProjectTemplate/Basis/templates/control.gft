@@ -7,7 +7,7 @@
     <gft:view typename="c1d2d:TimestepsObservation" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
         <gft:gridLayout numColumns="2" horizontalSpacing="10"/>
-        <gft:label text="Zeitschrittvorgabe" visible="true" tooltip="Zeitschrittvorgabe der quasi station�ren Berechnung" style="SWT.NONE">
+        <gft:label text="Zeitschrittvorgabe" visible="true" tooltip="Zeitschrittvorgabe der quasi station?ren Berechnung" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="true"/>
         </gft:label>
         <gft:tupleResult property="om:result" tooltip="Zeitschrittvorgabe" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:om="http://www.opengis.net/om">
@@ -15,15 +15,35 @@
 	         <gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM" parseFormat="dd.MM.yyyy HH:mm"/>
         </gft:tupleResult>
 		<gft:extensioncontrol property="om:result" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory" style="SWT.NONE">
-			<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.BEGINNING" grabExcessVerticalSpace="false" />
+			<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.END" grabExcessHorizontalSpace="true" verticalAlignment="GridData.BEGINNING" grabExcessVerticalSpace="false" />
 		</gft:extensioncontrol>
     </gft:view>
     
-    <gft:view typename="c1d2d:ControlModel" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
+    <gft:view typename="c1d2d:ControlModel" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
-                
-<!-- Allgemeines-->        
+	
+	
+	                
+        <gft:group text="General" style="0">
+        <gft:gridData verticalSpan="2" horizontalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
+		<gft:gridLayout numColumns = "3"  horizontalSpacing="10"/>
+                <gft:label text="Active control model:" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        
+        <gft:text editable="false" property="gml:name" style="SWT.NONE">
+            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+		<gft:extensioncontrol property="om:result" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelChooserControlFactory" style="SWT.NONE">
+			<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="false" verticalAlignment="GridData.BEGINNING" grabExcessVerticalSpace="false" />
+		</gft:extensioncontrol>
+        
+          </gft:group>
+          
+          
+          
+          <!-- Allgemeines-->        
         <gft:group text="Allgemeines" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
@@ -41,10 +61,10 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
         
-		<gft:label text="Ber�cksichtigung Bewuchs" visible="true" tooltip="Ber�cksichtigung der Bewuchsparameter bei der Berechnung" style="SWT.NONE">
+		<gft:label text="Ber?cksichtigung Bewuchs" visible="true" tooltip="Ber?cksichtigung der Bewuchsparameter bei der Berechnung" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:checkbox editable="true" property="c1d2d:VEGETA" tooltip="Ber�cksichtigung der Bewuchsparameter bei der Berechnung" style="SWT.NONE">
+        <gft:checkbox editable="true" property="c1d2d:VEGETA" tooltip="Ber?cksichtigung der Bewuchsparameter bei der Berechnung" style="SWT.NONE">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:checkbox>
         <gft:label visible="false" style="SWT.NONE">
@@ -54,10 +74,10 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
         
-        <gft:label text="Breitengrad  [�]" visible="true" tooltip="Breitengrad zur Ermittlung der Corioliskraft [�]" style="SWT.NONE">
+        <gft:label text="Breitengrad  [?]" visible="true" tooltip="Breitengrad zur Ermittlung der Corioliskraft [?]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:OMEGA" tooltip="Breitengrad zur Ermittlung der Corioliskraft [�]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:OMEGA" tooltip="Breitengrad zur Ermittlung der Corioliskraft [?]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -73,10 +93,10 @@
         <gft:group text="Berechnungssteuerung" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
-		<gft:label text="Max. Anzahl Interationsschritte (station�r)" visible="true" tooltip="Maximale Anzahl der Interationen f�r station�re Berechnung (0 - ohne station�re Berechnung)." style="SWT.NONE">
+		<gft:label text="Max. Anzahl Interationsschritte (station?r)" visible="true" tooltip="Maximale Anzahl der Interationen f?r station?re Berechnung (0 - ohne station?re Berechnung)." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:NITI" tooltip="Maximale Anzahl der Interationen f�r station�re Berechnung (0 - ohne station�re Berechnung)." style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:NITI" tooltip="Maximale Anzahl der Interationen f?r station?re Berechnung (0 - ohne station?re Berechnung)." style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -85,10 +105,10 @@
         <gft:validatorlabel property="c1d2d:NITI" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Anzahl der Zeitschritte (instation�r)" visible="true" tooltip="Anzahl der Zeitschritte (instation�r)" style="SWT.NONE">
+        <gft:label text="Anzahl der Zeitschritte (instation?r)" visible="true" tooltip="Anzahl der Zeitschritte (instation?r)" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:NCYC" tooltip="Anzahl der Zeitschritte (instation�r)" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:NCYC" tooltip="Anzahl der Zeitschritte (instation?r)" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -97,10 +117,10 @@
         <gft:validatorlabel property="c1d2d:NCYC" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Max. Anzahl Interationsschritte (instation�r)" visible="true" tooltip="Maximale Anzahl der Interationen f�r instation�re Berechnung." style="SWT.NONE">
+        <gft:label text="Max. Anzahl Interationsschritte (instation?r)" visible="true" tooltip="Maximale Anzahl der Interationen f?r instation?re Berechnung." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:NITN" tooltip="Maximale Anzahl der Interationen f�r instation�re Berechnung." style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:NITN" tooltip="Maximale Anzahl der Interationen f?r instation?re Berechnung." style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -130,10 +150,10 @@
         <gft:group text="Konvergenz" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
-		<gft:label text="Konvergenzschranke vx  [-]" visible="true" tooltip="Maximale �nderung der Geschwindigkeit in x-Richtung [-]" style="SWT.NONE">
+		<gft:label text="Konvergenzschranke vx  [-]" visible="true" tooltip="Maximale ?nderung der Geschwindigkeit in x-Richtung [-]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:CONV_1" tooltip="Maximale �nderung der Geschwindigkeit in x-Richtung [-]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:CONV_1" tooltip="Maximale ?nderung der Geschwindigkeit in x-Richtung [-]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -142,10 +162,10 @@
         <gft:validatorlabel property="c1d2d:CONV_1" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Konvergenzschranke vy [-]" visible="true" tooltip="Maximale �nderung der Geschwindigkeit in y-Richtung [-]" style="SWT.NONE">
+        <gft:label text="Konvergenzschranke vy [-]" visible="true" tooltip="Maximale ?nderung der Geschwindigkeit in y-Richtung [-]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:CONV_2" tooltip="Maximale �nderung der Geschwindigkeit in y-Richtung [-]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:CONV_2" tooltip="Maximale ?nderung der Geschwindigkeit in y-Richtung [-]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -154,10 +174,10 @@
         <gft:validatorlabel property="c1d2d:CONV_2" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Konvergenzschranke h [-]" visible="true" tooltip="Maximale �nderung der Wassertiefe [-]" style="SWT.NONE">
+        <gft:label text="Konvergenzschranke h [-]" visible="true" tooltip="Maximale ?nderung der Wassertiefe [-]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:CONV_3" tooltip="Maximale �nderung der Wassertiefe [-]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:CONV_3" tooltip="Maximale ?nderung der Wassertiefe [-]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -166,10 +186,10 @@
         <gft:validatorlabel property="c1d2d:CONV_3" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Gleichungsdeaktivierung" visible="true" tooltip="Deaktivierung von nicht ben�tigten Gleichungen (konvergente Freiheitsgrade)" style="SWT.NONE">
+        <gft:label text="Gleichungsdeaktivierung" visible="true" tooltip="Deaktivierung von nicht ben?tigten Gleichungen (konvergente Freiheitsgrade)" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:combo property="c1d2d:IDRPT" tooltip="Deaktivierung von nicht ben�tigten Gleichungen (konvergente Freiheitsgrade)" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:combo property="c1d2d:IDRPT" tooltip="Deaktivierung von nicht ben?tigten Gleichungen (konvergente Freiheitsgrade)" style="SWT.DROP_DOWN | SWT.READ_ONLY">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:combo>
         <gft:label visible="false" style="SWT.NONE">
@@ -178,10 +198,10 @@
         <gft:validatorlabel property="c1d2d:IDRPT" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Deaktivierungskriterium [-]" visible="true" tooltip="Deaktivierungskriterium f�r Gleichungen [-]" style="SWT.NONE">
+        <gft:label text="Deaktivierungskriterium [-]" visible="true" tooltip="Deaktivierungskriterium f?r Gleichungen [-]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:DRFACT" tooltip="Deaktivierungskriterium f�r Gleichungen [-]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:DRFACT" tooltip="Deaktivierungskriterium f?r Gleichungen [-]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -192,14 +212,14 @@
         </gft:validatorlabel>
 		</gft:group>
 		          
-<!-- Wirbelviskosit�t-->
+<!-- Wirbelviskosit?t-->
         <gft:group text="Turbulenzmodell" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
-        <gft:label text="Wirbelviskosit�tsansatz" visible="true" tooltip="Wirbelviskosit�tsansatz" style="SWT.NONE">
+        <gft:label text="Wirbelviskosit?tsansatz" visible="true" tooltip="Wirbelviskosit?tsansatz" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:combo property="c1d2d:IEDSW" tooltip="Wirbelviskosit�tsansatz" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:combo property="c1d2d:IEDSW" tooltip="Wirbelviskosit?tsansatz" style="SWT.DROP_DOWN | SWT.READ_ONLY">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:combo>
         <gft:label visible="false" style="SWT.NONE">
@@ -222,10 +242,10 @@
         <gft:validatorlabel property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Min. Wirbelviskosit�t [m�/s]" visible="true" tooltip="Minimale Wirbelviskosit�t beim Smagorinsky-Ansatz [m�/s]" style="SWT.NONE">
+        <gft:label text="Min. Wirbelviskosit?t [m?/s]" visible="true" tooltip="Minimale Wirbelviskosit?t beim Smagorinsky-Ansatz [m?/s]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:TBMIN" tooltip="Minimale Wirbelviskosit�t beim Smagorinsky-Ansatz [m�/s]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:TBMIN" tooltip="Minimale Wirbelviskosit?t beim Smagorinsky-Ansatz [m?/s]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -240,10 +260,10 @@
         <gft:group text="Marsh Parameter" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
-	<gft:label text="Marsh Algorithmus" visible="true" tooltip="Art der gesonderten Behandlung von nur teilweise Durchstr�mten Elementen (Randelemente)." style="SWT.NONE">
+	<gft:label text="Marsh Algorithmus" visible="true" tooltip="Art der gesonderten Behandlung von nur teilweise Durchstr?mten Elementen (Randelemente)." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:combo property="c1d2d:IDNOPT" tooltip="Art der gesonderten Behandlung von nur teilweise Durchstr�mten Elementen (Randelemente)." style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gft:combo property="c1d2d:IDNOPT" tooltip="Art der gesonderten Behandlung von nur teilweise Durchstr?mten Elementen (Randelemente)." style="SWT.DROP_DOWN | SWT.READ_ONLY">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:combo>
         <gft:label visible="false" style="SWT.NONE">
@@ -252,10 +272,10 @@
         <gft:validatorlabel property="c1d2d:IDNOPT" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-	<gft:label text="Deaktivierungstiefe  [m]" visible="true" tooltip="Tiefe unter der Oberfl�che zur deaktivierung von Knoten [m]" style="SWT.NONE">
+	<gft:label text="Deaktivierungstiefe  [m]" visible="true" tooltip="Tiefe unter der Oberfl?che zur deaktivierung von Knoten [m]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:AC1" tooltip="Tiefe unter der Oberfl�che zur deaktivierung von Knoten [m]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:AC1" tooltip="Tiefe unter der Oberfl?che zur deaktivierung von Knoten [m]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -264,7 +284,7 @@
         <gft:validatorlabel property="c1d2d:AC1" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="�bergangstiefe [m]" visible="true" tooltip="Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m]." style="SWT.NONE">
+        <gft:label text="?bergangstiefe [m]" visible="true" tooltip="Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m]." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="c1d2d:AC2" tooltip="Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m]." style="SWT.BORDER">
@@ -276,10 +296,10 @@
         <gft:validatorlabel property="c1d2d:AC2" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Porosit�t [-]" visible="true" tooltip="Porosit�t des Marsh-Bodens [-]." style="SWT.NONE">
+        <gft:label text="Porosit?t [-]" visible="true" tooltip="Porosit?t des Marsh-Bodens [-]." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:AC3" tooltip="Porosit�t des Marsh-Bodens [-]." style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:AC3" tooltip="Porosit?t des Marsh-Bodens [-]." style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -288,10 +308,10 @@
         <gft:validatorlabel property="c1d2d:AC3" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Trockenfalltiefe [m]" visible="true" tooltip="Wassertiefe ab welcher Knoten trocken f�llt [m]." style="SWT.NONE">
+        <gft:label text="Trockenfalltiefe [m]" visible="true" tooltip="Wassertiefe ab welcher Knoten trocken f?llt [m]." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:DSET" tooltip="Wassertiefe ab welcher Knoten trocken f�llt [m]." style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:DSET" tooltip="Wassertiefe ab welcher Knoten trocken f?llt [m]." style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -317,10 +337,10 @@
         <gft:group text="Anfangswerte" style="0">
         <gft:gridData verticalSpan="2" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		<gft:gridLayout numColumns = "4"  horizontalSpacing="10"/>
-		<gft:label text="Anfangswasserspiegel [-]" visible="true" tooltip="Anfangswert des Wasserstandes �ber jeden Knoten [m]" style="SWT.NONE">
+		<gft:label text="Anfangswasserspiegel [-]" visible="true" tooltip="Anfangswert des Wasserstandes ?ber jeden Knoten [m]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:ELEV" tooltip="Anfangswert des Wasserstandes �ber jeden Knoten [m]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:ELEV" tooltip="Anfangswert des Wasserstandes ?ber jeden Knoten [m]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -341,10 +361,10 @@
         <gft:validatorlabel property="c1d2d:UNOM" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:label text="Geschwindigkeitsrichtung [�]" visible="true" tooltip="Ungef�hre Flie�richtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [�]" style="SWT.NONE">
+        <gft:label text="Geschwindigkeitsrichtung [?]" visible="true" tooltip="Ungef?hre Flie?richtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [?]" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="c1d2d:UDIR" tooltip="Ungef�hre Flie�richtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [�]" style="SWT.BORDER">
+        <gft:text editable="true" property="c1d2d:UDIR" tooltip="Ungef?hre Flie?richtung im Gegenuhrzeigersinn auf die globale x-Achse bezogen [?]" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
