@@ -60,7 +60,7 @@
     <title>Datenakquisition KalypsoNA</title>
 
     <indexterm>
-      <primary>Datenakquisition und Aufbereitung</primary>
+      <primary>Datenakquisition und Aufbereitung KalypsoNA</primary>
     </indexterm>
 
     <para>Für die Erstellung eines Niederschlag-Abfluss-Modells sind
@@ -179,7 +179,7 @@
       <title>Abgrenzung der Teilgebiete</title>
 
       <indexterm>
-        <primary>Teilgebietsuntergliederung</primary>
+        <primary>Teilgebietsuntergliederung KalypsoNA</primary>
       </indexterm>
 
       <para><emphasis role="bold">Oberirdisches Teilgebiet</emphasis></para>
@@ -230,6 +230,12 @@
           </mediaobject>
         </figure></para>
 
+      <note>
+        <para>Bei der Erstellung der Shape-Datei sind mindestens die Elemente
+        aus <xref linkend="kalypso_na-mapping_teilgebiete" />
+        einzubinden.</para>
+      </note>
+
       <para><emphasis role="">Bei der Aufteilung in Teileinzugsgebiete sind
       folgende Punkte zu beachten:</emphasis></para>
 
@@ -260,61 +266,15 @@
       wird die Quantifizierung des Zustromes von außen vollzogen.
       Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
       Tiefengrundwasserleiter.</para>
-
-      <para><table align="center" id="kalypso_na-mapping_teilgebiete">
-          <title>Mapping Shape-Datei - Modellelement (Teilgebiete)</title>
-
-          <tgroup align="center" cols="3">
-            <colspec align="left" colwidth="1*" />
-
-            <colspec align="left" />
-
-            <colspec align="left" />
-
-            <thead>
-              <row>
-                <entry>Quelle</entry>
-
-                <entry>Ziel</entry>
-
-                <entry>Bedeutung</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry>GEOM</entry>
-
-                <entry>Geometrie</entry>
-
-                <entry>Geometrie (Polygon)</entry>
-              </row>
-
-              <row>
-                <entry>TeilgebNr</entry>
-
-                <entry>name</entry>
-
-                <entry align="center">Teilgebietsnummer zur besseren Zuordnung
-                (optional)</entry>
-              </row>
-
-              <row>
-                <entry>Beschr</entry>
-
-                <entry>description</entry>
-
-                <entry>Beschreibung (optional), <abbrev>z. B.</abbrev> Name
-                des zugehörigen Gewässersystems</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table></para>
     </section>
 
-    <section>
+    <section id="kalypso_na-Land_Flächennutzung">
       <title>Landnutzungsverteilung und Ableitung der
       Flächennutzungsparameter</title>
+
+      <indexterm>
+        <primary>Land- und Flächennutzung KalypsoNA</primary>
+      </indexterm>
 
       <para>Die Landnutzung im Einzugsgebiet ist entscheidend zur Ableitung
       der Parameter des Versiegelungsgrades und der Vegetationsdaten. Sie kann
@@ -348,7 +308,7 @@
       Vegetationsklasse zugeordnet werden. Dies erleichtert die Erstellung des
       Parameterkataloges. Der zuvor angelegte Key wird in diesem dann wieder
       aufgeschlüsselt, wobei noch zu sagen ist, dass der Key in Hamburg nach
-      den Konventionen des <glossterm linkend="glossar.xml">ALB</glossterm>
+      den Konventionen des <glossterm linkend="ALB">ALB</glossterm>
       zusammengestellt wird. Grundsätzlich aber ist der Key frei
       zusammenstellbar.</para>
 
@@ -364,8 +324,12 @@
       </figure>
     </section>
 
-    <section>
+    <section id="kalypso_na-Bodenschichtung">
       <title>Gebietscharakteristika und Ableitung der Bodenschichtung</title>
+
+      <indexterm>
+        <primary>Ableitung der Bodenschichtung KalypsoNA</primary>
+      </indexterm>
 
       <para>Zunächst eine generelle Unterscheidung bzw. Definition: Man
       unterscheidet zwischen Bodenart und Boden, bzw. Horizonttyp. Für die
@@ -448,11 +412,15 @@
       </itemizedlist>
     </section>
 
-    <section>
+    <section id="kalypso_na-hydrotope">
       <title>Bildung von Hydrotopen</title>
 
-      <para>Es erfolgt die Verschneidung der Daten aus Landnutzung, des Bodens
-      und den Teilgebieten zu Hydrotopen.</para>
+      <indexterm>
+        <primary>Bildung von Hydrotopen KalypsoNA</primary>
+      </indexterm>
+
+      <para>Es erfolgt die Verschneidung der Daten aus der Landnutzung, des
+      Bodens und den Teilgebieten zu Hydrotopen.</para>
 
       <figure>
         <title>Hydrotopbildung</title>
@@ -465,133 +433,29 @@
       </figure>
 
       <note>
-        <para>Aggregieren pro Teileinzugsgebiet im Hydrotop durch
-        Multipolygonfunktion</para>
+        <para><itemizedlist>
+            <listitem>
+              <para>Aggregieren pro Teileinzugsgebiet im Hydrotop durch
+              Multipolygonfunktion</para>
+            </listitem>
+
+            <listitem>
+              <para>es sind mindestens die Elemente aus <xref
+              linkend="kalypso_na-mapping_hydrotope" /> einzubinden</para>
+            </listitem>
+          </itemizedlist></para>
       </note>
 
       <para>Nach der Verschneidung können Hydrotope identischer Eigenschaften
       in einem Teilgebiet zusammengefast werden. Hierdurch kann die Rechenzeit
-      des späteren Modells erheblich verringert werden. Auf weitere Parameter
-      wird in Kapitel 3.7 eingegangen (siehe <xref
-      linkend="kalypso_na-hydrotopparameter" /> )</para>
-
-      <table id="kalypso_na-mapping_hydrotope">
-        <title>Mapping Shape-Dateien - Modellelemente (Hydrotope)</title>
-
-        <tgroup align="center" cols="3">
-          <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" />
-
-          <colspec align="left" />
-
-          <thead>
-            <row>
-              <entry>Quelle</entry>
-
-              <entry>Ziel</entry>
-
-              <entry>Bedeutung</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry>Beschr</entry>
-
-              <entry>description</entry>
-
-              <entry>Beschreibung (optional)</entry>
-            </row>
-
-            <row>
-              <entry>Name</entry>
-
-              <entry>name</entry>
-
-              <entry>Name (optional)</entry>
-            </row>
-
-            <row>
-              <entry>GEOM</entry>
-
-              <entry>Geometrie</entry>
-
-              <entry>Geometrie (Multipolygon)</entry>
-            </row>
-
-            <row>
-              <entry>NutzungALB</entry>
-
-              <entry>Nutzungsschlüssel</entry>
-
-              <entry>Kürzel der Landnutzung (Zuordnung zu den global
-              definierten Nutzungsparametern)</entry>
-            </row>
-
-            <row>
-              <entry>Bodentyp</entry>
-
-              <entry>Bodenschlüssel</entry>
-
-              <entry>Kürzel des Bodenaufbaus. (Zuordnung zu den global
-              definierten Bodenparametern)</entry>
-            </row>
-
-            <row>
-              <entry>VersiegKor</entry>
-
-              <entry>Faktor Versiegelung</entry>
-
-              <entry>Multiplikativer Korrekturfaktor des global definierten
-              Versiegelungsgrades einer Landnutzung</entry>
-            </row>
-
-            <row>
-              <entry>EntwArt</entry>
-
-              <entry>Entwässerung</entry>
-
-              <entry>Unterscheidung in besielte und unbesielte Flächen
-              (optional)</entry>
-            </row>
-
-            <row>
-              <entry>MaxPerRate</entry>
-
-              <entry>max. Perkolationsrate</entry>
-
-              <entry>Hydraulische Leitfähigkeit, mit der das aus der letzten
-              Bodenschicht perkolierte Wasser in das GW eindringen
-              kann.</entry>
-            </row>
-
-            <row>
-              <entry>GWFaktor</entry>
-
-              <entry>Zuflussanteil GW</entry>
-
-              <entry>Anteil des Grundwassers, das im oberen Grundwasserleiter
-              verbleibt. Der Differenzanteil wird in den
-              Tiefengrundwasserleiter abgeschlagen.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
-
-      <para><note>
-          <para>Nutzungs- und Bodenschlüssel dienen der Zuordnung der
-          Landnutzung und des Bodentypes zu den Attributen im
-          Parameterkatalog. Es ist daher auf eine korrekte Schreibweise zu
-          achten.</para>
-        </note></para>
+      des späteren Modells erheblich verringert werden.</para>
     </section>
 
     <section id="kalypso_na-Systemelemente">
       <title>Verknüpfung der Systemelemente</title>
 
       <indexterm>
-        <primary>Systemelementverknüpfung</primary>
+        <primary>Systemelementverknüpfung KalypsoNA</primary>
       </indexterm>
 
       <para>Die räumliche Diskretisierung des zu untersuchenden
@@ -607,7 +471,7 @@
         <mediaobject>
           <imageobject>
             <imagedata fileref="img/kalypso_na/Kapitel_2/netzplan_na.png"
-                       scale="70" />
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -648,22 +512,22 @@
       Grundwasserspeichers bis zu 3 anderen Speichern beliebiger Teilgebiete
       zugeschlagen werden.</para>
 
-      <para>Des weiteren kann die Abflußkomponente des
-      Tiefengrundwasserleiters eines Teilgebietes einem beliebigem Knoten
-      zugeschlagen werden. Hierfür läßt sich auch ein imaginärer Knoten
+      <para>Des weiteren kann die Abflusskomponente des
+      Tiefengrundwasserleiters eines Teilgebietes einem beliebigen Knoten
+      zugeschlagen werden. Hierfür lässt sich auch ein imaginärer Knoten
       wählen, der über ebenfalls imaginäre Stränge an das Oberflächennetz
       angeschlossen werden kann. Auf diese Weise lassen sich Fließvorgänge
       z.B. eines Karstgrundwasserleiters in einem eigenständigen Netz in das
       Modell einbauen.</para>
 
-      <para>Der Gesamtabfluß am oberen Knoten eines Stranges wird ohne
+      <para>Der Gesamtabfluss am oberen Knoten eines Stranges wird ohne
       Verluste dem unteren Knoten zugeführt. In speziell gekennzeichneten
       Fällen können allerdings Abschläge in beliebiger Art und Höhe aus einem
       Gerinnestrang einem anderen, beliebigen Knoten zugeführt werden. Es ist
-      entweder möglich, lediglich einen festen Anteil oder einen konstanten
-      Wert eines Gerinneabschnittes anderen Knoten zuzuführen (z.B.
-      Karstquellen). Diese Modelloption dient zur Berücksichtigung von
-      Sickerverlusten aus dem Gerinne (z.B. ins Tiefengrundwasser).</para>
+      möglich, entweder einen festen Anteil oder einen konstanten Wert eines
+      Gerinneabschnittes einen anderen Knoten zuzuführen (z.B. Karstquellen).
+      Diese Modelloption dient zur Berücksichtigung von Sickerverlusten aus
+      dem Gerinne (z.B. ins Tiefengrundwasser).</para>
 
       <figure>
         <title>Komponenten eines Netzplans</title>
@@ -671,7 +535,7 @@
         <mediaobject>
           <imageobject>
             <imagedata fileref="img/kalypso_na/Kapitel_2/Systemelments-na.png"
-                       scale="70" />
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -707,39 +571,59 @@
         </listitem>
 
         <listitem>
-          <para>verbinde verschiedene Flüsse in einem Knoten und füge einen
-          virtuellen Strang hinzu, bevor der Zufluss in den Hauptstrom
-          stattfindet</para>
+          <para>verbinden verschiedener Flüsse in einem Knoten und hinzufügen
+          eines virtuellen Stranges, bevor der Zufluss in den Hauptstrom
+          erfolgt</para>
         </listitem>
       </itemizedlist>
     </section>
 
-    <section>
+    <section id="kalypso_na-Zeitreihenaufbereitung">
       <title>Aufbereitung der Zeitreihen</title>
 
+      <indexterm>
+        <primary>Zeitreihenaufbereitung KalypsoNA</primary>
+      </indexterm>
+
       <para></para>
     </section>
 
-    <section>
+    <section id="kalypso_na-hydraulische-Berechnung">
       <title>Hydraulische Berechnung</title>
 
+      <indexterm>
+        <primary>Hydraulische Berechnung KalypsoNA</primary>
+      </indexterm>
+
       <para></para>
     </section>
 
-    <section>
+    <section id="kalypso_na-Teil-Strangdaten">
       <title>Ermittlung der Teilgebiets- und Strangdaten</title>
 
+      <indexterm>
+        <primary>Teilgebiets- und Strangdaten KalypsoNA</primary>
+      </indexterm>
+
       <para></para>
     </section>
 
-    <section>
+    <section id="kalypso_na-Retention">
       <title>Ermittlung der Retentionskonstanten</title>
 
+      <indexterm>
+        <primary>Retentionskonstanten KalypsoNA</primary>
+      </indexterm>
+
       <para></para>
     </section>
 
-    <section>
+    <section id="kalypso_na-Zeitflächenfunktion">
       <title>Ermittlung der Zeitflächenfunktion je Teilgebiet</title>
+
+      <indexterm>
+        <primary>Zeitflächenfunktion je Teilgebiet KalypsoNA</primary>
+      </indexterm>
 
       <para></para>
     </section>
@@ -831,28 +715,33 @@
       <para>Ein neues NA-Modell erfordert im Rahmen des Preprocessings die
       Aufbereitung der geometrischen Eingangsdaten (Teilgebiete, Stränge und
       Knoten), sowie die Erstellung der hydrologischen Einheiten (Hydrotope)
-      in einem GIS. Notwendige Inhalte der GIS Grundlagendateien sind in <xref
-      linkend="kalypso_na-mapping_teilgebiete" />,<xref
-      linkend="kalypso_na-mapping_straenge" />,<xref
-      linkend="kalypso_na-mapping_knoten" /> und <xref
-      linkend="kalypso_na-mapping_hydrotope" /> zu finden. Im Kalypso Modeler
-      (siehe <xref linkend="programm_start" />) können diese Daten dann in ein
-      neues NA-Modell Projekt integriert werden. Um die Datenmenge und später
-      die Rechenzeit zu reduzieren ist es empfehlenswert gleiche Hydrotope in
+      in einem GIS. Notwendige Inhalte der GIS Grundlagendateien sind in den
+      weiter unten aufgeführten <emphasis>Mapping Shape-Datei</emphasis>
+      Tabellen zu finden. Im Kalypso Modeler (siehe <xref
+      linkend="programm_start" />) können diese Daten dann in ein neues
+      NA-Modell Projekt integriert werden. Um die Datenmenge und später die
+      Rechenzeit zu reduzieren ist es empfehlenswert gleiche Hydrotope in
       einem Teilgebiet zu vereinigen (GIS Anwendung dissolve).</para>
 
       <para>Ein neues Projekt kann durch Auswahl des Menüpunktes
-      <guimenuitem>Datei &gt; Neu &gt; Andere</guimenuitem> mit Hilfe eines
+      <guimenuitem>Datei =&gt; Neu =&gt; Andere</guimenuitem> mit Hilfe eines
       Assistenten angelegt werden. Es ist der Assistent <guimenuitem>Kalypso
-      &gt; Niederschlag-Abfluss Modell &gt; NA Projekt</guimenuitem>
-      auszuwählen. Mit Hilfe des darauf folgenden Dialoges kann ein NA-Modell
-      Projekt erstellt werden, indem die Inhalte der im Preprozessing
-      erstellten Shape-Dateien den Elementen des NA-Modelles zugeordnet
-      werden.</para>
+      =&gt; Niederschlag-Abfluss Modell =&gt; NA Projekt</guimenuitem>
+      auszuwählen. Ein weiterer Weg erfolgt über die <emphasis>Welcom
+      Site</emphasis>, hier ist der Button <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_3/Kalypso_NA_button.png"
+                       scale="30" />
+          </imageobject>
+        </inlinemediaobject> Kalypso NA zu betätigen und anschließend ein
+      <emphasis role="bold">neues Projekt erstellen</emphasis> auszuwählen.
+      Mit Hilfe des darauf folgenden Dialoges kann ein NA-Modell Projekt
+      erstellt werden, indem die Inhalte der im Preprozessing erstellten
+      Shape-Dateien den Elementen des NA-Modelles zugeordnet werden.</para>
 
       <para>Die erste Abfrage des Assistenten bezieht sich auf den Namen sowie
       den Speicherort des neuen Projektes. Durch klicken des Buttons
-      <guibutton>weiter</guibutton> wird die Abfrage fortgeführt. Die folgende
+      <guibutton>Next</guibutton> wird die Abfrage fortgeführt. Die folgende
       Abfrage des Assistenten bezieht sich auf allgemeine
       Projektvoreinstellungen. Es können die Anzahl der modellierten
       Bodenschichten (es wird die entsprechende Anzahl von
@@ -860,6 +749,17 @@
       der mit Hilfe des Hydraulikmodells (WspWin) ermittelten Abflüsse (es
       wird die entsprechende Anzahl von Kalinin-Miljukov Parametern angelegt -
       im Modell ist dieser Wert zur Zeit auf 5 festgelegt).</para>
+
+      <figure>
+        <title>Eingabe des Projektnamens und der Voreinstellungen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_3/neues_projekt1.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
 
       <para>Im Anschluss sind nacheinander die Shape Dateien der Teilgebiete,
       Stränge, Knoten und Hydrotope mit Hilfe des Dateibrowsers auszuwählen
@@ -874,26 +774,80 @@
       bei der Modellerstellung in den Shape-Dateien vorhanden sein sollten. Da
       eine Assoziation der Elemente (Teilgebiete, Knoten, Stränge) anhand von
       Nummerierungen zur Übersichtlichkeit beiträgt, wird optional die Nummer
-      der Elemente entsprechend einer Namensgebung dem Zielobjekt
-      <literal>name</literal> zugeordnet. Zusätzlich ist das Element
-      <literal>description</literal> für eine allgemeine Beschreibung bzw.
-      einen wirklichen Namen (<abbrev>z. B.</abbrev> Pegelname) optional zu
-      besetzen. Die Flächen der Geometrieobjekte werden automatisch vom
-      Programm ermittelt und müssen somit nicht zugeordnet werden.</para>
+      der Elemente entsprechend einer Namensgebung dem Zielobjekt <literal>
+      name</literal> zugeordnet. Zusätzlich ist das Element <literal>
+      description</literal> für eine allgemeine Beschreibung bzw. einen
+      wirklichen Namen (<abbrev>z. B.</abbrev> Pegelname) optional zu
+      besetzen. Die <emphasis role="bold">Flächen der Geometrieobjekte werden
+      automatisch vom Programm ermittelt</emphasis> und müssen somit nicht
+      zugeordnet werden.</para>
 
       <para>Da das Mapping unabhängig der Namensgebung der Quelle
-      (Spaltenbezeichung in der Shape-Datei) ist, dient die Spalte Quelle in
-      den folgenden Tabellen lediglich als Hinweis. Die Verwendung der
-      Elemente ist in der Spalte Bedeutung erläutert. Zusätzliche Elemente
-      sind wahlweise in die Shape-Dateien zu integrieren und mit Hilfe des
+      (Spaltenbezeichung in der Shape-Datei) ist, dient die Spalte <emphasis
+      role="bold">Quelle</emphasis> in den folgenden Tabellen lediglich als
+      Hinweis. Die Verwendung der Elemente ist in der Spalte <emphasis
+      role="bold">Bedeutung </emphasis>erläutert. Zusätzliche Elemente sind
+      wahlweise in die Shape-Dateien zu integrieren und mit Hilfe des
       Assistenten den jeweiligen Modellelementen zuzuordnen. Alle Elemente,
       welche nicht über das Mapping übertragen werden, können später bei der
       Modellvervollständigung in entsprechenden Tabellen bearbeitet werden. Es
       ist aufgrund der Datenredundanz sinnvoll nur die vorgeschlagenen
-      statischen Informationen durch die Shape-Dateien vorzuhalten.</para>
+      <emphasis role="bold">statischen Informationen</emphasis> durch die
+      Shape-Dateien vorzuhalten.</para>
+
+      <para><table align="center" id="kalypso_na-mapping_teilgebiete">
+          <title>Mapping Shape-Datei - Modellelement (Teilgebiete)</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <thead>
+              <row>
+                <entry>Quelle</entry>
+
+                <entry>Ziel</entry>
+
+                <entry>Bedeutung</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>GEOM</entry>
+
+                <entry>Geometrie</entry>
+
+                <entry>Geometrie (Polygon)</entry>
+              </row>
+
+              <row>
+                <entry>TeilgebNr</entry>
+
+                <entry>name</entry>
+
+                <entry align="center">Teilgebietsnummer zur besseren Zuordnung
+                <emphasis role="bold">(optional)</emphasis></entry>
+              </row>
+
+              <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung <emphasis
+                role="bold">(optional)</emphasis>, <abbrev>z. B.</abbrev> Name
+                des zugehörigen Gewässersystems</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
 
       <table id="kalypso_na-mapping_straenge">
-        <title>Mapping Shape-Datei - Modellelement (Straenge)</title>
+        <title>Mapping Shape-Datei - Modellelement (Stränge)</title>
 
         <tgroup align="center" cols="3">
           <colspec align="left" colwidth="1*" />
@@ -926,7 +880,8 @@
 
               <entry>name</entry>
 
-              <entry>Strangnummer zur besseren Zuordnung (optional)</entry>
+              <entry>Strangnummer zur besseren Zuordnung <emphasis
+              role="bold">(optional)</emphasis></entry>
             </row>
 
             <row>
@@ -943,8 +898,9 @@
 
               <entry>description</entry>
 
-              <entry>Beschreibung (optional), <abbrev>z. B.</abbrev>
-              Gewässername, Rückhaltebeckenbezeichnung</entry>
+              <entry>Beschreibung <emphasis role="bold">(optional)</emphasis>,
+              <abbrev>z. B.</abbrev> Gewässername,
+              Rückhaltebeckenbezeichnung</entry>
             </row>
           </tbody>
         </tgroup>
@@ -984,7 +940,8 @@
 
               <entry>name</entry>
 
-              <entry>Knotennummer zur besseren Zuordnung (optional)</entry>
+              <entry>Knotennummer zur besseren Zuordnung <emphasis
+              role="bold">(optional)</emphasis></entry>
             </row>
 
             <row>
@@ -992,12 +949,149 @@
 
               <entry>description</entry>
 
-              <entry>Beschreibung (optional), <abbrev>z. B.</abbrev>
-              Pegelbezeichnung, Ortsbezeichnung, Fluss-Kilometer</entry>
+              <entry>Beschreibung <emphasis role="bold">(optional)</emphasis>,
+              <abbrev>z. B.</abbrev> Pegelbezeichnung, Ortsbezeichnung,
+              Fluss-Kilometer</entry>
             </row>
           </tbody>
         </tgroup>
       </table>
+
+      <table id="kalypso_na-mapping_hydrotope">
+        <title>Mapping Shape-Dateien - Modellelemente (Hydrotope)</title>
+
+        <tgroup align="center" cols="3">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" />
+
+          <colspec align="left" />
+
+          <thead>
+            <row>
+              <entry>Quelle</entry>
+
+              <entry>Ziel</entry>
+
+              <entry>Bedeutung</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>Beschr</entry>
+
+              <entry>description</entry>
+
+              <entry>Beschreibung <emphasis
+              role="bold">(optional)</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>Name</entry>
+
+              <entry>name</entry>
+
+              <entry>Name <emphasis role="bold">(optional)</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>GEOM</entry>
+
+              <entry>Geometrie</entry>
+
+              <entry>Geometrie (Multipolygon)</entry>
+            </row>
+
+            <row>
+              <entry>NutzungALB</entry>
+
+              <entry>Nutzungsschlüssel</entry>
+
+              <entry>Kürzel der Landnutzung (Zuordnung zu den global
+              definierten Nutzungsparametern)</entry>
+            </row>
+
+            <row>
+              <entry>Bodentyp</entry>
+
+              <entry>Bodenschlüssel</entry>
+
+              <entry>Kürzel des Bodenaufbaus. (Zuordnung zu den global
+              definierten Bodenparametern)</entry>
+            </row>
+
+            <row>
+              <entry>VersiegKor</entry>
+
+              <entry>Faktor Versiegelung</entry>
+
+              <entry>Multiplikativer Korrekturfaktor des global definierten
+              Versiegelungsgrades einer Landnutzung</entry>
+            </row>
+
+            <row>
+              <entry>EntwArt</entry>
+
+              <entry>Entwässerung</entry>
+
+              <entry>Unterscheidung in besielte und unbesielte Flächen
+              <emphasis role="bold">(optional)</emphasis></entry>
+            </row>
+
+            <row>
+              <entry>MaxPerRate</entry>
+
+              <entry>max. Perkolationsrate</entry>
+
+              <entry>Hydraulische Leitfähigkeit, mit der das aus der letzten
+              Bodenschicht perkolierte Wasser in das GW eindringen
+              kann.</entry>
+            </row>
+
+            <row>
+              <entry>GWFaktor</entry>
+
+              <entry>Zuflussanteil GW</entry>
+
+              <entry>Anteil des Grundwassers, das im oberen Grundwasserleiter
+              verbleibt. Der Differenzanteil wird in den
+              Tiefengrundwasserleiter abgeschlagen.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para><note>
+          <para>Nutzungs- und Bodenschlüssel dienen der Zuordnung der
+          Landnutzung und des Bodentypes zu den Attributen im Parameterkatalog
+          ( siehe <xref linkend="kalypso_na-hydrotopparameter" /> ). Es ist
+          daher auf eine korrekte Schreibweise zu achten.</para>
+        </note></para>
+
+      <figure>
+        <title>Durchführung des Mapping</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_3/Mapping1.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Bei der Eingabe der Inhalte ist folgendermaßen vorzugehen. Über
+      den Button <emphasis role="bold">Durchsuchen</emphasis> wird die
+      geforderte Shape-Datei ermittelt. Anschließend werden nacheinander die
+      einzelnen Unterpunkte des Dateifensters abgearbeitet und über 1. die
+      <emphasis role="bold">Zuordnung bestätigt</emphasis>. Ist man von der
+      Richtigkeit der Eingabe überzeugt erfolgt ein Klick auf <emphasis
+      role="bold">Next</emphasis> (2.) und ein neues Dateifenster geht auf.
+      Bei dem letzten Dateifenster Hydrotope erfolgt nach der Eingabe der
+      Inhalte ein Klick auf <emphasis role="bold">Finish</emphasis> und das
+      Dateifenster wird geschlossen. Nun befindet man sich in der Kalypso
+      Simulation Platform, wo der neu angelegte Ordner im View <emphasis
+      role="bold">Navigator</emphasis> angezeigt wird.</para>
     </section>
 
     <section id="kalypso_na-systemvernetzung">
@@ -1008,10 +1102,11 @@
       </indexterm>
 
       <para>Die Vernetzung des Modelles erfolgt auf Basis übertragener
-      Geometrien der Shape-Dateien. Mit Hilfe der Karte Modellvernetzung
-      werden die Geometrien als Punktelemente dargestellt, welche mit Hilfe
-      des Netzeditors entsprechend des realen Entwässerungssystems verbunden
-      werden können.</para>
+      Geometrien der Shape-Dateien. Mit Hilfe der Karte <emphasis
+      role="bold">Basiskarten =&gt;</emphasis> <emphasis
+      role="bold">Modellvernetzung</emphasis> werden die Geometrien als
+      Punktelemente dargestellt, welche mit Hilfe des Netzeditors entsprechend
+      des realen Entwässerungssystems verbunden werden können.</para>
 
       <para><figure>
           <title>Karte Modellvernetzung</title>
@@ -1024,47 +1119,56 @@
             </imageobject>
           </mediaobject>
         </figure>Die Relationen können in der Karte mit der Kartenfunktion
-      <guimenuitem>Karte &gt; Relation setzen</guimenuitem> editiert werden.
-      Bei Aktivierung der Funktion Relation setzen erscheint zur Hilfe die
+      <guimenuitem>Karte =&gt; Relation setzen</guimenuitem> editiert werden.
+      Bei Aktivierung der Funktion Relation setzen, erscheint zur Hilfe die
       Ansicht <guimenu>Edit Optionen</guimenu>. Diese Ansicht dient der
-      Auswahl der zu setzenden Realtionen, um den Umfang der möglichen
-      Realtionen zu reduzieren und so den Netzaufbau übersichtlich zu
-      gestalten. Es können einzelne Relationen durch setzen eines Hakens im
-      Kontrollkästchen an- bzw. ausgeschaltet werden. Hierbei ist es durch die
-      hierarchische Anordnung möglich, ganze Gruppen zu bedienen.</para>
+      Auswahl der zu setzenden Relationen, um den Umfang der möglichen
+      Relationen zu reduzieren und so den Netzaufbau übersichtlich zu
+      gestalten. Es können zunächst einzelne Relationen durch setzen eines
+      Hakens im Kontrollkästchen an- bzw. ausgeschaltet werden. Hierbei ist es
+      durch die hierarchische Anordnung möglich, ganze Gruppen zu
+      bedienen.</para>
 
       <para>Eine Relation wird durch "ziehen" einer Verbindung mit der Maus
-      erreicht. Hierzu ist das Anfangselement durch Klicken der linken
-      Maustaste (nicht loslassen) auszuwählen. Zieht man die Verbindung auf
-      das Zielelement, so wird bei einer möglichen Verbindung eine dünne rote
-      Linie sichtbar. Ist die gewünschte Verbindung auf diese Weise angezeigt,
-      so kann die Maustaste losgelassen werden, um die Verbindung zu setzen.
-      Die Realation wird durch einen Pfeil der entsprechenden Farbe des
-      Ausgangselementes symbolisiert (Darstellung entsprechend des gewählten
-      Styles).</para>
+      erreicht. Hierzu ist das Anfangselement durch <emphasis
+      role="bold">Klicken der linken Maustaste</emphasis> (nicht loslassen)
+      auszuwählen. <emphasis role="bold">Zieht</emphasis> man die Verbindung
+      <emphasis role="bold">auf das Zielelement</emphasis>, so wird bei einer
+      möglichen Verbindung eine dünne rote Linie sichtbar. Ist die gewünschte
+      Verbindung auf diese Weise angezeigt, so kann die <emphasis
+      role="bold">Maustaste losgelassen</emphasis> werden, um die Verbindung
+      zu setzen. Die Realation wird durch einen Pfeil der entsprechenden Farbe
+      des Ausgangselementes symbolisiert (Darstellung entsprechend des
+      gewählten Styles).</para>
 
       <para>Der Verlauf des abzubildenenden Gewässers wird durch Relationen
-      von Strängen zu Knoten und wiederum weiter von Knoten zu Strängen
-      realisiert. Die Verbindungen werden jeweils in Fließrichtung getätigt.
-      An das so entstandene Gewässersystem werden die Teilgebiete durch eine
-      Relation vom Teilgebiet zum Strang angebunden (die Entwässerung des
-      Teilgebietes erfolgt am Unterwasserknoten des Stranges). Zusätzlich wird
-      das unterirdische Einzugsgebiet - das Grundwassersystem - durch die
-      Verbindung von Teilgebiet zu Teilgebieten abgebildet. Für weitere
-      Spezialfälle wie Zuflüsse, Verzweigungen, Entnahmen, usw. sind
-      zusätzliche Knoten zu Knoten Relationen möglich. Sind bei der
-      Verknüpfung zweier Elemente mehrere Verbindungsmöglichkeiten vorhanden,
-      so kann die entsprechend gewünschte Verbindung durch einen Auswahldialog
-      festgesetzt werden.</para>
+      <emphasis role="bold">von</emphasis> <emphasis role="bold">Strängen zu
+      Knoten</emphasis> und wiederum weiter <emphasis role="bold">von Knoten
+      zu Strängen</emphasis> realisiert (siehe <xref
+      linkend="kalypso_na-Systemelemente" /> ). Die Verbindungen werden
+      jeweils <emphasis role="bold">in Fließrichtung</emphasis> getätigt. An
+      das so entstandene Gewässersystem werden die Teilgebiete durch eine
+      Relation <emphasis role="bold">vom Teilgebiet zum Strang</emphasis>
+      angebunden (die Entwässerung des Teilgebietes erfolgt <emphasis
+      role="bold">am Unterwasserknoten des Stranges</emphasis>). Zusätzlich
+      wird das unterirdische Einzugsgebiet - das Grundwassersystem - durch die
+      Verbindung <emphasis role="bold">von Teilgebiet zu
+      Teilgebieten</emphasis> abgebildet. Für weitere Spezialfälle wie
+      Zuflüsse, Verzweigungen, Entnahmen, usw. sind zusätzliche Knoten zu
+      Knoten Relationen möglich. Sind bei der Verknüpfung zweier Elemente
+      mehrere Verbindungsmöglichkeiten vorhanden, so kann die entsprechend
+      gewünschte Verbindung durch einen Auswahldialog festgesetzt
+      werden.</para>
 
       <para>Die Relationen sind durch die Tatsache, dass die Systemstruktur
       eine gerichtete Baumstruktur sein muss in ihrer Anordnung begrenzt.
       Sollte eine Relation nicht möglich sein, so kann sie auch nicht editiert
       werden. Als Information über die getätigte Auswahl der Elemente und
-      eventuell auftretender Probleme bei der Vernetzung dient das
-      Informationsfenster am unteren Rand der Ansicht Edit Optionen.</para>
+      eventuell auftretender Probleme bei der Vernetzung, dient dass
+      Informationsfenster am unteren Rand der Ansicht <emphasis
+      role="bold">Edit Optionen</emphasis>.</para>
 
-      <para>Das Funktionalität des Löschens einer Verbindung wird durch
+      <para>Die Funktionalität des Löschens einer Verbindung wird durch
       Auswahl der Option <guimenuitem>Relationen entfernen</guimenuitem> im
       Fenster Edit Optionen auf gleicher Art und Weise erreicht.</para>
 
@@ -1088,29 +1192,34 @@
         <primary>Parameter editieren KalypsoNA</primary>
       </indexterm>
 
-      <para>Die Parameter können in den Karten,Tabellen sowie in der Feature
-      (Element)- und Baumansicht geändert werden. Prinzipiell können alle
+      <para>Die Parameter können in den <emphasis
+      role="bold">BasisKarten</emphasis> und <emphasis
+      role="bold">BasisTabellen</emphasis>, sowie in der Feature (Element)-
+      und Baumansicht unter doppel klicken von <emphasis role="bold">model.gml
+      <emphasis>( im Fenster Navigator)</emphasis> =&gt; &lt;Standard
+      baumansicht&gt;.gmv</emphasis> geändert werden. Prinzipiell können alle
       einfachen Datentypen direkt in den entsprechenden Feldern editiert
       werden. Bei komplexen Datentypen, wie <abbrev>z. B.</abbrev>
       Zeitreihenverknüpfungen und Diagrammelementen erfolgt die Bearbeitung in
       einem Zusatzdialog.</para>
 
-      <para>Einfach Daten, wie <abbrev>z. B.</abbrev> Textelemente, Zahlen und
-      Datumsangaben können in den Tabellenzellen per Tastatur editiert werden.
-      Hilfestellung beim Bearbeiten von Zahlen bietet die Funktion
-      <guimenuitem>Auswahl bearbeiten -&gt; Werte anpassen</guimenuitem> und
-      <guimenuitem>Werte übertragen</guimenuitem> , welche durch das Menu der
-      rechten Maustaste ausgelöst werden kann. Bei den Datumseingaben ist
-      darauf zu achten, dass die Anzeige entsprechend der globalen Zeitzone in
-      den Voreinstellungen erfolgt.</para>
+      <para>Einfache Daten, wie <abbrev>z. B.</abbrev> Textelemente, Zahlen
+      und Datumsangaben können in den Tabellenzellen per Tastatur editiert
+      werden. Hilfestellung beim Bearbeiten von Zahlen bietet die Funktion
+      <guimenuitem>Auswahl bearbeiten =&gt; Werte anpassen</guimenuitem> und
+      <guimenuitem>Werte übertragen</guimenuitem> , welche durch das Menü der
+      <emphasis role="bold">rechten Maustaste</emphasis> ausgelöst werden
+      kann. Bei den Datumseingaben ist darauf zu achten, dass die Anzeige
+      entsprechend der globalen Zeitzone in den Voreinstellungen
+      erfolgt.</para>
 
-      <para>Komplexer Datentypen werden meist durch einen speziellen Editor
+      <para>Komplexere Datentypen werden meist durch einen speziellen Editor
       bearbeitet. In Kapitel <xref linkend="kalypso_na-systemvernetzung" />
       wurde bereits der Netzeditor zum Bearbeiten von Relationen dargestellt.
-      Neben den Relationen sind Listen, Zeitreihenverknüpfunegn und Diagramme
+      Neben den Relationen sind Listen, Zeitreihenverknüpfungen und Diagramme
       weitere Arten von komplexen Daten. Listen können über die Elementansicht
       (Feature View) als Tabelle innerhalb der Elementdaten editiert werden.
-      Die Bearbeitung von Zeitreihenverknüpfung wird in Kapitel <xref
+      Die Bearbeitung von Zeitreihenverknüpfungen wird in Kapitel <xref
       linkend="kalypso_na-zeitreihenverknüpfung" /> behandelt. Zum Bearbeiten
       von Diagrammen dient ein Diagrammeditor, welcher im Folgenden erläutert
       wird.</para>
@@ -1168,7 +1277,7 @@
               <imageobject>
                 <imagedata align="center"
                            fileref="img/kalypso_na/diagramm_neu_schritte-na.png"
-                           scale="80" />
+                           scale="100" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -1195,7 +1304,7 @@
               <imageobject>
                 <imagedata align="center"
                            fileref="img/kalypso_na/diagramm_import_schritte-na.png"
-                           scale="90" />
+                           scale="100" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -1224,8 +1333,9 @@
       untergliedern sich in Allgemeine Gebietsinformationen, Relationen,
       Zeitreihenverknüpfungen, Retentions- und Translationsparamter,
       Anfangswerte, Korrekturparameter, Grundwasserparameter und
-      Optimierungsparameter. Alle Parameter, welche als optinal gekennzeichnet
-      sind, werden nicht zwingend vom Programm benötigt.</para>
+      Optimierungsparameter. Alle Parameter, welche als <emphasis
+      role="bold">optinal</emphasis> gekennzeichnet sind, werden nicht
+      zwingend vom Programm benötigt.</para>
 
       <table>
         <title>Allgemeine Teilgebietsinformationen</title>
@@ -1263,8 +1373,8 @@
 
               <entry>-</entry>
 
-              <entry>Teilgebietsnummer zur besseren Zuordnung
-              (optional)</entry>
+              <entry>Teilgebietsnummer zur besseren Zuordnung <emphasis
+              role="bold">(optional)</emphasis></entry>
 
               <entry>Text</entry>
             </row>
@@ -1276,8 +1386,9 @@
 
               <entry>-</entry>
 
-              <entry>Beschreibung des Teilgebietes (optional), <abbrev>z.
-              B.</abbrev> Name des zugehörigen Gewässersystems</entry>
+              <entry>Beschreibung des Teilgebietes <emphasis
+              role="bold">(optional)</emphasis>, <abbrev>z. B.</abbrev> Name
+              des zugehörigen Gewässersystems</entry>
 
               <entry>Text</entry>
             </row>
@@ -1316,7 +1427,8 @@
 
               <entry>-</entry>
 
-              <entry>Teilgebietsfläche (optional, da nur zur Information. Wird
+              <entry>Teilgebietsfläche (<emphasis
+              role="bold">optional</emphasis>, da nur zur Information. Wird
               vom Programm beim Import der Shape-Daten ermittelt). Die
               Berechnungsfläche ergibt sich aus den zum Teilgebiet gehörigen
               Hydrotopen.</entry>
@@ -1637,7 +1749,7 @@
               <entry></entry>
 
               <entry>Korrekturfaktor der Retentionskonstante versiegelter
-              Abfluss (optional).</entry>
+              Abfluss <emphasis role="bold">(optional)</emphasis>.</entry>
 
               <entry>Zahl (double)</entry>
             </row>
@@ -1650,7 +1762,8 @@
               <entry></entry>
 
               <entry>Korrekturfaktor der Retentionskonstante
-              Oberflächenabfluss (optional).</entry>
+              Oberflächenabfluss <emphasis
+              role="bold">(optional)</emphasis>.</entry>
 
               <entry>Zahl (double)</entry>
             </row>
@@ -1676,7 +1789,7 @@
               <entry></entry>
 
               <entry>Korrekturfaktor der Retentionskonstante Basisabfluss
-              (optional).</entry>
+              <emphasis role="bold">(optional)</emphasis>.</entry>
 
               <entry>Zahl (double)</entry>
             </row>
@@ -1689,7 +1802,8 @@
               <entry></entry>
 
               <entry>Korrekturfaktor der Retentionskonstante
-              Grundwasserabfluss (optional).</entry>
+              Grundwasserabfluss <emphasis
+              role="bold">(optional)</emphasis>.</entry>
 
               <entry>Zahl (double)</entry>
             </row>
@@ -1702,7 +1816,7 @@
               <entry></entry>
 
               <entry>Korrekturfaktor der Retentionskonstante Tiefengrundwasser
-              (optional).</entry>
+              <emphasis role="bold">(optional)</emphasis>.</entry>
 
               <entry>Zahl (double)</entry>
             </row>
@@ -2148,7 +2262,8 @@
 
               <entry>-</entry>
 
-              <entry>Zielknoten des Tiefengrundwassers (optional).</entry>
+              <entry>Zielknoten des Tiefengrundwassers <emphasis
+              role="bold">(optional)</emphasis>.</entry>
 
               <entry>Relation</entry>
             </row>
@@ -2267,7 +2382,8 @@
 
               <entry>-</entry>
 
-              <entry>Strangnummer zur besseren Zuordnung (optional)</entry>
+              <entry>Strangnummer zur besseren Zuordnung <emphasis
+              role="bold">(optional)</emphasis></entry>
 
               <entry>Text</entry>
             </row>
@@ -2279,8 +2395,9 @@
 
               <entry>-</entry>
 
-              <entry>Beschreibung des Stranges (optional), <abbrev>z.
-              B.</abbrev> Name des Flusses, name des Rückhaltebeckens.</entry>
+              <entry>Beschreibung des Stranges <emphasis
+              role="bold">(optional)</emphasis>, <abbrev>z. B.</abbrev> Name
+              des Flusses, name des Rückhaltebeckens.</entry>
 
               <entry>Text</entry>
             </row>
@@ -2382,7 +2499,8 @@
 
               <entry></entry>
 
-              <entry>Kilometrierung Unterwasser (optional).</entry>
+              <entry>Kilometrierung Unterwasser <emphasis
+              role="bold">(optional)</emphasis>.</entry>
 
               <entry>double</entry>
             </row>
@@ -2394,7 +2512,8 @@
 
               <entry></entry>
 
-              <entry>Kilometrierung Oberwasser (optional).</entry>
+              <entry>Kilometrierung Oberwasser <emphasis
+              role="bold">(optional)</emphasis>.</entry>
 
               <entry>double</entry>
             </row>
@@ -2600,9 +2719,9 @@
               <entry>-</entry>
 
               <entry>Zielknoten auf den die Hochwasserentlastungsanlage
-              abschlägt (optional). Falls unbesetzt, wird der Überlauf zum
-              Grundabfluss addiert und dem Entwässerungsknoten des
-              Speicherstranges zugeschlagen.</entry>
+              abschlägt <emphasis role="bold">(optional)</emphasis>. Falls
+              unbesetzt, wird der Überlauf zum Grundabfluss addiert und dem
+              Entwässerungsknoten des Speicherstranges zugeschlagen.</entry>
 
               <entry>Link</entry>
             </row>
@@ -2775,7 +2894,7 @@
 
       <para>Die Modellknoten sind für das Modell als Verknüpfungselement zu
       sehen, welche auch einfache Bauwerkseigenschaften erfüllen können. Neben
-      den allgemeinen Informationen und Zeitreiehenverknüfungen beinhalten die
+      den allgemeinen Informationen und Zeitreihenverknüpfungen beinhalten die
       Knotenparameter daher auch die Knoten zu Knoten Relationen, welche die
       Modellierung einer Gewässerverzeigung ermöglichen.</para>
 
@@ -2815,7 +2934,8 @@
 
               <entry>-</entry>
 
-              <entry>Knotennummer zur besseren Zuordnung (optional)</entry>
+              <entry>Knotennummer zur besseren Zuordnung <emphasis
+              role="bold">(optional)</emphasis></entry>
 
               <entry>Text</entry>
             </row>
@@ -2827,8 +2947,9 @@
 
               <entry>-</entry>
 
-              <entry>Beschreibung des Knotens (optional), <abbrev>z.
-              B.</abbrev> Pegelname, Name des Ortes.</entry>
+              <entry>Beschreibung des Knotens <emphasis
+              role="bold">(optional)</emphasis>, <abbrev>z. B.</abbrev>
+              Pegelname, Name des Ortes.</entry>
 
               <entry>Text</entry>
             </row>
@@ -2944,9 +3065,10 @@
 
               <entry>Pegel/*.zml</entry>
 
-              <entry>Pegelzeitreihe, lokal im Rechenfall (optional). Bei
-              vorhandenen W/Q-Beziehungen in der Pegelzeitreihe, werden diese
-              für das Ergebnis an diesem Knoten übernommen.</entry>
+              <entry>Pegelzeitreihe, lokal im Rechenfall <emphasis
+              role="bold">(optional)</emphasis>. Bei vorhandenen
+              W/Q-Beziehungen in der Pegelzeitreihe, werden diese für das
+              Ergebnis an diesem Knoten übernommen.</entry>
 
               <entry>Zeitreihenlink</entry>
             </row>
@@ -2959,9 +3081,10 @@
               <entry>Ergebnisse/ Berechnet/*.zml</entry>
 
               <entry>Zeitreihenverknüfung zum berechneten Knotenabfluss, lokal
-              im Rechenfall (optional). Ist diese Verknüpfung gesetzt, so wird
-              die Ergebniszeitreihe gemäß des vorgegebenen Pfades gespeichert
-              und nicht in den allgemeinen Knotenergebnissen abgelegt.</entry>
+              im Rechenfall <emphasis role="bold">(optional)</emphasis>. Ist
+              diese Verknüpfung gesetzt, so wird die Ergebniszeitreihe gemäß
+              des vorgegebenen Pfades gespeichert und nicht in den allgemeinen
+              Knotenergebnissen abgelegt.</entry>
 
               <entry>Zeitreihenlink</entry>
             </row>
@@ -2973,10 +3096,10 @@
 
               <entry>Zufluss/*.zml</entry>
 
-              <entry>Zufluss Zeitreihe, lokal im Rechenfall (optional).
-              Besteht ein Knotenzufluss, so ist die entsprechende
-              Zulaufganglinie hier zu verknüpfen (<abbrev>z. B.</abbrev>
-              Einleitung).</entry>
+              <entry>Zufluss Zeitreihe, lokal im Rechenfall <emphasis
+              role="bold">(optional)</emphasis>. Besteht ein Knotenzufluss, so
+              ist die entsprechende Zulaufganglinie hier zu verknüpfen
+              (<abbrev>z. B.</abbrev> Einleitung).</entry>
 
               <entry>Zeitreihenlink</entry>
             </row>
@@ -3104,7 +3227,7 @@
         <primary>Parameter der Hydrotope KalypsoNA</primary>
       </indexterm>
 
-      <para>Die Hydrotopparameter werden vornehmlich beim Anlagen eines neuen
+      <para>Die Hydrotopparameter werden vornehmlich beim Anlegen eines neuen
       Projektes (siehe <xref linkend="kalypso_na-neues_projekt" />) gesetzt.
       Dies ist sinnvoll, weil die Hydrotopdaten sich im Laufe der Zeit
       verändern (<abbrev>z. B.</abbrev> neue Bebauungen...) und so eine
@@ -3281,7 +3404,7 @@
       projektspezifisch, da er allgemeine Informationen enthält, welche im
       Modell lediglich durch Referenz hierauf verwendet werden. Es ist daher
       empfehlenswert, den Parameterkatalog sehr allgemein aufzubauen, um die
-      Wiederverwedbarkeit der Daten zu gewährleisten.</para>
+      Wiederverwendbarkeit der Daten zu gewährleisten.</para>
 
       <table>
         <title>Parameterkatalog "natürliche" Parameter</title>
@@ -3732,12 +3855,12 @@
       rechenvariante, Zeitreihen updaten,...) finden sich in Kapitel <xref
       linkend="definition_calccase" />.</para>
 
-      <para>Nach dem Anlegen einer neuen Rechenvariante nethält das
+      <para>Nach dem Anlegen einer neuen Rechenvariante enthält das
       Verzeichnis der Rechenvariante alle zur Modellberechnung notwendigen
       Dateien. Diese werden beim Anlegen automatisch vom Programm in das
       entsprechende Verzeichnis kopiert. Es werden verknüpfte Zeitreihen und
       Modellparameter des Basismodells in das Verzeichnis der Rechenvariante
-      abgelegt (siehe Zeitreiehenverknüfung im Zeitreihencontrol des
+      abgelegt (siehe Zeitreihenverknüfpung im Zeitreihencontrol des
       Basismodells <xref linkend="kalypso_na-zeitreihenverknüpfung" />).
       Pegel- und Zuflussganglinien sowie Niederschlags- und Klimazeitreihen
       werden für den Simulationszeitraum aus dem verknüpften
@@ -3912,10 +4035,10 @@
 
       <para>Nachdem alle Modellparameter gesetzt wurden kann die Berechnung
       gestartet werden. Hierzu muss zunächst eine Rechenvariante markiert
-      werden, welcher dann über das <guimenuitem>Menü &gt; Rechenvariante
+      werden, welche dann über das <guimenuitem>Menü &gt; Rechenvariante
       Berechnung(en)</guimenuitem><guimenuitem> durchführen</guimenuitem>
       gestartet wird. Generell ist auch die Berechnung mehrerer
-      Rechanvarianten in einem Schritt möglich, indem das
+      Rechenvarianten in einem Schritt möglich, indem das
       Rechenvariantenverzeichnis ausgewählt wird und im Auswahldialog die
       Rechenvarianten markiert werden, welche berechnet werden sollen.</para>
 
@@ -3960,7 +4083,7 @@
     </indexterm>
 
     <para>Nach der Aufstellung des Basismodells ist die Modellkalibrierung
-    durchzuführen. Diese gliedert sich in die beider Schritte der
+    durchzuführen. Diese gliedert sich in die beiden Schritte der
     Langzeitsimulation (Simulationsintervall &gt; 1440 Minuten, dies
     entspricht einem Tag) zur Kalibrierung des gesamten Wasserhaushaltes und
     der anschließenden Kurzzeitsimulation zur Kalibrierung der schnellen
@@ -4034,11 +4157,11 @@
       Simulationsstart durch die ermittelten Anfangswerte abgedeckt ist. Die
       entsprechenden Anfangsdaten (d.h. die dem Simulationsanfang
       entsprechenden; Dateibenennung: ddMMyyyy(hh).gml) müssen nach Erstellung
-      der Rechenvariante aus dem Basismodell (Ordner Anfangswerte) in den in
-      den Ordner Anfangswerte der Rechenvariante kopiert werden.</para>
+      der Rechenvariante aus dem Basismodell (Ordner Anfangswerte) in den
+      Ordner Anfangswerte der Rechenvariante kopiert werden.</para>
 
       <para>Identisch zur Langzeitsimulation wird die Kurzzeitkalibrierung des
-      modelles in der Rechenvariante durchgeführt. Zu Beachten ist jedoch,
+      Modelles in der Rechenvariante durchgeführt. Zu Beachten ist jedoch,
       dass die Charakteristik von Ereignissen sehr unterschiedlich ist. Aus
       diesem Grund sollten für eine allgemeingültige Kalibrierung mehrere
       Kurzzeitereignisse herangezogen werden. Ist die Kalibrierung
@@ -4054,7 +4177,7 @@
       <primary>Synthetische Ereignissen KalypsoNA</primary>
     </indexterm>
 
-    <para>Auf der Basis eines Kalibrieten NA-Modells können die
+    <para>Auf der Basis eines kalibrierten NA-Modelles können die
     Bemessungsabflüsse für weitere Planungsaufgaben auf Basis synthetischer
     Niederschlagsereignisse ermittelt werden.</para>
 
@@ -4131,7 +4254,7 @@
     KALYPSO-NA erfolgt hauptsächlich in Tabellen. Neben dem <emphasis
     role="bold">(Basis)Tabellen</emphasis>-Verzeichnis ist ein <emphasis
     role="bold">(Basis)Karten</emphasis>-Verzeichnis im Projekt enthalten,
-    welches verschieden Karten zur Modellvisualisierung beinhaltet. Die zur
+    welches verschiedene Karten zur Modellvisualisierung beinhaltet. Die zur
     Visualisierung benötigten Shape-Dateien können im <emphasis
     role="bold">Shape</emphasis>-Verzeichnis abgelegt werden (optional). Für
     das Abholen der Zeitreihen (aus einer Datenbank/ einem lokalen Verzeichnis
@@ -4140,8 +4263,8 @@
     verschiedenen Zeitreihentypen vordefiniert. Der Name des Ordners für die
     Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner <emphasis
     role="bold">Rechenvarianten</emphasis> im Projekt vordefiniert. Unter den
-    Verzeichnissen der angelegten Rechenvarianten findet sich eine jeweiligen
-    Strukturen zur Datenbearbeitung ähnlich zum Hauptverzeichnis wieder. Mit
+    Verzeichnissen der angelegten Rechenvarianten findet sich eine jeweilige
+    Struktur zur Datenbearbeitung ähnlich zum Hauptverzeichnis wieder. Mit
     Hilfe dieser Struktur können die Daten der Rechenvarianten unabhängig zum
     Basismodell bearbeitet werden.</para>
 
@@ -4293,7 +4416,7 @@
     ZeitreihenManagement</emphasis></para>
 
     <para>Zur Anbindung der Zeitreihen aus verschiedenen Datenquellen
-    (Dateisystem, Datenbank) sind zu jedem Zeitreihentyp Verknüfungen mit
+    (Dateisystem, Datenbank) sind zu jedem Zeitreihentyp Verknüfpungen mit
     Hilfe folgender Tabellen herzustellen, um die Zeitreihen bei der
     Erstellung eines Rechenfalles im gewünschten Berechnungszeitraum aus der
     Datenquelle abzuholen :</para>

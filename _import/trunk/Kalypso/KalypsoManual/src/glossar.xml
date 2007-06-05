@@ -47,11 +47,15 @@
   <glossdiv>
     <title>D</title>
 
-    <glossentry>
-      <glossterm></glossterm>
+    <glossentry id="DIN">
+      <glossterm>Deutsches Institut für Normung e. V.</glossterm>
+
+      <acronym>DIN</acronym>
 
       <glossdef>
-        <para></para>
+        <para>Das DIN ist ein eingetragener Verein und ist laut eines
+        Vertrages mit dem Bund die zuständige Normungsorganisation für die
+        europäischen und internationalen Normungsaktivitäten. </para>
       </glossdef>
     </glossentry>
   </glossdiv>
