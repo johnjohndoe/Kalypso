@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -61,11 +59,13 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
  * @author Patrice Congo
  *
  */
+@SuppressWarnings({"unchecked", "hiding"})
 public class CalculationUnitComponent 
       extends FeatureWrapperListEditor 
       implements IButtonConstants
 {
 
+  
   public CalculationUnitComponent()
   {
     super(null,null,null);
@@ -80,9 +80,10 @@ public class CalculationUnitComponent
   @Override
   public void createFeatureWrapper()
   {
-      final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-      CreateCalculationUnitDialog calculationDialog = 
-                    new CreateCalculationUnitDialog( shell, getDataModel() );
+    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    final CreateCalculationUnitDialog calculationDialog = 
+      new CreateCalculationUnitDialog( shell, getDataModel() );      
+      
       int answer = calculationDialog.open();
       if( answer == Window.OK )
       {

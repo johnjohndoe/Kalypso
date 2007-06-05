@@ -475,27 +475,42 @@ public class FeatureWrapperListEditor implements IButtonConstants
   /**
    * Update the gui components to reflect the table new input
    */
-  final void updateOnNewInput( Object input )
+  final void updateOnNewInput( final Object input )
   {
-    if( input == null )
+    Runnable changeInputRunnable = new Runnable()
     {
-      input = new Object[]{};
-    }
-    tableViewer.setInput( input );
-    IFeatureWrapper2 currentSelection = getCurrentSelection();
-//    final IStructuredSelection selection;
-//    if( currentSelection != null )
-//    {
-//      selection = 
-//        new StructuredSelection( new Object[]{ currentSelection } );
-//    }
-//    else
-//    {
-//      selection = 
-//        new StructuredSelection( new Object[]{ } );
-//    }
-//    tableViewer.setSelection( selection );
-    updateOnNewSelection( currentSelection );
+      /**
+       * @see java.lang.Runnable#run()
+       */
+      public void run( )
+      {
+        if( input == null )
+        {
+          tableViewer.setInput( new Object[]{} );
+        }
+        else
+        {
+          tableViewer.setInput( input );
+        }
+        IFeatureWrapper2 currentSelection = getCurrentSelection();
+        //    final IStructuredSelection selection;
+        //    if( currentSelection != null )
+        //    {
+        //      selection = 
+        //        new StructuredSelection( new Object[]{ currentSelection } );
+        //    }
+        //    else
+        //    {
+        //      selection = 
+        //        new StructuredSelection( new Object[]{ } );
+        //    }
+        //    tableViewer.setSelection( selection );
+        updateOnNewSelection( currentSelection );
+      }
+    };
+    Display display = parent.getDisplay();
+    
+    display.syncExec( changeInputRunnable );
   }
   
   final void updateOnNewSelection( final Object currentSelection  )

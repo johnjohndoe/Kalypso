@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -54,6 +56,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -66,6 +69,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
  * @author Madanagopal
  *
  */
+@SuppressWarnings({"unchecked","hiding","synthetic-access"})
 class CreateCalculationUnitDialog extends Dialog{
   
   private static final String QNAME_KEY_1D2D = "1D/2D";
@@ -95,6 +99,7 @@ class CreateCalculationUnitDialog extends Dialog{
     this.dataModel =  dataModel;
   }
   
+  @Override
   protected Control createDialogArea(Composite parent)
   {
     Composite comp = (Composite)super.createDialogArea(parent);
@@ -132,12 +137,14 @@ class CreateCalculationUnitDialog extends Dialog{
     
     return comp;
   }
+  @Override
   protected void createButtonsForButtonBar(Composite parent)
   {
     super.createButtonsForButtonBar(parent);
     createButton(parent, RESET_ID, "Reset All", false);
   }
   
+  @Override
   protected void buttonPressed(int buttonId)
   {
     if(buttonId == RESET_ID)
@@ -159,7 +166,28 @@ class CreateCalculationUnitDialog extends Dialog{
                   getCUnitQName( qNameKey ),
           Util.getModel( IFEDiscretisationModel1d2d.class ),
           name,
-          desc );
+          desc )
+      {
+        /**
+         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
+         */
+        @SuppressWarnings({"unchecked","synthetic-access"})
+        @Override
+        public void process( ) throws Exception
+        {
+          super.process();
+            dataModel.setData( 
+                ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
+                getCreatedCalculationUnit() );
+            IFEDiscretisationModel1d2d model1d2d =
+              (IFEDiscretisationModel1d2d) 
+                  dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+            List<ICalculationUnit> calUnits = 
+                              CalUnitOps.getModelCalculationUnits( model1d2d );
+            dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+          
+        }
+      };
       ICommandTarget cmdTarget =
         (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
       if( cmdTarget == null )

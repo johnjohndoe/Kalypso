@@ -109,6 +109,9 @@ public class Kalypso1D2DSchemaConstants
   public static final QName WB1D2D_F_CALC_UNIT_1D2D = 
     new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D2D" );
   
+  public static final QName WB1D2D_PROP_CALC_UNIT = 
+    new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "calculationUnit" );
+  
   public static final QName WB1D2D_F_CALC_UNIT_1D = 
     new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" );
   

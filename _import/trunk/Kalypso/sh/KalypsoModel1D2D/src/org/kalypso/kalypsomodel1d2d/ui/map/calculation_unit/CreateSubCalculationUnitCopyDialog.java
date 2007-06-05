@@ -107,11 +107,12 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
 //      display.syncExec( runnable );      
 //    }    
 //  };
-  private ArrayList<ICalculationUnit> inputListWithNo1D2D;
+private ArrayList<ICalculationUnit> inputListWithNo1D2D;
 private ArrayList<ICalculationUnit> inputListCalSubUnits;
 private TableViewer subCalculationUnits;
 private Table subCalcUnitsTable;
 private ICalculationUnit1D2D calculation1D2D;
+ICalculationUnit1D2D parentCalcUnit1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
  
   protected CreateSubCalculationUnitCopyDialog( Shell parentShell, CalculationUnitDataModel dataModel )
   {
@@ -144,7 +145,10 @@ private ICalculationUnit1D2D calculation1D2D;
     
     Object inputData = dataModel.getData(ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
 
-    inputListWithNo1D2D = new ArrayList<ICalculationUnit>();
+    if (parentCalcUnit1D2D.getSubUnits() == null)
+      inputListCalSubUnits = new ArrayList<ICalculationUnit>();
+    else
+      inputListCalSubUnits = (ArrayList<ICalculationUnit>) parentCalcUnit1D2D.getSubUnits();
     
     if (inputData == null)
     {
@@ -178,8 +182,6 @@ private ICalculationUnit1D2D calculation1D2D;
     formData.left = new FormAttachment(fromCalculationUnitGroup,5);
     formData.top = new FormAttachment(35);
     addButton.setLayoutData( formData );
-    
-    inputListCalSubUnits= new ArrayList<ICalculationUnit>();
     
     addButton.addSelectionListener( new SelectionAdapter(){
       public void widgetSelected( SelectionEvent e )
@@ -226,8 +228,10 @@ private ICalculationUnit1D2D calculation1D2D;
     subCalculationUnits = new TableViewer(fromCalculationSubUnitGroup);
     subCalculationUnits.setContentProvider( new ArrayContentProvider() );
     subCalculationUnits.setLabelProvider( new CalculationUnit1D2DLabelProvider());
-    subCalculationUnits.setInput(inputListCalSubUnits);
     
+    
+    subCalculationUnits.setInput(inputListCalSubUnits);
+      
     subCalcUnitsTable = subCalculationUnits.getTable();
     subCalcUnitsTable.setLinesVisible( true );
     subCalcUnitsTable.setLayoutData( new GridData(GridData.FILL_BOTH) );    

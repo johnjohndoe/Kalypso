@@ -113,8 +113,9 @@ public class CalculationElementComponent
         public void run( )
         {
           if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
+            if (newValue != null){
             updateThisSection( newValue );
-            
+            }            
           }
         }
       };

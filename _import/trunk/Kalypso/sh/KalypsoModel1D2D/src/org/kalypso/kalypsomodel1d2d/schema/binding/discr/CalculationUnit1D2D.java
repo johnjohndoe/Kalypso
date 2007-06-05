@@ -68,6 +68,7 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement>
         featureToBind,
         Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D,
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT,
         (Class<ET>)IFE1D2DElement.class );
     
   }
@@ -75,7 +76,8 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement>
   public CalculationUnit1D2D( 
               Feature featureToBind, 
               QName qnameToBind, 
-              QName elementListPropQName, 
+              QName elementListPropQName,
+              QName subUnitPropQName,
               Class<ET> wrapperClass )
   {
     super( 
@@ -86,7 +88,7 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement>
     subUnits = Util.<ICalculationUnit>get( 
         featureToBind, 
         qnameToBind, 
-        elementListPropQName, 
+        subUnitPropQName, 
         ICalculationUnit.class, 
         true); 
   }

@@ -328,11 +328,13 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
     //create row c-unit
     cuToDel = 
       model1d2d.getComplexElements().addNew( oldQName, ICalculationUnit.class );
+    
     //set name
     if( oldName != null )
     {
       cuToDel.setName( oldName );
     }
+    
     //set description
     if( oldDesc != null )
     {
@@ -345,6 +347,7 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
       cuToDel.addElementAsRef( ele );
       ele.getContainers().addRef( cuToDel );
     }
+    
     //set subunits
     if( cuToDel instanceof ICalculationUnit1D2D )
     {
@@ -361,7 +364,6 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
       parentUnit.getSubUnits().addRef( cuToDel );
     }
     
-//    fireProcessChanges( deletedCreatedCU, true );
     final Feature[] changedFeatureArray = getChangedFeatureArray( cuToDel );
     fireProcessChanges( changedFeatureArray, true );
   }
