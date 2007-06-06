@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    0:04 am
+C     Last change:  K     6 Jun 2007    2:13 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -66,6 +66,7 @@ C-
         XSLP(N)=0.
         YSLP(N)=0.
   260 CONTINUE
+
       DO 280 N=1,NEM
         NM=IMAT(N)
         IF(NM .LT. 1) GO TO 280
@@ -178,31 +179,6 @@ C-
             !-
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,2)
-!nis,may07
-!Add midside node for polynom approach
-!            !nis,feb07: Add for FFF-elements (at this place)
-!            else
-!              !nis,feb07,testing
-!              !if (n == 8) then
-!              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
-!              !  WRITE(*,*) 'SRT: ', SRT
-!              !end if
-!              !-
-!              call outnrm   (cord(n1,1), cord(n1,2),
-!     +                    0.5*(cord(n1,1)+cord(n3,1)),
-!     +                    0.5*(cord(n1,2)+cord(n3,2)),
-!     +                      cord(n3,1), cord(n3,2), SRT, 2)
-!            !-
-!!nis,feb07,baustelle!!!
-!              !nis,feb07,testing
-!              !if (n == 8) then
-!              !  WRITE(*,*) 'Knoten von 8: ', (nops(n,iii),iii=1,3)
-!              !  WRITE(*,*) 'SRT: ', SRT
-!              !  pause
-!              !end if
-!              !-
-!Add midside node for polynom approach
-!-
 
             ENDIF
             VOUTN(N1)=SRT(1)
@@ -281,8 +257,9 @@ CIPK JUN05  SETUP FOR SUBMERGENGE
 
 C-
       !nis,feb07,testing
-      !do i = 1, np
-      !  WRITE(*,*) nfix(i), alfa(i), 'test Winkel'
+      !do i = 1, 379
+      !  WRITE(*,*) 'node: ', i, nfix(i), alfa(i), 'test Winkel'
+      !  !if (nfix(i)  == 0 .and. nfix(i-1) /= 0) pause
       !enddo
       !pause
       !-
