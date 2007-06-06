@@ -1,4 +1,4 @@
-!     Last change:  K    31 May 2007    4:38 pm
+!     Last change:  K     6 Jun 2007    4:25 pm
 
 subroutine TransVelDistribution
 
@@ -64,9 +64,9 @@ INTEGER            :: teststat
     TransNo = nop(TransLines(i,1),3)
 
     !testing
-    WRITE(*,*) transno, 'Iteration: ', maxn
-    WRITE(*,*) vel(1,transno), vel(2,transno)
-    pause
+    !WRITE(*,*) transno, 'Iteration: ', maxn
+    !WRITE(*,*) vel(1,transno), vel(2,transno)
+    !pause
     !-
 
     !get the 1D-velocity; the transition node is always the 3rd one of the 1D-part definition nop(j,3)
@@ -144,8 +144,8 @@ INTEGER            :: teststat
       !x-component (parallel component)
       !EqScale(line(TransLi,l),1) = TransVel/ localVel
       EqScale(line(TransLi,l),1) = localVel / TransVel
-      WRITE(999,*) 'lokale Absolutgeschwindigkeit:',localvel
-      WRITE(*,*) 'Node: ', line(TransLi,l)
+      !WRITE(999,*) 'lokale Absolutgeschwindigkeit:',localvel
+      !WRITE(*,*) 'Node: ', line(TransLi,l)
       !y-component (perpendicular component) (no value perpendicular to settled flow direction!)
       EqScale(line(TransLi,l),2) = EqScale(line(TransLi,l),1)
       !depth-component
