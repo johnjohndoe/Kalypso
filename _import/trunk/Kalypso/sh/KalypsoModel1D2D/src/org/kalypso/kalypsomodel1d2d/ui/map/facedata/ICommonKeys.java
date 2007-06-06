@@ -74,6 +74,12 @@ public interface ICommonKeys
    * used to post command
    */
   public static final String KEY_COMMAND_TARGET ="_command target_";
+  
+  /**
+   * Key for data entry holding the {@link org.kalypso.commons.command.ICommandManager}
+   * to be use to post command. 
+   */
+  public static final String KEY_COMMAND_MANAGER ="_command_manager__";
 
   public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_";
   

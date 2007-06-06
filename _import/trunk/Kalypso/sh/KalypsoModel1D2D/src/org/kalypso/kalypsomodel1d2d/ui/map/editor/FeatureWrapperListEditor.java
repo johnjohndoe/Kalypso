@@ -85,6 +85,7 @@ import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
  * 
  * @author Madanagopal
  */
+@SuppressWarnings({"synthetic-access", "hiding", "unchecked"})
 public class FeatureWrapperListEditor implements IButtonConstants
 {
   /* ======================================================================== */
@@ -242,6 +243,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   final private ISelectionChangedListener elevationModelSelectListener = new ISelectionChangedListener()
   {
+    @SuppressWarnings("synthetic-access")
     public void selectionChanged( SelectionChangedEvent event )
     {
       try
@@ -252,17 +254,20 @@ public class FeatureWrapperListEditor implements IButtonConstants
           System.out.println( "Selection is null" );
           return;
         }
-        if( selection.getFirstElement() == null )
-          throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
+        Object firstElement = selection.getFirstElement();
+        if( firstElement == null )
+        {
+          return;//throw new NullPointerException( "Null Value while selection.getFirstElement() :" + firstElement );
+        }
         else
         {
-          if( selection.getFirstElement() instanceof IFeatureWrapper2 )
+          if( firstElement instanceof IFeatureWrapper2 )
           {
-            IFeatureWrapper2 firstElement = (IFeatureWrapper2) selection.getFirstElement();
+            IFeatureWrapper2 firstElementWrapper = (IFeatureWrapper2) firstElement;
 //            dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
 //            descriptionText.setText( firstElement.getDescription() );
 //            descriptionText.redraw();
-            setCurrentSelection(firstElement);
+            setCurrentSelection(firstElementWrapper);
           }
         }
       }

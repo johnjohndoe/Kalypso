@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.util.List;
 
+import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
@@ -72,8 +73,9 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
               ICommonKeys.KEY_DISCRETISATION_MODEL,
               ICommonKeys.KEY_MAP_PANEL,
-              ICommonKeys.KEY_COMMAND_TARGET,
-              ICommonKeys.WIDGET_WITH_STRATEGY
+//              ICommonKeys.KEY_COMMAND_TARGET,
+              ICommonKeys.WIDGET_WITH_STRATEGY,
+              ICommonKeys.KEY_COMMAND_MANAGER
               }, 
         null 
         );

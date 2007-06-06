@@ -29,6 +29,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * 
  * @author Patrice Congo
  */
+@SuppressWarnings({"unchecked"})
 public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends AbstractFeatureBinder
             implements IFeatureWrapperCollection<FWCls> 
 {
@@ -572,7 +573,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     /**
      * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#removeAllRefs(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
      */
-	synchronized public boolean removeAllRefs( FWCls toRemove )
+	public boolean removeAllRefs( FWCls toRemove )
                                   throws IllegalArgumentException 
     {
       if(toRemove == null)
@@ -597,7 +598,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     /**
      * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#addRef(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
      */
-	synchronized public boolean addRef(  FWCls toAdd )
+	public boolean addRef(  FWCls toAdd )
                             throws IllegalArgumentException
     {
       final String gmlID = toAdd.getGmlID();
@@ -651,6 +652,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     /**
      * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Envelope)
      */
+    
     public List<FWCls> query( GM_Envelope envelope )
     {
       final List selectedFeature = featureList.query( envelope , null );

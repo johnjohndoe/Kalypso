@@ -41,8 +41,21 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * Utils method arround {@link KeyBasedDataModel}
@@ -64,16 +77,83 @@ public class KeyBasedDataModelUtil
     Assert.throwIAEOnNullParam( dataModel, "dataModel" );
     Assert.throwIAEOnNullParam( command, "command" );
     
-    final ICommandTarget cmdTarget =
-        dataModel.getData( 
-            ICommandTarget.class, 
-            ICommonKeys.KEY_COMMAND_TARGET );
-    if( cmdTarget == null )
+//    final ICommandTarget cmdTarget =
+//        dataModel.getData( 
+//            ICommandTarget.class, 
+//            ICommonKeys.KEY_COMMAND_TARGET );
+//    if( cmdTarget == null )
+//    {
+//      throw new RuntimeException(
+//          "Could not found command target in the model:key="+
+//          ICommonKeys.KEY_COMMAND_TARGET );
+//    }
+//    cmdTarget.postCommand( command, null );
+    final ICommandManager commandManager = dataModel.getData( 
+        ICommandManager.class, 
+        ICommonKeys.KEY_COMMAND_MANAGER );
+    if( commandManager== null )
     {
       throw new RuntimeException(
-          "Could not found command target in the model:key="+
-          ICommonKeys.KEY_COMMAND_TARGET );
+        "Could not found command target in the model:key="+
+        ICommonKeys.KEY_COMMAND_MANAGER );
     }
-    cmdTarget.postCommand( command, null );
+    try
+    {
+      commandManager.postCommand( command );
+    }
+    catch (Exception e) 
+    {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
   }
+  
+  /**
+   * Primarily used to notify the workflow about the change
+   * in discretisation model after using a command that changes
+   * an sub feature of the discretisation model but does not 
+   * include the discretisation model in the change event
+   * @param dataModel the dataModel holding the discretisation model
+   * @throws IllegalArgumentException if dataModel is null or does
+   *            not hold a discretisation model with the key 
+   *            {@link ICommonKeys#KEY_DISCRETISATION_MODEL}
+   *  
+   */
+  public static final void fireDiscretisationModelChanged( 
+                                          KeyBasedDataModel dataModel )
+  {
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
+    Object modelObject = 
+        dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    if( !(modelObject instanceof IFEDiscretisationModel1d2d ))
+    {
+      String message = String.format( 
+          "Data model does not contain a discretisation model:"+
+            "\n\t key=%s "+
+            "\n\t found data=%s", 
+          ICommonKeys.KEY_DISCRETISATION_MODEL,
+          modelObject);
+      throw new IllegalArgumentException( message );
+    }
+    
+    try
+    {
+      
+      final Feature modelFeature = 
+        ((IFEDiscretisationModel1d2d)modelObject).getWrappedFeature();
+      GMLWorkspace workspace = modelFeature.getWorkspace();
+      
+      final FeaturesChangedModellEvent event =
+          new FeaturesChangedModellEvent(
+              workspace,
+              new Feature[]{modelFeature} );
+      workspace.fireModellEvent( event );
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+    }
+    
+  }
+    
 }

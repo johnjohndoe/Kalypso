@@ -57,6 +57,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -66,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -81,6 +83,7 @@ public class CalculationUnitWidget
 //                    extends FENetConceptSelectionWidget//AbstractWidget 
                     implements IWidgetWithOptions, IWidget, IWidgetWithStrategy/*, IEvaluationContextConsumer*/
 {
+  
   
   private static IWorkbench workbench;
 
@@ -133,7 +136,7 @@ public class CalculationUnitWidget
   {
 //    super.activate(commandPoster, mapPanel);
     
-    dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET, commandPoster );
+//    dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET, commandPoster );
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     IFEDiscretisationModel1d2d model1d2d =
         UtilMap.findFEModelTheme( mapPanel.getMapModell() );
@@ -144,18 +147,29 @@ public class CalculationUnitWidget
         ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
         CalUnitOps.getModelCalculationUnits( model1d2d ) );
     dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
+    
+    //command manager since it is use in the dirty pool object framework
+    //the commandable workspace of the target theme is taken
+    IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( 
+        mapPanel.getMapModell(), 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    dataModel.setData( 
+        ICommonKeys.KEY_COMMAND_MANAGER, 
+        targetTheme.getWorkspace());
+    
+    
 ////    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
 //    PopupMenu popup = new PopupMenu();
 //    popup.add( new MenuItem("TestMenu") );
 //    mapPanel.add( popup  );
 //    hookContextMenu();
     registerPopupBlocker( popupBlocker );
-    setStrategy( 
-        new RouteLineElementWidget<IBoundaryLine>(
-                                "Create Boundary Line",
-                                "Create Boundary Line",
-                                IBoundaryLine.class,
-                                Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) );
+//    setStrategy( 
+//        new RouteLineElementWidget<IBoundaryLine>(
+//                                "Create Boundary Line",
+//                                "Create Boundary Line",
+//                                IBoundaryLine.class,
+//                                Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) );
   }
   
   /**
@@ -198,13 +212,20 @@ public class CalculationUnitWidget
    */
   private static final void unRegisterPopupBlocker(Listener popupBlocker) 
   {
-    IViewPart findView = getMapView();
-    
-    if( findView instanceof MapView )
-    {      
-      final IWorkbenchPartSite site = findView.getViewSite();
-            Control control = (Control) findView.getAdapter( Control.class );
-      control.removeListener( SWT.MenuDetect, popupBlocker  );
+    try
+    {
+      IViewPart findView = getMapView();
+      
+      if( findView instanceof MapView )
+      {      
+        final IWorkbenchPartSite site = findView.getViewSite();
+              Control control = (Control) findView.getAdapter( Control.class );
+        control.removeListener( SWT.MenuDetect, popupBlocker  );
+      }
+    }
+    catch ( Throwable th) 
+    {
+      th.printStackTrace();
     }
   }
   
