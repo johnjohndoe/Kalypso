@@ -50,7 +50,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
