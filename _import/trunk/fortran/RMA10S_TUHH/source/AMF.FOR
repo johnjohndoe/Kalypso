@@ -1,3 +1,4 @@
+!nis  Adding some comments to the if-structures of AMF
 cipk  last update April 24 1997
       SUBROUTINE AMF(H,HSIG,AKAPM,ATM,ABM,AM,DAMH,ISWT)
 c
@@ -23,24 +24,40 @@ C
 C
 C...... Convert HSIG to H
 C
-        IF(AKAPM .GT. 0.9999) THEN
+
+!       Calculate the virtual water depth out of the real water depth
+!       am   : difference between virtual and real bed elevation
+!       damh : additional friction losses
+
+!       ???Marsh-option not active, because of high permeability of underground???
+        IF(AKAPM > 0.9999) THEN
           H=HSIG
           AM=0.
           DAMH=0.
 cipk apr97
           efpor=akapm
-        ELSEIF(HSIG .LT. AKAPM*ABM) THEN
+
+!       minimum range (h beneath abm but above virtual bed elevation)
+!                      waterlevel beyond real bed elevation??
+
+        ELSEIF(HSIG < AKAPM*ABM) THEN
           H=HSIG/AKAPM
           AM=H-HSIG
           DAMH=1.0/AKAPM-1.
 cipk apr97
           efpor=akapm
+
+!       normal range (h over atm)
+!       waterlevel above the transition range (waterlevel certainly above real bed elevation)
         ELSEIF( HSIG .GT. ATM-(ABM+ATM)/2.*(1.-AKAPM) ) THEN
           H=HSIG+(1.-AKAPM)/2.*(ABM+ATM)
           AM=H-HSIG
           DAMH=0.0
 cipk apr97
           efpor=1.0
+
+!       transition range
+!       waterlevel around the real bed elevation
         ELSE
           SQ=SQRT((ATM-ABM)*(AKAPM*(AKAPM*(ATM+ABM)-2.*ABM)
      +                      +2.*HSIG*(1.-AKAPM)))
@@ -59,16 +76,27 @@ C       ENDIF
 C*******************
 C                               END CHANGE
 C*******************
+
+
       ELSE
 C
 C...... Convert H to HSIG
 C
+
+!       Marsh-option not active, because of high permeability of underground???
         IF(AKAPM .GT. 0.9999) THEN
           HSIG=H
+
+!       minimum range (h beneath abm but above virtual bed elevation)
+!       water level beneath real bed elevation
         ELSEIF(H .LT. ABM) THEN
           HSIG=H*AKAPM
+!       normal range (h over atm)
+!       water level certainly above real bed elevation
         ELSEIF(H .GT. ATM) THEN
           HSIG=AKAPM*H+(1.-AKAPM)*((ATM-ABM)/2.+(H-ATM))
+!       transition range
+!       water level around the real bed elevation
         ELSE
           HSIG=AKAPM*H+(1.-AKAPM)/2.*(H-ABM)**2/(ATM-ABM)
         ENDIF
