@@ -144,4 +144,13 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
   {
     return new BigDecimal( station ).setScale( STATION_SCALE, RoundingMode.HALF_UP );
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return "" + getStation();
+  }
 }

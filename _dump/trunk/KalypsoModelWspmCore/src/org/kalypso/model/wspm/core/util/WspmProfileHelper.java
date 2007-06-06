@@ -129,11 +129,13 @@ public class WspmProfileHelper
 
     /* Transform geo point into the coord-system of the line. */
     GeoTransformer transformer = new GeoTransformer( kalypsoCrs );
-    Geometry comparePoint = JTSAdapter.export( geoPoint  );
+    final GM_Point transformedGeoPoint = (GM_Point) transformer.transform( geoPoint  );
+    Geometry comparePoint = JTSAdapter.export( transformedGeoPoint  );
 
     double distance = Double.MAX_VALUE;
     IProfilPoint pointOne = null;
     IProfilPoint pointTwo = null;
+    LineSegment segment = null;
 
     /* No we have a list with fully geo referenced points of a profile. */
     for( int i = 0; i < geoReferencedPoints.size() - 1; i++ )
@@ -165,28 +167,26 @@ public class WspmProfileHelper
         distance = tempDistance;
         pointOne = tempPointOne;
         pointTwo = tempPointTwo;
+        segment = geoSegment;
       }
     }
 
     /* Now we have a segment and a distance. The two points of the segment are used to interpolate. */
-    Coordinate geoCoordOne = new Coordinate( pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-    Coordinate geoCoordTwo = new Coordinate( pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-    LineSegment geoSegment = new LineSegment( geoCoordOne, geoCoordTwo );
 
     /* The point on the geo segment, which is closest to the comparePoint (originally geoPoint). */
-    Coordinate geoCoordinate = geoSegment.closestPoint( comparePoint.getCoordinate() );
+    Coordinate geoCoordinate = segment.closestPoint( comparePoint.getCoordinate() );
 
-    double geoSegmentLength = JTSUtilities.getLengthBetweenPoints( geoCoordOne, geoCoordTwo );
-    double toGeoPointLength = JTSUtilities.getLengthBetweenPoints( geoCoordOne, geoCoordinate );
+    double geoSegmentLength = segment.getLength();
+    double toGeoPointLength = JTSUtilities.getLengthBetweenPoints( segment.getCoordinate( 0 ), geoCoordinate );
 
-    /* Using Breite und Hoehe to build. */
-    Coordinate coordProfileOne = new Coordinate( pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    Coordinate coordProfileTwo = new Coordinate( pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    /* Using Breite to build. */
+    final double breiteOne = pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double breiteTwo = pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
 
     /* Important: The interpolation is done here :). */
-    double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * (coordProfileTwo.x - coordProfileOne.x);
+    double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * (breiteTwo - breiteOne);
 
-    return coordProfileOne.x + toProfilePointLength;
+    return breiteOne + toProfilePointLength;
   }
 
   /**
@@ -239,9 +239,11 @@ public class WspmProfileHelper
       if( widthValueOne < width & widthValueTwo > width )
       {
         /* calculate the georeference */
-        final double x = ((width - widthValueOne) * (rechtsWertTwo - rechtsWertOne) / (widthValueTwo - widthValueOne)) + rechtsWertOne;
-        final double y = ((width - widthValueOne) * (hochWertTwo - hochWertOne) / (widthValueTwo - widthValueOne)) + hochWertOne;
-        final double z = ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
+        final double deltaOne = width - widthValueOne;
+        final double delta = widthValueTwo - widthValueOne;
+        final double x = (deltaOne * (rechtsWertTwo - rechtsWertOne) / delta) + rechtsWertOne;
+        final double y = (deltaOne * (hochWertTwo - hochWertOne) / delta) + hochWertOne;
+        final double z = (deltaOne * (heigthValueTwo - heigthValueOne) / delta) + heigthValueOne;
 
         Coordinate geoCoord = new Coordinate( x, y, z );
         GeometryFactory factory = new GeometryFactory();
