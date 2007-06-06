@@ -219,7 +219,7 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
       //delete links to parent units
       for( ICalculationUnit1D2D parentUnit: oldParentUnits )
       {
-        parentUnit.getSubUnits().remove( parentUnit );
+        parentUnit.getSubUnits().removeAllRefs( cuToDel );
       }
       //delete links to child units
       if( cuToDel instanceof ICalculationUnit1D2D )
