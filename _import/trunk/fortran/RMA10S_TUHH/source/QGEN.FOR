@@ -1,4 +1,4 @@
-C     Last change:  JAJ  15 May 2007   10:37 pm
+C     Last change:  K     6 Jun 2007    4:16 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -42,7 +42,7 @@ C-
 
       REAL     :: cos_in_grad, sin_in_grad
 
-      INTEGER max
+      INTEGER  :: maxL
 !-
 
 !nis,sep06: controloutputfile iostat, controloutput declarations
@@ -70,11 +70,11 @@ C-
 C-
 C...... Calculate total projected area
 C-
-      !nis,sep06,com: MAX matches the number of corner-nodes of the CCL J
-      MAX=LMT(J)
+      !nis,sep06,com: maxL matches the number of corner-nodes of the CCL J
+      maxL=LMT(J)
 CIPK FEB01
         !nis,sep06,com: if there is no node for the CCL, stop the program
-	IF(MAX .EQ. 0) THEN
+	IF(maxL .EQ. 0) THEN
 	  WRITE(75,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
 	  WRITE(75,*) 'EXECUTION TERMINATED'
 	  WRITE(*,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
@@ -84,7 +84,7 @@ CIPK FEB01
       STQT(J)=THET
 
       !nis,sep06,com: If the CCL has only 1 node, that means 1D-element
-      IF(MAX .EQ. 1) THEN
+      IF(maxL .EQ. 1) THEN
 C-
 C...... This is for 1-D element
 C-
@@ -174,7 +174,7 @@ CIPK OCT01
 !           a 1D-boundary. This is preserved by copying it to this place.
 !           The if control number 500 is replaced by actual way of statement.
         IF(ICYC .GT. 0) THEN
-          DO K=1,MAX
+          DO K=1,maxL
             NA=LINE(J,K)
             CALL BFORM(NA)
           ENDDO
@@ -188,7 +188,7 @@ CIPK OCT01
 
 
 !nis,sep06,com: If CCL has more than 1 node, that means 2D
-!nis,jan07,com: condition to come here is: max.ne.1
+!nis,jan07,com: condition to come here is: maxL.ne.1
 
 cipk oc98        VM=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)
 C       VEL(1,NA)=VM*COS(BEETA)
@@ -267,8 +267,8 @@ cipk oct98 update to f90
           !nis,sep06,com: initialize summed area SUMA
           SUMA=0.
 
-          MAX = LMT(J)-2
-          DO 150 K = 1, MAX, 2
+          maxL = LMT(J)-2
+          DO 150 K = 1, maxL, 2
             NA = LINE(J,K)
             NC = LINE(J,K+2)
             DX=CORD(NC,1)-CORD(NA,1)
@@ -299,8 +299,8 @@ C-
 C-
 C...... Insert values into SPEC  and  NFIX arrays
 C-
-          MAX=MAX+2
-          DO 300 K=1,MAX
+          maxL=maxL+2
+          DO 300 K=1,maxL
             NA=LINE(J,K)
             D1=VEL(3,NA)
             SPEC(NA,1)=VEST*D1*COS(THET)
@@ -344,7 +344,7 @@ C-
 C...... Find correct components for boundary nodes
 C-
 !NiS,sep06,com: Objective is to find the right direction of the node inflow, parallel to the boundary at the inflow
-          DO 400 K=1,MAX,MAX-1
+          DO 400 K=1,maxL,maxL-1
             NA=LINE(J,K)
 C-
 C...... Locate element with this node
@@ -364,7 +364,7 @@ C-
   315         IF(K .EQ. 1) THEN
                 KK=2
               ELSE
-                KK=MAX-1
+                KK=maxL-1
               ENDIF
               MLW=M-1
               IF(MM .EQ. 1) THEN
@@ -416,7 +416,7 @@ C-
               IF(K .EQ. 1) THEN
                 NAD=LINE(J,3)
               ELSE
-                NAD=LINE(J,MAX-2)
+                NAD=LINE(J,maxL-2)
               ENDIF
               DXA=CORD(NAD,1)-CORD(NA,1)
               DYA=-(CORD(NAD,2)-CORD(NA,2))
@@ -451,7 +451,7 @@ C-
 !        ENDIF
 !-
         IF(ICYC .GT. 0) THEN
-          DO 500 K=1,MAX
+          DO 500 K=1,maxL
             NA=LINE(J,K)
             CALL BFORM(NA)
   500     CONTINUE
@@ -576,7 +576,7 @@ C-
           END DO
 
           !nis,sep06,com: For next loop the maximum value is the penultimate CORNER node
-          max = lmt (j) - 2
+          maxL = lmt (j) - 2
 
 
       !nis,jan07,testfileoutput-----------------------------------------------
@@ -595,7 +595,7 @@ C-
       !-----------------------------------------------------------------------
 
           !nis,sep06,com: Loop over all corner nodes till the last one of CCL to get the Conveyance factor of the single parts of line.
-          DO 750 k = 1, max, 2
+          DO 750 k = 1, maxL, 2
             !nis,sep06,com: Get the first (na), midside (ncc), and endnode (nc) of the actual line segment
             na  = line (j, k)
             ncc = line (j, k + 1)
@@ -648,6 +648,14 @@ C-
      +         d2, 1)
 !-
             ENDIF
+
+      !WRITE(*,*) 'RB: '
+      !WRITE(*,*) 'Wassertiefen: ', na, ': ', d1v, ' ', nc, ': ', ' ',d3v
+      !WRITE(*,*) 'Wassertiefen: ', na, ': ', d1, ' ', nc, ': ', ' ', d3
+      !WRITE(*,*) waspi, ao(na), ao(nc), idnopt
+      !WRITE(*,*) akp(na), adt(na), adb(na)
+      !WRITE(*,*) akp(nc), adt(nc), adb(nc)
+      !pause
 
             !nis,sep06,com: Set depth to 0, if neglectable
             IF (d1.le.0.0) d1 = 0.0
@@ -762,7 +770,7 @@ C-
      +                           ((78.48/lambda)**0.5)
                                                                         
               !nis,dec06,testfileoutput------------------------------------------
-              if (k.eq.max) then
+              if (k.eq.maxL) then
                 WRITE(999,*) 'End node ', k+2,':', line(j,k+2)
                 WRITE(999,*) 'Conveyance: ', teilline(k+2)
                 WRITE(999,*) 'Resistance: ', lambda
@@ -823,11 +831,11 @@ C-
 !         angegeben in BFORM in Betrag und Richtung umgewandelt
 !         und in COEFS als Randbedingung beruecksichtigt.
                                                                         
-          !nis,sep06,com: Refresh the max-value with the number of nodes of the actual CCL
-          max = lmt (j)
+          !nis,sep06,com: Refresh the maxL-value with the number of nodes of the actual CCL
+          maxL = lmt (j)
                                                                         
           !nis,sep06,com: Run through every node of the CCL for applying the specified discharge
-          DO 900 k = 1, max
+          DO 900 k = 1, maxL
             !nis,sep06,com: Get the actual node number
             na = line (j, k)
             !nis,sep06,com: Skip non existing point
@@ -851,7 +859,7 @@ C-
               dy2 = dy1
 
             !nis,sep06,com: node is the last of the actual CCL
-            ELSEIF (k.eq.max) then
+            ELSEIF (k.eq.maxL) then
               !nis,sep06,com: Calculate the x-distance to the penultimate node of the actual CCL
               dx1 = cord (line (j, k), 1) - cord (line (j, k - 1), 1)
               !nis,sep06,com: Calculate the y-distance to the penultimate node of the actual CCL
@@ -1075,7 +1083,7 @@ C-
   900     END DO
                                                                         
           !nis,sep06,com: Give every node the controlling specifier nfix and set the value of inflow to minimum 0.0001, if nothing is assigned
-          DO 334 k = 1, max
+          DO 334 k = 1, maxL
             na = line (j, k)
             IF (na.gt.0) then
               IF (spec (na, 1) .eq.0.) spec (na, 1) = 0.0001
@@ -1089,7 +1097,7 @@ C-
 !         gesetzt:
                                                                         
           !nis,sep06,com: Processing on the outer CCL-nodes
-          DO 335 k = 1, max, max - 1
+          DO 335 k = 1, maxL, maxL - 1
             neck = line (j, k)
 !           neck ist der erste/letzte Knoten in der Q-Linie
             !nis,sep06,com: Get the second or penultimate node of the line, depending on which one is processed at the actually
@@ -1156,6 +1164,10 @@ C-
               ENDIF
   336       END DO
                                                                         
+              WRITE(*,*) lmt(j)
+              WRITE(*,*) (line(j,i), i=1, lmt(j))
+              WRITE(*,*) (ibn(line(j,i)), i=1, lmt(j))
+              pause
 
             !nis,sep06,com: If the counter of elements, that fit the CCL-end-node is .gt.1 and network error occurs and the execution is stopped
             IF (ieck.ne.1) then
@@ -1237,10 +1249,10 @@ C-
         sumy = 0.0
 
         !nis,sep06,com: Set the number of segment-starting-nodes in the CCL
-        max = lmt (j) - 2
+        maxL = lmt (j) - 2
                                                                         
         !nis,sep06,com: Run through all Corner nodes of the the CCL
-        DO 559 k = 1, max, 2
+        DO 559 k = 1, maxL, 2
           !nis,sep06,com: Get the first corner node of segment
           na = line (j, k)
           !nis,sep06,com: Get the midside node of the segment
@@ -1284,7 +1296,7 @@ C-
       !------------------------------------------------------------------------
 
         !nis,sep06,com: Correct the discharge at the nodes by scaling with correction-factor
-        DO k = 1, max
+        DO k = 1, maxL
           na = line (j, k)
           IF (na.gt.0) then
             spec (na, 1) = spec (na, 1) * total
@@ -1293,7 +1305,7 @@ C-
         END DO
                                                                         
         !nis,sep06,testfileoutput-----------------------------------------------
-        DO k = 1, max
+        DO k = 1, maxL
           na = line (j, k)
           WRITE (999,9898)  j, na, spec(na,1), spec (na, 2),
      +                      SQRT((spec(na,2))**2+(spec(na,1))**2)
