@@ -1,4 +1,4 @@
-!     Last change:  JAJ   7 Jan 2007    4:53 pm
+!     Last change:  K     4 Jun 2007    3:07 pm
 subroutine getLineAverageWaterLevel(CCL, waspi)
 
 USE BLK10MOD
@@ -41,9 +41,9 @@ DO k = 1, lmt (CCL)
   !nis,sep06,com: Get node k
   na = line (CCL, k)
   !nis,sep06,com: Test whether node exists, if so get the flow depth
-  IF (na.gt.0) fliesstiefe = vel (3, na)
+  IF (na > 0) fliesstiefe = vel (3, na)
   !nis,sep06,com: Very small flow depth
-  IF (fliesstiefe.le.0.001) then
+  IF (fliesstiefe <= 0.001) then
     !nis,sep06,com: Decrease the number of wetted nodes (lump) and overgive estimated 0.0 depth to the temporary depth d3
     lump = lump - 1
     d3 = 0.0
@@ -58,8 +58,8 @@ DO k = 1, lmt (CCL)
     d3 = d3 + ao (na)
     !nis,sep06,controloutput: CCL-Fließtiefen
      !nis,jan07,testing
-     WRITE(999,'(1x,i6,2(1x,f10.7))')na,fliesstiefe,(d3-ao(na))
-     !WRITE(999,'(1x,i6,4(1x,f10.7))')na,fliesstiefe,(d3-ao(na)),d3, ao(na)
+     !WRITE(999,'(1x,i6,2(1x,f10.7))') na, fliesstiefe, (d3-ao(na))
+     WRITE(999,'(1x,i6,4(1x,f10.7))') na, fliesstiefe, (d3-ao(na)), d3, ao(na)
      !-
     !-
   ENDIF

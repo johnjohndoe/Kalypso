@@ -1,4 +1,4 @@
-!     Last change:  K     6 May 2007    1:53 am
+!     Last change:  K     4 Jun 2007    4:19 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -482,22 +482,22 @@ ENDDO write_trans_els
 !nis,apr07: write informations of transition lines
 write_trans_lines: do i = 1, MaxLT
   WRITE(IKALYPSOFM, 7041) i, (translines(i,j), j = 1, 3)
-  LiLe = (lmt(Translines(i,2)) + 1) / 2
-  Rest = LiLe
-  NoLines = 1
-  GetDefLineNo: do
-    if (Rest <= 9) EXIT GetDefLineNo
-    Rest = LiLe - 9
-    NoLines = NoLines + 1
-  ENDDO getDefLineNo
-  Startnode = 1
-  do j = 1, NoLines - 1
-    WRITE(ikalypsofm, 7042) NoLines-1, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + 8 * 2, 2)
-    Startnode = Startnode + 8 * 2 + 1
-  end do
-  !WRITE(*,*) lile, rest, startnode, lmt(translines(i,2))
-  !pause
-  WRITE(ikalypsofm, 7042) NoLines, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + Rest * 2 - 1, 2)
+!  LiLe = (lmt(Translines(i,2)) + 1) / 2
+!  Rest = LiLe
+!  NoLines = 1
+!  GetDefLineNo: do
+!    if (Rest <= 9) EXIT GetDefLineNo
+!    Rest = LiLe - 9
+!    NoLines = NoLines + 1
+!  ENDDO getDefLineNo
+!  Startnode = 1
+!  do j = 1, NoLines - 1
+!    WRITE(ikalypsofm, 7042) NoLines-1, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + 8 * 2, 2)
+!    Startnode = Startnode + 8 * 2 + 1
+!  end do
+!  !WRITE(*,*) lile, rest, startnode, lmt(translines(i,2))
+!  !pause
+!  WRITE(ikalypsofm, 7042) NoLines, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + Rest * 2 - 1, 2)
 end do write_trans_lines
 
 
