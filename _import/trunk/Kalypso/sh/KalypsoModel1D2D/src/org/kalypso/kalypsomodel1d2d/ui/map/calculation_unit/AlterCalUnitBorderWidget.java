@@ -51,9 +51,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -61,14 +58,12 @@ import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryLineFromCalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -87,7 +82,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";
   private static final String ICONS_ELCL16_SET_BOUNDARY_GIF = "icons/elcl16/addBoundary.gif";
   private static final String TXT_REMOVE_BOUNDARY_LINE_UP_STREAM = "Remove Up Stream boundary line";
-//  private static final String TXT_REMOVE_BOUNDARY_LINE_DOWN_STREAM = "Remove Down Stream boundary line";
   private static final String TXT_ADD_BOUNDARY_LINE_UP_STREAM = "Add Up Stream Boundary Line";
   private static final String TXT_ADD_BOUNDARY_LINE_DOWN_STREAM = "Add Down Stream Boundary Line";
   
@@ -195,10 +189,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       {
         updateRemoveUpStreamMenu( item );
       }
-//      else if(TXT_REMOVE_BOUNDARY_LINE_DOWN_STREAM.equals( text ))
-//      {
-//        updateRemoveUpStreamMenu( item );
-//      }
       else if (TXT_SET_BOUNDARY_CONDITION.equals( text )){
         updateSetBoundaryMenu( item );
       }
@@ -300,12 +290,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     {
       System.out.println("Not supported menu action:"+text);
     }
-//    final Feature[] selectedFeatures = getSelectedFeature();
-//    Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-//    if( selectedWrapper instanceof ICalculationUnit )
-//    {
-//      ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;          
-//    }
   }
 
   private void setBoundaryLine(String itemText )
@@ -355,10 +339,11 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       }
     };
     
-    final ICommandTarget commandTarget =
-        (ICommandTarget) dataModel.getData( 
-        /* ICommandTarget.class, */ICommonKeys.KEY_COMMAND_TARGET );
-    commandTarget.postCommand( cmd,  null );
+//    final ICommandTarget commandTarget =
+//        (ICommandTarget) dataModel.getData( 
+//        /* ICommandTarget.class, */ICommonKeys.KEY_COMMAND_TARGET );
+    //commandTarget.postCommand( cmd,  null );
+    KeyBasedDataModelUtil.postCommand( dataModel, cmd );
   }
   
   private void removeBoundaryLine(String itemText )
@@ -392,10 +377,11 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       }
     };
     
-    final ICommandTarget commandTarget =
-        (ICommandTarget) dataModel.getData( 
-        /* ICommandTarget.class, */ICommonKeys.KEY_COMMAND_TARGET );
-    commandTarget.postCommand( cmd,  null );
+//    final ICommandTarget commandTarget =
+//        (ICommandTarget) dataModel.getData( 
+//        /* ICommandTarget.class, */ICommonKeys.KEY_COMMAND_TARGET );
+    KeyBasedDataModelUtil.postCommand( dataModel, cmd );
+    //commandTarget.postCommand( cmd,  null );
   }
   
   synchronized private JPopupMenu createMenu()

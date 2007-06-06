@@ -45,7 +45,6 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -54,6 +53,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 
 /**
  * 
@@ -120,10 +120,10 @@ public class CalculationUnitComponent
           dataModel.getData( 
               IFEDiscretisationModel1d2d.class, 
               ICommonKeys.KEY_DISCRETISATION_MODEL );
-      final ICommandTarget commandTarget =
-          dataModel.getData( 
-              ICommandTarget.class, 
-              ICommonKeys.KEY_COMMAND_TARGET );
+//      final ICommandTarget commandTarget =
+//          dataModel.getData( 
+//              ICommandTarget.class, 
+//              ICommonKeys.KEY_COMMAND_TARGET );
       DeleteCalculationUnit delCmd = 
           new DeleteCalculationUnit( model1d2d, calUnitToDel)
       {
@@ -141,7 +141,8 @@ public class CalculationUnitComponent
               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
         }
       };
-      commandTarget.postCommand( delCmd, null );
+      KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
+      //commandTarget.postCommand( delCmd, null );
     }
   }
   

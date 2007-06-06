@@ -46,7 +46,6 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -79,7 +78,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromCalcUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -339,14 +338,15 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
           
         }; 
         
-        ICommandTarget cmdRemTarget =
-          (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-        if( cmdRemTarget == null )
-        {
-          throw new RuntimeException(
-              "Could not found command target; not set in the data model" );
-        }
-        cmdRemTarget.postCommand( cmdToRemove, null );
+//        ICommandTarget cmdRemTarget =
+//          (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+//        if( cmdRemTarget == null )
+//        {
+//          throw new RuntimeException(
+//              "Could not found command target; not set in the data model" );
+//        }
+//        cmdRemTarget.postCommand( cmdToRemove, null );
+        KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove );
         
       
       AddSubCalcUnitsToCalcUnit1D2D cmdToAdd 
@@ -372,14 +372,15 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
         }
       };
 
-      ICommandTarget cmdTarget =
-        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-      if( cmdTarget == null )
-      {
-        throw new RuntimeException(
-            "Could not found command target; not set in the data model" );
-      }
-      cmdTarget.postCommand( cmdToAdd, null );
+//      ICommandTarget cmdTarget =
+//        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+//      if( cmdTarget == null )
+//      {
+//        throw new RuntimeException(
+//            "Could not found command target; not set in the data model" );
+//      }
+      KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd );
+//      cmdTarget.postCommand( cmdToAdd, null );
       
       super.okPressed();   
     }

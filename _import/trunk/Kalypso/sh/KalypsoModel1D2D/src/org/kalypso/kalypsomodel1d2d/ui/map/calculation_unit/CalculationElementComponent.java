@@ -100,8 +100,8 @@ public class CalculationElementComponent
   final String titleDescriptionGroup = "Beschreibung";
   private Group descriptionGroupText;
   Text descriptionText;
-  private Text _2dElementField;
-  private Text _1dElementField;
+  private Text element2D;
+  private Text element1D;
   private GridData data;
   private Image imageBoundaryDown;
   private FormToolkit toolkit;
@@ -131,9 +131,9 @@ public class CalculationElementComponent
 
   private Composite rootComposite;
 
-  private Label _1dElementLabel;
+  private Label element1DLabel;
 
-  private Label _2dElementLabel;
+  private Label element2DLabel;
 
   private Button boundaryUpBtn;
 
@@ -189,27 +189,27 @@ public class CalculationElementComponent
         num1DElement = CalUnitOps.getNum1DElement((ICalculationUnit) newValue);
         if (newValue instanceof ICalculationUnit1D)
         {
-          _1dElementLabel.setEnabled( true );
-          _1dElementField.setEnabled( true );
-          _1dElementField.setText( num1DElement+"");
+          element1DLabel.setEnabled( true );
+          element1D.setEnabled( true );
+          element1D.setText( num1DElement+"");
         }
         else 
         {
-          _1dElementField.setEnabled( false );
-          _1dElementLabel.setEnabled( false );
+          element1D.setEnabled( false );
+          element1DLabel.setEnabled( false );
         }
         
         num2DElement = CalUnitOps.getNum2DElement((ICalculationUnit) newValue);
         if (newValue instanceof ICalculationUnit2D)
         {
-          _2dElementLabel.setEnabled( true );
-          _2dElementField.setEnabled( true );        
-          _2dElementField.setText( num2DElement+"");
+          element2DLabel.setEnabled( true );
+          element2D.setEnabled( true );        
+          element2D.setText( num2DElement+"");
         }
         else
         {
-          _2dElementField.setEnabled( false );
-          _2dElementLabel.setEnabled( false );
+          element2D.setEnabled( false );
+          element2DLabel.setEnabled( false );
         }
         
         
@@ -255,10 +255,10 @@ public class CalculationElementComponent
     else
     {
       // Disable the Section
-      _1dElementField.setEnabled( false );
-      _1dElementLabel.setEnabled( false );
-      _2dElementField.setEnabled( false );
-      _2dElementLabel.setEnabled( false );
+      element1D.setEnabled( false );
+      element1DLabel.setEnabled( false );
+      element2D.setEnabled( false );
+      element2DLabel.setEnabled( false );
       boundaryUpBtn.setImage( imageBoundaryUp_Error );
       boundaryDownBtn.setImage( imageBoundaryDown_Error );
     }
@@ -280,21 +280,21 @@ public class CalculationElementComponent
     data = new GridData(GridData.FILL_HORIZONTAL);
     typeField.setLayoutData(data);
     
-    _1dElementLabel = new Label(optionsComposite, SWT.RIGHT);
-    _1dElementLabel.setText("1D Element: ");
+    element1DLabel = new Label(optionsComposite, SWT.RIGHT);
+    element1DLabel.setText("1D Element: ");
     
-    _1dElementField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
-    _1dElementField.setEditable( false );
+    element1D = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
+    element1D.setEditable( false );
     data = new GridData(GridData.FILL_HORIZONTAL);
-    _1dElementField.setLayoutData(data);    
+    element1D.setLayoutData(data);    
         
-    _2dElementLabel = new Label(optionsComposite, SWT.RIGHT);
-    _2dElementLabel.setText("2D Element: ");
+    element2DLabel = new Label(optionsComposite, SWT.RIGHT);
+    element2DLabel.setText("2D Element: ");
     
-    _2dElementField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
-    _2dElementField.setEditable( false );
+    element2D = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
+    element2D.setEditable( false );
     data = new GridData(GridData.FILL_HORIZONTAL);
-    _2dElementField.setLayoutData(data);
+    element2D.setLayoutData(data);
     
     image_ = new Image( optionsComposite.getDisplay(), 
         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
@@ -382,11 +382,8 @@ public class CalculationElementComponent
       
     });
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new ListLabelProvider(this) );
-    //tableViewer.addSelectionChangedListener( listener )
-    table.setLinesVisible( true );
-    
-    
+    tableViewer.setLabelProvider( new ListLabelProvider(this) );    
+    table.setLinesVisible( true );   
     
     formData = new FormData();
     formData.top = new FormAttachment(titleSubCalculation,5);
@@ -406,7 +403,8 @@ public class CalculationElementComponent
     FormLayout formDescription = new FormLayout();
     descriptionGroupText.setLayout( formDescription );
     
-    descriptionText = new Text( descriptionGroupText, SWT.MULTI|SWT.WRAP );
+    descriptionText = new Text( descriptionGroupText, 
+                                          SWT.MULTI|SWT.WRAP );
      
     
     descriptionText.setEditable( false );

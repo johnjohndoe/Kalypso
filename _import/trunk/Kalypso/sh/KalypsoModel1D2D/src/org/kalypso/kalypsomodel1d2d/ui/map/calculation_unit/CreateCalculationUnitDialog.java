@@ -63,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 
 /**
@@ -189,14 +190,15 @@ class CreateCalculationUnitDialog extends Dialog{
           
         }
       };
-      ICommandTarget cmdTarget =
-        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-      if( cmdTarget == null )
-      {
-        throw new RuntimeException(
-            "Could not found command target; not set in the data model" );
-      }
-      cmdTarget.postCommand( cmd, null );
+//      ICommandTarget cmdTarget =
+//        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+//      if( cmdTarget == null )
+//      {
+//        throw new RuntimeException(
+//            "Could not found command target; not set in the data model" );
+//      }
+      //cmdTarget.postCommand( cmd, null );
+      KeyBasedDataModelUtil.postCommand( dataModel, cmd );
       
       super.okPressed();   
       this.createdCalculationUnit = cmd.getCreatedCalculationUnit();

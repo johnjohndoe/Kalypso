@@ -42,10 +42,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -63,16 +61,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.DrawElements;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -164,40 +160,9 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
                                   KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
                                   "icons/elcl16/add.gif" )));
     addElement.addActionListener( makeAddElementActionListener() );
-   
-//    JMenuItem removeElement = new JMenuItem();
-//    removeElement.setText("Remove Element");
-//    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                  "icons/elcl16/remove.gif" )));
-//    removeElement.addActionListener( 
-//          makeRemoveElementActionListener());
-    
     popupMenu.add( addElement);
-//    popupMenu.add( removeElement);
-//    popupMenu.addSeparator();
-    
     popupMenu.show( mapPanel, p.x, p.y );    
   }
-  
-//  private ActionListener makeRemoveElementActionListener()
-//  {
-//    ActionListener al = new ActionListener()
-//    {
-//
-//      public void actionPerformed( ActionEvent e )
-//      {
-//        final Feature[] selectedFeatures = getSelectedFeature();
-//        Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-//        if( selectedWrapper instanceof ICalculationUnit )
-//        {
-//          ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;          
-//        }
-//      }
-//      
-//    };
-//    return al;
-//  }
   
   private ActionListener makeAddElementActionListener()
   {
@@ -251,18 +216,15 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
             }
             if( command != null )
             {
-              ICommandTarget cmdTarget =
-                (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+//              ICommandTarget cmdTarget =
+//                (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
               
-              cmdTarget.postCommand( command, null  );
-            }
-            
-
+              //cmdTarget.postCommand( command, null  );
+              KeyBasedDataModelUtil.postCommand( dataModel, command );
+            }            
           }       
-          
         }
       }
-      
     };
     return al;
   }
@@ -274,10 +236,7 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
   public void paint( Graphics g )
   {
     super.paint( g );
-//    MapPanel mapPanel == null;
-    
-    DrawElements drawElements = new DrawElements();
-    
+    DrawElements drawElements = new DrawElements();    
     MapPanel mapPanel = getMapPanel();
     Object selectedWraper = 
       dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
@@ -288,7 +247,5 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
           mapPanel.getProjection(), 
           (ICalculationUnit2D)selectedWraper );
     }
-  }
-  
-  
+  }  
 }

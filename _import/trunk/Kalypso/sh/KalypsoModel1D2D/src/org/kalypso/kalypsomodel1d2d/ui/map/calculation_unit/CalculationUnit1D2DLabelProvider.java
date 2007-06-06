@@ -53,7 +53,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
  */
 public class CalculationUnit1D2DLabelProvider extends LabelProvider
 {
-  //private final static CalculationUnit1D2DLabelProvider labelProvider;
   public CalculationUnit1D2DLabelProvider()
   {   
   }

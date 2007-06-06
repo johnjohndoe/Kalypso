@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -219,9 +220,10 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
           }           
           if( command != null )
           {
-            ICommandTarget cmdTarget =
-              (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-            cmdTarget.postCommand( command, null  );
+//            ICommandTarget cmdTarget =
+//              (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+//            cmdTarget.postCommand( command, null  );
+            KeyBasedDataModelUtil.postCommand( dataModel, command );
           }
         }
       }      

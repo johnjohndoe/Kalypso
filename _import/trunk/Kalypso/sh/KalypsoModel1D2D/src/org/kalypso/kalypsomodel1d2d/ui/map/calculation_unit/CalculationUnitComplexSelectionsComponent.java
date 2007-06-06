@@ -64,7 +64,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
@@ -89,14 +88,12 @@ public class CalculationUnitComplexSelectionsComponent
   private static final String ELEMENTS_KEY_ELEMENTS = "Elements";
   private static final String ELEMENTS_KEY_SUBUNITS = "Sub Complex Unit";
   private static final String ELEMENTS_KEY_BOUNDARY_UP = "Boundary";
-//  private static final String ELEMENTS_KEY_BOUNDARY_DOWN = "Boundary DOWN";
 
-  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
-    public void dataChanged( String key, Object newValue )
-    {
-      // TODO Auto-generated method stub     
-    }  
-  };
+//  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
+//    public void dataChanged( String key, Object newValue )
+//    {
+//    }  
+//  };
   
   
   public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
@@ -105,7 +102,7 @@ public class CalculationUnitComplexSelectionsComponent
     this.parent = parent;
     this.dataModel = dataModel;
     guiComboSelections( parent );
-    dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
+  //  dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
   }
 
   private void guiComboSelections( Composite parentComposite )
@@ -124,8 +121,7 @@ public class CalculationUnitComplexSelectionsComponent
     elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
     elementsCombo.add( ELEMENTS_KEY_SUBUNITS );
     elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
-//    elementsCombo.add( ELEMENTS_KEY_BOUNDARY_DOWN );
-    
+   
     data = new GridData(GridData.FILL_HORIZONTAL);
     elementsCombo.setLayoutData( data );
     
@@ -148,9 +144,7 @@ public class CalculationUnitComplexSelectionsComponent
       public void widgetSelected( SelectionEvent e )
       {
         changeStategy();
-        
-      }
-      
+      }     
     };
     goButton.addSelectionListener( goButtonListener  );
   }
@@ -187,7 +181,7 @@ public class CalculationUnitComplexSelectionsComponent
         int answer = calculationDialog.open();
         if( answer == Window.OK )
         {
-          
+          // Do Nothing
         }
       }      
     }
@@ -223,8 +217,6 @@ public class CalculationUnitComplexSelectionsComponent
           strategy = new CreateFEElement1DWidget();
         if (selectedWrapper instanceof ICalculationUnit2D)
           strategy = new CreateFE2DElementWidget();
-//        if (selectedWrapper instanceof ICalculationUnit1D2D)
-//          strategy = 
       }
       else
       {
