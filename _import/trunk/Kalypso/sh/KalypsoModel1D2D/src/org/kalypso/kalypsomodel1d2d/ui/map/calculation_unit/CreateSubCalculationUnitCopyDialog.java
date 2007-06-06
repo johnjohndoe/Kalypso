@@ -104,6 +104,8 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
   private Combo typeCombo;
   private CalculationUnitDataModel dataModel;
   private TableViewer calculationUnits;
+  private ArrayList<ICalculationUnit> buffInputListWithNo1D2D = new ArrayList<ICalculationUnit>();
+  private ArrayList<ICalculationUnit> buffInputListCalSubUnits = new ArrayList<ICalculationUnit>();
   
   class calculationUnitsSelectionFilter extends ViewerFilter{
 
@@ -120,23 +122,6 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
         return (!inputList.contains((ICalculationUnit)element));
     }    
   }
-
-//  KeyBasedDataModelChangeListener newKeyListener = new KeyBasedDataModelChangeListener(){
-//    public void dataChanged( final String key, final Object newValue )
-//    {
-//      Display display = parent.getDisplay();
-//      final Runnable runnable = new Runnable()
-//      {
-//        public void run( )
-//        {
-////          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
-////            //updateThisSection( newValue );
-////          }
-//        }
-//      };
-//      display.syncExec( runnable );      
-//    }    
-//  };
  
   protected CreateSubCalculationUnitCopyDialog( Shell parentShell, CalculationUnitDataModel dataModel )
   {
@@ -207,9 +192,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
       }
     }
     
-    calculationUnits.setInput(inputListWithNo1D2D );
-    
-    
+    calculationUnits.setInput(inputListWithNo1D2D );    
     
     final Table calcUnitsTable = calculationUnits.getTable();
     calcUnitsTable.setLinesVisible( true );
@@ -272,9 +255,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
 
     subCalculationUnits = new TableViewer(fromCalculationSubUnitGroup);
     subCalculationUnits.setContentProvider( new ArrayContentProvider() );
-    subCalculationUnits.setLabelProvider( new CalculationUnit1D2DLabelProvider());
-    
-    
+    subCalculationUnits.setLabelProvider( new CalculationUnit1D2DLabelProvider());    
       
     if (parentCalcUnit1D2D.getSubUnits() == null){
       subCalculationUnits.setInput(new Object[]{});      
@@ -302,6 +283,9 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
       calculationUnits.refresh();
       
     }
+    
+    buffInputListWithNo1D2D.addAll(inputListWithNo1D2D);
+    buffInputListCalSubUnits.addAll(inputListCalSubUnits);
     return comp;  
   }
 
@@ -316,6 +300,16 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     calculation1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
     if(buttonId == RESET_ID)
     {
+      inputListWithNo1D2D.clear();
+      inputListWithNo1D2D.addAll( buffInputListWithNo1D2D );
+      inputListCalSubUnits.clear();
+      inputListCalSubUnits.addAll( buffInputListCalSubUnits );
+      calculationUnits.refresh();
+      subCalculationUnits.refresh();
+      
+      
+      System.out.println(buffInputListWithNo1D2D.size());
+      System.out.println(buffInputListCalSubUnits.size());      
 //      nameField.setText("");
 //      typeCombo.select( 0 );        
 //      descriptionText.setText(defaultDescriptionText);

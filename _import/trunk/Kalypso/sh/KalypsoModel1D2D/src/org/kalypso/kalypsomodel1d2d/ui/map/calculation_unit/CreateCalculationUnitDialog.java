@@ -137,6 +137,7 @@ class CreateCalculationUnitDialog extends Dialog{
     descriptionText.setLayoutData( data );
     return comp;
   }
+  
   @Override
   protected void createButtonsForButtonBar(Composite parent)
   {

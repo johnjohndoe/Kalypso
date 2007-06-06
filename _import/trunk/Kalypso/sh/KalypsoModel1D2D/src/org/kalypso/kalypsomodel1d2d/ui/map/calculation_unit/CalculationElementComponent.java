@@ -234,6 +234,7 @@ public class CalculationElementComponent
         if (!(newValue instanceof ICalculationUnit1D2D))
         {
           titleSubCalculation.setEnabled( false );
+          table.clearAll();
           table.setEnabled( false );
           descriptionGroupText.setEnabled( false );
           descriptionText.setEnabled( false );          
@@ -248,6 +249,7 @@ public class CalculationElementComponent
          
           tableViewer.setInput( ((ICalculationUnit1D2D)newValue).getSubUnits().toArray());
         }
+        
         
     }
     else
