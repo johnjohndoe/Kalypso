@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -58,6 +59,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 
 /**
@@ -367,4 +369,67 @@ public class CalUnitOps
       return null;
     }
   }
+  
+  
+  /**
+   * To get the bounding box of the given calculation unit.
+   * 
+   * @param calUnit the calculation which bounding box is to be get
+   * @return an {@link GM_Envelope} representing the bounding box
+   *    of the calculation unit. 
+   * 
+   */
+  public static final GM_Envelope getBoundingBox(
+                                    ICalculationUnit calUnit)
+  {
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    LinkedList<GM_Envelope> contributingBBox =
+      new LinkedList<GM_Envelope>();
+    
+    //collect all contributing bboxes
+    contributingBBox.add( 
+        calUnit.getElements().getWrappedList().getBoundingBox() );
+    if( calUnit instanceof ICalculationUnit1D2D )
+    {
+      LinkedList<ICalculationUnit> subUnits = 
+            new LinkedList<ICalculationUnit>(
+                ((ICalculationUnit1D2D)calUnit).getSubUnits());
+      while(!subUnits.isEmpty())
+      {
+        ICalculationUnit removed = subUnits.remove( 0 );
+        contributingBBox.add( 
+            removed.getElements().getWrappedList().getBoundingBox() );
+        if( removed instanceof ICalculationUnit1D2D )
+        {
+          subUnits.addAll( ((ICalculationUnit1D2D)removed).getSubUnits() );
+        }
+      }
+    }
+    
+    GM_Envelope boundingBox=null;
+    //find the first non null
+    find_first_non_null: while(!contributingBBox.isEmpty())
+    {
+      GM_Envelope removeBB = contributingBBox.removeFirst();
+      if( removeBB != null )
+      {
+        boundingBox = removeBB;
+        break find_first_non_null;
+      }
+    }
+    
+    //widden box the include following non nulls
+    while(!contributingBBox.isEmpty())
+    {
+      GM_Envelope removeBB = contributingBBox.removeFirst();
+      if( removeBB != null )
+      {
+        boundingBox = boundingBox.getMerged( removeBB );
+      }
+    }
+    
+    return boundingBox;
+    
+  }
+  
 }

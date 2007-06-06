@@ -42,19 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
@@ -119,7 +110,7 @@ public class KeyBasedDataModelUtil
    *            {@link ICommonKeys#KEY_DISCRETISATION_MODEL}
    *  
    */
-  public static final void fireDiscretisationModelChanged( 
+  private static final void fireDiscretisationModelChanged( 
                                           KeyBasedDataModel dataModel )
   {
     Assert.throwIAEOnNullParam( dataModel, "dataModel" );

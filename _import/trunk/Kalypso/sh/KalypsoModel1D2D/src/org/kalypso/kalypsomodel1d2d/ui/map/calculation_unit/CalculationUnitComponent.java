@@ -54,6 +54,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * 
@@ -105,6 +107,29 @@ public class CalculationUnitComponent
   @Override
   public void refreshOtherSections(){    
     
+  }
+  
+  @Override
+  protected void maximizeSelected( )
+  {
+    final KeyBasedDataModel dataModel = getDataModel();
+    ICalculationUnit calUnitToMax = dataModel.getData( 
+        ICalculationUnit.class,
+        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( calUnitToMax == null )
+    {
+      System.out.println("current selection is null");
+      return;
+    }
+    GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
+    if( boundingBox == null )
+    {
+      System.out.println("BBox is null");
+      return;
+    }
+    MapPanel mapPanel = 
+      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    mapPanel.setBoundingBox( boundingBox );
   }
   
   @Override
