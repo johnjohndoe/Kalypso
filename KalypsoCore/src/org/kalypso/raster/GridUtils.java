@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.raster;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -71,9 +68,9 @@ public abstract class GridUtils
    * exports a RectifiedGridCoverage to an Ascii-Grid
    * 
    * @param out
-   *          ascii output file
+   *            ascii output file
    * @param grid
-   *          RectifiedGridCoverage to export
+   *            RectifiedGridCoverage to export
    * @throws Exception
    */
   public static void exportGridArc( final File out, final RectifiedGridCoverage2 grid ) throws Exception
@@ -163,61 +160,43 @@ public abstract class GridUtils
    * imports an ascii-grid file
    * 
    * @param in
-   *          input file (*.asc)
+   *            input file (*.asc)
    * @param cs
-   *          the coordinate system for the geometric data of the ascii-grid
+   *            the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
    */
   public static RectifiedGridCoverage2 importGridArc( final File in, final CS_CoordinateSystem cs ) throws Exception
   {
-    BufferedReader br = null;
-    try
-    {
-      br = new BufferedReader( new FileReader( in ) );
-      final String[] data = new String[6];
-      String line;
-      // reading header data
-      for( int i = 0; i < 6; i++ )
-      {
-        line = br.readLine();
-        final int index = line.indexOf( " " ); //$NON-NLS-1$
-        final String subString = line.substring( index );
-        data[i] = subString.trim();
-      }
-      br.close();
+    final GridReader reader = new GridReader( in );
 
-      final int nCols = new Integer( data[0] ).intValue();
-      final int nRows = new Integer( data[1] ).intValue();
+    final int nCols = new Integer( reader.getCols() ).intValue();
+    final int nRows = new Integer( reader.getRows() ).intValue();
 
-      final OffsetVector offsetX = new OffsetVector( new Double( data[2] ), new Double( data[4] ) );
-      final OffsetVector offsetY = new OffsetVector( new Double( data[4] ), new Double( data[3] ) );
+    final OffsetVector offsetX = new OffsetVector( reader.getUpperLeftCornerX(), reader.getCellSize() );
+    final OffsetVector offsetY = new OffsetVector( reader.getCellSize(), reader.getUpperLeftCornerY() );
 
-      final GM_Point origin = GeometryFactory.createGM_Point( offsetX.getGeoX(), offsetY.getGeoY(), cs );
+    final GM_Point origin = GeometryFactory.createGM_Point( offsetX.getGeoX(), offsetY.getGeoY(), cs );
 
-      final double[] low = { 0.0, 0.0 };
-      final double[] high = { nCols, nRows };
-      final GridRange gridRange = new GridRange_Impl( low, high );
-      final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+    final double[] low = { 0.0, 0.0 };
+    final double[] high = { nCols, nRows };
+    final GridRange gridRange = new GridRange_Impl( low, high );
+    final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
 
-      /* RangeSet */
-      final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-      // TODO: consider import the file into the eclipse workspace
-      rangeSetFile.setFileName( in.toURL().toExternalForm() );
-      // TODO: define a good mime type
-      rangeSetFile.setMimeType( "text/asc" );
-      // rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
+    /* RangeSet */
+    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
+    // TODO: consider import the file into the eclipse workspace
+    rangeSetFile.setFileName( in.toURL().toExternalForm() );
+    // TODO: define a good mime type
+    rangeSetFile.setMimeType( "text/asc" );
+    // rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
-      final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-      rangeSet.setFile( rangeSetFile );
-      // final RangeSet rangeSet = new RangeSet();
-      // rangeSet.setRangeSetDataFile( rangeSetFile.getFileName() );
+    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
+    rangeSet.setFile( rangeSetFile );
+    // final RangeSet rangeSet = new RangeSet();
+    // rangeSet.setRangeSetDataFile( rangeSetFile.getFileName() );
 
-      return RectifiedGridCoverage2.createRectifiedGridCoverage( gridDomain, rangeSet );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( br );
-    }
+    return RectifiedGridCoverage2.createRectifiedGridCoverage( gridDomain, rangeSet );
+
   }
 
   /**
