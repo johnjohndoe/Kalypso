@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -93,10 +94,19 @@ public class CalculationUnit
    */
   public void setDownStreamBoundaryLine( IBoundaryLine line )
   {
+    //unlink old boundary
+    final IBoundaryLine oldLine = getDownStreamBoundaryLine();
+    if( oldLine != null )
+    {
+      LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
+    }
+    
+    //set new boundary
     FeatureHelper.setLocalLink( 
         this, 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, 
         line );
+    line.getContainers().addRef( this );
   }
   
   /**
@@ -117,6 +127,14 @@ public class CalculationUnit
    */
   public void setUpStreamBoundaryLine( IBoundaryLine line )
   {
+    //unlink old boundary
+    final IBoundaryLine oldLine = getUpStreamBoundaryLine();
+    if( oldLine != null )
+    {
+      LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
+    }
+    
+    //set new boundary
     FeatureHelper.setLocalLink( 
         this, 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, 

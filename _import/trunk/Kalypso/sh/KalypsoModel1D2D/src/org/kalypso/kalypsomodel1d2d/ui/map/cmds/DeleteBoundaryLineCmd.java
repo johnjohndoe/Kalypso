@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -122,13 +123,20 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-   if( !done )
-   {
-     unlinkEdges(bLine);
-     unlinkComplexElement(bLine);
-     model1d2d.getElements().remove( bLine );
-     done = true;
-   }
+    try
+    {
+     if( !done )
+     {
+       unlinkEdges(bLine);
+       unlinkComplexElement(bLine);
+       model1d2d.getElements().remove( bLine );
+       done = true;
+     }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      throw e;
+    }
   }
 
 
@@ -139,53 +147,55 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
                                                 line.getContainers();
     for( int i = containers.size()-1;i>=0;i--)
     {
-      IFE1D2DComplexElement ce = containers.remove( i );
       
-      if( ce instanceof ICalculationUnit )
-      {
-        unlinkCalUnitBorder( (ICalculationUnit)ce, line);
-      }
-      else
-      {
-        unlinkComplexElementAndEle( ce, line );
-      }
+      IFE1D2DComplexElement ce = containers.remove( i );
+      LinksOps.delRelationshipElementAndComplexElement( line, ce );
+//      if( ce instanceof ICalculationUnit )
+//      {
+//        unlinkCalUnitBorder( (ICalculationUnit)ce, line);
+//      }
+//      else
+//      {
+//        unlinkComplexElementAndEle( ce, line );
+//      }
     }
+    containers.clear();
   }
 
-  private static final void unlinkComplexElementAndEle( IFE1D2DComplexElement ce, IBoundaryLine line )
-  {
-    ce.getElements().removeAllRefs( line );
-  }
-  
-  private static final void unlinkCalUnitBorder( ICalculationUnit ce, IBoundaryLine line )
-  {
-    ce.getElements().removeAllRefs( line );
-    final IBoundaryLine downStreamBL = ce.getDownStreamBoundaryLine();
-    if( downStreamBL!=null )
-    {
-      if(downStreamBL.equals( line ))
-      {
-        ce.setDownStreamBoundaryLine( null );
-      }
-    }
-    
-    final IBoundaryLine upStreamBL = ce.getUpStreamBoundaryLine();
-    if( upStreamBL!=null )
-    {
-      if(upStreamBL.equals( line ))
-      {
-        ce.setDownStreamBoundaryLine( null );
-      }
-    }
-    
-  }
+//  private static final void unlinkComplexElementAndEle( IFE1D2DComplexElement ce, IBoundaryLine line )
+//  {
+//    ce.getElements().removeAllRefs( line );
+//  }
+//  
+//  private static final void unlinkCalUnitBorder( ICalculationUnit ce, IBoundaryLine line )
+//  {
+//    ce.getElements().removeAllRefs( line );
+//    final IBoundaryLine downStreamBL = ce.getDownStreamBoundaryLine();
+//    if( downStreamBL!=null )
+//    {
+//      if(downStreamBL.equals( line ))
+//      {
+//        ce.setDownStreamBoundaryLine( null );
+//      }
+//    }
+//    
+//    final IBoundaryLine upStreamBL = ce.getUpStreamBoundaryLine();
+//    if( upStreamBL!=null )
+//    {
+//      if(upStreamBL.equals( line ))
+//      {
+//        ce.setDownStreamBoundaryLine( null );
+//      }
+//    }
+//    
+//  }
 
   private static final void unlinkEdges( ILineElement line )
   {
     IFeatureWrapperCollection<IFE1D2DEdge> edges = line.getEdges();
     for( int i = edges.size()-1;i>=0;i-- )
     {
-      IFE1D2DEdge edge = edges.remove( i );
+      IFE1D2DEdge edge = edges.remove( i ); 
       edge.getContainers().removeAllRefs( line );
     }
   }

@@ -435,9 +435,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
 	@SuppressWarnings("unchecked")
 	public FWCls remove(int index) {
-		Feature f = (Feature) featureList.remove(index);
-		IFeatureWrapper2 wrapper = (IFeatureWrapper2) f.getAdapter(fwClass);
-		return (FWCls) wrapper;
+//		Feature f = (Feature) featureList.remove(index);
+//		IFeatureWrapper2 wrapper = (IFeatureWrapper2) f.getAdapter(fwClass);
+	  FWCls wrapper = FeatureHelper.getFeature( 
+	      featureCol.getWorkspace(), 
+	      featureList.remove(index), 
+	      fwClass );
+	  return wrapper;
 	}
 
 	public boolean remove(Object o) {

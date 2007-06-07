@@ -147,4 +147,24 @@ public class KeyBasedDataModelUtil
     
   }
     
+  /**
+   * Get and reset the current entry associated with the
+   * provided key. This just cause a change event to be
+   * raise so views may update.
+   * 
+   * @param dataModel model to update
+   * @param key the key for the entry to reset
+   * @throws IllegalArgumentException if dataModel or key
+   *            is null
+   */
+  public static final void resetCurrentEntry( 
+                  KeyBasedDataModel dataModel, 
+                  String key)
+  {
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
+    Assert.throwIAEOnNullParam( key, "key" );
+    dataModel.setData( 
+        key, 
+        dataModel.getData( key ) );
+  }
 }

@@ -157,19 +157,7 @@ public class CalculationUnitWidget
         ICommonKeys.KEY_COMMAND_MANAGER, 
         targetTheme.getWorkspace());
     
-    
-////    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-//    PopupMenu popup = new PopupMenu();
-//    popup.add( new MenuItem("TestMenu") );
-//    mapPanel.add( popup  );
-//    hookContextMenu();
     registerPopupBlocker( popupBlocker );
-//    setStrategy( 
-//        new RouteLineElementWidget<IBoundaryLine>(
-//                                "Create Boundary Line",
-//                                "Create Boundary Line",
-//                                IBoundaryLine.class,
-//                                Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) );
   }
   
   /**
@@ -238,6 +226,9 @@ public class CalculationUnitWidget
     {
     try
     {
+      dataModel.setData( 
+          ICommonKeys.KEY_SELECTED_DISPLAY,
+          parent.getDisplay() );
       return widgetFace.createControl( parent );
     }
     catch (Throwable th) 

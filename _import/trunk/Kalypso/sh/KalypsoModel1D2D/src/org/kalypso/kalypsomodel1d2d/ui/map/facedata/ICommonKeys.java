@@ -65,6 +65,11 @@ public interface ICommonKeys
   public static final String KEY_SELECTED_FEATURE_WRAPPER = "_sel_feature_wrapper_";
   
   /**
+   * Key for data entry holding a {@link org.eclipse.swt.widgets.Display}
+   */
+  public static final String KEY_SELECTED_DISPLAY = "_ui_display_";
+  
+  /**
    * Key for data entry holding the discretisation model
    */
   public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_"; 
