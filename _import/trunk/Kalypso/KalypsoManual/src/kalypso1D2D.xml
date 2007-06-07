@@ -41,8 +41,32 @@
     </mediaobject>
   </figure>
 
-  <para>Rechenkernhistorie, Welche Rechenalgorythmen sind implementiert, Wofür
-  Anwenden</para>
+  <para>(// aus Welcome dialog kopiert...):Das zweidimensionale
+  Strömungsmodell wird über den Ansatz der zweidimensionalen,
+  tiefengemittelten, Reynolds-gemittelten Flachwassergleichungen formuliert.
+  Im polynombasierten eindimensionalen Modell werden die
+  Saint-Venant-Gleichungen verwendet. Mit diesem Ansatz können auch komplexe
+  Gewässerprofile auf Basis einer stationär ungleichförmigen
+  Spiegellinienberechnung berechnet werden, in der die beschreibenden Polynome
+  bestimmt werden. Die Lösung in Kalypso1D2D erfolgt über eine Diskretisierung
+  des Modellgebietes nach dem Finite-Elemente-Verfahren mit der Methode der
+  gewichteten Residuen nach Galerkin. Für die Diskretisierung können
+  unterschiedliche Elementformen verwendet werden: Zweidimensionale Gebiete
+  werden über planare Dreiecke oder Vierecke modelliert. Eindimensionale
+  Bereiche werden über rein lineare Elemente mit zwei Eckknoten für den
+  polynombasierten Berechnungsansatz modelliert. Die Zeitabhängigkeit wird
+  über ein modifiziertes Crank-Nicholson Verfahren abgebildet, wobei das
+  Newton-Raphson Verfahren verwendet wird. Innovative Ansätze sind in den
+  Bereichen Rauheitsmodellierung und Turbulenz enthalten. Die
+  Rauheitsmodellierung erfolgt über das Colebrook-White’sche Widerstandsgesetz
+  und beinhalten die Modellierung von Fliessverlusten infolge von überströmtem
+  und durchströmtem Bewuchs. Verschiedene Turbulenzmodelle sind bei der
+  Simulation verfügbar: Ein konstantes Wirbelviskositätsmodell, ein
+  bodeninduziertes Turbulenz-Modell, der Prandtl’sche Mischungswegansatz und
+  das Smagorinsky Modell. Das hydrodynamische Model Kalypso1D2D berechnet
+  Wasserstände und horizontale Komponenten der Fliessgeschwindigkeiten sowohl
+  für strömenden als auch schiessenden Abfluss in offenen Gewässern. (// aus
+  Welcome dialog kopiert...)</para>
 
   <section id="kalypso_1D2D-Allgemeines">
     <title>Allgemeine Einführung</title>
@@ -167,7 +191,7 @@
       doppelt klicken. Es erscheint die Kalypso-Startseite mit allen Plug-in
       Modulen. <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="img/1D2D/01_willkommen.png" />
           </imageobject>
         </mediaobject></para>
 
@@ -203,10 +227,15 @@
       Projektnamen und einigen standardgemäßen Unterordnern angelegt. Falls
       Sie einen anderen Ort wünschen als den angegebenen, ändern Sie diese
       Einstellung JETZT, indem Sie auf "Browse" klicken und das gewünschte
-      Verzeichnis auswählen.</para>
+      Verzeichnis auswählen. Der Button "Browse" ist nur aktiv, wenn das
+      Häckchen bei "Use default location" deaktiviert ist.</para>
 
       <para>Anschließend klicken Sie auf "Finish". Es sind nun standardgemäß
-      zwei Fenster geöffnet<itemizedlist>
+      zwei Fenster geöffnet<mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/02_default_perspective.gif" />
+          </imageobject>
+        </mediaobject><itemizedlist>
           <listitem>
             <para>Aktivitäten</para>
 
@@ -232,12 +261,13 @@
           </listitem>
 
           <listitem>
-            <para>Szenarien</para>
+            <para>Gliederung / Szenarien</para>
 
-            <para>Hier ist nun Ihr neu angelegtes Projekt -gegebenenfalls
-            nebst anderen schon existiereden Projekten- zu sehen. Wenn Sie auf
-            das Plussymbol klicken, sehen Sie, dass Ihr Projekt -wie oben
-            erwähnt- bereits mit einigen Standarts ausgestattet ist.</para>
+            <para>Im Tab "Szenarien" ist nun Ihr neu angelegtes Projekt
+            -gegebenenfalls nebst anderen schon existiereden Projekten- zu
+            sehen. Wenn Sie auf das Plussymbol klicken, sehen Sie, dass Ihr
+            Projekt -wie oben erwähnt- bereits mit einigen Standarts
+            ausgestattet ist.</para>
           </listitem>
         </itemizedlist></para>
     </section>
@@ -265,27 +295,45 @@
         Koordinatensystems, welches als EPSC-Code angegeben werden
         muss.</para>
 
-        <para>Im Fenster "Aktivitäten" öffnen Sie das Bäumchen bis zu "Import
-        von Hintergrundlkarten" und klicken nun doppelt auf den Schriftzug. Es
-        öffnet sich ein kleines Fenster mit dem Titel "Import von
-        Hintergrundkarten". Hier können sie nun auswählen in welchem Format
-        Ihre Hintergrundkarte vorliegt. Wenn SIe das getan haben klicken sie
-        auf "Next". Nun können sie über den Button "Durchsuchen", Ihre Karte
-        aus dem Ordnersystem Ihres Rechners auswählen. Klicken Sie auf
-        "Finish". Die Karte wird nun automatisch in den bei der Projekt
-        Anlegung erstellten Order kopiert und zwar im Ordner mit dem
-        jeweiligen Projektnamen unter " \imports\basemap" (zum Beispiel:
-        X:\KalypsoDaten1\versuchskanickel\imports\basemap).</para>
+        <para>Im Fenster "Aktivitäten" klicken Sie auf -&gt;Preprocessing
+        -&gt;Daten Laden und klicken nun doppelt auf den Schriftzug "Import
+        von Hintergrundlkarten" . Es öffnet sich ein kleines Fenster mit dem
+        Titel "Import von Hintergrundkarten". Hier können sie nun auswählen in
+        welchem Format Ihre Hintergrundkarte vorliegt. Wenn Sie das getan
+        haben klicken sie auf "Next". Nun können sie über den Button
+        "Durchsuchen", Ihre Karte aus dem Ordnersystem Ihres Rechners
+        auswählen. Klicken Sie auf "Finish". Die Karte wird nun automatisch in
+        den bei der Projekt Anlegung erstellten Order kopiert und zwar im
+        Ordner mit dem jeweiligen Projektnamen unter " \imports\basemap" (zum
+        Beispiel: X:\KalypsoDaten1\versuchskanickel\imports\basemap).</para>
 
         <para>Unten links auf dem Bildschirm sollte nun nicht mehr das Fenster
         "Szenarien", sondern "Gliederung" aktiv sein. Sie sehen, dass das
         Fenster "Grundlagen" neu hinzugekommen ist, in diesem Fenster befindet
-        sich nun auch Ihre Hintergrundkarte. Wenn Sie Kalypso wieder schließen
-        und später erneut öffnen, werden Sie wieder nur die Standardansicht
-        mit den zwei Fenstern "Aktibvitäten" und "Szenarien" und "Gliederung"
-        vorfinden. Die Karte ist zwar wie oben erwähnt dann immer noch im
-        Projekt gespeichet, wird alledings erst wieder sichtbar, wenn Sie dann
-        eine Aktivität auswählen.</para>
+        sich nun auch Ihre Hintergrundkarte.</para>
+
+        <para><mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/03_hintergrundkarte.png" />
+            </imageobject>
+          </mediaobject>Falls die sich Ihre Hintergrundkarte aus mehreren
+        Datein zusammensetzt können Sie den Vorgang wie oben beschriebe
+        wiederholen.</para>
+
+        <para>Sollte die Karte nicht auf Anhieb sichtbar sein oder nur ein
+        Teilauschnitt klicken Sie den Button... (//zoom to full
+        extend...)<mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/werkzeugleiste.png" />
+            </imageobject>
+          </mediaobject></para>
+
+        <para>Wenn Sie Kalypso wieder schließen und später erneut öffnen,
+        werden Sie wieder nur die Standardansicht mit den zwei Fenstern
+        "Aktivitäten" und "Szenarien"/ "Gliederung" vorfinden. Die Karte ist
+        zwar wie oben erwähnt dann immer noch im Projekt gespeichet, wird
+        alledings erst wieder sichtbar, wenn Sie dann eine Aktivität
+        auswählen.</para>
 
         <para>Zunächsteinmal können Sie sich mit den Werkzeugen, die Ihnen im
         Fenser "Grundlagen" zur Verfügung stehen vertraut machen. Das jeweils
