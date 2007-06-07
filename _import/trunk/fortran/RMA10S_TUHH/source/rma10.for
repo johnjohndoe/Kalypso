@@ -1,4 +1,4 @@
-C     Last change:  K     8 May 2007    3:11 pm
+C     Last change:  K     7 Jun 2007    9:51 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -260,6 +260,11 @@ C     REWIND IVS
       npr = maxn
 !-
 
+!nis,jun07: Moving distribution calculation to this place because of dry node handling
+      if (MaxLT /= 0) call TransVelDistribution
+!-
+
+
 C-
 C......  Process dry nodes
 C-
@@ -306,8 +311,10 @@ CIPK JAN02 SET SIDFF TO ZERO
 cipk aug00 experimental
       IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
-!nis,feb07: Calling the processing of the 1D 2D line transitions
-      if (MaxLT /= 0) call TransVelDistribution
+!nis,jun07: Wrong place because of dry-node-handling, moved up
+! !nis,feb07: Calling the processing of the 1D 2D line transitions
+!       if (MaxLT /= 0) call TransVelDistribution
+! !-
 !-
 
        write(*,*) 'entering load'
