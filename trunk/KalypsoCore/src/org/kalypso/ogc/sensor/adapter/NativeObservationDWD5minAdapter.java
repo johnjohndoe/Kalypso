@@ -66,7 +66,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
- * @author huebsch adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue
+ * @author huebsch
+ * 
+ * adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue
  *         Struktur) Feld-Nr. 1 2 3 4 5 Inhalt 77 Stations-nummer Datumjj/mm/tt gemesseneNiederschlagshöhe(in 1/10 mm)
  *         Tagessumme der 5-Min-Werte(in 1/1000 mm)Kalendertag! ch. v. b. 1-2 4-8 10-15 17-20 22-27 Anz. ch. 2 5 6 4 6
  *         Ein Datenblock besteht aus 18 Datensätzen: Datensatz 5-Minuten-Datei (neue Struktur) Feld-Nr. 1-16 Inhalt 16
@@ -78,7 +80,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0
  */
-public class NativeObservationDWDAdapter implements INativeObservationAdapter
+public class NativeObservationDWD5minAdapter implements INativeObservationAdapter
 {
   private final Pattern m_dwdBlockPattern = Pattern.compile( "[7]{2}\\s+([0-9]{5})\\s+([0-9]{6}).+?" );
 
