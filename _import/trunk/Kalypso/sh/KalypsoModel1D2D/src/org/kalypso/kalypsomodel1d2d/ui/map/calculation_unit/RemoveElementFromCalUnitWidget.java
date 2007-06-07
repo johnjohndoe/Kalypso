@@ -62,7 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
@@ -79,7 +79,7 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
 
   private KeyBasedDataModel dataModel;
   
-  private class RemoveElementFromCalculationUnitWithPostCall extends RemoveElementFromCalculationUnit
+  private class RemoveElementFromCalculationUnitWithPostCall extends RemoveElementFromCalculationUnitCmd
   {
 
     public RemoveElementFromCalculationUnitWithPostCall( 
@@ -121,9 +121,13 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
     public void process( ) throws Exception
     {
       super.process();
-      dataModel.setData( 
-          ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-          dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ));
+      KeyBasedDataModelUtil.resetCurrentEntry( 
+          dataModel, 
+          ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER
+          ); 
+      KeyBasedDataModelUtil.repaintMapPanel( 
+          dataModel, 
+          ICommonKeys.KEY_MAP_PANEL );
     }
   }
   

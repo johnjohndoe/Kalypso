@@ -75,8 +75,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromCalcUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2DCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
@@ -134,6 +134,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
   
   protected Control createDialogArea(Composite parent)
   {
+    //TODO Patrice change since selection must not be on 1d2d cal uni
     parentCalcUnit1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
     Composite comp = (Composite)super.createDialogArea(parent);
     
@@ -315,8 +316,8 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     }
     if (buttonId == OK_APPLIED)
     {
-      RemoveSubCalcUnitsFromCalcUnit1D2D cmdToRemove
-          = new RemoveSubCalcUnitsFromCalcUnit1D2D( 
+      RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove
+          = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( 
               new ArrayList<ICalculationUnit>(calculation1D2D.getSubUnits()),//inputListCalSubUnits,
               calculation1D2D,
               Util.getModel( IFEDiscretisationModel1d2d.class )){
@@ -349,8 +350,8 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
         KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove );
         
       
-      AddSubCalcUnitsToCalcUnit1D2D cmdToAdd 
-          = new AddSubCalcUnitsToCalcUnit1D2D(
+      AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd 
+          = new AddSubCalcUnitsToCalcUnit1D2DCmd(
                   inputListCalSubUnits,
                   calculation1D2D,
                   Util.getModel( IFEDiscretisationModel1d2d.class )){

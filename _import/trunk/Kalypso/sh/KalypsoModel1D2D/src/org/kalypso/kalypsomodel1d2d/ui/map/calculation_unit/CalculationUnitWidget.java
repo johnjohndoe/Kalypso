@@ -208,7 +208,10 @@ public class CalculationUnitWidget
       {      
         final IWorkbenchPartSite site = findView.getViewSite();
               Control control = (Control) findView.getAdapter( Control.class );
-        control.removeListener( SWT.MenuDetect, popupBlocker  );
+        if( !control.isDisposed() )
+        {
+          control.removeListener( SWT.MenuDetect, popupBlocker  );
+        }
       }
     }
     catch ( Throwable th) 
@@ -243,6 +246,15 @@ public class CalculationUnitWidget
    */
   public void disposeControl( )
   {
+//    try
+//    {
+//      unRegisterPopupBlocker( popupBlocker );
+//    }
+//    catch (Exception e) 
+//    {
+//      e.printStackTrace();
+//    }
+    
     if(widgetFace!=null)
     {
       widgetFace.disposeControl();

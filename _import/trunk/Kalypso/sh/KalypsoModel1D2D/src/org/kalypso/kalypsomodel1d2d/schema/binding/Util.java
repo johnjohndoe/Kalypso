@@ -40,13 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Patrice Congo
@@ -56,67 +49,67 @@ public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
 {
 
   
-  /**
-   * Get an {@link IFeatureWrapperCollection} from a feature list
-   * property.
-   * The feature type, the property type and the type of the collection 
-   * elements can be return
-   * @param feature the feature whose property is to be wrapped in a
-   *        {@link IFeatureWrapperCollection} 
-   * @param listPropQName the Q Name of the property
-   * @param bindingInterface the class of the collection elements
-   * @param doCreate a boolean controling the handling of the property 
-   *            creation. if true a listProperty is created if its not 
-   *            allready availayble
-   *             
-   * 
-   */
-  public static final  <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> 
-                              get(
-                                    Feature feature,
-                                    QName featureQName,
-                                    QName listPropQName,
-                                    Class<T> bindingInterface,
-                                    boolean doCreate
-                                    )
-  {
-    Assert.throwIAEOnNull( 
-        feature, "Param feature must not be null" );
-    Assert.throwIAEOnNull( 
-        featureQName, "Param listPropQName must not be null" );
-    Assert.throwIAEOnNull( 
-        listPropQName, "Param feature must not be null" );
-    Assert.throwIAEOnNull( 
-        bindingInterface, "Param bindingInterface must not be null" );
-    
-    Object prop=
-        feature.getProperty(listPropQName);
-    
-    FeatureWrapperCollection<T> col=null;
-    
-    if(prop==null)
-    {
-      //create the property tha is still missing
-      if(doCreate)
-      {
-        col= 
-          new FeatureWrapperCollection<T>(
-                              feature,
-                              featureQName,
-                              listPropQName,
-                              bindingInterface);
-      }     
-    }
-    else
-    {      
-      //just wrapped the existing one
-      col= 
-        new FeatureWrapperCollection<T>(
-                            feature,
-                            bindingInterface,
-                            listPropQName);
-    }
-    
-    return col;
-  }
+//  /**
+//   * Get an {@link IFeatureWrapperCollection} from a feature list
+//   * property.
+//   * The feature type, the property type and the type of the collection 
+//   * elements can be return
+//   * @param feature the feature whose property is to be wrapped in a
+//   *        {@link IFeatureWrapperCollection} 
+//   * @param listPropQName the Q Name of the property
+//   * @param bindingInterface the class of the collection elements
+//   * @param doCreate a boolean controling the handling of the property 
+//   *            creation. if true a listProperty is created if its not 
+//   *            allready availayble
+//   *             
+//   * 
+//   */
+//  public static final  <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> 
+//                              get(
+//                                    Feature feature,
+//                                    QName featureQName,
+//                                    QName listPropQName,
+//                                    Class<T> bindingInterface,
+//                                    boolean doCreate
+//                                    )
+//  {
+//    Assert.throwIAEOnNull( 
+//        feature, "Param feature must not be null" );
+//    Assert.throwIAEOnNull( 
+//        featureQName, "Param listPropQName must not be null" );
+//    Assert.throwIAEOnNull( 
+//        listPropQName, "Param feature must not be null" );
+//    Assert.throwIAEOnNull( 
+//        bindingInterface, "Param bindingInterface must not be null" );
+//    
+//    Object prop=
+//        feature.getProperty(listPropQName);
+//    
+//    FeatureWrapperCollection<T> col=null;
+//    
+//    if(prop==null)
+//    {
+//      //create the property tha is still missing
+//      if(doCreate)
+//      {
+//        col= 
+//          new FeatureWrapperCollection<T>(
+//                              feature,
+//                              featureQName,
+//                              listPropQName,
+//                              bindingInterface);
+//      }     
+//    }
+//    else
+//    {      
+//      //just wrapped the existing one
+//      col= 
+//        new FeatureWrapperCollection<T>(
+//                            feature,
+//                            bindingInterface,
+//                            listPropQName);
+//    }
+//    
+//    return col;
+//  }
 }

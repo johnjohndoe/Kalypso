@@ -345,13 +345,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 		return new Iterator<FWCls>() {
 			private final Iterator it = featureList.iterator();
 			private final GMLWorkspace workspace=featureCol.getWorkspace();
-			public boolean hasNext() {
+			synchronized public boolean hasNext() {
 				return it.hasNext();
 			}
 
 			@SuppressWarnings({ "unchecked", "synthetic-access" })
 			synchronized public FWCls next() {
-				final Feature f = FeatureHelper.getFeature( workspace, it.next());
+				final Object next = it.next();
+                final Feature f = FeatureHelper.getFeature( workspace, next);
 
 				FWCls wrapper = (FWCls) f.getAdapter(fwClass);
 				if (wrapper == null) {

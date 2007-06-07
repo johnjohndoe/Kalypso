@@ -64,20 +64,20 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author Patrice Congo
  */
 @SuppressWarnings({ "hiding", "unchecked" })
-public class AddBoundaryLineToCalculationUnit implements IDiscrModel1d2dChangeCommand
+public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
-  private final IBoundaryLine elementsToRemove;
+  private final IBoundaryLine elementsToAdd;
   private final ICalculationUnit calculationUnit;
   private final IFEDiscretisationModel1d2d model1d2d;
   
   private boolean done = false;
   
-  /**
-   * Denotes the boundary line which has been replaced 
-   * by the newly added line in the relationship to the
-   * calculation unit. E.g. the old upstream boundary line
-   */
-  private IBoundaryLine replacedBoundaryLine;
+//  /**
+//   * Denotes the boundary line which has been replaced 
+//   * by the newly added line in the relationship to the
+//   * calculation unit. E.g. the old upstream boundary line
+//   */
+//  private IBoundaryLine replacedBoundaryLine;
   
   /**
    * Denotes the relation, which goes beyond simple elements 
@@ -86,7 +86,7 @@ public class AddBoundaryLineToCalculationUnit implements IDiscrModel1d2dChangeCo
    */
   private final QName relationToCalUnit;
   
-  public AddBoundaryLineToCalculationUnit(
+  public AddBoundaryLineToCalculationUnitCmd(
                       ICalculationUnit calculationUnit,
                       IBoundaryLine elementsToRemove,
                       IFEDiscretisationModel1d2d model1d2d,
@@ -96,18 +96,18 @@ public class AddBoundaryLineToCalculationUnit implements IDiscrModel1d2dChangeCo
     Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     
-    if( !CalUnitOps.isCalculationUnitBoundaryRelationType( relationToCalUnit ) )
-    {
-      String message =
-        String.format( 
-            "Support only relation of type( %s and %s ) but got %s", 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM,
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM,
-            relationToCalUnit );
-      throw new IllegalArgumentException(message);
-    }
+//    if( !CalUnitOps.isCalculationUnitBoundaryRelationType( relationToCalUnit ) )
+//    {
+//      String message =
+//        String.format( 
+//            "Support only relation of type( %s and %s ) but got %s", 
+//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM,
+//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM,
+//            relationToCalUnit );
+//      throw new IllegalArgumentException(message);
+//    }
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToAdd = elementsToRemove;
     this.model1d2d = model1d2d;
     this.relationToCalUnit = relationToCalUnit;
   }
@@ -120,7 +120,7 @@ public class AddBoundaryLineToCalculationUnit implements IDiscrModel1d2dChangeCo
   {
     if( done )
     {
-      return new IFeatureWrapper2[]{ calculationUnit, elementsToRemove };
+      return new IFeatureWrapper2[]{ calculationUnit, elementsToAdd };
     }
     else
     {
@@ -161,29 +161,31 @@ public class AddBoundaryLineToCalculationUnit implements IDiscrModel1d2dChangeCo
     {
       if( !done )
       {
-        replacedBoundaryLine = 
-          CalUnitOps.getLinkedBoundaryLine( 
-                        calculationUnit, relationToCalUnit );
-        if( replacedBoundaryLine != null )
-        {
-          LinksOps.delRelationshipElementAndComplexElement( 
-                          replacedBoundaryLine, calculationUnit  );
-        }
-        if( relationToCalUnit.equals( 
-                Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM ))
-        {
-          calculationUnit.setDownStreamBoundaryLine( elementsToRemove );
-        }
-        else if( relationToCalUnit.equals( 
-                Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM ))
-        {
-          calculationUnit.setUpStreamBoundaryLine( elementsToRemove );
-        }
-        else 
-        {
-         throw new RuntimeException(
-             "Relation type not supported="+relationToCalUnit);
-        }
+//        replacedBoundaryLine = 
+//          CalUnitOps.getLinkedBoundaryLine( 
+//                        calculationUnit, relationToCalUnit );
+//        if( replacedBoundaryLine != null )
+//        {
+//          LinksOps.delRelationshipElementAndComplexElement( 
+//                          replacedBoundaryLine, calculationUnit  );
+//        }
+//        if( relationToCalUnit.equals( 
+//                Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM ))
+//        {
+//          calculationUnit.setDownStreamBoundaryLine( elementsToRemove );
+//        }
+//        else if( relationToCalUnit.equals( 
+//                Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM ))
+//        {
+//          calculationUnit.setUpStreamBoundaryLine( elementsToRemove );
+//        }
+//        else 
+//        {
+//         throw new RuntimeException(
+//             "Relation type not supported="+relationToCalUnit);
+//        }
+        calculationUnit.addElementAsRef( elementsToAdd );
+        elementsToAdd.getContainers().addRef( calculationUnit );
         fireProcessChanges();
         done=true;
       }
@@ -201,7 +203,7 @@ public class AddBoundaryLineToCalculationUnit implements IDiscrModel1d2dChangeCo
     List<Feature> features = 
       new ArrayList<Feature>( );
     features.add( calUnitFeature );
-    features.add( elementsToRemove.getWrappedFeature() );
+    features.add( elementsToAdd.getWrappedFeature() );
     
     GMLWorkspace workspace = 
           calUnitFeature.getWorkspace();

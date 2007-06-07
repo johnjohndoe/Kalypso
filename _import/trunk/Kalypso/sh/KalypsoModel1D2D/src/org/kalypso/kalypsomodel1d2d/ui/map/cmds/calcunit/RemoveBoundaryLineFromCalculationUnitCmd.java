@@ -41,57 +41,65 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * @author Madanagopal
- *
+ * Removes a boundary line from a calculation unit.
+ * 
+ * @author Patrice Congo
  */
-public class AddSubCalcUnitsToCalcUnit1D2D implements IDiscrModel1d2dChangeCommand
+@SuppressWarnings({ "hiding", "unchecked" })
+public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
   
-  private List<ICalculationUnit> listCalculationUnits;
-  //private IFE1D2DElement[] elementsToAdd;
-  private IFEDiscretisationModel1d2d model1d2d;
-    private boolean added = false;
-    private ICalculationUnit1D2D parentCalculationUnit;
-
-  public AddSubCalcUnitsToCalcUnit1D2D(
-      List<ICalculationUnit> listCalculationUnits,
-      ICalculationUnit1D2D parentCalculationUnit,
-      IFEDiscretisationModel1d2d model1d2d )
-
-  {    
-      this.listCalculationUnits = listCalculationUnits;
-      this.parentCalculationUnit = parentCalculationUnit;
-      this.model1d2d = model1d2d;
+  private final IBoundaryLine bLineToRemove;
+  
+  private final ICalculationUnit calculationUnit;
+  
+  private final IFEDiscretisationModel1d2d model1d2d;
+  
+  private boolean done = false;
+  
+//  /**
+//   * Denotes the relation, which goes beyond simple elements 
+//   * inclusion,  of the boundary line to the calculation unit
+//   */
+//  private QName relationToCalUnit;
+  
+  public RemoveBoundaryLineFromCalculationUnitCmd(
+                      ICalculationUnit calculationUnit,
+                      IBoundaryLine elementsToRemove,
+                      IFEDiscretisationModel1d2d model1d2d )
+  {
+    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
+    Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     
+    this.calculationUnit = calculationUnit;
+    this.bLineToRemove = elementsToRemove;
+    this.model1d2d = model1d2d;
   }
+  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    if( added )
+    if( done )
     {
-      List<IFeatureWrapper2> changed = new ArrayList<IFeatureWrapper2>();
-      changed.addAll(listCalculationUnits);
-      changed.add( parentCalculationUnit);
-      return changed.toArray( new IFeatureWrapper2[changed.size()] );
+      return new IFeatureWrapper2[]{ calculationUnit, bLineToRemove };
     }
     else
     {
@@ -112,7 +120,6 @@ public class AddSubCalcUnitsToCalcUnit1D2D implements IDiscrModel1d2dChangeComma
    */
   public String getDescription( )
   {
-    
     return null;
   }
 
@@ -121,7 +128,6 @@ public class AddSubCalcUnitsToCalcUnit1D2D implements IDiscrModel1d2dChangeComma
    */
   public boolean isUndoable( )
   {
-    
     return false;
   }
 
@@ -129,48 +135,47 @@ public class AddSubCalcUnitsToCalcUnit1D2D implements IDiscrModel1d2dChangeComma
    * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process( ) throws Exception
-  {
-       if(!added )
+  {  
+    try
     {
-      try
+      if( !done )
       {
-        for( ICalculationUnit ele : listCalculationUnits )
-        {
-          parentCalculationUnit.getSubUnits().addRef( ele );          
-        }
-        
-        added = true;
-        //fire change
-        fireProcessChanges();
+//        relationToCalUnit = 
+//            CalUnitOps.getRelationType( calculationUnit, bLineToRemove );
+//        if( relationToCalUnit!=null )
+//        {
+          LinksOps.delRelationshipElementAndComplexElement( 
+                            bLineToRemove, calculationUnit  );
+          fireProcessChanges();
+          done=true;
+//        }
       }
-      catch( Exception th )
-      {        
-        th.printStackTrace();
-        throw th;
-      }
-      
     }
-
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+    }
   }
 
-  private void fireProcessChanges( )
-  {    
-    IFeatureWrapper2[] elementsToAdd = getChangedFeature();    
-    List<Feature> features = new ArrayList<Feature>();   
-    for( IFeatureWrapper2 ele: elementsToAdd )
-    {
-      features.add( ele.getWrappedFeature() );
-    }
+  private final void fireProcessChanges()
+  {
+    final Feature calUnitFeature = calculationUnit.getWrappedFeature();
+    final Feature model1d2dFeature = model1d2d.getWrappedFeature();
+    List<Feature> features = 
+      new ArrayList<Feature>( );
+    features.add( calUnitFeature );
+    features.add( bLineToRemove.getWrappedFeature() );
     
-    GMLWorkspace workspace = parentCalculationUnit.getWrappedFeature().getWorkspace();
+    GMLWorkspace workspace = 
+          calUnitFeature.getWorkspace();
     FeatureStructureChangeModellEvent event = 
         new FeatureStructureChangeModellEvent(
             workspace,//final GMLWorkspace workspace, 
-            model1d2d.getWrappedFeature(),// Feature parentFeature, 
+            model1d2dFeature,// Feature parentFeature, 
             features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD//final int changeType
+            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
             );
-    workspace.fireModellEvent( event );    
+    workspace.fireModellEvent( event );
   }
 
   /**
@@ -178,8 +183,7 @@ public class AddSubCalcUnitsToCalcUnit1D2D implements IDiscrModel1d2dChangeComma
    */
   public void redo( ) throws Exception
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   /**
@@ -187,8 +191,6 @@ public class AddSubCalcUnitsToCalcUnit1D2D implements IDiscrModel1d2dChangeComma
    */
   public void undo( ) throws Exception
   {
-    // TODO Auto-generated method stub
-
+    
   }
-
 }

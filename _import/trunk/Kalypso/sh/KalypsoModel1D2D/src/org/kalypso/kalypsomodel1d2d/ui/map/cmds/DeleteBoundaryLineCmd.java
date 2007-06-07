@@ -143,23 +143,14 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
   
   private void unlinkComplexElement( IBoundaryLine line )
   {
-    IFeatureWrapperCollection<IFE1D2DComplexElement> containers = 
-                                                line.getContainers();
-    for( int i = containers.size()-1;i>=0;i--)
+    IFeatureWrapperCollection<IFE1D2DComplexElement> containers2 = line.getContainers();
+    IFE1D2DComplexElement[] containers = 
+                           containers2.toArray( new IFE1D2DComplexElement[]{} );
+    for( IFE1D2DComplexElement ce: containers )
     {
-      
-      IFE1D2DComplexElement ce = containers.remove( i );
       LinksOps.delRelationshipElementAndComplexElement( line, ce );
-//      if( ce instanceof ICalculationUnit )
-//      {
-//        unlinkCalUnitBorder( (ICalculationUnit)ce, line);
-//      }
-//      else
-//      {
-//        unlinkComplexElementAndEle( ce, line );
-//      }
     }
-    containers.clear();
+    
   }
 
 //  private static final void unlinkComplexElementAndEle( IFE1D2DComplexElement ce, IBoundaryLine line )

@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  *
  */
 @SuppressWarnings("unchecked")
-public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
+public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
   /**
    * the discretisation model holding the calculation unit
@@ -86,15 +86,15 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
    */
   private QName oldQName;
   
-  /**
-   * the upstream boundary line of the deleted calculation unit
-   */
-  private IBoundaryLine oldBLineUpStream;
-  
-  /**
-   * the downstream boundary line of the deleted calculation unit
-   */
-  private IBoundaryLine oldBLineDownStream;
+//  /**
+//   * the upstream boundary line of the deleted calculation unit
+//   */
+//  private IBoundaryLine oldBLineUpStream;
+//  
+//  /**
+//   * the downstream boundary line of the deleted calculation unit
+//   */
+//  private IBoundaryLine oldBLineDownStream;
   
   /**
    * the parent/container units of the deleted calculation unit
@@ -132,7 +132,7 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
    * @throws IllegalArgumentException if cuFeatureQName or model1d2d is null
    */
   @SuppressWarnings("hiding")
-  public DeleteCalculationUnit(
+  public DeleteCalculationUnitCmd(
               IFEDiscretisationModel1d2d model1d2d,
               ICalculationUnit cuToDel )
   {
@@ -187,8 +187,8 @@ public class DeleteCalculationUnit implements IDiscrModel1d2dChangeCommand
   {
     oldName = cuToDel.getName();
     oldDesc = cuToDel.getDescription();
-    oldBLineDownStream = cuToDel.getDownStreamBoundaryLine();
-    oldBLineUpStream = cuToDel.getUpStreamBoundaryLine();
+//    oldBLineDownStream = cuToDel.getDownStreamBoundaryLine();
+//    oldBLineUpStream = cuToDel.getUpStreamBoundaryLine();
     if( cuToDel instanceof ICalculationUnit1D2D )
     {
       IFeatureWrapperCollection subUnits = 

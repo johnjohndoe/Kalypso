@@ -178,15 +178,18 @@ class CreateCalculationUnitDialog extends Dialog{
         public void process( ) throws Exception
         {
           super.process();
-            dataModel.setData( 
+          //reset list of calculation units
+          IFEDiscretisationModel1d2d model1d2d =
+            (IFEDiscretisationModel1d2d) 
+            dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+          List<ICalculationUnit> calUnits = 
+            CalUnitOps.getModelCalculationUnits( model1d2d );
+          dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+          
+          //set the create unit as selected
+          dataModel.setData( 
                 ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
                 getCreatedCalculationUnit() );
-            IFEDiscretisationModel1d2d model1d2d =
-              (IFEDiscretisationModel1d2d) 
-                  dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-            List<ICalculationUnit> calUnits = 
-                              CalUnitOps.getModelCalculationUnits( model1d2d );
-            dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
           
         }
       };
@@ -238,8 +241,8 @@ class CreateCalculationUnitDialog extends Dialog{
     }
   }
   
-  public ICalculationUnit getCreatedCalculationUnit()
-  {
-    return createdCalculationUnit;
-  }
+//  public ICalculationUnit getCreatedCalculationUnit()
+//  {
+//    return createdCalculationUnit;
+//  }
 }  

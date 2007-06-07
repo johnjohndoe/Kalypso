@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  *
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit1D<ET extends IElement1D>
+public class CalculationUnit1D<ET extends IFE1D2DElement>//IElement1D>
                         extends CalculationUnit<ET>
                         implements ICalculationUnit1D<ET>
 {
@@ -63,8 +63,8 @@ public class CalculationUnit1D<ET extends IElement1D>
     this(
         featureToBind,
         Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
-        (Class<ET>)IElement1D.class );
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
+        (Class<ET>)IFE1D2DElement.class);//IElement1D.class );
     
   }
   
@@ -82,5 +82,23 @@ public class CalculationUnit1D<ET extends IElement1D>
     
   }
   
-
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
+   */
+  @Override
+  public boolean addElementAsRef( ET element )
+  {
+    boolean isElement1dOrBoundaryLine =
+      ( element instanceof IElement1D ) ||
+      ( element instanceof IBoundaryLine );
+    if( !isElement1dOrBoundaryLine )
+    {
+      String message = String.format( 
+          "Argument must be an element 1d or a boundary line:"+
+            "\n\t value=%s", 
+            element );
+      throw new IllegalArgumentException( message );
+    }
+    return super.addElementAsRef( element );
+  }
 }

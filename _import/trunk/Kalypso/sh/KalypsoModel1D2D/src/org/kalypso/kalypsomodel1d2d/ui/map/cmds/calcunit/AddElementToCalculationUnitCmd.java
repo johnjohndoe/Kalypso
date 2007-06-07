@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
+import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -53,61 +54,66 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * @author Madanagopal
+ * Command to add element to calculation unit
+ * 
+ * @author Patrice Congo
+ *
  */
-public class RemoveElementFromCalculationUnit implements IDiscrModel1d2dChangeCommand
+@SuppressWarnings("unchecked")
+public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
-  private final IFE1D2DElement[] elementsToRemove;
+
+  private final IFE1D2DElement[] elementsToAdd ;
+  
   private boolean added = false;
+  
   private final ICalculationUnit calculationUnit;
+
   private final IFEDiscretisationModel1d2d model1d2d;
   
   @SuppressWarnings("hiding")
-  public RemoveElementFromCalculationUnit(
+  public AddElementToCalculationUnitCmd(
                       ICalculationUnit1D calculationUnit,
-                      IElement1D[] elementsToRemove,
+                      IElement1D[] elementsToAdd,
                       IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToAdd = elementsToAdd;
     this.model1d2d = model1d2d;
   }
   
-  public RemoveElementFromCalculationUnit(
+  public AddElementToCalculationUnitCmd(
       ICalculationUnit calculationUnit,
-      IFE1D2DElement[] elementsToRemove,
+      IFE1D2DElement[] elementsToAdd,
       IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToAdd = elementsToAdd;
     this.model1d2d = model1d2d;
   }
-  public RemoveElementFromCalculationUnit(
-      ICalculationUnit2D calculationUnit,
-      IElement2D[] elementsToRemove,
+  public AddElementToCalculationUnitCmd(
+      ICalculationUnit2D<IElement2D> calculationUnit,
+      IElement2D[] elementsToAdd,
       IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToAdd = elementsToAdd;
     this.model1d2d = model1d2d;
   }
   
-  public RemoveElementFromCalculationUnit(
+  public AddElementToCalculationUnitCmd(
       ICalculationUnit1D2D calculationUnit,
-      IFE1D2DElement[] elementsToRemove,
+      IFE1D2DElement[] elementsToAdd,
       IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToAdd = elementsToAdd;
     this.model1d2d = model1d2d;
   }
   
@@ -116,7 +122,16 @@ public class RemoveElementFromCalculationUnit implements IDiscrModel1d2dChangeCo
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return null;
+    if( added )
+    {
+      List<IFeatureWrapper2> changed = new ArrayList<IFeatureWrapper2>();
+      changed.addAll( Arrays.asList( elementsToAdd ) );
+      return changed.toArray( new IFeatureWrapper2[changed.size()] );
+    }
+    else
+    {
+      return new IFeatureWrapper2[]{};
+    }
   }
 
   /**
@@ -132,7 +147,7 @@ public class RemoveElementFromCalculationUnit implements IDiscrModel1d2dChangeCo
    */
   public String getDescription( )
   {
-    return null;
+    return "Elemente einer Berechnungseinheit hinzufügen";
   }
 
   /**
@@ -140,28 +155,62 @@ public class RemoveElementFromCalculationUnit implements IDiscrModel1d2dChangeCo
    */
   public boolean isUndoable( )
   {
-    return false;
+    return true;
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process( ) throws Exception
-  {  
-
-    for (IFE1D2DElement element : elementsToRemove){
-      LinksOps.delRelationshipElementAndComplexElement( element, calculationUnit );
+  {
+    if(!added )
+    {
+      try
+      {
+        for( IFE1D2DElement ele : elementsToAdd )
+        {
+          ele.getContainers().add( calculationUnit );
+          calculationUnit.addElementAsRef( ele );
+        }
+        
+        added = true;
+        //fire change
+        fireProcessChanges();
+      }
+      catch( Exception th )
+      {
+        for( IFE1D2DElement ele : elementsToAdd )
+        {
+          try
+          {
+            ele.getContainers().add( calculationUnit );
+          }
+          catch( Throwable e)
+          {
+            
+          }
+          try
+          {
+            calculationUnit.addElementAsRef( ele );
+          }
+          catch ( Throwable e ) 
+          {
+            
+          }
+        }
+        th.printStackTrace();
+        throw th;
+      }
+      
     }
-    fireProcessChanges();
-    }
-
+  }
   private final void fireProcessChanges()
   {
-    List<Feature> features = new ArrayList<Feature>( elementsToRemove.length * 2 );
+    List<Feature> features = new ArrayList<Feature>( elementsToAdd.length * 2 );
     features.add( calculationUnit.getWrappedFeature() );
-    for( IFE1D2DElement ele: elementsToRemove )
+    for( IFE1D2DElement ele: elementsToAdd )
     {
-      features.remove( ele.getWrappedFeature() );
+      features.add( ele.getWrappedFeature() );
     }
     
     GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
@@ -170,17 +219,20 @@ public class RemoveElementFromCalculationUnit implements IDiscrModel1d2dChangeCo
             workspace,//final GMLWorkspace workspace, 
             model1d2d.getWrappedFeature(),// Feature parentFeature, 
             features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
+            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD//final int changeType
             );
     workspace.fireModellEvent( event );
   }
-
+  
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
-    
+    if( !added )
+    {
+      process();
+    }
   }
 
   /**
@@ -188,6 +240,48 @@ public class RemoveElementFromCalculationUnit implements IDiscrModel1d2dChangeCo
    */
   public void undo( ) throws Exception
   {
-    
+    if( added )
+    {
+     
+      MultiException multiException = null;
+      for( IFE1D2DElement ele : elementsToAdd )
+      {
+        try
+        {
+          ele.getContainers().add( calculationUnit );
+        }
+        catch( Exception e)
+        {
+          e.printStackTrace();
+          if( multiException == null )
+          {
+            multiException = new MultiException();
+          }
+          multiException.addException( e );
+        }
+        try
+        {
+          calculationUnit.addElementAsRef( ele );
+        }
+        catch ( Exception e ) 
+        {
+          if( multiException == null )
+          {
+            multiException = new MultiException();
+          }
+          multiException.addException( e );
+        }
+      }
+      if( multiException != null )
+      {
+        throw multiException;
+      }
+      else
+      {
+        added = false;
+        fireProcessChanges();
+      }
+    }
   }
+
 }

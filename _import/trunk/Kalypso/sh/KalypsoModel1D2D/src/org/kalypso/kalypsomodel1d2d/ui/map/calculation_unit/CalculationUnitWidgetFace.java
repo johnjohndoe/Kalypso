@@ -88,14 +88,14 @@ class CalculationUnitWidgetFace
   private Section calculationSettingsSection;
   private Composite sectionFirstComposite;
   private Composite sectionThirdComposite;
-  private CalculationElementComponent calcElementGUI;
+  private SelectedCalculationComponent calcElementGUI;
   private Section calculationElementUnitSection;
   private Composite sectionSecondComposite;
   private Combo elementsCombo;
   private Combo actionsCombo;
   private Button goButton;
   private Image goImage;
-  private CalculationUnitComplexSelectionsComponent calcComplexSelectionGUI;
+  private CalculationUnitAdministerComponent calcComplexSelectionGUI;
   public CalculationUnitWidgetFace( )
   {
     
@@ -122,7 +122,7 @@ class CalculationUnitWidgetFace
 
     // Calculation Unit Section     
     calculationUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationUnitSection.setText( "Berechnungseinheiten Modellieren" );
+    calculationUnitSection.setText( "Berechnungseinheiten" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -131,7 +131,7 @@ class CalculationUnitWidgetFace
 
  // Creates Section for "Calculation Settings Unit"
     calculationSettingsSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationSettingsSection.setText( "Complex Unit Verwalten" );
+    calculationSettingsSection.setText( "Berechnungseinheit Verwalten" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -140,7 +140,7 @@ class CalculationUnitWidgetFace
  
  // Creates Section for "Calculation Elements Unit"
     calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationElementUnitSection.setText( "Selectierte Bereichnungseinheit Verwalten" );
+    calculationElementUnitSection.setText( "Status der selektierten Berechnungseinheit" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -183,7 +183,7 @@ class CalculationUnitWidgetFace
     //formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
     sectionSecondComposite.setLayoutData( formData );
     
-    calcComplexSelectionGUI = new CalculationUnitComplexSelectionsComponent();
+    calcComplexSelectionGUI = new CalculationUnitAdministerComponent();
     calcComplexSelectionGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
   }
 
@@ -201,7 +201,7 @@ class CalculationUnitWidgetFace
     formData.bottom = new FormAttachment( 100, -5 );
     sectionThirdComposite.setLayoutData( formData );
     
-    calcElementGUI= new CalculationElementComponent();    
+    calcElementGUI= new SelectedCalculationComponent();    
     calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );    
   }
 

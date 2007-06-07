@@ -70,7 +70,7 @@ import org.kalypso.ogc.gml.widgets.IWidget;
  * @author Madanagopal
  *
  */
-public class CalculationUnitComplexSelectionsComponent 
+public class CalculationUnitAdministerComponent 
 {
 
   private FormToolkit toolkit;
@@ -81,13 +81,13 @@ public class CalculationUnitComplexSelectionsComponent
   private Combo elementsCombo;
   private Button goButton;
   private Image goImage;
-  private static final String ACTION_KEY_ADD = "ADD";
+  private static final String ACTION_KEY_ADMINISTER = "Verwalten";
   private static final String ACTION_KEY_REMOVE = "REMOVE";
-  private static final String ACTION_KEY_DRAW = "DRAW";
+  private static final String ACTION_KEY_DRAW = "New Zeichnen";
   
-  private static final String ELEMENTS_KEY_ELEMENTS = "Elements";
-  private static final String ELEMENTS_KEY_SUBUNITS = "Sub Complex Unit";
-  private static final String ELEMENTS_KEY_BOUNDARY_UP = "Boundary";
+  private static final String ELEMENTS_KEY_ELEMENTS = "Elemente";
+  private static final String ELEMENTS_KEY_SUBUNITS = "Sub-Einheiten";
+  private static final String ELEMENTS_KEY_BOUNDARY_UP = "RandLinien";
 
 //  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
 //    public void dataChanged( String key, Object newValue )
@@ -111,7 +111,7 @@ public class CalculationUnitComplexSelectionsComponent
     rootComposite.setLayout( new GridLayout(3,false) );
         
     actionsCombo = new Combo(rootComposite, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
-    actionsCombo.add( ACTION_KEY_ADD );
+    actionsCombo.add( ACTION_KEY_ADMINISTER );
     actionsCombo.add( ACTION_KEY_REMOVE );
     actionsCombo.add( ACTION_KEY_DRAW );
     GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -126,7 +126,8 @@ public class CalculationUnitComplexSelectionsComponent
     elementsCombo.setLayoutData( data );
     
     goButton = new Button(rootComposite,SWT.PUSH);
-    goButton.setText( "GO");
+    goButton.setToolTipText( "Funktion aktivieren" );
+//    goButton.setText( "GO");
     
     goImage = new Image( rootComposite.getDisplay(), 
         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
@@ -163,7 +164,7 @@ public class CalculationUnitComplexSelectionsComponent
     
     IWidget strategy = null;
     
-    if( ACTION_KEY_ADD.equals( selectedAction) )
+    if( ACTION_KEY_ADMINISTER.equals( selectedAction) )
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
       {

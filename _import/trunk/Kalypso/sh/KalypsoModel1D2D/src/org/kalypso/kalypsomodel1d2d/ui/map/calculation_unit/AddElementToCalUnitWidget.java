@@ -62,7 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.DrawElements;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
@@ -79,7 +79,7 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
 {
   private KeyBasedDataModel dataModel;
   
-  private class AddElementToCalculationUnitWithPostCall extends AddElementToCalculationUnit
+  private class AddElementToCalculationUnitWithPostCall extends AddElementToCalculationUnitCmd
   {
 
     public AddElementToCalculationUnitWithPostCall( ICalculationUnit calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
@@ -109,7 +109,13 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
     public void process( ) throws Exception
     {
       super.process();
-      dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ));
+      KeyBasedDataModelUtil.resetCurrentEntry( 
+                              dataModel, 
+                              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      KeyBasedDataModelUtil.repaintMapPanel( 
+                              dataModel, 
+                              ICommonKeys.KEY_MAP_PANEL );
+      
     }
   }
 
@@ -180,7 +186,7 @@ public class AddElementToCalUnitWidget extends FENetConceptSelectionWidget
           
           for(Feature feature:selectedFeatures)
           {
-            AddElementToCalculationUnit command = null;
+            AddElementToCalculationUnitCmd command = null;
             IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
             if( calUnit instanceof ICalculationUnit1D &&
                 ele instanceof IElement1D )

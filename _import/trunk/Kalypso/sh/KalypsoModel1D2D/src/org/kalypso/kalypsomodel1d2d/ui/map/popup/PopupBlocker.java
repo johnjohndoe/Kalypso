@@ -38,44 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
+package org.kalypso.kalypsomodel1d2d.ui.map.popup;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-
-class ListLabelProvider extends LabelProvider
+/**
+ * @author Patrice Congo
+ *
+ */
+public class PopupBlocker
 {
-  private final SelectedCalculationComponent listLabelProvider;
 
-  ListLabelProvider( SelectedCalculationComponent calculationElementComponent )
-  {
-    listLabelProvider = calculationElementComponent;
-  }
-
-  public Image getImage( Object element )
-  {
-    return null;
-  }
-
-  public String getText( Object element )
-  {
-    if( element instanceof IFeatureWrapper2 )
-    {
-
-      String name = ((IFeatureWrapper2) element).getName();
-      if( name != null )
-      {
-        return name;
-      }
-      else
-      {
-        return ((IFeatureWrapper2) element).getGmlID();
-      }
-    }
-    else
-    {
-      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
-    }
-  }
 }

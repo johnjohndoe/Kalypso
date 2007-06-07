@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
@@ -167,4 +169,54 @@ public class KeyBasedDataModelUtil
         key, 
         dataModel.getData( key ) );
   }
+  
+  /**
+   * Repaints the map panel stored in the data model
+   * using the provided key.
+   * 
+   * @param dataModel the data model holding the map panel
+   * @param key the key for the map panel entry
+   * @throws IllegalArgumentException if dataModel or key is null
+   *            or if the data corresponding to key is not a MapPanel;
+   *            this also include null values
+   */
+  public static void repaintMapPanel(
+                        KeyBasedDataModel dataModel, 
+                        String key )
+  {
+    Assert.throwIAEOnNullParam( key, "key" );
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
+    final Object mapPanelEntry = dataModel.getData( key );
+    if( !( mapPanelEntry instanceof MapPanel ) )
+    {
+      throw new IllegalArgumentException(
+          "Key does not correspond to a MapPanel:"+key);
+    }
+    
+    final Object displayEntry = 
+      dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
+    if( !(displayEntry instanceof Display) )
+    {
+      throw new IllegalArgumentException(
+          "dataModel must contains a entry with key .KEY_SELECTED_DISPLAY "+
+          "representing a Display : current entry="+displayEntry);
+    }
+    
+    final Runnable repaintRunnable =
+      new Runnable()
+    {
+      
+      public void run( )
+      {
+        System.out.println("repainting the mappppppppp!");
+        ((MapPanel)mapPanelEntry).setValidMap( false );
+        ((MapPanel)mapPanelEntry).repaint();        
+      }
+      
+    };
+    
+    ((Display)displayEntry).asyncExec( repaintRunnable );
+  }
+  
+  
 }

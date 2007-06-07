@@ -63,7 +63,7 @@ public class CalculationUnit2D<ET extends IElement2D>
     this(
         featureToBind,
         Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
         (Class<ET>)IElement2D.class );
     
   }
@@ -81,6 +81,25 @@ public class CalculationUnit2D<ET extends IElement2D>
         wrapperClass );
     
   }
-  
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
+   */
+  @Override
+  public boolean addElementAsRef( ET element )
+  {
+    boolean isPolyElementOrBoundaryLine =
+      ( element instanceof IPolyElement ) ||
+      ( element instanceof IBoundaryLine );
+    if( !isPolyElementOrBoundaryLine )
+    {
+      String message = String.format( 
+          "Argument must be an element 1d or a boundary line:"+
+            "\n\t value=%s", 
+            element );
+      throw new IllegalArgumentException( message );
+    }
+    return super.addElementAsRef( element );
+  }
 
 }

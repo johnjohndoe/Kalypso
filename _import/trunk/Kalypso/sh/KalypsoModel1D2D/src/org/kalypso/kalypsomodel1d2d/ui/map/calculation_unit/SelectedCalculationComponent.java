@@ -83,7 +83,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Madanagopsl
  *
  */
-public class CalculationElementComponent
+public class SelectedCalculationComponent
 {
 
 
@@ -91,24 +91,25 @@ public class CalculationElementComponent
 
   /* ======================================================================== */
   TableViewer tableViewer;
-  private Image imageBoundaryUp;
-  final String mainGroupTitle = "Bitte Höhenmodell auswählen";
-  final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
-  final String deleteSelected = "Geländemodell löschen";
-  final String defaultTestDecription = "Wählen Sie ein Modell aus.";
-  final String saveToolTip = "Deskription Sichern";
-  final String titleDescriptionGroup = "Beschreibung";
+//  private Image imageBoundaryUp;
+//  private final String mainGroupTitle = "Berechnungseinheiten";
+//  private final String bTextMaximizeSelected = "Berechnungeinheit anzeigen und maximieren";
+//  private final String deleteSelected = "Berechnungseinheit löschen";
+  private final String defaultTestDecription = "Wählen Sie ein Modell aus.";
+//  private final String saveToolTip = "Beschreibung Sichern";
+  private final String titleDescriptionGroup = "Beschreibung";
   private Group descriptionGroupText;
-  Text descriptionText;
+  private Text descriptionText;
   private Text element2D;
   private Text element1D;
+  private Text bLineText;
   private GridData data;
-  private Image imageBoundaryDown;
+//  private Image imageBoundaryDown;
   private FormToolkit toolkit;
-  Composite parent;
+  private Composite parent;
   private KeyBasedDataModel dataModel;
-  private int num1DElement;
-  private int num2DElement;
+//  private int num1DElement;
+//  private int num2DElement;
 
   KeyBasedDataModelChangeListener newKeyListener = new KeyBasedDataModelChangeListener(){
     public void dataChanged( final String key, final Object newValue )
@@ -134,18 +135,6 @@ public class CalculationElementComponent
   private Label element1DLabel;
 
   private Label element2DLabel;
-
-  private Button boundaryUpBtn;
-
-  private Image imageBoundaryUp_Ok;
-
-  private Image imageBoundaryUp_Error;
-
-  private Image imageBoundaryDown_Ok;
-
-  private Image imageBoundaryDown_Error;
-
-  private Button boundaryDownBtn;
 
   private Composite subCalculationComposite;
 
@@ -175,63 +164,67 @@ public class CalculationElementComponent
     if (newValue instanceof ICalculationUnit)
     {
         if (newValue instanceof ICalculationUnit1D){
-          typeField.setText( "ICal 1D" );          
+          typeField.setText( "1D" );          
         } else if (newValue instanceof ICalculationUnit2D){
-          typeField.setText( "ICal 2D" );
+          typeField.setText( "2D" );
         } else if (newValue instanceof ICalculationUnit1D2D){
-          typeField.setText( "ICal 1D/2D" );
+          typeField.setText( "1D/2D" );
         } 
         else
         {
-          typeField.setText( "No Data" );
+          typeField.setText( "Type unbekannt" );
         }
         
-        num1DElement = CalUnitOps.getNum1DElement((ICalculationUnit) newValue);
         if (newValue instanceof ICalculationUnit1D)
         {
+          int num1DElement = 
+                CalUnitOps.getNum1DElement((ICalculationUnit) newValue);
           element1DLabel.setEnabled( true );
           element1D.setEnabled( true );
-          element1D.setText( num1DElement+"");
+          element1D.setText( 
+              String.valueOf( num1DElement ) );
+          bLineText.setText( 
+              String.valueOf( 
+                  CalUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
         }
         else 
         {
+          element1D.setText( "" );
           element1D.setEnabled( false );
           element1DLabel.setEnabled( false );
         }
         
-        num2DElement = CalUnitOps.getNum2DElement((ICalculationUnit) newValue);
         if (newValue instanceof ICalculationUnit2D)
         {
+          int num2DElement = CalUnitOps.getNum2DElement((ICalculationUnit) newValue);
           element2DLabel.setEnabled( true );
           element2D.setEnabled( true );        
-          element2D.setText( num2DElement+"");
+          element2D.setText( 
+              String.valueOf( num2DElement ) );
+          bLineText.setText( 
+              String.valueOf( 
+                  CalUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
         }
         else
         {
           element2D.setEnabled( false );
+          element2D.setText( "" );
           element2DLabel.setEnabled( false );
         }
         
-        
-        if (CalUnitOps.hasUpBoundary((ICalculationUnit) newValue))
+        //TODO update the number of boundaries
+        if ( newValue instanceof ICalculationUnit1D2D )
         {
-          boundaryUpBtn.setImage( imageBoundaryUp_Ok );
+          titleSubCalculation.setEnabled( true );
+          table.setEnabled(true);
+          descriptionGroupText.setEnabled( true );
+          descriptionText.setEnabled( true );
+          bLineText.setText( 
+              String.valueOf( 
+                  CalUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
+          tableViewer.setInput( ((ICalculationUnit1D2D)newValue).getSubUnits().toArray());
         }
         else
-        {
-          boundaryUpBtn.setImage( imageBoundaryUp_Error );
-        } 
-        
-        if (CalUnitOps.hasDownBoundary((ICalculationUnit) newValue))
-        {
-          boundaryDownBtn.setImage( imageBoundaryDown_Ok );
-        }
-        else
-        {
-          boundaryDownBtn.setImage( imageBoundaryDown_Error );
-        }
-        
-        if (!(newValue instanceof ICalculationUnit1D2D))
         {
           titleSubCalculation.setEnabled( false );
           table.clearAll();
@@ -239,18 +232,6 @@ public class CalculationElementComponent
           descriptionGroupText.setEnabled( false );
           descriptionText.setEnabled( false );          
         }
-        else{
-          titleSubCalculation.setEnabled( true );
-          table.setEnabled(true);
-          descriptionGroupText.setEnabled( true );
-          descriptionText.setEnabled( true );
-        }
-        if (newValue instanceof ICalculationUnit1D2D){
-         
-          tableViewer.setInput( ((ICalculationUnit1D2D)newValue).getSubUnits().toArray());
-        }
-        
-        
     }
     else
     {
@@ -259,8 +240,6 @@ public class CalculationElementComponent
       element1DLabel.setEnabled( false );
       element2D.setEnabled( false );
       element2DLabel.setEnabled( false );
-      boundaryUpBtn.setImage( imageBoundaryUp_Error );
-      boundaryDownBtn.setImage( imageBoundaryDown_Error );
     }
   }
 
@@ -273,7 +252,7 @@ public class CalculationElementComponent
     optionsComposite.setLayout( new GridLayout(2,false));
     
     labelName = new Label(optionsComposite,SWT.RIGHT);
-    labelName.setText( "Type of Element :" );
+    labelName.setText( "Type:" );
     
     typeField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
     typeField.setEditable( false );
@@ -281,7 +260,7 @@ public class CalculationElementComponent
     typeField.setLayoutData(data);
     
     element1DLabel = new Label(optionsComposite, SWT.RIGHT);
-    element1DLabel.setText("1D Element: ");
+    element1DLabel.setText("1D Elemente: ");
     
     element1D = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
     element1D.setEditable( false );
@@ -289,7 +268,7 @@ public class CalculationElementComponent
     element1D.setLayoutData(data);    
         
     element2DLabel = new Label(optionsComposite, SWT.RIGHT);
-    element2DLabel.setText("2D Element: ");
+    element2DLabel.setText("2D Elemente: ");
     
     element2D = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
     element2D.setEditable( false );
@@ -302,41 +281,12 @@ public class CalculationElementComponent
         "icons/elcl16/alert.gif" ).getImageData() );      
     
     Label boundaryUpLabel = new Label(optionsComposite, SWT.RIGHT);
-    boundaryUpLabel.setText("Boundary Up: ");
+    boundaryUpLabel.setText("Randlinien: ");
     
-    boundaryUpBtn = new Button(optionsComposite,SWT.CENTER|SWT.PUSH);
-    
-    boundaryUpBtn.setImage( image_ );    
-    imageBoundaryUp_Ok = new Image( optionsComposite.getDisplay(), 
-        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/inputOk.gif" ).getImageData() );
-    
-    imageBoundaryUp_Error = new Image( optionsComposite.getDisplay(), 
-        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/inputError.gif" ).getImageData());
-    
-    
-    Label boundaryDownLabel = new Label(optionsComposite, SWT.RIGHT);
-    boundaryDownLabel.setText("Boundary Down: ");
-    
-    boundaryDownBtn = new Button(optionsComposite,SWT.CENTER|SWT.PUSH);
-    
-    
-    imageBoundaryDown_Ok = new Image( optionsComposite.getDisplay(), 
-          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-              "icons/elcl16/inputOk.gif" ).getImageData() );
+    bLineText = toolkit.createText( optionsComposite, "", SWT.SINGLE|SWT.BORDER );
 
-
-    imageBoundaryDown_Error = new Image( optionsComposite.getDisplay(), 
-          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-              "icons/elcl16/inputError.gif" ).getImageData() );      
-
-  
-    boundaryDownBtn.setImage( image_ );
+//    Label boundaryDownLabel = new Label(optionsComposite, SWT.RIGHT);
+//    boundaryDownLabel.setText("Boundary Down: ");
     
     subCalculationComposite = new Composite(rootComposite,SWT.FLAT);
     subCalculationComposite.setLayout( new FormLayout() );
@@ -415,12 +365,5 @@ public class CalculationElementComponent
     formDescripData.right = new FormAttachment( 100, 0 );
     descriptionText.setLayoutData(formDescripData);
   }
-  
-  private ICalculationUnit getSelectedCalculationUnit()
-  { 
-      if (dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER )!= null)
-        return (ICalculationUnit)dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      else 
-        return null;
-  }
+
 }

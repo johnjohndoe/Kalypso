@@ -48,7 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -89,19 +89,19 @@ public class CalculationUnitComponent
       new CreateCalculationUnitDialog( shell, getDataModel() );      
       
       int answer = calculationDialog.open();
-      if( answer == Window.OK )
-      {
-        KeyBasedDataModel dataModel = getDataModel();
-        dataModel.setData( 
-            ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-            calculationDialog.getCreatedCalculationUnit() );
-        IFEDiscretisationModel1d2d model1d2d =
-          (IFEDiscretisationModel1d2d) 
-              dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-        List<ICalculationUnit> calUnits = 
-                          CalUnitOps.getModelCalculationUnits( model1d2d );
-        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
-      }
+//      if( answer == Window.OK )
+//      {
+//        KeyBasedDataModel dataModel = getDataModel();
+//        dataModel.setData( 
+//            ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
+//            calculationDialog.getCreatedCalculationUnit() );
+//        IFEDiscretisationModel1d2d model1d2d =
+//          (IFEDiscretisationModel1d2d) 
+//              dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+//        List<ICalculationUnit> calUnits = 
+//                          CalUnitOps.getModelCalculationUnits( model1d2d );
+//        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+//      }
   } 
   
   @Override
@@ -149,8 +149,8 @@ public class CalculationUnitComponent
 //          dataModel.getData( 
 //              ICommandTarget.class, 
 //              ICommonKeys.KEY_COMMAND_TARGET );
-      DeleteCalculationUnit delCmd = 
-          new DeleteCalculationUnit( model1d2d, calUnitToDel)
+      DeleteCalculationUnitCmd delCmd = 
+          new DeleteCalculationUnitCmd( model1d2d, calUnitToDel)
       {
         /**
          * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit#process()
@@ -159,11 +159,25 @@ public class CalculationUnitComponent
         public void process( ) throws Exception
         {
           super.process();
-          dataModel.setData( 
-              ICommonKeys.KEY_FEATURE_WRAPPER_LIST,
-              CalUnitOps.getModelCalculationUnits( model1d2d ) );
-          dataModel.setData( 
-              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
+          //reset with list from model
+          IFEDiscretisationModel1d2d model1d2d =
+            (IFEDiscretisationModel1d2d) 
+            dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+          List<ICalculationUnit> calUnits = 
+            CalUnitOps.getModelCalculationUnits( model1d2d );
+          dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+          
+          //set current selection to null
+          dataModel.setData(  
+              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
+              null );
+          
+//          KeyBasedDataModelUtil.resetCurrentEntry( 
+//                  dataModel, 
+//                  ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+//          KeyBasedDataModelUtil.resetCurrentEntry( 
+//              dataModel,  
+//              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
         }
       };
       KeyBasedDataModelUtil.postCommand( dataModel, delCmd );

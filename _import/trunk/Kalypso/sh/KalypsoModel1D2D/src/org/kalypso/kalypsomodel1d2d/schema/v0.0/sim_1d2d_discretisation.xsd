@@ -513,14 +513,18 @@
            <xs:extension
                base="wb1d2d:ComplexElementType">
                <xs:sequence>
-		            <xs:element
+		            <!--xs:element
 		            	name="upstreamBoundaryLine"
 		            	type="wb1d2d:BoundaryLinePropertyType"
-		            	minOccurs="1" maxOccurs="1"/>
-		            <xs:element
+		            	minOccurs="1" maxOccurs="1"/-->
+		            <!--xs:element
 		            	name="downstreamBoundaryLine"
 		            	type="wb1d2d:BoundaryLinePropertyType"
-		            	minOccurs="1" maxOccurs="1"/>
+		            	minOccurs="1" maxOccurs="1"/ -->
+		            
+	            	<xs:element 
+		            	ref="wb1d2d:element" 
+		            	minOccurs="0" maxOccurs="unbounded"/>
 		    	</xs:sequence>
            </xs:extension>
        </xs:complexContent>       
@@ -561,9 +565,9 @@
         <xs:extension
             base="wb1d2d:CalculationUnitType">
             <xs:sequence>
-	            <xs:element 
+	            <!--xs:element 
 	            	ref="wb1d2d:element1D"
-	            	minOccurs="0" maxOccurs="unbounded"/>
+	            	minOccurs="0" maxOccurs="unbounded"/ -->
             </xs:sequence>
         </xs:extension>
     </xs:complexContent>       
@@ -584,9 +588,9 @@
         <xs:extension
             base="wb1d2d:CalculationUnitType">
             <xs:sequence>
-	            <xs:element 
+	            <!--xs:element 
 	            	ref="wb1d2d:element2D"
-	            	minOccurs="0" maxOccurs="unbounded"/>
+	            	minOccurs="0" maxOccurs="unbounded"/-->
 	            <!--xs:element
 	            	name="upstreamBoundaryLine"
 	            	type="wb1d2d:BoundaryLinePropertyType"
@@ -615,9 +619,9 @@
         <xs:extension
             base="wb1d2d:CalculationUnitType">
             <xs:sequence>
-	            <xs:element 
+	            <!--xs:element 
 	            	ref="wb1d2d:element" 
-	            	minOccurs="0" maxOccurs="unbounded"/>
+	            	minOccurs="0" maxOccurs="unbounded"/-->
 	            <xs:element 
 	            	ref="wb1d2d:calculationUnit"  
 	            	minOccurs="0" maxOccurs="unbounded"/>

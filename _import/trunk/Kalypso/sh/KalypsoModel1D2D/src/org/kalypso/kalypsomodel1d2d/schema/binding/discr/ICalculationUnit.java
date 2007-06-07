@@ -53,11 +53,11 @@ public interface ICalculationUnit<T extends IFE1D2DElement>
                           
 {
   
-  public IBoundaryLine getUpStreamBoundaryLine();
-  
-  public void setUpStreamBoundaryLine( IBoundaryLine line);
-  
-  public IBoundaryLine getDownStreamBoundaryLine();
-  
-  public void setDownStreamBoundaryLine( IBoundaryLine line);
+//  public IBoundaryLine getUpStreamBoundaryLine();
+//  
+//  public void setUpStreamBoundaryLine( IBoundaryLine line);
+//  
+//  public IBoundaryLine getDownStreamBoundaryLine();
+//  
+//  public void setDownStreamBoundaryLine( IBoundaryLine line);
 }

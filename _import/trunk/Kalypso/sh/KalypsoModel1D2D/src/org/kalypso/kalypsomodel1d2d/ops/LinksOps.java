@@ -79,44 +79,44 @@ public class LinksOps
      complexElement.removeElementAsRef( element );
      
      //special remove BoundaryLine from CalUnit
-     if( element instanceof IBoundaryLine && 
-         complexElement instanceof ICalculationUnit )
-     {
-       removeSpecificBoundaryLink( 
-           (IBoundaryLine)element, 
-           (ICalculationUnit)complexElement );
-     }
+//     if( element instanceof IBoundaryLine && 
+//         complexElement instanceof ICalculationUnit )
+//     {
+//       removeSpecificBoundaryLink( 
+//           (IBoundaryLine)element, 
+//           (ICalculationUnit)complexElement );
+//     }
   }
   
-  /**
-   * Unset the given boundary line as up- or downdream boundary
-   * line if it is the current set up or down stream boundary line
-   * @param boundaryLine the boundary line to reset
-   * @param calculationUnit the target calculation unit
-   */
-  private static void removeSpecificBoundaryLink(
-                          IBoundaryLine boundaryLine,
-                          ICalculationUnit calculationUnit )
-  {
-    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
-    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    IBoundaryLine downStreamBL = calculationUnit.getDownStreamBoundaryLine();
-    if( downStreamBL!=null )
-    {
-      if( downStreamBL.equals( boundaryLine ))
-      {
-        calculationUnit.setDownStreamBoundaryLine( null );
-      }
-    }
-    
-    IBoundaryLine upStreamBL = calculationUnit.getUpStreamBoundaryLine();
-    if(upStreamBL!=null)
-    {
-      if(upStreamBL.equals( boundaryLine ))
-      {    
-        calculationUnit.setUpStreamBoundaryLine( null );
-      }
-    }
-  }
+//  /**
+//   * Unset the given boundary line as up- or downdream boundary
+//   * line if it is the current set up or down stream boundary line
+//   * @param boundaryLine the boundary line to reset
+//   * @param calculationUnit the target calculation unit
+//   */
+//  private static void removeSpecificBoundaryLink(
+//                          IBoundaryLine boundaryLine,
+//                          ICalculationUnit calculationUnit )
+//  {
+//    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
+//    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
+//    IBoundaryLine downStreamBL = calculationUnit.getDownStreamBoundaryLine();
+//    if( downStreamBL!=null )
+//    {
+//      if( downStreamBL.equals( boundaryLine ))
+//      {
+//        calculationUnit.setDownStreamBoundaryLine( null );
+//      }
+//    }
+//    
+//    IBoundaryLine upStreamBL = calculationUnit.getUpStreamBoundaryLine();
+//    if(upStreamBL!=null)
+//    {
+//      if(upStreamBL.equals( boundaryLine ))
+//      {    
+//        calculationUnit.setUpStreamBoundaryLine( null );
+//      }
+//    }
+//  }
   
 }

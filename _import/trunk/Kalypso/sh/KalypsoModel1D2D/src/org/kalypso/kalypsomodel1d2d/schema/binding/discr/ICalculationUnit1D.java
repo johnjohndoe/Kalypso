@@ -45,7 +45,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
  * @author Patrice Congo
  *
  */
-public interface ICalculationUnit1D<T extends IElement1D>
+public interface ICalculationUnit1D<T extends IFE1D2DElement>//IElement1D>
                                   extends ICalculationUnit<T>
 {
   
