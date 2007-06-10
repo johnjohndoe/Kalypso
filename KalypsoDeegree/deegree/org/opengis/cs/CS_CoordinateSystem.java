@@ -9,8 +9,6 @@
 package org.opengis.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
-
 import org.opengis.pt.PT_Envelope;
 
 /**
@@ -35,32 +33,25 @@ public interface CS_CoordinateSystem extends CS_Info
 {
   /**
    * Dimension of the coordinate system.
-   * 
-   * @throws RemoteException
-   *           if a remote method call failed.
    */
-  int getDimension() throws RemoteException;
+  int getDimension( );
 
   /**
    * Gets axis details for dimension within coordinate system. Each dimension in the coordinate system has a
    * corresponding axis.
    * 
    * @param dimension
-   *          Zero based index of axis.
-   * @throws RemoteException
-   *           if a remote method call failed.
+   *            Zero based index of axis.
    */
-  CS_AxisInfo getAxis( int dimension ) throws RemoteException;
+  CS_AxisInfo getAxis( int dimension );
 
   /**
    * Gets units for dimension within coordinate system. Each dimension in the coordinate system has corresponding units.
    * 
    * @param dimension
-   *          Zero based index of axis.
-   * @throws RemoteException
-   *           if a remote method call failed.
+   *            Zero based index of axis.
    */
-  CS_Unit getUnits( int dimension ) throws RemoteException;
+  CS_Unit getUnits( int dimension );
 
   /**
    * Gets default envelope of coordinate system. Coordinate systems which are bounded should return the minimum bounding
@@ -68,9 +59,6 @@ public interface CS_CoordinateSystem extends CS_Info
    * For example, a (lon,lat) geographic coordinate system in degrees should return a box from (-180,-90) to (180,90),
    * and a geocentric coordinate system could return a box from (-r,-r,-r) to (+r,+r,+r) where r is the approximate
    * radius of the Earth.
-   * 
-   * @throws RemoteException
-   *           if a remote method call failed.
    */
-  PT_Envelope getDefaultEnvelope() throws RemoteException;
+  PT_Envelope getDefaultEnvelope( );
 }

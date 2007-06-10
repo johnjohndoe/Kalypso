@@ -71,15 +71,10 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -113,12 +108,9 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * @param feature
    * @param geometry
    */
-  PointDisplayElement_Impl( final Feature feature, final GM_Point geometry )
+  PointDisplayElement_Impl( final Feature feature, final GM_Point[] points )
   {
-    super( feature, geometry, null );
-
-    final Symbolizer defaultSymbolizer = new PointSymbolizer_Impl();
-    this.setSymbolizer( defaultSymbolizer );
+    this( feature, points, new PointSymbolizer_Impl() );
   }
 
   /**
@@ -128,35 +120,9 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * @param geometry
    * @param symbolizer
    */
-  PointDisplayElement_Impl( final Feature feature, final GM_Point geometry, final PointSymbolizer symbolizer )
+  PointDisplayElement_Impl( final Feature feature, final GM_Point[] points, final PointSymbolizer symbolizer )
   {
-    super( feature, geometry, symbolizer );
-  }
-
-  /**
-   * Creates a new PointDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   */
-  PointDisplayElement_Impl( final Feature feature, final GM_MultiPoint geometry )
-  {
-    super( feature, geometry, null );
-
-    final Symbolizer defaultSymbolizer = new PointSymbolizer_Impl();
-    this.setSymbolizer( defaultSymbolizer );
-  }
-
-  /**
-   * Creates a new PointDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   * @param symbolizer
-   */
-  PointDisplayElement_Impl( final Feature feature, final GM_MultiPoint geometry, final PointSymbolizer symbolizer )
-  {
-    super( feature, geometry, symbolizer );
+    super( feature, points, symbolizer );
   }
 
   /**
@@ -187,15 +153,9 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
 
       final Graphics2D g2D = (Graphics2D) g;
 
-      final GM_Object geometry = getGeometry();
-      if( geometry instanceof GM_MultiPrimitive )
-      {
-        final GM_Primitive[] primitives = ((GM_MultiPrimitive) geometry).getAllPrimitives();
-        for( final GM_Primitive primitive : primitives )
-          drawPoint( g2D, primitive.getCentroid(), projection, image, rotation );
-      }
-      else
-        drawPoint( g2D, geometry.getCentroid(), projection, image, rotation );
+      final GM_Point[] points = (GM_Point[]) getGeometry();
+      for( final GM_Point point : points )
+        drawPoint( g2D, point, projection, image, rotation );
     }
     catch( final FilterEvaluationException e )
     {

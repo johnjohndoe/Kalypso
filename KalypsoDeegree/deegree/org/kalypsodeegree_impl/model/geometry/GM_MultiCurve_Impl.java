@@ -64,7 +64,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -105,9 +104,9 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   {
     super( null );
 
-    for( int i = 0; i < gmc.length; i++ )
+    for( final GM_Curve element : gmc )
     {
-      m_aggregate.add( gmc[i] );
+      m_aggregate.add( element );
     }
   }
 
@@ -121,9 +120,9 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   {
     super( crs );
 
-    for( int i = 0; i < gmc.length; i++ )
+    for( final GM_Curve element : gmc )
     {
-      m_aggregate.add( gmc[i] );
+      m_aggregate.add( element );
     }
   }
 
@@ -218,17 +217,6 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * returns the boundary of the MultiCurve
-   * <p>
-   * not implemented yet
-   */
-  @Override
-  public GM_Boundary getBoundary( )
-  {
-    return null;
-  }
-
-  /**
    * calculates the bounding box / envelope of the aggregation
    */
   protected void calculateEnvelope( )
@@ -265,7 +253,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       }
     }
 
-    envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) ) );
   }
 
   /**
@@ -297,7 +285,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
         cen[j] = cen[j] / cnt / getSize();
       }
 
-      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
+      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
     }
     catch( final Exception ex )
     {

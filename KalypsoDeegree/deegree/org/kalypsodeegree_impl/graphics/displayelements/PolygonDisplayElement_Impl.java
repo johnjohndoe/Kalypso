@@ -76,11 +76,8 @@ import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -106,12 +103,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param feature
    * @param geometry
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface geometry )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface[] surfaces )
   {
-    super( feature, geometry, null );
-
-    final Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
-    this.setSymbolizer( defaultSymbolizer );
+    this( feature, surfaces, new PolygonSymbolizer_Impl() );
   }
 
   /**
@@ -121,35 +115,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface geometry, final PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface[] surfaces, final PolygonSymbolizer symbolizer )
   {
-    super( feature, geometry, symbolizer );
-  }
-
-  /**
-   * Creates a new PolygonDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_MultiSurface geometry )
-  {
-    super( feature, geometry, null );
-
-    final Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
-    this.setSymbolizer( defaultSymbolizer );
-  }
-
-  /**
-   * Creates a new PolygonDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   * @param symbolizer
-   */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_MultiSurface geometry, final PolygonSymbolizer symbolizer )
-  {
-    super( feature, geometry, symbolizer );
+    super( feature, surfaces, symbolizer );
   }
 
   /**
@@ -160,23 +128,11 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   {
     try
     {
-      final GM_Object geometry = getGeometry();
-      if( geometry == null )
-        return;
-      Area area = null;
-      if( geometry instanceof GM_Surface )
+      final GM_Surface[] surfaces = (GM_Surface[]) getGeometry();
+      for( final GM_Surface element : surfaces )
       {
-        area = calcTargetCoordinates( projection, (GM_Surface) geometry );
+        final Area area = calcTargetCoordinates( projection, element );
         drawPolygon( g, area, projection );
-      }
-      else
-      {
-        final GM_MultiSurface msurface = (GM_MultiSurface) geometry;
-        for( int i = 0; i < msurface.getSize(); i++ )
-        {
-          area = calcTargetCoordinates( projection, msurface.getSurfaceAt( i ) );
-          drawPolygon( g, area, projection );
-        }
       }
     }
     catch( final FilterEvaluationException e )

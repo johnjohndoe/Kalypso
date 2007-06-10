@@ -70,7 +70,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_MultiPrimitive interface of package jago.model.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -89,7 +88,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * 
    * @param crs
    */
-  public GM_MultiPrimitive_Impl( CS_CoordinateSystem crs )
+  public GM_MultiPrimitive_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
   }
@@ -98,12 +97,12 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * merges this aggregation with another one
    * 
    * @exception GM_Exception
-   *              will be thrown if the submitted isn't the same type as the recieving one.
+   *                will be thrown if the submitted isn't the same type as the recieving one.
    */
   @Override
-  public void merge( GM_Aggregate aggregate ) throws GM_Exception
+  public void merge( final GM_Aggregate aggregate ) throws GM_Exception
   {
-    if( !( aggregate instanceof GM_MultiPrimitive ) )
+    if( !(aggregate instanceof GM_MultiPrimitive) )
     {
       throw new GM_Exception( "The submitted aggregation isn't a GM_MultiPrimitive" );
     }
@@ -114,33 +113,33 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   /**
    * returns the GM_Primitive at the submitted index.
    */
-  public GM_Primitive getPrimitiveAt( int index )
+  public GM_Primitive getPrimitiveAt( final int index )
   {
-    return (GM_Primitive)super.getObjectAt( index );
+    return (GM_Primitive) super.getObjectAt( index );
   }
 
   /**
    * returns all GM_Primitives as array
    */
-  public GM_Primitive[] getAllPrimitives()
+  public GM_Primitive[] getAllPrimitives( )
   {
-    GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
+    final GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
 
     return m_aggregate.toArray( gmos );
   }
 
   @Override
-  protected void calculateParam()
-  {}
+  protected void calculateParam( )
+  {
+  }
 
-  public int getCoordinateDimension()
+  public int getCoordinateDimension( )
   {
     return -1;
   }
 
-  public int getDimension()
+  public int getDimension( )
   {
     return 2;
   }
-
 }

@@ -17,7 +17,6 @@ import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
@@ -50,8 +49,8 @@ public class Element
 
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
-    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final IMarshallingTypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
+    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final IPropertyType[] pts = new IPropertyType[]//
     { GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1, false ),//
         GMLSchemaFactory.createValuePropertyType( new QName( ns, "vertList" ), stringTH.getTypeName(), stringTH, 1, 1, false ) //
@@ -61,16 +60,16 @@ public class Element
 
   private Feature feature = null;
 
-  public Element( String eleNo, String verticies, GM_Position[] positions, CS_CoordinateSystem crs ) throws GM_Exception
+  public Element( final String eleNo, final String verticies, final GM_Position[] positions, CS_CoordinateSystem crs ) throws GM_Exception
   {
     if( crs == null )
     {
       // default coordinate system is Gauß-Krüger
 
-      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+      final CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       crs = cs;
     }
-    GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
+    final GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
     final Feature f = FeatureFactory.createFeature( null, null, eleNo, m_featureType, false );
 
     FeatureHelper.addProperty( f, m_featureType.getProperty( "GEOM" ), surface );
@@ -78,7 +77,7 @@ public class Element
     this.feature = f;
   }
 
-  public Element( String eleNo, GM_Object geom, CS_CoordinateSystem crs ) throws GM_Exception
+  public Element( final String eleNo, final GM_Object geom, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     if( crs == null )
       throw new GM_Exception( "No coordinate system defined! Element can not be created" );
@@ -107,9 +106,9 @@ public class Element
     return feature.getEnvelope();
   }
 
-  public boolean isPointVertex( String pointID )
+  public boolean isPointVertex( final String pointID )
   {
-    StringTokenizer st = new StringTokenizer( (String) feature.getProperty( "vertList" ) );
+    final StringTokenizer st = new StringTokenizer( (String) feature.getProperty( "vertList" ) );
     while( st.hasMoreTokens() )
     {
       if( st.nextToken().equals( pointID ) )
@@ -121,7 +120,7 @@ public class Element
   public Vector getVertList( )
   {
     final Vector<String> vect = new Vector<String>();
-    StringTokenizer st = new StringTokenizer( (String) feature.getProperty( "vertList" ) );
+    final StringTokenizer st = new StringTokenizer( (String) feature.getProperty( "vertList" ) );
     while( st.hasMoreTokens() )
     {
       vect.add( st.nextToken() );
@@ -142,11 +141,11 @@ public class Element
   public Map splitElement( ) throws Exception
   {
     final Map<String, Element> res = new HashMap<String, Element>();
-    String eID1 = getElementID() + ".1";
-    String eID2 = getElementID() + ".2";
-    Vector vList = getVertList();
-    GM_Surface surface = getGeometry();
-    GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
+    final String eID1 = getElementID() + ".1";
+    final String eID2 = getElementID() + ".2";
+    final Vector vList = getVertList();
+    final GM_Surface surface = getGeometry();
+    final GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
 
     // make split such that diagonal will have least
     // slope
@@ -154,9 +153,9 @@ public class Element
     if( ((positions[0].getY() - positions[1].getY()) / (positions[0].getX() - positions[1].getX())) < ((positions[1].getY() - positions[3].getY()) / (positions[1].getX() - positions[3].getX())) )
     {
 
-      Element e1 = new Element( eID1, (String) vList.elementAt( 0 ) + " " + (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 2 ) + " " + (String) vList.elementAt( 0 ), new GM_Position[] {
+      final Element e1 = new Element( eID1, (String) vList.elementAt( 0 ) + " " + (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 2 ) + " " + (String) vList.elementAt( 0 ), new GM_Position[] {
           positions[0], positions[1], positions[2], positions[0] }, null );
-      Element e2 = new Element( eID2, (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 2 ) + " " + (String) vList.elementAt( 3 ) + " " + (String) vList.elementAt( 1 ), new GM_Position[] {
+      final Element e2 = new Element( eID2, (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 2 ) + " " + (String) vList.elementAt( 3 ) + " " + (String) vList.elementAt( 1 ), new GM_Position[] {
           positions[1], positions[2], positions[3], positions[1] }, null );
       res.put( eID1, e1 );
       res.put( eID2, e2 );
@@ -164,9 +163,9 @@ public class Element
     }
     else
     {
-      Element e1 = new Element( eID1, (String) vList.elementAt( 0 ) + " " + (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 3 ) + " " + (String) vList.elementAt( 0 ), new GM_Position[] {
+      final Element e1 = new Element( eID1, (String) vList.elementAt( 0 ) + " " + (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 3 ) + " " + (String) vList.elementAt( 0 ), new GM_Position[] {
           positions[0], positions[1], positions[3], positions[0] }, null );
-      Element e2 = new Element( eID2, (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 2 ) + " " + (String) vList.elementAt( 3 ) + " " + (String) vList.elementAt( 1 ), new GM_Position[] {
+      final Element e2 = new Element( eID2, (String) vList.elementAt( 1 ) + " " + (String) vList.elementAt( 2 ) + " " + (String) vList.elementAt( 3 ) + " " + (String) vList.elementAt( 1 ), new GM_Position[] {
           positions[1], positions[2], positions[3], positions[1] }, null );
       res.put( eID1, e1 );
       res.put( eID2, e2 );
@@ -183,9 +182,9 @@ public class Element
    */
   public int getPolygonType( ) throws Exception
   {
-    GM_Surface surface = getGeometry();
-    GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
-    int nNumOfVertices = positions.length - 1;// -1 because first and last
+    final GM_Surface surface = getGeometry();
+    final GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
+    final int nNumOfVertices = positions.length - 1;// -1 because first and last
     // point are the same (closed)
     // polygon
     boolean bSignChanged = false;
@@ -239,10 +238,10 @@ public class Element
    */
   public Object[] calculateWeightsFEM( ) throws Exception
   {
-    double alpha[] = new double[3];
-    double beta[] = new double[3];
-    double gamma[] = new double[3];
-    GM_Position[] v = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final double alpha[] = new double[3];
+    final double beta[] = new double[3];
+    final double gamma[] = new double[3];
+    final GM_Position[] v = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
     alpha[0] = ((v[1].getX() * v[2].getY()) - (v[2].getX() * v[1].getY()));
     beta[0] = v[1].getY() - v[2].getY();
     gamma[0] = v[2].getX() - v[1].getX();
@@ -255,7 +254,7 @@ public class Element
     beta[2] = v[0].getY() - v[1].getY();
     gamma[2] = v[1].getX() - v[0].getX();
 
-    Object res[] = { alpha, beta, gamma };
+    final Object res[] = { alpha, beta, gamma };
     return res;
   }// setWeightsFEM
 
@@ -265,20 +264,20 @@ public class Element
    * Returns interpolated value of a given point using FEM method
    * 
    * @param p
-   *          Point point to interpolate
+   *            Point point to interpolate
    * @see Point
    * @return double interpolated value
    */
-  public double interpolatePointFEM( GM_Position p, double[] points ) throws Exception
+  public double interpolatePointFEM( final GM_Position p, final double[] points ) throws Exception
   {
     // logWriter.newLine();
     // logWriter.write("Interpolation Method used: " + "Finite Element Method");
     // logWriter.close();
-    double[] phi = new double[3];
+    final double[] phi = new double[3];
     Double cellValue = new Double( 0 );
-    Object[] factors = calculateWeightsFEM();
-    GM_Position[] v = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
-    double area = getGeometry().getArea();
+    final Object[] factors = calculateWeightsFEM();
+    final GM_Position[] v = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final double area = getGeometry().getArea();
     // apply formula on each vertex
     for( int i = 0; i < v.length - 1; i++ )
     {
@@ -294,21 +293,21 @@ public class Element
     return cellValue.doubleValue();
   }// interpolatePoint
 
-  public boolean isPointOnEdge( Point p ) throws GM_Exception
+  public boolean isPointOnEdge( final Point p ) throws GM_Exception
   {
-    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
-      GM_Position vertex1 = array[i];
-      GM_Position vertex2 = array[i + 1];
+      final GM_Position vertex1 = array[i];
+      final GM_Position vertex2 = array[i + 1];
       double slope = 0.0;
       slope = ((vertex1.getX() - vertex2.getX()) / (vertex1.getY() - vertex2.getY()));
 
       if( slope == Double.NEGATIVE_INFINITY || slope == Double.POSITIVE_INFINITY )
         slope = 0;
 
-      double b = vertex1.getY() - slope * vertex1.getX();
-      double y = slope * p.getPosition().getX() + b;
+      final double b = vertex1.getY() - slope * vertex1.getX();
+      final double y = slope * p.getPosition().getX() + b;
       if( y == p.getPosition().getY() )
         return true;
 
@@ -316,21 +315,21 @@ public class Element
     return false;
   }// isPointOnEdge
 
-  public boolean isPointOnEdge( GM_Position p ) throws GM_Exception
+  public boolean isPointOnEdge( final GM_Position p ) throws GM_Exception
   {
-    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
-      GM_Position vertex1 = array[i];
-      GM_Position vertex2 = array[i + 1];
+      final GM_Position vertex1 = array[i];
+      final GM_Position vertex2 = array[i + 1];
       double slope = 0.0;
       slope = ((vertex1.getX() - vertex2.getX()) / (vertex1.getY() - vertex2.getY()));
 
       if( slope == Double.NEGATIVE_INFINITY || slope == Double.POSITIVE_INFINITY )
         slope = 0;
 
-      double b = vertex1.getY() - slope * vertex1.getX();
-      double y = slope * p.getX() + b;
+      final double b = vertex1.getY() - slope * vertex1.getX();
+      final double y = slope * p.getX() + b;
       if( y == p.getY() )
         return true;
 

@@ -54,11 +54,11 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.catalog.urn.IURNGenerator;
-import org.kalypso.gmlschema.adapter.DefaultAnnotation;
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.adapter.IAnnotationProvider;
-import org.kalypso.gmlschema.basics.QualifiedElement;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotationProvider;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.xml.QualifiedElement;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**

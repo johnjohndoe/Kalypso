@@ -48,8 +48,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.core.jaxb.TemplateUtilitites;
-import org.kalypso.gmlschema.adapter.DefaultAnnotation;
-import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.annotation.DefaultAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;

@@ -81,7 +81,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 465725117946501686L;
 
-  private GM_Object m_geometry = null;
+  private GM_Object[] m_geometries = null;
 
   private Symbolizer m_symbolizer = null;
 
@@ -91,10 +91,10 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * @param feature
    * @param geometry
    */
-  GeometryDisplayElement_Impl( final Feature feature, final GM_Object geometry )
+  GeometryDisplayElement_Impl( final Feature feature, final GM_Object[] geometries )
   {
     super( feature );
-    setGeometry( geometry );
+    setGeometry( geometries );
   }
 
   /**
@@ -104,10 +104,10 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * @param geometry
    * @param symbolizer
    */
-  GeometryDisplayElement_Impl( final Feature feature, final GM_Object geometry, final Symbolizer symbolizer )
+  GeometryDisplayElement_Impl( final Feature feature, final GM_Object[] geometries, final Symbolizer symbolizer )
   {
     super( feature );
-    setGeometry( geometry );
+    setGeometry( geometries );
     setSymbolizer( symbolizer );
   }
 
@@ -126,17 +126,17 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /**
    * sets the geometry that determines the position the DisplayElement will be rendered to
    */
-  public void setGeometry( final GM_Object geometry )
+  public void setGeometry( final GM_Object[] geometry )
   {
-    this.m_geometry = geometry;
+    m_geometries = geometry;
   }
 
   /**
    * returns the geometry that determines the position the DisplayElement will be rendered to
    */
-  public GM_Object getGeometry( )
+  public GM_Object[] getGeometry( )
   {
-    return m_geometry;
+    return m_geometries;
   }
 
   /**
@@ -144,7 +144,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    */
   public void setSymbolizer( final Symbolizer symbolizer )
   {
-    this.m_symbolizer = symbolizer;
+    m_symbolizer = symbolizer;
   }
 
   /**

@@ -44,15 +44,15 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
+import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
+import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterGmlIO;
 import org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -74,11 +74,11 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
   @Override
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
-    final UnMarshallResultEater eater = new UnMarshallResultEater()
+    final UnmarshallResultEater eater = new UnmarshallResultEater()
     {
-      public void eat( final Object bindingGeometry ) throws GMLSchemaException
+      public void unmarshallSuccesful( final Object bindingGeometry ) throws SAXParseException
       {
         Object geometryValue = null;
         try
@@ -106,11 +106,11 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
           }
 
           // geometryValue = BindingToValueAdapter_GML31.createGM_Object( bindingGeometry, geometryClass );
-          marshalResultEater.eat( geometryValue );
+          marshalResultEater.unmarshallSuccesful( geometryValue );
         }
         catch( final Exception e )
         {
-          throw new GMLSchemaException( e );
+          throw new SAXParseException( e.getLocalizedMessage(), null, e );
         }
       }
     };

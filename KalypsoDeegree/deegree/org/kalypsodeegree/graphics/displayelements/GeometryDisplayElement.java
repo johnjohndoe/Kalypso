@@ -82,32 +82,32 @@ public interface GeometryDisplayElement extends DisplayElement
    * <p>
    * 
    * @param o
-   *          the placement to be used
+   *            the placement to be used
    */
   void setPlacement( Object o );
 
   /**
-   * sets the geometry that determines the position the DisplayElement will be rendered to
+   * Sets the geometries that determines the position the DisplayElement will be rendered to
    * 
-   * @geometry geometry the <tt>DisplayElement</tt> is based on
+   * @geometry geometries the <tt>DisplayElement</tt> is based on
    */
-  void setGeometry( GM_Object geometry );
+  void setGeometry( GM_Object[] geometries );
 
   /**
    * returns the geometry that determines the position the DisplayElement will be rendered to
    */
-  GM_Object getGeometry();
+  GM_Object[] getGeometry( );
 
   /**
    * sets the rule that determines how the geometry will be rendered
    * 
    * @param rule
-   *          symbolizer defining rendering style
+   *            symbolizer defining rendering style
    */
   void setSymbolizer( Symbolizer rule );
 
   /**
    * Returns the symbolizer that determines how the geometry will be rendered.
    */
-  Symbolizer getSymbolizer();
+  Symbolizer getSymbolizer( );
 }

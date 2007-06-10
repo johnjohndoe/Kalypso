@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 
@@ -58,7 +57,7 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
 {
   private final QName m_name;
 
-  private final ITypeHandler m_typeHandler;
+  private final IMarshallingTypeHandler m_typeHandler;
 
   private final int m_minOccurs;
 
@@ -66,10 +65,10 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
 
   /**
    * @param qName
-   *          of virtual property
+   *            of virtual property
    * @pt typehandler of virtual property
    */
-  public AbstractVirtualPropertyType( QName qName, int minOccurs, int maxOccurs, final Class valueClazz )
+  public AbstractVirtualPropertyType( final QName qName, final int minOccurs, final int maxOccurs, final Class valueClazz )
   {
     m_name = qName;
     m_minOccurs = minOccurs;
@@ -210,7 +209,7 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
   /**
    * @see org.kalypso.gmlschema.property.IValuePropertyType#getTypeHandler()
    */
-  public ITypeHandler getTypeHandler( )
+  public IMarshallingTypeHandler getTypeHandler( )
   {
     return m_typeHandler;
   }
@@ -218,7 +217,7 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( int initializeRun )
+  public void init( final int initializeRun )
   {
     // nothing to do
   }
@@ -226,11 +225,11 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
-  
+
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
    */

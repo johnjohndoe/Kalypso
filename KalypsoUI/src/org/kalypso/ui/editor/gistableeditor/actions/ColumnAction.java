@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.Action;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
 

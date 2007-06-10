@@ -48,8 +48,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.gmlschema.swe.RepresentationType.KIND;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.swe.RepresentationType.KIND;
 
 /**
  * @author Gernot Belger

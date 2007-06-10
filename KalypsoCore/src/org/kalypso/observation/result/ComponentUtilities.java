@@ -42,7 +42,7 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.adapter.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 

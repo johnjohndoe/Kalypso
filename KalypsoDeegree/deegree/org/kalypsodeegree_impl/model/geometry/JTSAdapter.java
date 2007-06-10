@@ -120,12 +120,12 @@ public class JTSAdapter
    * <p>
    * 
    * @param gmObject
-   *          the object to be converted
+   *            the object to be converted
    * @return the corresponding JTS- <tt>Geometry</tt> object
    * @throws GM_Exception
-   *           if type unsupported or conversion failed
+   *             if type unsupported or conversion failed
    */
-  public static Geometry export( GM_Object gmObject ) throws GM_Exception
+  public static Geometry export( final GM_Object gmObject ) throws GM_Exception
   {
 
     Geometry geometry = null;
@@ -180,12 +180,12 @@ public class JTSAdapter
    * <p>
    * 
    * @param geometry
-   *          the JTS- <tt>Geometry</tt> to be converted
+   *            the JTS- <tt>Geometry</tt> to be converted
    * @return the corresponding <tt>GM_Object</tt>
    * @throws GM_Exception
-   *           if type unsupported or conversion failed
+   *             if type unsupported or conversion failed
    */
-  public static GM_Object wrap( Geometry geometry ) throws GM_Exception
+  public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
   {
 
     GM_Object gmObject = null;
@@ -229,10 +229,10 @@ public class JTSAdapter
    * <p>
    * 
    * @param gmPoint
-   *          point to be converted
+   *            point to be converted
    * @return the corresponding <tt>Point</tt> object
    */
-  private static Point export( GM_Point gmPoint )
+  private static Point export( final GM_Point gmPoint )
   {
     final Coordinate coord = export( gmPoint.getPosition() );
     return jtsFactory.createPoint( coord );
@@ -265,13 +265,13 @@ public class JTSAdapter
    * <p>
    * 
    * @param gmMultiPoint
-   *          multipoint to be converted
+   *            multipoint to be converted
    * @return the corresponding <tt>MultiPoint</tt> object
    */
-  private static MultiPoint export( GM_MultiPoint gmMultiPoint )
+  private static MultiPoint export( final GM_MultiPoint gmMultiPoint )
   {
-    GM_Point[] gmPoints = gmMultiPoint.getAllPoints();
-    Point[] points = new Point[gmPoints.length];
+    final GM_Point[] gmPoints = gmMultiPoint.getAllPoints();
+    final Point[] points = new Point[gmPoints.length];
     for( int i = 0; i < points.length; i++ )
     {
       points[i] = export( gmPoints[i] );
@@ -284,11 +284,11 @@ public class JTSAdapter
    * <p>
    * 
    * @param curve
-   *          <tt>GM_Curve</tt> to be converted
+   *            <tt>GM_Curve</tt> to be converted
    * @return the corresponding <tt>LineString</tt> object
    * @throws GM_Exception
    */
-  private static LineString export( GM_Curve curve ) throws GM_Exception
+  private static LineString export( final GM_Curve curve ) throws GM_Exception
   {
     final GM_LineString lineString = curve.getAsLineString();
     final Coordinate[] coords = new Coordinate[lineString.getNumberOfPoints()];
@@ -305,15 +305,15 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *          <tt>GM_MultiCurve</tt> to be converted
+   *            <tt>GM_MultiCurve</tt> to be converted
    * @return the corresponding <tt>MultiLineString</tt> object
    * @throws GM_Exception
    */
-  private static MultiLineString export( GM_MultiCurve multi ) throws GM_Exception
+  private static MultiLineString export( final GM_MultiCurve multi ) throws GM_Exception
   {
 
-    GM_Curve[] curves = multi.getAllCurves();
-    LineString[] lineStrings = new LineString[curves.length];
+    final GM_Curve[] curves = multi.getAllCurves();
+    final LineString[] lineStrings = new LineString[curves.length];
     for( int i = 0; i < curves.length; i++ )
     {
       lineStrings[i] = export( curves[i] );
@@ -326,10 +326,10 @@ public class JTSAdapter
    * <p>
    * 
    * @param positions
-   *          an array of <tt>GM_Position</tt> s
+   *            an array of <tt>GM_Position</tt> s
    * @return the corresponding <tt>LinearRing</tt> object
    */
-  private static LinearRing export( GM_Position[] positions )
+  private static LinearRing export( final GM_Position[] positions )
   {
     final Coordinate[] coords = new Coordinate[positions.length];
     for( int i = 0; i < positions.length; i++ )
@@ -344,24 +344,24 @@ public class JTSAdapter
    * <p>
    * 
    * @param surface
-   *          a <tt>GM_Surface</tt>
+   *            a <tt>GM_Surface</tt>
    * @return the corresponding <tt>Polygon</tt> object
    */
-  private static Polygon export( GM_Surface surface )
+  private static Polygon export( final GM_Surface surface )
   {
     GM_SurfacePatch patch = null;
     try
     {
       patch = surface.getSurfacePatchAt( 0 );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       System.out.println( e );
     }
-    GM_Position[] exteriorRing = patch.getExteriorRing();
-    GM_Position[][] interiorRings = patch.getInteriorRings();
+    final GM_Position[] exteriorRing = patch.getExteriorRing();
+    final GM_Position[][] interiorRings = patch.getInteriorRings();
 
-    LinearRing shell = export( exteriorRing );
+    final LinearRing shell = export( exteriorRing );
     LinearRing[] holes = new LinearRing[0];
     if( interiorRings != null )
       holes = new LinearRing[interiorRings.length];
@@ -379,14 +379,14 @@ public class JTSAdapter
    * <p>
    * 
    * @param msurface
-   *          a <tt>GM_MultiSurface</tt>
+   *            a <tt>GM_MultiSurface</tt>
    * @return the corresponding <tt>MultiPolygon</tt> object
    */
-  private static MultiPolygon export( GM_MultiSurface msurface )
+  private static MultiPolygon export( final GM_MultiSurface msurface )
   {
 
-    GM_Surface[] surfaces = msurface.getAllSurfaces();
-    Polygon[] polygons = new Polygon[surfaces.length];
+    final GM_Surface[] surfaces = msurface.getAllSurfaces();
+    final Polygon[] polygons = new Polygon[surfaces.length];
 
     for( int i = 0; i < surfaces.length; i++ )
     {
@@ -400,15 +400,15 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *          a <tt>GM_MultiPrimtive</tt>
+   *            a <tt>GM_MultiPrimtive</tt>
    * @return the corresponding <tt>GeometryCollection</tt> object
    * @throws GM_Exception
    */
-  private static GeometryCollection export( GM_MultiPrimitive multi ) throws GM_Exception
+  private static GeometryCollection export( final GM_MultiPrimitive multi ) throws GM_Exception
   {
 
-    GM_Object[] primitives = multi.getAllPrimitives();
-    Geometry[] geometries = new Geometry[primitives.length];
+    final GM_Object[] primitives = multi.getAllPrimitives();
+    final Geometry[] geometries = new Geometry[primitives.length];
 
     for( int i = 0; i < primitives.length; i++ )
     {
@@ -422,7 +422,7 @@ public class JTSAdapter
    * <p>
    * 
    * @param point
-   *          a <tt>Point</tt> object
+   *            a <tt>Point</tt> object
    * @return the corresponding <tt>GM_Point</tt>
    */
   private static GM_Point wrap( final Point point )
@@ -439,12 +439,12 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *          a <tt>MultiPoint</tt> object
+   *            a <tt>MultiPoint</tt> object
    * @return the corresponding <tt>GM_MultiPoint</tt>
    */
-  private static GM_MultiPoint wrap( MultiPoint multi )
+  private static GM_MultiPoint wrap( final MultiPoint multi )
   {
-    GM_Point[] gmPoints = new GM_Point[multi.getNumGeometries()];
+    final GM_Point[] gmPoints = new GM_Point[multi.getNumGeometries()];
     for( int i = 0; i < gmPoints.length; i++ )
     {
       gmPoints[i] = wrap( (Point) multi.getGeometryN( i ) );
@@ -457,14 +457,14 @@ public class JTSAdapter
    * <p>
    * 
    * @param line
-   *          a <tt>LineString</tt> object
+   *            a <tt>LineString</tt> object
    * @return the corresponding <tt>GM_Curve</tt>
    * @throws GM_Exception
    */
-  private static GM_Curve wrap( LineString line ) throws GM_Exception
+  private static GM_Curve wrap( final LineString line ) throws GM_Exception
   {
-    Coordinate[] coords = line.getCoordinates();
-    GM_Position[] positions = new GM_Position[coords.length];
+    final Coordinate[] coords = line.getCoordinates();
+    final GM_Position[] positions = new GM_Position[coords.length];
     for( int i = 0; i < coords.length; i++ )
     {
       positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y );
@@ -477,13 +477,13 @@ public class JTSAdapter
    * <p>
    * 
    * @param multi
-   *          a <tt>MultiLineString</tt> object
+   *            a <tt>MultiLineString</tt> object
    * @return the corresponding <tt>GM_MultiCurve</tt>
    * @throws GM_Exception
    */
-  private static GM_MultiCurve wrap( MultiLineString multi ) throws GM_Exception
+  private static GM_MultiCurve wrap( final MultiLineString multi ) throws GM_Exception
   {
-    GM_Curve[] curves = new GM_Curve[multi.getNumGeometries()];
+    final GM_Curve[] curves = new GM_Curve[multi.getNumGeometries()];
     for( int i = 0; i < curves.length; i++ )
     {
       curves[i] = wrap( (LineString) multi.getGeometryN( i ) );
@@ -494,23 +494,23 @@ public class JTSAdapter
   /**
    * Converts a <tt>Polygon</tt> to a <tt>GM_Surface</tt>.
    * <p>
+   * TODO: is this correct, it seems that a Polygon corresponds to a GM_Polygon?
    * 
    * @param polygon
-   *          a <tt>Polygon</tt>
+   *            a <tt>Polygon</tt>
    * @return the corresponding <tt>GM_Surface</tt> object
    * @throws GM_Exception
    */
-  private static GM_Surface wrap( Polygon polygon ) throws GM_Exception
+  private static GM_Surface wrap( final Polygon polygon ) throws GM_Exception
   {
-
-    GM_Position[] exteriorRing = createGMPositions( polygon.getExteriorRing() );
-    GM_Position[][] interiorRings = new GM_Position[polygon.getNumInteriorRing()][];
+    final GM_Position[] exteriorRing = createGMPositions( polygon.getExteriorRing() );
+    final GM_Position[][] interiorRings = new GM_Position[polygon.getNumInteriorRing()][];
 
     for( int i = 0; i < interiorRings.length; i++ )
     {
       interiorRings[i] = createGMPositions( polygon.getInteriorRingN( i ) );
     }
-    GM_SurfacePatch patch = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), exteriorRing, interiorRings, null );
+    final GM_SurfacePatch patch = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), exteriorRing, interiorRings, null );
 
     return new GM_Surface_Impl( patch );
   }
@@ -520,14 +520,13 @@ public class JTSAdapter
    * <p>
    * 
    * @param multiPolygon
-   *          a <tt>MultiPolygon</tt>
+   *            a <tt>MultiPolygon</tt>
    * @return the corresponding <tt>GM_MultiSurface</tt> object
    * @throws GM_Exception
    */
-  private static GM_MultiSurface wrap( MultiPolygon multiPolygon ) throws GM_Exception
+  private static GM_MultiSurface wrap( final MultiPolygon multiPolygon ) throws GM_Exception
   {
-
-    GM_Surface[] surfaces = new GM_Surface[multiPolygon.getNumGeometries()];
+    final GM_Surface[] surfaces = new GM_Surface[multiPolygon.getNumGeometries()];
     for( int i = 0; i < surfaces.length; i++ )
     {
       surfaces[i] = wrap( (Polygon) multiPolygon.getGeometryN( i ) );
@@ -540,14 +539,14 @@ public class JTSAdapter
    * <p>
    * 
    * @param collection
-   *          a <tt>GeometryCollection</tt>
+   *            a <tt>GeometryCollection</tt>
    * @return the corresponding <tt>GM_MultiPrimitive</tt> object
    * @throws GM_Exception
    */
-  private static GM_MultiPrimitive wrap( GeometryCollection collection ) throws GM_Exception
+  private static GM_MultiPrimitive wrap( final GeometryCollection collection ) throws GM_Exception
   {
 
-    GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( null );
+    final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( null );
     for( int i = 0; i < collection.getNumGeometries(); i++ )
     {
       multi.setObjectAt( wrap( collection.getGeometryN( i ) ), i );
@@ -560,13 +559,13 @@ public class JTSAdapter
    * <p>
    * 
    * @param line
-   *          a <tt>LineString</tt> object
+   *            a <tt>LineString</tt> object
    * @return the corresponding array of <tt>GM_Position</tt> s
    */
-  private static GM_Position[] createGMPositions( LineString line )
+  private static GM_Position[] createGMPositions( final LineString line )
   {
-    Coordinate[] coords = line.getCoordinates();
-    GM_Position[] positions = new GM_Position[coords.length];
+    final Coordinate[] coords = line.getCoordinates();
+    final GM_Position[] positions = new GM_Position[coords.length];
     for( int i = 0; i < coords.length; i++ )
     {
       positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y );
@@ -591,7 +590,7 @@ public class JTSAdapter
   {
     if( env == null )
       return new Envelope();
-    
+
     final GM_Position posMin = env.getMin();
     final GM_Position posMax = env.getMax();
 

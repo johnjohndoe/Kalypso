@@ -61,13 +61,14 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Primitive interface from package jago.model.
- * 
  * ------------------------------------------------------------
  * 
  * @version 8.6.2001
@@ -83,8 +84,33 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
    * 
    * @param crs
    */
-  protected GM_Primitive_Impl( CS_CoordinateSystem crs )
+  protected GM_Primitive_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    /* A primitive adapts to the array of itself adapted to the desired class. */
+    final Class< ? > componentType = adapter.getComponentType();
+    if( componentType != null && GM_Object.class.isAssignableFrom( componentType ) )
+    {
+      final Object adaptedObject = getAdapter( componentType );
+      if( adaptedObject == null )
+        return null;
+
+      final Object adaptedArray = Array.newInstance( componentType, 1 );
+      Array.set( adaptedArray, 0, adaptedObject );
+
+      return adaptedArray;
+    }
+
+    return super.getAdapter( adapter );
+  }
+
 }

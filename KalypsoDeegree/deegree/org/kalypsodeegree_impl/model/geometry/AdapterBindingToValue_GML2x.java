@@ -94,9 +94,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
   final static JAXBContext GML2_JAXCONTEXT = KalypsoOGC2xJAXBcontext.getContext();
 
-  // JaxbUtilities.createQuiet( gml2Fac.getClass() );
-
-  private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSystem cs ) throws TransformException
+  private GM_MultiPoint createGM_MultiPoint( final MultiPointType type, final CS_CoordinateSystem cs ) throws TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
     int i = 0;
@@ -105,7 +103,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     final List<JAXBElement< ? extends GeometryAssociationType>> pointMember = type.getGeometryMember();
     final GM_Point[] resultPoints = new GM_Point[pointMember.size()];
 
-    for( JAXBElement< ? extends GeometryAssociationType> element : pointMember )
+    for( final JAXBElement< ? extends GeometryAssociationType> element : pointMember )
     {
       final GeometryAssociationType value = element.getValue();
       final JAXBElement< ? extends AbstractGeometryType> geometry = value.getGeometry();
@@ -116,13 +114,13 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiPoint( resultPoints, co );
   }
 
-  private GM_MultiCurve createGM_MultiLineString( MultiLineStringType multiLineStringType, CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_MultiCurve createGM_MultiLineString( final MultiLineStringType multiLineStringType, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, multiLineStringType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiLineStringType.getGeometryMember();
     final GM_Curve[] curves = new GM_Curve[geometryMember.size()];
     int i = 0;
-    for( JAXBElement< ? extends GeometryAssociationType> element : geometryMember )
+    for( final JAXBElement< ? extends GeometryAssociationType> element : geometryMember )
     {
       final GeometryAssociationType value = element.getValue();
       final JAXBElement< ? extends AbstractGeometryType> geometry = value.getGeometry();
@@ -133,14 +131,14 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 
-  private GM_MultiSurface createGM_MultiSurface( MultiPolygonType multiPolygonType, CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_MultiSurface createGM_MultiSurface( final MultiPolygonType multiPolygonType, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, multiPolygonType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
     final GM_Surface[] surfaces = new GM_Surface[geometryMember.size()];
 
     int i = 0;
-    for( JAXBElement< ? extends GeometryAssociationType> element : geometryMember )
+    for( final JAXBElement< ? extends GeometryAssociationType> element : geometryMember )
     {
       final GeometryAssociationType value = element.getValue();
       final JAXBElement< ? extends AbstractGeometryType> geometry = value.getGeometry();
@@ -151,7 +149,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
-  private GM_Surface createGM_Surface( PolygonType polygonType, CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_Surface createGM_Surface( final PolygonType polygonType, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, polygonType );
     // outer...
@@ -165,7 +163,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
     final GM_Position[][] interiorRings = new GM_Position[innerBoundaryIs.size()][];
     int i = 0;
-    for( LinearRingMemberType linearRingMemberType : innerBoundaryIs )
+    for( final LinearRingMemberType linearRingMemberType : innerBoundaryIs )
     {
       final JAXBElement< ? extends AbstractGeometryType> geometry = linearRingMemberType.getGeometry();
       final AbstractGeometryType abstractGeometryType = geometry.getValue();
@@ -175,7 +173,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
   }
 
-  private GM_Position[] createGM_PositionFrom( LinearRingType linearRingType )
+  private GM_Position[] createGM_PositionFrom( final LinearRingType linearRingType )
   {
     final CoordinatesType coordinates = linearRingType.getCoordinates();
     if( coordinates != null )
@@ -185,7 +183,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return createGM_Positions( coord );
   }
 
-  private GM_Position[] createGM_Positions( List<CoordType> coords )
+  private GM_Position[] createGM_Positions( final List<CoordType> coords )
   {
     final GM_Position[] positions = new GM_Position[coords.size()];
     int i = 0;
@@ -197,7 +195,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return positions;
   }
 
-  private GM_Curve createGM_LineString( LineStringType type, CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_Curve createGM_LineString( final LineStringType type, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
     final CoordinatesType coordinates = type.getCoordinates();
@@ -205,7 +203,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_Curve( positions, co );
   }
 
-  private GM_Point createGM_Point( PointType type, CS_CoordinateSystem cs ) throws TransformException
+  private GM_Point createGM_Point( final PointType type, final CS_CoordinateSystem cs ) throws TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
     final CoordType coord = type.getCoord();
@@ -232,7 +230,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_Point( position, co );
   }
 
-  private GM_Position createGM_Position( CoordType coord )
+  private GM_Position createGM_Position( final CoordType coord )
   {
     final double x = coord.getX().doubleValue();
     final double y = coord.getX().doubleValue();
@@ -269,7 +267,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return result.toArray( new GM_Position[result.size()] );
   }
 
-  private CS_CoordinateSystem getCS_CoordinateSystem( CS_CoordinateSystem defaultCS, AbstractGeometryType geom ) throws TransformException
+  private CS_CoordinateSystem getCS_CoordinateSystem( final CS_CoordinateSystem defaultCS, final AbstractGeometryType geom ) throws TransformException
   {
     final String srsName = geom.getSrsName();
     if( srsName == null )
@@ -277,7 +275,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     final CoordinateSystem csByName;
     if( srsName.startsWith( "http://www.opengis.net/gml/srs/epsg.xml#" ) )
     {
-      String[] split = srsName.split( "#" );
+      final String[] split = srsName.split( "#" );
       csByName = m_csFac.getCSByName( "EPSG:" + split[1] );
     }
     else
@@ -294,7 +292,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
-  public Object wrapFromBinding( Object bindingGeometry, Class geometryClass ) throws GM_Exception
+  public Object wrapFromBinding( final Object bindingGeometry, final Class geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
       return null;
@@ -331,7 +329,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
         if( bindingTypeObject instanceof MultiPointType )
           return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
       }
-      catch( TransformException e )
+      catch( final TransformException e )
       {
         throw new GM_Exception( e.getMessage() );
       }
@@ -343,7 +341,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     throw new UnsupportedOperationException( bindingGeometry.getClass().getName() + " is not supported" );
   }
 
-  private Object createGM_Envelope( BoxType boxType )
+  private Object createGM_Envelope( final BoxType boxType )
   {
     final GM_Position[] positions;
     final List<CoordType> coords = boxType.getCoord();
@@ -359,7 +357,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromElement(org.w3c.dom.Element)
    */
-  public Object wrapFromNode( Node node ) throws Exception
+  public Object wrapFromNode( final Node node ) throws Exception
   {
     final Unmarshaller unmarshaller = GML2_JAXCONTEXT.createUnmarshaller();
     final Object bindingGeometry = unmarshaller.unmarshal( node );

@@ -121,7 +121,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * @param geometry
    * @param symbolizer
    */
-  protected RasterDisplayElement_Impl( final Feature feature, final GM_Object geometry, final RasterSymbolizer symbolizer )
+  protected RasterDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final RasterSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -155,12 +155,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
     // create the target Coordinate system
 
+    // TODO: ugly! Instead, adwe apt something to GM_Curve[] and let the normal LineStirngSymbolizer mechanisms aply
+    // TODO: probably we can just remove the line stuff and just add lineSymbolizer to our maps.
     final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() )[0];
     final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature, null );
     final CS_CoordinateSystem cs = geom.getCoordinateSystem();
 
     final TiledImage rasterImage = getImage();
-    // JAI.create( "filestore", rasterImage, "c:\\image.tif", "TIFF" );
 
     try
     {
@@ -168,9 +169,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
       final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
       final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing.getAsCurveSegment() );
-      final LineStringDisplayElement lineDE = new LineStringDisplayElement_Impl( feature, curve );
+      final LineStringDisplayElement lineDE = new LineStringDisplayElement_Impl( feature, new GM_Curve[] { curve } );
 
-      // final PolygonDisplayElement de = new PolygonDisplayElement_Impl( feature, surface );
       lineDE.paint( g2, projection );
 
       drawRasterImage( g2, projection, rasterImage, rgDomain, cs );

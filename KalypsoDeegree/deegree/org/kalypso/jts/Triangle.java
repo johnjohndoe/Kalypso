@@ -38,16 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml;
+package org.kalypso.jts;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author doemming
+ * A triangle which is also a {@link com.vividsolutions.jts.geom.Geometry}.
+ * 
+ * @author Gernot Belger
  */
-public interface FeatureTypeProvider
+public class Triangle extends Polygon
 {
-  public IFeatureType getFeatureType( QName nameFE );
+  final static LinearRing[] EMPTY_HOLES = new LinearRing[] {};
+
+  public Triangle( final Coordinate c0, final Coordinate c1, final Coordinate c2, @SuppressWarnings("hiding")
+  final GeometryFactory factory )
+  {
+    super( factory.createLinearRing( new Coordinate[] { c0, c1, c2, c0 } ), EMPTY_HOLES, factory );
+  }
 }

@@ -105,13 +105,13 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * <p>
    * 
    * @param feature
-   *          associated <tt>Feature</tt>
+   *            associated <tt>Feature</tt>
    * @param geometry
-   *          associated <tt>GM_Object</tt>
+   *            associated <tt>GM_Object</tt>
    * @param symbolizer
-   *          associated <tt>TextSymbolizer</tt>
+   *            associated <tt>TextSymbolizer</tt>
    */
-  LabelDisplayElement_Impl( Feature feature, GM_Object geometry, TextSymbolizer symbolizer )
+  LabelDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final TextSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
     setLabel( symbolizer.getLabel() );
@@ -120,7 +120,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /**
    * Sets the caption of the label.
    */
-  public void setLabel( ParameterValueType label )
+  public void setLabel( final ParameterValueType label )
   {
     this.m_label = label;
   }
@@ -140,16 +140,16 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * <p>
    * 
    * @param g
-   *          <tt>Graphics</tt> context to be used
+   *            <tt>Graphics</tt> context to be used
    * @param projection
-   *          <tt>GeoTransform</tt> to be used
+   *            <tt>GeoTransform</tt> to be used
    */
   @Override
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
     if( m_label == null )
       return;
-    Graphics2D g2D = (Graphics2D) g;
+    final Graphics2D g2D = (Graphics2D) g;
 
     if( m_labels == null )
     {
@@ -157,7 +157,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
       {
         setLabels( LabelFactory.createLabels( this, projection, g2D ) );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -166,10 +166,10 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
     // paint all labels
     if( m_labels != null )
     {
-      Iterator it = m_labels.iterator();
+      final Iterator<Label> it = m_labels.iterator();
       while( it.hasNext() )
       {
-        ((Label) it.next()).paint( g2D );
+        it.next().paint( g2D );
       }
     }
     // mark the labels as unset (for the next paint-call)
@@ -180,7 +180,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Returns whether the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
   @Override
-  public boolean doesScaleConstraintApply( double scale )
+  public boolean doesScaleConstraintApply( final double scale )
   {
     final Symbolizer symbolizer = getSymbolizer();
     return (symbolizer.getMinScaleDenominator() <= scale) && (symbolizer.getMaxScaleDenominator() > scale);
@@ -199,7 +199,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Adds a <tt>Label<tt> representation that is to be considered when the
    * <tt>LabelDisplayElement</tt> is painted to the view.
    */
-  public void addLabel( Label label )
+  public void addLabel( final Label label )
   {
     if( m_labels == null )
     {
@@ -212,13 +212,13 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * Adds <tt>Label<tt> representations that are to be considered when the
    * <tt>LabelDisplayElement</tt> is painted to the view.
    */
-  public void addLabels( Label[] labels )
+  public void addLabels( final Label[] labels )
   {
     if( m_labels == null )
       m_labels = new ArrayList<Label>( 100 );
 
-    for( int i = 0; i < labels.length; i++ )
-      m_labels.add( labels[i] );
+    for( final Label element : labels )
+      m_labels.add( element );
   }
 
   /**
@@ -228,9 +228,9 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   public void setLabels( final Label[] labels )
   {
     m_labels = new ArrayList<Label>( 100 );
-    for( int i = 0; i < labels.length; i++ )
+    for( final Label element : labels )
     {
-      this.m_labels.add( labels[i] );
+      this.m_labels.add( element );
     }
   }
 }

@@ -44,7 +44,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.InputSource;
 
 /**
- * @author doemming
+ * An input source which just provides a {@link GMLWorkspace}.
+ * 
+ * @author Andreas von Dömming
  */
 public class GMLWorkspaceInputSource extends InputSource
 {
@@ -59,6 +61,4 @@ public class GMLWorkspaceInputSource extends InputSource
   {
     return m_gmlWorkspace;
   }
-  
-  
 }

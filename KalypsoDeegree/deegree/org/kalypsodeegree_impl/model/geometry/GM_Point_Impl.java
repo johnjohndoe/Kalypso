@@ -85,7 +85,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 6106017748940535740L;
 
-  private GM_Position position = null;
+  private final GM_Position m_position;
 
   /**
    * constructor. initializes a point to the coordinate 0/0
@@ -95,10 +95,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final CS_CoordinateSystem crs )
   {
-    super( crs );
-    position = new GM_Position_Impl();
-    m_empty = true;
-    centroid = this;
+    this( new GM_Position_Impl(), crs );
   }
 
   /**
@@ -113,10 +110,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final double x, final double y, final CS_CoordinateSystem crs )
   {
-    super( crs );
-    position = new GM_Position_Impl( x, y );
-    m_empty = false;
-    centroid = this;
+    this( new GM_Position_Impl( x, y ), crs );
   }
 
   /**
@@ -133,10 +127,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final double x, final double y, final double z, final CS_CoordinateSystem crs )
   {
-    super( crs );
-    position = new GM_Position_Impl( x, y, z );
-    m_empty = false;
-    centroid = this;
+    this( new GM_Position_Impl( x, y, z ), crs );
   }
 
   /**
@@ -147,10 +138,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final GM_Point gmo )
   {
-    super( gmo.getCoordinateSystem() );
-    position = new GM_Position_Impl( gmo.getAsArray() );
-    m_empty = false;
-    centroid = this;
+    this( new GM_Position_Impl( gmo.getAsArray() ), gmo.getCoordinateSystem() );
   }
 
   /**
@@ -164,9 +152,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   public GM_Point_Impl( final GM_Position gmo, final CS_CoordinateSystem crs )
   {
     super( crs );
-    position = gmo;
-    m_empty = false;
-    centroid = this;
+    m_position = gmo;
+    setEmpty( false );
+    setCentroid( this );
   }
 
   /**
@@ -178,10 +166,10 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     if( super.equals( other ) && (other instanceof GM_Point) )
     {
       final GM_Point p = (GM_Point) other;
-      boolean flagEq = (Math.abs( getX() - p.getX() ) < GM_Object_Impl.mute) && (Math.abs( getY() - p.getY() ) < GM_Object_Impl.mute);
+      boolean flagEq = (Math.abs( getX() - p.getX() ) < MUTE) && (Math.abs( getY() - p.getY() ) < MUTE);
       if( getCoordinateDimension() == 3 )
       {
-        flagEq = flagEq && (Math.abs( getZ() - p.getZ() ) < GM_Object_Impl.mute);
+        flagEq = flagEq && (Math.abs( getZ() - p.getZ() ) < MUTE);
       }
       return flagEq;
     }
@@ -206,7 +194,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public int getCoordinateDimension( )
   {
-    return position.getAsArray().length;
+    return m_position.getAsArray().length;
   }
 
   /**
@@ -226,7 +214,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public double getX( )
   {
-    return position.getX();
+    return m_position.getX();
   }
 
   /**
@@ -234,7 +222,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public double getY( )
   {
-    return position.getY();
+    return m_position.getY();
   }
 
   /**
@@ -242,7 +230,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public double getZ( )
   {
-    return position.getZ();
+    return m_position.getZ();
   }
 
   /**
@@ -251,7 +239,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public double[] getAsArray( )
   {
-    return position.getAsArray();
+    return m_position.getAsArray();
   }
 
   /**
@@ -261,12 +249,12 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   public void translate( final double[] d )
   {
     setValid( false );
-    position.translate( d );
+    m_position.translate( d );
   }
 
   public GM_Position getPosition( )
   {
-    return position;
+    return m_position;
   }
 
   /**

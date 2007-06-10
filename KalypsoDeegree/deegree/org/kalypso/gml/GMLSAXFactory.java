@@ -80,9 +80,8 @@ public class GMLSAXFactory
 
   private final QName m_xlinkQN;
 
+  /** {@link ContentHandler} where everything gets written to. */
   private final ContentHandler m_handler;
-
-  private String m_gmlVersion;
 
   /**
    * (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
@@ -100,6 +99,7 @@ public class GMLSAXFactory
     m_handler = handler;
     m_idMap = idMap;
     m_lexHandler = lexHandler;
+
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
   }
@@ -115,7 +115,7 @@ public class GMLSAXFactory
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
 
     final GMLSchema gmlSchema = (GMLSchema) workspace.getGMLSchema();
-    m_gmlVersion = gmlSchema.getGMLVersion();
+
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( final IFeatureType element : featureTypes )
     {
@@ -151,7 +151,6 @@ public class GMLSAXFactory
   private void process( final Feature feature, final AttributesImpl a ) throws SAXException
   {
     final IFeatureType featureType = feature.getFeatureType();
-    final QName prefixedQName = getPrefixedQName( feature.getFeatureType().getQName() );
 
     String id = feature.getId();
     if( m_idMap.containsKey( id ) )
@@ -161,15 +160,18 @@ public class GMLSAXFactory
       final String version = featureType.getGMLSchema().getGMLVersion();
       final QName idQName = getPrefixedQName( GMLSchemaUtilities.getIdAttribute( version ) );
       final String localPart = idQName.getLocalPart();
-      a.addAttribute( idQName.getNamespaceURI(), localPart, idQName.getPrefix() + ":" + localPart, "CDATA", id );
+      final String namespaceUri = idQName.getNamespaceURI();
+      a.addAttribute( namespaceUri, localPart, idQName.getPrefix() + ":" + localPart, "CDATA", id );
     }
 
     final IPropertyType[] properties = featureType.getProperties();
 
+    final QName prefixedQName = getPrefixedQName( feature.getFeatureType().getQName() );
     final String localPart = prefixedQName.getLocalPart();
     final String uri = prefixedQName.getNamespaceURI();
-    // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
+
     m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
+
     for( final IPropertyType pt : properties )
     {
       if( pt instanceof IRelationType )
@@ -179,7 +181,7 @@ public class GMLSAXFactory
       else
         throw new UnsupportedOperationException();
     }
-    // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
+
     m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
   }
 
@@ -201,62 +203,47 @@ public class GMLSAXFactory
 
     final Object value = feature.getProperty( vpt );
 
-    if( value == null )
+    final GMLSchema gmlSchema = (GMLSchema) feature.getWorkspace().getGMLSchema();
+    final String version = gmlSchema.getGMLVersion();
+
+    final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
+
+    if( vpt.isList() )
     {
-      // write empty tag if this property is required
-      if( vpt.getMinOccurs() > 0 )
-      {
-        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
-
-        // TODO: put default value if element is not nullable?
-
-        m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
-      }
-
-      return;
-    }
-    else if( vpt.isList() )
-    {
-      final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
-      final URL context = null;
-      final LexicalHandler lexicalHandler = null;
-
-      for( final Object singleValue : ((List) value) )
-      {
-        try
-        {
-          if( singleValue == null )
-          {
-            /* Write empty tag if we have one null value */
-            /* Maybe change behaviour according to min/max-occurs */
-            m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
-            // TODO: put default value if element is not nullable?
-            m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
-          }
-          else
-            th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context, m_gmlVersion );
-        }
-        catch( final TypeRegistryException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
+      for( final Object singleValue : ((List< ? >) value) )
+        processValue( prefixedQName, uri, localPart, th, null, singleValue, true, version );
     }
     else
     {
-      final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
-      final URL context = null;
-      try
-      {
-        th.marshal( prefixedQName, value, m_handler, m_lexHandler, context, m_gmlVersion );
-      }
-      catch( final TypeRegistryException e )
-      {
-        e.printStackTrace();
-      }
+      final boolean isMandatory = vpt.getMinOccurs() > 0;
+      processValue( prefixedQName, uri, localPart, th, null, value, isMandatory, version );
     }
 
+  }
+
+  private void processValue( final QName prefixedQName, final String uri, final String localPart, final IMarshallingTypeHandler th, final URL context, final Object singleValue, final boolean isMandatory, final String gmlVersion ) throws SAXException
+  {
+    try
+    {
+      if( singleValue != null )
+        th.marshal( prefixedQName, singleValue, m_handler, m_lexHandler, context, gmlVersion );
+      else if( isMandatory )
+      {
+        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
+        // TODO: put default value if element is not nullable?
+        m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+      }
+      else
+      {
+        // optional null value: do nothing
+      }
+    }
+    catch( final TypeRegistryException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      // TODO: report to error handler of xmlReader
+    }
   }
 
   /**
@@ -323,6 +310,7 @@ public class GMLSAXFactory
       m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
 
       process( (Feature) next, new AttributesImpl() );
+
       m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
     else

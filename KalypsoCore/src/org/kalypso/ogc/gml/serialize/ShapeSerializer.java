@@ -58,7 +58,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
@@ -138,7 +137,7 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     // ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geoPt.getValueClass(), true );
-    final ITypeHandler typeHandler = geoPt.getTypeHandler();
+    final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
     ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName(), typeHandler, 0, 1, false );
 
     int count = 1;
@@ -150,7 +149,7 @@ public class ShapeSerializer
 
       // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
       // ftp.isNullable() );
-      final ITypeHandler typeHandler2 = ftp.getTypeHandler();
+      final IMarshallingTypeHandler typeHandler2 = ftp.getTypeHandler();
       ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", (String) entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
       count++;
     }
@@ -219,8 +218,8 @@ public class ShapeSerializer
   public static Feature createShapeRootFeature( final IFeatureType childFeatureType )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final ITypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
+    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
 
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
