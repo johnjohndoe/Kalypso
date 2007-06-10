@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.contribs.org.xml.sax.IndentingContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -60,29 +61,19 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class GMLWorkspaceReader implements XMLReader
 {
-  // private String nsu = ""; // NamespaceURI
-
-  // private Attributes atts = new AttributesImpl();
-
-  // private String rootElement = "addressbook";
-
-  // private String indent = "\n "; // for readability!
-
   private final List<String> m_enabledFeatures = new ArrayList<String>();
 
   private final HashMap<String, Object> m_propMap = new HashMap<String, Object>();
+
+  private final Map<String, String> m_idMap;
 
   private EntityResolver m_entityResolver;
 
   private DTDHandler m_dtdHandler;
 
-  private ContentHandler m_ContentHandler;
+  private ContentHandler m_contentHandler;
 
   private ErrorHandler m_errorHandler;
-
-  private final Map<String, String> m_idMap;
-
-  private LexicalHandler m_lexicalHandler;
 
   /**
    * @param idMap
@@ -103,9 +94,14 @@ public class GMLWorkspaceReader implements XMLReader
 
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
-    final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
 
-    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler, m_idMap, m_lexicalHandler );
+    // TODO instead of passing this instance of the lexcial handler, give the whole reader in order to let the handler
+    // to be
+    // changed during parsing
+    final LexicalHandler lexicalHandler = (LexicalHandler) m_propMap.get( "http://xml.org/sax/properties/lexical-handler" );
+    final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
+    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler, m_idMap, lexicalHandler );
+
     handler.startDocument();
     factory.process( workspace );
     handler.endDocument();
@@ -140,9 +136,6 @@ public class GMLWorkspaceReader implements XMLReader
    */
   public void setProperty( final String name, final Object value )
   {
-    if( "http://xml.org/sax/properties/lexical-handler".equals( name ) )
-      m_lexicalHandler = (LexicalHandler) value;
-
     m_propMap.put( name, value );
   }
 
@@ -183,7 +176,7 @@ public class GMLWorkspaceReader implements XMLReader
    */
   public void setContentHandler( final ContentHandler handler )
   {
-    m_ContentHandler = handler;
+    m_contentHandler = handler;
   }
 
   /**
@@ -191,7 +184,7 @@ public class GMLWorkspaceReader implements XMLReader
    */
   public ContentHandler getContentHandler( )
   {
-    return m_ContentHandler;
+    return m_contentHandler;
   }
 
   /**
@@ -213,9 +206,9 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#parse(java.lang.String)
    */
-  public void parse( final String systemId ) throws SAXException
+  public void parse( final String systemId )
   {
-    parse( new InputSource( systemId ) );
+    throw new UnsupportedOperationException();
   }
 
 }

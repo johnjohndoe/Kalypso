@@ -90,17 +90,14 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -272,8 +269,10 @@ public class DisplayElementFactory
       System.out.println( "symbolizer...?" );
     }
 
-    // //TODO Patrice Check changes
-    // //decorate the display with another get through adapation
+    // TODO Patrice Check changes
+    // decorate the display with another get through adapation
+    // TODO: next line is strange: if we adapt to DisplayElementDecorator, of course
+    // DisplayElementDecorator shall be returned, not only a DisplayElement....
     final DisplayElement displayElementDecorator = (DisplayElement) feature.getAdapter( DisplayElementDecorator.class );
     if( displayElementDecorator instanceof DisplayElementDecorator )
     {
@@ -345,47 +344,17 @@ public class DisplayElementFactory
    * @param sym style information
    * @return constructed <tt>PointDisplayElement</tt>
    */
-  public static PointDisplayElement buildPointDisplayElement( final Feature feature, final GM_Object geom, final PointSymbolizer sym )
-  {
-
-    // if the geometry is not a point geometry, the centroid(s) of the
-    // geometry will be used
-    PointDisplayElement displayElement = null;
-
-    if( geom instanceof GM_Point )
-    {
-      displayElement = new PointDisplayElement_Impl( feature, (GM_Point) geom, sym );
-    }
-    else if( geom instanceof GM_MultiPoint )
-    {
-      displayElement = new PointDisplayElement_Impl( feature, (GM_MultiPoint) geom, sym );
-    }
-    else if( geom instanceof GM_MultiPrimitive )
-    {
-      final GM_Primitive[] primitives = ((GM_MultiPrimitive) geom).getAllPrimitives();
-      final GM_Point[] centroids = new GM_Point[primitives.length];
-
-      for( int i = 0; i < primitives.length; i++ )
-        centroids[i] = primitives[i].getCentroid();
-
-      displayElement = new PointDisplayElement_Impl( feature, GeometryFactory.createGM_MultiPoint( centroids ), sym );
-    }
-    else
-    {
-      final GM_Point centeroid = createCenteroidOnElement( geom );
-      displayElement = new PointDisplayElement_Impl( feature, centeroid, sym );
-    }
-
-    return displayElement;
-  }
-
-  private static GM_Point createCenteroidOnElement( final GM_Object geom )
+  public static PointDisplayElement buildPointDisplayElement( final Feature feature, final GM_Object geom, final PointSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     if( geom == null )
       return null;
-    if( geom instanceof GM_Point )
-      return (GM_Point) geom;
-    return geom.getCentroid();
+
+    final GM_Point[] points = (GM_Point[]) geom.getAdapter( GM_Point[].class );
+
+    if( points == null )
+      throw new IncompatibleGeometryTypeException( "Could not create PointDisplayElement from geometry: " + geom.getClass().getName() );
+
+    return new PointDisplayElement_Impl( feature, points, sym );
   }
 
   /**
@@ -398,12 +367,15 @@ public class DisplayElementFactory
    * @param sym style information
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym )
+  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     if( geom == null )
       return null;
 
-    return new LineStringDisplayElement_Impl( feature, geom, sym );
+    final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
+    if( curves == null )
+      throw new IncompatibleGeometryTypeException( "Could not create LineStringDisplayElement from geometry: " + geom.getClass().getName() );
+    return new LineStringDisplayElement_Impl( feature, curves, sym );
   }
 
   /**
@@ -418,20 +390,16 @@ public class DisplayElementFactory
    *         a <tt>GM_Surface</tt> or a <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final GM_Object gmObject, final PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final GM_Object geom, final PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
-    if( gmObject instanceof GM_Surface )
-    {
-      return new PolygonDisplayElement_Impl( feature, (GM_Surface) gmObject, sym );
-    }
-    else if( gmObject instanceof GM_MultiSurface )
-    {
-      return new PolygonDisplayElement_Impl( feature, (GM_MultiSurface) gmObject, sym );
-    }
-    else
-    {
-      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
-    }
+    if( geom == null )
+      return null;
+
+    final GM_Surface[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
+    if( surfaces == null )
+      throw new IncompatibleGeometryTypeException( "Could not create PolygonDisplayElement from geometry: " + geom.getClass().getName() );
+
+    return new PolygonDisplayElement_Impl( feature, surfaces, sym );
   }
 
   /**
@@ -451,19 +419,10 @@ public class DisplayElementFactory
    */
   public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final GM_Object gmObject, final TextSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
-
-    LabelDisplayElement displayElement = null;
-
     if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface || gmObject instanceof GM_Curve || gmObject instanceof GM_MultiCurve )
-    {
-      displayElement = new LabelDisplayElement_Impl( feature, gmObject, sym );
-    }
-    else
-    {
-      throw new IncompatibleGeometryTypeException( "Tried to create a LabelDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
-    }
+      return new LabelDisplayElement_Impl( feature, new GM_Object[] { gmObject }, sym );
 
-    return displayElement;
+    throw new IncompatibleGeometryTypeException( "Tried to create a LabelDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
   }
 
   /**
@@ -478,6 +437,8 @@ public class DisplayElementFactory
    */
   public static RasterDisplayElement buildRasterDisplayElement( final Feature feature, final RasterSymbolizer sym )
   {
+    // TODO: instead of giving a null geometry, retrieve a raster class from the feature and give it to the raste
+    // display element.
     return new RasterDisplayElement_Impl( feature, null, sym );
   }
 }

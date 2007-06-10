@@ -139,7 +139,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
       }
     }
 
-    envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) ) );
   }
 
   /**
@@ -234,7 +234,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    */
   public GM_CurveBoundary getCurveBoundary( )
   {
-    return (GM_CurveBoundary) m_boundary;
+    return (GM_CurveBoundary) getBoundary();
   }
 
   /**
@@ -251,7 +251,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
       return false;
     }
 
-    if( !envelope.equals( ((GM_Object) other).getEnvelope() ) )
+    if( !getEnvelope().equals( ((GM_Object) other).getEnvelope() ) )
     {
       return false;
     }
@@ -395,15 +395,15 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   {
     final double[] cen = new double[getCoordinateDimension()];
 
-    for( int i = 0; i < m_points.length; i++ )
+    for( final GM_Position element : m_points )
     {
       for( int j = 0; j < getCoordinateDimension(); j++ )
       {
-        cen[j] += (m_points[i].getAsArray()[j] / m_points.length);
+        cen[j] += (element.getAsArray()[j] / m_points.length);
       }
     }
 
-    centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), getCoordinateSystem() );
+    setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), getCoordinateSystem() ) );
   }
 
   /**
@@ -422,7 +422,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   {
     String ret = null;
     ret = "points = " + m_points + "\n";
-    ret += ("envelope = " + envelope + "\n");
+    ret += ("envelope = " + getEnvelope() + "\n");
     return ret;
   }
 

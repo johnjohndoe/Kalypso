@@ -60,6 +60,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
@@ -84,18 +85,21 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gml.GMLContentHandler;
+import org.kalypso.gml.GMLException;
 import org.kalypso.gml.GMLWorkspaceInputSource;
 import org.kalypso.gml.GMLWorkspaceReader;
+import org.kalypso.gml.GMLorExceptionContentHandler;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -139,9 +143,9 @@ public final class GmlSerializer
 
   /**
    * @param idMap
-   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, Map<String, String> idMap ) throws GmlSerializeException
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final Map<String, String> idMap ) throws GmlSerializeException
   {
     try
     {
@@ -153,7 +157,8 @@ public final class GmlSerializer
       inputSource.setEncoding( charsetEncoding );
 
       final Source source = new SAXSource( reader, inputSource );
-      
+
+      // TODO: change to stream instead of writer
       final StreamResult result = new StreamResult( writer );
 
       final TransformerFactory tFac = TransformerFactory.newInstance();
@@ -161,6 +166,7 @@ public final class GmlSerializer
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+      // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
       transformer.transform( source, result );
     }
     catch( final Exception e )
@@ -217,9 +223,9 @@ public final class GmlSerializer
       final ReplaceTokens rt = new ReplaceTokens( reader );
       rt.setBeginToken( ':' );
       rt.setEndToken( ':' );
-      for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
+      for( final Iterator<Entry<Object, Object>> tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
       {
-        final Map.Entry entry = (Entry) tokenIt.next();
+        final Map.Entry<Object, Object> entry = tokenIt.next();
 
         final Token token = new ReplaceTokens.Token();
         token.setKey( (String) entry.getKey() );
@@ -239,55 +245,49 @@ public final class GmlSerializer
   private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IFeatureProviderFactory factory ) throws Exception
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
-    
+
     TimeLogger perfLogger = null;
     if( doTrace )
       perfLogger = new TimeLogger( "Start loading gml workspace" );
 
-    final SAXParserFactory saxFac = SAXParserFactory.newInstance();
-    saxFac.setNamespaceAware( true );
+    final GMLWorkspace workspace = parseGml( inputSource, null, true, context, factory );
 
-    final SAXParser saxParser = saxFac.newSAXParser();
-    // make namespace-prefxes vsible to content handler
-    // used to allow necessary schemas from gml document
-    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
-
-    final XMLReader xmlReader = saxParser.getXMLReader();
-    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, context );
-    xmlReader.setContentHandler( contentHandler );
-    xmlReader.parse( inputSource );
-
-    final GMLSchema schema = contentHandler.getGMLSchema();
-    final Feature rootFeature = contentHandler.getRootFeature();
-    final String schemaLocationString = contentHandler.getSchemaLocationString();
-    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocationString, providerFactory );
-    
     if( perfLogger != null )
     {
       perfLogger.takeInterimTime();
       perfLogger.printCurrentTotal( "Finished loading gml workspace in: " );
     }
-    
+
     return workspace;
+  }
+
+  private static GMLWorkspace parseGml( final InputSource inputSource, final URL schemaLocationHint, final boolean useSchemaCache, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException, IOException, GMLException
+  {
+    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
+
+    final SAXParserFactory saxFac = SAXParserFactory.newInstance();
+    saxFac.setNamespaceAware( true );
+
+    final SAXParser saxParser = saxFac.newSAXParser();
+    // make namespace-prefxes visible to content handler
+    // used to allow necessary schemas from gml document
+    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
+
+    final XMLReader xmlReader = saxParser.getXMLReader();
+
+    // TODO: also set an error handler here
+    // TODO: use progress-monitors to show progress and let the user cancel parsing
+
+    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, schemaLocationHint, useSchemaCache, context, providerFactory );
+    xmlReader.setContentHandler( exceptionHandler );
+    xmlReader.parse( inputSource );
+
+    return exceptionHandler.getWorkspace();
   }
 
   public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache, final IFeatureProviderFactory factory ) throws Exception
   {
-    final SAXParserFactory saxFac = SAXParserFactory.newInstance();
-    saxFac.setNamespaceAware( true );
-    final SAXParser saxParser = saxFac.newSAXParser();
-    final XMLReader xmlReader = saxParser.getXMLReader();
-    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, schemaURLHint, useGMLSchemaCache, null );
-    xmlReader.setContentHandler( contentHandler );
-    xmlReader.parse( new InputSource( inputStream ) );
-    final GMLSchema schema = contentHandler.getGMLSchema();
-    final Feature rootFeature = contentHandler.getRootFeature();
-    final String schemaLocationString = contentHandler.getSchemaLocationString();
-
-    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, schemaLocationString, providerFactory );
-    return workspace;
+    return parseGml( new InputSource( inputStream ), schemaURLHint, useGMLSchemaCache, null, factory );
   }
 
   public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException
@@ -310,7 +310,7 @@ public final class GmlSerializer
       contentHelper.setFileContents( targetFile, false, true, new SubProgressMonitor( monitor, 1 ) );
       monitor.worked( 1 );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -322,7 +322,7 @@ public final class GmlSerializer
     monitor.beginTask( "Creating gml file", 2 );
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
-    
+
     URL context = null;
     try
     {
@@ -332,7 +332,7 @@ public final class GmlSerializer
     {
       e.printStackTrace();
     }
-    
+
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName, context, providerFactory );
 
     // introduce further schemata into workspace

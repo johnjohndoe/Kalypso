@@ -29,9 +29,11 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
-import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
+import org.kalypso.gmlschema.ui.GMLSchemaLabelProvider;
+import org.kalypso.gmlschema.ui.GMLSchemaSorter;
+import org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+
 
 public class GMLSchemaEditor extends EditorPart
 {
@@ -75,13 +77,14 @@ public class GMLSchemaEditor extends EditorPart
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     parent.setLayout( new GridLayout() );
     m_viewer = new TreeViewer( parent, SWT.V_SCROLL );
     m_viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_viewer.setContentProvider( new GMLSchemaTreeContentProvider( null, false ) );
     m_viewer.setLabelProvider( new GMLSchemaLabelProvider() );
+    m_viewer.setSorter( new GMLSchemaSorter() );
   }
 
   @Override

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model;
 
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.namespace.QName;
@@ -55,13 +53,13 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
-import org.kalypso.gmlschema.basics.JAXBContextProvider;
+import org.kalypso.gmlschema.swe.RepresentationTypeHandler;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.swe.RepresentationTypeHandler;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_EnvelopeBindingTypeHandler;
@@ -72,6 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
+import org.kalypsodeegree.model.geometry.TriangulatedSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigDecimal;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigInteger;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBoolean;
@@ -261,8 +260,6 @@ public class TypeHandlerUtilities
 
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POINT_PROPERTY, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
-    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3,
-    // "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POINT_PROPERTY, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
@@ -278,14 +275,13 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, LocationPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
-    // We do not use the binding classes, because they do not work
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "RectifiedGridDomainType" ), new QName( NS.GML3, "rectifiedGridDomain" ), RectifiedGridDomainType.class, false )
-    // );
+
+    registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
+
+// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
+// "TrianglePatchArrayPropertyType" ), new QName( NS.GML3, "trianglePatches" ), TrianglePatchArrayPropertyType.class,
+// true, true, false ) );
+
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
     registry.registerTypeHandler( new RangeSetTypeHandler() );
 
@@ -296,99 +292,6 @@ public class TypeHandlerUtilities
 
     registry.registerTypeHandler( new MetaDataPropertyTypeHandler() );
 
-    // swe types
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "PhenomenonPropertyType"
-    // ), new QName( NS.SWE, "observedProperty" ), PhenomenonPropertyType.class, false, false, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE,
-    // "DataDefinitionPropertyType" ), new QName( NS.SWE, "resultDefinition" ), DataDefinitionPropertyType.class, false,
-    // false, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "RelativeMeasureType" ),
-    // new QName( NS.SWE, "RelativeMeasureType" ), RelativeMeasureType.class, false, true, false ) );
-
     registry.registerTypeHandler( new RepresentationTypeHandler() );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinition" ), new
-    // QName( NS.SWE, "DataDefinitionType" ), DataDefinitionType.class, false, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE,
-    // "SWE_RecordSchemaPropertyType" ), new QName( NS.SWE, "component" ), SWERecordSchemaPropertyType.class, false,
-    // false ) );
-
-    // gmd types
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GMD,
-    // "DQ_DataQuality_PropertyType" ), new QName( NS.SWE, "quality" ), DQDataQualityPropertyType.class, false, false )
-    // );
-
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3,
-    // "TimePrimitivePropertyType" ), new QName( NS.GML3, "validTime" ), TimePrimitivePropertyType.class, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
-    // NS.GML3, "" ), .class, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
-    // NS.GML3, "" ), .class, false ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
-    // NS.GML3, "" ), .class, false ) );
-
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "EnvelopeType" ), new
-    // QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
-
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // PointType.class, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // PolygonType.class, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // LineStringType.class, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // MultiPointType.class, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // MultiLineStringType.class, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // MultiPolygonType.class, true ) );
-    // registry.registerTypeHandler( new GenericBindingTypeHandler( context,
-    // EnvelopeType.class, true ) );
-
-    // registry.registerTypeHandler( new GMLBoundingShapeTypeHandler() );
-    // final String gmlns = XMLHelper.GMLSCHEMA_NS;
-    // final QName[] points = new QName[] { new QName( gmlns,
-    // "PointPropertyType" ) };
-    // registry.registerTypeHandler( new GM_ObjectTypeHandler( points,
-    // GeometryUtilities.getPointClass() ) );
-    //
-    // final QName[] multiPoints = new QName[] { new QName( gmlns,
-    // "MultiPointPropertyType" ) };
-    // registry.registerTypeHandler( new GM_ObjectTypeHandler( multiPoints,
-    // GeometryUtilities.getMultiPointClass() ) );
-    //
-    // final QName[] lineString = new QName[] { new QName( gmlns,
-    // "LineStringPropertyType" ) };
-    // registry.registerTypeHandler( new GM_ObjectTypeHandler( lineString,
-    // GeometryUtilities.getLineStringClass() ) );
-    //
-    // final QName[] multiLineStrings = new QName[] { new QName( gmlns,
-    // "MultiLineStringPropertyType" ) };
-    // registry.registerTypeHandler( new GM_ObjectTypeHandler(
-    // multiLineStrings,
-    // GeometryUtilities.getMultiLineStringClass() ) );
-    //
-    // final QName[] polygon = new QName[] { new QName( gmlns,
-    // "PolygonPropertyType" ) };
-    // registry.registerTypeHandler( new GM_ObjectTypeHandler( polygon,
-    // GeometryUtilities.getPolygonClass() ) );
-    //
-    // final QName[] multPolygons = new QName[] { new QName( gmlns,
-    // "MultiPolygonPropertyType" ) };
-    // registry.registerTypeHandler( new GM_ObjectTypeHandler( multPolygons,
-    // GeometryUtilities.getMultiPolygonClass() )
-    // );
-    //
-    // // final QName[] geometry = new QName[] { new QName( gmlns,
-    // "GeometryAssociationType" ),//
-    // // new QName( gmlns, "GeometryPropertyType" ) };
-    // // registry.registerTypeHandler( new GM_ObjectTypeHandler( geometry,
-    // GeometryUtilities.getUndefinedGeometryClass() )
-    // // );
-    //
-    // // final QName[] multGeometry = new QName[] { new QName(
-    // XMLHelper.GMLSCHEMA_NS, "MultiGeometryPropertyType" ) };
-    // // registry.registerTypeHandler( new GM_ObjectTypeHandler(
-    // // multGeometry,GeometryUtilities.getUndefinedGeometryClass() ) );
-    //
   }
 }

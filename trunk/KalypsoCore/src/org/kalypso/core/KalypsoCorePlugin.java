@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -125,8 +124,6 @@ public class KalypsoCorePlugin extends Plugin
 
       if( marshallingRegistry != null )
       {
-        TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
-        TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
         RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
         marshallingRegistry.registerTypeHandler( wvqInline );
         marshallingRegistry.registerTypeHandler( taInline );
@@ -141,21 +138,20 @@ public class KalypsoCorePlugin extends Plugin
       if( PlatformUI.isWorkbenchRunning() )
         MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
     }
-
   }
 
   /**
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     m_catalogManager = null;
     m_sldCatalog = null;
     m_selectionManager = null;
 
     savePluginPreferences();
-    
+
     super.stop( context );
   }
 

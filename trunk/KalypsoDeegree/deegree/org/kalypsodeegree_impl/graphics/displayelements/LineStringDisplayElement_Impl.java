@@ -75,20 +75,13 @@ import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
 import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -109,28 +102,18 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
   /**
    * Creates a new LineStringDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
    */
-  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Object geometry )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Curve[] curves )
   {
-    super( feature, geometry, null );
-
-    final Symbolizer defaultSymbolizer = new LineSymbolizer_Impl();
-    this.setSymbolizer( defaultSymbolizer );
+    this( feature, curves, new LineSymbolizer_Impl() );
   }
 
   /**
    * Creates a new LineStringDisplayElement_Impl object.
-   * 
-   * @param feature
-   * @param geometry
-   * @param symbolizer
    */
-  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Object geometry, final LineSymbolizer symbolizer )
+  protected LineStringDisplayElement_Impl( final Feature feature, final GM_Curve[] curves, final LineSymbolizer symbolizer )
   {
-    super( feature, geometry, symbolizer );
+    super( feature, curves, symbolizer );
   }
 
   private void paintImage( final Image image, final Graphics2D g, final int x, final int y, final double rotation )
@@ -170,21 +153,15 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
       return;
 
     // GraphicStroke label
-    final GM_Object geometry = getGeometry();
+    final GM_Curve[] curves = (GM_Curve[]) getGeometry();
 
     try
     {
       final GraphicStroke graphicStroke = stroke == null ? null : stroke.getGraphicStroke();
       final Image image = graphicStroke == null ? null : graphicStroke.getGraphic().getAsImage( getFeature(), uom, projection );
-      if( geometry instanceof GM_Primitive )
-        paintCurve( g2, projection, (GM_Curve) geometry, image, stroke );
-      else if( geometry instanceof GM_MultiPrimitive )
-      {
-        final GM_MultiPrimitive multi = (GM_MultiPrimitive) geometry;
-        final GM_Primitive[] allPrimitives = multi.getAllPrimitives();
-        for( final GM_Primitive primitive : allPrimitives )
-          paintPrimitive( g2, projection, primitive, image, stroke );
-      }
+
+      for( final GM_Curve curve : curves )
+        paintCurve( g2, projection, curve, image, stroke );
     }
     catch( final FilterEvaluationException e )
     {
@@ -196,24 +173,6 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     }
 
     Debug.debugMethodEnd();
-  }
-
-  private void paintPrimitive( final Graphics2D g2, final GeoTransform projection, final GM_Primitive primitive, final Image image, final Stroke stroke ) throws FilterEvaluationException, Exception
-  {
-    if( primitive instanceof GM_Curve )
-      paintCurve( g2, projection, (GM_Curve) primitive, image, stroke );
-    else if( primitive instanceof GM_Surface )
-    {
-      final GM_Surface surface = (GM_Surface) primitive;
-      final int numberOfSurfacePatches = surface.getNumberOfSurfacePatches();
-      for( int i = 0; i < numberOfSurfacePatches; i++ )
-      {
-        final GM_SurfacePatch surfacePatchAt = surface.getSurfacePatchAt( i );
-        final GM_Position[] exteriorRing = surfacePatchAt.getExteriorRing();
-        final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, surface.getCoordinateSystem() );
-        paintCurve( g2, projection, curve, image, stroke );
-      }
-    }
   }
 
   private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final Image image, final Stroke stroke ) throws FilterEvaluationException, Exception

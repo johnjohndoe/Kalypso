@@ -61,8 +61,10 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -81,24 +83,16 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1161164609227432958L;
 
-  protected ArrayList<GM_Object> m_aggregate = new ArrayList<GM_Object>( 500 );
+  protected List<GM_Object> m_aggregate = new ArrayList<GM_Object>( 500 );
 
   /**
    * Creates a new GM_Aggregate_Impl object.
    * 
    * @param crs
    */
-  public GM_Aggregate_Impl( CS_CoordinateSystem crs )
+  public GM_Aggregate_Impl( final CS_CoordinateSystem crs )
   {
     super( crs );
-  }
-
-  /**
-   * Creates a new GM_Aggregate_Impl object.
-   */
-  private GM_Aggregate_Impl( )
-  {
-    super( null );
   }
 
   /**
@@ -113,9 +107,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * merges this aggregation with another one
    * 
    * @exception GM_Exception
-   *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
+   *                a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
-  public void merge( GM_Aggregate aggregate ) throws GM_Exception
+  public void merge( final GM_Aggregate aggregate ) throws GM_Exception
   {
     if( !this.getClass().getName().equals( aggregate.getClass().getName() ) )
     {
@@ -133,7 +127,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * adds an GM_Object to the aggregation
    */
-  public void add( GM_Object gmo )
+  public void add( final GM_Object gmo )
   {
     m_aggregate.add( gmo );
 
@@ -145,11 +139,11 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
    * 
    * @param gmo
-   *          GM_Object to insert.
+   *            GM_Object to insert.
    * @param index
-   *          position where to insert the new GM_Object
+   *            position where to insert the new GM_Object
    */
-  public void insertObjectAt( GM_Object gmo, int index ) throws GM_Exception
+  public void insertObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > this.getSize() - 1) )
     {
@@ -171,11 +165,11 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
    * 
    * @param gmo
-   *          GM_Object to set.
+   *            GM_Object to set.
    * @param index
-   *          position where to set the new GM_Object
+   *            position where to set the new GM_Object
    */
-  public void setObjectAt( GM_Object gmo, int index ) throws GM_Exception
+  public void setObjectAt( final GM_Object gmo, final int index ) throws GM_Exception
   {
     if( (index < 0) || (index > this.getSize() - 1) )
     {
@@ -197,14 +191,14 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * 
    * @return the removed GM_Object
    */
-  public GM_Object removeObject( GM_Object gmo )
+  public GM_Object removeObject( final GM_Object gmo )
   {
     if( gmo == null )
     {
       return null;
     }
 
-    int i = m_aggregate.indexOf( gmo );
+    final int i = m_aggregate.indexOf( gmo );
 
     GM_Object gmo_ = null;
 
@@ -212,7 +206,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     {
       gmo_ = removeObjectAt( i );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       Debug.debugException( e, "" );
     }
@@ -228,7 +222,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * 
    * @return the removed GM_Object
    */
-  public GM_Object removeObjectAt( int index ) throws GM_Exception
+  public GM_Object removeObjectAt( final int index ) throws GM_Exception
   {
     if( index < 0 )
     {
@@ -240,7 +234,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       throw new GM_Exception( "invalid index/position: " + index + " to remove a geometry!" );
     }
 
-    GM_Object gmo = m_aggregate.remove( index );
+    final GM_Object gmo = m_aggregate.remove( index );
 
     setValid( false );
 
@@ -253,7 +247,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   public void removeAll( )
   {
     m_aggregate.clear();
-    envelope = null;
+    setEnvelope( null );
     setValid( false );
   }
 
@@ -261,7 +255,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * returns the GM_Object at the submitted index. if index is larger then getSize() - 1 or smaller then 0 an exception
    * will be thrown.
    */
-  public GM_Object getObjectAt( int index )
+  public GM_Object getObjectAt( final int index )
   {
     return m_aggregate.get( index );
   }
@@ -271,7 +265,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public GM_Object[] getAll( )
   {
-    GM_Object[] gmos = new GM_Object[this.getSize()];
+    final GM_Object[] gmos = new GM_Object[this.getSize()];
 
     return m_aggregate.toArray( gmos );
   }
@@ -279,7 +273,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns true if the submitted GM_Object is within the aggregation
    */
-  public boolean isMember( GM_Object gmo )
+  public boolean isMember( final GM_Object gmo )
   {
     return m_aggregate.contains( gmo );
   }
@@ -287,7 +281,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns the aggregation as an iterator
    */
-  public Iterator getIterator( )
+  public Iterator<GM_Object> getIterator( )
   {
     return m_aggregate.iterator();
   }
@@ -305,10 +299,10 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * sets the spatial reference system
    * 
    * @param crs
-   *          new spatial reference system
+   *            new spatial reference system
    */
   @Override
-  public void setCoordinateSystem( CS_CoordinateSystem crs )
+  public void setCoordinateSystem( final CS_CoordinateSystem crs )
   {
     super.setCoordinateSystem( crs );
 
@@ -326,18 +320,18 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
   @Override
-  public void translate( double[] d )
+  public void translate( final double[] d )
   {
     try
     {
       for( int i = 0; i < getSize(); i++ )
       {
-        GM_Object gmo = getObjectAt( i );
+        final GM_Object gmo = getObjectAt( i );
         gmo.translate( d );
       }
       setValid( false );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       Debug.debugException( e, "" );
     }
@@ -345,7 +339,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
     // envelope was not valid
     if( !super.equals( other ) || !(other instanceof GM_Aggregate_Impl) || !getEnvelope().equals( ((GM_Object) other).getEnvelope() ) || (getSize() != ((GM_Aggregate) other).getSize()) )
@@ -357,8 +351,8 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     {
       for( int i = 0; i < getSize(); i++ )
       {
-        Object o1 = getObjectAt( i );
-        Object o2 = ((GM_Aggregate) other).getObjectAt( i );
+        final Object o1 = getObjectAt( i );
+        final Object o2 = ((GM_Aggregate) other).getObjectAt( i );
 
         if( !o1.equals( o2 ) )
         {
@@ -366,7 +360,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
         }
       }
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       return false;
     }
@@ -380,7 +374,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * geometric objects to capture intersection information.
    */
   @Override
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     boolean inter = false;
 
@@ -395,7 +389,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
     }
 
@@ -407,7 +401,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     String ret = null;
     ret = "aggregate = " + m_aggregate + "\n";
-    ret += ("envelope = " + envelope + "\n");
+    ret += ("envelope = " + getEnvelope() + "\n");
     return ret;
   }
 
@@ -417,9 +411,36 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   @Override
   public void invalidate( )
   {
-    for( GM_Object gmobj : m_aggregate )
+    for( final GM_Object gmobj : m_aggregate )
       gmobj.invalidate();
-    
+
     super.invalidate();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    /* An array of GM_xxx adapts to the array of its adapters. */
+    final Class< ? > componentType = adapter.getComponentType();
+    if( componentType != null && GM_Object.class.isAssignableFrom( componentType ) )
+    {
+      final List<GM_Object> adaptedObjects = new ArrayList<GM_Object>();
+
+      for( final GM_Object objectToAdapt : m_aggregate )
+      {
+        final GM_Object adaptedObject = (GM_Object) objectToAdapt.getAdapter( componentType );
+        if( adaptedObject != null && componentType.isAssignableFrom( adaptedObject.getClass() ) )
+          adaptedObjects.add( adaptedObject );
+      }
+
+      final Object adaptedArray = Array.newInstance( componentType, adaptedObjects.size() );
+      return adaptedObjects.toArray( (GM_Object[]) adaptedArray );
+    }
+
+    return super.getAdapter( adapter );
   }
 }

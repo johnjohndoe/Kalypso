@@ -54,7 +54,6 @@ import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
  */
 public class RefactorThis
 {
-
   public static void registerSpecialTypeHandler( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
     // TODO move these to extentionpoints...

@@ -64,10 +64,8 @@ package org.kalypsodeegree.model.geometry;
 import java.util.Iterator;
 
 /**
- * 
  * This interface defines the basis functionallity of all geometry aggregations. it will be specialized for the use of
  * primitive, and solid geometries.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -83,13 +81,13 @@ public interface GM_Aggregate extends GM_Object
   /**
    * returns the number of GM_Object within the aggregation
    */
-  int getSize();
+  int getSize( );
 
   /**
    * merges two aggregation.
    * 
    * @exception GM_Exception
-   *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
+   *                a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
   void merge( GM_Aggregate aggregate ) throws GM_Exception;
 
@@ -103,9 +101,9 @@ public interface GM_Aggregate extends GM_Object
    * larger then getSize() - 1 an exception will be thrown.
    * 
    * @param gmo
-   *          GM_Object to insert.
+   *            GM_Object to insert.
    * @param index
-   *          position where to insert the new GM_Object
+   *            position where to insert the new GM_Object
    */
   void insertObjectAt( GM_Object gmo, int index ) throws GM_Exception;
 
@@ -114,9 +112,9 @@ public interface GM_Aggregate extends GM_Object
    * removed. if index is larger then getSize() - 1 an exception will be thrown.
    * 
    * @param gmo
-   *          GM_Object to set.
+   *            GM_Object to set.
    * @param index
-   *          position where to set the new GM_Object
+   *            position where to set the new GM_Object
    */
   void setObjectAt( GM_Object gmo, int index ) throws GM_Exception;
 
@@ -138,7 +136,7 @@ public interface GM_Aggregate extends GM_Object
   /**
    * removes all GM_Object from the aggregation.
    */
-  void removeAll();
+  void removeAll( );
 
   /**
    * returns the GM_Object at the submitted index.
@@ -148,7 +146,7 @@ public interface GM_Aggregate extends GM_Object
   /**
    * returns all GM_Objects as array
    */
-  GM_Object[] getAll();
+  GM_Object[] getAll( );
 
   /**
    * returns true if the submitted GM_Object is within the aggregation
@@ -158,6 +156,6 @@ public interface GM_Aggregate extends GM_Object
   /**
    * returns the aggregation as an iterator
    */
-  Iterator getIterator();
+  Iterator<GM_Object> getIterator( );
 
 }

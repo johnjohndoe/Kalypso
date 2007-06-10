@@ -12,7 +12,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
@@ -37,8 +36,8 @@ public class Point
   private final IFeatureType m_featureType;
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPointClass() );
-    final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
+    final IMarshallingTypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPointClass() );
+    final IMarshallingTypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
 
     final IValuePropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1, false );
     final IValuePropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( ns, "value" ), doubleTH.getTypeName(), doubleTH, 1, 1, false );
@@ -49,47 +48,47 @@ public class Point
 
   private Feature feature = null;
 
-  public Point( String pointID, Double val, double x, double y, CS_CoordinateSystem crs )
+  public Point( final String pointID, final Double val, final double x, final double y, final CS_CoordinateSystem crs )
   {
-    GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
-    Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
+    final GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
+    final Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
     f.setProperty( "GEOM", point );
     f.setProperty( "value", val );
     this.feature = f;
 
   }// constructor}
 
-  public Point( String pointID, double x, double y, CS_CoordinateSystem crs )
+  public Point( final String pointID, final double x, final double y, CS_CoordinateSystem crs )
   {
     if( crs == null )
     {
-      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+      final CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       crs = cs;
     }
-    GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
-    Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
+    final GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
+    final Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
     f.setProperty( "GEOM", point );
     this.feature = f;
 
   }// constructor}
 
-  public Point( String pointID, GM_Position pos, CS_CoordinateSystem crs )
+  public Point( final String pointID, final GM_Position pos, CS_CoordinateSystem crs )
   {
     if( crs == null )
     {
       // default coordinate system is Gauß-Krüger
-      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+      final CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       crs = cs;
     }
-    GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(), crs );
-    Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
+    final GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(), crs );
+    final Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
     f.setProperty( "GEOM", point );
     this.feature = f;
   }// constructor}
 
-  public Point( String id, GM_Object geom )
+  public Point( final String id, final GM_Object geom )
   {
-    Feature f = FeatureFactory.createFeature( null, null, id, m_featureType, false );
+    final Feature f = FeatureFactory.createFeature( null, null, id, m_featureType, false );
     f.setProperty( "GEOM", geom );
     this.feature = f;
   }
@@ -106,13 +105,13 @@ public class Point
 
   public Double getAttribute( )
   {
-    Double val = (Double) getFeature().getProperty( "value" );
+    final Double val = (Double) getFeature().getProperty( "value" );
     return val;
   }
 
-  public void addAttribute( Double v, boolean replace )
+  public void addAttribute( final Double v, final boolean replace )
   {
-    Double value = (Double) feature.getProperty( "value" );
+    final Double value = (Double) feature.getProperty( "value" );
     if( value != null && replace == true )
     {
       feature.setProperty( "value", v );
@@ -134,10 +133,10 @@ public class Point
    * Returns the distance with respect to given point
    * 
    * @param p2
-   *          Point
+   *            Point
    * @see Point
    * @param logWriter
-   *          BufferedWriter
+   *            BufferedWriter
    * @return double
    * @throws IOException
    */
@@ -160,7 +159,7 @@ public class Point
    * Returns the distance of x value with given point
    * 
    * @param p2
-   *          Point
+   *            Point
    * @return double
    */
   // public double distanceDx( Point p2 )
@@ -190,7 +189,7 @@ public class Point
   // double dx = this.getPosition().getY() - p2.getY();
   // return dx;
   // }//distanceDx
-  public void setAttribute( Double v )
+  public void setAttribute( final Double v )
   {
     feature.setProperty( "value", v );
   }

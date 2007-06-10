@@ -107,9 +107,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   {
     super( null );
 
-    for( int i = 0; i < surface.length; i++ )
+    for( final GM_Surface element : surface )
     {
-      m_aggregate.add( surface[i] );
+      m_aggregate.add( element );
     }
 
     setValid( false );
@@ -125,9 +125,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   {
     super( crs );
 
-    for( int i = 0; i < surface.length; i++ )
+    for( final GM_Surface element : surface )
     {
-      m_aggregate.add( surface[i] );
+      m_aggregate.add( element );
     }
 
     setValid( false );
@@ -244,7 +244,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
       }
     }
 
-    envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) ) );
   }
 
   /**
@@ -277,7 +277,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
         cen[j] = cen[j] / area;
       }
 
-      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
+      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
     }
     catch( final Exception e )
     {

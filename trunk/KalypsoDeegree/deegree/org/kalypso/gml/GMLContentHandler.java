@@ -41,578 +41,325 @@
 package org.kalypso.gml;
 
 import java.net.URL;
-import java.util.Map;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.MultiException;
-import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
+import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * to parse gml from xmlReader,
+ * A {@link org.xml.sax.ContentHandler} imeplementation which parses GML fragment and produces a {@link Feature}
+ * hirarchy from it.
+ * <p>
+ * This content handler only parses the feature-property structure and delegates the parsing of any (non-feature)
+ * property-values to their corresponding {@link IMarshallingTypeHandler}s.
+ * </p>
  * 
- * @author doemming
+ * @author Andreas von Doemming
  */
-public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
+public class GMLContentHandler extends DelegateContentHandler implements UnmarshallResultEater
 {
-  private static final int FIRST_FEATURE = 1;
+  private final URL m_context;
 
-  /** a new property begins or a feature gets closed */
-  private static final int START_PROPERTY_END_FEATURE = 2;
-
-  /** a new value begins or a property gets closed */
-  private static final int START_VALUE_END_PROPERTY = 3;
-
-  private FeatureParser m_featureParser;
-
-  private PropertyParser m_propParser;
-
-  private int m_status = 0;
-
-  private int m_indent = 0;
-
-  private GMLSchema m_gmlSchema = null;
-
-  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
+  private final IGMLSchema m_schema;
 
   private final XMLReader m_xmlReader;
 
-  private Feature m_rootFeature = null;
+  /* The current feature in scope... */
+  private Feature m_scopeFeature = null;
 
-  private final URL m_schemaLocationHint;
+  private IPropertyType m_scopeProperty = null;
 
-  private final boolean m_useSchemaCatalog;
+  private Feature m_rootFeature;
 
-  private ToStringContentHandler m_exceptionContentHandler = null;
-
-  final StringBuffer m_errorBuffer = new StringBuffer();
-
-  private final URL m_context;
-
-  private String m_schemaLocationString = null;
-
-  /**
-   * uses GMLSchemaCatalog
-   */
-  public GMLContentHandler( XMLReader xmlReader, final URL context )
-  {
-    this( xmlReader, null, true, context );
-  }
-
-  public GMLContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog, final URL context )
+  public GMLContentHandler( final XMLReader xmlReader, final URL context, final IGMLSchema schema )
   {
     m_xmlReader = xmlReader;
-    m_schemaLocationHint = schemaLocationHint;
-    m_useSchemaCatalog = useGMLSchemaCatalog;
     m_context = context;
-    m_featureParser = new FeatureParser( this );
-    m_propParser = new PropertyParser();
-  }
-
-  /**
-   * @see org.kalypso.gml.FeatureTypeProvider#getFeatureType(javax.xml.namespace.QName)
-   */
-  public IFeatureType getFeatureType( QName nameFE )
-  {
-    return m_gmlSchema.getFeatureType( nameFE );
+    m_schema = schema;
   }
 
   /**
    * @see org.xml.sax.ContentHandler#startDocument()
    */
+  @Override
   public void startDocument( )
   {
-    // GML allways starts with features
-    m_status = FIRST_FEATURE;
+    m_scopeFeature = null;
+    m_scopeProperty = null;
   }
 
   /**
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
+  @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    // handle OGC Exceptions
-    if( m_exceptionContentHandler != null )
-    {
-      m_exceptionContentHandler.startElement( uri, localName, qName, atts );
+    super.startElement( uri, localName, qName, atts );
+
+    if( getDelegate() != null )
       return;
-    }
 
-    // Handle degree1 + deegree2 exepctions.
-    // deegree1-service: ...Exception
-    // deegree2-service: ServiceExceptionReport
-    // TODO: isn't this dangerous, because if we ever get gml's with an element 'exception' we are lost.
-    // Should'nt we at least test if we are at level 0?
-    if( localName != null && (localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" )) )
+    final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
+    final QName qname = new QName( localUri, localName );
+
+    if( (m_scopeFeature == null && m_scopeProperty == null) || (m_scopeFeature != null && m_scopeProperty instanceof IRelationType) )
+      startFeature( atts, qname );
+    else if( m_scopeFeature != null && m_scopeProperty == null )
+      startProperty( uri, localName, qName, atts, qname );
+    else
     {
-      m_exceptionContentHandler = new ToStringContentHandler( new ILogger()
-      {
-        public void log( final String message )
-        {
-          m_errorBuffer.append( message );
-        }
-      } );
-      m_exceptionContentHandler.startElement( uri, localName, qName, atts );
-      return;
-    }
-
-    // handle GML
-    m_indent++;
-    indent();
-
-    initGmlSchema( uri, atts );
-
-    final String localUri = (uri == null || uri.length() < 1) ? m_gmlSchema.getTargetNamespace() : uri;
-    switch( m_status )
-    {
-      case FIRST_FEATURE:
-      {
-        try
-        {
-          m_featureParser.createFeature( null, null, localUri, localName, atts );
-        }
-        catch( final GMLException e )
-        {
-          throw new SAXException( e );
-        }
-
-        m_rootFeature = m_featureParser.getCurrentFeature();
-        m_status = START_PROPERTY_END_FEATURE;
-        break;
-      }
-
-      case START_PROPERTY_END_FEATURE:
-      {
-        final Feature feature = m_featureParser.getCurrentFeature();
-        m_propParser.createProperty( feature, localUri, localName );
-
-        final IPropertyType pt = m_propParser.getCurrentPropertyType();
-        // final Feature parentFE = m_featureParser.getCurrentFeature();
-
-        if( pt instanceof IValuePropertyType )
-        {
-          final IValuePropertyType vpt = (IValuePropertyType) pt;
-
-          m_propParser.setContent( feature, vpt, m_xmlReader, localUri, localName, qName, atts );
-          // we skip the end tag
-        }
-        else if( pt instanceof IRelationType )// its a relation
-        {
-          final String href = getAttributeValue( atts, NS.XLINK, "href", null );
-          final String role = getAttributeValue( atts, NS.XLINK, "role", null );
-          final String arcrole = getAttributeValue( atts, NS.XLINK, "arcrole", null );
-          final String title = getAttributeValue( atts, NS.XLINK, "title", null );
-          final String show = getAttributeValue( atts, NS.XLINK, "show", "replace" );
-          final String actuate = getAttributeValue( atts, NS.XLINK, "actuate", "onRequest" );
-
-          if( href != null )// its a xlink
-          {
-            final IRelationType rt = (IRelationType) pt;
-
-            // REMARK: for backwards compability, we still set the href as property-value
-            // for internal links. This should be soon changed...
-            if( href.startsWith( "#" ) )
-            {
-              final String refID2 = href.replaceAll( "^#", "" );
-              FeatureHelper.addChild( feature, rt, refID2 );
-            }
-            else
-            {
-              final Feature childFeature = new XLinkedFeature_Impl( feature, rt, rt.getTargetFeatureType(), href, role, arcrole, title, show, actuate );
-              FeatureHelper.addChild( feature, rt, childFeature );
-            }
-          }
-        }
-        else
-        {
-          System.out.println( "unknown: " + localUri + " " + localName );
-          // unknown element in schema, probably this property is removed
-          // from schema and still occurs in the xml
-          // instance document
-          // we just ignore it
-        }
-
-        m_status = START_VALUE_END_PROPERTY;
-        break;
-      }
-
-      case START_VALUE_END_PROPERTY:
-      {
-        final IPropertyType pt = m_propParser.getCurrentPropertyType();
-        final Feature parentFE = m_featureParser.getCurrentFeature();
-        if( pt instanceof IRelationType )
-        {
-          try
-          {
-            m_featureParser.createFeature( parentFE, (IRelationType) pt, localUri, localName, atts );
-          }
-          catch( final GMLException e )
-          {
-            throw new SAXException( e );
-          }
-
-          final Feature childFE = m_featureParser.getCurrentFeature();
-          FeatureHelper.addChild( parentFE, (IRelationType) pt, childFE );
-          m_status = START_PROPERTY_END_FEATURE;
-        }
-        else
-          throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qName ); // they
-        break;
-      }
-
-      default:
-        break;
+      final String msg = String.format( "GML not well-balanced. Feature scope is: %s\tProperty scope is: %s\tStarting element: %s ", m_scopeFeature, m_scopeProperty, qName );
+      // this really should never happen as sax already checks the well-balancedness
+      throw new SAXException( msg );
     }
   }
 
-  private String getAttributeValue( final Attributes atts, final String namespace, final String localPart, final String defaultValue )
+  private void startProperty( final String uri, final String localName, final String qName, final Attributes atts, final QName qname ) throws SAXException
   {
-    final int index = atts.getIndex( namespace, localPart );
-    if( index != -1 )
-      return atts.getValue( index );
+    final Feature feature = m_scopeFeature;
 
-    return defaultValue;
-  }
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType pt = featureType.getProperty( qname );
+    if( pt == null )
+      throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qname );
 
-  /** Loads the main application schema and also all (via xmlns) references schemas. */
-  private void initGmlSchema( final String uri, final Attributes atts ) throws SAXException
-  {
-    if( m_gmlSchema == null )
+    /* Go into scope with that feature */
+    m_scopeProperty = pt;
+
+    // TODO: normally this should be enough. We should now activate a delegate contentHandler whih parses the content
+    // of a property
+
+    if( pt instanceof IValuePropertyType )
     {
-      // the main schema is the schema defining the root elements namespace
-      // REMARK: schemaLocationHint only used for main schema
-      m_gmlSchema = loadGMLSchema( uri, atts );
-
-      // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
-      // the main schema.
-      // This allows to introduce necessary schemata (for example which introduce new elements
-      // vis substitution).
-      final int attLength = atts.getLength();
-      for( int i = 0; i < attLength; i++ )
-      {
-        // STRANGE: shouldn't it work like this?
-        // if( NS.XML_PREFIX_DEFINITION_XMLNS.equals( atts.getURI( i ) ) )
-        // But atts.getURI gives empty string for xmlns entries.
-        // so we ask for the qname
-        final String qname = atts.getQName( i );
-        if( qname != null && qname.startsWith( "xmlns:" ) )
-        {
-          final String xmlnsUri = atts.getValue( i );
-          // HM: are there any other possible namespaces wo do NOT want to load?
-          if( !xmlnsUri.equals( NS.XSD ) )
-          {
-            try
-            {
-              m_gmlSchema.getGMLSchemaForNamespaceURI( xmlnsUri );
-            }
-            catch( final GMLSchemaException e )
-            {
-              // Just log it, this is pobably not a critical error
-              final IStatus status = StatusUtilities.statusFromThrowable( e );
-              KalypsoDeegreePlugin.getDefault().getLog().log( status );
-            }
-          }
-        }
-      }
+      startValueProperty( uri, localName, qName, atts, (IValuePropertyType) pt );
+    }
+    else if( pt instanceof IRelationType )// its a relation
+    {
+      startXLinkedFeature( atts, feature, (IRelationType) pt );
+    }
+    else
+    {
+      /* Should never happen. either its a value or a relation. */
+      throw new SAXException( "Unknown IPropertyType instance: " + pt );
     }
   }
 
-  private GMLSchema loadGMLSchema( final String uri, final Attributes atts ) throws SAXException
+  private void startValueProperty( final String uri, final String localName, final String qName, final Attributes atts, final IValuePropertyType vpt ) throws SAXException
   {
-    final MultiException schemaNotFoundExceptions = new MultiException();
+    // TODO: we should distinguish between simple and complex types here and use different types of typeHandlers for
+    // that. Reason1: get rid of overhead for simple types, just read the content as string and translate to the
+    // corresponding simple type. Reason2: If it is clear for the complex types that they are complex, we may
+    // enhance parsing there (for example dont read the end element of the property).
 
-    // first element may have schemalocation
-    m_schemaLocationString = getSchemalocation( atts );
+    final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
 
-    GMLSchema schema = null;
-
-    // 1. try : use hint
-    if( m_schemaLocationHint != null )
+    if( typeHandler instanceof IMarshallingTypeHandler2 )
+    {
+      final IMarshallingTypeHandler2 th2 = (IMarshallingTypeHandler2) typeHandler;
+      final ContentHandler contentHandler = th2.createContentHandler( m_xmlReader, this, uri, localName, qName, atts );
+      setDelegate( contentHandler );
+    }
+    else
     {
       try
       {
-        if( m_useSchemaCatalog )
-        {
-          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-          schema = schemaCatalog.getSchema( null, m_schemaLocationHint );
-        }
-        else
-          schema = GMLSchemaFactory.createGMLSchema( null, m_schemaLocationHint );
+        final String gmlVersion = m_schema.getGMLVersion();
+        // TODO hack, check if there is a better way to set the attributes (maybe in
+        // IMarshallingTypeHandler.unmarshall()
+        // ?)
+        if( typeHandler.getClass() == GenericBindingTypeHandler.class )
+          ((GenericBindingTypeHandler) typeHandler).setAttributes( atts );
+
+        // TODO: we must provide here the full information to the handler: qname, att, ...
+        typeHandler.unmarshal( m_xmlReader, m_context, this, gmlVersion );
       }
-      catch( final GMLSchemaException e )
+      catch( final TypeRegistryException e )
       {
-        schemaNotFoundExceptions.addException( new SAXException( e ) );
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+
+        m_xmlReader.getErrorHandler().warning( new SAXParseException( "Failed to unmarshall property value: " + vpt, getLocator(), e ) );
       }
     }
+  }
 
-    try
+  private void startXLinkedFeature( final Attributes atts, final Feature parentFeature, final IRelationType parentRelation )
+  {
+    final String href = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "href", null );
+
+    if( href != null )// its a xlink
     {
-      // 2. try : from uri + schemalocation attributes
-      if( schema == null )
+      // REMARK: for backwards compability, we still set the href as property-value
+      // for internal links. This should be changed soon...
+      if( href.startsWith( "#" ) )
       {
-        final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
-        final URL schemaLocation = namespaces.get( uri );
-
-        if( m_useSchemaCatalog )
-        {
-          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-          schema = schemaCatalog.getSchema( uri, null, schemaLocation );
-        }
-        else if( schemaLocation != null )
-          schema = GMLSchemaFactory.createGMLSchema( null, schemaLocation );
+        final String refID2 = href.replaceAll( "^#", "" );
+        FeatureHelper.addChild( parentFeature, parentRelation, refID2 );
       }
-    }
-    catch( final Exception e )
-    {
-      if( schema == null )
-        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
-            + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
-    }
-
-    // 3. try
-    if( schema == null && m_useSchemaCatalog )
-    {
-      try
-      {
-        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        schema = schemaCatalog.getSchema( uri.toString(), (String) null );
-      }
-      catch( Exception e )
-      {
-        /* Log it, because the following SaxExyception eats the innner exception */
-        KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
-            + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
-      }
-    }
-
-    if( schema == null )
-    {
-      if( schemaNotFoundExceptions.isEmpty() )
-        throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + m_schemaLocationString
-            + ")" );
       else
-        throw new SAXException( schemaNotFoundExceptions );
-    }
+      {
+        final String role = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "role", null );
+        final String arcrole = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "arcrole", null );
+        final String title = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "title", null );
+        final String show = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "show", "replace" );
+        final String actuate = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "actuate", "onRequest" );
 
-    if( !schemaNotFoundExceptions.isEmpty() )
-    {
-      System.out.println( "warning: errors occured with schemalocation" );
-      schemaNotFoundExceptions.printStackTrace();
-    }
+        final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
+        final Feature childFeature = new XLinkedFeature_Impl( parentFeature, parentRelation, targetFeatureType, href, role, arcrole, title, show, actuate );
+        FeatureHelper.addChild( parentFeature, parentRelation, childFeature );
+      }
 
-    return schema;
+      // normally the new feature should be set into scope as well, but it is not a real feature...
+    }
+    /*
+     * 'else' <p> The other case is an inline feature. That is parsed by entering again into startElement with the
+     * property type as scope.</p>
+     */
+
+    // TODO: We should make sure that this element has no futher content.
   }
 
-  // DONT REMOVE: used by proto-implementation of DelegateFeature obove
-  // private String getAttributeValue( final Attributes atts, final String uri, final String localName, final String
-  // defaultValue )
-  // {
-  // final String value = atts.getValue( uri, localName );
-  // return value == null ? defaultValue : value;
-  // }
+  private void startFeature( final Attributes atts, final QName qname ) throws SAXException
+  {
+    /* Root feature or new sub-feature. */
+    final IFeatureType featureType = m_schema.getFeatureType( qname );
+    if( featureType == null )
+      throw new SAXException( "No feature type found for: " + qname );
+
+    final String fid = idFromAttributes( atts );
+
+    final Feature childFE = FeatureFactory.createFeature( m_scopeFeature, (IRelationType) m_scopeProperty, fid, featureType, false );
+    if( m_scopeFeature != null )
+      FeatureHelper.addChild( m_scopeFeature, (IRelationType) m_scopeProperty, childFE );
+
+    m_scopeFeature = childFE;
+    m_scopeProperty = null;
+  }
 
   /**
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
-  public void endElement( String uri, String localName, String qName )
+  @Override
+  public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
-    if( m_exceptionContentHandler != null )
-    {
-      m_exceptionContentHandler.endElement( uri, localName, qName );
+    super.endElement( uri, localName, qName );
+
+    if( getDelegate() != null )
       return;
-    }
-    /**
-     * deegreehack, deegree1 WFS doesn't define namespace in GetFeature-Result gml<br>
-     * do not remove (doemming)
-     */
-    if( uri == null || uri.length() < 1 )
-      uri = m_gmlSchema.getTargetNamespace();
 
-    indent();
-    // System.out.println( "</" + uri + ":" + localName + ">" );
-    m_indent--;
-    switch( m_status )
+    final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
+
+    if( m_scopeProperty != null && QNameUtilities.equals( m_scopeProperty.getQName(), localUri, localName ) )
     {
-      case FIRST_FEATURE:
-        m_status = START_VALUE_END_PROPERTY;
-        break;
-      case START_PROPERTY_END_FEATURE:
-        m_featureParser.popFeature();
-        m_status = START_VALUE_END_PROPERTY;
-        break;
-      case START_VALUE_END_PROPERTY:
-        m_propParser.popPT();
-        m_status = START_PROPERTY_END_FEATURE;
-        break;
-      default:
-        break;
+      /* Closing current property */
+      m_scopeProperty = null;
     }
-  }
-
-  private void indent( )
-  {
-    // System.out.print( StringUtils.repeat( " ", m_indent ) );
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
-   */
-  public void ignorableWhitespace( char[] ch, int start, int length )
-  {
-    if( m_exceptionContentHandler != null )
+    else if( m_scopeFeature != null && QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), localUri, localName ) )
     {
-      m_exceptionContentHandler.ignorableWhitespace( ch, start, length );
-      return;
+      /* Closing current feature, scope changes back to parent feature. */
+      final Feature parent = m_scopeFeature.getParent();
+      /* If the root gets closed we know the result feature. */
+      if( parent == null )
+        m_rootFeature = m_scopeFeature;
+
+      m_scopeFeature = parent;
     }
-    // TODO call characters() from here ??
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#characters(char[], int, int)
-   */
-  public void characters( char[] ch, int start, int length )
-  {
-    if( m_exceptionContentHandler != null )
-    {
-      m_exceptionContentHandler.characters( ch, start, length );
-      return;
-    }
-
-    switch( m_status )
-    {
-      case FIRST_FEATURE:
-        // nothing
-        break;
-      case START_PROPERTY_END_FEATURE:
-        // nothing
-        break;
-      case START_VALUE_END_PROPERTY:
-        final StringBuffer buffer = new StringBuffer();
-        for( int i = start; i < length; i++ )
-          buffer.append( ch[i] );
-
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
-   */
-  public void startPrefixMapping( String prefix, String uri )
-  {
-    if( m_exceptionContentHandler != null )
-      m_exceptionContentHandler.startPrefixMapping( prefix, uri );
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#endDocument()
-   */
-  public void endDocument( )
-  {
-    if( m_exceptionContentHandler != null )
-      m_exceptionContentHandler.endDocument();
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
-   */
-  public void endPrefixMapping( String prefix )
-  {
-    if( m_exceptionContentHandler != null )
-      m_exceptionContentHandler.endPrefixMapping( prefix );
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
-   */
-  public void processingInstruction( String target, String data )
-  {
-    if( m_exceptionContentHandler != null )
-      m_exceptionContentHandler.processingInstruction( target, data );
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
-   */
-  public void setDocumentLocator( Locator locator )
-  {
-    if( m_exceptionContentHandler != null )
-      m_exceptionContentHandler.setDocumentLocator( locator );
-  }
-
-  /**
-   * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
-   */
-  public void skippedEntity( String name )
-  {
-    if( m_exceptionContentHandler != null )
-      m_exceptionContentHandler.skippedEntity( name );
-  }
-
-  private String getSchemalocation( Attributes atts )
-  {
-    for( int i = 0; i < atts.getLength(); i++ )
-    {
-      final QName attQName = new QName( atts.getURI( i ), atts.getLocalName( i ) );
-      if( XSD_SCHEMALOCATION.equals( attQName ) )
-      {
-        final String value = atts.getValue( i );
-        return value == null ? null : value.trim();
-      }
-    }
-    // no schemalocation found in attributes
-    return null;
-  }
-
-  public GMLSchema getGMLSchema( )
-  {
-    return m_gmlSchema;
   }
 
   public Feature getRootFeature( ) throws GMLException
   {
-    if( m_rootFeature != null )
-      return m_rootFeature;
+    if( m_rootFeature == null )
+      throw new GMLException( "Could not load GML, Root-Feature was not created." );
 
-    if( m_exceptionContentHandler != null )
-      throw new GMLException( m_errorBuffer.toString() );
-
-    throw new GMLException( "Could not load GML, Root-Feature was not created." );
+    return m_rootFeature;
   }
 
-  public String getSchemaLocationString( )
+  private static String idFromAttributes( final Attributes atts )
   {
-    return m_schemaLocationString;
+    final int id1 = atts.getIndex( NS.GML2, "fid" );
+    if( id1 != -1 )
+      return atts.getValue( id1 );
+
+    final int id2 = atts.getIndex( "fid" );
+    if( id2 != -1 )
+      return atts.getValue( id2 );
+
+    final int id3 = atts.getIndex( NS.GML2, "id" );
+    if( id3 != -1 )
+      return atts.getValue( id3 );
+
+    final int id4 = atts.getIndex( "id" );
+    if( id4 != -1 )
+      return atts.getValue( id4 );
+
+    return null;
   }
 
-  public URL getContext( )
+  /**
+   * @see org.kalypso.gmlschema.types.UnMarshallResultEater#eat(java.lang.Object)
+   */
+  // TODO: we need here the full information to recall endElement here
+  // maybe even get a flag if we should all endElement?
+  @SuppressWarnings("unchecked")
+  public void unmarshallSuccesful( final Object value )
   {
-    return m_context;
+    m_xmlReader.setContentHandler( this );
+
+    setDelegate( null );
+
+    try
+    {
+      // TODO: is this always correct? What about empty elements of list properties?
+      if( value == null )
+        return;
+
+      if( m_scopeProperty.isList() )
+      {
+        final List<Object> list = (List<Object>) m_scopeFeature.getProperty( m_scopeProperty );
+        list.add( value );
+      }
+      else
+        m_scopeFeature.setProperty( m_scopeProperty, value );
+    }
+    finally
+    {
+      // This should not be necessary, the inner content handler parses too much at the moment!
+      // equivalent to endElement( -property-qname- ); but we do not have that information at the moment
+      m_scopeProperty = null;
+    }
+  }
+
+  /**
+   * @see org.xml.sax.helpers.DefaultHandler#setDocumentLocator(org.xml.sax.Locator)
+   */
+  @Override
+  public void setDocumentLocator( final Locator locator )
+  {
+    super.setDocumentLocator( locator );
   }
 }

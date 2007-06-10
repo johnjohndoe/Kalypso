@@ -170,7 +170,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         }
       }
 
-      envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+      setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) ) );
     }
     catch( final GM_Exception e )
     {
@@ -182,7 +182,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    */
   private void calculateBoundary( )
   {
-    m_boundary = new GM_CurveBoundary_Impl( getCoordinateSystem(), getStartPoint().getPosition(), getEndPoint().getPosition() );
+    setBoundary( new GM_CurveBoundary_Impl( getCoordinateSystem(), getStartPoint().getPosition(), getEndPoint().getPosition() ) );
   }
 
   /**
@@ -201,7 +201,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
       final double length = getLength();
       if( length == 0 )
       {
-        centroid = new GM_Point_Impl( positions[0], getCoordinateSystem() );
+        setCentroid( new GM_Point_Impl( positions[0], getCoordinateSystem() ) );
         return;
       }
       final double halfWay = length / 2d;
@@ -220,7 +220,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         }
       }
       final GM_Position newPos = GeometryUtilities.createGM_PositionAt( positions[i - 1], positions[i], halfWay - coveredDistance );
-      centroid = new GM_Point_Impl( newPos, getCoordinateSystem() );
+      setCentroid( new GM_Point_Impl( newPos, getCoordinateSystem() ) );
     }
     catch( final Exception e )
     {
@@ -279,7 +279,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    */
   public GM_CurveBoundary getCurveBoundary( )
   {
-    return (GM_CurveBoundary) m_boundary;
+    return (GM_CurveBoundary) getBoundary();
   }
 
   /**
@@ -443,9 +443,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
       {
         final GM_Position[] gmps = getCurveSegmentAt( i ).getPositions();
 
-        for( int j = 0; j < gmps.length; j++ )
+        for( final GM_Position element : gmps )
         {
-          tmp[k++] = gmps[j];
+          tmp[k++] = element;
         }
       }
     }
@@ -716,9 +716,9 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
       {
         final GM_Position[] pos = getCurveSegmentAt( i ).getPositions();
 
-        for( int j = 0; j < pos.length; j++ )
+        for( final GM_Position element : pos )
         {
-          pos[j].translate( d );
+          element.translate( d );
         }
       }
     }
@@ -806,8 +806,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   {
     String ret = null;
     ret = "segments = " + m_segments + "\n";
-    ret += ("envelope = " + envelope + "\n");
+    ret += ("envelope = " + getEnvelope() + "\n");
     return ret;
   }
-
 }

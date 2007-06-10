@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import java.util.List;
 
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

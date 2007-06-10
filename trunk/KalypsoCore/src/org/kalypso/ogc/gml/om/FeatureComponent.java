@@ -43,11 +43,11 @@ package org.kalypso.ogc.gml.om;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.swe.RepresentationType;
 import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.phenomenon.FeaturePhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.AbstractComponent;
-import org.kalypso.ogc.swe.RepresentationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;

@@ -51,7 +51,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
+import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypso.gmlschema.types.XsdBaseContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
@@ -128,7 +128,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {

@@ -46,10 +46,10 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.jaxb.TemplateUtilitites;
-import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;

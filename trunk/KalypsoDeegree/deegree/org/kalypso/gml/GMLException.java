@@ -41,7 +41,9 @@
 package org.kalypso.gml;
 
 /**
- * @author doemming
+ * Exception for GML parsing related stuff.
+ * 
+ * @author Andreas von Dömming
  */
 public class GMLException extends Exception
 {
@@ -50,17 +52,17 @@ public class GMLException extends Exception
     super();
   }
 
-  public GMLException( String message )
+  public GMLException( final String message )
   {
     super( message );
   }
 
-  public GMLException( String message, Throwable cause )
+  public GMLException( final String message, final Throwable cause )
   {
     super( message, cause );
   }
 
-  public GMLException( Throwable cause )
+  public GMLException( final Throwable cause )
   {
     super( cause );
   }

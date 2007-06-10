@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -16,12 +17,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -131,14 +129,14 @@ public class Feature_Impl extends AbstractFeature implements Feature
     final IPropertyType[] ftp = m_featureType.getProperties();
     for( final IPropertyType element : ftp )
     {
-      if( GeometryUtilities.isGeometry( element ) )
+      if( element instanceof IValuePropertyType && ((IValuePropertyType) element).isGeometry() )
       {
         final Object o = getProperty( element );
         if( o == null )
         {
           continue;
         }
-        if( o instanceof List )
+        if( element.isList() )
         {
           result.addAll( (List) o );
         }
@@ -218,7 +216,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
     final IPropertyType property = m_featureType.getProperties( pos );
     final Object prop = getProperty( property );
-    if( prop instanceof List )
+    if( property.isList() )
     {
       final List props = (List) prop;
       return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
@@ -246,33 +244,16 @@ public class Feature_Impl extends AbstractFeature implements Feature
   {
     GM_Envelope env = null;
     final GM_Object[] geoms = getGeometryProperties();
-    for( int i = 0; i < geoms.length; i++ )
+    for( final GM_Object geometry : geoms )
     {
-      if( !(geoms[i] instanceof GM_Point) )
+      final GM_Envelope geomEnv = GeometryUtilities.getEnvelope( geometry );
+      if( env == null )
       {
-        if( env == null )
-        {
-          env = geoms[i].getEnvelope();
-        }
-        else
-        {
-          env = env.getMerged( geoms[i].getEnvelope() );
-        }
+        env = geomEnv;
       }
       else
       {
-        final GM_Position pos = ((GM_Point) geoms[i]).getPosition();
-// System.out.println(geoms[i].getClass().getName());
-// System.out.println("POS:"+pos);
-        final GM_Envelope env2 = GeometryFactory.createGM_Envelope( pos, pos );
-        if( env == null )
-        {
-          env = env2;
-        }
-        else
-        {
-          env = env.getMerged( env2 );
-        }
+        env = env.getMerged( geomEnv );
       }
     }
     m_envelope = env;

@@ -102,9 +102,9 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   public GM_MultiPoint_Impl( final GM_Point[] gmp )
   {
     super( null );
-    for( int i = 0; i < gmp.length; i++ )
+    for( final GM_Point element : gmp )
     {
-      m_aggregate.add( gmp[i] );
+      m_aggregate.add( element );
     }
 
   }
@@ -119,9 +119,9 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   {
     super( crs );
 
-    for( int i = 0; i < gmp.length; i++ )
+    for( final GM_Point element : gmp )
     {
-      m_aggregate.add( gmp[i] );
+      m_aggregate.add( element );
     }
   }
 
@@ -225,7 +225,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       }
     }
 
-    envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) ) );
   }
 
   /**
@@ -249,7 +249,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
         }
       }
 
-      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
+      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
     }
     catch( final Exception ex )
     {

@@ -222,7 +222,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
         for( final FeatureChange fc : fcs )
         {
-          final Object newValue = org.kalypso.gmlschema.Mapper.mapJavaValueToXml( fc.getNewValue() );
+          final Object newValue = org.kalypso.gmlschema.xml.Mapper.mapJavaValueToXml( fc.getNewValue() );
           metadata.put( fc.getProperty(), newValue );
         }
 

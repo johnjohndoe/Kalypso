@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -74,10 +75,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Object
+public interface GM_Object extends IAdaptable
 {
-  /* #CS_CoordinateSystem lnkCS_CoordinateSystem; */
-
   /**
    * returns the bounding box of a geometry
    */

@@ -63,6 +63,10 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -147,7 +151,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     // extracting surface patches from the boundary
     super( boundary.getCoordinateSystem(), orientation );
 
-    m_boundary = boundary;
+    setBoundary( boundary );
   }
 
   /**
@@ -155,7 +159,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   private void calculateCentroidArea( )
   {
-    centroid = m_patch.getCentroid();
+    setCentroid( m_patch.getCentroid() );
     area = m_patch.getArea();
   }
 
@@ -180,7 +184,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
         }
       }
 
-      m_boundary = new GM_SurfaceBoundary_Impl( ext, inn );
+      setBoundary( new GM_SurfaceBoundary_Impl( ext, inn ) );
     }
     catch( final Exception e )
     {
@@ -198,8 +202,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     calculateEnvelope();
     calculateBoundary();
     setValid( true );
-    // TODO ???
-    centroid = GeometryUtilities.guessPointOnSurface( this, centroid, 3 );
+    setCentroid( GeometryUtilities.guessPointOnSurface( this, getCentroid(), 3 ) );
   }
 
   /**
@@ -207,7 +210,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   private void calculateEnvelope( )
   {
-    envelope = m_patch.getEnvelope();
+    setEnvelope( m_patch.getEnvelope() );
   }
 
   /**
@@ -241,7 +244,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       calculateParam();
     }
-    return (GM_SurfaceBoundary) m_boundary;
+    return (GM_SurfaceBoundary) getBoundary();
   }
 
   /**
@@ -332,11 +335,11 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
       return false;
     }
 
-    if( envelope == null )
+    if( getEnvelope() == null )
     {
       calculateEnvelope();
     }
-    if( !envelope.equals( ((GM_Object) other).getEnvelope() ) )
+    if( !getEnvelope().equals( ((GM_Object) other).getEnvelope() ) )
     {
       return false;
     }
@@ -406,18 +409,18 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     final GM_Position[] ext = m_patch.getExteriorRing();
     final GM_Position[][] inn = m_patch.getInteriorRings();
 
-    for( int j = 0; j < ext.length; j++ )
+    for( final GM_Position element : ext )
     {
-      ext[j].translate( d );
+      element.translate( d );
     }
 
     if( inn != null )
     {
-      for( int j = 0; j < inn.length; j++ )
+      for( final GM_Position[] element : inn )
       {
-        for( int k = 0; k < inn[j].length; k++ )
+        for( final GM_Position element2 : element )
         {
-          inn[j][k].translate( d );
+          element2.translate( d );
         }
       }
     }
@@ -440,7 +443,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       calculateParam();
     }
-    return m_patch.contains( gmo ) || m_boundary.intersects( gmo );
+    return m_patch.contains( gmo ) || getBoundary().intersects( gmo );
   }
 
   /**
@@ -467,7 +470,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       calculateParam();
     }
-    return m_boundary.contains( gmo );
+    return getBoundary().contains( gmo );
   }
 
   /**
@@ -478,7 +481,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   public String toString( )
   {
     String ret = getClass().getName() + ":\n";
-    ret += ("envelope = " + envelope + "\n");
+    ret += ("envelope = " + getEnvelope() + "\n");
     try
     {
       ret += " CRS: " + getCoordinateSystem().getName() + "\n";
@@ -500,5 +503,35 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     m_patch.invalidate();
 
     super.invalidate();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == GM_Curve.class )
+    {
+      {
+        {
+          final GM_SurfacePatch surfacePatchAt = m_patch;
+          final GM_Position[] exteriorRing = surfacePatchAt.getExteriorRing();
+          try
+          {
+            return GeometryFactory.createGM_Curve( exteriorRing, getCoordinateSystem() );
+          }
+          catch( final GM_Exception e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e );
+            KalypsoDeegreePlugin.getDefault().getLog().log( status );
+            return null;
+          }
+        }
+      }
+    }
+
+    return super.getAdapter( adapter );
   }
 }
