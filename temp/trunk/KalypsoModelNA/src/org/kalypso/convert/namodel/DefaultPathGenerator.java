@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.ogc.gml.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

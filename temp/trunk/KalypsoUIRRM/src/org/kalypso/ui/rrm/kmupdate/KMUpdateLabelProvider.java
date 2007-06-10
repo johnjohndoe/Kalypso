@@ -46,9 +46,9 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
