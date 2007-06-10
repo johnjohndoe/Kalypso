@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;

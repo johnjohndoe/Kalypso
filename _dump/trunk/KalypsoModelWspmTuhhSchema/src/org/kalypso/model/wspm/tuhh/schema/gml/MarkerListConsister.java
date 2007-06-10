@@ -63,7 +63,7 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
    */
   public void init( final GMLWorkspace workspace )
   {
-    recreateLists( workspace );
+// recreateLists( workspace );
   }
 
   /**
@@ -108,7 +108,8 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
         final TuhhReach tuhhReach = new TuhhReach( reachFeatures[i] );
         tuhhReach.recreateMarkerList();
       }
-      // TODO: generate also event for FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE and hand over changed features
+      // TODO: generate also event for FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE and hand over changed
+      // features
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reachFeatures, null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
   }
