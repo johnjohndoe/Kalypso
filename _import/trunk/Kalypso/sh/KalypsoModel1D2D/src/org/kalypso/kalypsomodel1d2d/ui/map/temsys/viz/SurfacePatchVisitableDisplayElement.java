@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Area;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
@@ -55,7 +52,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
@@ -78,9 +74,9 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class SurfacePatchVisitableDisplayElement implements DisplayElementDecorator, SurfacePatchVisitor
 {
-  private IElevationColorModel/* SimpleElevationColorModel */colorModel;
+  private IElevationColorModel colorModel;
 
-  private NativeTerrainElevationModelWrapper m_elevationModel;
+  private final NativeTerrainElevationModelWrapper m_elevationModel;
 
   private boolean isHighlighted = false;
 
@@ -90,32 +86,18 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
 
   private SurfacePatchVisitable/* ASCTerrainElevationModel */ascElevationModel;
 
-  private Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
+  private final Symbolizer defaultSymbolizer = new PolygonSymbolizer_Impl();
 
   private DisplayElement m_decorated;
 
   private GeoTransform projection;
 
-  private SurfacePatchVisitable hmoTerrain;
-  private ColorModelIntervalSingleton sampleColorModel;
-  private GM_Position[] ex;
- 
-
-  private ArrayList<GM_Position[]> triangleList;
-
-  private List<GM_Surface> name;
-//  List<GM_Surface> toDivide = new ArrayList<GM_Surface>();
-//  List<GM_Surface> notToDivide = new ArrayList<GM_Surface>();
-
-  
-
-  public SurfacePatchVisitableDisplayElement( NativeTerrainElevationModelWrapper elevationModel )
+  public SurfacePatchVisitableDisplayElement( final NativeTerrainElevationModelWrapper elevationModel )
   {
-    triangleList = new ArrayList<GM_Position[]>();
     Assert.throwIAEOnNullParam( elevationModel, "elevationModel" );
-    
+
     m_elevationModel = elevationModel;
-    IElevationProvider elevationProvider = elevationModel.getElevationProvider();
+    final IElevationProvider elevationProvider = elevationModel.getElevationProvider();
     // TODO continue
     if( elevationProvider instanceof SurfacePatchVisitable )
     {
@@ -128,14 +110,12 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     {
       throw new RuntimeException( "Can only handle asc ele model:" + elevationProvider );
     }
-    //divider = new TriangleDivider((colorModel.getElevationMinMax()[1]-colorModel.getElevationMinMax()[0]) /colorModel.getColorIndex());
-    
   }
 
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
    */
-  public boolean doesScaleConstraintApply( double scale )
+  public boolean doesScaleConstraintApply( final double scale )
   {
     if( m_decorated != null )
     {
@@ -210,7 +190,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
    */
-  public void setHighlighted( boolean highlighted )
+  public void setHighlighted( final boolean highlighted )
   {
     if( m_decorated != null )
     {
@@ -222,7 +202,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
-  public void setSelected( boolean selected )
+  public void setSelected( final boolean selected )
   {
     if( m_decorated != null )
     {
@@ -231,8 +211,8 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     this.isSelected = selected;
   }
 
-  public void paint( Graphics g, @SuppressWarnings("hiding")
-  GeoTransform projection )
+  public void paint( final Graphics g, @SuppressWarnings("hiding")
+  final GeoTransform projection )
   {
     if( m_decorated != null )
     {
@@ -243,11 +223,10 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       // TODO Patrice try to get the current paint box
       this.graphics = g;
       this.projection = projection;
-      ascElevationModel.acceptSurfacePatches( projection.getSourceRect(),// ascElevationModel.getBoundingBox(),
-      this);
+      ascElevationModel.acceptSurfacePatches( projection.getSourceRect(), this );
 
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
@@ -262,7 +241,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
   private Area calcTargetCoordinates( @SuppressWarnings("hiding")
-  GeoTransform projection, GM_Surface surface ) throws Exception
+  final GeoTransform projection, final GM_Surface surface ) throws Exception
   {
     final PolygonSymbolizer sym = getSymbolizer();
     final Stroke stroke = sym.getStroke();
@@ -281,7 +260,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
       final Area areaouter = areaFromRing( projection, width, ex );
       if( inner != null )
       {
-        for( GM_Position[] innerRing : inner )
+        for( final GM_Position[] innerRing : inner )
         {
           if( innerRing != null )
             areaouter.subtract( areaFromRing( projection, width, innerRing ) );
@@ -290,7 +269,7 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
 
       return areaouter;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       Debug.debugException( e, "" );
     }
@@ -298,21 +277,17 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     return null;
   }
 
-  
-  public static final Area areaFromRing( 
-                                GeoTransform projection, 
-                                float width, 
-                                final GM_Position[] ex )
+  public static final Area areaFromRing( final GeoTransform projection, final float width, final GM_Position[] ex )
   {
     final int[] x = new int[ex.length];
     final int[] y = new int[ex.length];
 
     int k = 0;
-    for( int i = 0; i < ex.length; i++ )
+    for( final GM_Position element : ex )
     {
-      GM_Position position = projection.getDestPoint( ex[i] );
-      int xx = (int) (position.getX() + 0.5);
-      int yy = (int) (position.getY() + 0.5);
+      final GM_Position position = projection.getDestPoint( element );
+      final int xx = (int) (position.getX() + 0.5);
+      final int yy = (int) (position.getY() + 0.5);
 
       if( k > 0 && k < ex.length - 1 )
       {
@@ -335,47 +310,9 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     return new Area( polygon );
   }
 
-  public static final double distance( double x1, double y1, double x2, double y2 )
+  public static final double distance( final double x1, final double y1, final double x2, final double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
-  }
-
-  /**
-   * renders one surface to the submitted graphic context considering the also submitted projection
-   */
-  private void drawPolygon( Graphics gg, Area area ) throws FilterEvaluationException
-  {
-    Graphics2D g2d = (Graphics2D) gg;
-    PolygonSymbolizer sym = getSymbolizer();
-    org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
-    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
-
-    final Feature feature = getFeature();
-    // only draw filled polygon, if Fill-Element is given
-    if( fill != null )
-    {
-      double opacity = fill.getOpacity( feature );
-      // is completly transparent
-      // if not fill polygon
-      if( opacity > 0.01 )
-      {
-        Color color = fill.getFill( feature );
-        int alpha = (int) Math.round( opacity * 255 );
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
-
-        try
-        {
-
-          g2d.fill( area );
-        }
-        catch( Exception e )
-        {
-          //  
-        }
-      }
-    }
   }
 
   private PolygonSymbolizer getSymbolizer( )
@@ -384,13 +321,13 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
     return (PolygonSymbolizer) defaultSymbolizer;
   }
 
-  public static final SurfacePatchVisitableDisplayElement createDisplayElement( Feature feature )
+  public static final SurfacePatchVisitableDisplayElement createDisplayElement( final Feature feature )
   {
     if( feature == null )
     {
       return null;
     }
-    ITerrainElevationModel terrainElevationModel = (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
+    final ITerrainElevationModel terrainElevationModel = (ITerrainElevationModel) feature.getAdapter( ITerrainElevationModel.class );
     if( terrainElevationModel instanceof NativeTerrainElevationModelWrapper )
     {
       return new SurfacePatchVisitableDisplayElement( (NativeTerrainElevationModelWrapper) terrainElevationModel );
@@ -413,55 +350,49 @@ public class SurfacePatchVisitableDisplayElement implements DisplayElementDecora
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
-  public void setDecorated( DisplayElement decorated )
+  public void setDecorated( final DisplayElement decorated )
   {
     m_decorated = decorated;
   }
-
-
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor#accept(org.kalypsodeegree.model.geometry.GM_Surface,
    *      double)
    */
-  public boolean visit( GM_Surface surface, double elevationSample )
-  { 
-    paintThisSurface(surface,elevationSample);
+  public boolean visit( final GM_Surface surface, final double elevationSample )
+  {
+    paintThisSurface( surface, elevationSample );
     return true;
   }
-  
-  
-  public GM_Position[] getGM_PositionForThisSurface(GM_Surface surface) {
-    
+
+  public GM_Position[] getGM_PositionForThisSurface( final GM_Surface surface )
+  {
+
     GM_Position[] pos = null;
-    GM_SurfacePatch patch;    
+    GM_SurfacePatch patch;
     try
     {
       patch = surface.getSurfacePatchAt( 0 );
-      pos = patch.getExteriorRing();    
-    }   
-    catch( GM_Exception e1 )
+      pos = patch.getExteriorRing();
+    }
+    catch( final GM_Exception e1 )
     {
       e1.printStackTrace();
-    }    
+    }
     return pos;
   }
 
-  private void paintThisSurface(GM_Surface _surface, double elevation) {
+  private void paintThisSurface( final GM_Surface _surface, final double elevation )
+  {
     try
     {
-      Area area = calcTargetCoordinates( this.projection, _surface);
+      final Area area = calcTargetCoordinates( this.projection, _surface );
       graphics.setColor( colorModel.getColor( elevation ) );
       ((Graphics2D) graphics).fill( area );
-      
-//      java.awt.Stroke bs2 = new BasicStroke( 0 );
-//      ((Graphics2D) graphics).setStroke( bs2 );
-//      ((Graphics2D) graphics).draw( area );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-  }  
+  }
 }
-

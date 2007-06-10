@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -794,12 +795,11 @@ public class SegmentData
       /* convert current bankLine in Curve */
       final Feature bankFeature = bankEntry.getKey();
       final CreateChannelData.SIDE side = bankEntry.getValue();
-      
+
       final GM_MultiCurve multiline = (GM_MultiCurve) bankFeature.getDefaultGeometryProperty();
-      if (multiline.getSize() > 1)
+      if( multiline.getSize() > 1 )
         return;
       final GM_Curve bankCurve = multiline.getCurveAt( 0 );
-      
 
       /* convert bank curve into LineString */
       try
@@ -1461,9 +1461,15 @@ public class SegmentData
     stroke.setStroke( color );
     symb.setStroke( stroke );
 
-    DisplayElement de;
-    de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
-    de.paint( g, mapPanel.getProjection() );
+    try
+    {
+      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
+      de.paint( g, mapPanel.getProjection() );
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      e.printStackTrace();
+    }
 
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );

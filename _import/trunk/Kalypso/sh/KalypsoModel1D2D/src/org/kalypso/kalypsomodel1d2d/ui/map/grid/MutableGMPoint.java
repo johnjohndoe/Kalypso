@@ -57,15 +57,13 @@ import org.opengis.cs.CS_CoordinateSystem;
 class MutableGMPoint implements GM_Point
 {
   private GM_Point point;
-  
-  public MutableGMPoint( GM_Point point)
+
+  public MutableGMPoint( final GM_Point point )
   {
-    Assert.throwIAEOnNull( 
-                      point, 
-                      "Param point must not be null" );
-    this.point=point;
+    Assert.throwIAEOnNull( point, "Param point must not be null" );
+    this.point = point;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Point#getAsArray()
    */
@@ -109,7 +107,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#contains(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public boolean contains( GM_Object gmo )
+  public boolean contains( final GM_Object gmo )
   {
     return point.contains( gmo );
   }
@@ -117,7 +115,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#contains(org.kalypsodeegree.model.geometry.GM_Position)
    */
-  public boolean contains( GM_Position position )
+  public boolean contains( final GM_Position position )
   {
     return point.contains( position );
   }
@@ -125,7 +123,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#difference(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public GM_Object difference( GM_Object gmo )
+  public GM_Object difference( final GM_Object gmo )
   {
     return gmo.difference( gmo );
   }
@@ -133,7 +131,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#distance(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public double distance( GM_Object gmo )
+  public double distance( final GM_Object gmo )
   {
     return point.distance( gmo );
   }
@@ -149,7 +147,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#getBuffer(double)
    */
-  public GM_Object getBuffer( double distance )
+  public GM_Object getBuffer( final double distance )
   {
     return point.getBuffer( distance );
   }
@@ -205,7 +203,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#intersection(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public GM_Object intersection( GM_Object gmo )
+  public GM_Object intersection( final GM_Object gmo )
   {
     return point.intersection( gmo );
   }
@@ -213,7 +211,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#intersects(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public boolean intersects( GM_Object gmo )
+  public boolean intersects( final GM_Object gmo )
   {
     return point.intersects( gmo );
   }
@@ -235,9 +233,10 @@ class MutableGMPoint implements GM_Point
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#isWithinDistance(org.kalypsodeegree.model.geometry.GM_Object, double)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#isWithinDistance(org.kalypsodeegree.model.geometry.GM_Object,
+   *      double)
    */
-  public boolean isWithinDistance( GM_Object gmo, double distance )
+  public boolean isWithinDistance( final GM_Object gmo, final double distance )
   {
     return point.isWithinDistance( gmo, distance );
   }
@@ -245,7 +244,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#setCoordinateSystem(org.opengis.cs.CS_CoordinateSystem)
    */
-  public void setCoordinateSystem( CS_CoordinateSystem crs )
+  public void setCoordinateSystem( final CS_CoordinateSystem crs )
   {
     point.setCoordinateSystem( crs );
   }
@@ -253,7 +252,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#translate(double[])
    */
-  public void translate( double[] d )
+  public void translate( final double[] d )
   {
     point.translate( d );
   }
@@ -261,16 +260,16 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#union(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public GM_Object union( GM_Object gmo )
+  public GM_Object union( final GM_Object gmo )
   {
     return point.union( gmo );
   }
-  
-  public void setPoint(GM_Point point)
+
+  public void setPoint( final GM_Point point )
   {
-    this.point=point;
+    this.point = point;
   }
-  
+
   /**
    * @see java.lang.Object#clone()
    */
@@ -278,5 +277,13 @@ class MutableGMPoint implements GM_Point
   public Object clone( ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( final Class adapter )
+  {
+    return null;
   }
 }

@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -364,6 +365,10 @@ public class DragBankLineWidget extends AbstractWidget
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      e.printStackTrace();
     }
 
   }

@@ -73,6 +73,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
 {
 
   public static final double[][] NO_INTERIOR = {};
+
   public static final GM_Position[][] NO_INTERIOR_POS = {};
 
   private double minElevation;
@@ -83,21 +84,21 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
 
   private Quadtree triangles;
 
-  private Object regionOfInterest;
+  private final Object regionOfInterest;
 
-  private CS_CoordinateSystem crs = CRS_GAUSS_KRUEGER;
+  private final CS_CoordinateSystem crs = CRS_GAUSS_KRUEGER;
 
-  public HMOTerrainElevationModel( URL hmoFileURL, GM_Envelope regionOfInterest ) throws IOException, ParseException
+  public HMOTerrainElevationModel( final URL hmoFileURL, final GM_Envelope regionOfInterest ) throws IOException, ParseException
   {
     this.regionOfInterest = regionOfInterest;
     parseFile( hmoFileURL );
   }
 
-  private final void parseFile( URL hmoFileURL ) throws IOException, ParseException
+  private final void parseFile( final URL hmoFileURL ) throws IOException, ParseException
   {
-    HMOReader hmoReader = new HMOReader( new GeometryFactory() );
-    Reader r = new InputStreamReader( hmoFileURL.openStream() );
-    LinearRing[] rings = hmoReader.read( r );
+    final HMOReader hmoReader = new HMOReader( new GeometryFactory() );
+    final Reader r = new InputStreamReader( hmoFileURL.openStream() );
+    final LinearRing[] rings = hmoReader.read( r );
 
     this.triangles = new Quadtree();
 
@@ -108,11 +109,11 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
 
     // System.out.println("Parsing:"+rings.length);
     union = rings[0].getEnvelopeInternal();
-    for( LinearRing ring : rings )
+    for( final LinearRing ring : rings )
     {
       // System.out.println("ring:"+ring);
       triangleData = new TriangleData( ring );
-      Envelope envelopeInternal = ring.getEnvelopeInternal();
+      final Envelope envelopeInternal = ring.getEnvelopeInternal();
       triangles.insert( envelopeInternal, triangleData );
       //
       // set min
@@ -147,7 +148,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
       union.getMaxY()// maxy
       );
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
       return null;
@@ -166,15 +167,15 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
-  public double getElevation( GM_Point location )
+  public double getElevation( final GM_Point location )
   {
     try
     {
-      double x = location.getX();
-      double y = location.getY();
-      Point jtsPoint = (Point) JTSAdapter.export( location );
-      Envelope searchEnv = new Envelope( x, x, y, y );
-      List<TriangleData> list = triangles.query( searchEnv );
+      final double x = location.getX();
+      final double y = location.getY();
+      final Point jtsPoint = (Point) JTSAdapter.export( location );
+      final Envelope searchEnv = new Envelope( x, x, y, y );
+      final List<TriangleData> list = triangles.query( searchEnv );
       if( list.isEmpty() )
       {
         System.out.println( "List is empty" );
@@ -183,7 +184,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
       else
       {
         // System.out.println("Selected triange liste size="+list.size());
-        for( TriangleData data : list )
+        for( final TriangleData data : list )
         {
           if( data.contains( jtsPoint ) )
           {
@@ -194,7 +195,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
         return Double.NaN;// ((TriangleData)list.get( 0 )).getCenterElevation();
       }
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       throw new RuntimeException( "Error while getting the elevation", th );
     }
@@ -204,18 +205,19 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
   {
-    
+
     Assert.throwIAEOnNullParam( envToVisit, "envToVisit" );
     Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" );
-    Coordinate max = JTSAdapter.export( envToVisit.getMax() );
-    Coordinate min = JTSAdapter.export( envToVisit.getMin() );
-    Envelope jtsEnv = new Envelope( min, max );
-    List triToVisit = triangles.query( jtsEnv );
-    for( Object tri : triToVisit )
+    // TODO; export the whole env at once
+    final Coordinate max = JTSAdapter.export( envToVisit.getMax() );
+    final Coordinate min = JTSAdapter.export( envToVisit.getMin() );
+    final Envelope jtsEnv = new Envelope( min, max );
+    final List triToVisit = triangles.query( jtsEnv );
+    for( final Object tri : triToVisit )
     {
-      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor);
+      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor );
     }
   }
 
@@ -240,7 +242,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#setCoordinateSystem(java.lang.String)
    */
-  public void setCoordinateSystem( String coordinateSystem )
+  public void setCoordinateSystem( final String coordinateSystem )
   {
     // TODO
   }
@@ -248,7 +250,5 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#getDiscretisationInterval()
    */
-
-
 
 }

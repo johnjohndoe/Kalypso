@@ -72,6 +72,8 @@ public class CombineModells extends TestCase
 
   }
 
+  // TODO: this seems not to be used any more
+  // if we delete this we may get rid of the id-map for the gml-writer...
   public void combineIt( ) throws Exception
   {
     final URL baseModel = getClass().getResource( "resources/base.gml" );

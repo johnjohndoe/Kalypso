@@ -56,41 +56,39 @@ import com.vividsolutions.jts.geom.Polygon;
 
 class TriangleData implements SurfacePatchVisitable
 {
-  private LinearRing ring;
+  private final LinearRing ring;
 
-  private ITriangleAlgorithm _divider;
-  private Polygon polygon;
+  private final ITriangleAlgorithm _divider;
 
-  private double[] planeEquation;
+  private final Polygon polygon;
 
-  private double centerElevation;
-  private static int simple = 0;
+  private final double[] planeEquation;
 
-  public TriangleData( LinearRing ring )
-  {    
+  private final double centerElevation;
+
+  public TriangleData( final LinearRing ring )
+  {
     this.ring = ring;
     // Choice of the Triangle Division Algoritm
-    /*  1. */_divider = new TriangleFourDividerAlgorithm(ring);
-    /*  2. */ //_divider = new TriangleDivider(ring);
+    /* 1. */_divider = new TriangleFourDividerAlgorithm( ring );
+    /* 2. */// _divider = new TriangleDivider(ring);
     polygon = new Polygon( ring, null, ring.getFactory() );
-    Coordinate[] coords = ring.getCoordinates();
+    final Coordinate[] coords = ring.getCoordinates();
     planeEquation = calculateTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
   }
 
   /**
-   * Calculate Center Elevatation from an Array of Coordinates 
-   *  representing the GM_Surface
+   * Calculate Center Elevatation from an Array of Coordinates representing the GM_Surface
    */
-  private double calculateCenterElevation( Coordinate[] coords )
+  private double calculateCenterElevation( final Coordinate[] coords )
   {
-    double xCenter = (coords[0].x + coords[1].x + coords[2].x) / 3;
-    double yCenter = (coords[0].y + coords[1].y + coords[2].y) / 3;
+    final double xCenter = (coords[0].x + coords[1].x + coords[2].x) / 3;
+    final double yCenter = (coords[0].y + coords[1].y + coords[2].y) / 3;
     return computeZOfTrianglePlanePoint( xCenter, yCenter );
-
   }
 
-  public boolean contains( Point point )
+  public boolean contains( final Point point )
   {
     if( point == null )
     {
@@ -127,10 +125,10 @@ class TriangleData implements SurfacePatchVisitable
    * form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
    * 
    * @param coords
-   *          coordinate of 3 plane points
+   *            coordinate of 3 plane points
    * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
    */
-  public static final double[] calculateTrianglePlaneEquation( Coordinate[] coords )
+  public static final double[] calculateTrianglePlaneEquation( final Coordinate[] coords )
   {
     Assert.throwIAEOnNullParam( coords, "coords" );
     if( coords.length < 3 )
@@ -139,20 +137,20 @@ class TriangleData implements SurfacePatchVisitable
     }
 
     Coordinate coord = coords[0];
-    
-    double x1 = coord.x;
-    double y1 = coord.y;
-    double z1 = coord.z;
+
+    final double x1 = coord.x;
+    final double y1 = coord.y;
+    final double z1 = coord.z;
 
     coord = coords[1];
-    double x2 = coord.x;
-    double y2 = coord.y;
-    double z2 = coord.z;
+    final double x2 = coord.x;
+    final double y2 = coord.y;
+    final double z2 = coord.z;
 
     coord = coords[2];
-    double x3 = coord.x;
-    double y3 = coord.y;
-    double z3 = coord.z;
+    final double x3 = coord.x;
+    final double y3 = coord.y;
+    final double z3 = coord.z;
     if( z1 == z2 && z2 == z3 )
     {
       // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
@@ -163,8 +161,8 @@ class TriangleData implements SurfacePatchVisitable
       // build the equation Ax + By + Cz - D = 0
       double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
       double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
-      double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
-      double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
+      final double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+      final double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
 
       // C=-C;
       // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
@@ -176,14 +174,14 @@ class TriangleData implements SurfacePatchVisitable
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
   {
-     _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor);
+    _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor );
   }
 
   public double getMinElevation( )
   {
-    Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = ring.getCoordinates();
     double min = coordinates[0].z;
     if( min > coordinates[1].z )
     {
@@ -199,7 +197,7 @@ class TriangleData implements SurfacePatchVisitable
 
   public double getMaxElevation( )
   {
-    Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = ring.getCoordinates();
     double max = coordinates[0].z;
     if( max < coordinates[1].z )
     {
@@ -215,7 +213,7 @@ class TriangleData implements SurfacePatchVisitable
 
   public final double getMinX( )
   {
-    Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = ring.getCoordinates();
 
     double min = coordinates[0].x;
     if( min > coordinates[1].x )
@@ -232,7 +230,7 @@ class TriangleData implements SurfacePatchVisitable
 
   public final double getMinY( )
   {
-    Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] coordinates = ring.getCoordinates();
 
     double min = coordinates[0].y;
     if( min > coordinates[1].y )
@@ -248,7 +246,7 @@ class TriangleData implements SurfacePatchVisitable
 
   }
 
-  public double computeZOfTrianglePlanePoint( double x, double y )
+  public double computeZOfTrianglePlanePoint( final double x, final double y )
   {
     return planeEquation[0] * x + planeEquation[1] * y + planeEquation[2];
   }
@@ -257,6 +255,5 @@ class TriangleData implements SurfacePatchVisitable
   {
     return ring;
   }
-
 
 }

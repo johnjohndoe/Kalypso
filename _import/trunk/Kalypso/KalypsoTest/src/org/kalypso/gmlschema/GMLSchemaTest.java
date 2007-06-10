@@ -39,12 +39,13 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
-import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
-import org.kalypso.gmlschema.basics.GmlTreePrintVisitor;
-import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
+import org.kalypso.gmlschema.ui.GMLSchemaLabelProvider;
+import org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider;
+import org.kalypso.gmlschema.ui.GmlTreePrintVisitor;
+import org.kalypso.gmlschema.ui.ITreeContentProviderVisitor;
 import org.kalypso.test.TestUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
+
 
 /**
  * this test parses GML application schemas and produces a ASCII-Tree-output. this output is compared by validated

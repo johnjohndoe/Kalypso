@@ -59,6 +59,7 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -139,8 +140,15 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       final GM_Curve line = profile.getLine();
 
       final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
-      de.paint( g, getMapPanel().getProjection() );
+      try
+      {
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
+        de.paint( g, getMapPanel().getProjection() );
+      }
+      catch( final IncompatibleGeometryTypeException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
@@ -201,7 +209,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     for( final Feature feature : selectedBanks )
     {
       final GM_MultiCurve multiline = (GM_MultiCurve) feature.getDefaultGeometryProperty();
-      if (multiline.getSize() > 1)
+      if( multiline.getSize() > 1 )
         return;
       final GM_Curve line = multiline.getCurveAt( 0 );
 
@@ -216,8 +224,15 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       stroke.setStroke( color );
       symb.setStroke( stroke );
 
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
-      de.paint( g, getMapPanel().getProjection() );
+      try
+      {
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
+        de.paint( g, getMapPanel().getProjection() );
+      }
+      catch( final IncompatibleGeometryTypeException e )
+      {
+        e.printStackTrace();
+      }
 
       symb.setStroke( defaultstroke );
     }

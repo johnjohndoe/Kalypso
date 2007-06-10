@@ -52,6 +52,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -659,13 +660,19 @@ public class LinePointCollector
     // stroke.setDashArray( dArray );
     symb.setStroke( stroke );
 
-    final DisplayElement de;
-    de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-    de.paint( g, projection );
+    try
+    {
+      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+      de.paint( g, projection );
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );
-
   }
 
 }
