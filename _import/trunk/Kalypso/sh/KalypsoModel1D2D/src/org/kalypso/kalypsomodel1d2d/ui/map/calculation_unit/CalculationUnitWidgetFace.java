@@ -94,7 +94,6 @@ class CalculationUnitWidgetFace
   private Combo elementsCombo;
   private Combo actionsCombo;
   private Button goButton;
-  private Image goImage;
   private CalculationUnitAdministerComponent calcComplexSelectionGUI;
   public CalculationUnitWidgetFace( )
   {

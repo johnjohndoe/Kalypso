@@ -263,7 +263,7 @@ public class SelectedCalculationComponent
     optionsComposite.setLayout( new GridLayout(2,false));
     
     selectedProjectName = new Label(optionsComposite,SWT.RIGHT);
-    selectedProjectName.setText(" Project Title: " );
+    selectedProjectName.setText(" Berechnungseinheit: " );
     
     selectedProjField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
     selectedProjField.setEditable( false );

@@ -51,7 +51,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.dialogs.ImportExportWizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
@@ -67,9 +71,12 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryLineFromC
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Patrice Congo
@@ -279,8 +286,10 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  synchronized void doMenuAction( String text )
+    synchronized void doMenuAction( String text )
   {
+     final IFeatureWrapper2 boundaryFeature = (IFeatureWrapper2) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      
     if( text == null )
     {
       return;
@@ -295,10 +304,30 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
     else if( TXT_SET_BOUNDARY_CONDITION.equals( text ) )
     {
-// final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-// NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(null, null, null, null);
-// final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
-// wizardDialog.open();
+      final Display display = (Display) dataModel.getData(ICommonKeys.KEY_SELECTED_DISPLAY);
+      final Runnable runnable = new Runnable()
+      {
+        private CommandableWorkspace workspace;
+
+        public void run( )
+        {
+         //@ TODO Add two more parameters.
+           if (dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER) instanceof CommandableWorkspace)
+           {
+             workspace = (CommandableWorkspace) dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER);
+           }
+          NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
+                                            null,
+                                            workspace,
+                                            boundaryFeature.getWrappedFeature().getParent(),
+                                            boundaryFeature.getWrappedFeature().getParent().getParentRelation());
+          final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
+          wizardDialog.open();
+        }
+      };
+      display.syncExec( runnable );
+ 
+      
     }
 
     else if( TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL.equals( text ) )

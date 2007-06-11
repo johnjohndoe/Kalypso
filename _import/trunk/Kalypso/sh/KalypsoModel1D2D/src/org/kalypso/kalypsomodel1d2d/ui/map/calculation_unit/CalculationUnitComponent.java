@@ -42,7 +42,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
@@ -183,6 +185,12 @@ public class CalculationUnitComponent
       KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
       //commandTarget.postCommand( delCmd, null );
     }
+  }
+  
+  protected ILabelProvider getLabelProvider(Display display)
+  {    
+    return new CalculationUnitViewerLabelProvider(display);
+    
   }
   
 }

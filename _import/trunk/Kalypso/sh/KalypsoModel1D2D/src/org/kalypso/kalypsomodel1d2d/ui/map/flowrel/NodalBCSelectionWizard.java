@@ -94,7 +94,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     setWindowTitle( "Randbedingung definieren" );
-
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) );
   }
 

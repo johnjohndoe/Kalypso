@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -354,7 +355,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
     Table table = tableViewer.getTable();
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new ListLabelProvider( ) );
+    tableViewer.setLabelProvider( getLabelProvider(parent.getDisplay()) );
     table.setLinesVisible( true );
     table.setLayoutData( formData );
 
@@ -522,6 +523,13 @@ public class FeatureWrapperListEditor implements IButtonConstants
     tableViewer.setCellEditors( editors );
     tableViewer.setCellModifier( modifier );
     tableViewer.setColumnProperties( new String[]{"Name"} );
+  }
+
+
+  protected IBaseLabelProvider getLabelProvider(Display display)
+  {
+    
+    return null;
   }
 
   protected void deleteSelected( ) throws Exception
