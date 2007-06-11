@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    10 May 2007    8:03 pm
+C     Last change:  K     8 Jun 2007    6:21 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -1825,6 +1825,33 @@ CIPK JUN05
           ENDIF
  1400   CONTINUE
  1450 CONTINUE
+
+      !matrix in datei
+      if (nn >=201  .or. nn <= 220) then
+        WRITE(9919,*) 'Element ', nn, 'coef2nt'
+        WRITE(9919,'(6x,32(1x,i10))')
+     +       ( ( nbc (nop(nn,i), j), j=1, 4), i = 1,8)
+        do i = 1,32
+          if (MOD(i,4)/=0) then
+!            WRITE(*,*) i, MOD(i,4),
+!     +         1+(i-MOD(i,4))/ 4, nop(nn, 1+(i-MOD(i,4))/ 4)
+            WRITE(9919,'(i6,33(1x,f10.2))')
+     +       nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
+     +       (estifm(i,j), j=1, 32),
+     +       f(i)
+          ELSE
+!            WRITE(*,*) i, 4,
+!     +       i/4, nop(nn, i/4)
+            WRITE(9919,'(i6,33(1x,f10.2))')
+     +       nbc( nop(nn, i/4 ), 4),
+     +       (estifm(i,j), j=1, 32),f(i)
+          endif
+        end do
+        WRITE(9919,*)
+        WRITE(9919,*)
+      endif
+      !-
+
       RETURN
 
 CIPK JUN05
