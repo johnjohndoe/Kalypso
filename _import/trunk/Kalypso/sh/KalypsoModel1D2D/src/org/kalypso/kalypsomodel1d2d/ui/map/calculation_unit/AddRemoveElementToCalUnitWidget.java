@@ -361,16 +361,16 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
   public void paint( Graphics g )
   {
     super.paint( g );
-    DrawElements drawElements = new DrawElements();    
-    MapPanel mapPanel = getMapPanel();
-    Object selectedWraper = 
-      dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    if( selectedWraper instanceof ICalculationUnit2D )
-    {
-      drawElements.paint( 
-          g, 
-          mapPanel.getProjection(), 
-          (ICalculationUnit2D)selectedWraper );
-    }
+//    DrawElements drawElements = new DrawElements();    
+//    MapPanel mapPanel = getMapPanel();
+//    Object selectedWraper = 
+//      dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+//    if( selectedWraper instanceof ICalculationUnit2D )
+//    {
+//      drawElements.paint( 
+//          g, 
+//          mapPanel.getProjection(), 
+//          (ICalculationUnit2D)selectedWraper );
+//    }
   }  
 }

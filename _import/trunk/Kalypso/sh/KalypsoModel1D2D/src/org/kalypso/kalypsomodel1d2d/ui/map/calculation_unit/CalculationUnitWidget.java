@@ -62,13 +62,19 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.IDataModelCheck;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.views.map.MapView;
@@ -102,6 +108,26 @@ public class CalculationUnitWidget
   private String name;
   
   private String tooltip;
+  
+  private Model1d2dCalUnitTheme calUnitTheme;
+  
+  
+  private KeyBasedDataModelChangeListener calThemeUpdater =
+      new KeyBasedDataModelChangeListener()
+  {
+
+    public void dataChanged( String key, Object newValue )
+    {
+      if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+      {
+        calUnitTheme.setCalulationUnit( (ICalculationUnit) newValue );
+        KeyBasedDataModelUtil.repaintMapPanel( 
+                    dataModel, ICommonKeys.KEY_MAP_PANEL );
+      }
+    }
+    
+  };
+  
   
   /**
    * Prevents pop up menu to show
@@ -138,8 +164,9 @@ public class CalculationUnitWidget
     
 //    dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET, commandPoster );
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
+    IMapModell mapModell = mapPanel.getMapModell();
     IFEDiscretisationModel1d2d model1d2d =
-        UtilMap.findFEModelTheme( mapPanel.getMapModell() );
+        UtilMap.findFEModelTheme( mapModell );
     //TODO check model1d2d for null and do something
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
@@ -151,12 +178,15 @@ public class CalculationUnitWidget
     //command manager since it is use in the dirty pool object framework
     //the commandable workspace of the target theme is taken
     IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( 
-        mapPanel.getMapModell(), 
+        mapModell, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
     dataModel.setData( 
         ICommonKeys.KEY_COMMAND_MANAGER, 
         targetTheme.getWorkspace());
-    
+    calUnitTheme = 
+      new Model1d2dCalUnitTheme("Aktuelle CalUnit",mapModell);
+    mapModell.addTheme( calUnitTheme );
+    dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
     registerPopupBlocker( popupBlocker );
   }
   
@@ -375,9 +405,28 @@ public class CalculationUnitWidget
    */
   public void finish( )
   {
-    if( strategy != null )
+    try
     {
-      strategy.finish();
+      MapPanel mapPanel =
+        (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      IMapModell mapModell = mapPanel.getMapModell();
+      mapModell.removeTheme( calUnitTheme );
+    }
+    catch ( Exception e) 
+    {
+      e.printStackTrace();
+    }
+    
+    try
+    {
+      if( strategy != null )
+      {
+        strategy.finish();
+      }
+    }
+    catch (Exception e) 
+    {
+      e.printStackTrace();
     }
     unRegisterPopupBlocker( popupBlocker );
   }
