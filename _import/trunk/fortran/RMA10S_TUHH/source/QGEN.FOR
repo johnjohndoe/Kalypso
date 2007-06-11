@@ -1,4 +1,4 @@
-C     Last change:  K     6 Jun 2007    4:16 pm
+C     Last change:  K     8 Jun 2007   11:00 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -499,36 +499,21 @@ C-
         dx = cord (nc, 1) - cord (na, 1)
         dy = - (cord (nc, 2) - cord (na, 2) )
 
-!nis,dec06: deactivating, confuses!
-!        !pl     Anfang
-!        !       260199
-!        IF (dx.lt.0.00001.and.dx.gt. - 0.00001.and.
-!     +    dy.lt.0.00001.and.dy.gt. - 0.00001) then
-!          WRITE (Lout, * ) 'Nr.', 'Knoten m', 'Knoten c', 'Knoten a'
-!          WRITE (Lout, * ) '6.', nm, nc, na
-!        ENDIF
-!        !pl   Ende
-!-
-
+        !Calculate angle properties of Q-line
         alp = atan2 (dx, dy)
-        ! alp ist der Winkel zwischen x-Achse und Liniensehne
+        ! alp is angle between x-axis and chord of CCL
         ! thet=thet+alp
         if (ABS(thet) > 1.0e-4 .and. maxn == 1) then
           thet = thet + alp
         end if
-        ! thet ist jetzt der Winkel zwischen x-Achse und der Senkrechten
-        ! der Einstroemgeschwindigkeiten
+        ! thet is the angel between x-axis and the perpendicular of the CCL's chord
 
-        ! um Wellen laengs des Einstroemrandes zu vermeiden, die sich bei
-        ! wiederholtem durchlaufen dieser Option einstellen koennen, wird
-        ! hier erst einmal ein mittlerer Wasserspiegel am Einstroemrand
-        ! berechnet:
-
-        !nis,sep06,com: Initializing the Summed waterlevel
+        !Calculation of the average water level:
+        !Initializing
         waspi = 0.0
-        !nis,dec06: Getting the waterlevel at the continuity line
+
+        !subroutine gets average water level waspi for line j
         call getLineAverageWaterlevel(j,waspi)
-        !-
 
       !nis,sep06,testfileoutput:--------------------------------------------
         !calculation of real average waterlevel
@@ -561,21 +546,23 @@ C-
       !---------------------------------------------------------------------
 
 
-          ! Zur Verteilung der Fliessgeschwindigkeiten laengs eines Q-Randes
-          ! muss ein Proportionalitaetsfaktor 'suma' gebildet werden, der sich
-          ! aus der Integration der spezifischen Abfluesse ueber die gesamte
-          ! Linie ergibt:
+          !For the distribution calculation the Conveyance factor is used, to independently from energy-slope calculate
+          !the fraction of water the passes through node's influence range.
+          !The summed Conveyance factors (suma) will be divided by the required discharge Q. The module obtains the square root of the
+          !energy slope to then calculate the specific discharges at the node's by multiplying the individual Conveyance factor with
+          !this square root of the energy slope.
 
-          !nis,sep06,com: Initialize factor suma
+          !Initializations
+          !sum of Conveyance factors
           suma = 0.
-          !nis,sep06,com: Run over all nodes of CCL
           DO k = 1, lmt (j)
-            !nis,sep06,com: Initialize teillinie (Conveyance factors) and dxl (influenced segment length) for every node
+            !Conveyance factors
             teilline (k) = 0.0
+            !Influence ranges
             dxl (k) = 0.0
           END DO
 
-          !nis,sep06,com: For next loop the maximum value is the penultimate CORNER node
+          !For next loop the maximum value is the penultimate CORNER node
           maxL = lmt (j) - 2
 
 
@@ -596,44 +583,31 @@ C-
 
           !nis,sep06,com: Loop over all corner nodes till the last one of CCL to get the Conveyance factor of the single parts of line.
           DO 750 k = 1, maxL, 2
-            !nis,sep06,com: Get the first (na), midside (ncc), and endnode (nc) of the actual line segment
+            !Get the first (na), midside (ncc), and endnode (nc) of the actual line segment
             na  = line (j, k)
             ncc = line (j, k + 1)
             nc  = line (j, k + 2)
 
-            !nis,sep06,com: Calculate the x- and y- length of the actual CCL-segment
+            !Calculate the x- and y- lengths of the actual CCL-segment
             dx = cord (nc, 1) - cord (na, 1)
             dy = - (cord (nc, 2) - cord (na, 2) )
-            !nis,sep06,com: Calculate the sixth part of the Euklidean length of the actual CCL-segment, it's used for the Simpson Integration rule
+            !Calculate the sixth part of the Euklidean length of the actual CCL-segment, it's used for the Simpson Integration rule
             xl = sqrt (dx**2 + dy**2) * 1 / 6
 
-!pl         Anfang
-!           260199
-          IF (dx.lt.0.00001.and.dx.gt. -
-     +      0.00001.and.dy.lt.0.00001.and.dy.gt. - 0.00001) then
-            WRITE (Lout, * ) 'Nr.', 'Knoten m', 'Knoten c', 'Knoten a'
-            WRITE (Lout, * ) '7.', nm, nc, na
-          ENDIF
-!pl         Ende
-                                                                        
-            !nis,sep06,com: Calculate the direction angle of the actual CCL-segment
+            !Calculate the direction angle of the actual CCL-segment
             alp = atan2 (dx, dy)
 
-! uralt   d1=vel(3,na)                                                  
-! uralt   d3=vel(3,nc)                                                  
-! alt     d1=waspi-ao(na)-amec(k)                                       
-! alt     d3=waspi-ao(nc)-amec(k+2)                                     
-                                                                        
-            !nis,sep06,com: IDNOPT.eq.0, if only wetting and drying is applied
+            !no Marsh-algorithm
             IF (idnopt.eq.0) then
-              !nis,sep06,com: get the depth of the corner nodes of the actual CCL-segment
+              !Get water depth, negative numbers mean: dry nodes
               d1 = waspi - ao (na)
               d3 = waspi - ao (nc)
-            !nis,sep06,com: IDNOPT.ne.0, if marsh-algorithm is applied
+
+            !with Marsh-algorithm
             ELSE
-              !nis,sep06,com: Get the depth of the corner nodes of the actual CCL-segment
-              d1v = waspi - ao (na)
-              d3v = waspi - ao (nc)
+              !Get the depth of the corner nodes of the actual CCL-segment
+              d1v = waspi - ado (na)
+              d3v = waspi - ado (nc)
 
               !nis,sep06,com: Transform the depths to the marsh-algorithm-depths
 
@@ -647,6 +621,13 @@ C-
               CALL amf (d3v, d3, akp (nc), adt (nc), adb (nc), amec (k),
      +         d2, 1)
 !-
+
+              !nis,jun07,testing
+              !WRITE(*,*) 'na: ', na, d1v, d1
+              !WRITE(*,*) 'nc: ', nc, d3v, d3
+              !pause
+              !-
+
             ENDIF
 
       !WRITE(*,*) 'RB: '
@@ -691,7 +672,16 @@ C-
               CALL darcy (lambda, vecq, d1, ort(lineimat(j, k + 1), 15),
               !-
      +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
+
+              !Correct roughness, if there is a material factor
+              if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
+                lambda = lambda
+     +                 * (ort(lineimat(j,k+1), 12)**2 - 1.)
+     +                 * (akp(na) * adb(na) - d1)
+     +                 / (akp(na) * adb(na)) + 1.0
+              end if
               !-
+
               !nis,sep06,com: teilline represents the Conveyance factor of the element part.
               teilline(k) = teilline(k) + xl*(d1** (3./2.)) *
      +                      ((78.48/lambda)**0.5)
@@ -738,6 +728,15 @@ C-
               teilline (k + 1) = xl * 4 * (d2** (3. / 2.) ) *
      +                           ((78.48/lambda)**0.5)
 
+              !Correct roughness, if there is a material factor
+              if (idnopt /= 0 .and. d2 < akp(ncc) * adb(ncc)) then
+                lambda = lambda
+     +                 * (ort(lineimat(j,k+1), 12)**2 - 1.)
+     +                 * (akp(ncc) * adb(ncc) - d2)
+     +                 / (akp(ncc) * adb(ncc)) + 1.0
+              end if
+              !-
+
               !nis,dec06,testfileoutput--------------------------------------
               WRITE(999,*) 'Midside node ', k+1,':', line(j,k+1)
               WRITE(999,*) 'Conveyance: ', teilline(k+1)
@@ -769,6 +768,15 @@ C-
               teilline (k + 2) = teilline (k + 2) + xl * (d3**(3./2.)) *
      +                           ((78.48/lambda)**0.5)
                                                                         
+              !Correct roughness, if there is a material factor
+              if (idnopt /= 0 .and. d3 < akp(nc) * adb(nc)) then
+                lambda = lambda
+     +                 * (ort(lineimat(j, k+1), 12)**2 - 1.)
+     +                 * (akp(nc) * adb(nc) - d3)
+     +                 / (akp(nc) * adb(nc)) + 1.0
+              end if
+              !-
+
               !nis,dec06,testfileoutput------------------------------------------
               if (k.eq.maxL) then
                 WRITE(999,*) 'End node ', k+2,':', line(j,k+2)
@@ -1164,10 +1172,10 @@ C-
               ENDIF
   336       END DO
                                                                         
-              WRITE(*,*) lmt(j)
-              WRITE(*,*) (line(j,i), i=1, lmt(j))
-              WRITE(*,*) (ibn(line(j,i)), i=1, lmt(j))
-              pause
+              !WRITE(*,*) lmt(j)
+              !WRITE(*,*) (line(j,i), i=1, lmt(j))
+              !WRITE(*,*) (ibn(line(j,i)), i=1, lmt(j))
+              !pause
 
             !nis,sep06,com: If the counter of elements, that fit the CCL-end-node is .gt.1 and network error occurs and the execution is stopped
             IF (ieck.ne.1) then
