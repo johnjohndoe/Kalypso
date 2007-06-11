@@ -1,4 +1,4 @@
-!     Last change:  K     4 Jun 2007    4:07 pm
+!     Last change:  K     8 Jun 2007   12:32 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -35,7 +35,7 @@
       REAL          :: DUM1, DUM2
 
       !integer variables
-      INTEGER       :: maxno, mel
+      INTEGER       :: maxL, mel
 !      INTEGER       :: iostaterror
       INTEGER       :: k, l, i, Comp
       INTEGER       :: TLine, TNode
@@ -43,11 +43,6 @@
 
       !character variables
       CHARACTER (LEN=27)  :: filename
-
-!nis,jan07,testing
-!  WRITE(*,*) 'Erreiche QGENtrans'
-!  WRITE(*,*) 'Linie:',TLine,'qreq:',qreq,'thet:',thet
-!-
 
 !nis,jan07,test output file handling
 !filename = 'Kopplungsoutput.txt'
@@ -77,61 +72,61 @@ END DO
 !-
 
 !get number of nodes at line; zero-values can not occur, this was tested in the calling subroutine
-maxno = LMT(TLine)
-!WRITE(*,*) maxno
-!do i = 1, maxno
-!  WRITE(*,*) alfa(line(tline,i))
-!enddo
-!pause
-!-
+maxL = LMT(TLine)
 
 !transition line must contain more than one line segment
-if (maxno.lt.2) STOP 'ERROR - transition contains of less then 2 segments'
+if (maxL < 2) STOP 'ERROR - transition contains of less then 2 segments'
 !-
 
 !starting node, ending node
 na = line (TLine, 1)
-nc = line (TLine, maxno)
+nc = line (TLine, maxL)
+
 !x- and y- chord length of transition line
 dx = cord (nc, 1) - cord (na, 1)
 dy = cord (nc, 2) - cord (na, 2)
+
 !global angle between x-axis and chord
 alp = atan2 (dx, dy)
 
 !Initializing and calculating the average waterlevel at line;
 waspi = 0.0
-!nis,jan07: At transition lines the waterlevel has to be forced to be the waterlevel of the 1D-node
-!step1: deactivate the subroutine
-!call getLineAverageWaterlevel(j,waspi)
+
+TDep = vel(3,TNode)
+
+if (idnopt == 0) then
+  waspi = ao(TNode) + TDep
+
+else
+
+  CALL amf (TDepv, TDep, akp (TNode), adt (TNode), adb (TNode), dum1, dum2, 0)
+  waspi = ado(TNode) + TDepV
+
+end if
 
 !Assign water depth to nodes
-do k = 1, maxno
-  TransitionVels(3,k) = (ao(TNode) + vel(3,Tnode)) - ao(line(TLine,k))
-
-  !nis,may07: The transition depth should have a constant level, because, if it is updated with the same values later it will always have
-  !           the same topology. To prevent this, the elevation is flattened
-  Vel(3,line(Tline,k)) = (ao(TNode) + vel(3,Tnode)) - ao(line(TLine,k))
-  !-
-
-  WRITE(999,*) 'directly after assigning - Waterdepth:', TransitionVels(3,k)
-end do
-
-!step2: Force waspi
-!get the average marsh-depth, respectively let it like it is
-if (idnopt == -1) then
-  CALL amf (TDepv, TDep, akp (TNode), adt (TNode), adb (TNode), dum1, dum2, 0)
+if (idnopt == 0) then
+  do k = 1, maxL
+    na = line(TLine,k)
+    TransitionVels(3,k)  = waspi - ao(na)
+    Vel(3,na)            = waspi - ao(na)
+    WRITE(999,*) 'directly after assigning - Waterdepth:', TransitionVels(3,k)
+  end do
 else
-  TDepv = TDep
+  do k = 1, maxL
+    na = line(TLine,k)
+    tmpdepth = waspi - ado(na)
+    CALL amf (tmpdepth, TransitionVels(3,k), akp(na), adt (na), adb (na), dum1, dum2, 1)
+    vel(3,na) = TransitionVels(3,k)
+    WRITE(999,*) 'directly after assigning - Waterdepth:', TransitionVels(3,k)
+  end do
 end if
-waspi = ao(TNode) + TDepv
-!-
 
 !nis,jan07: testfile ouput
 WRITE(999,*) 'Average waterlevel at transition:', waspi
 WRITE(999,*) 'required discharge:              ', qreq
 WRITE(999,*) 'inflow angle:                    ', thet
 !-
-
 
 ! Zur Verteilung der Fliessgeschwindigkeiten laengs eines Q-Randes
 ! muss ein Proportionalitaetsfaktor 'suma' gebildet werden, der sich
@@ -142,11 +137,11 @@ WRITE(999,*) 'inflow angle:                    ', thet
 suma = 0.
 
 !nis,sep06,com: For next loop the maximum value is the penultimate CORNER node
-maxno = lmt (TLine) - 2
+maxL = lmt (TLine) - 2
 
 
 !nis,sep06,com: Loop over all corner nodes till the last one of CCL to get the Conveyance factor of the single parts of line.
-ThroughNodesOfLine: DO k = 1, maxno, 2
+ThroughNodesOfLine: DO k = 1, maxL, 2
   !nis,sep06,com: Get the first (na), midside (ncc), and endnode (nc) of the actual line segment
   na  = line (TLine, k)
   ncc = line (TLine, k + 1)
@@ -158,19 +153,11 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
   !nis,sep06,com: Calculate the sixth part of the Euklidean length of the actual CCL-segment, it's used for the Simpson Integration rule
   xl = sqrt (dx**2 + dy**2) * 1 / 6
 
-  !pl Anfang
-  !260199
-  IF (dx.lt.0.00001.and.dx.gt. - 0.00001.and.dy.lt.0.00001.and.dy.gt. - 0.00001) then
-    !WRITE (Lout, * ) 'Nr.', 'Knoten m', 'Knoten c', 'Knoten a'
-    !WRITE (Lout, * ) '7.', nm, nc, na
-  ENDIF
-  !pl Ende
-                                                                        
   !nis,sep06,com: Calculate the direction angle of the actual CCL-segment
   alp = atan2 (dx, dy)
 
   !nis,jun07: switched off Marsh-Algorithm:
-  IF (idnopt.eq.0) then
+  IF (idnopt == 0) then
     !waterdepth
     d1 = waspi - ao (na)
     d3 = waspi - ao (nc)
@@ -178,8 +165,8 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
   !nis,jun07: Marsh-Algorithm:
   ELSE
     !waterdepth
-    d1v = waspi - ao (na)
-    d3v = waspi - ao (nc)
+    d1v = waspi - ado (na)
+    d3v = waspi - ado (nc)
 
     !Transform to Marsh-depth
     !nis,sep06: zeigmarsh-parameter is not working in RMA10S yet
@@ -231,6 +218,13 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
     !CALL darcy (lambda, vecq, d1, cniku (lineimat(TLine, k + 1)), 0., 0., 0,  0,     gl_bedform, mel, cwr_line)
     CALL darcy (lambda, vecq, d1, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
     !-
+
+    !Correct roughness, if there is a material factor
+    if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
+      lambda = lambda * (ort(lineimat(TLine,k+1), 12)**2 - 1.) * (akp(na) * adb(na) - d1) / (akp(na) * adb(na)) + 1.0
+    end if
+    !-
+
     !nis,sep06,com: Conveyance represents the Conveyance factor of the element part.
     Conveyance(k) = Conveyance(k) + xl*(d1** (3./2.)) * ((78.48/lambda)**0.5)
 
@@ -261,6 +255,12 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
     d2 = d2_kind8
     !-
 
+    !Correct roughness, if there is a material factor
+    if (idnopt /= 0 .and. d2 < akp(ncc) * adb(ncc)) then
+      lambda = lambda * (ort(lineimat(TLine,k+1), 12)**2 - 1.) * (akp(ncc) * adb(ncc) - d2) / (akp(ncc) * adb(ncc)) + 1.0
+    end if
+    !-
+
     !nis,sep06,com: Calculate the Conveyance factor of the midside node of the actual CCL-segment
     Conveyance (k + 1) = xl * 4 * (d2** (3. / 2.) ) * ((78.48/lambda)**0.5)
 
@@ -287,6 +287,13 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
     !CALL darcy (lambda, vecq, d3, cniku(lineimat (TLine, k+1)), 0., 0., 0,  0, gl_bedform, mel, cwr_line)
     CALL darcy (lambda, vecq, d3, ort(lineimat(TLine,k+1),15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
     !-
+
+    !Correct roughness, if there is a material factor
+    if (idnopt /= 0 .and. d3 < akp(nc) * adb(nc)) then
+      lambda = lambda * (ort(lineimat(TLine, k+1), 12)**2 - 1.) * (akp(nc) * adb(nc) - d3) / (akp(nc) * adb(nc)) + 1.0
+    end if
+    !-
+
     !nis,sep06,com: Calculate the Connyance factor of the ending cornder node of the actual CCL-segment
     Conveyance (k + 2) = Conveyance (k + 2) + xl * (d3**(3./2.)) * ((78.48/lambda)**0.5)
 
@@ -309,17 +316,17 @@ ThroughNodesOfLine: DO k = 1, maxno, 2
 END DO ThroughNodesOfLine
 
 !nis,sep06,com: Refresh the max-value with the number of nodes of the actual CCL
-maxno = lmt (TLine)
+maxL = lmt (TLine)
 
 !nis,jan07: testfile ouput
-do i = 1, maxno
+do i = 1, maxL
  WRITE(999,*) 'Conveyance Factor of node ', i,':',Conveyance(i)
 end do
 !-
 
 
 !nis,sep06,com: Summing of the Conveyance factors
-DO k = 1, maxno
+DO k = 1, maxL
   suma = suma + Conveyance (k)
 END DO
 
@@ -347,7 +354,7 @@ WRITE(999,*) 'Slope is: ', vest ,'(',qreq, suma, ')'
 !Set values for the flow velocity at every node of transition
 
 !nis,sep06,com: Run through every node of the CCL for applying the specified discharge
-AssignVelocities: DO k = 1, maxno
+AssignVelocities: DO k = 1, maxL
   !nis,sep06,com: Get the actual node number
   na = line (TLine, k)
   !nis,sep06,com: Skip non existing point
@@ -370,7 +377,7 @@ AssignVelocities: DO k = 1, maxno
     dy2 = dy1
 
   !nis,sep06,com: node is the last of the actual CCL
-  ELSEIF (k.eq.maxno) then
+  ELSEIF (k.eq.maxL) then
     !nis,sep06,com: Calculate the x-distance to the penultimate node of the actual CCL
     dx1 = cord (line (TLine, k), 1) - cord (line (TLine, k - 1), 1)
     !nis,sep06,com: Calculate the y-distance to the penultimate node of the actual CCL
@@ -429,8 +436,8 @@ AssignVelocities: DO k = 1, maxno
     !nis,sep06,com: If marsh-algorithm is applied, calculate the waterdepths of the two adjacent corner nodes of the actual midsied node and
     !               transform them afterwards
     ELSE
-      d1v = waspi - ao (na1)
-      d3v = waspi - ao (na2)
+      d1v = waspi - ado (na1)
+      d3v = waspi - ado (na2)
 
       !nis,sep06: Zeigmarsh not active in RMA10S yet
       !CALL amf (d1v, d1, akp (na1), adt (na1), adb (na1), amec (k - 1), d2, 1, zeigmarsh)
@@ -454,7 +461,7 @@ AssignVelocities: DO k = 1, maxno
     IF (idnopt == 0) then
       d1 = waspi - ao (na)
     ELSE
-      d1v = waspi - ao (na)
+      d1v = waspi - ado (na)
       !nis,sep06: Zeigmarsh not active in RMA10S
       !CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1, zeigmarsh)
       CALL amf (d1v, d1, akp (na), adt (na), adb (na), amec (k), d2, 1)
@@ -536,7 +543,7 @@ END DO AssignVelocities
 !nis,jan07: Test output file
 WRITE(999,*) 'Output of velocity and specific discharge distribution'
 WRITE(999,*) 'node,     qx     ,     qy     ,     vx     ,     vy     ,   b   '
-do i = 1, maxno
+do i = 1, maxL
   !WRITE(*,*) tline, line(tline,i)
   !pause
 
@@ -555,10 +562,10 @@ sumx = 0.0
 sumy = 0.0
 
 !nis,sep06,com: Set the number of segment-starting-nodes in the CCL
-maxno = lmt (TLine) - 2
-                                                                        
+maxL = lmt (TLine) - 2
+
 !nis,sep06,com: Run through all Corner nodes of the the CCL
-GetControlDischarge: DO k = 1, maxno, 2
+GetControlDischarge: DO k = 1, maxL, 2
   !nis,sep06,com: Get the first corner node of segment
   na = line (TLine, k)
 
@@ -597,7 +604,7 @@ WRITE(999,*) 'sumx: ', sumx, ' sumy: ', sumy
 total = abs (qreq) / abs (total)
 
 !nis,sep06,com: Correct the discharge at the nodes by scaling with correction-factor
-DO k = 1, maxno
+DO k = 1, maxL
   IF (na.gt.0) then
     TransitionVels (1,k) = TransitionVels (1,k) * total
     TransitionVels (2,k) = TransitionVels (2,k) * total
@@ -605,7 +612,7 @@ DO k = 1, maxno
 END DO
                                                                         
 !nis,sep06,com: Control output
-DO k = 1, maxno
+DO k = 1, maxL
   WRITE (999,9898)  TLine, line(TLine,k), (TransitionVels(l,k),l=1,2), SQRT(TransitionVels(1,k)**2+TransitionVels(2,k)**2)
 END DO
                                                                         
