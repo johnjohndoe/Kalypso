@@ -112,7 +112,7 @@ public class CalculationUnitAdministerComponent
         
     actionsCombo = new Combo(rootComposite, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
     actionsCombo.add( ACTION_KEY_ADMINISTER );
-    actionsCombo.add( ACTION_KEY_REMOVE );
+   // actionsCombo.add( ACTION_KEY_REMOVE );
     actionsCombo.add( ACTION_KEY_DRAW );
     GridData data = new GridData(GridData.FILL_HORIZONTAL);
     actionsCombo.setLayoutData( data );
@@ -172,7 +172,7 @@ public class CalculationUnitAdministerComponent
       }
       else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
       {
-        strategy= new AddElementToCalUnitWidget(dataModel);        
+        strategy= new AddRemoveElementToCalUnitWidget(dataModel);        
       }
       else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType )  )
       {
@@ -186,21 +186,21 @@ public class CalculationUnitAdministerComponent
         }
       }      
     }
-    else if (ACTION_KEY_REMOVE.equals( selectedAction ))
-    {
-      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )){
-        
-      }
-      else if (ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
-      {
-        strategy = new RemoveElementFromCalUnitWidget(dataModel);
-      }
-      else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType ))
-      {
-        
-      }
-
-    }
+//    else if (ACTION_KEY_REMOVE.equals( selectedAction ))
+//    {
+//      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )){
+//        
+//      }
+//      else if (ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
+//      {
+//        strategy = new RemoveElementFromCalUnitWidget(dataModel);
+//      }
+//      else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType ))
+//      {
+//        
+//      }
+//
+//    }
     else if( ACTION_KEY_DRAW.equals( selectedAction) )
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )

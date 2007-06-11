@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +50,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
@@ -62,6 +62,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.DrawElements;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
@@ -71,14 +73,53 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * @author Patrice Congo
  * @author Madanagopal
  *
  */
-public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
+public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
 {
-
   private KeyBasedDataModel dataModel;
   
+  private class AddElementToCalculationUnitWithPostCall extends AddElementToCalculationUnitCmd
+  {
+
+    public AddElementToCalculationUnitWithPostCall( ICalculationUnit calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+    {
+      super( calculationUnit, elementsToAdd, model1d2d );
+    }
+
+    public AddElementToCalculationUnitWithPostCall( ICalculationUnit1D calculationUnit, IElement1D[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+    {
+      super( calculationUnit, elementsToAdd, model1d2d );
+    }
+
+    public AddElementToCalculationUnitWithPostCall( ICalculationUnit1D2D calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+    {
+      super( calculationUnit, elementsToAdd, model1d2d );
+    }
+
+    public AddElementToCalculationUnitWithPostCall( ICalculationUnit2D<IElement2D> calculationUnit, IElement2D[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+    {
+      super( calculationUnit, elementsToAdd, model1d2d );
+    }
+    
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit#process()
+     */
+    @Override
+    public void process( ) throws Exception
+    {
+      super.process();
+      KeyBasedDataModelUtil.resetCurrentEntry( 
+                              dataModel, 
+                              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      KeyBasedDataModelUtil.repaintMapPanel( 
+                              dataModel, 
+                              ICommonKeys.KEY_MAP_PANEL );
+      
+    }
+  }
   private class RemoveElementFromCalculationUnitWithPostCall extends RemoveElementFromCalculationUnitCmd
   {
 
@@ -130,21 +171,21 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
           ICommonKeys.KEY_MAP_PANEL );
     }
   }
-  
-  public RemoveElementFromCalUnitWidget( KeyBasedDataModel dataModel )
+
+  public AddRemoveElementToCalUnitWidget( KeyBasedDataModel dataModel )
   {
       this(
           new QName[]{
-              Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
+              Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ,
               Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D,
           },
-          "Select Elements and Remove from current calculation unit",
-          "Select Elements and Remove from current calculation unit", 
+          "Select Elements and add to the current calculation unit",
+          "Select Elements and add to the current calculation unit", 
           dataModel );
       
   }
   
-  protected RemoveElementFromCalUnitWidget( 
+  protected AddRemoveElementToCalUnitWidget( 
               QName themeElementsQName, 
               String name, String toolTip,
               KeyBasedDataModel dataModel )
@@ -152,7 +193,7 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
     this( new QName[]{themeElementsQName}, name, toolTip,dataModel);
   }
 
-  protected RemoveElementFromCalUnitWidget( 
+  protected AddRemoveElementToCalUnitWidget( 
                   QName[] themeElementsQNames, 
                   String name, 
                   String toolTip,
@@ -160,13 +201,23 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
   {
     super( themeElementsQNames, name, toolTip );
     this.dataModel = dataModel;
-  }  
+  }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#clickPopup(java.awt.Point)
+   */
   @Override
   public void clickPopup( Point p )
   {
     MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     JPopupMenu popupMenu = new JPopupMenu();
+    
+    JMenuItem addElement = new JMenuItem();
+    addElement.setText( "Add Element" );
+    addElement.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                  "icons/elcl16/add.gif" )));
+    addElement.addActionListener( makeAddElementActionListener() );
     
     JMenuItem removeElement = new JMenuItem();
     removeElement.setText( "Remove Element" );
@@ -174,11 +225,78 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
                                   KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
                                   "icons/elcl16/remove.gif" )));
     removeElement.addActionListener( makeRemoveElementActionListener() );
+    
+    popupMenu.add( addElement);
     popupMenu.add( removeElement);
     popupMenu.show( mapPanel, p.x, p.y );    
   }
+  
+  private ActionListener makeAddElementActionListener()
+  {
+    ActionListener al = new ActionListener()
+    {
 
-  private ActionListener makeRemoveElementActionListener( )
+      public void actionPerformed( ActionEvent e )
+      {
+        final Feature[] selectedFeatures = getSelectedFeature();
+        final Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        IFEDiscretisationModel1d2d model1d2d = 
+          (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+        if( selectedWrapper instanceof ICalculationUnit )
+        {
+          ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
+          
+          for(Feature feature:selectedFeatures)
+          {
+            AddElementToCalculationUnitCmd command = null;
+            IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+            if( calUnit instanceof ICalculationUnit1D &&
+                ele instanceof IElement1D )
+            {
+              command = new AddElementToCalculationUnitWithPostCall(
+                        (ICalculationUnit1D)calUnit, 
+                        new IElement1D[]{(IElement1D)ele},
+                        model1d2d);
+              
+            }
+            else if( calUnit instanceof ICalculationUnit2D &&
+                ele instanceof IElement2D )
+            {
+              command = new AddElementToCalculationUnitWithPostCall(
+                        (ICalculationUnit2D)calUnit, 
+                        new IElement2D[]{(IElement2D)ele},
+                        model1d2d);
+              
+            }
+            else if( calUnit instanceof ICalculationUnit1D2D &&
+                      ele instanceof IFE1D2DElement )
+            {
+              command = new AddElementToCalculationUnitWithPostCall(
+                        (ICalculationUnit1D2D)calUnit, 
+                        new IFE1D2DElement[]{(IFE1D2DElement)ele},
+                        model1d2d);
+              
+            }
+            else
+            {
+              System.out.println("Bad constellation:"+feature+ " "+calUnit);
+            }
+            if( command != null )
+            {
+//              ICommandTarget cmdTarget =
+//                (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+              
+              //cmdTarget.postCommand( command, null  );
+              KeyBasedDataModelUtil.postCommand( dataModel, command );
+            }            
+          }       
+        }
+      }
+    };
+    return al;
+  }
+  
+  private ActionListener makeRemoveElementActionListener()
   {
     ActionListener al = new ActionListener()
     {  
@@ -234,4 +352,25 @@ public class RemoveElementFromCalUnitWidget extends FENetConceptSelectionWidget
     };
     return al;
   }
+  
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( Graphics g )
+  {
+    super.paint( g );
+    DrawElements drawElements = new DrawElements();    
+    MapPanel mapPanel = getMapPanel();
+    Object selectedWraper = 
+      dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( selectedWraper instanceof ICalculationUnit2D )
+    {
+      drawElements.paint( 
+          g, 
+          mapPanel.getProjection(), 
+          (ICalculationUnit2D)selectedWraper );
+    }
+  }  
 }

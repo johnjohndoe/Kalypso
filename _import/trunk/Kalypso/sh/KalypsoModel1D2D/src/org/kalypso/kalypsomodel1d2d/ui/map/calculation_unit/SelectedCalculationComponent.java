@@ -149,6 +149,10 @@ public class SelectedCalculationComponent
   Table table;
 
   private Image image_;
+
+  private Label selectedProjectName;
+
+  private Text selectedProjField;
   public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
     this.toolkit = toolkit;
@@ -158,11 +162,18 @@ public class SelectedCalculationComponent
     dataModel.addKeyBasedDataChangeListener( newKeyListener );
   }
   
+  @SuppressWarnings("unchecked")
   protected void updateThisSection( Object newValue )
   {
     Assert.throwIAEOnNullParam( newValue, "newValue" );    
     if (newValue instanceof ICalculationUnit)
     {
+        if (newValue instanceof ICalculationUnit)
+        {
+          ICalculationUnit selUnit = (ICalculationUnit) newValue;
+          selectedProjField.setText(selUnit.getName());          
+        }
+        
         if (newValue instanceof ICalculationUnit1D){
           typeField.setText( "1D" );          
         } else if (newValue instanceof ICalculationUnit2D){
@@ -251,8 +262,16 @@ public class SelectedCalculationComponent
     Composite optionsComposite = new Composite(rootComposite,SWT.FLAT);
     optionsComposite.setLayout( new GridLayout(2,false));
     
+    selectedProjectName = new Label(optionsComposite,SWT.RIGHT);
+    selectedProjectName.setText(" Project Title: " );
+    
+    selectedProjField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
+    selectedProjField.setEditable( false );
+    data = new GridData(GridData.FILL_HORIZONTAL);
+    selectedProjField.setLayoutData(data);
+    
     labelName = new Label(optionsComposite,SWT.RIGHT);
-    labelName.setText( "Type:" );
+    labelName.setText( "Type: " );
     
     typeField = new Text(optionsComposite, SWT.SINGLE|SWT.BORDER);
     typeField.setEditable( false );
