@@ -30,14 +30,15 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
   public static RectifiedGridCoverage2 createRectifiedGridCoverage( ) throws InvocationTargetException
   {
     final GMLSchema schema = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog().getSchema( NS.GML3, "3.1" );
-    final IFeatureType featureType = schema.getFeatureType( QNAME_RECTIFIED_GRID_COVERAGE );
+    final IFeatureType featureType = schema.getFeatureType( RectifiedGridCoverage2.QNAME_RECTIFIED_GRID_COVERAGE );
     final Feature feature = FeatureFactory.createFeature( null, null, null, featureType, true );
+
     return new RectifiedGridCoverage2( feature );
   }
 
   public static RectifiedGridCoverage2 createRectifiedGridCoverage( final RectifiedGridDomain gridDomain, final RangeSetType rangeSet ) throws InvocationTargetException
   {
-    RectifiedGridCoverage2 coverage = createRectifiedGridCoverage();
+    final RectifiedGridCoverage2 coverage = RectifiedGridCoverage2.createRectifiedGridCoverage();
     coverage.setGridDomain( gridDomain );
     coverage.setRangeSet( rangeSet );
     return coverage;
@@ -45,7 +46,7 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
 
   public RectifiedGridCoverage2( final Feature feature )
   {
-    super( feature, QNAME_RECTIFIED_GRID_COVERAGE );
+    super( feature, RectifiedGridCoverage2.QNAME_RECTIFIED_GRID_COVERAGE );
   }
 
   public static String getNameStatic( )
@@ -58,16 +59,16 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
    */
   public RectifiedGridDomain getGridDomain( )
   {
-    return (RectifiedGridDomain) getFeature().getProperty( QNAME_PROP_GRID_DOMAIN );
+    return (RectifiedGridDomain) getFeature().getProperty( RectifiedGridCoverage2.QNAME_PROP_GRID_DOMAIN );
   }
 
   /**
    * @param gridDomain
-   *          The gridDomain to set.
+   *            The gridDomain to set.
    */
   public void setGridDomain( final RectifiedGridDomain gridDomain )
   {
-    getFeature().setProperty( QNAME_PROP_GRID_DOMAIN, gridDomain );
+    getFeature().setProperty( RectifiedGridCoverage2.QNAME_PROP_GRID_DOMAIN, gridDomain );
   }
 
   /**
@@ -75,16 +76,16 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
    */
   public RangeSetType getRangeSet( )
   {
-    return (RangeSetType) getFeature().getProperty( QNAME_PROP_RANGE_SET );
+    return (RangeSetType) getFeature().getProperty( RectifiedGridCoverage2.QNAME_PROP_RANGE_SET );
   }
 
   /**
    * @param rangeSet
-   *          The rangeSet to set.
+   *            The rangeSet to set.
    */
   public void setRangeSet( final RangeSetType rangeSet )
   {
-    getFeature().setProperty( QNAME_PROP_RANGE_SET, rangeSet );
+    getFeature().setProperty( RectifiedGridCoverage2.QNAME_PROP_RANGE_SET, rangeSet );
   }
 
 }

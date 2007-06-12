@@ -27,9 +27,9 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster implements DoubleRaster
 {
-  private int m_sizeX;
+  private final int m_sizeX;
 
-  private int m_sizeY;
+  private final int m_sizeY;
 
   private final Coordinate m_origin;
 
@@ -37,23 +37,30 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
 
   private final Coordinate m_offsetY;
 
-  private RangeSetType m_rangeSet;
+  private final RangeSetType m_rangeSet;
 
-  private URL m_context;
+  private final URL m_context;
 
   private DoubleGrid m_grid;
 
   public RectifiedGridCoverageDoubleRaster( final Feature rgcFeature ) throws Exception
   {
-    // TODO: getWorkspace can be null (e.g. for legend features)
-    // what to do??
-    m_context = rgcFeature.getWorkspace().getContext();
+    this( rgcFeature, null );
+  }
+
+  public RectifiedGridCoverageDoubleRaster( final Feature rgcFeature, final URL context ) throws Exception
+  {
+    if( context == null )
+      m_context = rgcFeature.getWorkspace().getContext();
+    else
+      m_context = context;
+
     final RectifiedGridDomain domain = (RectifiedGridDomain) rgcFeature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
     m_rangeSet = (RangeSetType) rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
     final GM_Point origin = domain.getOrigin( null );
     m_origin = new Coordinate( origin.getX(), origin.getY() );
-    m_offsetX = new Coordinate( domain.getOffsetX(  ).getGeoX(), domain.getOffsetX(  ).getGeoY() );
-    m_offsetY = new Coordinate( domain.getOffsetY(  ).getGeoX(), domain.getOffsetY(  ).getGeoY() );
+    m_offsetX = new Coordinate( domain.getOffsetX().getGeoX(), domain.getOffsetX().getGeoY() );
+    m_offsetY = new Coordinate( domain.getOffsetY().getGeoX(), domain.getOffsetY().getGeoY() );
 
     m_sizeX = domain.getNumColumns();
     m_sizeY = domain.getNumRows();
@@ -77,7 +84,6 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
       final FileType file = m_rangeSet.getFile();
       // TODO: only supported type now is 'File', support other types
       if( file != null )
-      {
         try
         {
           // TODO: we assume that mime-type image is tiff
@@ -85,35 +91,32 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
           if( mimeType.startsWith( "image" ) )
           {
             final String fileName = file.getFileName();
-            
+
             final URL url = new URL( m_context, fileName );
             m_grid = new ImageGrid( url );
           }
           else if( mimeType.startsWith( "text/asc" ) )
           {
             final String fileName = file.getFileName();
-            URL fileURL= new URL(fileName);
-            
-            if(fileURL.toURI().isAbsolute())
-            {
+            final URL fileURL = new URL( fileName );
+
+            if( fileURL.toURI().isAbsolute() )
               m_grid = new AsciiGrid( fileURL );
-            }
             else
             {
-              URL url = new URL( m_context, fileName );
-             m_grid = new AsciiGrid( url );
+              final URL url = new URL( m_context, fileName );
+              m_grid = new AsciiGrid( url );
             }
           }
         }
-        catch( MalformedURLException e )
+        catch( final MalformedURLException e )
         {
           e.printStackTrace();
         }
-        catch( URISyntaxException e )
+        catch( final URISyntaxException e )
         {
           e.printStackTrace();
         }
-      }
 
     }
 
@@ -140,7 +143,7 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
    */
   public double getValueChecked( final int x, final int y )
   {
-    if( x < 0 || x >= m_sizeX || y < 0 || y >= m_sizeY )
+    if( (x < 0) || (x >= m_sizeX) || (y < 0) || (y >= m_sizeY) )
       return Double.NaN;
 
     return getValue( x, y );
