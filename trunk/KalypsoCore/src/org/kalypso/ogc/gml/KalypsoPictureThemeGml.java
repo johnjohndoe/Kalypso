@@ -77,7 +77,9 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     final RangeSetType rangeSet = coverage2.getRangeSet();
     final FileType type = rangeSet.getFile();
 
-    final URL imageUrl = UrlResolverSingleton.resolveUrl( context, type.getFileName() );
+    final URL imageContext = UrlResolverSingleton.resolveUrl( context, layerType.getHref() );
+
+    final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
     final RenderedOp image = JAI.create( "url", imageUrl );
     m_image = new TiledImage( image, true );
 
