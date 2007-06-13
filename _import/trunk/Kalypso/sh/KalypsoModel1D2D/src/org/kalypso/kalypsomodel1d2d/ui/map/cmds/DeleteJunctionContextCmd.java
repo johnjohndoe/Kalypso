@@ -117,6 +117,32 @@ public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
       throw new IllegalArgumentException(message);
     }
   }
+  
+  /**
+   * creates a new junction context delete command to delete 
+   * the given junction passed as feature.
+   * 
+   * @param model1d2d the model containing the junction feature
+   * @param feature  the junction context feature
+   */
+  public DeleteJunctionContextCmd(
+              IFEDiscretisationModel1d2d model1d2d,
+              Feature feature )
+  {
+      Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+      Assert.throwIAEOnNullParam( feature, "feature" );
+      
+      this.model1d2d = model1d2d;
+      
+      this.junctionContext = (IJunctionContext1DToCLine)
+              feature.getAdapter( IJunctionContext1DToCLine.class );
+      if( junctionContext == null )
+      {
+        throw new IllegalArgumentException(
+            "Could not adapt feature to IJunctionContext1DToCLine ");
+      }
+  }
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */

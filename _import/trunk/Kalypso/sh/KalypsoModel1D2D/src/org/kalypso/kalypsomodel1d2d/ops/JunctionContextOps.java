@@ -55,14 +55,21 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
- * @author congo
+ * Algorithms around the junction context type:
+ * <ul>
+ *      <li> create from edge selection
+ * </ul>
+ * 
+ * 
+ * @author Patrice Congo
  *
  */
+@SuppressWarnings( {"unchecked", "hiding"} )
 public class JunctionContextOps
 {
   private JunctionContextOps( )
   {
-    //I do not like to instanciated
+    //I do not like to instantiated
   }
 
   
@@ -161,15 +168,28 @@ public class JunctionContextOps
     IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element1D = edge1D.getContainers().get( 0 );
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
     
-    //create continuity line to hold the element
-    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = 
-    elements.addNew( 
-      Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
-      IFE1D2DContinuityLine.class );
-    cLine.setEdges( new IFE1D2DEdge[]{edge2D} );
+    //get a continuity line containing containing the 2Egde
+    //or create continuity line to hold it
+    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = null;
+    found_container_cline: for(IFE1D2DElement ele : edge2D.getContainers())
+    {
+      if( ele instanceof IFE1D2DContinuityLine )
+      {
+        cLine = (IFE1D2DContinuityLine) ele;
+        break found_container_cline;
+      }
+    }
+    if( cLine == null )
+    {
+      cLine = 
+      elements.addNew( 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
+        IFE1D2DContinuityLine.class );
+      cLine.setEdges( new IFE1D2DEdge[]{edge2D} );
+    }
     
     //
-    IFeatureWrapperCollection<IFE1D2DComplexElement> cElements = 
+    IFeatureWrapperCollection<IFE1D2DComplexElement> cElements =  
                                 model1d2d.getComplexElements();
     IJunctionContext1DTo2D jc1d2d = 
     cElements.addNew( 

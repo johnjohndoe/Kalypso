@@ -381,6 +381,28 @@
                     value="Randbedingungen markieren und löschen"/>              
             </class>
 		 </handler>
+		 
+		 <!-- Handler to delete junction -->		 
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionContextWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/cut.png"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Kopplung markieren und entfernen"/>              
+            </class>
+		 </handler>
+		 
 		 <!--*** EditElement handlers ***-->
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">

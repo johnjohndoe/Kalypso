@@ -410,7 +410,10 @@ public class CalculationUnitWidget
       MapPanel mapPanel =
         (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       IMapModell mapModell = mapPanel.getMapModell();
-      mapModell.removeTheme( calUnitTheme );
+      if( mapModell != null )
+      {
+        mapModell.removeTheme( calUnitTheme );
+      }
     }
     catch ( Exception e) 
     {

@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLi
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Provides mechanism to get the type info for
@@ -167,6 +168,18 @@ public class TypeInfo
     }
   }
   
+  public static final boolean isPolyElementFeature( IFeatureWrapper2 featureWrapper )
+  {
+    if( featureWrapper == null )
+    {
+      return false;
+    }
+    else
+    {
+      return isPolyElementFeature( featureWrapper.getWrappedFeature() );
+    }
+  }
+  
   /**
    * checks whether the provided feature is of type Poly element
    * The check is base on {@link QName} equality and not on 
@@ -254,21 +267,50 @@ public class TypeInfo
   
   public static final boolean isBorderEdge(IFE1D2DEdge edge)
   {
-    IFeatureWrapperCollection edgeContainer = edge.getContainers();
-    if(edgeContainer.size()!=1)
+    
+    if( is2DEdge( edge ))
     {
-      return false;      
-    }
-    IEdgeInv edgeInv = edge.getEdgeInv();
-    if(edgeInv!=null)
-    {
-      if(!edgeInv.getContainers().isEmpty())
+      IFeatureWrapperCollection<IFeatureWrapper2> edgeContainer = edge.getContainers();
+      //get numer of containing poly elemnt
+      int numPoly = 0;
+      for(IFeatureWrapper2 ele: edgeContainer )
       {
-        return false;
+        if( isPolyElementFeature( ele ))
+        {
+          numPoly = numPoly +1;
+        }
       }
+      
+      if( numPoly!=1 )
+      {
+        return false;      
+      }
+      
+      IEdgeInv edgeInv = edge.getEdgeInv();
+      if( edgeInv != null )
+      {
+        final IFeatureWrapperCollection<IFeatureWrapper2> edgeInvContainers = 
+                      edgeInv.getContainers();
+        for( IFeatureWrapper2 ele : edgeInvContainers )
+        {
+          if(isPolyElementFeature( ele ))
+          {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    else if ( is1DEdge( edge ) )
+    {
+      return true;
+    }
+    else
+    {
+      throw new RuntimeException("Unsupported edge type:"+edge);
     }
     
-    return true;
+    
     
   }
 
@@ -290,6 +332,38 @@ public class TypeInfo
     }
     Feature ceFeature = complexElement.getWrappedFeature();
     IFeatureType featureType = ceFeature.getFeatureType();
+    
+    if( GMLSchemaUtilities.substitutes( 
+            featureType, 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT ))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  
+  /**
+   * Check if the given complex element wrapper object
+   * wrapps a junction context feature, i.e. a feature which is
+   * substitutable to wb1d2d:JunctionContext
+   * 
+   * @param feature the feature to test for its
+   *        junction context nature
+   * @return true if the given feature is a junction context feature 
+   *            otherwise false, including the case where the passed junction 
+   *            element is null
+   */
+  public static final boolean isJuntionContext( Feature feature )
+  {
+    if( feature == null )
+    {
+      return false;
+    }
+    
+    IFeatureType featureType = feature.getFeatureType();
     
     if( GMLSchemaUtilities.substitutes( 
             featureType, 

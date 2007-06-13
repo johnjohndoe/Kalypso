@@ -85,6 +85,10 @@ public class DeleteCmdFactory
     {
       return new DeleteBoundaryLineCmd(model1d2d,feature);
     }
+    else if( TypeInfo.isJuntionContext( feature ) )
+    {
+      return new DeleteJunctionContextCmd(model1d2d, feature);
+    }
     else
     {
        return null;

@@ -184,14 +184,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#TransGroup">
 				<Help></Help>
 				<Name>1D-2D-Kopplungen</Name>
-				<Task context="FenetMap"
+				<Task context="JunctionContextTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]>
 					</Help>
 					<Name>1D-2D-Linienkopplung</Name>
 				</Task>
-				<Task context="FenetMap"
+				<Task context="JunctionContextTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen.]]>
@@ -462,6 +462,19 @@ hier ausgewertet und visualisiert werden.]]>
 								wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
 								wizardType="NEW_WIZARD" parent="2dElementTheme" />
 						</con:ExtensionContext>
+						
+						<con:ExtensionContext id="JunctionContextTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine" />
+							<!--con:WizardContext id="Import2dNet"
+								wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
+								wizardType="NEW_WIZARD" parent="2dElementTheme" / -->
+						</con:ExtensionContext>
+						
 						<con:ExtensionContext id="ContLineTheme"
 							parent="FenetMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">
