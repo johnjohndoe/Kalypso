@@ -148,7 +148,7 @@ public class SelectedCalculationComponent
 
   Table table;
 
-  private Image image_;
+  private Image image_alert;
 
   private Label selectedProjectName;
 
@@ -223,7 +223,6 @@ public class SelectedCalculationComponent
           element2DLabel.setEnabled( false );
         }
         
-        //TODO update the number of boundaries
         if ( newValue instanceof ICalculationUnit1D2D )
         {
           titleSubCalculation.setEnabled( true );
@@ -294,7 +293,7 @@ public class SelectedCalculationComponent
     data = new GridData(GridData.FILL_HORIZONTAL);
     element2D.setLayoutData(data);
     
-    image_ = new Image( optionsComposite.getDisplay(), 
+    image_alert = new Image( optionsComposite.getDisplay(), 
         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
             PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
         "icons/elcl16/alert.gif" ).getImageData() );      
@@ -322,7 +321,7 @@ public class SelectedCalculationComponent
       private IStructuredSelection sel;
 
       public void widgetSelected( SelectionEvent e )
-      {
+      { 
         
         if (tableViewer.getSelection() != null)
         {
@@ -339,25 +338,23 @@ public class SelectedCalculationComponent
           {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-          }
-          
+          }          
         }
         else
         {
           descriptionText.setText( defaultTestDecription );
-        }         
-        
-     }
-      
+        }        
+     }      
     });
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( new ListLabelProvider(this) );    
+    tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider(subCalculationComposite.getDisplay()));//ListLabelProvider(this) );    
     table.setLinesVisible( true );   
     
     formData = new FormData();
     formData.top = new FormAttachment(titleSubCalculation,5);
     formData.left = new FormAttachment(0,5);
     formData.bottom = new FormAttachment(100,0);
+    formData.width = 100;
     table.setLayoutData( formData );
     
     descriptionGroupText = new Group( subCalculationComposite, SWT.NONE );
@@ -372,9 +369,7 @@ public class SelectedCalculationComponent
     FormLayout formDescription = new FormLayout();
     descriptionGroupText.setLayout( formDescription );
     
-    descriptionText = new Text( descriptionGroupText, 
-                                          SWT.MULTI|SWT.WRAP );
-     
+    descriptionText = new Text( descriptionGroupText,SWT.MULTI|SWT.WRAP );     
     
     descriptionText.setEditable( false );
     descriptionText.setText( defaultTestDecription );
