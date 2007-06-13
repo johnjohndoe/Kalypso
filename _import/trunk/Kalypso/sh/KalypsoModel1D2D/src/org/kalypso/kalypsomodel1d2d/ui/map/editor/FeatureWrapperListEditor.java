@@ -210,7 +210,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   private IEnvelopeProvider selectionEnvelopeProvider;
 
-  final String mainGroupTitle = "Bitte Höhenmodell auswählen";
+  //final String mainGroupTitle = "Bitte Höhenmodell auswählen";
 
   final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
 
@@ -230,7 +230,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
       moveSelection( -1 );
       tableViewer.refresh();
     }
-
   };
 
   final private SelectionListener moveDownListener = new SelectionAdapter()
@@ -340,16 +339,16 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private void guiSelectFromList( Composite parent )
   {
     FormData formData;
-    formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    Label terrainModelLabel = new Label( parent, SWT.NONE );
-    terrainModelLabel.setText( mainGroupTitle );
-    terrainModelLabel.setLayoutData( formData );
+//    formData = new FormData();
+//    formData.left = new FormAttachment( 0, 5 );
+//    formData.top = new FormAttachment( 0, 5 );
+//    Label terrainModelLabel = new Label( parent, SWT.NONE );
+//    //terrainModelLabel.setText( mainGroupTitle );
+//    terrainModelLabel.setLayoutData( formData );
 
     formData = new FormData();
     formData.left = new FormAttachment( 0, 10 );
-    formData.top = new FormAttachment( terrainModelLabel, 5 );
+    formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment(100,0);
 
     tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
@@ -376,7 +375,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     formData = new FormData();
     formData.left = new FormAttachment(table, 5);
     formData.bottom = new FormAttachment( 100, 0 );
-    formData.top = new FormAttachment( terrainModelLabel, 5 );
+    formData.top = new FormAttachment( 0, 5 );
     
     Composite btnComposite = new Composite(parent,SWT.NONE);
     btnComposite.setLayout( new GridLayout(1,false));
@@ -476,7 +475,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     descriptionGroupText.setText( titleDescriptionGroup );
     formData = new FormData();
     formData.left = new FormAttachment( btnComposite, 5 );
-    formData.top = new FormAttachment( terrainModelLabel, 10 );
+    formData.top = new FormAttachment( 0, 10 );
     formData.bottom = new FormAttachment( 100, 0 );
     descriptionGroupText.setLayoutData( formData );
 
