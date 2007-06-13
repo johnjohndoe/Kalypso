@@ -98,7 +98,7 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
           else if( mimeType.startsWith( "text/asc" ) )
           {
             final String fileName = file.getFileName();
-            final URL fileURL = new URL( fileName );
+            final URL fileURL = new URL( m_context, fileName );
 
             if( fileURL.toURI().isAbsolute() )
               m_grid = new AsciiGrid( fileURL );
