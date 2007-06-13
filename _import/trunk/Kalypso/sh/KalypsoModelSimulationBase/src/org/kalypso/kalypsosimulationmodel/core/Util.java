@@ -47,6 +47,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -76,6 +77,30 @@ import de.renew.workflow.cases.ICaseDataProvider;
 public class Util
 {
 
+  /**
+   * Gets the scenario folder
+   */
+  public static final IFolder getScenarioFolder()
+  {
+    try
+    {
+      IWorkbench workbench = PlatformUI.getWorkbench();
+      IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      IEvaluationContext currentState = service.getCurrentState();
+      
+      IFolder scenarioFolder = 
+        (IFolder) currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+      
+      /// scenario
+      return scenarioFolder;
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+      throw new RuntimeException(th);
+    }
+  }
+  
   /**
    * Gets the szenario model
    */
