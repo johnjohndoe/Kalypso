@@ -51,6 +51,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -62,7 +63,13 @@ import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -71,8 +78,14 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryLineFromC
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ZmlChooserStepDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -310,14 +323,15 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
         private CommandableWorkspace workspace;
 
         public void run( )
-        {
+        {          
+           final IBoundaryConditionDescriptor[] descriptors = createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
          //@ TODO Add two more parameters.
            if (dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER) instanceof CommandableWorkspace)
            {
              workspace = (CommandableWorkspace) dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER);
            }
           NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
-                                            null,
+                                            descriptors,
                                             workspace,
                                             boundaryFeature.getWrappedFeature().getParent(),
                                             boundaryFeature.getWrappedFeature().getParent().getParentRelation());
@@ -325,10 +339,10 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
           wizardDialog.open();
         }
       };
-      display.syncExec( runnable );
- 
-      
+      display.syncExec( runnable );     
     }
+    
+    
 
     else if( TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL.equals( text ) )
     {
@@ -339,6 +353,36 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       System.out.println( "Not supported menu action:" + text );
     }
   }
+    
+    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
+    {
+      final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+      final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+      final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+      final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+      final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
+
+      final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
+      final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
+
+      // TODO: ask ingenieurs what is right here:
+      if( modelElement instanceof IElement1D )
+        return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
+
+      if( modelElement instanceof IPolyElement )
+        return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
+
+      if( modelElement instanceof IFE1D2DNode )
+        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+
+      if( modelElement instanceof IFE1D2DContinuityLine )
+        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+
+      if( modelElement instanceof ILineElement)
+        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+      
+      return new IBoundaryConditionDescriptor[] {};
+    }
 
   private void actionRemoveBoundaryLineFromModel( String itemText )
   {
@@ -365,7 +409,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
                 ICommonKeys.KEY_MAP_PANEL );
       }
     };
-// DeleteCmdFactory.createDeleteCmd( bLine.getWrappedFeature(), model1d2d );
     KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
 
   }

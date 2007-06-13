@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -49,8 +48,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
  * @author madanagopal
@@ -71,19 +68,19 @@ public class CalculationUnitViewerLabelProvider extends ListLabelProvider
            display,
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
             PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-            "icons/elcl16/add_1delement.gif" ).getImageData() );
+            "icons/elcl16/1d_Element.GIF" ).getImageData() );
 
   Image calc2DImage = new Image(
       display,
       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
         PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/add_2delement.gif" ).getImageData() );
+        "icons/elcl16/2d_Element.GIF" ).getImageData() );
   
   Image calc1D2DImage = new Image(
       display,
       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
         PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/ok.gif" ).getImageData() );
+        "icons/elcl16/1d_2d_Element.GIF" ).getImageData() );
  
   @Override
   public Image getImage( Object element )
