@@ -233,7 +233,7 @@
       <para>Anschließend klicken Sie auf "Finish". Es sind nun standardgemäß
       zwei Fenster geöffnet<mediaobject>
           <imageobject>
-            <imagedata fileref="img/1D2D/02_default_perspective.gif" />
+            <imagedata fileref="img/1D2D/02_default_perspective.png" />
           </imageobject>
         </mediaobject><itemizedlist>
           <listitem>
@@ -324,7 +324,7 @@
         Teilauschnitt klicken Sie den Button... (//zoom to full
         extend...)<mediaobject>
             <imageobject>
-              <imagedata fileref="img/1D2D/werkzeugleiste.png" />
+              <imagedata fileref="img/1D2D/04_werkzeugleiste.png" />
             </imageobject>
           </mediaobject></para>
 
