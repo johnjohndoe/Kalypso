@@ -24,7 +24,8 @@ public class VirtualFeatureTypeRegistry
     try
     {
       // common / na-modell: generate relations as geometry
-      m_instance.register( new VirtualAssociationFeatureTypePropertyHandler() );
+      VirtualFeatureTypeRegistry.m_instance.register( new VirtualAssociationFeatureTypePropertyHandler() );
+      VirtualFeatureTypeRegistry.m_instance.register( new VirtualRasterFeatureTypePropertyHandler() );
     }
     catch( final Exception e )
     {
@@ -74,9 +75,7 @@ public class VirtualFeatureTypeRegistry
       {
         final VirtualFeatureTypeProperty[] properties = vftp.createVirtualFeatureTypeProperties( ftp );
         for( final VirtualFeatureTypeProperty element2 : properties )
-        {
           result.add( element2 );
-        }
       }
     }
     return result.toArray( new VirtualFeatureTypeProperty[result.size()] );
@@ -84,6 +83,6 @@ public class VirtualFeatureTypeRegistry
 
   public static VirtualFeatureTypeRegistry getInstance( )
   {
-    return m_instance;
+    return VirtualFeatureTypeRegistry.m_instance;
   }
 }
