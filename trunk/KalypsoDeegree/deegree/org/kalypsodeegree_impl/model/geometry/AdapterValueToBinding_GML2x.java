@@ -51,7 +51,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import ogc2.www.opengis.net.gml.BoxType;
 import ogc2.www.opengis.net.gml.CoordinatesType;
 import ogc2.www.opengis.net.gml.GeometryAssociationType;
-import ogc2.www.opengis.net.gml.LineStringMember;
 import ogc2.www.opengis.net.gml.LineStringMemberType;
 import ogc2.www.opengis.net.gml.LineStringType;
 import ogc2.www.opengis.net.gml.LinearRingMemberType;
@@ -60,10 +59,8 @@ import ogc2.www.opengis.net.gml.MultiLineStringType;
 import ogc2.www.opengis.net.gml.MultiPointType;
 import ogc2.www.opengis.net.gml.MultiPolygonType;
 import ogc2.www.opengis.net.gml.ObjectFactory;
-import ogc2.www.opengis.net.gml.PointMember;
 import ogc2.www.opengis.net.gml.PointMemberType;
 import ogc2.www.opengis.net.gml.PointType;
-import ogc2.www.opengis.net.gml.PolygonMember;
 import ogc2.www.opengis.net.gml.PolygonMemberType;
 import ogc2.www.opengis.net.gml.PolygonType;
 
@@ -97,7 +94,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 
   private static final String TUPPLE_SEPARATOR = ",";
 
-  private String getCSName( final GM_Object geometry, String csNameDefault )
+  private String getCSName( final GM_Object geometry, final String csNameDefault )
   {
     final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
     if( coordinateSystem == null )
@@ -106,7 +103,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     {
       return coordinateSystem.getName();
     }
-    catch( RemoteException e )
+    catch( final RemoteException e )
     {
       return csNameDefault;
     }
@@ -115,7 +112,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IValueToGMLBindingAdapter#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public Object wrapToBinding( GM_Object geometry ) throws GM_Exception
+  public Object wrapToBinding( final GM_Object geometry ) throws GM_Exception
   {
     final String csNameDefault = getCSName( geometry, null );
     if( geometry instanceof GM_Point )
@@ -134,10 +131,10 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     throw new UnsupportedOperationException( geometry.getClass().getName() + " is not supported" );
   }
 
-  private Object createMultiPolygonType( GM_MultiSurface multiSurface, String csNameDefault )
+  private Object createMultiPolygonType( final GM_MultiSurface multiSurface, final String csNameDefault )
   {
     final String csName = getCSName( multiSurface, csNameDefault );
-    final MultiPolygonType multiPolygonType = gml2Fac.createMultiPolygonType();
+    final MultiPolygonType multiPolygonType = AdapterValueToBinding_GML2x.gml2Fac.createMultiPolygonType();
     final GM_Surface[] allSurfaces = multiSurface.getAllSurfaces();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
@@ -145,20 +142,20 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     for( final GM_Surface surface : allSurfaces )
     {
       final PolygonType polygonType = createPolygonType( surface, csName );
-      final PolygonMemberType polygonMemberType = gml2Fac.createPolygonMemberType();
-      final JAXBElement<PolygonType> polygonElement = gml2Fac.createPolygon( polygonType );
+      final PolygonMemberType polygonMemberType = AdapterValueToBinding_GML2x.gml2Fac.createPolygonMemberType();
+      final JAXBElement<PolygonType> polygonElement = AdapterValueToBinding_GML2x.gml2Fac.createPolygon( polygonType );
       polygonMemberType.setGeometry( polygonElement );
-      final PolygonMember polygonMember = gml2Fac.createPolygonMember( polygonMemberType );
+      final JAXBElement<PolygonMemberType> polygonMember = AdapterValueToBinding_GML2x.gml2Fac.createPolygonMember( polygonMemberType );
       geometryMember.add( polygonMember );
     }
     multiPolygonType.setSrsName( csName );
     return multiPolygonType;
   }
 
-  private Object createMultiLineStringType( GM_MultiCurve multiCurve, String csNameDefault ) throws GM_Exception
+  private Object createMultiLineStringType( final GM_MultiCurve multiCurve, final String csNameDefault ) throws GM_Exception
   {
     final String csName = getCSName( multiCurve, csNameDefault );
-    final MultiLineStringType multiLineStringType = gml2Fac.createMultiLineStringType();
+    final MultiLineStringType multiLineStringType = AdapterValueToBinding_GML2x.gml2Fac.createMultiLineStringType();
     final GM_Curve[] allCurves = multiCurve.getAllCurves();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiLineStringType.getGeometryMember();
@@ -166,20 +163,20 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     for( final GM_Curve curve : allCurves )
     {
       final LineStringType curveType = createLineStringType( curve, csName );
-      final LineStringMemberType lineStringMemberType = gml2Fac.createLineStringMemberType();
-      final JAXBElement<LineStringType> lineStringElement = gml2Fac.createLineString( curveType );
+      final LineStringMemberType lineStringMemberType = AdapterValueToBinding_GML2x.gml2Fac.createLineStringMemberType();
+      final JAXBElement<LineStringType> lineStringElement = AdapterValueToBinding_GML2x.gml2Fac.createLineString( curveType );
       lineStringMemberType.setGeometry( lineStringElement );
-      final LineStringMember lineStringMember = gml2Fac.createLineStringMember( lineStringMemberType );
+      final JAXBElement<LineStringMemberType> lineStringMember = AdapterValueToBinding_GML2x.gml2Fac.createLineStringMember( lineStringMemberType );
       geometryMember.add( lineStringMember );
     }
     multiLineStringType.setSrsName( csName );
     return multiLineStringType;
   }
 
-  private MultiPointType createMultiPointType( GM_MultiPoint multiPoint, String csNameDefault )
+  private MultiPointType createMultiPointType( final GM_MultiPoint multiPoint, final String csNameDefault )
   {
     final String csName = getCSName( multiPoint, csNameDefault );
-    final MultiPointType multiPointType = gml2Fac.createMultiPointType();
+    final MultiPointType multiPointType = AdapterValueToBinding_GML2x.gml2Fac.createMultiPointType();
     final GM_Point[] allPoints = multiPoint.getAllPoints();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> pointList = multiPointType.getGeometryMember();
@@ -187,31 +184,31 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     {
       final GM_Point point = allPoints[i];
       final PointType pointType = createPointType( point, csName );
-      final PointMemberType type = gml2Fac.createPointMemberType();
-      final JAXBElement<PointType> pointElement = gml2Fac.createPoint( pointType );
+      final PointMemberType type = AdapterValueToBinding_GML2x.gml2Fac.createPointMemberType();
+      final JAXBElement<PointType> pointElement = AdapterValueToBinding_GML2x.gml2Fac.createPoint( pointType );
       type.setGeometry( pointElement );
-      final PointMember pointMember = gml2Fac.createPointMember( type );
+      final JAXBElement<PointMemberType> pointMember = AdapterValueToBinding_GML2x.gml2Fac.createPointMember( type );
       pointList.add( pointMember );
     }
     multiPointType.setSrsName( csName );
     return multiPointType;
   }
 
-  private PolygonType createPolygonType( GM_Surface surface, String csNameDefault )
+  private PolygonType createPolygonType( final GM_Surface surface, final String csNameDefault )
   {
     final String csName = getCSName( surface, csNameDefault );
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
     final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
     final GM_Ring[] interiorRings = surfaceBoundary.getInteriorRings();
 
-    final PolygonType polygonType = gml2Fac.createPolygonType();
+    final PolygonType polygonType = AdapterValueToBinding_GML2x.gml2Fac.createPolygonType();
 
     // exterior
-    final LinearRingType outerLinearRingType = gml2Fac.createLinearRingType();
+    final LinearRingType outerLinearRingType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingType();
     final CoordinatesType outerRingCoordinatesType = createCoordinatesType( exteriorRing.getPositions() );
     outerLinearRingType.setCoordinates( outerRingCoordinatesType );
-    final JAXBElement<LinearRingType> outerLinearRing = gml2Fac.createLinearRing( outerLinearRingType );
-    final LinearRingMemberType outerLinearRingMemberType = gml2Fac.createLinearRingMemberType();
+    final JAXBElement<LinearRingType> outerLinearRing = AdapterValueToBinding_GML2x.gml2Fac.createLinearRing( outerLinearRingType );
+    final LinearRingMemberType outerLinearRingMemberType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingMemberType();
     outerLinearRingMemberType.setGeometry( outerLinearRing );
     polygonType.setOuterBoundaryIs( outerLinearRingMemberType );
 
@@ -219,28 +216,26 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 
     final List<LinearRingMemberType> interiorContainer = polygonType.getInnerBoundaryIs();
     if( interiorRings != null )
-    {
       for( int i = 0; i < interiorRings.length; i++ )
       {
         final GM_Ring ring = interiorRings[i];
-        final LinearRingType innerLinearRingType = gml2Fac.createLinearRingType();
+        final LinearRingType innerLinearRingType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingType();
         final CoordinatesType innerRingCoordinatesType = createCoordinatesType( ring.getPositions() );
         innerLinearRingType.setCoordinates( innerRingCoordinatesType );
-        final JAXBElement<LinearRingType> innerLinearRing = gml2Fac.createLinearRing( innerLinearRingType );
-        final LinearRingMemberType innerLinearRingMemberType = gml2Fac.createLinearRingMemberType();
+        final JAXBElement<LinearRingType> innerLinearRing = AdapterValueToBinding_GML2x.gml2Fac.createLinearRing( innerLinearRingType );
+        final LinearRingMemberType innerLinearRingMemberType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingMemberType();
         innerLinearRingMemberType.setGeometry( innerLinearRing );
         interiorContainer.add( innerLinearRingMemberType );
       }
-    }
     //
     polygonType.setSrsName( csName );
     return polygonType;
   }
 
-  private LineStringType createLineStringType( GM_Curve lineString, String csNameDefault ) throws GM_Exception
+  private LineStringType createLineStringType( final GM_Curve lineString, final String csNameDefault ) throws GM_Exception
   {
     final String csName = getCSName( lineString, csNameDefault );
-    final LineStringType lineStringType = gml2Fac.createLineStringType();
+    final LineStringType lineStringType = AdapterValueToBinding_GML2x.gml2Fac.createLineStringType();
     final GM_LineString asLineString = lineString.getAsLineString();
     final GM_Position[] positions = asLineString.getPositions();
     final CoordinatesType coordinatesType = createCoordinatesType( positions );
@@ -249,9 +244,9 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     return lineStringType;
   }
 
-  private PointType createPointType( GM_Point point, String csNameDefault )
+  private PointType createPointType( final GM_Point point, final String csNameDefault )
   {
-    final PointType pointType = gml2Fac.createPointType();
+    final PointType pointType = AdapterValueToBinding_GML2x.gml2Fac.createPointType();
     final GM_Position position = point.getPosition();
     final CoordinatesType coordinatesType = createCoordinatesType( new GM_Position[] { position } );
     pointType.setSrsName( csNameDefault );
@@ -259,24 +254,24 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     return pointType;
   }
 
-  private CoordinatesType createCoordinatesType( GM_Position[] positions )
+  private CoordinatesType createCoordinatesType( final GM_Position[] positions )
   {
-    final CoordinatesType coordinatesType = gml2Fac.createCoordinatesType();
-    coordinatesType.setCs( COORDINATES_SEPARATOR );
-    coordinatesType.setDecimal( DECIMAL_SEPARATOR );
-    coordinatesType.setTs( TUPPLE_SEPARATOR );
+    final CoordinatesType coordinatesType = AdapterValueToBinding_GML2x.gml2Fac.createCoordinatesType();
+    coordinatesType.setCs( AdapterValueToBinding_GML2x.COORDINATES_SEPARATOR );
+    coordinatesType.setDecimal( AdapterValueToBinding_GML2x.DECIMAL_SEPARATOR );
+    coordinatesType.setTs( AdapterValueToBinding_GML2x.TUPPLE_SEPARATOR );
     final StringBuffer buffer = new StringBuffer();
     for( int i = 0; i < positions.length; i++ )
     {
       if( i > 0 )
-        buffer.append( TUPPLE_SEPARATOR );
+        buffer.append( AdapterValueToBinding_GML2x.TUPPLE_SEPARATOR );
       final GM_Position position = positions[i];
       final double[] posArray = position.getAsArray();
       final int max = posArray.length;
       for( int j = 0; j < max; j++ )
       {
         if( j > 0 )
-          buffer.append( COORDINATES_SEPARATOR );
+          buffer.append( AdapterValueToBinding_GML2x.COORDINATES_SEPARATOR );
         buffer.append( posArray[j] );
       }
     }
@@ -287,13 +282,13 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   /**
    * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToElement(org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public Element wrapToElement( GM_Object geometry ) throws GM_Exception
+  public Element wrapToElement( final GM_Object geometry ) throws GM_Exception
   {
     final Object bindingGeometry;
     try
     {
       bindingGeometry = wrapToBinding( geometry );
-      Marshaller marshaller = AdapterBindingToValue_GML2x.GML2_JAXCONTEXT.createMarshaller();
+      final Marshaller marshaller = AdapterBindingToValue_GML2x.GML2_JAXCONTEXT.createMarshaller();
       final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
       fac.setNamespaceAware( true );
       final DocumentBuilder builder = fac.newDocumentBuilder();
@@ -302,7 +297,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
       marshaller.marshal( jaxbElement, document );
       return document.getDocumentElement();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       throw new GM_Exception( "could not marshall to Element", e );
@@ -312,29 +307,29 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   private JAXBElement createJAXBGeometryElement( final Object geometry )
   {
     if( geometry instanceof PointType )
-      return gml2Fac.createPoint( (PointType) geometry );
+      return AdapterValueToBinding_GML2x.gml2Fac.createPoint( (PointType) geometry );
     if( geometry instanceof LineStringType )
-      return gml2Fac.createLineString( (LineStringType) geometry );
+      return AdapterValueToBinding_GML2x.gml2Fac.createLineString( (LineStringType) geometry );
     if( geometry instanceof PolygonType )
-      return gml2Fac.createPolygon( (PolygonType) geometry );
+      return AdapterValueToBinding_GML2x.gml2Fac.createPolygon( (PolygonType) geometry );
 
     if( geometry instanceof MultiPointType )
-      return gml2Fac.createMultiPoint( (MultiPointType) geometry );
+      return AdapterValueToBinding_GML2x.gml2Fac.createMultiPoint( (MultiPointType) geometry );
     if( geometry instanceof MultiLineStringType )
-      return gml2Fac.createMultiLineString( (MultiLineStringType) geometry );
+      return AdapterValueToBinding_GML2x.gml2Fac.createMultiLineString( (MultiLineStringType) geometry );
     if( geometry instanceof MultiPolygonType )
-      return gml2Fac.createMultiPolygon( (MultiPolygonType) geometry );
+      return AdapterValueToBinding_GML2x.gml2Fac.createMultiPolygon( (MultiPolygonType) geometry );
     throw new UnsupportedOperationException();
   }
 
   /**
    * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public Object wrapToBinding( GM_Envelope geometry )
+  public Object wrapToBinding( final GM_Envelope geometry )
   {
-    final BoxType boxType = gml2Fac.createBoxType();
-    GM_Position[] positions = new GM_Position[] { geometry.getMin(), geometry.getMax() };
-    CoordinatesType coordinatesType = createCoordinatesType( positions );
+    final BoxType boxType = AdapterValueToBinding_GML2x.gml2Fac.createBoxType();
+    final GM_Position[] positions = new GM_Position[] { geometry.getMin(), geometry.getMax() };
+    final CoordinatesType coordinatesType = createCoordinatesType( positions );
     boxType.setCoordinates( coordinatesType );
     // TODO support srsname when refactored GM_Envelop to have a SRS
     return boxType;
