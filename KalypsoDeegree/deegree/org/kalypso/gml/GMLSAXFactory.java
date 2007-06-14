@@ -59,14 +59,13 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -80,25 +79,21 @@ public class GMLSAXFactory
 
   private final QName m_xlinkQN;
 
-  /** {@link ContentHandler} where everything gets written to. */
-  private final ContentHandler m_handler;
-
   /**
    * (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
   private final Map<String, String> m_idMap;
 
-  private final LexicalHandler m_lexHandler;
+  private final XMLReader m_xmlReader;
 
   /**
    * @param idMap
    *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLSAXFactory( final ContentHandler handler, final Map<String, String> idMap, final LexicalHandler lexHandler ) throws SAXException
+  public GMLSAXFactory( final XMLReader xmlReader, final Map<String, String> idMap ) throws SAXException
   {
-    m_handler = handler;
+    m_xmlReader = xmlReader;
     m_idMap = idMap;
-    m_lexHandler = lexHandler;
 
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
@@ -108,11 +103,13 @@ public class GMLSAXFactory
   {
     final Feature rootFeature = workspace.getRootFeature();
 
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+
     // handle prefixes...
     // theses are mandatory
-    m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
-    m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
-    m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
+    contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
+    contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
+    contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
 
     final GMLSchema gmlSchema = (GMLSchema) workspace.getGMLSchema();
 
@@ -134,7 +131,7 @@ public class GMLSAXFactory
     for( final String uri : uriSet )
     {
       final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
-      m_handler.startPrefixMapping( prefix, uri );
+      contentHandler.startPrefixMapping( prefix, uri );
     }
 
     // Add schemalocation string: wouldn't it be better to create it?
@@ -150,6 +147,8 @@ public class GMLSAXFactory
 
   private void process( final Feature feature, final AttributesImpl a ) throws SAXException
   {
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+
     final IFeatureType featureType = feature.getFeatureType();
 
     String id = feature.getId();
@@ -170,7 +169,7 @@ public class GMLSAXFactory
     final String localPart = prefixedQName.getLocalPart();
     final String uri = prefixedQName.getNamespaceURI();
 
-    m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
+    contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
 
     for( final IPropertyType pt : properties )
     {
@@ -182,7 +181,7 @@ public class GMLSAXFactory
         throw new UnsupportedOperationException();
     }
 
-    m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+    contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
   }
 
   private QName getPrefixedQName( final QName qName ) throws SAXException
@@ -190,7 +189,7 @@ public class GMLSAXFactory
     final String uri = qName.getNamespaceURI();
     final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
     if( !(m_usedPrefixes.contains( prefix )) )
-      m_handler.startPrefixMapping( prefix, uri );
+      m_xmlReader.getContentHandler().startPrefixMapping( prefix, uri );
     m_usedPrefixes.add( prefix );
     return new QName( qName.getNamespaceURI(), qName.getLocalPart(), prefix );
   }
@@ -206,7 +205,7 @@ public class GMLSAXFactory
     final GMLSchema gmlSchema = (GMLSchema) feature.getWorkspace().getGMLSchema();
     final String version = gmlSchema.getGMLVersion();
 
-    final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
+    final IMarshallingTypeHandler th = vpt.getTypeHandler();
 
     if( vpt.isList() )
     {
@@ -223,26 +222,19 @@ public class GMLSAXFactory
 
   private void processValue( final QName prefixedQName, final String uri, final String localPart, final IMarshallingTypeHandler th, final URL context, final Object singleValue, final boolean isMandatory, final String gmlVersion ) throws SAXException
   {
-    try
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+
+    if( singleValue != null )
+      th.marshal( prefixedQName, singleValue, m_xmlReader, context, gmlVersion );
+    else if( isMandatory )
     {
-      if( singleValue != null )
-        th.marshal( prefixedQName, singleValue, m_handler, m_lexHandler, context, gmlVersion );
-      else if( isMandatory )
-      {
-        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
-        // TODO: put default value if element is not nullable?
-        m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
-      }
-      else
-      {
-        // optional null value: do nothing
-      }
+      contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
+      // TODO: put default value if element is not nullable?
+      contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
-    catch( final TypeRegistryException e )
+    else
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      // TODO: report to error handler of xmlReader
+      // optional null value: do nothing
     }
   }
 
@@ -282,6 +274,8 @@ public class GMLSAXFactory
 
   private void processFeatureLink( final Object next, final QName prefixedQName ) throws SAXException
   {
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+
     final String uri = prefixedQName.getNamespaceURI();
     final String localPart = prefixedQName.getLocalPart();
 
@@ -302,16 +296,16 @@ public class GMLSAXFactory
 
       final AttributesImpl atts = new AttributesImpl();
       atts.addAttribute( NS.XLINK, "href", m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart(), "CDATA", fid );
-      m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
-      m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+      contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
+      contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
     else if( next instanceof Feature )
     {
-      m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
+      contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
 
       process( (Feature) next, new AttributesImpl() );
 
-      m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+      contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
     else
       throw new UnsupportedOperationException( "Could not process: " + next );

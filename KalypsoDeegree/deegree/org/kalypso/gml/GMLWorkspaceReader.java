@@ -54,7 +54,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * @author doemming
@@ -95,12 +94,11 @@ public class GMLWorkspaceReader implements XMLReader
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
 
-    // TODO instead of passing this instance of the lexcial handler, give the whole reader in order to let the handler
-    // to be
-    // changed during parsing
-    final LexicalHandler lexicalHandler = (LexicalHandler) m_propMap.get( "http://xml.org/sax/properties/lexical-handler" );
+    // Bit of a hack: wrap content handler in order to support indentation
     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
-    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler, m_idMap, lexicalHandler );
+    setContentHandler( indentHandler );
+
+    final GMLSAXFactory factory = new GMLSAXFactory( this, m_idMap );
 
     handler.startDocument();
     factory.process( workspace );

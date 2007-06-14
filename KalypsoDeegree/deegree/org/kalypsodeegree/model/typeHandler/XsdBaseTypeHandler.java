@@ -54,6 +54,7 @@ import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypso.gmlschema.types.XsdBaseContentHandler;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -84,40 +85,33 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public final void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public final void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    try
-    {
-      // TODO: this is NOT the right place to write the element! This should be done in the next higher level, because
-      // it is always the same for every marshalling type handler.
-      final String namespaceURI = propQName.getNamespaceURI();
-      final String localPart = propQName.getLocalPart();
-      final String qNameString = propQName.getPrefix() + ":" + localPart;
-      contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+    final ContentHandler contentHandler = reader.getContentHandler();
+    final LexicalHandler lexicalHandler = (LexicalHandler) reader.getProperty( "http://xml.org/sax/properties/lexical-handler" );
 
-      // FIXME: this is the right place to write CDATA stuff, but of course now it is a wild hack
-      // to look for a specific value. This must of course be decided in a more generel way.
-      // Maybe we register extensions for specific qnames?
-      // TODO: also, it should be only done for String, i.e. in the XxsdBaseTypeHandlerString
-      if( propQName.equals( new QName( NS.OM, "result" ) ) )
-        lexicalHandler.startCDATA();
+    // TODO: this is NOT the right place to write the element! This should be done in the next higher level, because
+    // it is always the same for every marshalling type handler.
+    final String namespaceURI = propQName.getNamespaceURI();
+    final String localPart = propQName.getLocalPart();
+    final String qNameString = propQName.getPrefix() + ":" + localPart;
+    contentHandler.startElement( namespaceURI, localPart, qNameString, null );
 
-      final String valueAsXMLString = convertToXMLString( (T) value );
-      final char[] cs = valueAsXMLString.toCharArray();
-      contentHandler.characters( cs, 0, cs.length );
+    // FIXME: this is the right place to write CDATA stuff, but of course now it is a wild hack
+    // to look for a specific value. This must of course be decided in a more generel way.
+    // Maybe we register extensions for specific qnames?
+    // TODO: also, it should be only done for String, i.e. in the XxsdBaseTypeHandlerString
+    if( propQName.equals( new QName( NS.OM, "result" ) ) )
+      lexicalHandler.startCDATA();
 
-      if( propQName.equals( new QName( NS.OM, "result" ) ) )
-        lexicalHandler.endCDATA();
+    final String valueAsXMLString = convertToXMLString( (T) value );
+    final char[] cs = valueAsXMLString.toCharArray();
+    contentHandler.characters( cs, 0, cs.length );
 
-      contentHandler.endElement( namespaceURI, localPart, qNameString );
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      // TODO: there is probably an errorHandler in the XmlReader, give it to him
-      e.printStackTrace();
-      throw new TypeRegistryException( e );
-    }
+    if( propQName.equals( new QName( NS.OM, "result" ) ) )
+      lexicalHandler.endCDATA();
+
+    contentHandler.endElement( namespaceURI, localPart, qNameString );
   }
 
   public abstract String convertToXMLString( final T value );
