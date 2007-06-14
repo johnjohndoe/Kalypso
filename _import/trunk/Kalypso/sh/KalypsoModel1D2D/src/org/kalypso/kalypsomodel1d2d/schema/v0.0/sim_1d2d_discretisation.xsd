@@ -14,6 +14,8 @@
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 	<xs:annotation>
@@ -22,6 +24,16 @@
 		</xs:appinfo>
 	</xs:annotation>
 	
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+		schemaLocation="sim_1d2d_operational.xsd"
+		/>
+		
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+		schemaLocation="sim_1d2d_control.xsd"
+		/>
+		
 	<xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
@@ -521,7 +533,8 @@
 		            	name="downstreamBoundaryLine"
 		            	type="wb1d2d:BoundaryLinePropertyType"
 		            	minOccurs="1" maxOccurs="1"/ -->
-		            
+		            <xs:element ref="op1d2d:operationalModel"/>
+		            <xs:element ref="c1d2d:controlModelMember"/>
 	            	<xs:element 
 		            	ref="wb1d2d:element" 
 		            	minOccurs="0" maxOccurs="unbounded"/>

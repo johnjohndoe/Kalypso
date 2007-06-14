@@ -750,4 +750,24 @@ public class FENetConceptSelectionWidget implements IWidget
   {
     return mapPanel;
   }
+  
+  /**
+   * To get the last clicked point.
+   * 
+   * @return a {@link GM_Point} representing the last clicked point
+   * 
+   */
+  public GM_Point getCurrentPoint()
+  {
+    if( currentPoint == null )
+    {
+      return null;
+    }
+    else
+    {
+      final GM_Point point = 
+        MapUtilities.transform( mapPanel, currentPoint );
+      return point;
+    }
+  }
 }

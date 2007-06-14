@@ -62,6 +62,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -83,11 +84,17 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   private NodalBCDescriptorPage m_descriptorPage;
 
   private IBoundaryCondition m_boundaryCondition;
+  
+  private GM_Point boundaryPosition;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
+  public NodalBCSelectionWizard( 
+            final IBoundaryConditionDescriptor[] descriptors, 
+            final CommandableWorkspace workspace, 
+            final Feature parentFeature, 
+            final IRelationType parentRelation )
   {
     m_descriptors = descriptors;
     m_workspace = workspace;
@@ -133,6 +140,10 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
         final IObservation<TupleResult> obs = bc.initializeObservation( domainComponentUrn, valueComponentUrn );
         descriptor.fillObservation( obs );
         bc.setObservation( obs );
+        if( boundaryPosition != null )
+        {
+          bc.setPosition( boundaryPosition );
+        }
 
         return Status.OK_STATUS;
       }
@@ -152,6 +163,17 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   public IBoundaryCondition getBoundaryCondition( )
   {
     return m_boundaryCondition;
+  }
+  
+  /**
+   * Sets the target position of the boundary condition to be created.
+   * 
+   * @param boundaryPosition the target position
+   * 
+   */
+  public void setBoundaryPosition(GM_Point boundaryPosition)
+  {
+    this.boundaryPosition= boundaryPosition;
   }
 
 }

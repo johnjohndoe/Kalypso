@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.dialogs.ImportExportWizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -69,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
@@ -86,10 +88,12 @@ import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ZmlChooserStepDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory;
 import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IOperationalModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Patrice Congo
@@ -330,14 +334,28 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
            {
              workspace = (CommandableWorkspace) dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER);
            }
+           
+           ///model is to be  get from the calculation unit
+           final IOperationalModel1D2D opModel=
+                      Util.getModel( IOperationalModel1D2D.class );
+           final Feature opModelFeature = opModel.getWrappedFeature();
+           final IRelationType parentRelation = 
+                     opModel.getBoundaryConditions().getWrappedList().getParentFeatureTypeProperty();
+           workspace = (CommandableWorkspace) opModel.getWrappedFeature().getWorkspace();
+           
           NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
                                             descriptors,
                                             workspace,
-                                            boundaryFeature.getWrappedFeature().getParent(),
-                                            boundaryFeature.getWrappedFeature().getParent().getParentRelation());
+                                            opModelFeature,
+                                            parentRelation );
+          
+          GM_Point boundaryPosition = getBoundaryPosition();
+          wizard.setBoundaryPosition( boundaryPosition );
           final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
           wizardDialog.open();
         }
+
+        
       };
       display.syncExec( runnable );     
     }
@@ -353,6 +371,13 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       System.out.println( "Not supported menu action:" + text );
     }
   }
+    
+    private GM_Point getBoundaryPosition( )
+    {
+      IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+      
+      return null;
+    }
     
     private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
     {

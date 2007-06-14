@@ -31,7 +31,15 @@
 		
 	@author Patrice Congo
 -->
-<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:kapp="org.kalypso.appinfo" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:kapp="org.kalypso.appinfo" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo>
 			<kapp:gmlVersion>3.1</kapp:gmlVersion>
