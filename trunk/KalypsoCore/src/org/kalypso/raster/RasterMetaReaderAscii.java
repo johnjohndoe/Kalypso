@@ -74,9 +74,7 @@ public class RasterMetaReaderAscii implements IRasterMetaReader
   private void setup( )
   {
     if( m_urlImage == null )
-    {
       throw (new IllegalStateException());
-    }
 
     try
     {
@@ -123,10 +121,14 @@ public class RasterMetaReaderAscii implements IRasterMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
    */
-  public String getUpperLeftCornerX( )
+  public String getOriginCornerX( )
   {
     try
     {
+      /**
+       * ASCII-Grid specification doesn't define an upper left corner, it has an origin point and we are returning this
+       * point
+       */
       return new Double( m_coverage.getGridDomain().getOrigin( m_cs ).getX() ).toString();
     }
     catch( final Exception e )
@@ -140,10 +142,14 @@ public class RasterMetaReaderAscii implements IRasterMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
    */
-  public String getUpperLeftCornerY( )
+  public String getOriginCornerY( )
   {
     try
     {
+      /**
+       * ASCII-Grid specification doesn't define an upper left corner, it has an origin point and we are returning this
+       * point
+       */
       return new Double( m_coverage.getGridDomain().getOrigin( m_cs ).getY() ).toString();
     }
     catch( final Exception e )
@@ -162,9 +168,7 @@ public class RasterMetaReaderAscii implements IRasterMetaReader
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final CS_CoordinateSystem crs ) throws Exception
   {
     if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
-    {
       throw (new IllegalStateException());
-    }
 
     final RectifiedGridDomain gridDomain = m_coverage.getGridDomain();
 

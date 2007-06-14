@@ -108,7 +108,7 @@ public class RasterMetaReaderGeo implements IRasterMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
    */
-  public String getUpperLeftCornerY( )
+  public String getOriginCornerY( )
   {
     try
     {
@@ -215,7 +215,7 @@ public class RasterMetaReaderGeo implements IRasterMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
    */
-  public String getUpperLeftCornerX( )
+  public String getOriginCornerX( )
   {
     try
     {

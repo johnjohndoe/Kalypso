@@ -56,9 +56,9 @@ public interface IRasterMetaReader
 
   public String getVectorYy( );
 
-  public String getUpperLeftCornerX( );
+  public String getOriginCornerX( );
 
-  public String getUpperLeftCornerY( );
+  public String getOriginCornerY( );
 
   /**
    * params can be modified by user editing

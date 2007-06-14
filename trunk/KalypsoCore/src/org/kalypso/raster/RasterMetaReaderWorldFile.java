@@ -98,7 +98,7 @@ public class RasterMetaReaderWorldFile implements IRasterMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
    */
-  public String getUpperLeftCornerY( )
+  public String getOriginCornerY( )
   {
     return new Double( m_world.getUlcy() ).toString();
   }
@@ -138,7 +138,7 @@ public class RasterMetaReaderWorldFile implements IRasterMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
    */
-  public String getUpperLeftCornerX( )
+  public String getOriginCornerX( )
   {
     return new Double( m_world.getUlcx() ).toString();
   }

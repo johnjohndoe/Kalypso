@@ -99,7 +99,7 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
       final int height = m_image.getHeight();
       final int width = m_image.getWidth();
 
-      final GM_Point origin = GeometryFactory.createGM_Point( new Double(reader.getUpperLeftCornerX()), new Double(reader.getUpperLeftCornerY()), system );
+      final GM_Point origin = GeometryFactory.createGM_Point( new Double(reader.getOriginCornerX()), new Double(reader.getOriginCornerY()), system );
 
       final OffsetVector offsetX = new OffsetVector( new Double(reader.getVectorXx()), new Double(reader.getVectorXy()) );
       final OffsetVector offsetY = new OffsetVector( new Double(reader.getVectorYx()), new Double(reader.getVectorYy()) );
