@@ -57,7 +57,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 
 /**
- * @author madanago
+ * @author Madanagopal
  * 
  */
 public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWizard
