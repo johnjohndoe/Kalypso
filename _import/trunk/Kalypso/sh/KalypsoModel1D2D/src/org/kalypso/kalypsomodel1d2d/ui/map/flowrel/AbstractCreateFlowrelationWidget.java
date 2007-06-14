@@ -63,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -219,9 +220,9 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
           return point.getPosition();
       }
       /* ContinuityLine: return middle of line */
-      else if( modelElement instanceof IFE1D2DContinuityLine )
+      else if( modelElement instanceof ILineElement )
       {
-        final IFE1D2DContinuityLine contiLine = (IFE1D2DContinuityLine) modelElement;
+        final ILineElement contiLine = (ILineElement) modelElement;
         final GM_Curve line = (GM_Curve) contiLine.recalculateElementGeometry();
         if( line != null )
         {
@@ -271,9 +272,9 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
           g.fillRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
       }
       /* ContinuityLine: return middle of line */
-      else if( m_modelElement instanceof IFE1D2DContinuityLine )
+      else if( m_modelElement instanceof ILineElement )
       {
-        final IFE1D2DContinuityLine contiLine = (IFE1D2DContinuityLine) m_modelElement;
+        final ILineElement contiLine = (ILineElement) m_modelElement;
         final GM_Curve line = (GM_Curve) contiLine.recalculateElementGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();

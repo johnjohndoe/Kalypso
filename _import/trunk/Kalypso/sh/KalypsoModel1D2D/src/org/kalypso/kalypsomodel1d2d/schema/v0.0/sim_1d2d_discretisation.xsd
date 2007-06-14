@@ -24,15 +24,20 @@
 		</xs:appinfo>
 	</xs:annotation>
 	
-	<xs:import
+	<!--xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
 		schemaLocation="sim_1d2d_operational.xsd"
-		/>
+		/-->
 		
-	<xs:import
+	<!--xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
 		schemaLocation="sim_1d2d_control.xsd"
-		/>
+		/ -->
+		
+	<!--xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+		schemaLocation="sim_1d2d_control.xsd"
+		/ -->
 		
 	<xs:import
 		namespace="http://www.opengis.net/gml"
@@ -533,8 +538,8 @@
 		            	name="downstreamBoundaryLine"
 		            	type="wb1d2d:BoundaryLinePropertyType"
 		            	minOccurs="1" maxOccurs="1"/ -->
-		            <xs:element ref="op1d2d:operationalModel"/>
-		            <xs:element ref="c1d2d:controlModelMember"/>
+		            <!--xs:element ref="op1d2d:operationalModel"/ -->
+		            <!--xs:element ref="c1d2d:controlModelMember"/ -->
 	            	<xs:element 
 		            	ref="wb1d2d:element" 
 		            	minOccurs="0" maxOccurs="unbounded"/>
@@ -965,7 +970,7 @@
 	<xs:element 
 		name="ContinuityLine"
 		type="wb1d2d:ContinuityLineType"
-		substitutionGroup="wb1d2d:Element"/>
+		substitutionGroup="wb1d2d:BoundaryLine" />
 	
 	<xs:complexType name="ContinuityLineType">
 		<xs:annotation>
@@ -982,7 +987,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
+			<!--xs:extension 
 				base="wb1d2d:ElementType">
 					<xs:sequence>
 						<xs:element
@@ -990,6 +995,9 @@
 							minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 				
+			</xs:extension -->
+			<xs:extension 
+				base="wb1d2d:BoundaryLineType">
 			</xs:extension>			
 		</xs:complexContent>	
 	</xs:complexType>
@@ -1024,7 +1032,7 @@
 							ref="wb1d2d:element1D"
 							minOccurs="1" maxOccurs="1"/>
 					<xs:element 
-							ref="wb1d2d:continuityLine"
+							ref="wb1d2d:boundaryLine"
 							minOccurs="1" maxOccurs="1"/>
 					</xs:sequence>
 			</xs:restriction>

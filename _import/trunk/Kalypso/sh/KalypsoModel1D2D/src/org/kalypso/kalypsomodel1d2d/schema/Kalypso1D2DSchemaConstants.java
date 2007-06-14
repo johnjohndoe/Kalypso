@@ -35,9 +35,9 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_F_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
 
-  public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
+//  public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
 
-  public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
+//  public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
 
   public final static QName WB1D2D_F_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element2D" );
 
@@ -47,11 +47,18 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_F_ABSTRACT_JUNCTION1D2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_Junction1D2D" );
 
+  public final static QName WB1D2D_F_JUNTCION_CONTEXT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_JunctionContext" );
+
   public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DToCLine" );
 
   public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DTo2D" );
 
-  public final static QName WB1D2D_F_JUNTCION_CONTEXT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_JunctionContext" );
+  public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
+  
+  public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
+  
+  public final static QName WB1D2D_F_LINE_ELEMENT = 
+    new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "LineElement" );
 
   public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 
@@ -67,9 +74,11 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" );
 
-  public final static QName WB1D2D_PROP_FE1D2DEDGE_CONTAINER = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer" );
+//  public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = 
+//           new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 
-  public static final QName WB1D2D_F_COMPLEX_ELE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement" );
+//  public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE = 
+//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToClineJunction1D2D" );
 
   public static final QName WB1D2D_F_COMPLEX_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement2D" );
 

@@ -68,6 +68,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * 
  * @author Patrice Congo
  */
+@SuppressWarnings({"unchecked", "hiding"})
 public class JunctionContext1DToCLine 
                   extends AbstractFeatureBinder 
                   implements IJunctionContext1DToCLine
@@ -89,48 +90,13 @@ public class JunctionContext1DToCLine
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#getContinuityLine()
    */
-  public IFE1D2DContinuityLine getContinuityLine( )
+  public ILineElement getContinuityLine( )
   {
-    Feature feature = getFeature();
-    Feature cLineFeature = 
-      FeatureHelper.resolveLink( 
-          feature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE );
-    if(cLineFeature == null)
-    {
-      return null;
-    }
-    else
-    {
-      return (IFE1D2DContinuityLine) 
-                cLineFeature.getAdapter( IFE1D2DContinuityLine.class );
-    }
-//    Object obj = 
-//      feature.getProperty( 
-//          Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE );
-//    if(obj !=null)
-//    {
-//      Feature cLine = FeatureHelper.getFeature( feature.getWorkspace(), obj );
-//      if(cLine!=null)
-//      {
-//        
-//        return (IFE1D2DContinuityLine) 
-//        cLine.getAdapter( IFE1D2DContinuityLine.class );
-//      }
-//      else
-//      {
-//        String message = 
-//          String.format( 
-//              "Could not get feature from the workspace:"+
-//                "\n\tworkspace feature=%s \n\tproperty(ref)=%s", 
-//              feature,
-//              obj );
-//        throw new RuntimeException(message);
-//      }
-//    }
-//    else
-//    {  
-//      return null;
-//    }
+    ILineElement resolvedLink = FeatureHelper.resolveLink( 
+                    this, 
+                    Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
+                    ILineElement.class );
+    return resolvedLink;
   }
 
   /**
@@ -138,28 +104,11 @@ public class JunctionContext1DToCLine
    */
   public IElement1D getElement1D( )
   {
-    Feature feature = getFeature();
-    Feature element1dFeature = 
-      FeatureHelper.resolveLink( 
-          feature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
-    if(element1dFeature == null)
-    {
-      return null;
-    }
-    else
-    {
-      return (IElement1D) element1dFeature.getAdapter( IElement1D.class );
-    }
-    
-//    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
-//    if(obj instanceof Feature)
-//    {
-//      return (IElement1D) ((Feature)obj).getAdapter( IElement1D.class );
-//    }
-//    else
-//    {  
-//      return null;
-//    }
+    IElement1D resolvedLink = FeatureHelper.resolveLink( 
+        this, 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
+        IElement1D.class );
+    return resolvedLink;
   }
 
   /**
@@ -168,10 +117,10 @@ public class JunctionContext1DToCLine
   public boolean addElementAsRef( IFE1D2DElement element )
   {
     Feature wrappedFeature = element.getWrappedFeature();
-    if(TypeInfo.isContinuityLine( wrappedFeature ))
+    if(TypeInfo.isBoundaryLine( wrappedFeature ))
     {
       getFeature().setProperty( 
-          Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
           wrappedFeature.getId() );
       element.getContainers().addRef( this );
       return true;
@@ -189,7 +138,7 @@ public class JunctionContext1DToCLine
       String message = 
         String.format( 
             "This complex element accept only one 1D element and one "+
-              " continuity line; so adding this feature is not possible"+
+              " boundary line; so adding this feature is not possible"+
               "\n\tfeature to add as ref=%s \n\ttype=", 
             wrappedFeature, 
             wrappedFeature.getFeatureType().getQName() );
@@ -211,13 +160,13 @@ public class JunctionContext1DToCLine
   public boolean removeElementAsRef( IFE1D2DElement element )
   {
     Feature featureToDel = element.getWrappedFeature();
-    if(TypeInfo.isContinuityLine( featureToDel ))
+    if(TypeInfo.isBoundaryLine( featureToDel ))
     {
       if(featureToDel.equals( getContinuityLine().getWrappedFeature() ))
       {
         element.getContainers().removeAllRefs( this );
         getFeature().setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
             null );
         return true;
       }
@@ -263,7 +212,7 @@ public class JunctionContext1DToCLine
       eleList.add( element1D );
     }
     
-    IFE1D2DContinuityLine continuityLine = getContinuityLine();
+    ILineElement continuityLine = getContinuityLine();
     if(continuityLine != null)
     {
       eleList.add( continuityLine );
@@ -276,7 +225,7 @@ public class JunctionContext1DToCLine
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = getContinuityLine();
+    ILineElement<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = getContinuityLine();
     if(continuityLine == null )
     {
       return null;
@@ -328,7 +277,7 @@ public class JunctionContext1DToCLine
       {
         Feature contextFeature = getFeature();
         contextFeature.setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINE, 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
             null );
         contextFeature.setProperty( 
             Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 

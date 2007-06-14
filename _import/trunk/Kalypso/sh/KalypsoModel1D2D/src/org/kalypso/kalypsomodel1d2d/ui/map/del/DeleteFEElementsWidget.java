@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -256,6 +257,7 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     catch( Exception e )
     {
       e.printStackTrace();
+      throw new RuntimeException(e.getMessage(), e );
     }
     
   }
@@ -362,6 +364,28 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     
     this.m_widgetStrategy = widgetStrategy;    
     widgetStrategy.activate( getCommandTarget(), getMapPanel() );
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    try
+    {
+      if( m_widgetStrategy !=null )
+      {
+        m_widgetStrategy.finish();
+      }
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+    }
+    
+    super.finish();
+    
   }
   
 }

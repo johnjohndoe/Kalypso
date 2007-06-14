@@ -269,8 +269,8 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
       // has no surface...
       // FIX: make an own wrapper-class for Polygon-Elements, only those
       // have a surface
-      if( netItem instanceof IFE1D2DContinuityLine )
-        return ((IFE1D2DContinuityLine) netItem).recalculateElementGeometry();
+      if( netItem instanceof ILineElement )
+        return ((ILineElement) netItem).recalculateElementGeometry();
 
       if( netItem instanceof IPolyElement )
       {
@@ -305,9 +305,9 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findContinuityLine(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
    */
-  public IFE1D2DContinuityLine findContinuityLine( final GM_Point position, final double grabDistance )
+  public ILineElement findContinuityLine( final GM_Point position, final double grabDistance )
   {
-    return (IFE1D2DContinuityLine) findElement( position, grabDistance, IFE1D2DContinuityLine.class );
+    return (ILineElement) findElement( position, grabDistance, ILineElement.class );
   }
 
   /**

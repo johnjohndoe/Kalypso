@@ -79,89 +79,17 @@ public class ContinuityLineOps
     // do not instantiate
   }
 
-  public static IFE1D2DContinuityLine contilineFromCurve( final GM_Curve curve, final IFEDiscretisationModel1d2d model ) throws CoreException
-  {
-    IFE1D2DContinuityLine cLine = 
-        lineElementFromCurve( 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
-            IFE1D2DContinuityLine.class, 
-            curve, 
-            model );
-    return cLine;
-    
-//    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
-//    // foreach segment of curve:
-//    try
-//    {
-//      if( doTrace )
-//        System.out.println( "START: ContinuityLine from Curve" );
-//
-//      final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> edgeList = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
-//
-//      final LineString lineString = (LineString) JTSAdapter.export( curve );
-//      for( int i = 0; i < lineString.getNumPoints() - 1; i++ )
-//      {
-//        if( doTrace )
-//          System.out.println( "Processing line segment: " + i );
-//
-//        final Point startPoint = lineString.getPointN( i );
-//        final Point endPoint = lineString.getPointN( i + 1 );
-//
-//        // TODO: wenn die punkte ausserhalb liegen, die Verbindung aber das Netzt schneidet, wäre es
-//        // eigentlich schöner, den ersten/letzten Schnittpunkt mit dem Netz als start und Endknoten zu verwenden
-//
-//        // TODO: eventuell das original segment stückeln, um komische wegführungen zu vermeiden (d.h. nächer an der
-//        // linie beiben)
-//        final IFE1D2DNode startNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( startPoint ), model );
-//        final IFE1D2DNode endNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( endPoint ), model );
-//
-//        if( startNode != null && endNode != null )
-//        {
-//          if( doTrace )
-//          {
-//            System.out.println( "Found start node: " + startNode.getWrappedFeature().getId() );
-//            System.out.println( "Found end node: " + endNode.getWrappedFeature().getId() );
-//          }
-//
-//          final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = 
-//                              ModelOps.routing( startNode, endNode );
-//          edgeList.addAll( Arrays.asList( edges ) );
-//        }
-//        else
-//        {
-//          final IStatus status = StatusUtilities.createWarningStatus( "No node(s) for drawn line found." );
-//          throw new CoreException( status );
-//        }
-//      }
-//
-//      // TODO: check number of edges
-//      if( edgeList.isEmpty() )
-//      {
-//        // TODO: error message?
-//        final IStatus status = StatusUtilities.createWarningStatus( "Continuity line could not be created: no edges found." );
-//        throw new CoreException( status );
-//      }
-//      else
-//      {
-//        final IFE1D2DContinuityLine contiLine = model.createContinuityLine();
-//        final FeatureList edgesList = (FeatureList) contiLine.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
-//        final String cLineGmlID=contiLine.getGmlID();
-//        for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edgeList )
-//        {
-//          edgesList.add( edge.getGmlID()/*getWrappedFeature().getId()*/ );
-//          edge.getContainers().getWrappedList().add( cLineGmlID );
-//        }
-//
-//        return contiLine;
-//      }
-//
-//    }
-//    catch( final GM_Exception e )
-//    {
-//      final IStatus status = StatusUtilities.statusFromThrowable( e );
-//      throw new CoreException( status );
-//    }
-  }
+//  public static IFE1D2DContinuityLine contilineFromCurve( final GM_Curve curve, final IFEDiscretisationModel1d2d model ) throws CoreException
+//  {
+//    IFE1D2DContinuityLine cLine = 
+//        lineElementFromCurve( 
+//            Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
+//            IFE1D2DContinuityLine.class, 
+//            curve, 
+//            model );
+//    return cLine;
+//    
+//  }
   
   
   public static <T extends ILineElement> T lineElementFromCurve( 

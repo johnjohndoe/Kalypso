@@ -62,9 +62,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToCLineJunction1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEJunction1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -231,42 +230,13 @@ public class ModelOps
 
   }
   
-  public static final IFEEdgeToEdgeJunction1D2D createEdgeToEdgeJunction(
-                                IFEDiscretisationModel1d2d model1d2d,
-                                IFE1D2DEdge edge1D,
-                                IFE1D2DEdge edge2D)
-  {
-    IFeatureWrapperCollection<IFE1D2DElement> elements = 
-                      model1d2d.getElements();
-    IFEEdgeToEdgeJunction1D2D junction1D2D = 
-    elements.addNew( 
-    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE,IFEEdgeToEdgeJunction1D2D.class );
-    
-    junction1D2D.set1DEdge( edge1D );
-    junction1D2D.set2DEdge( edge2D );
-    
-    return junction1D2D;
-  }
+
   
   
   
   
   
-  public static final IFEJunction1D2D createElement1DToCLineJunction(
-                                      IFEDiscretisationModel1d2d model1d2d,
-                                      IFE1D2DEdge edge)
-  {
-    IFeatureWrapperCollection<IFE1D2DElement> elements = 
-                      model1d2d.getElements();
-    IFEEdgeToCLineJunction1D2D junction1D2D = 
-    elements.addNew( 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE, IFEEdgeToCLineJunction1D2D.class );
-    
-    junction1D2D.setEdge( edge );
-    edge.addContainer( junction1D2D.getGmlID() );
-    
-    return junction1D2D;
-  }
+  
   
   public static final IFEJunction1D2D createJunction(
                             IFEDiscretisationModel1d2d model1d2d,
@@ -340,9 +310,9 @@ public class ModelOps
     final List<IFE1D2DEdge> toSort= new ArrayList<IFE1D2DEdge>(edges);
     edges.clear();
     
-    if(element instanceof IFE1D2DContinuityLine)
+    if(element instanceof ILineElement)
     {
-      sortCLineEdges( (IFE1D2DContinuityLine) element, toSort );
+      sortCLineEdges( (ILineElement) element, toSort );
     }
     else if( element instanceof IElement2D )
     {
@@ -353,7 +323,7 @@ public class ModelOps
   //TODO patrice more general use ist also for element
   @SuppressWarnings("deprecation")
   public static final void sortCLineEdges(
-      IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine,
+      ILineElement<IFE1D2DComplexElement, IFE1D2DEdge> cLine,
       List<IFE1D2DEdge> toSortAndAddEdges)
   {
     

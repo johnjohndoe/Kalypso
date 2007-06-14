@@ -42,10 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 
 import org.kalypso.kalypsomodel1d2d.ops.JunctionContextOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -55,6 +55,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Patrice Congo
  */
+@SuppressWarnings({"unchecked", "hiding"})
 public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d2dChangeCommand
 {
   private IFE1D2DEdge edge1D;
@@ -156,7 +157,7 @@ public class AddJunctionContextEle1DToEle2DFromEdgesCmd implements IDiscrModel1d
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    final IFE1D2DContinuityLine continuityLine = 
+    final ILineElement continuityLine =  
                             addedJunction.getContinuityLine();    
     return new IFeatureWrapper2[]{addedJunction, continuityLine};
   }

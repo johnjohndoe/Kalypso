@@ -69,17 +69,9 @@ public class DeleteCmdFactory
     {
       return new DeleteElement1DCmd(model1d2d,feature);
     }
-    else if(TypeInfo.isContinuityLine(feature))
+    else if(TypeInfo.isContinuityLine(feature)) 
     {
       return new DeleteContinuityLineCmd(model1d2d,feature);
-    }
-    else if(TypeInfo.isEdgeToEdgeJunction(feature))
-    {
-      return new DeleteEdgeToEdgeJunctionElementCmd(model1d2d,feature);
-    }
-    else if(TypeInfo.isEdgeToCLineJunction(feature))
-    {
-      return new DeleteEdgeToCLineJunctionElementCmd(model1d2d,feature);
     }
     else if( TypeInfo.isBoundaryLine( feature ) )
     {

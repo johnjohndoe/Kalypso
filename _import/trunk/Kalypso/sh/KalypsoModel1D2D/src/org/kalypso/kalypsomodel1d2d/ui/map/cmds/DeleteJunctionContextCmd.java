@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
@@ -71,7 +72,7 @@ public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
   
   private IElement1D deletedElement1D;
   
-  private IFE1D2DContinuityLine contiLine;
+  private ILineElement contiLine;
   
   /**
    * If the deleted context is a {@link IJunctionContext1DTo2D}

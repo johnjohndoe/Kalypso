@@ -62,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
@@ -396,7 +397,7 @@ public class Gml2RMA10SConv
   {
     for( final IFE1D2DElement element : elements )
     {
-      if( element instanceof IFE1D2DContinuityLine )
+      if( element instanceof ILineElement )
       {
         continue;
       }
@@ -409,7 +410,7 @@ public class Gml2RMA10SConv
   {
     for( final IFE1D2DElement element : elements )
     {
-      if( element instanceof IFE1D2DContinuityLine )
+      if( element instanceof ILineElement )
       {
         continue;
       }

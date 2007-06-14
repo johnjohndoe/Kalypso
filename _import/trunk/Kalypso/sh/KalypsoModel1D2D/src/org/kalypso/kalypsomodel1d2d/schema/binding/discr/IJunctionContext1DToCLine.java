@@ -64,7 +64,7 @@ public interface IJunctionContext1DToCLine
    * @return the continuity line of this juntion context or null
    *            if this junction context does not have a continuity line
    */
-  public IFE1D2DContinuityLine getContinuityLine();
+  public ILineElement getContinuityLine();
   
   /**
    * Gets the virtual geometry of this junction context 

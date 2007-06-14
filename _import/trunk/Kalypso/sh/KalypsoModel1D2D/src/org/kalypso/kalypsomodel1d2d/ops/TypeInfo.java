@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -228,7 +229,16 @@ public class TypeInfo
     }
   }
   
-  public static final boolean isEdgeToEdgeJunction( Feature feature )
+  /**
+   * Answer whether the given element is a line element; i.e. is 
+   * substitutable to wb1d2d:LineElement
+   * 
+   * @param feature  the feature to test
+   * @param return true if the feature passed is a line element 
+   *            otherwise false including the case where its feature 
+   *            is null
+   */
+  public static final boolean isLineElement( final Feature feature )
   {
     if(feature==null)
     {
@@ -236,23 +246,11 @@ public class TypeInfo
     }
     else
     {
-      QName featureQName = feature.getFeatureType().getQName();
-      return featureQName.equals( 
-              Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE );
-    }
-  }
-
-  public static final boolean isEdgeToCLineJunction( Feature feature )
-  {
-    if(feature==null)
-    {
-      return false;
-    }
-    else
-    {
-      QName featureQName = feature.getFeatureType().getQName();
-      return featureQName.equals( 
-              Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE );
+      IFeatureType featureType = feature.getFeatureType();
+      
+      return GMLSchemaUtilities.substitutes( 
+              featureType, 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_LINE_ELEMENT );
     }
   }
 
@@ -378,7 +376,7 @@ public class TypeInfo
   }
   
   public static final boolean isJunctionContextCL(
-              IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine)
+                      ILineElement<IFE1D2DComplexElement, IFE1D2DEdge> cLine)
   {
     Assert.throwIAEOnNullParam( cLine, "cLine" );
     IFeatureWrapperCollection<IFE1D2DComplexElement> containers = cLine.getContainers();
@@ -393,7 +391,7 @@ public class TypeInfo
   }
   
   public static final IJunctionContext1DToCLine getJunctionContextCL(
-                                  IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine)
+                                  ILineElement<IFE1D2DComplexElement, IFE1D2DEdge> cLine)
   {
     Assert.throwIAEOnNullParam( cLine, "cLine" );
     IFeatureWrapperCollection<IFE1D2DComplexElement> containers = cLine.getContainers();
@@ -405,5 +403,10 @@ public class TypeInfo
       }
     }
     return null;
+  }
+  
+  public static final boolean isJunctionContextLine( ILineElement cLine )
+  {    
+    return getJunctionContextCL( cLine ) != null;
   }
 }

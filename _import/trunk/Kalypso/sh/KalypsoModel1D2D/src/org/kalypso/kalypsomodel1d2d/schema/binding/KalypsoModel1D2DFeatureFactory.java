@@ -24,8 +24,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEEdgeToCLineJunction1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
@@ -41,12 +39,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToCLineJunction1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToEdgeJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionContext1DTo2D;
@@ -225,10 +222,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         {
           return new FEJunction1D2D( feature );
         }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE ) )
-        {
-          return new FEEdgeToEdgeJunction1D2D( feature );
-        }
+//        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE ) )
+//        {
+//          return new FEEdgeToEdgeJunction1D2D( feature );
+//        }
         else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
         {
           return new FE1D2DContinuityLine( feature );
@@ -250,6 +247,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // does not fit (this is according to the adapter-contract)
     cMap.put( IFE1D2DElement.class, cTor );
     cMap.put( IBoundaryLine.class, cTor );
+    cMap.put( ILineElement.class, cTor );
     cMap.put( IElement2D.class, cTor );
     cMap.put( IPolyElement.class, cTor );
     // PolyElement
@@ -332,45 +330,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IFEJunction1D2D.class, cTor );
 
-    // 1d2d IFEEdgeToEdgeJunction1D2D
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
+    
 
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE ) )
-        {
-          return new FEEdgeToEdgeJunction1D2D( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IFEEdgeToEdgeJunction1D2D.class );
-          return null;
-        }
-      }
-    };
-    cMap.put( IFEEdgeToEdgeJunction1D2D.class, cTor );
-
-    // 1d2d IFEEdgeToCLineJunction1D2D
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_CLINE ) )
-        {
-          return new FEEdgeToCLineJunction1D2D( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IFEEdgeToCLineJunction1D2D.class );
-          return null;
-        }
-      }
-    };
-    cMap.put( IFEEdgeToCLineJunction1D2D.class, cTor );
 
     // 1d2d complex element
     cTor = new AdapterConstructor()

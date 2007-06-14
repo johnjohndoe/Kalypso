@@ -105,7 +105,7 @@ public class DiscretisationModelUtils
     if( node != null )
       return node;
 
-    final IFE1D2DContinuityLine contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
+    final ILineElement contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
     if( contiLine != null )
       return contiLine;
 

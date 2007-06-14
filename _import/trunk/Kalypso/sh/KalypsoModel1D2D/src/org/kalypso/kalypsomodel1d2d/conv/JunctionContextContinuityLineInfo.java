@@ -42,12 +42,13 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 
 /**
  * @author antanas
  *
  */
-public class JunctionContextContinuityLineInfo extends ContinuityLineInfo
+public class JunctionContextContinuityLineInfo extends BoundaryLineInfo
 {
     final int nrTL;
     final int id1DEle;
@@ -56,7 +57,7 @@ public class JunctionContextContinuityLineInfo extends ContinuityLineInfo
     public JunctionContextContinuityLineInfo( 
                         final int id, 
                         IFE1D2DNode[] nodeArray,
-                        IFE1D2DContinuityLine cLine)
+                        ILineElement cLine)
     {
       super( id, nodeArray );
       nrTL = 0;

@@ -53,6 +53,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -101,7 +102,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     return wizard.getBoundaryCondition();
   }
 
-  private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
+  public static IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
   {
     final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
     final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
@@ -122,7 +123,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     if( modelElement instanceof IFE1D2DNode )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
 
-    if( modelElement instanceof IFE1D2DContinuityLine )
+    if( modelElement instanceof ILineElement )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
 
     return new IBoundaryConditionDescriptor[] {};
@@ -134,7 +135,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
   @Override
   protected boolean isConsidered( final IFeatureWrapper2 modelElement )
   {
-    return modelElement instanceof IFE1D2DNode || modelElement instanceof IFE1D2DContinuityLine || modelElement instanceof IPolyElement || modelElement instanceof IElement1D;
+    return modelElement instanceof IFE1D2DNode || modelElement instanceof ILineElement || modelElement instanceof IPolyElement || modelElement instanceof IElement1D;
   }
 
   /**

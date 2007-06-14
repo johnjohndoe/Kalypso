@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -211,7 +212,7 @@ public class EdgeOps
     {
       for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : containers )
       {
-        if( ele instanceof IFE1D2DContinuityLine )
+        if( ele instanceof ILineElement )
         {
           continue;
         }
@@ -242,7 +243,7 @@ public class EdgeOps
       {
         for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
         {
-          if( ele instanceof IFE1D2DContinuityLine )
+          if( ele instanceof ILineElement )
           {
             continue;
           }

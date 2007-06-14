@@ -55,6 +55,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * @author Patrice Congo
  *
  */
+@SuppressWarnings({"unchecked","hiding"})
 public class JunctionContext1DTo2D extends JunctionContext1DToCLine implements IJunctionContext1DTo2D
 {
 
@@ -82,7 +83,6 @@ public class JunctionContext1DTo2D extends JunctionContext1DToCLine implements I
       getFeature().setProperty( 
           Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D, 
           wrappedFeature.getId() );
-      //TODO Patrice 
       element.getContainers().addRef( this );
       return true;
     }
@@ -126,28 +126,13 @@ public class JunctionContext1DTo2D extends JunctionContext1DToCLine implements I
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DTo2D#getElement2D()
    */
   public IPolyElement getElement2D( )
-  {
-    Feature feature = getFeature();
-    Feature element2dFeature = 
+  {    
+    final IPolyElement resolvedLink = 
       FeatureHelper.resolveLink( 
-          feature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D );
-    if(element2dFeature == null)
-    {
-      return null;
-    }
-    else
-    {
-      return (IPolyElement) element2dFeature.getAdapter( IPolyElement.class );
-    }
-//    Object obj = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D );
-//    if(obj instanceof Feature)
-//    {
-//      return (IPolyElement) ((Feature)obj).getAdapter( IPolyElement.class );
-//    }
-//    else
-//    {  
-//      return null;
-//    }
+        this, 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D, 
+        IPolyElement.class );
+    return resolvedLink;
   }
 
   /**

@@ -80,6 +80,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryLineFromC
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor;
@@ -328,7 +329,8 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
         public void run( )
         {          
-           final IBoundaryConditionDescriptor[] descriptors = createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
+           final IBoundaryConditionDescriptor[] descriptors = 
+             CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
          //@ TODO Add two more parameters.
            if (dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER) instanceof CommandableWorkspace)
            {
@@ -379,35 +381,32 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       return null;
     }
     
-    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
-    {
-      final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-      final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-      final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
-      final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
-      final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
-
-      final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
-      final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
-
-      // TODO: ask ingenieurs what is right here:
-      if( modelElement instanceof IElement1D )
-        return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
-
-      if( modelElement instanceof IPolyElement )
-        return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
-
-      if( modelElement instanceof IFE1D2DNode )
-        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-
-      if( modelElement instanceof IFE1D2DContinuityLine )
-        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-
-      if( modelElement instanceof ILineElement)
-        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-      
-      return new IBoundaryConditionDescriptor[] {};
-    }
+//    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
+//    {
+//      final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+//      final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+//      final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+//      final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+//      final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
+//
+//      final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
+//      final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
+//
+//      // TODO: ask ingenieurs what is right here:
+//      if( modelElement instanceof IElement1D )
+//        return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
+//
+//      if( modelElement instanceof IPolyElement )
+//        return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
+//
+//      if( modelElement instanceof IFE1D2DNode )
+//        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+//
+//      if( modelElement instanceof ILineElement)
+//        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+//      
+//      return new IBoundaryConditionDescriptor[] {};
+//    }
 
   private void actionRemoveBoundaryLineFromModel( String itemText )
   {

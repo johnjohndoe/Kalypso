@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -180,8 +181,8 @@ public class OpsGeoEditAffected
 
   private static void addAffectedFeaturesByContinuityLineGeomChange( Feature changedFeature, Set<Feature> affectedFeatures )
   {
-    final IFE1D2DContinuityLine cLine= 
-      (IFE1D2DContinuityLine)changedFeature.getAdapter( IFE1D2DContinuityLine.class );
+    final ILineElement cLine= 
+      (ILineElement)changedFeature.getAdapter( ILineElement.class );
     if(cLine==null)
     {
       throw new IllegalArgumentException(

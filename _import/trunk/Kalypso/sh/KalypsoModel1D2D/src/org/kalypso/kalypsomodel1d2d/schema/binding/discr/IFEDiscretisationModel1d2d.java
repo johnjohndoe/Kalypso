@@ -121,7 +121,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
    */
   public IFE1D2DNode createNode( GM_Point nodeLocation, double searchSquareWidth, boolean[] alreadyExists );
 
-  public IFE1D2DContinuityLine findContinuityLine( final GM_Point position, double grabDistance );
+  public ILineElement findContinuityLine( final GM_Point position, double grabDistance );
 
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance );
 

@@ -195,11 +195,11 @@ public class Control1D2DConverter
 
   private void writeR10ContinuityLineDataBlock( final RMA10Calculation calculation, final Formatter formatter )
   {
-    final ContinuityLineInfo[] infos = calculation.getContinuityLineInfo();
+    final BoundaryLineInfo[] infos = calculation.getContinuityLineInfo();
 
     formatter.format( "SCL%9d%n", infos.length );
 
-    for( final ContinuityLineInfo info : infos )
+    for( final BoundaryLineInfo info : infos )
     {
       final IFE1D2DNode[] nodes = info.getNodes();
 

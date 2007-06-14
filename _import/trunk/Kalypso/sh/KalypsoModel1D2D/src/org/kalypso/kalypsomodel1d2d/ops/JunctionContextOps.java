@@ -43,8 +43,9 @@ package org.kalypso.kalypsomodel1d2d.ops;
 import java.util.Collection;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -84,11 +85,11 @@ public class JunctionContextOps
     {
       if(!TypeInfo.isBorderEdge( edge2D ))
       {
-      String message = 
-      String.format( 
-      "Edge 2d list must not only border edge but this edge[id = %s] is not a border edge", 
-      edge2D.getGmlID() );      
-      throw new IllegalArgumentException(message);
+        String message = 
+        String.format( 
+        "Edge 2d list must not only border edge but this edge[id = %s] is not a border edge", 
+        edge2D.getGmlID() );      
+        throw new IllegalArgumentException(message);
       }
     }
     
@@ -111,30 +112,34 @@ public class JunctionContextOps
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
     
     //create continuity line to hold the element
-    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = 
-    elements.addNew( 
-    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
-    IFE1D2DContinuityLine.class );
-    cLine.setEdges( edge2DList.toArray( new IFE1D2DEdge[edge2DList.size()] ) );
+    IFE1D2DEdge[] edge2DArray = edge2DList.toArray( new IFE1D2DEdge[edge2DList.size()] ); 
+    IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = 
+      getFirstContainerBoundaryLine( edge2DArray );
+    if( cLine == null )
+    {
+      cLine = elements.addNew( 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE, 
+        IBoundaryLine.class );
+        cLine.setEdges(edge2DArray );
+    }
     
     //
     IFeatureWrapperCollection<IFE1D2DComplexElement> cElements = 
     model1d2d.getComplexElements();
     IJunctionContext1DToCLine jc1d2d = 
-    cElements.addNew( 
-    Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE,
-    IJunctionContext1DToCLine.class );
+      cElements.addNew( 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE,
+        IJunctionContext1DToCLine.class );
     
     jc1d2d.addElementAsRef( element1D );
-    jc1d2d.addElementAsRef( cLine);
+    jc1d2d.addElementAsRef( cLine );
     
     return jc1d2d;
     
   }
   
   
-  public static final IJunctionContext1DTo2D 
-  createEdgeToEdgeJunctionContext(
+  public static final IJunctionContext1DTo2D createEdgeToEdgeJunctionContext(
                   IFEDiscretisationModel1d2d model1d2d,
                   IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge1D,
                   IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge2D)
@@ -170,21 +175,22 @@ public class JunctionContextOps
     
     //get a continuity line containing containing the 2Egde
     //or create continuity line to hold it
-    IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = null;
-    found_container_cline: for(IFE1D2DElement ele : edge2D.getContainers())
-    {
-      if( ele instanceof IFE1D2DContinuityLine )
-      {
-        cLine = (IFE1D2DContinuityLine) ele;
-        break found_container_cline;
-      }
-    }
+    IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine = 
+                                getFirstContainerBoundaryLine( edge2D );
+//    found_container_cline: for(IFE1D2DElement ele : edge2D.getContainers())
+//    {
+//      if( ele instanceof IBoundaryLine )
+//      {
+//        cLine = (IBoundaryLine) ele;
+//        break found_container_cline;
+//      }
+//    }
     if( cLine == null )
     {
       cLine = 
       elements.addNew( 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
-        IFE1D2DContinuityLine.class );
+        Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE, 
+        IBoundaryLine.class );
       cLine.setEdges( new IFE1D2DEdge[]{edge2D} );
     }
     
@@ -203,4 +209,47 @@ public class JunctionContextOps
     return jc1d2d;
   }
 
+  /**
+   * 
+   */
+  private static final IBoundaryLine getFirstContainerBoundaryLine(
+                            IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges2D )
+  {
+    for( IFE1D2DEdge edge : edges2D )
+    {
+      IBoundaryLine line = getFirstContainerBoundaryLine( edge );
+      if( line != null )
+      {
+        return line;
+      }
+    }
+    return null;
+  }
+  
+  private static final IBoundaryLine getFirstContainerBoundaryLine(
+                                        IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge2D )
+  {
+    Assert.throwIAEOnNullParam( edge2D, "edge2D" );
+    for(IFE1D2DElement ele : edge2D.getContainers())
+    {
+      if( ele instanceof IBoundaryLine )
+      {
+        return (IBoundaryLine) ele;        
+      }
+    }
+    
+    final IEdgeInv edgeInv = edge2D.getEdgeInv();
+    if( edgeInv != null )
+    {
+      for(Object ele : edgeInv.getContainers())
+      {
+        if( ele instanceof IBoundaryLine )
+        {
+          return (IBoundaryLine) ele;        
+        }
+      }
+    }
+    
+    return null;
+  }
 }

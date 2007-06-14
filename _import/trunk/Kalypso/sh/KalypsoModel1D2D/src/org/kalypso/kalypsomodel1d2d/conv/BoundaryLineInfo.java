@@ -38,30 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
+package org.kalypso.kalypsomodel1d2d.conv;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * Interface for classes that represents a 
- * wb1d2d:EdgeToEdgeJunction1D2D element
- * 
- * @author Patrice Congo
+ * @author antanas
  */
-public interface IFEEdgeToCLineJunction1D2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFEJunction1D2D<CT, ET>
+public class BoundaryLineInfo extends BoundaryConditionInfo implements ITimeStepinfo
 {
+  private final IFE1D2DNode[] m_nodeArray;
+
+  public BoundaryLineInfo( final int ID, final IFE1D2DNode[] nodeArray )
+  {
+    super( ID, TYPE.CONTI );
+    m_nodeArray = nodeArray;
+  }
+
+  public IFE1D2DNode[] getNodes( )
+  {
+    return m_nodeArray;
+  }
+
   /**
-   * Get the edge of this juction
-   * @return the edge of this junction
+   * @see org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo#setObservation(org.kalypso.observation.IObservation,
+   *      org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IComponent)
    */
-  public IFE1D2DEdge getEdge();
-  
-  /**
-   * To set the edge of this juction.
-   * This method also registers junction as container and
-   * unregister itself from a previous set edge
-   * 
-   * @param newEdge the new edge of this junction
-   */
-  public void setEdge(IFE1D2DEdge newEdge);
-  
+  public void setObservation( IObservation<TupleResult> obs, IComponent timeComponent, IComponent valueComponent, final TYPE type )
+  {
+    super.setObservation( obs, timeComponent, valueComponent );
+    setType( type );
+  }
 }

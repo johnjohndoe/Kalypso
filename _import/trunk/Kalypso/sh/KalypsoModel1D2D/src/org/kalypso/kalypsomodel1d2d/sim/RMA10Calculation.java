@@ -56,13 +56,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
-import org.kalypso.kalypsomodel1d2d.conv.ContinuityLineInfo;
+import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+//import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -91,6 +92,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  */
+@SuppressWarnings({"unchecked", "hiding"})
 public class RMA10Calculation
 {
   private GMLWorkspace m_disModelWorkspace = null;
@@ -417,19 +419,20 @@ public class RMA10Calculation
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
   }
 
-  public List<IFE1D2DContinuityLine> getContinuityLineList( )
+  public List<IBoundaryLine> getContinuityLineList( )
   {
     // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
     // (discretisation model)
-    final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d adapter = 
+          (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
-    final List<IFE1D2DContinuityLine> list = new ArrayList<IFE1D2DContinuityLine>();
+    final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
     final Iterator<IFE1D2DElement> iterator = elements.iterator();
     while( iterator.hasNext() )
     {
       final IFE1D2DElement element = iterator.next();
-      if( element instanceof IFE1D2DContinuityLine )
-        list.add( (IFE1D2DContinuityLine) element );
+      if( element instanceof IBoundaryLine )
+        list.add( (IBoundaryLine) element );
     }
     return list;
   }
@@ -439,17 +442,17 @@ public class RMA10Calculation
     return m_controlRootWorkspace;
   }
 
-  public ContinuityLineInfo[] getContinuityLineInfo( )
+  public BoundaryLineInfo[] getContinuityLineInfo( )
   {
-    final List<ContinuityLineInfo> continuityLineInfos = new ArrayList<ContinuityLineInfo>();
+    final List<BoundaryLineInfo> continuityLineInfos = new ArrayList<BoundaryLineInfo>();
 
     for( final ITimeStepinfo info : m_timeStepInfos )
     {
-      if( info instanceof ContinuityLineInfo )
-        continuityLineInfos.add( (ContinuityLineInfo) info );
+      if( info instanceof BoundaryLineInfo )
+        continuityLineInfos.add( (BoundaryLineInfo) info );
     }
 
-    return continuityLineInfos.toArray( new ContinuityLineInfo[continuityLineInfos.size()] );
+    return continuityLineInfos.toArray( new BoundaryLineInfo[continuityLineInfos.size()] );
   }
 
   public ITimeStepinfo[] getTimeStepInfos( )
@@ -462,14 +465,15 @@ public class RMA10Calculation
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
     /* Take all conti lines whihc are defined in the discretisation model. */
-    final Map<IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>, ContinuityLineInfo> contiMap = new HashMap<IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>, ContinuityLineInfo>();
-    final List<IFE1D2DContinuityLine> continuityLineList = getContinuityLineList();
+    final Map<IBoundaryLine, BoundaryLineInfo> contiMap = 
+                  new HashMap<IBoundaryLine, BoundaryLineInfo>();
+    final List<IBoundaryLine> continuityLineList = getContinuityLineList();
     int contiCount = 1;
-    for( final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
+    for( final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
     {
       final List<IFE1D2DNode> nodes = line.getNodes();
       final IFE1D2DNode[] nodeArray = nodes.toArray( new IFE1D2DNode[nodes.size()] );
-      final ContinuityLineInfo info = new ContinuityLineInfo( contiCount++, nodeArray );
+      final BoundaryLineInfo info = new BoundaryLineInfo( contiCount++, nodeArray );
       result.add( info );
       contiMap.put( line, info );
     }
@@ -488,10 +492,10 @@ public class RMA10Calculation
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 1.0 );
 
-        if( wrapper2 instanceof IFE1D2DContinuityLine )
+        if( wrapper2 instanceof IBoundaryLine )
         {
-          final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
-          final ContinuityLineInfo info = contiMap.get( contiLine );
+          final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
+          final BoundaryLineInfo info = contiMap.get( contiLine );
 
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
@@ -507,7 +511,7 @@ public class RMA10Calculation
         {
           // create new contiline
           final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
-          final ContinuityLineInfo info = new ContinuityLineInfo( contiCount++, nodeArray );
+          final BoundaryLineInfo info = new BoundaryLineInfo( contiCount++, nodeArray );
 
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
