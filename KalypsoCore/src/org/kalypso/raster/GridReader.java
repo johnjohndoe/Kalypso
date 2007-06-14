@@ -112,7 +112,7 @@ public class GridReader
     return m_headerData[1];
   }
 
-  public Double getUpperLeftCornerX( )
+  public Double getOriginCornerX( )
   {
     if( "xllcorner".equals( m_headerKeys[2].toLowerCase() ) )
       return new Double( m_headerData[2] );
@@ -125,7 +125,7 @@ public class GridReader
     throw (new NotImplementedException());
   }
 
-  public Double getUpperLeftCornerY( )
+  public Double getOriginCornerY( )
   {
     if( "yllcorner".equals( m_headerKeys[3].toLowerCase() ) )
       return new Double( m_headerData[3] );
