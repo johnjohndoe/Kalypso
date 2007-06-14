@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.schema.om;
 
 import org.kalypso.ogc.gml.om.IComponentHandler;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * @author Gernot Belger
