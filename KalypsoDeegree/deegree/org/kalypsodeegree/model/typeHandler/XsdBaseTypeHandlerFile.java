@@ -45,7 +45,6 @@ import java.io.File;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch

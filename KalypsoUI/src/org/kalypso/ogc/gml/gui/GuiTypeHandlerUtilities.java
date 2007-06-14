@@ -48,7 +48,7 @@ import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * Helper methods for {@link org.kalypso.ogc.gml.gui.IGuiTypeHandler}

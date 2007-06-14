@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model;
+package org.kalypsodeegree.model.typeHandler;
 
 import java.net.URL;
 import java.text.ParseException;
@@ -66,15 +66,15 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
 
   private final QName m_typeQName;
 
-  private final Class m_valueClass;
+  private final Class< ? > m_valueClass;
 
-  public XsdBaseTypeHandler( final String xsdTypeName, final Class valueClass )
+  public XsdBaseTypeHandler( final String xsdTypeName, final Class< ? > valueClass )
   {
     m_valueClass = valueClass;
     m_typeQName = new QName( NS.XSD_SCHEMA, xsdTypeName );
   }
 
-  public XsdBaseTypeHandler( final QName qname, final Class valueClass )
+  public XsdBaseTypeHandler( final QName qname, final Class< ? > valueClass )
   {
     m_valueClass = valueClass;
     m_typeQName = qname;

@@ -25,6 +25,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -96,9 +97,9 @@ public class Element
     return feature;
   }
 
-  public GM_Surface getGeometry( )
+  public GM_Surface<GM_SurfacePatch> getGeometry( )
   {
-    return (GM_Surface) feature.getDefaultGeometryProperty();
+    return (GM_Surface<GM_SurfacePatch>) feature.getDefaultGeometryProperty();
   }
 
   public GM_Envelope getBBox( )
@@ -135,7 +136,7 @@ public class Element
 
   public int getNumberOfVerticies( )
   {
-    return getGeometry().getNumberOfSurfacePatches();
+    return getGeometry().size();
   }
 
   public Map splitElement( ) throws Exception
@@ -144,8 +145,8 @@ public class Element
     final String eID1 = getElementID() + ".1";
     final String eID2 = getElementID() + ".2";
     final Vector vList = getVertList();
-    final GM_Surface surface = getGeometry();
-    final GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Surface<GM_SurfacePatch> surface = getGeometry();
+    final GM_Position[] positions = surface.get( 0 ).getExteriorRing();
 
     // make split such that diagonal will have least
     // slope
@@ -182,8 +183,8 @@ public class Element
    */
   public int getPolygonType( ) throws Exception
   {
-    final GM_Surface surface = getGeometry();
-    final GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Surface<GM_SurfacePatch> surface = getGeometry();
+    final GM_Position[] positions = surface.get( 0 ).getExteriorRing();
     final int nNumOfVertices = positions.length - 1;// -1 because first and last
     // point are the same (closed)
     // polygon
@@ -241,7 +242,7 @@ public class Element
     final double alpha[] = new double[3];
     final double beta[] = new double[3];
     final double gamma[] = new double[3];
-    final GM_Position[] v = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] v = getGeometry().get( 0 ).getExteriorRing();
     alpha[0] = ((v[1].getX() * v[2].getY()) - (v[2].getX() * v[1].getY()));
     beta[0] = v[1].getY() - v[2].getY();
     gamma[0] = v[2].getX() - v[1].getX();
@@ -276,7 +277,7 @@ public class Element
     final double[] phi = new double[3];
     Double cellValue = new Double( 0 );
     final Object[] factors = calculateWeightsFEM();
-    final GM_Position[] v = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] v = getGeometry().get( 0 ).getExteriorRing();
     final double area = getGeometry().getArea();
     // apply formula on each vertex
     for( int i = 0; i < v.length - 1; i++ )
@@ -295,7 +296,7 @@ public class Element
 
   public boolean isPointOnEdge( final Point p ) throws GM_Exception
   {
-    final GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] array = getGeometry().get( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
       final GM_Position vertex1 = array[i];
@@ -317,7 +318,7 @@ public class Element
 
   public boolean isPointOnEdge( final GM_Position p ) throws GM_Exception
   {
-    final GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] array = getGeometry().get( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
       final GM_Position vertex1 = array[i];

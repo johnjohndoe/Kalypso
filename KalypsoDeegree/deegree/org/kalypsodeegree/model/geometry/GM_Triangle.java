@@ -40,23 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
-import org.kalypso.jts.Triangle;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
  */
-public interface GM_Triangle
+public interface GM_Triangle extends GM_Polygon
 {
-  /**
-   * allways return a planar surface interpolation.
-   */
-  public GM_SurfaceInterpolation getInterpolation( );
-
-  public CS_CoordinateSystem getCoordinateSystem( );
-
-  /**
-   * Return the underlying triangle.
-   */
-  public Triangle getTriangle( );
 }

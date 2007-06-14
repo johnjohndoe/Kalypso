@@ -42,7 +42,6 @@ package org.kalypsodeegree.model.typeHandler;
 
 import java.math.BigDecimal;
 
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * Implementation-class of extensions of the extension-point org.kalypso.core.componentHandler.

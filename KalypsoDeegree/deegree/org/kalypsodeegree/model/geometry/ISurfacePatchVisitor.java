@@ -38,44 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.typeHandler;
+package org.kalypsodeegree.model.geometry;
 
-import javax.xml.namespace.QName;
-
-
-/**
- * @author kuch
- */
-public class XsdBaseTypeHandlerQName extends XsdBaseTypeHandler<QName>
+public interface ISurfacePatchVisitor<P extends GM_SurfacePatch>
 {
-  public XsdBaseTypeHandlerQName( )
-  {
-    super( "QName", QName.class );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-   */
-  @Override
-  public QName convertToJavaValue( final String xmlString )
-  {
-    return QName.valueOf( xmlString );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-   */
-  @Override
-  public String convertToXMLString( final QName value )
-  {
-    return value.toString();
-  }
-
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
-  public int compare( final QName o1, final QName o2 )
-  {
-    return ("" + o1).compareTo( "" + o2 );
-  }
+  public boolean visit( final P surfacePatch, double elevationSample ) throws Exception;
 }

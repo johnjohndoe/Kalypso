@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.typeHandler;
 
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch

@@ -38,39 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.cs;
+package org.kalypsodeegree_impl.graphics.displayelements;
 
-import org.kalypsodeegree.model.geometry.CS_CoordinateSystemProvider;
-import org.opengis.cs.CS_CoordinateSystem;
+import java.awt.Color;
 
 /**
- * Provides a coordinate system.
- * <p>
- * Delegates call to a parent provider if this provider has no own coordinate system.
- * </p>
+ * Interface for color model used in the elevation visualization
  * 
- * @author Gernot Belger
+ * @author Madanagopal
+ * @author Patrice Congo
  */
-public class CS_CoordinateSystemProvider_Impl implements CS_CoordinateSystemProvider
+public interface IElevationColorModel
 {
-  private final CS_CoordinateSystemProvider m_parentProvider;
-
-  private final CS_CoordinateSystem m_cs;
-
-  public CS_CoordinateSystemProvider_Impl( final CS_CoordinateSystemProvider parentProvider, final CS_CoordinateSystem cs )
-  {
-    m_parentProvider = parentProvider;
-    m_cs = cs;
-  }
+  /**
+   * To get the color for the given elevation
+   * 
+   * @return an {@link Color} for the given elevation
+   */
+  public Color getColor( double elevation );
 
   /**
-   * @see org.kalypsodeegree.model.geometry.CS_CoordinateSystemProvider#getCoordinateSystem()
+   * To set a new min and max elevation for the color model
+   * 
+   * @return an {@link Color} for the given elevation
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
-  {
-    if( m_cs == null && m_parentProvider != null )
-      return m_parentProvider.getCoordinateSystem();
+  public void setElevationMinMax( double min, double max );
 
-    return m_cs;
-  }
+  /**
+   * To get the min and max elevation for the color model
+   * 
+   * @return an {@link Color} for the given elevation
+   */
+  public double[] getElevationMinMax( );
+
+  public double getDiscretisationInterval( );
 }

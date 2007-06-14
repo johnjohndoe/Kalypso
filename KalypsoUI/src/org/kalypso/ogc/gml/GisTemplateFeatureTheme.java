@@ -87,8 +87,8 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
  * <p>
- * Ein Decorator f?r ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme}, welches dieses (asynchron) ?ber den Pool aus
- * einer Source l?dt.
+ * Ein Decorator für ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme}, welches dieses (asynchron) über den Pool aus
+ * einer Source lädt.
  * </p>
  * <p>
  * Die ganze dynamic, also die Überwachung, ob sich das Pool-Objekt geändert hat etc. findet hier statt
@@ -150,6 +150,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
     try
     {
+      setStatus( StatusUtilities.createInfoStatus( "lade Daten..." ) );
       pool.addPoolListener( this, m_layerKey );
     }
     catch( final Exception e )
@@ -350,6 +351,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // clear the theme
+      setStatus( StatusUtilities.createWarningStatus( "Daten wurden gelöscht" ) );
       m_theme.dispose();
       m_theme = null;
     }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.geometry;
+package org.kalypsodeegree_impl.io.sax;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -48,22 +48,22 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.kalypso.gmlschema.types.ListSimpleTypeHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypso.jts.Triangle;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerDouble;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * A content handler which parses a gml:TriangulatedSurface element.
@@ -77,8 +77,6 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
 {
   private final static ListSimpleTypeHandler DOUBLE_LIST_PARSER = new ListSimpleTypeHandler( new XsdBaseTypeHandlerDouble() );
 
-  private final static GeometryFactory FACTORY = new GeometryFactory();
-
   private List<GM_Triangle> m_triangles = null;
 
   private CS_CoordinateSystem m_crs;
@@ -87,15 +85,15 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
 
   private StringBuffer m_coordBuffer = null;
 
-  private Coordinate[] m_coords;
+  private GM_Position[] m_poses;
+
+  private GM_Position[] m_triangle;
 
   private CS_CoordinateSystem m_currentCrs;
 
   private final UnmarshallResultEater m_resultEater;
 
   private GM_TriangulatedSurface_Impl m_triangulatedSurface;
-
-  private Triangle m_triangle;
 
   /**
    * @param reader
@@ -165,10 +163,10 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
       if( countString != null )
       {
         final int count = Integer.parseInt( countString );
-        m_coords = new Coordinate[count];
+        m_poses = new GM_Position[count];
       }
       else
-        m_coords = new Coordinate[0];
+        m_poses = new GM_Position[0];
     }
 
   }
@@ -194,16 +192,30 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
       if( m_triangles == null )
         throw new SAXParseException( "Unexpected end of 'trianglePatches': " + uri, m_locator );
 
-      m_triangulatedSurface = new GM_TriangulatedSurface_Impl( m_triangles, m_crs );
+      try
+      {
+        m_triangulatedSurface = new GM_TriangulatedSurface_Impl( m_triangles, m_crs );
+      }
+      catch( final GM_Exception e )
+      {
+        throw new SAXException( e );
+      }
     }
     else if( "Triangle".equals( localName ) )
     {
       if( m_triangle == null )
         throw new SAXParseException( "Triangle contains no valid exterior.", m_locator );
 
-      final GM_Triangle_Impl gmTriangle = new GM_Triangle_Impl( m_triangle, m_currentCrs );
+      try
+      {
+        final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( m_triangle[0], m_triangle[1], m_triangle[2], m_currentCrs );
+        m_triangles.add( gmTriangle );
+      }
+      catch( final GM_Exception e )
+      {
+        throw new SAXException( e );
+      }
 
-      m_triangles.add( gmTriangle );
     }
     else if( "exterior".equals( localName ) )
     {
@@ -212,18 +224,14 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
     }
     else if( "LinearRing".equals( localName ) )
     {
-      if( m_coords == null )
+      if( m_poses == null )
         throw new SAXParseException( "Exterior contains no valid linear ring.", m_locator );
 
-      if( m_coords.length != 4 )
-        throw new SAXParseException( "LinearRing must contain exactly 4 coodirnates: " + m_coords.length, m_locator );
+      if( m_poses.length != 4 )
+        throw new SAXParseException( "LinearRing must contain exactly 4 coodirnates: " + m_poses.length, m_locator );
 
-      final Coordinate c0 = m_coords[0];
-      final Coordinate c1 = m_coords[1];
-      final Coordinate c2 = m_coords[2];
-      m_triangle = new Triangle( c0, c1, c2, FACTORY );
-
-      m_coords = null;
+      m_triangle = new GM_Position[] { m_poses[0], m_poses[1], m_poses[2] };
+      m_poses = null;
     }
     else if( "posList".equals( localName ) )
     {
@@ -248,16 +256,16 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
 
       final int count;
       final int dimensionToUse; // the dimension to use for parsing the doubles
-      if( m_coords.length == 0 )
+      if( m_poses.length == 0 )
       {
         // If the count attribute was omiited, we calculate the number of cooridnates from the dimension
         count = doubles.size() / dimension;
         dimensionToUse = dimension;
-        m_coords = new Coordinate[count];
+        m_poses = new GM_Position[count];
       }
       else
       {
-        count = m_coords.length;
+        count = m_poses.length;
         dimensionToUse = (doubles.size() / count);
       }
 
@@ -266,9 +274,9 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
         // HACK: as long as we have no variable sized coordinates, we have only the choice between dimension 2 or 3.
         final int j = i * dimensionToUse;
         if( dimensionToUse < 3 )
-          m_coords[i] = new Coordinate( doubles.get( j ), doubles.get( j + 1 ) );
+          m_poses[i] = GeometryFactory.createGM_Position( doubles.get( j ), doubles.get( j + 1 ) );
         else
-          m_coords[i] = new Coordinate( doubles.get( j ), doubles.get( j + 1 ), doubles.get( j + 2 ) );
+          m_poses[i] = GeometryFactory.createGM_Position( doubles.get( j ), doubles.get( j + 1 ), doubles.get( j + 2 ) );
       }
 
     }

@@ -69,8 +69,6 @@ import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
- * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -82,9 +80,9 @@ public class SHP2WKB
    * transforms a SHPPoint into a byte array using sf-WKB specifications <BR>
    * gets a point that should be transformed to a WKBGeometry <BR>
    */
-  public byte[] transformPoint( SHPPoint shppoint_ )
+  public byte[] transformPoint( final SHPPoint shppoint_ )
   {
-    byte[] wkbPoint = new byte[21];
+    final byte[] wkbPoint = new byte[21];
 
     // big endian coding
     wkbPoint[0] = 0;
@@ -105,9 +103,9 @@ public class SHP2WKB
    * transforms a SHPMultiPoint into a byte array using sf-WKB specifications <BR>
    * gets a multipoint that should be transformed to a WKBGeometry <BR>
    */
-  public byte[] transformMultiPoint( SHPMultiPoint shpmultipoint_ )
+  public byte[] transformMultiPoint( final SHPMultiPoint shpmultipoint_ )
   {
-    byte[] wkbPoint = new byte[9 + ( shpmultipoint_.numPoints * 21 )];
+    final byte[] wkbPoint = new byte[9 + (shpmultipoint_.numPoints * 21)];
 
     // big endian coding
     wkbPoint[0] = 0;
@@ -145,43 +143,31 @@ public class SHP2WKB
    * transforms a SHPPolyLine into a byte array using sf-WKB specifications <BR>
    * gets a multipoint that should be transformed <BR>
    */
-  public byte[] transformPolyLine( SHPPolyLine shppolyline )
+  public byte[] transformPolyLine( final SHPPolyLine shppolyline )
   {
-    byte[] wkbLineString = null;
+    final byte[] wkbLineString = null;
 
-    SHP2WKS shp2wks = new SHP2WKS();
-    CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
-    CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
+    final SHP2WKS shp2wks = new SHP2WKS();
+    final CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
+    final CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
     shp2wks.transformPolyLine( srs, shppolyline );
 
     /*
-     * // it's a single LineString if (points.length == 1) {
-     * 
-     * wkbLineString = new byte[points[0].length*21 + 9]; // big endian coding wkbLineString[0] = 0; // write wkbtype
-     * ByteUtils.writeBEInt(wkbLineString,1,2); // write number of points
-     * ByteUtils.writeBEInt(wkbLineString,5,points[0].length);
-     * 
-     * offset = 9;
-     * 
-     * for (int i = 0; i < points[0].length; i++) { // big endian coding wkbLineString[offset] = 0; offset++; // write
-     * wkbtype ByteUtils.writeBEInt(wkbLineString,offset + 1,1); offset += 4; // write point coordinates
+     * // it's a single LineString if (points.length == 1) { wkbLineString = new byte[points[0].length*21 + 9]; // big
+     * endian coding wkbLineString[0] = 0; // write wkbtype ByteUtils.writeBEInt(wkbLineString,1,2); // write number of
+     * points ByteUtils.writeBEInt(wkbLineString,5,points[0].length); offset = 9; for (int i = 0; i < points[0].length;
+     * i++) { // big endian coding wkbLineString[offset] = 0; offset++; // write wkbtype
+     * ByteUtils.writeBEInt(wkbLineString,offset + 1,1); offset += 4; // write point coordinates
      * ByteUtils.writeBEDouble(wkbLineString,offset + 5 ,points[0][i].getX()); offset += 8;
      * ByteUtils.writeBEDouble(wkbLineString,offset + 13,points[0][i].getY()); offset += 8; } } // it's a multi
-     * LineString else { // get size to be allocated form wkbstructure int size = 9;
-     * 
-     * for (int j = 0; j < points.length; j++) size += points[j].length*21 + 9;
-     * 
-     * wkbLineString = new byte[size]; // big endian coding wkbLineString[0] = 0; // write wkbtype
-     * ByteUtils.writeBEInt(wkbLineString,1,5); // write number of linestrings
-     * ByteUtils.writeBEInt(wkbLineString,5,points.length);
-     * 
-     * offset = 9; // for every linestring for (int j = 0; j < points.length; j++) { // big endian coding
-     * wkbLineString[offset] = 0; // write wkbtype ByteUtils.writeBEInt(wkbLineString,offset + 1,2); // write number of
-     * points ByteUtils.writeBEInt(wkbLineString,offset + 5,points[j].length);
-     * 
-     * offset += 9;
-     * 
-     * for (int i = 0; i < points[j].length; i++) { // big endian coding wkbLineString[offset] = 0; // write wkbtype
+     * LineString else { // get size to be allocated form wkbstructure int size = 9; for (int j = 0; j < points.length;
+     * j++) size += points[j].length*21 + 9; wkbLineString = new byte[size]; // big endian coding wkbLineString[0] = 0; //
+     * write wkbtype ByteUtils.writeBEInt(wkbLineString,1,5); // write number of linestrings
+     * ByteUtils.writeBEInt(wkbLineString,5,points.length); offset = 9; // for every linestring for (int j = 0; j <
+     * points.length; j++) { // big endian coding wkbLineString[offset] = 0; // write wkbtype
+     * ByteUtils.writeBEInt(wkbLineString,offset + 1,2); // write number of points
+     * ByteUtils.writeBEInt(wkbLineString,offset + 5,points[j].length); offset += 9; for (int i = 0; i <
+     * points[j].length; i++) { // big endian coding wkbLineString[offset] = 0; // write wkbtype
      * ByteUtils.writeBEInt(wkbLineString,offset + 1,1); // write point coordinates
      * ByteUtils.writeBEDouble(wkbLineString,offset + 5 ,points[j][i].getX());
      * ByteUtils.writeBEDouble(wkbLineString,offset + 13,points[j][i].getY()); // increment offset with the size of a
@@ -196,15 +182,15 @@ public class SHP2WKB
    * transforms the SHPPolygon into a byte array using sf-WKB specifications <BR>
    * gets the polygon that should be transformed to a WKSGeometry <BR>
    */
-  public byte[] transformPolygon( SHPPolygon shppolygon_ ) throws Exception
+  public byte[] transformPolygon( final SHPPolygon shppolygon_ ) throws Exception
   {
     int wkbtype = 0;
     int N = 0;
 
-    SHP2WKS shp2wks = new SHP2WKS();
-    CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
-    CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
-    GM_Surface[] wkslp = shp2wks.transformPolygon( srs, shppolygon_ );
+    final SHP2WKS shp2wks = new SHP2WKS();
+    final CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
+    final CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
+    final GM_Surface< ? >[] wkslp = shp2wks.transformPolygon( srs, shppolygon_ );
 
     byte[] buffer = null;
 
@@ -226,7 +212,7 @@ public class SHP2WKB
       // number of polygons (4 bytes)
       bufsize += 4;
 
-      for( int i = 0; i < wkslp.length; i++ )
+      for( final GM_Surface< ? > element : wkslp )
       {
         // byte order (1 byte) (of the i-th polygon)
         bufsize += 1;
@@ -241,18 +227,18 @@ public class SHP2WKB
         bufsize += 4;
 
         // add 16 byte (2*double) for every point of the external boundary
-        bufsize += ( wkslp[i].getSurfacePatchAt( 0 ).getExteriorRing().length * 16 );
+        bufsize += (element.get( 0 ).getExteriorRing().length * 16);
 
-        if( wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings() != null )
+        if( element.get( 0 ).getInteriorRings() != null )
         {
-          for( int j = 0; j < wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings().length; j++ )
+          for( int j = 0; j < element.get( 0 ).getInteriorRings().length; j++ )
           {
             // number of points of the j-th internal boundary
             bufsize += 4;
 
             // add 16 byte (2*double) for every point of the j-th internal
             // boundary
-            bufsize += ( wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings()[j].length * 16 );
+            bufsize += (element.get( 0 ).getInteriorRings()[j].length * 16);
           }
         }
       }
@@ -268,17 +254,17 @@ public class SHP2WKB
       bufsize += 4;
 
       // add 16 byte (2*double) for every point of the external boundary
-      bufsize += ( wkslp[0].getSurfacePatchAt( 0 ).getExteriorRing().length * 16 );
+      bufsize += (wkslp[0].get( 0 ).getExteriorRing().length * 16);
 
-      if( wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings() != null )
+      if( wkslp[0].get( 0 ).getInteriorRings() != null )
       {
-        for( int j = 0; j < wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings().length; j++ )
+        for( int j = 0; j < wkslp[0].get( 0 ).getInteriorRings().length; j++ )
         {
           // number of points of the j-th internal boundary
           bufsize += 4;
 
           // add 16 byte (2*double) for every point of every internal boundary
-          bufsize += ( wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings()[j].length * 16 );
+          bufsize += (wkslp[0].get( 0 ).getInteriorRings()[j].length * 16);
         }
       }
     }
@@ -302,7 +288,7 @@ public class SHP2WKB
       ByteUtils.writeBEInt( buffer, offset, wkslp.length );
       offset += 4;
 
-      for( int i = 0; i < wkslp.length; i++ )
+      for( final GM_Surface< ? > element : wkslp )
       {
         // big endian wkb type
         buffer[offset] = 0;
@@ -313,9 +299,9 @@ public class SHP2WKB
         offset += 4;
 
         // write number of rings to buffer
-        if( wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings() != null )
+        if( element.get( 0 ).getInteriorRings() != null )
         {
-          N = wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings().length;
+          N = element.get( 0 ).getInteriorRings().length;
         }
         else
         {
@@ -326,39 +312,39 @@ public class SHP2WKB
         offset += 4;
 
         // write number of points of the external boundary to buffer
-        ByteUtils.writeBEInt( buffer, offset, wkslp[i].getSurfacePatchAt( 0 ).getExteriorRing().length );
+        ByteUtils.writeBEInt( buffer, offset, element.get( 0 ).getExteriorRing().length );
         offset += 4;
 
-        GM_Position[] ls = wkslp[i].getSurfacePatchAt( 0 ).getExteriorRing();
+        final GM_Position[] ls = element.get( 0 ).getExteriorRing();
 
         // write points of the external boundary to buffer
-        for( int j = 0; j < ls.length; j++ )
+        for( final GM_Position element2 : ls )
         {
-          ByteUtils.writeBEDouble( buffer, offset, ls[j].getX() );
+          ByteUtils.writeBEDouble( buffer, offset, element2.getX() );
           offset += 8;
 
-          ByteUtils.writeBEDouble( buffer, offset, ls[j].getY() );
+          ByteUtils.writeBEDouble( buffer, offset, element2.getY() );
           offset += 8;
         }
 
-        if( wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings() != null )
+        if( element.get( 0 ).getInteriorRings() != null )
         {
-          GM_Position[][] gcu = wkslp[i].getSurfacePatchAt( 0 ).getInteriorRings();
+          final GM_Position[][] gcu = element.get( 0 ).getInteriorRings();
 
           // for every internal boundary of the i-th polygon
-          for( int j = 0; j < gcu.length; j++ )
+          for( final GM_Position[] element2 : gcu )
           {
             // write number of points of the j-th internal boundary to buffer
-            ByteUtils.writeBEInt( buffer, offset, gcu[j].length );
+            ByteUtils.writeBEInt( buffer, offset, element2.length );
             offset += 4;
 
             // write points of the j-th internal boundary to buffer
-            for( int k = 0; k < gcu[j].length; k++ )
+            for( int k = 0; k < element2.length; k++ )
             {
-              ByteUtils.writeBEDouble( buffer, offset, gcu[j][k].getX() );
+              ByteUtils.writeBEDouble( buffer, offset, element2[k].getX() );
               offset += 8;
 
-              ByteUtils.writeBEDouble( buffer, offset, gcu[j][k].getY() );
+              ByteUtils.writeBEDouble( buffer, offset, element2[k].getY() );
               offset += 8;
             }
           }
@@ -367,9 +353,9 @@ public class SHP2WKB
     }
     else
     {
-      if( wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings() != null )
+      if( wkslp[0].get( 0 ).getInteriorRings() != null )
       {
-        N = wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings().length;
+        N = wkslp[0].get( 0 ).getInteriorRings().length;
       }
       else
       {
@@ -381,38 +367,38 @@ public class SHP2WKB
       offset += 4;
 
       // write number of points of the external boundary to buffer
-      GM_Position[] ls = wkslp[0].getSurfacePatchAt( 0 ).getExteriorRing();
+      final GM_Position[] ls = wkslp[0].get( 0 ).getExteriorRing();
       ByteUtils.writeBEInt( buffer, offset, ls.length );
       offset += 4;
 
       // write points of the external boundary to buffer
-      for( int j = 0; j < ls.length; j++ )
+      for( final GM_Position element : ls )
       {
-        ByteUtils.writeBEDouble( buffer, offset, ls[j].getX() );
+        ByteUtils.writeBEDouble( buffer, offset, element.getX() );
         offset += 8;
 
-        ByteUtils.writeBEDouble( buffer, offset, ls[j].getY() );
+        ByteUtils.writeBEDouble( buffer, offset, element.getY() );
         offset += 8;
       }
 
-      if( wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings() != null )
+      if( wkslp[0].get( 0 ).getInteriorRings() != null )
       {
-        GM_Position[][] gcu = wkslp[0].getSurfacePatchAt( 0 ).getInteriorRings();
+        final GM_Position[][] gcu = wkslp[0].get( 0 ).getInteriorRings();
 
         // for every internal boundary
-        for( int j = 0; j < gcu.length; j++ )
+        for( final GM_Position[] element : gcu )
         {
           // write number of points of the j-th internal boundary to buffer
-          ByteUtils.writeBEInt( buffer, offset, gcu[j].length );
+          ByteUtils.writeBEInt( buffer, offset, element.length );
           offset += 4;
 
           // write points of the j-th internal boundary to buffer
-          for( int k = 0; k < gcu[j].length; k++ )
+          for( int k = 0; k < element.length; k++ )
           {
-            ByteUtils.writeBEDouble( buffer, offset, gcu[j][k].getX() );
+            ByteUtils.writeBEDouble( buffer, offset, element[k].getX() );
             offset += 8;
 
-            ByteUtils.writeBEDouble( buffer, offset, gcu[j][k].getY() );
+            ByteUtils.writeBEDouble( buffer, offset, element[k].getY() );
             offset += 8;
           }
         }

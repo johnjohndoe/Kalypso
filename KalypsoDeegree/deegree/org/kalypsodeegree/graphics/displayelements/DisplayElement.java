@@ -82,11 +82,6 @@ public interface DisplayElement
   Feature getFeature( );
 
   /**
-   * returns the id of thr feature that's associated with the DisplayElement
-   */
-  String getAssociateFeatureId( );
-
-  /**
    * renders the DisplayElement to the submitted graphic context
    */
   void paint( Graphics g, GeoTransform projection );

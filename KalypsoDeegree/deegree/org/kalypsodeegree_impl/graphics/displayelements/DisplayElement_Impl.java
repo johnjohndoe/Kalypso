@@ -106,14 +106,6 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   }
 
   /**
-   * returns the id of the feature that's associated with the DisplayElement
-   */
-  public String getAssociateFeatureId( )
-  {
-    return m_feature.getId();
-  }
-
-  /**
    * renders the DisplayElement to the submitted graphic context
    */
   public abstract void paint( Graphics g, GeoTransform projection );

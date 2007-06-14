@@ -61,12 +61,12 @@
 
 package org.kalypsodeegree.model.geometry;
 
+import java.util.List;
+
 /**
- * 
  * Defining the surface geometry of the iso geometry model. a surface is made of 1..n surface patches. for convention it
  * is defined that GM_Surface is a closed geometry. that means each surface patch a surface is made of must touch at
  * least one other surface patch if a surface is made of more then one surface patch
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -76,43 +76,6 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 
-public interface GM_Surface extends GM_OrientableSurface, GM_GenericSurface
+public interface GM_Surface<T extends GM_SurfacePatch> extends GM_OrientableSurface, GM_GenericSurface, List<T>, ISurfacePatchVisitable<T>
 {
-  /**
-   * @link aggregationByValue
-   * @clientCardinality 1..*
-   */
-  /* #GM_SurfacePatch lnkGM_SurfacePatch; */
-
-  /**
-   * returns the number of patches building the surface
-   */
-  int getNumberOfSurfacePatches();
-
-  /**
-   * returns the surface patch at the submitted index
-   */
-  GM_SurfacePatch getSurfacePatchAt( int index ) throws GM_Exception;
-
-  /**
-   * writes a surface patch to the surface at submitted position. the old patch will be deleted
-   */
-  void setSurfacePatchAt( GM_SurfacePatch segment, int index ) throws GM_Exception;
-
-  /**
-   * inserts a surface patch in the curve at the submitted position. all points with a position that equals index or is
-   * higher will be shifted
-   */
-  void insertSurfacePatchAt( GM_SurfacePatch segment, int index ) throws GM_Exception;
-
-  /**
-   * adds a surface patch at the end of the curve
-   */
-  void addSurfacePatch( GM_SurfacePatch segment );
-
-  /**
-   * deletes the surface patch at the submitted index
-   */
-  void deleteSurfacePatchAt( int index ) throws GM_Exception;
-
 }
