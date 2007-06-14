@@ -43,7 +43,6 @@ package org.kalypsodeegree.model.typeHandler;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch

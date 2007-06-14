@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
@@ -94,6 +95,8 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
@@ -173,12 +176,16 @@ public class DisplayElementFactory
                 // list
                 final Symbolizer[] symbolizers = element2.getSymbolizers();
 
-                for( final Symbolizer element3 : symbolizers )
+                for( final Symbolizer symbolizer : symbolizers )
                 {
-                  final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, element3 );
+                  final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
                   if( displayElement != null )
                     list.add( displayElement );
                 }
+
+                // TODO: test, remove
+                if( symbolizers.length == 0 )
+                  list.add( DisplayElementFactory.buildDisplayElement( feature, null ) );
               }
             }
           }
@@ -215,7 +222,7 @@ public class DisplayElementFactory
   {
     // determine the geometry property to be used
     GM_Object geoProperty = null;
-    final Geometry geometry = symbolizer.getGeometry();
+    final Geometry geometry = symbolizer == null ? null : symbolizer.getGeometry();
 
     if( geometry != null )
     {
@@ -263,6 +270,40 @@ public class DisplayElementFactory
     else if( symbolizer instanceof RasterSymbolizer )
     {
       displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
+    }
+    // TODO: replace with symbolizer read from sld
+    else if( symbolizer == null && feature.getDefaultGeometryProperty() instanceof GM_TriangulatedSurface )
+    {
+      final IElevationColorModel colorModel = new IElevationColorModel()
+      {
+        public Color getColor( double elevation )
+        {
+          if( elevation < 0.5 )
+            return Color.BLUE;
+
+          if( elevation < 1.5 )
+            return Color.RED;
+
+          return Color.GREEN;
+        }
+
+        public double getDiscretisationInterval( )
+        {
+          return 0;
+        }
+
+        public double[] getElevationMinMax( )
+        {
+          return null;
+        }
+
+        public void setElevationMinMax( double min, double max )
+        {
+        }
+      };
+
+      final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) feature.getDefaultGeometryProperty();
+      return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, colorModel );
     }
     else
     {
@@ -395,7 +436,7 @@ public class DisplayElementFactory
     if( geom == null )
       return null;
 
-    final GM_Surface[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
+    final GM_Surface< ? >[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
     if( surfaces == null )
       throw new IncompatibleGeometryTypeException( "Could not create PolygonDisplayElement from geometry: " + geom.getClass().getName() );
 

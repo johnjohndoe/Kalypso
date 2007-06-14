@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch

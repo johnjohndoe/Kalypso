@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
-import org.opengis.cs.CS_CoordinateSystem;
-
 /**
- * @author Gernot Belger
+ * @author Patrice Congo
  */
-public interface CS_CoordinateSystemProvider
+public interface ISurfacePatchVisitable<P extends GM_SurfacePatch>
 {
-  public CS_CoordinateSystem getCoordinateSystem();
+  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<P> surfacePatchVisitor ) throws GM_Exception;
 }

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
-import org.kalypso.jts.Triangle;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -49,13 +49,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class GM_Triangle_Impl implements GM_Triangle
+public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 {
   public static GM_SurfaceInterpolation PLANAR_INTERPOLATION;
-
-  private final Triangle m_triangle;
-
-  private final CS_CoordinateSystem m_crs;
 
   static
   {
@@ -70,12 +66,12 @@ public class GM_Triangle_Impl implements GM_Triangle
     }
   }
 
-  public GM_Triangle_Impl( final Triangle triangle, final CS_CoordinateSystem crs )
+  GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
   {
-    m_triangle = triangle;
-    m_crs = crs;
+    super( PLANAR_INTERPOLATION, new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
   }
 
+  @Override
   public CS_CoordinateSystem getCoordinateSystem( )
   {
     return m_crs;
@@ -84,16 +80,9 @@ public class GM_Triangle_Impl implements GM_Triangle
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#getInterpolation()
    */
+  @Override
   public GM_SurfaceInterpolation getInterpolation( )
   {
     return PLANAR_INTERPOLATION;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Triangle#getTriangle()
-   */
-  public Triangle getTriangle( )
-  {
-    return m_triangle;
   }
 }

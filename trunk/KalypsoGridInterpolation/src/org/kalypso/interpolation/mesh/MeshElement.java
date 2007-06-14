@@ -47,6 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -83,26 +84,25 @@ public class MeshElement
 
   private final Feature m_feature;
 
-  private double[] m_values;
+  private final double[] m_values;
 
   public MeshElement( final String id, final GM_Position[] positions, final double[] values, final CS_CoordinateSystem crs ) throws GM_Exception
   {
-    GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
-    Feature f = FeatureFactory.createFeature( null, null, id, m_featureType, false );
+    final GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
+    final Feature f = FeatureFactory.createFeature( null, null, id, m_featureType, false );
     f.setProperty( "GEOM", surface );
     m_feature = f;
     m_values = values;
 
   }// constructor}
 
-  public void interpolateMeshElement( GM_Position[] cells, Grid grid ) throws Exception
+  public void interpolateMeshElement( final GM_Position[] cells, final Grid grid ) throws Exception
   {
-    for( int i = 0; i < cells.length; i++ )
+    for( final GM_Position position : cells )
     {
-      GM_Position position = cells[i];
       if( getGeometry().contains( position ) == true )
       {
-        double value = interpolatePointFEM( position );
+        final double value = interpolatePointFEM( position );
         grid.writeGridValue( position, value );
 
       }// if cell contains
@@ -132,20 +132,20 @@ public class MeshElement
    * Returns interpolated value of a given point using FEM method
    * 
    * @param p
-   *          Point point to interpolate
+   *            Point point to interpolate
    * @see Point
    * @return double interpolated value
    */
-  private double interpolatePointFEM( GM_Position p ) throws Exception
+  private double interpolatePointFEM( final GM_Position p ) throws Exception
   {
     // logWriter.newLine();
     // logWriter.write("Interpolation Method used: " + "Finite Element Method");
     // logWriter.close();
-    double[] phi = new double[3];
+    final double[] phi = new double[3];
     Double cellValue = new Double( 0 );
-    Object[] factors = calculateWeightsFEM();
-    GM_Position[] v = ((GM_Surface) m_feature.getDefaultGeometryProperty()).getSurfacePatchAt( 0 ).getExteriorRing();
-    double area = ((GM_Surface) m_feature.getDefaultGeometryProperty()).getArea();
+    final Object[] factors = calculateWeightsFEM();
+    final GM_Position[] v = ((GM_Surface<GM_SurfacePatch>) m_feature.getDefaultGeometryProperty()).get( 0 ).getExteriorRing();
+    final double area = ((GM_Surface) m_feature.getDefaultGeometryProperty()).getArea();
     // apply formula on each vertex
     for( int i = 0; i < v.length - 1; i++ )
     {
@@ -171,10 +171,10 @@ public class MeshElement
    */
   private Object[] calculateWeightsFEM( ) throws Exception
   {
-    double alpha[] = new double[3];
-    double beta[] = new double[3];
-    double gamma[] = new double[3];
-    GM_Position[] v = ((GM_Surface) m_feature.getDefaultGeometryProperty()).getSurfacePatchAt( 0 ).getExteriorRing();
+    final double alpha[] = new double[3];
+    final double beta[] = new double[3];
+    final double gamma[] = new double[3];
+    final GM_Position[] v = ((GM_Surface<GM_SurfacePatch>) m_feature.getDefaultGeometryProperty()).get( 0 ).getExteriorRing();
     alpha[0] = ((v[1].getX() * v[2].getY()) - (v[2].getX() * v[1].getY()));
     beta[0] = v[1].getY() - v[2].getY();
     gamma[0] = v[2].getX() - v[1].getX();
@@ -187,31 +187,31 @@ public class MeshElement
     beta[2] = v[0].getY() - v[1].getY();
     gamma[2] = v[1].getX() - v[0].getX();
 
-    Object res[] = { alpha, beta, gamma };
+    final Object res[] = { alpha, beta, gamma };
     return res;
   }// setWeightsFEM
 
-  public GM_Surface getGeometry( )
+  public GM_Surface<GM_SurfacePatch> getGeometry( )
   {
-    return (GM_Surface) m_feature.getDefaultGeometryProperty();
+    return (GM_Surface<GM_SurfacePatch>) m_feature.getDefaultGeometryProperty();
 
   }
 
-  public boolean isPointOnEdge( GM_Position p ) throws GM_Exception
+  public boolean isPointOnEdge( final GM_Position p ) throws GM_Exception
   {
-    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
+    final GM_Position[] array = getGeometry().get( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
-      GM_Position vertex1 = array[i];
-      GM_Position vertex2 = array[i + 1];
+      final GM_Position vertex1 = array[i];
+      final GM_Position vertex2 = array[i + 1];
       double slope = 0.0;
       slope = ((vertex1.getX() - vertex2.getX()) / (vertex1.getY() - vertex2.getY()));
 
       if( slope == Double.NEGATIVE_INFINITY || slope == Double.POSITIVE_INFINITY )
         slope = 0;
 
-      double b = vertex1.getY() - slope * vertex1.getX();
-      double y = slope * p.getX() + b;
+      final double b = vertex1.getY() - slope * vertex1.getX();
+      final double y = slope * p.getX() + b;
       if( y == p.getY() )
         return true;
 
@@ -221,38 +221,38 @@ public class MeshElement
 
   public MeshElement[] splitElement( ) throws Exception
   {
-    List<MeshElement> res = new ArrayList<MeshElement>();
-    String eID1 = getMeshElementID() + ".1";
-    String eID2 = getMeshElementID() + ".2";
+    final List<MeshElement> res = new ArrayList<MeshElement>();
+    final String eID1 = getMeshElementID() + ".1";
+    final String eID2 = getMeshElementID() + ".2";
 
-    GM_Position[] positions = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
-    char orientation = getGeometry().getOrientation();
+    final GM_Position[] positions = getGeometry().get( 0 ).getExteriorRing();
+    final char orientation = getGeometry().getOrientation();
 
     // make split such that diagonal will have least
     // slope
 
-    double m1 = Math.abs( (positions[0].getY() - positions[2].getY()) / (positions[0].getX() - positions[2].getX()) );
-    double m2 = Math.abs( (positions[1].getY() - positions[3].getY()) / (positions[1].getX() - positions[3].getX()) );
+    final double m1 = Math.abs( (positions[0].getY() - positions[2].getY()) / (positions[0].getX() - positions[2].getX()) );
+    final double m2 = Math.abs( (positions[1].getY() - positions[3].getY()) / (positions[1].getX() - positions[3].getX()) );
 
     if( m1 < m2 && orientation == '+' )
     {
 
-      MeshElement me1 = new MeshElement( eID1, new GM_Position[] { positions[0], positions[1], positions[2], positions[0] }, new double[] { m_values[0], m_values[1], m_values[2], m_values[0]
+      final MeshElement me1 = new MeshElement( eID1, new GM_Position[] { positions[0], positions[1], positions[2], positions[0] }, new double[] { m_values[0], m_values[1], m_values[2], m_values[0]
 
       }, getCoordinateSystem() );
 
       res.add( me1 );
-      MeshElement me2 = new MeshElement( eID2, new GM_Position[] { positions[0], positions[2], positions[3], positions[0] }, new double[] { m_values[0], m_values[2], m_values[3], m_values[0] }, getCoordinateSystem() );
+      final MeshElement me2 = new MeshElement( eID2, new GM_Position[] { positions[0], positions[2], positions[3], positions[0] }, new double[] { m_values[0], m_values[2], m_values[3], m_values[0] }, getCoordinateSystem() );
       res.add( me2 );
     }
     else
     {
-      MeshElement me1 = new MeshElement( eID1, new GM_Position[] { positions[1], positions[2], positions[3], positions[1] }, new double[] { m_values[1], m_values[2], m_values[3], m_values[1]
+      final MeshElement me1 = new MeshElement( eID1, new GM_Position[] { positions[1], positions[2], positions[3], positions[1] }, new double[] { m_values[1], m_values[2], m_values[3], m_values[1]
 
       }, getCoordinateSystem() );
 
       res.add( me1 );
-      MeshElement me2 = new MeshElement( eID2, new GM_Position[] { positions[1], positions[3], positions[0], positions[1] }, new double[] { m_values[1], m_values[3], m_values[0], m_values[1] }, getCoordinateSystem() );
+      final MeshElement me2 = new MeshElement( eID2, new GM_Position[] { positions[1], positions[3], positions[0], positions[1] }, new double[] { m_values[1], m_values[3], m_values[0], m_values[1] }, getCoordinateSystem() );
       res.add( me2 );
     }
 
@@ -328,9 +328,9 @@ public class MeshElement
    */
   public int getPolygonType( ) throws Exception
   {
-    GM_Surface surface = getGeometry();
-    GM_Position[] positions = surface.getSurfacePatchAt( 0 ).getExteriorRing();
-    int nNumOfVertices = positions.length - 1;// -1 because first and last
+    final GM_Surface<GM_SurfacePatch> surface = getGeometry();
+    final GM_Position[] positions = surface.get( 0 ).getExteriorRing();
+    final int nNumOfVertices = positions.length - 1;// -1 because first and last
     // point are the same (closed)
     // polygon
     boolean bSignChanged = false;
@@ -392,9 +392,9 @@ public class MeshElement
 
   public int getOrientation( ) throws GM_Exception
   {
-    Geometry geom1 = JTSAdapter.export( getGeometry() );
-    Coordinate[] cor = geom1.getCoordinates();
-    int k = RobustCGAlgorithms.orientationIndex( cor[0], cor[1], cor[2] );
+    final Geometry geom1 = JTSAdapter.export( getGeometry() );
+    final Coordinate[] cor = geom1.getCoordinates();
+    final int k = RobustCGAlgorithms.orientationIndex( cor[0], cor[1], cor[2] );
     return k;
   }
 
@@ -403,7 +403,7 @@ public class MeshElement
    */
   public MeshElement invertOrientation( ) throws GM_Exception
   {
-    GM_Position[] pos = getGeometry().getSurfaceBoundary().getExteriorRing().getPositions();
+    final GM_Position[] pos = getGeometry().getSurfaceBoundary().getExteriorRing().getPositions();
     final GM_Position[] newPos = new GM_Position[pos.length];
     final double[] newVal = new double[pos.length];
     System.arraycopy( m_values, 0, newVal, 0, pos.length );

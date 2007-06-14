@@ -276,16 +276,16 @@ final public class GeoTransformer
   /**
    * transforms the submitted surface to the target coordinate reference system
    */
-  private GM_Object transformSurface( GM_Surface geo, final MathTransform trans ) throws Exception
+  private GM_Object transformSurface( GM_Surface< ? > geo, final MathTransform trans ) throws Exception
   {
     Debug.debugMethodBegin( this, "transformSurface" );
 
-    final int cnt = geo.getNumberOfSurfacePatches();
+    final int cnt = geo.size();
     final GM_SurfacePatch[] patches = new GM_SurfacePatch[cnt];
 
     for( int i = 0; i < cnt; i++ )
     {
-      final GM_SurfacePatch p = geo.getSurfacePatchAt( i );
+      final GM_SurfacePatch p = geo.get( i );
       GM_Position[] ex = p.getExteriorRing();
       ex = transformPositions( ex, trans );
 

@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
@@ -83,21 +84,21 @@ class LinearContains
   /**
    * the operation returns true if the submitted point contains the submitted surface patch
    */
-  public static boolean contains( GM_SurfacePatch surface, GM_Position point )
+  public static boolean contains( final GM_SurfacePatch surface, final GM_Position point )
   {
     boolean con = false;
-    GM_Position[] ex = surface.getExteriorRing();
+    final GM_Position[] ex = surface.getExteriorRing();
     con = contains( ex, point );
 
     if( con )
     {
-      GM_Position[][] inner = surface.getInteriorRings();
+      final GM_Position[][] inner = surface.getInteriorRings();
 
       if( inner != null )
       {
-        for( int i = 0; i < inner.length; i++ )
+        for( final GM_Position[] element : inner )
         {
-          if( contains( inner[i], point ) )
+          if( contains( element, point ) )
           {
             con = false;
             break;
@@ -112,11 +113,11 @@ class LinearContains
   /**
    * the operation returns true if the submitted curve segment contains the submitted surface patch
    */
-  public static boolean contains( GM_SurfacePatch surface, GM_CurveSegment curve )
+  public static boolean contains( final GM_SurfacePatch surface, final GM_CurveSegment curve )
   {
     boolean con = true;
-    GM_Position[] ex = surface.getExteriorRing();
-    GM_Position[] cu = curve.getPositions();
+    final GM_Position[] ex = surface.getExteriorRing();
+    final GM_Position[] cu = curve.getPositions();
 
     for( int i = 0; i < cu.length; i++ )
     {
@@ -129,15 +130,15 @@ class LinearContains
 
     if( con )
     {
-      GM_Position[][] inner = surface.getInteriorRings();
+      final GM_Position[][] inner = surface.getInteriorRings();
 
       if( inner != null )
       {
-        for( int i = 0; i < inner.length; i++ )
+        for( final GM_Position[] element : inner )
         {
-          for( int j = 0; j < cu.length; j++ )
+          for( final GM_Position element2 : cu )
           {
-            if( contains( inner[i], cu[j] ) )
+            if( contains( element, element2 ) )
             {
               con = false;
               break;
@@ -158,11 +159,11 @@ class LinearContains
   /**
    * the operation returns true if the first surface patches contains the second one
    */
-  public static boolean contains( GM_SurfacePatch surface1, GM_SurfacePatch surface2 )
+  public static boolean contains( final GM_SurfacePatch surface1, final GM_SurfacePatch surface2 )
   {
     boolean con = true;
-    GM_Position[] ex = surface1.getExteriorRing();
-    GM_Position[] ex_ = surface2.getExteriorRing();
+    final GM_Position[] ex = surface1.getExteriorRing();
+    final GM_Position[] ex_ = surface2.getExteriorRing();
 
     for( int i = 0; i < ex_.length; i++ )
     {
@@ -175,18 +176,18 @@ class LinearContains
 
     if( con )
     {
-      GM_Position[][] inner = surface1.getInteriorRings();
-      GM_Position[][] inner_ = surface2.getInteriorRings();
+      final GM_Position[][] inner = surface1.getInteriorRings();
+      final GM_Position[][] inner_ = surface2.getInteriorRings();
 
       if( inner != null )
       {
-        for( int i = 0; i < inner.length; i++ )
+        for( final GM_Position[] element : inner )
         {
           // a point of the second exterior is not allowed to be
           // within a inner ring of the first
-          for( int j = 0; j < ex_.length; j++ )
+          for( final GM_Position element2 : ex_ )
           {
-            if( contains( inner[i], ex_[j] ) )
+            if( contains( element, element2 ) )
             {
               con = false;
               break;
@@ -202,11 +203,11 @@ class LinearContains
           // to be within a inner ring of the first
           if( inner_ != null )
           {
-            for( int k = 0; k < inner_.length; k++ )
+            for( final GM_Position[] element2 : inner_ )
             {
-              for( int j = 0; j < inner_[k].length; j++ )
+              for( int j = 0; j < element2.length; j++ )
               {
-                if( contains( inner[i], inner_[k][j] ) )
+                if( contains( element, element2[j] ) )
                 {
                   con = false;
                   break;
@@ -222,9 +223,9 @@ class LinearContains
 
           // a point of the inner rings of the first is not allowed
           // to be within the second surface
-          for( int j = 0; j < inner[i].length; j++ )
+          for( int j = 0; j < element.length; j++ )
           {
-            if( contains( surface2, inner[i][j] ) )
+            if( contains( surface2, element[j] ) )
             {
               con = false;
               break;
@@ -242,9 +243,9 @@ class LinearContains
     // surface2 is not allowed to contain one point of surface1
     if( con )
     {
-      for( int i = 0; i < ex.length; i++ )
+      for( final GM_Position element : ex )
       {
-        if( contains( surface2, ex[i] ) )
+        if( contains( surface2, element ) )
         {
           con = false;
           break;
@@ -258,14 +259,14 @@ class LinearContains
   /**
    * the operation returns true if the submitted point contains the submitted surface
    */
-  public static boolean contains( GM_Surface surface, GM_Point point ) throws Exception
+  public static boolean contains( final GM_Surface< ? > surface, final GM_Point point ) throws Exception
   {
     boolean contain = false;
-    int cnt = surface.getNumberOfSurfacePatches();
+    final int cnt = surface.size();
 
     for( int i = 0; i < cnt; i++ )
     {
-      if( contains( surface.getSurfacePatchAt( i ), point.getPosition() ) )
+      if( contains( surface.get( i ), point.getPosition() ) )
       {
         contain = true;
         break;
@@ -278,36 +279,36 @@ class LinearContains
   /**
    * Convenience method to extract all <tt>GM_Position</tt> s from a <tt>GM_Curve</tt>.
    */
-  private static GM_Position[] getPositions( GM_Curve curve ) throws GM_Exception
+  private static GM_Position[] getPositions( final GM_Curve curve ) throws GM_Exception
   {
-    ArrayList positions = new ArrayList( 1000 );
+    final List<GM_Position> positions = new ArrayList<GM_Position>( 1000 );
 
     for( int i = 0; i < curve.getNumberOfCurveSegments(); i++ )
     {
-      GM_CurveSegment segment = curve.getCurveSegmentAt( i );
-      GM_Position[] segmentPos = segment.getPositions();
+      final GM_CurveSegment segment = curve.getCurveSegmentAt( i );
+      final GM_Position[] segmentPos = segment.getPositions();
 
-      for( int j = 0; j < segmentPos.length; j++ )
-        positions.add( segmentPos[j] );
+      for( final GM_Position element : segmentPos )
+        positions.add( element );
     }
 
-    return (GM_Position[])positions.toArray();
+    return (GM_Position[]) positions.toArray();
   }
 
   /**
    * the operation returns true if the submitted curve contains the submitted surface
    */
-  public static boolean contains( GM_Surface surface, GM_Curve curve ) throws GM_Exception
+  public static boolean contains( final GM_Surface< ? > surface, final GM_Curve curve ) throws GM_Exception
   {
     // gather the positions of the crings (exterior and interior) and
     // the curve as arrays of GM_Positions
-    GM_SurfaceBoundary boundary = (GM_SurfaceBoundary)surface.getBoundary();
-    GM_Ring extRing = boundary.getExteriorRing();
-    GM_Ring[] intRings = boundary.getInteriorRings();
+    final GM_SurfaceBoundary boundary = (GM_SurfaceBoundary) surface.getBoundary();
+    final GM_Ring extRing = boundary.getExteriorRing();
+    final GM_Ring[] intRings = boundary.getInteriorRings();
 
-    GM_Position[] curvePos = getPositions( curve );
-    GM_Position[] extRingPos = extRing.getPositions();
-    GM_Position[][] intRingsPos = new GM_Position[intRings.length][];
+    final GM_Position[] curvePos = getPositions( curve );
+    final GM_Position[] extRingPos = extRing.getPositions();
+    final GM_Position[][] intRingsPos = new GM_Position[intRings.length][];
 
     for( int i = 0; i < intRings.length; i++ )
       intRingsPos[i] = intRings[i].getPositions();
@@ -337,15 +338,15 @@ class LinearContains
   /**
    * the operation returns true if the two submitted surfaces contains
    */
-  public static boolean contains( GM_Surface surface2, GM_Surface surface1 ) throws Exception
+  public static boolean contains( final GM_Surface< ? > surface2, final GM_Surface< ? > surface1 ) throws Exception
   {
-    return contains( surface2.getSurfacePatchAt( 0 ), surface1.getSurfacePatchAt( 0 ) );
+    return contains( surface2.get( 0 ), surface1.get( 0 ) );
   }
 
   /**
    * the operation returns true if polygon defined by an array of GM_Position contains the submitted point.
    */
-  protected static boolean contains( GM_Position[] positions, GM_Position point )
+  protected static boolean contains( final GM_Position[] positions, final GM_Position point )
   {
     if( positions.length <= 2 )
     {
@@ -396,7 +397,7 @@ class LinearContains
 
       if( cury < lasty )
       {
-        if( ( point.getY() < cury ) || ( point.getY() >= lasty ) )
+        if( (point.getY() < cury) || (point.getY() >= lasty) )
         {
           continue;
         }
@@ -412,7 +413,7 @@ class LinearContains
       }
       else
       {
-        if( ( point.getY() < lasty ) || ( point.getY() >= cury ) )
+        if( (point.getY() < lasty) || (point.getY() >= cury) )
         {
           continue;
         }
@@ -427,12 +428,12 @@ class LinearContains
         test2 = point.getY() - lasty;
       }
 
-      if( test1 < ( test2 / ( lasty - cury ) * ( lastx - curx ) ) )
+      if( test1 < (test2 / (lasty - cury) * (lastx - curx)) )
       {
         hits++;
       }
     }
 
-    return ( ( hits & 1 ) != 0 );
+    return ((hits & 1) != 0);
   }
 }

@@ -64,8 +64,8 @@ import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * @author Gernot Belger

@@ -42,7 +42,6 @@ package org.kalypsodeegree.model.typeHandler;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch

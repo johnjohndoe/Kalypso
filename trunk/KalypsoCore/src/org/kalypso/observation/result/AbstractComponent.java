@@ -41,7 +41,7 @@
 package org.kalypso.observation.result;
 
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypsodeegree.model.XsdBaseTypeHandler;
+import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * @author kuch

@@ -52,9 +52,13 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.internal.util.Util;
@@ -62,6 +66,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.contribs.eclipse.swt.events.CustomDrawListener;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
@@ -103,7 +108,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
   public void createControl( final Composite parent )
   {
-    m_viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI );
+    m_viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_viewer.setContentProvider( m_contentProvider );
     m_viewer.setLabelProvider( m_labelProvider );
 
@@ -137,6 +142,37 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
           text = ttProvider == null ? null : ttProvider.getTooltip( data );
         }
         tree.setToolTipText( text );
+      }
+    } );
+
+    /* Allow the tree item to draw themselves. */
+    final CustomDrawListener drawListener = new CustomDrawListener();
+    tree.addListener( SWT.MeasureItem, drawListener );
+    tree.addListener( SWT.EraseItem, drawListener );
+    tree.addListener( SWT.PaintItem, drawListener );
+
+    tree.addListener( SWT.EraseItem, new Listener()
+    {
+      public void handleEvent( final Event event )
+      {
+        final Composite c = (Composite) event.widget;
+
+        if( (event.detail & SWT.SELECTED) == 0 )
+          return; /* item not selected */
+        final Color red = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
+        final Color yellow = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
+
+        final GC gc = event.gc;
+        final int clientWidth = event.width;
+
+        final Color oldForeground = gc.getForeground();
+        final Color oldBackground = gc.getBackground();
+        gc.setForeground( red );
+        gc.setBackground( yellow );
+        gc.fillGradientRectangle( 0, event.y, clientWidth, event.height, false );
+        gc.setForeground( oldForeground );
+        gc.setBackground( oldBackground );
+        event.detail &= ~SWT.SELECTED;
       }
     } );
 

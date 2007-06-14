@@ -74,7 +74,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 public interface GM_SurfacePatch extends GM_GenericSurface
 {
-
   /**
    * The interpolation determines the surface interpolation mechanism used for this GM_SurfacePatch. This mechanism uses
    * the control points and control parameters defined in the various subclasses to determine the position of this GM_

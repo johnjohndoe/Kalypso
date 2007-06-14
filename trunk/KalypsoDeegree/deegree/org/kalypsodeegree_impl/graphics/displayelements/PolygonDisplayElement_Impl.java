@@ -103,7 +103,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param feature
    * @param geometry
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface[] surfaces )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface< ? >[] surfaces )
   {
     this( feature, surfaces, new PolygonSymbolizer_Impl() );
   }
@@ -115,7 +115,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface[] surfaces, final PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface< ? >[] surfaces, final PolygonSymbolizer symbolizer )
   {
     super( feature, surfaces, symbolizer );
   }
@@ -128,8 +128,8 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   {
     try
     {
-      final GM_Surface[] surfaces = (GM_Surface[]) getGeometry();
-      for( final GM_Surface element : surfaces )
+      final GM_Surface< ? >[] surfaces = (GM_Surface< ? >[]) getGeometry();
+      for( final GM_Surface< ? > element : surfaces )
       {
         final Area area = calcTargetCoordinates( projection, element );
         drawPolygon( g, area, projection );
@@ -153,7 +153,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  private Area calcTargetCoordinates( final GeoTransform projection, final GM_Surface surface ) throws Exception
+  private <T extends GM_SurfacePatch> Area calcTargetCoordinates( final GeoTransform projection, final GM_Surface<T> surface ) throws Exception
   {
     final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
     final Stroke stroke = sym.getStroke();
@@ -165,7 +165,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
     try
     {
-      final GM_SurfacePatch patch = surface.getSurfacePatchAt( 0 );
+      final GM_SurfacePatch patch = surface.get( 0 );
       final GM_Position[] ex = patch.getExteriorRing();
       final GM_Position[][] inner = patch.getInteriorRings();
 

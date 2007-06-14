@@ -48,36 +48,38 @@ import java.util.ListIterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.jts.Triangle;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.index.ItemVisitor;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 /**
  * @author Gernot Belger
  */
-public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM_TriangulatedSurface
+public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl implements GM_TriangulatedSurface
 {
   private SpatialIndex m_index = new Quadtree();
 
   private final List<GM_Triangle> m_items;
 
-  public GM_TriangulatedSurface_Impl( final CS_CoordinateSystem crs )
+  public GM_TriangulatedSurface_Impl( final CS_CoordinateSystem crs ) throws GM_Exception
   {
     this( new ArrayList<GM_Triangle>(), crs );
   }
 
-  public GM_TriangulatedSurface_Impl( final List<GM_Triangle> items, final CS_CoordinateSystem crs )
+  public GM_TriangulatedSurface_Impl( final List<GM_Triangle> items, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     super( crs );
 
@@ -301,7 +303,15 @@ public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM
    */
   public List<GM_Triangle> subList( final int fromIndex, final int toIndex )
   {
-    return new GM_TriangulatedSurface_Impl( m_items.subList( fromIndex, toIndex ), getCoordinateSystem() );
+    try
+    {
+      return new GM_TriangulatedSurface_Impl( m_items.subList( fromIndex, toIndex ), getCoordinateSystem() );
+    }
+    catch( final GM_Exception e )
+    {
+      // should never happen
+      throw new IllegalStateException( e );
+    }
   }
 
   /**
@@ -347,8 +357,8 @@ public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM
     Envelope bbox = null;
     for( final GM_Triangle gmTriangle : items )
     {
-      final Triangle triangle = gmTriangle.getTriangle();
-      final Envelope envelope = triangle.getEnvelopeInternal();
+      final GM_Envelope env = gmTriangle.getEnvelope();
+      final Envelope envelope = JTSAdapter.export( env );
       if( envelope.isNull() )
         continue;
 
@@ -386,9 +396,8 @@ public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM
         final GM_Curve[] curves = new GM_Curve[m_items.size()];
         for( int i = 0; i < curves.length; i++ )
         {
-          final Triangle triangle = m_items.get( i ).getTriangle();
-          final LineString exteriorRing = triangle.getExteriorRing();
-          curves[i] = (GM_Curve) JTSAdapter.wrap( exteriorRing );
+          final GM_Position[] triangle = m_items.get( i ).getExteriorRing();
+          curves[i] = GeometryFactory.createGM_Curve( triangle, getCoordinateSystem() );
         }
 
         return curves;
@@ -407,8 +416,7 @@ public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM
         final GM_Surface[] surfaces = new GM_Surface[m_items.size()];
         for( int i = 0; i < surfaces.length; i++ )
         {
-          final Triangle triangle = m_items.get( i ).getTriangle();
-          surfaces[i] = (GM_Surface) JTSAdapter.wrap( triangle );
+          surfaces[i] = GeometryFactory.createGM_Surface( m_items.get( i ) );
         }
 
         return surfaces;
@@ -425,11 +433,12 @@ public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM
 
   private void insertToIndex( final GM_Triangle triangle )
   {
-    m_index.insert( triangle.getTriangle().getEnvelopeInternal(), triangle );
+    final Envelope env = JTSAdapter.export( triangle.getEnvelope() );
+    m_index.insert( env, triangle );
 
     if( isValid() )
     {
-      final GM_Envelope triangleEnv = JTSAdapter.wrap( triangle.getTriangle().getEnvelopeInternal() );
+      final GM_Envelope triangleEnv = triangle.getEnvelope();
 
       final GM_Envelope envelope = getEnvelope();
       if( envelope == null )
@@ -444,9 +453,59 @@ public class GM_TriangulatedSurface_Impl extends GM_Primitive_Impl implements GM
     if( o instanceof GM_Triangle )
     {
       final GM_Triangle gmTri = (GM_Triangle) o;
-      final Envelope envelopeInternal = gmTri.getTriangle().getEnvelopeInternal();
-      m_index.remove( envelopeInternal, o );
+      final Envelope env = JTSAdapter.export( gmTri.getEnvelope() );
+      m_index.remove( env, o );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_OrientableSurface#getSurfaceBoundary()
+   */
+  public GM_SurfaceBoundary getSurfaceBoundary( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getArea()
+   */
+  public double getArea( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getPerimeter()
+   */
+  public double getPerimeter( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor)
+   */
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_Triangle> surfacePatchVisitor )
+  {
+    final ItemVisitor visitor = new ItemVisitor()
+    {
+      public void visitItem( final Object item )
+      {
+        final GM_Triangle t = (GM_Triangle) item;
+        try
+        {
+          surfacePatchVisitor.visit( t, Double.NaN );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    };
+
+    final Envelope searchEnv = JTSAdapter.export( envToVisit );
+    m_index.query( searchEnv, visitor );
   }
 
 }

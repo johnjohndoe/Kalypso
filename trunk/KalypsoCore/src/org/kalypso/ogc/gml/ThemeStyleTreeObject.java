@@ -46,13 +46,15 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 
-public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
+public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider, ICustomDrawHandler
 {
   private final KalypsoUserStyle m_style;
 
@@ -198,5 +200,35 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     }
 
     return getStyle().getAbstract();
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler#measureItem(org.eclipse.swt.widgets.Event)
+   */
+  public void measureItem( final Event event )
+  {
+// final Composite c = (Composite) event.widget;
+// final int orgHeight = event.height;
+// final int fontHeight = event.gc.getFontMetrics().getHeight();
+//
+// final int lineCount = 1 + getChildren( this ).length;
+//
+// event.height = orgHeight * lineCount;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler#eraseItem(org.eclipse.swt.widgets.Event)
+   */
+  public void eraseItem( final Event event )
+  {
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler#paintItem(org.eclipse.swt.widgets.Event)
+   */
+  public void paintItem( final Event event )
+  {
+    // TODO Auto-generated method stub
+
   }
 }

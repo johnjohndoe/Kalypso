@@ -40,17 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
-import java.util.List;
-
 /**
  * A triangulated surface.
- * <p>
- * TODO: reimplement GM_Surface with help of template parameters.
- * </p>
  * 
  * @author Gernot Belger
  */
-// REMARK: we do not inherit from GM_Surface because that interface and that implementation are SO bad.
-public interface GM_TriangulatedSurface /* extends GM_Surface */extends GM_Primitive, List<GM_Triangle>
+public interface GM_TriangulatedSurface extends GM_Surface<GM_Triangle>
 {
 }

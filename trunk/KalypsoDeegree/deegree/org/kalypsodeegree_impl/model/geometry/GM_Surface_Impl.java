@@ -62,11 +62,17 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -75,6 +81,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -93,12 +100,14 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, GM_GenericSurface, Serializable
+class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Impl implements GM_Surface<T>, GM_GenericSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
 
-  protected GM_SurfacePatch m_patch = null;
+  private final List<T> m_list;
+
+  private final GM_SurfacePatch m_patch;
 
   private double area = 0;
 
@@ -108,7 +117,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * @param surfacePatch
    *            patches of the surface.
    */
-  public GM_Surface_Impl( final GM_SurfacePatch surfacePatch ) throws GM_Exception
+  public GM_Surface_Impl( final T surfacePatch ) throws GM_Exception
   {
     this( '+', surfacePatch );
   }
@@ -119,10 +128,11 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * @param surfacePatch
    *            patches of the surface.
    */
-  public GM_Surface_Impl( final char orientation, final GM_SurfacePatch surfacePatch ) throws GM_Exception
+  public GM_Surface_Impl( final char orientation, final T surfacePatch ) throws GM_Exception
   {
     super( surfacePatch.getCoordinateSystem(), orientation );
 
+    m_list = Collections.singletonList( surfacePatch );
     m_patch = surfacePatch;
 
     setValid( false );
@@ -150,6 +160,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     // todo
     // extracting surface patches from the boundary
     super( boundary.getCoordinateSystem(), orientation );
+
+    m_list = Collections.emptyList();
+    m_patch = null;
 
     setBoundary( boundary );
   }
@@ -269,54 +282,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * writes a surface patch to the surface at submitted position. the old patch will be deleted
-   */
-  public void setSurfacePatchAt( final GM_SurfacePatch patch, final int index ) throws GM_Exception
-  {
-    if( index != 0 )
-    {
-      throw new GM_Exception( "invalid index/position to set a patch!" );
-    }
-
-    m_patch = patch;
-
-    setValid( false );
-  }
-
-  /**
-   * inserts a surface patch in the curve at the submitted position. all points with a position that equals index or is
-   * higher will be shifted
-   */
-  public void insertSurfacePatchAt( final GM_SurfacePatch patch, final int index ) throws GM_Exception
-  {
-    if( index != 0 )
-    {
-      throw new GM_Exception( "invalid index/position to insert a patch!" );
-    }
-
-    m_patch = patch;
-
-    setValid( false );
-  }
-
-  /**
-   * adds a surface patch at the end of the curve
-   */
-  public void addSurfacePatch( final GM_SurfacePatch patch )
-  {
-    throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment." );
-  }
-
-  /**
-   * deletes the surface patch at the submitted index
-   */
-  public void deleteSurfacePatchAt( final int index )
-  {
-    throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment. Because " + "empty surface are not allowed you can't delete "
-        + "the only existing patch." );
-  }
-
-  /**
    * checks if this surface is completly equal to the submitted geometry
    * 
    * @param other
@@ -346,7 +311,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
 
     try
     {
-      if( !m_patch.equals( ((GM_Surface) other).getSurfacePatchAt( 0 ) ) )
+      if( !m_patch.equals( ((GM_Surface< ? >) other).get( 0 ) ) )
       {
         return false;
       }
@@ -390,7 +355,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       final GM_SurfacePatch myPatch = (GM_SurfacePatch) m_patch.clone();
 
-      return new GM_Surface_Impl( getOrientation(), myPatch );
+      return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), myPatch );
     }
     catch( final GM_Exception e )
     {
@@ -533,5 +498,260 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     }
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @param index
+   * @param element
+   * @see java.util.List#add(int, java.lang.Object)
+   */
+  public void add( final int index, final T element )
+  {
+    m_list.add( index, element );
+  }
+
+  /**
+   * @param o
+   * @return
+   * @see java.util.List#add(java.lang.Object)
+   */
+  public boolean add( final T o )
+  {
+    return m_list.add( o );
+  }
+
+  /**
+   * @param c
+   * @return
+   * @see java.util.List#addAll(java.util.Collection)
+   */
+  public boolean addAll( final Collection< ? extends T> c )
+  {
+    return m_list.addAll( c );
+  }
+
+  /**
+   * @param index
+   * @param c
+   * @return
+   * @see java.util.List#addAll(int, java.util.Collection)
+   */
+  public boolean addAll( final int index, final Collection< ? extends T> c )
+  {
+    return m_list.addAll( index, c );
+  }
+
+  /**
+   * @see java.util.List#clear()
+   */
+  public void clear( )
+  {
+    m_list.clear();
+  }
+
+  /**
+   * @param o
+   * @return
+   * @see java.util.List#contains(java.lang.Object)
+   */
+  public boolean contains( final Object o )
+  {
+    return m_list.contains( o );
+  }
+
+  /**
+   * @param c
+   * @return
+   * @see java.util.List#containsAll(java.util.Collection)
+   */
+  public boolean containsAll( final Collection< ? > c )
+  {
+    return m_list.containsAll( c );
+  }
+
+  /**
+   * @param index
+   * @return
+   * @see java.util.List#get(int)
+   */
+  public T get( final int index )
+  {
+    return m_list.get( index );
+  }
+
+  /**
+   * @return
+   * @see java.util.List#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return m_list.hashCode();
+  }
+
+  /**
+   * @param o
+   * @return
+   * @see java.util.List#indexOf(java.lang.Object)
+   */
+  public int indexOf( final Object o )
+  {
+    return m_list.indexOf( o );
+  }
+
+  /**
+   * @return
+   * @see java.util.List#isEmpty()
+   */
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_list.isEmpty();
+  }
+
+  /**
+   * @return
+   * @see java.util.List#iterator()
+   */
+  public Iterator<T> iterator( )
+  {
+    return m_list.iterator();
+  }
+
+  /**
+   * @param o
+   * @return
+   * @see java.util.List#lastIndexOf(java.lang.Object)
+   */
+  public int lastIndexOf( final Object o )
+  {
+    return m_list.lastIndexOf( o );
+  }
+
+  /**
+   * @return
+   * @see java.util.List#listIterator()
+   */
+  public ListIterator<T> listIterator( )
+  {
+    return m_list.listIterator();
+  }
+
+  /**
+   * @param index
+   * @return
+   * @see java.util.List#listIterator(int)
+   */
+  public ListIterator<T> listIterator( final int index )
+  {
+    return m_list.listIterator( index );
+  }
+
+  /**
+   * @param index
+   * @return
+   * @see java.util.List#remove(int)
+   */
+  public T remove( final int index )
+  {
+    return m_list.remove( index );
+  }
+
+  /**
+   * @param o
+   * @return
+   * @see java.util.List#remove(java.lang.Object)
+   */
+  public boolean remove( final Object o )
+  {
+    return m_list.remove( o );
+  }
+
+  /**
+   * @param c
+   * @return
+   * @see java.util.List#removeAll(java.util.Collection)
+   */
+  public boolean removeAll( final Collection< ? > c )
+  {
+    return m_list.removeAll( c );
+  }
+
+  /**
+   * @param c
+   * @return
+   * @see java.util.List#retainAll(java.util.Collection)
+   */
+  public boolean retainAll( final Collection< ? > c )
+  {
+    return m_list.retainAll( c );
+  }
+
+  /**
+   * @param index
+   * @param element
+   * @return
+   * @see java.util.List#set(int, java.lang.Object)
+   */
+  public T set( final int index, final T element )
+  {
+    return m_list.set( index, element );
+  }
+
+  /**
+   * @return
+   * @see java.util.List#size()
+   */
+  public int size( )
+  {
+    return m_list.size();
+  }
+
+  /**
+   * @param fromIndex
+   * @param toIndex
+   * @return
+   * @see java.util.List#subList(int, int)
+   */
+  public List<T> subList( final int fromIndex, final int toIndex )
+  {
+    return m_list.subList( fromIndex, toIndex );
+  }
+
+  /**
+   * @return
+   * @see java.util.List#toArray()
+   */
+  public Object[] toArray( )
+  {
+    return m_list.toArray();
+  }
+
+  /**
+   * @param <T>
+   * @param a
+   * @return
+   * @see java.util.List#toArray(T[])
+   */
+  public <S> S[] toArray( final S[] a )
+  {
+    return m_list.toArray( a );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor)
+   */
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor ) throws GM_Exception
+  {
+    try
+    {
+      for( final T patch : m_list )
+        visitor.visit( patch, Double.NaN );
+    }
+    catch( final Exception e )
+    {
+      throw new GM_Exception( e.getLocalizedMessage(), e );
+    }
   }
 }

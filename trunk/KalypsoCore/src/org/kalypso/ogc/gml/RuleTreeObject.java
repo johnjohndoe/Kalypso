@@ -117,29 +117,35 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( m_rule == null )
       return null;
 
+    final Display display = Display.getCurrent();
+
     /*
      * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have too
      * many RuleTreeObjects.
      */
-    final Image image = new Image( Display.getCurrent(), 15, 15 );
-
+    final Image image = new Image( display, 16, 16 );
     final GC gc = new GC( image );
 
     try
     {
       gc.setAntialias( SWT.ON );
       RulePainter.paint( m_rule, gc );
+
+      final ImageData imageData = image.getImageData();
+      return ImageDescriptor.createFromImageData( imageData );
     }
     catch( final Throwable t )
     {
       t.printStackTrace();
+
+      return null;
+    }
+    finally
+    {
+      gc.dispose();
+      image.dispose();
     }
 
-    gc.dispose();
-
-    final ImageData imageData = image.getImageData();
-
-    return ImageDescriptor.createFromImageData( imageData );
   }
 
   /**

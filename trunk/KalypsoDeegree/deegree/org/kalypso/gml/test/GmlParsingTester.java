@@ -56,9 +56,9 @@ import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.gml.GMLException;
 import org.kalypso.gml.GMLorExceptionContentHandler;
-import org.kalypso.jts.Triangle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
@@ -163,8 +163,10 @@ public class GmlParsingTester extends TestCase
     final GM_Triangle gmTriangle = triangulatedSurface.get( 0 );
     assertNotNull( gmTriangle );
 
-    final Triangle triangle = gmTriangle.getTriangle();
+    final GM_Position[] triangle = gmTriangle.getExteriorRing();
     assertNotNull( triangle );
+    assertEquals( 4, triangle.length );
+    assertEquals( triangle[0], triangle[1] );
   }
 
 }
